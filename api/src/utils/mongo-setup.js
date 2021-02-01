@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 
 // CONNECTION TO MONGO
-const devUrl =
-  'mongodb+srv://alicesf2:Q9p0y$*hN15I@cluster0.xsaeb.mongodb.net/development?retryWrites=true&w=majority';
+const devUrl = '';
+
 let mongoUrl = process.env.MONGO_URL || devUrl;
 mongoose.connect(mongoUrl, {
   useNewUrlParser: true,
