@@ -18,9 +18,7 @@ describe('GET /api/home/ ', () => {
   test('API should return home text', async () => {
     const response = await request(app).get('/api/home/');
     expect(response.body.message).toEqual('Successfully returned home text');
-    expect(response.body.result).toEqual(
-      "You've connected the database! Isn't it so beautiful???",
-    );
+    expect(response.body.result).toEqual('SSW working!!');
     expect(response.statusCode).toBe(200);
   });
 });
