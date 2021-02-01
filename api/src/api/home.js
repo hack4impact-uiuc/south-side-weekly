@@ -10,7 +10,7 @@ router.get(
   errorWrap(async (req, res) => {
     // MongoDB connection
     // const homeText = await Home.findOne();
-    const homeText = "You've connected the database! Isn't it so beautiful???";
+    const homeText = 'SSW working!!';
     res.status(200).json({
       message: `Successfully returned home text`,
       success: true,
