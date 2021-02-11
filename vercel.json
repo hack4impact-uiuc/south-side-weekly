@@ -1,7 +1,7 @@
 {
   "regions": ["iad1"],
   "env": {
-    "MONGO_URL": "@ssw_db_url"
+    "PROD_MONGO_URL": "@ssw_db_url"
   },
   "builds": [
     { "src": "api/src/app.js", "use": "@now/node" },
@@ -14,7 +14,9 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "headers": { "cache-control": "s-maxage=0" },
+      "headers": {
+        "cache-control": "s-maxage=0"
+      },
       "dest": "api/src/app.js"
     },
     {

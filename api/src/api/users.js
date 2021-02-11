@@ -2,19 +2,16 @@ const express = require('express');
 const router = express.Router();
 const { errorWrap } = require('../middleware');
 
-// uncomment to use the schema
-// const Home = require('../models/home');
+const User = require('../models/user');
 
 router.get(
   '/',
   errorWrap(async (req, res) => {
-    // MongoDB connection
-    // const homeText = await Home.findOne();
-    const homeText = 'SSW working!!';
+    const user = await User.findOne();
     res.status(200).json({
-      message: `Successfully returned home text`,
+      message: `Successfully retrieved ${user.name} users.`,
       success: true,
-      result: homeText,
+      result: user,
     });
   }),
 );

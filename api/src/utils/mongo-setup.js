@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 
 // CONNECTION TO MONGO
-const devUrl = '';
-
-let mongoUrl = process.env.MONGO_URL || devUrl;
+let mongoUrl = process.env.DEV_MONGO_URL;
+if (process.env.NODE_ENV === 'production') {
+  mongoUrl = process.env.PROD_MONGO_URL;
+}
 mongoose.connect(mongoUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,

@@ -14,11 +14,12 @@ describe('GET / ', () => {
   });
 });
 
-describe('GET /api/home/ ', () => {
-  test('API should return home text', async () => {
-    const response = await request(app).get('/api/home/');
-    expect(response.body.message).toEqual('Successfully returned home text');
-    expect(response.body.result).toEqual('SSW working!!');
+describe('GET /api/users/ ', () => {
+  test('API should return users text', async () => {
+    const response = await request(app).get('/api/users');
+    expect(response.body.message).toEqual(
+      'Successfully retrieved Development users.',
+    );
     expect(response.statusCode).toBe(200);
   });
 });
