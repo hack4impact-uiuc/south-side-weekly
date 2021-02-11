@@ -30,7 +30,7 @@ The majority of The Weekly's staff are volunteers, with their main contributor b
 
 ## Usage
 
-The latest version of this application can be found at [pineapple.lol](https://pineapple.lol).
+The latest version of this application can be found at [south-side-weekly.vercel.app](https://south-side-weekly.vercel.app).
 
 To install and set up locally, follow the instructions in the [`/client`](https://github.com/hack4impact-uiuc/mern_template/tree/main/client) and [`/api`](https://github.com/hack4impact-uiuc/mern_template/tree/main/api) directories.
 
