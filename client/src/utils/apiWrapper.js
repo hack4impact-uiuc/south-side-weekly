@@ -9,7 +9,7 @@ const BASE_URL = process.env.REACT_APP_VERCEL_URL
  * Returns GET_SAMPLE_FAIL upon failure
  */
 export const getSampleResponse = () => {
-  const requestString = `${BASE_URL}/home`;
+  const requestString = `${BASE_URL}/users`;
   return axios
     .get(requestString, {
       headers: {

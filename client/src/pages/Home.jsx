@@ -12,8 +12,9 @@ function Home(): Node {
   useEffect(() => {
     const populateText = async () => {
       const resp = await getSampleResponse();
+      console.log(resp);
       if (!resp.error) {
-        setText(resp.data.result);
+        setText(resp.data.message);
       }
     };
 
