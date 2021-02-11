@@ -1,6 +1,7 @@
 ## Summary
 
 Description of PR here...
+Closes #85, Closes #22
 
 ## Changes
 
@@ -53,5 +54,3 @@ HTTP/1.1 200 OK
   }
 }
 ```
-
-Closes #85, Closes #22
