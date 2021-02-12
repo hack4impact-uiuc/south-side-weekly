@@ -49,7 +49,7 @@ This application is built with React, Express, MongoDB, and tested with Cypress 
     <td align="center"><a href="https://neeraj.lol"><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/637255/android/sticker.png" width="75px;" alt="Chef Pusheen"/><br /><b>Chef Pusheen</b></a><br /><sub>Software Developer</sub></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://neeraj.lol"><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/637245/android/sticker.png" width="75px;" alt="Sad Pusheen"/><br /><b>Sad Pusheen</b></a><br /><sub>Software Developer</sub></td>
+    <td align="center"><a href="https://www.linkedin.com/in/danielle-yang-254308154/"><img src="https://ca.slack-edge.com/T6VL1BSEA-UFUGPEN01-1fea6ce5aadb-512" width="75px;" alt="Danielle Yang"/><br /><b>Danielle Yang</b></a><br /><sub>Software Developer</sub></td>
     <td align="center"><a href="https://neeraj.lol"><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/637258/android/sticker.png" width="75px;" alt="Silly Pusheen"/><br /><b>Silly Pusheen</b></a><br /><sub>Software Developer</sub></td>
     <td align="center"><a href="https://www.linkedin.com/in/amit-m-sawhney/"><img src="https://media-exp1.licdn.com/dms/image/C4D03AQF6eWCL4Z8_qg/profile-displayphoto-shrink_400_400/0/1595738823858?e=1618444800&v=beta&t=UBhqmIAi_KyPYmYAIpD1uXSllZpZ-KuAZm30ZL4Yt8M" width="75px;" alt="Amit Sawhney"/><br /><b>Amit Sawhney</b></a><br /><sub>Software Developer</sub></td>
     <td align="center"><a href="https://neeraj.lol"><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/637246/android/sticker.png" width="75px;" alt="Chatty Pusheen"/><br /><b>Chatty Pusheen</b></a><br /><sub>Software Developer</sub></td>
