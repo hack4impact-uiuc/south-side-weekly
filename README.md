@@ -49,7 +49,7 @@ This application is built with React, Express, MongoDB, and tested with Cypress 
     <td align="center"><a href="https://neeraj.lol"><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/637255/android/sticker.png" width="75px;" alt="Chef Pusheen"/><br /><b>Chef Pusheen</b></a><br /><sub>Software Developer</sub></td>
   </tr>
   <tr>
-    <td align="center"><a href="https://neeraj.lol"><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/637245/android/sticker.png" width="75px;" alt="Sad Pusheen"/><br /><b>Sad Pusheen</b></a><br /><sub>Software Developer</sub></td>
+    <td align="center"><a href="https://neeraj.lol"><img src="https://ca.slack-edge.com/T6VL1BSEA-UFUGPEN01-1fea6ce5aadb-512" width="75px;" alt="Danielle Yang"/><br /><b>Danielle Yang</b></a><br /><sub>Software Developer</sub></td>
     <td align="center"><a href="https://neeraj.lol"><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/637258/android/sticker.png" width="75px;" alt="Silly Pusheen"/><br /><b>Silly Pusheen</b></a><br /><sub>Software Developer</sub></td>
     <td align="center"><a href="https://neeraj.lol"><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/637256/android/sticker.png" width="75px;" alt="Coffee Pusheen"/><br /><b>Coffee Pusheen</b></a><br /><sub>Software Developer</sub></td>
     <td align="center"><a href="https://neeraj.lol"><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/637246/android/sticker.png" width="75px;" alt="Chatty Pusheen"/><br /><b>Chatty Pusheen</b></a><br /><sub>Software Developer</sub></td>
