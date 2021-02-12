@@ -42,9 +42,9 @@ This application is built with React, Express, MongoDB, and tested with Cypress 
 
 <table align="center">
   <tr>
-    <td align="center"><a href="https://neeraj.lol"><img src="https://stickershop.line-scdn.net/stickershop/v1/product/1014241/LINEStorePC/main.png" width="75px;" alt="Pusheen"/><br /><b>Pusheen</b></a><br /><sub>Product Manager</sub></td>
-    <td align="center"><a href="https://www.linkedin.com/in/alicesf2/"><img src="https://media-exp1.licdn.com/dms/image/C4E03AQFT2hqGjVdINA/profile-displayphoto-shrink_400_400/0/1594157771622?e=1617235200&v=beta&t=2R7VB-iKCQkRbkn-g1NqydQ-KWCeAc_fGN1m78MsXJw" width="75px;" alt="Unicorn Pusheen"/><br /><b>Alice Fang</b></a><br /><sub>Technical Lead</sub></td>
-    <td align="center"><a href="https://neeraj.lol"><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/637275/android/sticker.png" width="75px;" alt="Pilot Pusheen"/><br /><b>Pilot Pusheen</b></a><br /><sub>Product Designer</sub></td>
+    <td align="center"><a href="https://www.linkedin.com/in/sahithimuthyala/"><img src="https://media-exp1.licdn.com/dms/image/C5603AQGjSoe8PD2D7Q/profile-displayphoto-shrink_400_400/0/1567143267652?e=1618444800&v=beta&t=9BpxkgdilrD2tBI2y3UrV_Q_tmZPhvNosyv9LkeArVU" width="75px;" alt="Sahithi Muthyala"/><br /><b>Sahithi Muthyala</b></a><br /><sub>Product Manager</sub></td>
+    <td align="center"><a href="https://www.linkedin.com/in/alicesf2/"><img src="https://media-exp1.licdn.com/dms/image/C4E03AQFT2hqGjVdINA/profile-displayphoto-shrink_400_400/0/1594157771622?e=1617235200&v=beta&t=2R7VB-iKCQkRbkn-g1NqydQ-KWCeAc_fGN1m78MsXJw" width="75px;" alt="Alice Fang"/><br /><b>Alice Fang</b></a><br /><sub>Technical Lead</sub></td>
+    <td align="center"><a href="https://www.linkedin.com/in/mustafasyedali/"><img src="https://media-exp1.licdn.com/dms/image/C4D03AQE03wF5UgwtEA/profile-displayphoto-shrink_400_400/0/1610007269207?e=1618444800&v=beta&t=DWIyVJDbwFIGRN5ln1tVaWj_5T_5JJaSvwA9nmygNoE" width="75px;" alt="Mustafa Ali"/><br /><b>Mustafa Ali</b></a><br /><sub>Product Designer</sub></td>
     <td align="center"><a href="https://neeraj.lol"><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/637273/android/sticker.png" width="75px;" alt="Angry Pusheen"/><br /><b>Angry Pusheen</b></a><br /><sub>Product Researcher</sub></td>
     <td align="center"><a href="https://neeraj.lol"><img src="https://stickershop.line-scdn.net/stickershop/v1/sticker/637255/android/sticker.png" width="75px;" alt="Chef Pusheen"/><br /><b>Chef Pusheen</b></a><br /><sub>Software Developer</sub></td>
   </tr>
