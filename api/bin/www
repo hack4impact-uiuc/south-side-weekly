@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const app = require('../src/app');
+const app = require('../dist/app');
 const debug = require('debug')('api:server');
 const http = require('http');
 

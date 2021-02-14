@@ -1,6 +1,9 @@
 {
   "plugins": ["@hack4impact-uiuc"],
-  "extends": ["plugin:@hack4impact-uiuc/base"],
+  "extends": [
+    "plugin:@hack4impact-uiuc/base",
+    "plugin:@hack4impact-uiuc/typescript"
+  ],
   "rules": {
     "require-await": "off"
   }
