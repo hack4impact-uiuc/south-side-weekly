@@ -1,4 +1,6 @@
-const errorHandler = (err, req, res) => {
+import { Request, Response } from 'express';
+
+export default (err: Error, req: Request, res: Response): void => {
   console.error(err);
   console.error(err.stack);
   res.status(500).json({
@@ -8,5 +10,3 @@ const errorHandler = (err, req, res) => {
     success: false,
   });
 };
-
-module.exports = errorHandler;

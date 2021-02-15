@@ -1,19 +1,18 @@
-// @flow
-import React, { useEffect, useState } from 'react';
-import type { Node } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 
-import { getSampleResponse } from '../utils/apiWrapper';
+import { getSampleResponse, isError } from '../utils/apiWrapper';
 
 import '../css/Home.css';
 
-function Home(): Node {
+function Home(): ReactElement {
   const [text, setText] = useState('You did not run local API!');
 
   useEffect(() => {
-    const populateText = async () => {
+    const populateText = async (): Promise<void> => {
       const resp = await getSampleResponse();
       console.log(resp);
-      if (!resp.error) {
+
+      if (!isError(resp)) {
         setText(resp.data.message);
       }
     };

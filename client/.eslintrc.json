@@ -2,9 +2,9 @@
   "extends": [
     "plugin:@hack4impact-uiuc/base",
     "plugin:@hack4impact-uiuc/react",
-    "plugin:flowtype/recommended"
+    "plugin:@hack4impact-uiuc/typescript"
   ],
-  "plugins": ["@hack4impact-uiuc", "flowtype"],
+  "plugins": ["@hack4impact-uiuc"],
   "rules": {
     "import/order": [
       "warn",

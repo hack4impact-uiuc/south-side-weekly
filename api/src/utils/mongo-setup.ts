@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 // CONNECTION TO MONGO
 let mongoUrl = process.env.DEV_MONGO_URL;
