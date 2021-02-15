@@ -4,10 +4,10 @@
     "PROD_MONGO_URL": "@ssw_db_url"
   },
   "builds": [
-    { "src": "api/src/app.js", "use": "@now/node" },
+    { "src": "api/src/app.ts", "use": "@vercel/node" },
     {
       "src": "client/package.json",
-      "use": "@now/static-build",
+      "use": "@vercel/static-build",
       "config": { "distDir": "build" }
     }
   ],
@@ -17,7 +17,7 @@
       "headers": {
         "cache-control": "s-maxage=0"
       },
-      "dest": "api/src/app.js"
+      "dest": "api/src/app.ts"
     },
     {
       "src": "/static/(.*)",
