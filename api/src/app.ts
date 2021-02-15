@@ -30,4 +30,4 @@ app.use(function (req: Request, res: Response, next) {
 
 app.use(errorHandler);
 
-module.exports = app;
+export default app;
