@@ -1,6 +1,6 @@
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 
-import Pitch, { IPitch } from './pitch';
+import { IPitch } from './pitch';
 
 /**
  * Basic interface for a User Schema
@@ -60,8 +60,8 @@ const User = new mongoose.Schema({
   portfolio: { type: String, default: null },
   linkedIn: { type: String, default: null },
   twitter: { type: String, default: null },
-  claimedPitches: { type: [Pitch], default: [] },
-  submittedPitches: { type: [Pitch], default: [] },
+  claimedPitches: { type: Schema.Types.ObjectId, ref: 'Pitch', default: [] },
+  submittedPitches: { type: Schema.Types.ObjectId, ref: 'Pitch', default: [] },
 
   role: {
     type: String,
