@@ -60,8 +60,8 @@ const User = new mongoose.Schema({
   portfolio: { type: String, default: null },
   linkedIn: { type: String, default: null },
   twitter: { type: String, default: null },
-  claimedPitches: { type: Schema.Types.ObjectId, ref: 'Pitch', default: [] },
-  submittedPitches: { type: Schema.Types.ObjectId, ref: 'Pitch', default: [] },
+  claimedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
+  submittedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
 
   role: {
     type: String,
