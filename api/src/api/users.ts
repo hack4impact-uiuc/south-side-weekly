@@ -8,6 +8,7 @@ const router = express.Router();
 
 const isValidMongoId = (id: string): boolean => ObjectId.isValid(id);
 
+// gets all users
 router.get(
   '/',
   errorWrap(async (req: Request, res: Response) => {
@@ -20,6 +21,7 @@ router.get(
   }),
 );
 
+//gets user by id
 router.get(
   '/:userId',
   errorWrap(async (req: Request, res: Response) => {
