@@ -5,6 +5,7 @@ import helmet from 'helmet';
 import logger from 'morgan';
 import apiRoutes from './api';
 import { errorHandler } from './middleware';
+import passport from 'passport';
 
 const app = express();
 
@@ -15,6 +16,9 @@ app.use(logger('dev'));
 
 app.use(express.json({ limit: '2.1mb' }));
 app.use(express.urlencoded({ limit: '2.1mb', extended: false }));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Mongo setup
 require('./utils/mongo-setup');
