@@ -36,14 +36,14 @@ const interestsEnum = {
   CANNABIS: 'CANNABIS',
   IMMIGRATION: 'IMMIGRATION',
   FUN: 'FUN',
-  NONE: 'NONE'
+  NONE: 'NONE',
 };
 
 const rolesEnum = {
   CONTRIBUTOR: 'CONTRIBUTOR',
   STAFF: 'STAFF',
   ADMIN: 'ADMIN',
-  TBD: 'TBD'
+  TBD: 'TBD',
 };
 
 /**
