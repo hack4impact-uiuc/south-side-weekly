@@ -6,6 +6,7 @@ interface User extends Document<any> {
 
 const User = new mongoose.Schema({
   name: { type: String },
+  googleId: { type: String },
 });
 
 export default mongoose.model<User>('User', User);
