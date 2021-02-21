@@ -28,6 +28,7 @@ function Home(): ReactElement {
         <br />
         {text}
       </p>
+      <a href="http://localhost:9000/api/auth/google">Sign In with Google</a>
     </>
   );
 }
