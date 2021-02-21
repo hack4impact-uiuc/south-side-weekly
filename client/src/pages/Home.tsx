@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 
-import { getSampleResponse, isError } from '../utils/apiWrapper';
+import { BASE_URL, getSampleResponse, isError } from '../utils/apiWrapper';
 
 import '../css/Home.css';
 
@@ -28,7 +28,7 @@ function Home(): ReactElement {
         <br />
         {text}
       </p>
-      <a href="http://localhost:9000/api/auth/google">Sign In with Google</a>
+      <a href={BASE_URL + '/auth/google'}>Sign In with Google</a>
     </>
   );
 }
