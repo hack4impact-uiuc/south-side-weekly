@@ -36,12 +36,14 @@ const interestsEnum = {
   CANNABIS: 'CANNABIS',
   IMMIGRATION: 'IMMIGRATION',
   FUN: 'FUN',
+  NONE: 'NONE'
 };
 
 const rolesEnum = {
   CONTRIBUTOR: 'CONTRIBUTOR',
   STAFF: 'STAFF',
   ADMIN: 'ADMIN',
+  TBD: 'TBD'
 };
 
 /**
@@ -66,13 +68,13 @@ const User = new mongoose.Schema({
   role: {
     type: String,
     enum: Object.values(rolesEnum),
-    default: null,
+    default: rolesEnum.TBD,
   },
 
   interests: {
     type: String,
     enum: Object.values(interestsEnum),
-    default: null,
+    default: interestsEnum.NONE,
   },
 });
 
