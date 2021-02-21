@@ -17,4 +17,19 @@ router.get(
   }),
 );
 
+// Create a new user, given 
+router.post(
+  '/new',
+  errorWrap(async (req: Request, res: Response) => {
+    const newUser = await User.create(req.body);
+    if (newUser) {
+      res.status(200).json({
+        message: 'Succesfully created new user',
+        success: true,
+        result: newUser,
+      });
+    }
+  }),
+);
+
 export default router;
