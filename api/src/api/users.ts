@@ -55,7 +55,7 @@ router.get(
 
 // Create a new user
 router.post(
-  '/new',
+  '/',
   errorWrap(async (req: Request, res: Response) => {
     const newUser = await User.create(req.body);
     if (newUser) {

@@ -43,7 +43,7 @@ describe('GET user by invalid ID', () => {
 
 describe('POST create a new user', () => {
     test('API should create a new user', async () => {
-        const response = await request(app).post('/api/users/new').send({
+        const response = await request(app).post('/api/users/').send({
             name: 'Test User',
             email: 'testUser@gmail.com',
         });
@@ -96,7 +96,7 @@ describe('DELETE a specific user', () => {
     test('API should delete a user', async () => {
 
         // create a test user to delete
-        const createdUserResponse = await request(app).post('/api/users/new').send({
+        const createdUserResponse = await request(app).post('/api/users/').send({
             name: 'Delete User',
             email: 'deleteUser@gmail.com',
         });
