@@ -3,7 +3,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 import { IPitch } from './pitch';
 
 /**
- * Basic interface for a User Schema
+ * Basic interface for a User Schema.
  */
 interface IUser extends Document<any> {
   name: string;
@@ -59,7 +59,7 @@ const racesEnum = {
 };
 
 /**
- * Mongoose Schema to represent a User at South Side Weekly
+ * Mongoose Schema to represent a User at South Side Weekly.
  */
 const User = new mongoose.Schema({
   firstName: { type: String, default: null, required: true },
