@@ -57,15 +57,18 @@ const User = new mongoose.Schema({
   email: { type: String, default: null },
   phone: { type: String, default: null },
   oauthID: { type: String, default: null, unique: true, sparse: true },
-  gender: { type: String, default: null },
-  pronouns: { type: String, default: null },
+  gender: [{ type: String, default: null }],
+  pronouns: [{ type: String, default: null }],
+  race: [{ type: String, default: null }],
   dateJoined: { type: Date, default: Date.now },
+  masthead: { type: Boolean, default: false },
 
   portfolio: { type: String, default: null },
   linkedIn: { type: String, default: null },
   twitter: { type: String, default: null },
   claimedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
   submittedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
+  currentTeams: [{ type: String, default: null }],
 
   role: {
     type: String,

@@ -64,6 +64,7 @@ describe('PUT update a specific user', () => {
     test('API should update Development user', async () => {
         const response = await request(app).put('/api/users/60332ef8dd742493ce5562b3').send({
             firstName: 'Development',
+            lastName: 'User',
         });
 
         expect(response.body.message).toEqual('Successfully updated user');
@@ -74,7 +75,8 @@ describe('PUT update a specific user', () => {
 describe('PUT update invalid mongoID user', () => {
     test('API should recognize bad MongoID', async () => {
         const response = await request(app).put('/api/users/BAD_ID').send({
-            firstName: 'Development'
+            firstName: 'Development',
+            lastUser: 'User',
         });
 
         expect(response.body.message).toEqual('Bad ID format');
@@ -85,7 +87,8 @@ describe('PUT update invalid mongoID user', () => {
 describe('PUT update unknown user', () => {
     test('API should not find user', async () => {
         const response = await request(app).put(`/api/users/${UNKNOWN_MONGOID}`).send({
-            firstName: 'Development'
+            firstName: 'Development',
+            lastName: 'User',
         });
 
         expect(response.body.message).toEqual('User not found with id');
