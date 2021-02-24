@@ -44,7 +44,8 @@ describe('GET user by invalid ID', () => {
 describe('POST create a new user', () => {
     test('API should create a new user', async () => {
         const response = await request(app).post('/api/users/').send({
-            name: 'Test User',
+            firstName: 'Test',
+            lastName: 'User',
             email: 'testUser@gmail.com',
         });
 
@@ -62,7 +63,7 @@ describe('POST create a new user', () => {
 describe('PUT update a specific user', () => {
     test('API should update Development user', async () => {
         const response = await request(app).put('/api/users/60332ef8dd742493ce5562b3').send({
-            name: 'Development',
+            firstName: 'Development',
         });
 
         expect(response.body.message).toEqual('Successfully updated user');
@@ -73,7 +74,7 @@ describe('PUT update a specific user', () => {
 describe('PUT update invalid mongoID user', () => {
     test('API should recognize bad MongoID', async () => {
         const response = await request(app).put('/api/users/BAD_ID').send({
-            name: 'Development'
+            firstName: 'Development'
         });
 
         expect(response.body.message).toEqual('Bad ID format');
@@ -84,7 +85,7 @@ describe('PUT update invalid mongoID user', () => {
 describe('PUT update unknown user', () => {
     test('API should not find user', async () => {
         const response = await request(app).put(`/api/users/${UNKNOWN_MONGOID}`).send({
-            name: 'Development'
+            firstName: 'Development'
         });
 
         expect(response.body.message).toEqual('User not found with id');
@@ -97,7 +98,8 @@ describe('DELETE a specific user', () => {
 
         // create a test user to delete
         const createdUserResponse = await request(app).post('/api/users/').send({
-            name: 'Delete User',
+            firstName: 'Delete',
+            lastName: 'User',
             email: 'deleteUser@gmail.com',
         });
 

@@ -50,7 +50,9 @@ const rolesEnum = {
  * Mongoose Schema to represent a User at South Side Weekly
  */
 const User = new mongoose.Schema({
-  name: { type: String, default: null },
+  firstName: { type: String, default: null, required: true },
+  middleName: { type: String, default: null },
+  lastName: { type: String, default: null, required: true },
   preferredName: { type: String, default: null },
   email: { type: String, default: null },
   phone: { type: String, default: null },
