@@ -5,7 +5,7 @@ import { IPitch } from './pitch';
 /**
  * Basic interface for a User Schema
  */
-export interface IUser extends Document<any> {
+interface IUser extends Document<any> {
   name: string;
   preferredName: string;
   email: string;
@@ -46,6 +46,18 @@ const rolesEnum = {
   TBD: 'TBD',
 };
 
+const racesEnum = {
+  AMERICAN_INDIAN_OR_ALASKAN_NATIVE: 'AMERICAN INDIAN OR ALASKAN NATIVE',
+  BLACK_OR_AFRICAN_AMERICAN: 'BLACK OR AFRICAN AMERICAN',
+  MIDDLE_EASTERN_OR_NORTH_AFRICAN: 'MIDDLE EASTERN OR NORTH AFRICAN',
+  NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER: 'NATIVE HAWAIIAN OR PACIFIC ISLANDER',
+  LATINX_OR_HISPANIC: 'LATINX OR HISPANIC',
+  WHITE: 'WHITE',
+  ASIAN: 'ASIAN',
+  OTHER: 'OTHER',
+  NONE: 'NONE',
+};
+
 /**
  * Mongoose Schema to represent a User at South Side Weekly
  */
@@ -57,9 +69,8 @@ const User = new mongoose.Schema({
   email: { type: String, default: null },
   phone: { type: String, default: null },
   oauthID: { type: String, default: null, unique: true, sparse: true },
-  gender: [{ type: String, default: null }],
+  genders: [{ type: String, default: null }],
   pronouns: [{ type: String, default: null }],
-  race: [{ type: String, default: null }],
   dateJoined: { type: Date, default: Date.now },
   masthead: { type: Boolean, default: false },
 
@@ -76,11 +87,23 @@ const User = new mongoose.Schema({
     default: rolesEnum.TBD,
   },
 
-  interests: {
-    type: String,
-    enum: Object.values(interestsEnum),
-    default: interestsEnum.NONE,
-  },
+  races: [
+    {
+      type: String,
+      enum: Object.values(racesEnum),
+      default: racesEnum.NONE,
+    },
+  ],
+
+  interests: [
+    {
+      type: String,
+      enum: Object.values(interestsEnum),
+      default: interestsEnum.NONE,
+    },
+  ],
 });
 
 export default mongoose.model<IUser>('User', User);
+export { IUser };
+export { interestsEnum, rolesEnum, racesEnum };
