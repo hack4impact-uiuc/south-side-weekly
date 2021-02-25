@@ -11,7 +11,14 @@
     }
   },
   "lint-staged": {
-    "*.js": "eslint --cache --fix",
-    "*.{js,css,md}": "prettier --write"
+    "./**/*.{js,css,scss,json,md,jsx}": [
+      "prettier --write"
+    ],
+    "./api/**/*.{js,jsx}": [
+      "eslint --fix -c api/.eslintrc.json"
+    ],
+    "./client/**/*.{js,jsx}": [
+      "eslint --fix -c client/.eslintrc.json"
+    ]
   }
 }
