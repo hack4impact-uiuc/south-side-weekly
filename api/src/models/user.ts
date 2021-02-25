@@ -3,22 +3,29 @@ import mongoose, { Document, Schema } from 'mongoose';
 import { IPitch } from './pitch';
 
 /**
- * Basic interface for a User Schema.
+ * Interface for a User Schema.
  */
 interface IUser extends Document<any> {
-  name: string;
+  firstName: string;
+  middleName: string;
+  lastName: string;
   preferredName: string;
   email: string;
   phone: string;
   oauthID: string;
-  gender: string;
-  pronouns: string;
+  gender: [string];
+  pronouns: [string];
   dateJoined: Date;
+  masthead: boolean;
   portfolio: string;
   linkedIn: string;
   twitter: string;
   claimedPitches: [IPitch];
   submittedPitches: [IPitch];
+  currentTeams: [string];
+  role: string;
+  races: [string];
+  interests: [string];
 }
 
 const interestsEnum = {

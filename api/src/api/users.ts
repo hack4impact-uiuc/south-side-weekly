@@ -12,7 +12,7 @@ const router = express.Router();
  */
 const isValidMongoId = (id: string): boolean => ObjectId.isValid(id);
 
-// gets all users
+// Gets all users
 router.get(
   '/',
   errorWrap(async (req: Request, res: Response) => {
@@ -25,7 +25,7 @@ router.get(
   }),
 );
 
-//gets user by id
+// Gets user by id
 router.get(
   '/:userId',
   errorWrap(async (req: Request, res: Response) => {
@@ -102,7 +102,7 @@ router.put(
   }),
 );
 
-// deletes a user
+// Deletes a user
 router.delete(
   '/:userId',
   errorWrap(async (req: Request, res: Response) => {
