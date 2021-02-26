@@ -17,6 +17,7 @@ interface IUser extends Document<any> {
   pronouns: [string];
   dateJoined: Date;
   masthead: boolean;
+  onboarding: string;
   portfolio: string;
   linkedIn: string;
   twitter: string;
@@ -65,6 +66,12 @@ const racesEnum = {
   NONE: 'NONE',
 };
 
+const onboardingStatusEnum = {
+  ONBOARDING_SCHEDULED: 'ONBOARDING_SCHEDULED',
+  STALLED: 'STALLED',
+  ONBOARDED: 'ONBOARDED',
+};
+
 /**
  * Mongoose Schema to represent a User at South Side Weekly.
  */
@@ -80,6 +87,11 @@ const User = new mongoose.Schema({
   pronouns: [{ type: String, default: null }],
   dateJoined: { type: Date, default: Date.now },
   masthead: { type: Boolean, default: false },
+  onboardingStatus: {
+    type: String,
+    enum: Object.values(onboardingStatusEnum),
+    default: onboardingStatusEnum.ONBOARDING_SCHEDULED,
+  },
 
   portfolio: { type: String, default: null },
   linkedIn: { type: String, default: null },
