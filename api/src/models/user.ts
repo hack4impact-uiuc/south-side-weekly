@@ -10,4 +10,3 @@ const User = new mongoose.Schema({
 
 export default mongoose.model<IUser>('User', User);
 export { IUser };
-
