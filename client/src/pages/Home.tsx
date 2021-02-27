@@ -12,7 +12,9 @@ function Home(): ReactElement {
       const resp = await getSampleResponse();
       console.log(resp);
 
-      if (!isError(resp)) setText(resp.data.message);
+      if (!isError(resp)) {
+        setText(resp.data.message);
+      }
     };
 
     populateText();
