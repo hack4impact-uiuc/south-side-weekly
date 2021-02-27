@@ -1,0 +1,18 @@
+.wizard-wrapper {
+  position: relative;
+  text-align: center;
+  height: 100vh;
+}
+
+.wizard-wrapper .logo {
+  width: 60%;
+  margin: 2%;
+}
+
+.wizard-wrapper .wizard-page-counter {
+  position: absolute;
+  left: 41.9%;
+  right: 39.17%;
+  top: 92.29%;
+  bottom: 3.42%;
+}

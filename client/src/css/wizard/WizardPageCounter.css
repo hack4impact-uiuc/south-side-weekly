@@ -1,0 +1,18 @@
+.page-counter-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.page-counter-wrapper .page-icon {
+  padding: 15px;
+  border-radius: 50%;
+  background-color: #3d4f91;
+  opacity: 55%;
+  font-size: 28px;
+  color: white;
+  margin: 0px 10px 0px 5px;
+}
+
+.page-counter-wrapper .active {
+  opacity: 95%;
+}
