@@ -1,6 +1,6 @@
 import mongoose, { Document } from 'mongoose';
 
-interface User extends Document<any> {
+interface IUser extends Document<any> {
   name: string;
 }
 
@@ -8,4 +8,6 @@ const User = new mongoose.Schema({
   name: { type: String },
 });
 
-export default mongoose.model<User>('User', User);
+export default mongoose.model<IUser>('User', User);
+export { IUser };
+
