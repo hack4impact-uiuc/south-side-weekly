@@ -8,11 +8,11 @@ const router = express.Router();
 router.get(
   '/',
   errorWrap(async (req: Request, res: Response) => {
-    const user = await User.findOne();
+    const users = await User.find();
     res.status(200).json({
-      message: `Successfully retrieved ${user.name} users.`,
+      message: `Successfully retrieved ${users.length} users.`,
       success: true,
-      result: user,
+      result: users,
     });
   }),
 );

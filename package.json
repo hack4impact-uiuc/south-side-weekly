@@ -11,14 +11,14 @@
     }
   },
   "lint-staged": {
-    "./**/*.{js,css,scss,json,md,jsx}": [
+    "./**/*.{js,css,scss,json,md,jsx,ts,tsx}": [
       "prettier --write"
     ],
-    "./api/**/*.{js,jsx}": [
-      "eslint --fix -c api/.eslintrc.json"
+    "./api/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix --max-warnings 0 -c api/.eslintrc.json"
     ],
-    "./client/**/*.{js,jsx}": [
-      "eslint --fix -c client/.eslintrc.json"
+    "./client/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix --max-warnings 0 -c client/.eslintrc.json"
     ]
   }
 }
