@@ -43,6 +43,9 @@ const WizardWrapper = (): ReactElement => {
   const [linkedIn, setLinkedIn] = useState<string>('');
   const [twitter, setTwitter] = useState<string>('');
 
+  /**
+   * Gos to the next page
+   */
   const handlePageNext = (): void => {
     console.log(getPages());
     const pages = getPages();
@@ -52,6 +55,9 @@ const WizardWrapper = (): ReactElement => {
     }
   };
 
+  /**
+   * Gos back a page
+   */
   const handlePagePrevious = (): void => {
     const pages = getPages();
     const currentIdx = pages.indexOf(page);
@@ -60,11 +66,18 @@ const WizardWrapper = (): ReactElement => {
     }
   };
 
+  /**
+   * Updatse the role and triggers the next page event
+   * @param event the mouse event from clicking on the button
+   */
   const handleRole = (event: MouseEvent<HTMLButtonElement>): void => {
     setRole(event.currentTarget.value);
     handlePageNext();
   };
 
+  /**
+   * @returns an array of stirngs representing the valid pages to go to based on the role
+   */
   const getPages = (): Array<string> => {
     let parsedPages = Object.values(WizardPage);
     if (role === 'STAFF') {
@@ -76,7 +89,7 @@ const WizardWrapper = (): ReactElement => {
       );
     }
     return parsedPages;
-  }
+  };
 
   return (
     <div className="wizard-wrapper">
@@ -136,7 +149,10 @@ const WizardWrapper = (): ReactElement => {
 
       <div className="wizard-page-counter">
         {page !== WizardPage.INITIAL_PAGE.toString() && (
-          <WizardPageCounter wizardPages={getPages().slice(1)} activePage={page} />
+          <WizardPageCounter
+            wizardPages={getPages().slice(1)}
+            activePage={page}
+          />
         )}
       </div>
     </div>
