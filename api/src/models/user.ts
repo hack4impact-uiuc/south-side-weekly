@@ -7,7 +7,6 @@ import { IPitch } from './pitch';
  */
 interface IUser extends Document<any> {
   firstName: string;
-  middleName: string;
   lastName: string;
   preferredName: string;
   email: string;
@@ -77,7 +76,6 @@ const onboardingStatusEnum = {
  */
 const User = new mongoose.Schema({
   firstName: { type: String, default: null, required: true },
-  middleName: { type: String, default: null },
   lastName: { type: String, default: null, required: true },
   preferredName: { type: String, default: null },
   email: { type: String, default: null },
