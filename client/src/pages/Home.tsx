@@ -28,7 +28,7 @@ function Home(): ReactElement {
         <br />
         {text}
       </p>
-      <a href={BASE_URL + '/auth/google'}>Sign In with Google</a>
+      <a href={`${BASE_URL}/auth/google`}>Sign In with Google</a>
     </>
   );
 }
