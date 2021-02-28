@@ -1,15 +1,13 @@
 .initial-prompt {
   width: 60%;
   margin: auto;
-  margin-top: 15vh;
 }
 
 .initial-prompt .header-text {
   margin-bottom: 15vh;
-  font-family: 'Proxima Nova';
   font-style: normal;
   font-weight: bold;
-  font-size: 3.5rem;
+  font-size: 2.5rem;
   line-height: 58px;
   color: #3b3f4c;
 }

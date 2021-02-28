@@ -11,8 +11,6 @@ const Identity: FC<IProps> = ({
   setGenders,
   setPronouns,
   setRaces,
-}): ReactElement => <div>
-  
-</div>;
+}): ReactElement => <div></div>;
 
 export default Identity;

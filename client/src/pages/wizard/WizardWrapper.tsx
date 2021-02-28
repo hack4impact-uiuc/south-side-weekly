@@ -1,4 +1,5 @@
 import React, { ReactElement, useState, MouseEvent } from 'react';
+import { Button } from 'semantic-ui-react';
 
 import '../../css/wizard/WizardWrapper.css';
 import Logo from '../../assets/ssw-form-header.png';
@@ -7,6 +8,8 @@ import WizardInitialPrompt from './InitialPrompt';
 import BasicInfo from './BasicInfo';
 import Identity from './Identity';
 import WizardPageCounter from '../../components/WizardPageCounter/WizardPageCounter';
+import ArrowBack from '../../assets/arrow-back.svg';
+import ArrowNext from '../../assets/arrow-next.svg';
 
 enum WizardPage {
   INITIAL_PAGE = 'INITIAL_PAGE',
@@ -38,13 +41,25 @@ const WizardWrapper = (): ReactElement => {
   const [linkedIn, setLinkedIn] = useState<string>('');
   const [twitter, setTwitter] = useState<string>('');
 
-  const handlePageChange = (newPage: WizardPage): void => {
-    setPage(newPage);
+  const handlePageNext = (): void => {
+    const pages = Object.values(WizardPage);
+    const currentIdx = pages.indexOf(page);
+    if (currentIdx <= pages.length) {
+      setPage(pages[currentIdx + 1]);
+    }
+  };
+
+  const handlePagePrevious = (): void => {
+    const pages = Object.values(WizardPage);
+    const currentIdx = pages.indexOf(page);
+    if (currentIdx > 0) {
+      setPage(pages[currentIdx - 1]);
+    }
   };
 
   const handleRole = (event: MouseEvent<HTMLButtonElement>): void => {
     setRole(event.currentTarget.value);
-    handlePageChange(WizardPage.BASIC_INFO_PAGE);
+    handlePageNext();
   };
 
   return (
@@ -53,27 +68,55 @@ const WizardWrapper = (): ReactElement => {
         <img className="logo" alt="SSW Logo" src={Logo} />
       </div>
 
-      {page === WizardPage.INITIAL_PAGE && (
-        <WizardInitialPrompt handleRole={handleRole} />
+      {page !== WizardPage.INITIAL_PAGE && (
+        <div className="previous-page">
+          <Button
+            circular
+            onClick={handlePagePrevious}
+            className="previous-icon"
+          >
+            <img width="70%" src={ArrowBack} alt="back arrow" />
+          </Button>
+        </div>
       )}
 
-      {page === WizardPage.BASIC_INFO_PAGE && (
-        <BasicInfo
-          setFirstName={setFirstName}
-          setLastName={setLastName}
-          setPhoneNumber={setPhoneNumber}
-          setPreferredName={setPreferredName}
-          handlePageChange={handlePageChange}
-        />
-      )}
+      <div className="wizard-content">
+        <div className="wizard-pages">
+          {page === WizardPage.INITIAL_PAGE && (
+            <WizardInitialPrompt handleRole={handleRole} />
+          )}
 
-      {page === WizardPage.IDENTITY_PAGE && (
-        <Identity
-          setGenders={setGenders}
-          setPronouns={setPronouns}
-          setRaces={setRaces}
-        />
-      )}
+          {page === WizardPage.BASIC_INFO_PAGE && (
+            <BasicInfo
+              firstName={firstName}
+              lastName={lastName}
+              preferredName={preferredName}
+              phoneNumber={phoneNumber}
+              setFirstName={setFirstName}
+              setLastName={setLastName}
+              setPhoneNumber={setPhoneNumber}
+              setPreferredName={setPreferredName}
+              handlePageNext={handlePageNext}
+            />
+          )}
+
+          {page === WizardPage.IDENTITY_PAGE && (
+            <Identity
+              setGenders={setGenders}
+              setPronouns={setPronouns}
+              setRaces={setRaces}
+            />
+          )}
+        </div>
+
+        {page !== WizardPage.INITIAL_PAGE && (
+          <div className="next-page">
+            <Button circular onClick={handlePageNext} className="next-icon">
+              <img src={ArrowNext} alt="next arrow" />
+            </Button>
+          </div>
+        )}
+      </div>
 
       <div className="wizard-page-counter">
         {page !== WizardPage.INITIAL_PAGE && (

@@ -14,9 +14,7 @@ const WizardPageCounter: FC<IProps> = ({
   <div className="page-counter-wrapper">
     {wizardPages.map((wizardPage, index) => (
       <div
-        className={`page-icon ${
-          wizardPage === activePage ? 'active' : ''
-        }`}
+        className={`page-icon ${wizardPage === activePage ? 'active' : ''}`}
         key={index}
       >
         {index + 1}
