@@ -25,7 +25,7 @@ router.get(
   }),
 );
 
-// Gets pitch by id
+// Gets pitch by pitch id
 router.get(
   '/:pitchId',
   errorWrap(async (req: Request, res: Response) => {
