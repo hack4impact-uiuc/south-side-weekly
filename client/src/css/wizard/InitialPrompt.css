@@ -12,6 +12,13 @@
   color: #3b3f4c;
 }
 
+.initial-prompt .page-image {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 35%;
+}
+
 .initial-prompt .btn-group .btn-wrapper {
   display: flex;
   position: relative;
