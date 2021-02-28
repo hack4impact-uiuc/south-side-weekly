@@ -55,7 +55,7 @@ router.get(
 
 // Gets all pitches for a specific User
 router.get(
-  '/:userId',
+  '/all/:userId',
   errorWrap(async (req: Request, res: Response) => {
     if (!isValidMongoId(req.params.userId)) {
       res.status(400).json({
