@@ -3,7 +3,7 @@ import { IUser } from './user';
 
 export interface IPitch extends Document<any> {
   name: string;
-  pitchAuthor: IUser;
+  pitchAuthor: mongoose.Types.ObjectId;
   pitchStatus: string;
   assignmentStatus: string;
   assignmentGoogleDocLink: string;
