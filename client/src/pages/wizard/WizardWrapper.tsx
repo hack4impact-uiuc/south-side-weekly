@@ -16,6 +16,7 @@ enum WizardPage {
   BASIC_INFO_PAGE = 'BASIC_INFO_PAGE',
   IDENTITY_PAGE = 'IDENTITY_PAGE',
   RESPONSE_PAGE = 'RESPONSE_PAGE',
+  WORK_SECTION_PAGE = 'WORK_SECTION_PAGE',
   INTERESTS_PAGE = 'INTERESTS_PAGE',
   LINKS_PAGE = 'LINKS_PAGE',
   SCHEDULE_PAGE = 'SCHEDULE_PAGE',
@@ -26,7 +27,8 @@ enum WizardPage {
  * Wrapper function to handle the join SSW form
  */
 const WizardWrapper = (): ReactElement => {
-  const [page, setPage] = useState<WizardPage>(WizardPage.INITIAL_PAGE);
+  const [page, setPage] = useState<string>(WizardPage.INITIAL_PAGE.toString());
+  const [pages, setPages] = useState<Array<string>>([]);
   const [role, setRole] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
@@ -42,7 +44,8 @@ const WizardWrapper = (): ReactElement => {
   const [twitter, setTwitter] = useState<string>('');
 
   const handlePageNext = (): void => {
-    const pages = Object.values(WizardPage);
+    console.log(getPages());
+    const pages = getPages();
     const currentIdx = pages.indexOf(page);
     if (currentIdx <= pages.length) {
       setPage(pages[currentIdx + 1]);
@@ -50,7 +53,7 @@ const WizardWrapper = (): ReactElement => {
   };
 
   const handlePagePrevious = (): void => {
-    const pages = Object.values(WizardPage);
+    const pages = getPages();
     const currentIdx = pages.indexOf(page);
     if (currentIdx > 0) {
       setPage(pages[currentIdx - 1]);
@@ -62,13 +65,26 @@ const WizardWrapper = (): ReactElement => {
     handlePageNext();
   };
 
+  const getPages = (): Array<string> => {
+    let parsedPages = Object.values(WizardPage);
+    if (role === 'STAFF') {
+      parsedPages = parsedPages.filter(
+        (page) =>
+          page !== WizardPage.RESPONSE_PAGE &&
+          page !== WizardPage.SCHEDULE_PAGE &&
+          page !== WizardPage.WORK_SECTION_PAGE,
+      );
+    }
+    return parsedPages;
+  }
+
   return (
     <div className="wizard-wrapper">
       <div className="logo-header">
         <img className="logo" alt="SSW Logo" src={Logo} />
       </div>
 
-      {page !== WizardPage.INITIAL_PAGE && (
+      {page !== WizardPage.INITIAL_PAGE.toString() && (
         <div className="previous-page">
           <Button
             circular
@@ -82,11 +98,11 @@ const WizardWrapper = (): ReactElement => {
 
       <div className="wizard-content">
         <div className="wizard-pages">
-          {page === WizardPage.INITIAL_PAGE && (
+          {page === WizardPage.INITIAL_PAGE.toString() && (
             <WizardInitialPrompt handleRole={handleRole} />
           )}
 
-          {page === WizardPage.BASIC_INFO_PAGE && (
+          {page === WizardPage.BASIC_INFO_PAGE.toString() && (
             <BasicInfo
               firstName={firstName}
               lastName={lastName}
@@ -100,7 +116,7 @@ const WizardWrapper = (): ReactElement => {
             />
           )}
 
-          {page === WizardPage.IDENTITY_PAGE && (
+          {page === WizardPage.IDENTITY_PAGE.toString() && (
             <Identity
               setGenders={setGenders}
               setPronouns={setPronouns}
@@ -109,7 +125,7 @@ const WizardWrapper = (): ReactElement => {
           )}
         </div>
 
-        {page !== WizardPage.INITIAL_PAGE && (
+        {page !== WizardPage.INITIAL_PAGE.toString() && (
           <div className="next-page">
             <Button circular onClick={handlePageNext} className="next-icon">
               <img src={ArrowNext} alt="next arrow" />
@@ -119,11 +135,8 @@ const WizardWrapper = (): ReactElement => {
       </div>
 
       <div className="wizard-page-counter">
-        {page !== WizardPage.INITIAL_PAGE && (
-          <WizardPageCounter
-            wizardPages={Object.values(WizardPage).slice(1)}
-            activePage={page}
-          />
+        {page !== WizardPage.INITIAL_PAGE.toString() && (
+          <WizardPageCounter wizardPages={getPages().slice(1)} activePage={page} />
         )}
       </div>
     </div>

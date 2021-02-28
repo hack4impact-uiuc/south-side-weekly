@@ -4,7 +4,7 @@ import '../../css/wizard/WizardPageCounter.css';
 
 interface IProps {
   wizardPages: Array<string>;
-  activePage: WizardPage;
+  activePage: string;
 }
 
 const WizardPageCounter: FC<IProps> = ({
