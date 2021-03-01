@@ -17,9 +17,8 @@ describe('GET / ', () => {
 describe('GET /api/users/ ', () => {
   test('API should return users text', async () => {
     const response = await request(app).get('/api/users');
-    expect(response.body.message).toEqual(
-      'Successfully retrieved Development users.',
-    );
+    console.log(response.body.message);
+    expect(response.body.message).toEqual('Successfully retrieved all users.');
     expect(response.statusCode).toBe(200);
   });
 });

@@ -20,5 +20,6 @@
         "newlines-between": "always"
       }
     ]
-  }
+  },
+  "ignorePatterns": ["**/*.js"]
 }
