@@ -6,6 +6,5 @@
   ],
   "rules": {
     "require-await": "off"
-  },
-  "ignorePatterns": ["**/*.js"]
+  }
 }
