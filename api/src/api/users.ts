@@ -20,7 +20,7 @@ router.get(
     res.status(200).json({
       message: `Successfully retrieved all users.`,
       success: true,
-      result: user,
+      result: users,
     });
   }),
 );
