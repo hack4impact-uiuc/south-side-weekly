@@ -1,6 +1,12 @@
 import mongoose, { Document, Schema } from 'mongoose';
 
 import { IPitch } from './pitch';
+import {
+  interestsEnum,
+  onboardingStatusEnum,
+  rolesEnum,
+  racesEnum,
+} from '../utils/enums';
 
 /**
  * Interface for a User Schema.
@@ -27,49 +33,6 @@ interface IUser extends Document<any> {
   races: [string];
   interests: [string];
 }
-
-const interestsEnum = {
-  POLITICS: 'POLITICS',
-  EDUCATION: 'EDUCATION',
-  HOUSING: 'HOUSING',
-  LIT: 'LIT',
-  MUSIC: 'MUSIC',
-  VISUAL_ARTS: 'VISUAL ARTS',
-  STAGE_AND_SCREEN: 'STAGE AND SCREEN',
-  FOOD_AND_LAND: 'FOOD AND LAND',
-  NATURE: 'NATURE',
-  TRANSPORTATION: 'TRANSPORTATION',
-  HEALTH: 'HEALTH',
-  CANNABIS: 'CANNABIS',
-  IMMIGRATION: 'IMMIGRATION',
-  FUN: 'FUN',
-  NONE: 'NONE',
-};
-
-const rolesEnum = {
-  CONTRIBUTOR: 'CONTRIBUTOR',
-  STAFF: 'STAFF',
-  ADMIN: 'ADMIN',
-  TBD: 'TBD',
-};
-
-const racesEnum = {
-  AMERICAN_INDIAN_OR_ALASKAN_NATIVE: 'AMERICAN INDIAN OR ALASKAN NATIVE',
-  BLACK_OR_AFRICAN_AMERICAN: 'BLACK OR AFRICAN AMERICAN',
-  MIDDLE_EASTERN_OR_NORTH_AFRICAN: 'MIDDLE EASTERN OR NORTH AFRICAN',
-  NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER: 'NATIVE HAWAIIAN OR PACIFIC ISLANDER',
-  LATINX_OR_HISPANIC: 'LATINX OR HISPANIC',
-  WHITE: 'WHITE',
-  ASIAN: 'ASIAN',
-  OTHER: 'OTHER',
-  NONE: 'NONE',
-};
-
-const onboardingStatusEnum = {
-  ONBOARDING_SCHEDULED: 'ONBOARDING_SCHEDULED',
-  STALLED: 'STALLED',
-  ONBOARDED: 'ONBOARDED',
-};
 
 /**
  * Mongoose Schema to represent a User at South Side Weekly.
@@ -123,4 +86,3 @@ const User = new mongoose.Schema({
 
 export default mongoose.model<IUser>('User', User);
 export { IUser };
-export { interestsEnum, rolesEnum, racesEnum };

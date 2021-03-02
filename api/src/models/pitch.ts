@@ -1,6 +1,12 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { IUser } from './user';
 
+import {
+  interestsEnum,
+  pitchStatusEnum,
+  assignmentStatusEnum,
+} from '../utils/enums';
+
 export interface IPitch extends Document<any> {
   name: string;
   pitchAuthor: mongoose.Types.ObjectId;
@@ -31,39 +37,6 @@ export interface IPitch extends Document<any> {
   similarStories: [string];
   deadline: Date;
 }
-
-const pitchStatusEnum = {
-  APPROVED: 'APPROVED',
-  PENDING: 'PENDING',
-  REJECTED: 'REJECTED',
-  NONE: 'NONE',
-};
-
-const assignmentStatusEnum = {
-  IN_PROGRESS: 'IN_PROGRESS',
-  COMPLETED: 'COMPLETED',
-  ABANDONED: 'ABANDONED',
-  NONE: 'NONE',
-};
-
-// TODO: don't repeat this code
-const interestsEnum = {
-  POLITICS: 'POLITICS',
-  EDUCATION: 'EDUCATION',
-  HOUSING: 'HOUSING',
-  LIT: 'LIT',
-  MUSIC: 'MUSIC',
-  VISUAL_ARTS: 'VISUAL ARTS',
-  STAGE_AND_SCREEN: 'STAGE AND SCREEN',
-  FOOD_AND_LAND: 'FOOD AND LAND',
-  NATURE: 'NATURE',
-  TRANSPORTATION: 'TRANSPORTATION',
-  HEALTH: 'HEALTH',
-  CANNABIS: 'CANNABIS',
-  IMMIGRATION: 'IMMIGRATION',
-  FUN: 'FUN',
-  NONE: 'NONE',
-};
 
 /**
  * Mongoose Schema to represent a Pitch at South Side Weekly
