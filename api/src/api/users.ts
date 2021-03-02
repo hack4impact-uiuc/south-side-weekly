@@ -3,7 +3,6 @@ import { ObjectId } from 'mongodb';
 import { errorWrap } from '../middleware';
 
 import User from '../models/user';
-import Pitch from '../models/pitch';
 
 const router = express.Router();
 
@@ -49,35 +48,6 @@ router.get(
         success: true,
         result: user,
         message: `Successfully retrieved user`,
-      });
-    }
-  }),
-);
-
-// Gets all pitches for a specific User
-router.get(
-  '/:userId/pitches',
-  errorWrap(async (req: Request, res: Response) => {
-    if (!isValidMongoId(req.params.userId)) {
-      res.status(400).json({
-        success: false,
-        message: 'Bad ID format',
-      });
-      return;
-    }
-
-    const pitches = await Pitch.find({ pitchAuthor: req.params.userId });
-    if (!pitches) {
-      res.status(404).json({
-        success: false,
-        result: [],
-        message: 'User has no pitches',
-      });
-    } else {
-      res.status(200).json({
-        success: true,
-        result: pitches,
-        message: `Successfully retrieved pitch`,
       });
     }
   }),
