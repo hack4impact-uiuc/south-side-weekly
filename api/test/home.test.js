@@ -13,12 +13,3 @@ describe('GET / ', () => {
     expect(response.statusCode).toBe(200);
   });
 });
-
-describe('GET /api/users/ ', () => {
-  test('API should return users text', async () => {
-    const response = await request(app).get('/api/users');
-    console.log(response.body.message);
-    expect(response.body.message).toEqual('Successfully retrieved all users.');
-    expect(response.statusCode).toBe(200);
-  });
-});
