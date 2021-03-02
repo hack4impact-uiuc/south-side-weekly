@@ -16,11 +16,11 @@ const isValidMongoId = (id: string): boolean => ObjectId.isValid(id);
 router.get(
   '/',
   errorWrap(async (req: Request, res: Response) => {
-    const user = await Pitch.find({});
+    const pitch = await Pitch.find({});
     res.status(200).json({
       message: `Successfully retrieved all pitches.`,
       success: true,
-      result: user,
+      result: pitch,
     });
   }),
 );
