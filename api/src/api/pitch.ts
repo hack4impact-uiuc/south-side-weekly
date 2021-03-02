@@ -53,37 +53,7 @@ router.get(
   }),
 );
 
-// Gets all pitches for a specific User
-router.get(
-  '/all/:userId',
-  errorWrap(async (req: Request, res: Response) => {
-    if (!isValidMongoId(req.params.userId)) {
-      res.status(400).json({
-        success: false,
-        message: 'Bad ID format',
-      });
-      return;
-    }
-
-    const pitches = await Pitch.find({ pitchAuthor: req.params.userId });
-    if (!pitches) {
-      res.status(404).json({
-        success: false,
-        result: [],
-        message: 'User has no pitches',
-      });
-    } else {
-      res.status(200).json({
-        success: true,
-        result: pitches,
-        message: `Successfully retrieved pitch`,
-      });
-    }
-  }),
-);
-
 // Create a new pitch
-// TODO - gracefully exit if all valid fields not met?
 router.post(
   '/',
   errorWrap(async (req: Request, res: Response) => {
