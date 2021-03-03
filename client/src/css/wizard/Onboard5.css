@@ -1,0 +1,46 @@
+.onboard5-wrapper {
+  width: 60%;
+  float: right;
+  margin-top: 10vh;
+}
+
+.onboard5-wrapper .page-svg {
+  position: absolute;
+  left: 0;
+  bottom: 10%;
+  width: 40%;
+}
+
+.onboard5-wrapper .onboard5-content {
+  width: fit-content;
+  margin-left: 5vh;
+}
+
+.onboard5-wrapper .onboard5-content .page-text {
+  font-size: 18px;
+  text-align: left;
+  line-height: 30px;
+  position: relative;
+  padding-left: 30px;
+}
+
+.onboard5-wrapper .onboard5-content .page-text b {
+  font-weight: 600;
+}
+
+.onboard5-wrapper .onboard5-content .page-text .required-icon {
+  position: absolute;
+  top: 5px;
+  left: 0;
+}
+
+.onboard5-wrapper .onboard5-content .select-group {
+  margin-top: 5vh;
+  text-align: left;
+}
+
+.onboard5-wrapper .onboard5-content .select-group .select {
+  margin: 15px 60px 15px 0px;
+  width: 150px;
+  border-radius: 1rem;
+}

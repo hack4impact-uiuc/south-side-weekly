@@ -9,6 +9,8 @@ import Onboard1 from './Onboard1';
 import Onboard2 from './Onboard2';
 import Onboard3 from './Onboard3';
 import Onboard4 from './Onboard4';
+import Onboard5 from './Onboard5';
+import Onboard6 from './Onboard6';
 import WizardPageCounter from '../../components/WizardPageCounter/WizardPageCounter';
 import ArrowBack from '../../assets/arrow-back.svg';
 import ArrowNext from '../../assets/arrow-next.svg';
@@ -18,9 +20,9 @@ enum WizardPage {
   ONBOARD_1 = 'ONBOARD_1',
   ONBOARD_2 = 'ONBOARD_2',
   ONBOARD_3 = 'ONBOARD_3',
-  RESPONSE_PAGE = 'RESPONSE_PAGE',
-  WORK_SECTION_PAGE = 'WORK_SECTION_PAGE',
-  INTERESTS_PAGE = 'INTERESTS_PAGE',
+  ONBOARD_4 = 'ONBOARD_4',
+  ONBOARD_5 = 'ONBOARD_5',
+  ONBOARD_6 = 'ONBOARD_6',
   LINKS_PAGE = 'LINKS_PAGE',
   SCHEDULE_PAGE = 'SCHEDULE_PAGE',
   EXIT_PAGE = 'EXIT_PAGE',
@@ -41,7 +43,8 @@ const WizardWrapper = (): ReactElement => {
   const [pronouns, setPronouns] = useState<Array<string>>([]);
   const [races, setRaces] = useState<Array<string>>([]);
   const [reasonForInvolvement, setReasonForInvolvement] = useState<string>('');
-  const [interests, setInterests] = useState<string>('');
+  const [currentTeams, setCurrentTeams] = useState<Array<string>>([]);
+  const [interests, setInterests] = useState<Array<string>>([]);
   const [portfolio, setPortfolio] = useState<string>('');
   const [linkedIn, setLinkedIn] = useState<string>('');
   const [twitter, setTwitter] = useState<string>('');
@@ -86,9 +89,9 @@ const WizardWrapper = (): ReactElement => {
     if (role === 'STAFF') {
       parsedPages = parsedPages.filter(
         (page) =>
-          page !== WizardPage.RESPONSE_PAGE &&
+          page !== WizardPage.ONBOARD_4 &&
           page !== WizardPage.SCHEDULE_PAGE &&
-          page !== WizardPage.WORK_SECTION_PAGE,
+          page !== WizardPage.ONBOARD_5,
       );
     }
     return parsedPages;
@@ -144,13 +147,20 @@ const WizardWrapper = (): ReactElement => {
             <Onboard3 races={races} setRaces={setRaces} />
           )}
 
-          {console.log(page)}
-
-          {page === WizardPage.RESPONSE_PAGE.toString() && (
+          {page === WizardPage.ONBOARD_4.toString() && (
             <Onboard4
               reasonsForInvolvement={reasonForInvolvement}
               setReasonsForInvolvement={setReasonForInvolvement}
             />
+          )}
+          {page === WizardPage.ONBOARD_5.toString() && (
+            <Onboard5
+              currentTeams={currentTeams}
+              setCurrentTeams={setCurrentTeams}
+            />
+          )}
+          {page === WizardPage.ONBOARD_6.toString() && (
+            <Onboard6 interests={interests} setInterests={setInterests} />
           )}
         </div>
 

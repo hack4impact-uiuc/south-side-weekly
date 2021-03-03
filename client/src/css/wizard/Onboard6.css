@@ -1,0 +1,32 @@
+.onboard6-wrapper {
+  margin-left: 15vh;
+  text-align: center;
+}
+
+.onboard6-wrapper .page-svg {
+  position: absolute;
+  left: 30px;
+  bottom: 30px;
+  width: 30%;
+}
+
+.onboard6-wrapper .onboard6-content {
+  margin-top: 5vh;
+}
+
+.onboard6-wrapper .onboard6-content .page-text {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.onboard6-wrapper .onboard6-content .select-group {
+  margin: auto;
+  margin-top: 5vh;
+  width: 60%;
+}
+
+.onboard6-wrapper .onboard6-content .select-group .select {
+  border-radius: 1rem;
+  margin: 10px 15px 10px 15px;
+  width: 150px;
+}
