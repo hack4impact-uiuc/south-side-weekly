@@ -2,34 +2,34 @@ import express, { Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
 import { errorWrap } from '../middleware';
 
-import User from '../models/user';
+import Pitch from '../models/pitch';
 
 const router = express.Router();
 
 /**
  * Validates an ID to whether or not it is a valid MongoDB ID or not
- * @param id Potential User ID to validate
+ * @param id Potential Pitch ID to validate
  */
 const isValidMongoId = (id: string): boolean => ObjectId.isValid(id);
 
-// Gets all users
+// Gets all pitches
 router.get(
   '/',
   errorWrap(async (req: Request, res: Response) => {
-    const users = await User.find({});
+    const pitch = await Pitch.find({});
     res.status(200).json({
-      message: `Successfully retrieved all users.`,
+      message: `Successfully retrieved all pitches.`,
       success: true,
-      result: users,
+      result: pitch,
     });
   }),
 );
 
-// Gets user by id
+// Gets pitch by pitch id
 router.get(
-  '/:userId',
+  '/:pitchId',
   errorWrap(async (req: Request, res: Response) => {
-    if (!isValidMongoId(req.params.userId)) {
+    if (!isValidMongoId(req.params.pitchId)) {
       res.status(400).json({
         success: false,
         message: 'Bad ID format',
@@ -37,42 +37,42 @@ router.get(
       return;
     }
 
-    const user = await User.findById(req.params.userId);
-    if (!user) {
+    const pitch = await Pitch.findById(req.params.pitchId);
+    if (!pitch) {
       res.status(404).json({
         success: false,
-        message: 'User not found with id',
+        message: 'Pitch not found with id',
       });
     } else {
       res.status(200).json({
         success: true,
-        result: user,
-        message: `Successfully retrieved user`,
+        result: pitch,
+        message: `Successfully retrieved pitch`,
       });
     }
   }),
 );
 
-// Create a new user
+// Create a new pitch
 router.post(
   '/',
   errorWrap(async (req: Request, res: Response) => {
-    const newUser = await User.create(req.body);
-    if (newUser) {
+    const newPitch = await Pitch.create(req.body);
+    if (newPitch) {
       res.status(200).json({
-        message: 'Successfully created new user',
+        message: 'Successfully created new pitch',
         success: true,
-        result: newUser,
+        result: newPitch,
       });
     }
   }),
 );
 
-// Updates a user
+// Updates a pitch
 router.put(
-  '/:userId',
+  '/:pitchId',
   errorWrap(async (req: Request, res: Response) => {
-    if (!isValidMongoId(req.params.userId)) {
+    if (!isValidMongoId(req.params.pitchId)) {
       res.status(400).json({
         success: false,
         message: 'Bad ID format',
@@ -80,33 +80,33 @@ router.put(
       return;
     }
 
-    const updatedUser = await User.findByIdAndUpdate(
-      req.params.userId,
+    const updatedPitch = await Pitch.findByIdAndUpdate(
+      req.params.pitchId,
       req.body,
       { new: true, runValidators: true },
     );
 
-    if (!updatedUser) {
+    if (!updatedPitch) {
       res.status(404).json({
         success: false,
-        message: 'User not found with id',
+        message: 'Pitch not found with id',
       });
       return;
     }
 
     res.status(200).json({
       success: true,
-      message: 'Successfully updated user',
-      result: updatedUser,
+      message: 'Successfully updated pitch',
+      result: updatedPitch,
     });
   }),
 );
 
-// Deletes a user
+// Deletes a pitch
 router.delete(
-  '/:userId',
+  '/:pitchId',
   errorWrap(async (req: Request, res: Response) => {
-    if (!isValidMongoId(req.params.userId)) {
+    if (!isValidMongoId(req.params.pitchId)) {
       res.status(400).json({
         success: false,
         message: 'Bad ID format',
@@ -114,20 +114,20 @@ router.delete(
       return;
     }
 
-    const deletedUser = await User.findByIdAndDelete(req.params.userId);
+    const deletedPitch = await Pitch.findByIdAndDelete(req.params.pitchId);
 
-    if (!deletedUser) {
+    if (!deletedPitch) {
       res.status(404).json({
         success: false,
-        message: 'User not found with id',
+        message: 'Pitch not found with id',
       });
       return;
     }
 
     res.status(200).json({
       success: true,
-      message: 'User successfully deleted',
-      result: deletedUser,
+      message: 'Pitch successfully deleted',
+      result: deletedPitch,
     });
   }),
 );
