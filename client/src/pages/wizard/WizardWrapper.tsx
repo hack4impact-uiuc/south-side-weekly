@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, MouseEvent } from 'react';
+import React, { ReactElement, useState, MouseEvent, useEffect } from 'react';
 import { Button } from 'semantic-ui-react';
 
 import '../../css/wizard/WizardWrapper.css';
@@ -34,6 +34,9 @@ enum WizardPage {
  */
 const WizardWrapper = (): ReactElement => {
   const [page, setPage] = useState<string>(WizardPage.INITIAL_PAGE.toString());
+  const [viewablePages, setViewablePages] = useState<Array<string>>(
+    Object.values(WizardPage),
+  );
   const [role, setRole] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
@@ -49,15 +52,27 @@ const WizardWrapper = (): ReactElement => {
   const [linkedIn, setLinkedIn] = useState<string>('');
   const [twitter, setTwitter] = useState<string>('');
 
+  useEffect(() => {
+    let parsedPages = Object.values(WizardPage);
+    if (role === 'STAFF') {
+      parsedPages = parsedPages.filter(
+        (page) =>
+          page !== WizardPage.ONBOARD_4 &&
+          page !== WizardPage.SCHEDULE_PAGE &&
+          page !== WizardPage.ONBOARD_5,
+      );
+    }
+    setViewablePages(parsedPages);
+  }, [role]);
+
   /**
    * Gos to the next page
    */
   const handlePageNext = (): void => {
-    console.log(getPages());
-    const pages = getPages();
-    const currentIdx = pages.indexOf(page);
-    if (currentIdx <= pages.length) {
-      setPage(pages[currentIdx + 1]);
+    // const pages = getPages();
+    const currentIdx = viewablePages.indexOf(page);
+    if (currentIdx <= viewablePages.length) {
+      setPage(viewablePages[currentIdx + 1]);
     }
   };
 
@@ -65,10 +80,10 @@ const WizardWrapper = (): ReactElement => {
    * Gos back a page
    */
   const handlePagePrevious = (): void => {
-    const pages = getPages();
-    const currentIdx = pages.indexOf(page);
+    // const pages = getPages();
+    const currentIdx = viewablePages.indexOf(page);
     if (currentIdx > 0) {
-      setPage(pages[currentIdx - 1]);
+      setPage(viewablePages[currentIdx - 1]);
     }
   };
 
@@ -82,19 +97,15 @@ const WizardWrapper = (): ReactElement => {
   };
 
   /**
-   * @returns an array of stirngs representing the valid pages to go to based on the role
+   * @returns an array of stirngs representing the pages to count in the WizardPageCounter
    */
-  const getPages = (): Array<string> => {
-    let parsedPages = Object.values(WizardPage);
-    if (role === 'STAFF') {
-      parsedPages = parsedPages.filter(
-        (page) =>
-          page !== WizardPage.ONBOARD_4 &&
-          page !== WizardPage.SCHEDULE_PAGE &&
-          page !== WizardPage.ONBOARD_5,
-      );
-    }
-    return parsedPages;
+  const getCountablePages = (): Array<string> => {
+    const countablePages = [...viewablePages];
+
+    countablePages.shift();
+    countablePages.pop();
+
+    return countablePages;
   };
 
   return (
@@ -186,12 +197,13 @@ const WizardWrapper = (): ReactElement => {
       </div>
 
       <div className="wizard-page-counter">
-        {page !== WizardPage.INITIAL_PAGE.toString() && (
-          <WizardPageCounter
-            wizardPages={getPages().slice(1)}
-            activePage={page}
-          />
-        )}
+        {page !== WizardPage.INITIAL_PAGE.toString() &&
+          page !== WizardPage.EXIT_PAGE.toString() && (
+            <WizardPageCounter
+              wizardPages={getCountablePages()}
+              activePage={page}
+            />
+          )}
       </div>
     </div>
   );

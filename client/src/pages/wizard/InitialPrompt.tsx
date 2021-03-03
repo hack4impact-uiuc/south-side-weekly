@@ -35,7 +35,7 @@ const WizardInitialPrompt: FC<IProps> = ({ handleRole }): ReactElement => (
         </Button>
         <img className="icon" alt="icon symbol" src={Icon} />
         <div className="hide">
-          Put some text here please Alice, idk what to write
+          If you're an employee or a contractor, this one is for you!
         </div>
       </div>
     </div>
