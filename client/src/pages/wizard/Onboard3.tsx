@@ -5,7 +5,6 @@ import React, {
   ReactElement,
   MouseEvent,
 } from 'react';
-
 import { Button } from 'semantic-ui-react';
 
 import RacesSVG from '../../assets/races-page.svg';
@@ -32,7 +31,7 @@ const racesEnum = {
 };
 
 const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
-  const handleRaces = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleRaces = (e: MouseEvent<HTMLButtonElement>): void => {
     const elementIdx = races.indexOf(e.currentTarget.value);
     if (elementIdx === NOT_FOUND_IDX) {
       const addedGenders = races.concat(e.currentTarget.value);

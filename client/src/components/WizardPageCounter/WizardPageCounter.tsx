@@ -1,5 +1,5 @@
 import React, { FC, ReactElement } from 'react';
-import { WizardPage } from '../../pages/wizard/WizardWrapper';
+
 import '../../css/wizard/WizardPageCounter.css';
 
 interface IProps {

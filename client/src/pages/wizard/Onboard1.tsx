@@ -1,8 +1,9 @@
 import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
-import { WizardPage } from './WizardWrapper';
+import { Input } from 'semantic-ui-react';
+
 import BasicInfoSvg from '../../assets/basic-info.svg';
-import { Input, Button } from 'semantic-ui-react';
 import Required from '../../assets/required.svg';
+
 import '../../css/wizard/Onboard1.css';
 
 interface IProps {

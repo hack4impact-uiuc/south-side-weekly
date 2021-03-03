@@ -19,7 +19,7 @@ interface IProps {
 const NOT_FOUND_IDX = -1;
 
 const Onboard6: FC<IProps> = ({ interests, setInterests }): ReactElement => {
-  const handleInterests = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleInterests = (e: MouseEvent<HTMLButtonElement>): void => {
     const elementIdx = interests.indexOf(e.currentTarget.value);
     if (elementIdx === NOT_FOUND_IDX) {
       const addedGenders = interests.concat(e.currentTarget.value);

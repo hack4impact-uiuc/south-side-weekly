@@ -6,7 +6,9 @@ import React, {
   MouseEvent,
 } from 'react';
 import { Button } from 'semantic-ui-react';
+
 import PersonalInfoSvg from '../../assets/personal-information.svg';
+
 import '../../css/wizard/Onboard2.css';
 
 interface IProps {
@@ -24,7 +26,7 @@ const Onboard2: FC<IProps> = ({
   setGenders,
   setPronouns,
 }): ReactElement => {
-  const handleGenders = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleGenders = (e: MouseEvent<HTMLButtonElement>): void => {
     const elementIdx = genders.indexOf(e.currentTarget.value);
     if (elementIdx === NOT_FOUND_IDX) {
       const addedGenders = genders.concat(e.currentTarget.value);
@@ -37,7 +39,7 @@ const Onboard2: FC<IProps> = ({
     }
   };
 
-  const handlePronouns = (e: MouseEvent<HTMLButtonElement>) => {
+  const handlePronouns = (e: MouseEvent<HTMLButtonElement>): void => {
     const elementIdx = pronouns.indexOf(e.currentTarget.value);
     if (elementIdx === NOT_FOUND_IDX) {
       const addedGenders = pronouns.concat(e.currentTarget.value);

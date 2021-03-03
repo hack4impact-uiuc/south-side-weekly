@@ -3,6 +3,9 @@ import { Button } from 'semantic-ui-react';
 
 import '../../css/wizard/WizardWrapper.css';
 import Logo from '../../assets/ssw-form-header.png';
+import ArrowBack from '../../assets/arrow-back.svg';
+import ArrowNext from '../../assets/arrow-next.svg';
+import WizardPageCounter from '../../components/WizardPageCounter/WizardPageCounter';
 
 import WizardInitialPrompt from './InitialPrompt';
 import Onboard1 from './Onboard1';
@@ -11,9 +14,7 @@ import Onboard3 from './Onboard3';
 import Onboard4 from './Onboard4';
 import Onboard5 from './Onboard5';
 import Onboard6 from './Onboard6';
-import WizardPageCounter from '../../components/WizardPageCounter/WizardPageCounter';
-import ArrowBack from '../../assets/arrow-back.svg';
-import ArrowNext from '../../assets/arrow-next.svg';
+import Onboard7 from './Onboard7';
 
 enum WizardPage {
   INITIAL_PAGE = 'INITIAL_PAGE',
@@ -23,7 +24,7 @@ enum WizardPage {
   ONBOARD_4 = 'ONBOARD_4',
   ONBOARD_5 = 'ONBOARD_5',
   ONBOARD_6 = 'ONBOARD_6',
-  LINKS_PAGE = 'LINKS_PAGE',
+  ONBOARD_7 = 'ONBOARD_7',
   SCHEDULE_PAGE = 'SCHEDULE_PAGE',
   EXIT_PAGE = 'EXIT_PAGE',
 }
@@ -33,7 +34,6 @@ enum WizardPage {
  */
 const WizardWrapper = (): ReactElement => {
   const [page, setPage] = useState<string>(WizardPage.INITIAL_PAGE.toString());
-  const [pages, setPages] = useState<Array<string>>([]);
   const [role, setRole] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
@@ -161,6 +161,17 @@ const WizardWrapper = (): ReactElement => {
           )}
           {page === WizardPage.ONBOARD_6.toString() && (
             <Onboard6 interests={interests} setInterests={setInterests} />
+          )}
+
+          {page === WizardPage.ONBOARD_7.toString() && (
+            <Onboard7
+              portfolio={portfolio}
+              linkedIn={linkedIn}
+              twitter={twitter}
+              setPortfolio={setPortfolio}
+              setLinkedIn={setLinkedIn}
+              setTwitter={setTwitter}
+            />
           )}
         </div>
 

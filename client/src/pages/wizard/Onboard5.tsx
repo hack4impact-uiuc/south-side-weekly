@@ -23,7 +23,7 @@ const Onboard5: FC<IProps> = ({
   currentTeams,
   setCurrentTeams,
 }): ReactElement => {
-  const handleCurrentTeams = (e: MouseEvent<HTMLButtonElement>) => {
+  const handleCurrentTeams = (e: MouseEvent<HTMLButtonElement>): void => {
     const elementIdx = currentTeams.indexOf(e.currentTarget.value);
     if (elementIdx === NOT_FOUND_IDX) {
       const addedGenders = currentTeams.concat(e.currentTarget.value);
