@@ -3,7 +3,7 @@ import { WizardPage } from './WizardWrapper';
 import BasicInfoSvg from '../../assets/basic-info.svg';
 import { Input, Button } from 'semantic-ui-react';
 import Required from '../../assets/required.svg';
-import '../../css/wizard/BasicInfo.css';
+import '../../css/wizard/Onboard1.css';
 
 interface IProps {
   firstName: string;
@@ -14,10 +14,9 @@ interface IProps {
   setLastName: Dispatch<SetStateAction<string>>;
   setPreferredName: Dispatch<SetStateAction<string>>;
   setPhoneNumber: Dispatch<SetStateAction<string>>;
-  handlePageNext(): void;
 }
 
-const BasicInfo: FC<IProps> = ({
+const OnBoard1: FC<IProps> = ({
   firstName,
   lastName,
   preferredName,
@@ -26,7 +25,6 @@ const BasicInfo: FC<IProps> = ({
   setLastName,
   setPreferredName,
   setPhoneNumber,
-  handlePageNext,
 }): ReactElement => (
   <div className="basic-info-wrapper">
     <img className="basic-info-image" alt="info-graphic" src={BasicInfoSvg} />
@@ -90,4 +88,4 @@ const BasicInfo: FC<IProps> = ({
   </div>
 );
 
-export default BasicInfo;
+export default OnBoard1;

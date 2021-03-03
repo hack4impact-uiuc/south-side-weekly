@@ -1,0 +1,61 @@
+.races-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 10%;
+}
+
+.races-wrapper .page-text {
+  width: 100%;
+  font-size: 24px;
+  line-height: 30px;
+  text-align: center;
+}
+
+.races-wrapper .races-content-wrapper {
+  width: 90%;
+}
+
+.races-wrapper .races-content-wrapper .races-svg {
+  width: 30%;
+  position: absolute;
+  bottom: 0;
+  left: 1%;
+}
+
+.races-wrapper .races-content-wrapper .select-title {
+  background-color: rgb(61, 79, 145, 0.55);
+  margin: auto;
+  color: white;
+  border-radius: 1rem;
+  font-size: 24px;
+  padding: 10px 50px 10px 50px;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  width: 20%;
+}
+
+.races-wrapper .races-content-wrapper .select-row-1 {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+.races-wrapper .races-content-wrapper .select-row-1 .select {
+  padding: 5px 20px 5px 20px;
+  margin: 20px 0px 20px 0px;
+  border-radius: 1rem;
+  color: black;
+}
+
+.races-wrapper .races-content-wrapper .select-row-2 {
+  display: flex;
+  justify-content: center;
+}
+
+.races-wrapper .races-content-wrapper .select-row-2 .select {
+  margin: 0px 60px 0px 60px;
+  padding: 5px 20px 5px 20px;
+  border-radius: 1rem;
+  color: black;
+}

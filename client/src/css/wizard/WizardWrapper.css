@@ -32,10 +32,14 @@
   background-color: transparent !important;
 }
 
+.wizard-wrapper .previous-page .previous-icon:focus {
+  background-color: transparent !important;
+}
+
 .wizard-wrapper .wizard-content {
   display: flex;
   width: 100%;
-  margin-top: 5%;
+  margin-top: 2%;
 }
 
 .wizard-wrapper .wizard-content .wizard-pages {
@@ -59,4 +63,7 @@
 
 .wizard-wrapper .next-page .next-icon:hover {
   background-color: #548d31 !important;
+}
+.wizard-wrapper .next-page .next-icon:focus {
+  background-color: #8cb076 !important;
 }

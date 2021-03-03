@@ -5,16 +5,19 @@ import '../../css/wizard/WizardWrapper.css';
 import Logo from '../../assets/ssw-form-header.png';
 
 import WizardInitialPrompt from './InitialPrompt';
-import BasicInfo from './BasicInfo';
-import Identity from './Identity';
+import Onboard1 from './Onboard1';
+import Onboard2 from './Onboard2';
+import Onboard3 from './Onboard3';
+import Onboard4 from './Onboard4';
 import WizardPageCounter from '../../components/WizardPageCounter/WizardPageCounter';
 import ArrowBack from '../../assets/arrow-back.svg';
 import ArrowNext from '../../assets/arrow-next.svg';
 
 enum WizardPage {
   INITIAL_PAGE = 'INITIAL_PAGE',
-  BASIC_INFO_PAGE = 'BASIC_INFO_PAGE',
-  IDENTITY_PAGE = 'IDENTITY_PAGE',
+  ONBOARD_1 = 'ONBOARD_1',
+  ONBOARD_2 = 'ONBOARD_2',
+  ONBOARD_3 = 'ONBOARD_3',
   RESPONSE_PAGE = 'RESPONSE_PAGE',
   WORK_SECTION_PAGE = 'WORK_SECTION_PAGE',
   INTERESTS_PAGE = 'INTERESTS_PAGE',
@@ -115,8 +118,8 @@ const WizardWrapper = (): ReactElement => {
             <WizardInitialPrompt handleRole={handleRole} />
           )}
 
-          {page === WizardPage.BASIC_INFO_PAGE.toString() && (
-            <BasicInfo
+          {page === WizardPage.ONBOARD_1.toString() && (
+            <Onboard1
               firstName={firstName}
               lastName={lastName}
               preferredName={preferredName}
@@ -125,26 +128,40 @@ const WizardWrapper = (): ReactElement => {
               setLastName={setLastName}
               setPhoneNumber={setPhoneNumber}
               setPreferredName={setPreferredName}
-              handlePageNext={handlePageNext}
             />
           )}
 
-          {page === WizardPage.IDENTITY_PAGE.toString() && (
-            <Identity
+          {page === WizardPage.ONBOARD_2.toString() && (
+            <Onboard2
+              genders={genders}
+              pronouns={pronouns}
               setGenders={setGenders}
               setPronouns={setPronouns}
-              setRaces={setRaces}
+            />
+          )}
+
+          {page === WizardPage.ONBOARD_3.toString() && (
+            <Onboard3 races={races} setRaces={setRaces} />
+          )}
+
+          {console.log(page)}
+
+          {page === WizardPage.RESPONSE_PAGE.toString() && (
+            <Onboard4
+              reasonsForInvolvement={reasonForInvolvement}
+              setReasonsForInvolvement={setReasonForInvolvement}
             />
           )}
         </div>
 
-        {page !== WizardPage.INITIAL_PAGE.toString() && (
-          <div className="next-page">
-            <Button circular onClick={handlePageNext} className="next-icon">
-              <img src={ArrowNext} alt="next arrow" />
-            </Button>
-          </div>
-        )}
+        {page !== WizardPage.INITIAL_PAGE.toString() &&
+          page !== WizardPage.EXIT_PAGE && (
+            <div className="next-page">
+              <Button circular onClick={handlePageNext} className="next-icon">
+                <img src={ArrowNext} alt="next arrow" />
+              </Button>
+            </div>
+          )}
       </div>
 
       <div className="wizard-page-counter">
