@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import { roleEnum } from '../models/user';
 import validateRequestForRole from './authvalidators';
 
-const requireContributorStatus = (
+export const requireContributorStatus = (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -17,7 +17,7 @@ const requireContributorStatus = (
   res.status(401).send('You are not authorized (requires contributor status).');
 };
 
-const requireStaffStatus = (
+export const requireStaffStatus = (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -31,7 +31,7 @@ const requireStaffStatus = (
   res.status(401).send('You are not authorized (requires staff status).');
 };
 
-const requireAdminStatus = (
+export const requireAdminStatus = (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -40,10 +40,4 @@ const requireAdminStatus = (
     return next();
   }
   res.status(401).send('You are not authorized (requires admin status).');
-};
-
-module.exports = {
-  requireContributorStatus,
-  requireStaffStatus,
-  requireAdminStatus,
 };
