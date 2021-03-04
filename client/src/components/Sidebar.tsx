@@ -2,15 +2,12 @@ import React, { ReactElement } from 'react';
 
 import '../css/Sidebar.css';
 
-type SidebarProps = {
-  firstName: string;
-};
-
-function Sidebar({ firstName }: SidebarProps): ReactElement {
+function Sidebar(): ReactElement {
   return (
     <div className="sidebar">
-      <div className="profile-pic"></div>
-      {firstName}
+      <div className="profile-pic">
+        <img src="https://i.ibb.co/RPcYkT7/IMG-5592.jpg" alt="IMG-5592" />
+      </div>
       <div className="vertical-nav">
         <div className="nav-link">
           <div className="icon">Home</div>
