@@ -1,4 +1,5 @@
 .sidebar {
+    font-family: Roboto;
     position: fixed;
     top: 50%;
     transform: translateY(-50%);
@@ -29,6 +30,13 @@
     border-radius: 190px;
     border: 10px solid #fff;
     transition: 0.5s all;
+}
+
+.profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 190px;
 }
 
 @media only screen and (max-width: 600px) {
