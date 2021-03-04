@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb';
 import { errorWrap } from '../middleware';
 
 import User from '../models/user';
+import Pitch from '../models/pitch';
 
 const router = express.Router();
 
@@ -128,6 +129,53 @@ router.delete(
       success: true,
       message: 'User successfully deleted',
       result: deletedUser,
+    });
+  }),
+);
+
+// Add pitch to a user's claimed pitches
+router.put(
+  '/:userId/claim/:pitchId',
+  errorWrap(async (req: Request, res: Response) => {
+    if (!isValidMongoId(req.params.userId)) {
+      res.status(400).json({
+        success: false,
+        message: 'Bad user ID format',
+      });
+      return;
+    } else if (!isValidMongoId(req.params.pitchId)) {
+      res.status(400).json({
+        success: false,
+        message: 'Bad pitch ID format',
+      });
+      return;
+    }
+
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found with id',
+      });
+      return;
+    }
+
+    const pitch = await Pitch.findById(req.params.pitchId);
+    if (!pitch) {
+      res.status(404).json({
+        success: false,
+        message: 'Pitch not found with id',
+      });
+      return;
+    }
+
+    user.claimedPitches.push(pitch);
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully updated user',
+      result: user,
     });
   }),
 );
