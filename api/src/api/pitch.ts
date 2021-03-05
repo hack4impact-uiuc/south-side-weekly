@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb';
 import { errorWrap } from '../middleware';
 
 import Pitch from '../models/pitch';
+import { pitchStatusEnum } from '../utils/enums';
 
 const router = express.Router();
 
@@ -128,6 +129,36 @@ router.delete(
       success: true,
       message: 'Pitch successfully deleted',
       result: deletedPitch,
+    });
+  }),
+);
+
+// Gets all pitches on the Pitch Doc
+router.get(
+  // not sure about this URL, ideally it should just be "unclaimed"
+  // but it gives me error "bad id format" bc it thinks it's an id...
+  '/doc/unclaimed',
+  errorWrap(async (req: Request, res: Response) => {
+    const pitch = await Pitch.find({
+      pitchStatus: pitchStatusEnum.APPROVED,
+      $expr: {
+        $or: [
+          { $lt: ['$currentWriters', '$targetWriters'] },
+          { $lt: ['$currentEditors', '$targetEditors'] },
+          { $lt: ['$currentData', '$targetData'] },
+          { $lt: ['$currentVisuals', '$targetVisuals'] },
+          { $lt: ['$currentIllustration', '$targetIllustration'] },
+          { $lt: ['$currentPhotography', '$targetPhotography'] },
+          { $lt: ['$currentFactChecking', '$targetFactChecking'] },
+          { $lt: ['$currentRadio', '$targetRadio'] },
+          { $lt: ['$currentLayout', '$targetLayout'] },
+        ],
+      },
+    });
+    res.status(200).json({
+      message: `Successfully retrieved unclaimed pitches.`,
+      success: true,
+      result: pitch,
     });
   }),
 );
