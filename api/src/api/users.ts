@@ -134,8 +134,8 @@ router.delete(
 );
 
 // Add pitch to a user's claimed pitches
-router.put(
-  '/:userId/claim/:pitchId',
+router.post(
+  '/:userId/pitches',
   errorWrap(async (req: Request, res: Response) => {
     if (!isValidMongoId(req.params.userId)) {
       res.status(400).json({
@@ -143,7 +143,7 @@ router.put(
         message: 'Bad user ID format',
       });
       return;
-    } else if (!isValidMongoId(req.params.pitchId)) {
+    } else if (!isValidMongoId(req.body.pitchId)) {
       res.status(400).json({
         success: false,
         message: 'Bad pitch ID format',
@@ -160,7 +160,7 @@ router.put(
       return;
     }
 
-    const pitch = await Pitch.findById(req.params.pitchId);
+    const pitch = await Pitch.findById(req.body.pitchId);
     if (!pitch) {
       res.status(404).json({
         success: false,
@@ -174,7 +174,7 @@ router.put(
 
     res.status(200).json({
       success: true,
-      message: 'Successfully updated user',
+      message: 'Successfully added pitch to user',
       result: user,
     });
   }),
