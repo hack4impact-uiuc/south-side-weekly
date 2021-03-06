@@ -2,6 +2,8 @@ import React, { ReactElement, useEffect, useState } from 'react';
 
 import { getSampleResponse, isError } from '../utils/apiWrapper';
 
+// import PitchDoc from './PitchDoc';
+
 import '../css/Home.css';
 
 function Home(): ReactElement {
@@ -22,6 +24,8 @@ function Home(): ReactElement {
 
   return (
     <>
+      {/* Temporary until Onboarding Wizard / real home page is merged so I can look at PitchDoc */}
+      {/* <PitchDoc></PitchDoc> */}
       <h1>MERN Template</h1>
       <p>
         Below will tell you if the API is running.

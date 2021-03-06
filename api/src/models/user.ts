@@ -1,38 +1,12 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
+import { IUser } from '../utils/types';
 
-import { IPitch } from './pitch';
 import {
   interestsEnum,
   onboardingStatusEnum,
   rolesEnum,
   racesEnum,
 } from '../utils/enums';
-
-/**
- * Interface for a User Schema.
- */
-interface IUser extends Document<any> {
-  firstName: string;
-  lastName: string;
-  preferredName: string;
-  email: string;
-  phone: string;
-  oauthID: string;
-  gender: [string];
-  pronouns: [string];
-  dateJoined: Date;
-  masthead: boolean;
-  onboarding: string;
-  portfolio: string;
-  linkedIn: string;
-  twitter: string;
-  claimedPitches: [IPitch];
-  submittedPitches: [IPitch];
-  currentTeams: [string];
-  role: string;
-  races: [string];
-  interests: [string];
-}
 
 /**
  * Mongoose Schema to represent a User at South Side Weekly.
@@ -85,4 +59,3 @@ const User = new mongoose.Schema({
 });
 
 export default mongoose.model<IUser>('User', User);
-export { IUser };

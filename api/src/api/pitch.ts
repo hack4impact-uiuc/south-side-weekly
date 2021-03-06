@@ -133,7 +133,7 @@ router.delete(
   }),
 );
 
-// Gets all pitches on the Pitch Doc
+// Gets all pitches on the Pitch Doc (all approved but unclaimed pitches)
 router.get(
   // not sure about this URL, ideally it should just be "unclaimed"
   // but it gives me error "bad id format" bc it thinks it's an id...

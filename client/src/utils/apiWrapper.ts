@@ -1,5 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 
+import { IPitch } from '../../../api/src/utils/types';
+
 const BASE_URL = process.env.REACT_APP_VERCEL_URL
   ? `https://${process.env.REACT_APP_VERCEL_URL}/api`
   : 'http://localhost:9000/api';
@@ -17,6 +19,7 @@ export function isError<T>(res: ApiResponse<T>): res is ErrorWrapper {
 
 export interface GetSampleResponseType {
   message: string;
+  result: IPitch;
 }
 
 /**
@@ -55,6 +58,26 @@ export const addSampleResponse = (
     })
     .catch((error) => ({
       type: 'POST_SAMPLE_FAIL',
+      error,
+    }));
+};
+
+/**
+ * Returns all unclaimed and approved pitches
+ * Returns GET_SAMPLE_FAIL upon failure
+ */
+export const getUnclaimedPitches = (): Promise<
+  AxiosResponse<GetSampleResponseType> | ErrorWrapper
+> => {
+  const requestString = `${BASE_URL}/pitch/doc/unclaimed`;
+  return axios
+    .get(requestString, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'GET_SAMPLE_FAIL',
       error,
     }));
 };
