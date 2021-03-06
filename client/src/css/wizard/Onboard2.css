@@ -15,8 +15,8 @@
 .personal-information-wrapper {
   display: flex;
   justify-content: left;
-  width: 100%;
-  margin-top: 30px;
+  width: 90%;
+  margin-top: 20px;
 }
 
 .personal-information .personal-information-wrapper .svg {

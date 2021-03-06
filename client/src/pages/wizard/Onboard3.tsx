@@ -18,18 +18,6 @@ interface IProps {
 
 const NOT_FOUND_IDX = -1;
 
-const racesEnum = {
-  AMERICAN_INDIAN_OR_ALASKAN_NATIVE: 'AMERICAN INDIAN OR ALASKAN NATIVE',
-  BLACK_OR_AFRICAN_AMERICAN: 'BLACK OR AFRICAN AMERICAN',
-  MIDDLE_EASTERN_OR_NORTH_AFRICAN: 'MIDDLE EASTERN OR NORTH AFRICAN',
-  NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER: 'NATIVE HAWAIIAN OR PACIFIC ISLANDER',
-  LATINX_OR_HISPANIC: 'LATINX OR HISPANIC',
-  WHITE: 'WHITE',
-  ASIAN: 'ASIAN',
-  OTHER: 'OTHER',
-  NONE: 'NONE',
-};
-
 const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
   const handleRaces = (e: MouseEvent<HTMLButtonElement>): void => {
     const elementIdx = races.indexOf(e.currentTarget.value);
@@ -58,15 +46,14 @@ const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
           <Button
             style={{
               backgroundColor: `${
-                races.indexOf(
-                  racesEnum.AMERICAN_INDIAN_OR_ALASKAN_NATIVE.toString(),
-                ) === NOT_FOUND_IDX
+                races.indexOf('American Indian or Alaskan Native') ===
+                NOT_FOUND_IDX
                   ? '#EF8B8B'
                   : '#CCD1D1'
               }`,
             }}
             onClick={handleRaces}
-            value={racesEnum.AMERICAN_INDIAN_OR_ALASKAN_NATIVE.toString()}
+            value="American Indian or Alaskan Native"
             className="select"
           >
             American Indian or Alaskan Native
@@ -74,15 +61,13 @@ const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
           <Button
             style={{
               backgroundColor: `${
-                races.indexOf(
-                  racesEnum.BLACK_OR_AFRICAN_AMERICAN.toString(),
-                ) === NOT_FOUND_IDX
+                races.indexOf('Black or African American') === NOT_FOUND_IDX
                   ? '#A5C4F2'
                   : '#CCD1D1'
               }`,
             }}
             onClick={handleRaces}
-            value={racesEnum.BLACK_OR_AFRICAN_AMERICAN.toString()}
+            value="Black or African American"
             className="select"
           >
             Black or African American
@@ -90,15 +75,14 @@ const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
           <Button
             style={{
               backgroundColor: `${
-                races.indexOf(
-                  racesEnum.MIDDLE_EASTERN_OR_NORTH_AFRICAN.toString(),
-                ) === NOT_FOUND_IDX
+                races.indexOf('Middle Eastern or North African') ===
+                NOT_FOUND_IDX
                   ? '#BAB9E9'
                   : '#CCD1D1'
               }`,
             }}
             onClick={handleRaces}
-            value={racesEnum.MIDDLE_EASTERN_OR_NORTH_AFRICAN.toString()}
+            value="Middle Eastern or North African"
             className="select"
           >
             Middle Eastern or North African
@@ -106,15 +90,14 @@ const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
           <Button
             style={{
               backgroundColor: `${
-                races.indexOf(
-                  racesEnum.NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER.toString(),
-                ) === NOT_FOUND_IDX
+                races.indexOf('Native Hawaiian or Pacific Islander') ===
+                NOT_FOUND_IDX
                   ? '#A9D3E5'
                   : '#CCD1D1'
               }`,
             }}
             onClick={handleRaces}
-            value={racesEnum.NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER.toString()}
+            value="Native Hawaiian or Pacific Islander"
             className="select"
           >
             Native Hawaiian or Pacific Islander
@@ -124,14 +107,13 @@ const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
           <Button
             style={{
               backgroundColor: `${
-                races.indexOf(racesEnum.LATINX_OR_HISPANIC.toString()) ===
-                NOT_FOUND_IDX
+                races.indexOf('Latinx or Hispanic') === NOT_FOUND_IDX
                   ? '#F9B893'
                   : '#CCD1D1'
               }`,
             }}
             onClick={handleRaces}
-            value={racesEnum.LATINX_OR_HISPANIC.toString()}
+            value="Latinx or Hispanic"
             className="select"
           >
             Latinx or Hispanic
@@ -139,13 +121,11 @@ const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
           <Button
             style={{
               backgroundColor: `${
-                races.indexOf(racesEnum.WHITE.toString()) === NOT_FOUND_IDX
-                  ? '#F1D8B0'
-                  : '#CCD1D1'
+                races.indexOf('White') === NOT_FOUND_IDX ? '#F1D8B0' : '#CCD1D1'
               }`,
             }}
             onClick={handleRaces}
-            value={racesEnum.WHITE.toString()}
+            value="White"
             className="select"
           >
             White
@@ -153,13 +133,11 @@ const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
           <Button
             style={{
               backgroundColor: `${
-                races.indexOf(racesEnum.ASIAN.toString()) === NOT_FOUND_IDX
-                  ? '#CFE7C4'
-                  : '#CCD1D1'
+                races.indexOf('Asian') === NOT_FOUND_IDX ? '#CFE7C4' : '#CCD1D1'
               }`,
             }}
             onClick={handleRaces}
-            value={racesEnum.ASIAN.toString()}
+            value="Asian"
             className="select"
           >
             Asian
@@ -167,13 +145,11 @@ const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
           <Button
             style={{
               backgroundColor: `${
-                races.indexOf(racesEnum.OTHER.toString()) === NOT_FOUND_IDX
-                  ? '#BFEBE0'
-                  : '#CCD1D1'
+                races.indexOf('Other') === NOT_FOUND_IDX ? '#BFEBE0' : '#CCD1D1'
               }`,
             }}
             onClick={handleRaces}
-            value={racesEnum.OTHER.toString()}
+            value="Other"
             className="select"
           >
             Other

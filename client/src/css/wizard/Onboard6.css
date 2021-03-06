@@ -8,6 +8,7 @@
   left: 30px;
   bottom: 30px;
   width: 35%;
+  z-index: -1;
 }
 
 .onboard6-wrapper .onboard6-content {

@@ -5,6 +5,7 @@ import '../../css/wizard/WizardWrapper.css';
 import Logo from '../../assets/ssw-form-header.png';
 import ArrowBack from '../../assets/arrow-back.svg';
 import ArrowNext from '../../assets/arrow-next.svg';
+import SubmitSVG from '../../assets/check.svg';
 import WizardPageCounter from '../../components/WizardPageCounter/WizardPageCounter';
 
 import WizardInitialPrompt from './InitialPrompt';
@@ -15,6 +16,7 @@ import Onboard4 from './Onboard4';
 import Onboard5 from './Onboard5';
 import Onboard6 from './Onboard6';
 import Onboard7 from './Onboard7';
+import Onboard8 from './Onboard8';
 
 enum WizardPage {
   INITIAL_PAGE = 'INITIAL_PAGE',
@@ -25,7 +27,7 @@ enum WizardPage {
   ONBOARD_5 = 'ONBOARD_5',
   ONBOARD_6 = 'ONBOARD_6',
   ONBOARD_7 = 'ONBOARD_7',
-  SCHEDULE_PAGE = 'SCHEDULE_PAGE',
+  ONBOARD_8 = 'ONBOARD_8',
   EXIT_PAGE = 'EXIT_PAGE',
 }
 
@@ -58,7 +60,7 @@ const WizardWrapper = (): ReactElement => {
       parsedPages = parsedPages.filter(
         (page) =>
           page !== WizardPage.ONBOARD_4 &&
-          page !== WizardPage.SCHEDULE_PAGE &&
+          page !== WizardPage.ONBOARD_8 &&
           page !== WizardPage.ONBOARD_5,
       );
     }
@@ -106,6 +108,31 @@ const WizardWrapper = (): ReactElement => {
     countablePages.pop();
 
     return countablePages;
+  };
+
+  const handleFormSubmit = (): void => {
+    const formData = {
+      firstName: firstName,
+      lastName: lastName,
+      preferredName: preferredName,
+      email: '',
+      phone: phoneNumber,
+      oauthID: '',
+      genders: genders,
+      pronouns: pronouns,
+      masthead: false,
+      portfolio: portfolio,
+      linkedIn: linkedIn,
+      twitter: twitter,
+      claimedPitches: [],
+      submittedPitches: [],
+      currentTeams: currentTeams,
+      role: role,
+      races: races,
+      interests: interests,
+    };
+
+    console.log(formData);
   };
 
   return (
@@ -184,14 +211,26 @@ const WizardWrapper = (): ReactElement => {
               setTwitter={setTwitter}
             />
           )}
+
+          {page === WizardPage.ONBOARD_8.toString() && <Onboard8 />}
         </div>
 
         {page !== WizardPage.INITIAL_PAGE.toString() &&
           page !== WizardPage.EXIT_PAGE && (
             <div className="next-page">
-              <Button circular onClick={handlePageNext} className="next-icon">
-                <img src={ArrowNext} alt="next arrow" />
-              </Button>
+              {page !== WizardPage.ONBOARD_8.toString() ? (
+                <Button circular onClick={handlePageNext} className="next-icon">
+                  <img src={ArrowNext} alt="next arrow" />
+                </Button>
+              ) : (
+                <Button
+                  circular
+                  onClick={handleFormSubmit}
+                  className="check-icon"
+                >
+                  <img src={SubmitSVG} alt="submit" />
+                </Button>
+              )}
             </div>
           )}
       </div>

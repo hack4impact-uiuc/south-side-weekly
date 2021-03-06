@@ -1,6 +1,7 @@
 .initial-prompt {
   width: 60%;
   margin: auto;
+  margin-left: 25vw;
 }
 
 .initial-prompt .header-text {
