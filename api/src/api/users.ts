@@ -5,6 +5,14 @@ import User from '../models/user';
 
 const router = express.Router();
 
+declare global {
+  namespace Express {
+    interface User {
+      role: String;
+    }
+  }
+}
+
 router.get(
   '/',
   errorWrap(async (req: Request, res: Response) => {
