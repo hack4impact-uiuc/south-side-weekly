@@ -1,4 +1,4 @@
-.body {
+/*.body {
     font-family: Roboto;
     display: flex;
     flex-direction: column;
@@ -44,4 +44,14 @@
     .section-grid {
         grid-template-columns: 1fr;
     }
+}*/
+
+.logo-header {
+    text-align: center;
+}
+
+.logo-header .logo {
+    width: 60%;
+    /*height: 20%;*/
+    margin: 2%;
 }
