@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 
 import Sidebar from '../../components/Sidebar';
 import PitchCard from '../../components/PitchCard';
@@ -6,6 +6,7 @@ import PitchCard from '../../components/PitchCard';
 import '../../css/Account.css';
 
 function Account(): ReactElement {
+  const [toggle, setToggle] = useState(true);
   const claimedPitches = [
     {
       title: 'Title of Pitch',
@@ -81,6 +82,20 @@ function Account(): ReactElement {
       category: 'Visual Arts',
     },
   ];
+
+  const togglePitches = (): void => {
+    setToggle(!toggle);
+    const claimed = document.getElementById('claimed-tab');
+    if (claimed) {
+      claimed.classList.toggle('active-tab');
+    }
+
+    const submitted = document.getElementById('submitted-tab');
+    if (submitted) {
+      submitted.classList.toggle('active-tab');
+    }
+  };
+
   return (
     <>
       <Sidebar />
@@ -89,38 +104,53 @@ function Account(): ReactElement {
           <h1>SOUTH SIDE WEEKLY</h1>
           <h2 className="sub-heading">Welcome back, Mustafa!</h2>
         </div>
-        <div className="section">
-          <div className="section-title">
-            <h3>Claimed Pitches</h3>
-          </div>
-          <div className="section-grid">
-            {claimedPitches.map((elem, idx) => (
-              <PitchCard
-                key={idx}
-                title={elem.title}
-                description={elem.description}
-                status={elem.status}
-                category={elem.category}
-              />
-            ))}
-          </div>
+        <div className="tabs">
+          <button
+            id="claimed-tab"
+            className="tab active-tab"
+            onClick={togglePitches}
+          >
+            Claimed
+          </button>
+          <button id="submitted-tab" className="tab" onClick={togglePitches}>
+            Submitted
+          </button>
         </div>
-        <div className="section">
-          <div className="section-title">
-            <h3>Submitted Pitches</h3>
+        {toggle ? (
+          <div className="section">
+            <div className="section-title">
+              <h3>Claimed Pitches</h3>
+            </div>
+            <div className="section-grid">
+              {claimedPitches.map((elem, idx) => (
+                <PitchCard
+                  key={idx}
+                  title={elem.title}
+                  description={elem.description}
+                  status={elem.status}
+                  category={elem.category}
+                />
+              ))}
+            </div>
           </div>
-          <div className="section-grid">
-            {submittedPitches.map((elem, idx) => (
-              <PitchCard
-                key={idx}
-                title={elem.title}
-                description={elem.description}
-                status={elem.status}
-                category={elem.category}
-              />
-            ))}
+        ) : (
+          <div className="section">
+            <div className="section-title">
+              <h3>Submitted Pitches</h3>
+            </div>
+            <div className="section-grid">
+              {submittedPitches.map((elem, idx) => (
+                <PitchCard
+                  key={idx}
+                  title={elem.title}
+                  description={elem.description}
+                  status={elem.status}
+                  category={elem.category}
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );
