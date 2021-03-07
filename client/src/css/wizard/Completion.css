@@ -1,0 +1,42 @@
+.completion-wrapper {
+  margin-left: 12vw;
+}
+
+.completion-wrapper .page-svg {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  width: 30%;
+}
+
+.completion-wrapper .completion-content {
+  width: 90%;
+  margin: auto;
+}
+
+.completion-wrapper .completion-content .page-text {
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 30px;
+  text-align: left;
+  width: 70%;
+  margin-left: 4vw;
+}
+
+.completion-wrapper .completion-content .resource-btn-group {
+  width: 90%;
+  margin-left: 15vw;
+}
+
+.completion-wrapper .completion-content .resource-btn-group .resource-btn {
+  border-radius: 1rem;
+  width: 200px;
+  height: 150px;
+  color: white;
+  background: linear-gradient(
+    to bottom right,
+    rgb(59, 63, 76),
+    rgb(61, 79, 145, 0.85)
+  );
+  margin: 50px 25px 0px 25px;
+}

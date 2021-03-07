@@ -17,6 +17,7 @@ import Onboard5 from './Onboard5';
 import Onboard6 from './Onboard6';
 import Onboard7 from './Onboard7';
 import Onboard8 from './Onboard8';
+import Compleition from './Completion';
 
 enum WizardPage {
   INITIAL_PAGE = 'INITIAL_PAGE',
@@ -28,7 +29,7 @@ enum WizardPage {
   ONBOARD_6 = 'ONBOARD_6',
   ONBOARD_7 = 'ONBOARD_7',
   ONBOARD_8 = 'ONBOARD_8',
-  EXIT_PAGE = 'EXIT_PAGE',
+  COMPLETION = 'COMPLETION',
 }
 
 /**
@@ -110,6 +111,9 @@ const WizardWrapper = (): ReactElement => {
     return countablePages;
   };
 
+  /**
+   * Submits the form and collects the data
+   */
   const handleFormSubmit = (): void => {
     const formData = {
       firstName: firstName,
@@ -133,6 +137,16 @@ const WizardWrapper = (): ReactElement => {
     };
 
     console.log(formData);
+    handlePageNext();
+  };
+
+  const shouldShowNextBtn = (): boolean => {
+    if (role === 'STAFF') {
+      return page !== WizardPage.ONBOARD_7.toString();
+    } else if (role === 'CONTRIBUTOR') {
+      return page !== WizardPage.ONBOARD_8.toString();
+    }
+    return false;
   };
 
   return (
@@ -141,17 +155,18 @@ const WizardWrapper = (): ReactElement => {
         <img className="logo" alt="SSW Logo" src={Logo} />
       </div>
 
-      {page !== WizardPage.INITIAL_PAGE.toString() && (
-        <div className="previous-page">
-          <Button
-            circular
-            onClick={handlePagePrevious}
-            className="previous-icon"
-          >
-            <img width="70%" src={ArrowBack} alt="back arrow" />
-          </Button>
-        </div>
-      )}
+      {page !== WizardPage.INITIAL_PAGE.toString() &&
+        page !== WizardPage.COMPLETION.toString() && (
+          <div className="previous-page">
+            <Button
+              circular
+              onClick={handlePagePrevious}
+              className="previous-icon"
+            >
+              <img width="70%" src={ArrowBack} alt="back arrow" />
+            </Button>
+          </div>
+        )}
 
       <div className="wizard-content">
         <div className="wizard-pages">
@@ -213,12 +228,13 @@ const WizardWrapper = (): ReactElement => {
           )}
 
           {page === WizardPage.ONBOARD_8.toString() && <Onboard8 />}
+          {page === WizardPage.COMPLETION.toString() && <Compleition />}
         </div>
 
         {page !== WizardPage.INITIAL_PAGE.toString() &&
-          page !== WizardPage.EXIT_PAGE && (
+          page !== WizardPage.COMPLETION && (
             <div className="next-page">
-              {page !== WizardPage.ONBOARD_8.toString() ? (
+              {shouldShowNextBtn() ? (
                 <Button circular onClick={handlePageNext} className="next-icon">
                   <img src={ArrowNext} alt="next arrow" />
                 </Button>
@@ -237,7 +253,7 @@ const WizardWrapper = (): ReactElement => {
 
       <div className="wizard-page-counter">
         {page !== WizardPage.INITIAL_PAGE.toString() &&
-          page !== WizardPage.EXIT_PAGE.toString() && (
+          page !== WizardPage.COMPLETION.toString() && (
             <WizardPageCounter
               wizardPages={getCountablePages()}
               activePage={page}
