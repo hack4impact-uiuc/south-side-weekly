@@ -10482,6 +10482,9 @@ ssri@^8.0.0:
   dependencies:
     minipass "^3.1.1"
 
+"ssw-common@file:../common":
+  version "0.0.1"
+
 stable@^0.1.8:
   version "0.1.8"
   resolved "https://registry.yarnpkg.com/stable/-/stable-0.1.8.tgz#836eb3c8382fe2936feaf544631017ce7d47a3cf"
