@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from 'axios';
-
 import { IPitch } from 'ssw-common';
 
 const BASE_URL = process.env.REACT_APP_VERCEL_URL

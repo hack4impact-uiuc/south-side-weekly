@@ -28,7 +28,7 @@
     "lint:fix": "eslint --fix src --ext ts,tsx",
     "format": "prettier --write \"./**/*.{js,ts,tsx,css,scss,json,md}\"",
     "format:check": "prettier --check \"./**/*.{js,ts,tsx,css,scss,json,md}\"",
-    "build": "react-scripts build",
+    "build": "CI=false react-scripts build",
     "test": "yarn run cypress run",
     "eject": "react-scripts eject",
     "typecheck": "tsc"
