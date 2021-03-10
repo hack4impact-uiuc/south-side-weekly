@@ -32,15 +32,12 @@
   position: absolute;
   top: 5px;
   left: 0;
+  max-width: 20%;
 }
 
 .onboard5-wrapper .onboard5-content .select-group {
   margin-top: 5vh;
   text-align: left;
-}
-
-.onboard5-wrapper .onboard5-content .select-group .select {
-  margin: 15px 60px 15px 0px;
-  width: 150px;
-  border-radius: 1rem;
+  display: flex;
+  flex-wrap: wrap;
 }

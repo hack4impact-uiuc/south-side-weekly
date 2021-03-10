@@ -5,36 +5,49 @@ import React, {
   SetStateAction,
   MouseEvent,
 } from 'react';
-import { Button } from 'semantic-ui-react';
 
 import Onboard5SVG from '../../assets/onboard5.svg';
 import RequiredSvg from '../../assets/required.svg';
-
+import { handleSelectGroupArray } from '../../utils/helpers';
 import '../../css/wizard/Onboard5.css';
+import WizardSelectButton from '../../components/WizardSelectButton/WizardSelectButton';
 
 interface IProps {
   currentTeams: Array<string>;
   setCurrentTeams: Dispatch<SetStateAction<Array<string>>>;
 }
 
-const NOT_FOUND_IDX = -1;
-
+/**
+ * Builds and controls the form management for Onboard5 of the Onboarding Wizard
+ *
+ * @param {Array<string>} currentTeams the current teams that the user is interested in
+ * @param {Dispatch<SetStateAction<Array<string>>>} setCurrentTeams React setter function to control
+ *                                                                  current Teams state variable
+ */
 const Onboard5: FC<IProps> = ({
   currentTeams,
   setCurrentTeams,
 }): ReactElement => {
+  /**
+   * Adds selected current team to the current teams form array if it isn't already there, otherwise removes it
+   * @param e the mouse event of clicking one of the current team select options
+   */
   const handleCurrentTeams = (e: MouseEvent<HTMLButtonElement>): void => {
-    const elementIdx = currentTeams.indexOf(e.currentTarget.value);
-    if (elementIdx === NOT_FOUND_IDX) {
-      const addedGenders = currentTeams.concat(e.currentTarget.value);
-      setCurrentTeams(addedGenders);
-    } else {
-      const removedGenders = currentTeams.filter(
-        (race) => race !== e.currentTarget.value,
-      );
-      setCurrentTeams(removedGenders);
-    }
+    handleSelectGroupArray(e, currentTeams, setCurrentTeams);
   };
+
+  // All of the buttons to show for the current teams
+  const currentTeamsButtons = [
+    { value: 'Data', color: '#EF8B8B' },
+    { value: 'Editing', color: '#A5C4F2' },
+    { value: 'Fact-checking', color: '#CFE7C4' },
+    { value: 'Illustration', color: '#BAB9E9' },
+    { value: 'Layout', color: '#F9B893' },
+    { value: 'Photography', color: '#D8ACE8' },
+    { value: 'Radio', color: '#F1D8B0' },
+    { value: 'Visuals', color: '#BFEBE0' },
+    { value: 'Writing', color: '#A9D3E5' },
+  ];
 
   return (
     <div className="onboard5-wrapper">
@@ -49,132 +62,17 @@ const Onboard5: FC<IProps> = ({
         </div>
 
         <div className="select-group">
-          <Button
-            value="Data"
-            style={{
-              backgroundColor: `${
-                currentTeams.indexOf('Data') === NOT_FOUND_IDX
-                  ? '#EF8B8B'
-                  : '#CCD1D1'
-              }`,
-            }}
-            onClick={handleCurrentTeams}
-            className="select"
-          >
-            Data
-          </Button>
-          <Button
-            style={{
-              backgroundColor: `${
-                currentTeams.indexOf('Editing') === NOT_FOUND_IDX
-                  ? '#A5C4F2'
-                  : '#CCD1D1'
-              }`,
-            }}
-            value="Editing"
-            onClick={handleCurrentTeams}
-            className="select"
-          >
-            Editing
-          </Button>
-          <Button
-            style={{
-              backgroundColor: `${
-                currentTeams.indexOf('Fact-checking') === NOT_FOUND_IDX
-                  ? '#CFE7C4'
-                  : '#CCD1D1'
-              }`,
-            }}
-            value="Fact-checking"
-            onClick={handleCurrentTeams}
-            className="select"
-          >
-            Fact-checking
-          </Button>
-          <Button
-            style={{
-              backgroundColor: `${
-                currentTeams.indexOf('Illustration') === NOT_FOUND_IDX
-                  ? '#BAB9E9'
-                  : '#CCD1D1'
-              }`,
-            }}
-            value="Illustration"
-            onClick={handleCurrentTeams}
-            className="select"
-          >
-            Illustration
-          </Button>
-          <Button
-            style={{
-              backgroundColor: `${
-                currentTeams.indexOf('Layout') === NOT_FOUND_IDX
-                  ? '#F9B893'
-                  : '#CCD1D1'
-              }`,
-            }}
-            value="Layout"
-            onClick={handleCurrentTeams}
-            className="select"
-          >
-            Layout
-          </Button>
-          <Button
-            style={{
-              backgroundColor: `${
-                currentTeams.indexOf('Photography') === NOT_FOUND_IDX
-                  ? '#D8ACE8'
-                  : '#CCD1D1'
-              }`,
-            }}
-            value="Photography"
-            onClick={handleCurrentTeams}
-            className="select"
-          >
-            Photography
-          </Button>
-          <Button
-            style={{
-              backgroundColor: `${
-                currentTeams.indexOf('Radio') === NOT_FOUND_IDX
-                  ? '#F1D8B0'
-                  : '#CCD1D1'
-              }`,
-            }}
-            value="Radio"
-            onClick={handleCurrentTeams}
-            className="select"
-          >
-            Radio
-          </Button>
-          <Button
-            style={{
-              backgroundColor: `${
-                currentTeams.indexOf('Visuals') === NOT_FOUND_IDX
-                  ? '#BFEBE0'
-                  : '#CCD1D1'
-              }`,
-            }}
-            value="Visuals"
-            onClick={handleCurrentTeams}
-            className="select"
-          >
-            Visuals
-          </Button>
-          <Button
-            style={{
-              backgroundColor: `${
-                currentTeams.indexOf('Writing') === NOT_FOUND_IDX
-                  ? '#A9D3E5'
-                  : '#CCD1D1'
-              }`,
-            }}
-            value="Writing"
-            onClick={handleCurrentTeams}
-            className="select"
-          >
-            Writing
-          </Button>
+          {currentTeamsButtons.map((button) => (
+            <WizardSelectButton
+              key={button.value}
+              onClick={handleCurrentTeams}
+              selectedArray={currentTeams}
+              width="150px"
+              margin="15px 30px 15px 30px"
+              value={button.value}
+              color={button.color}
+            />
+          ))}
         </div>
       </div>
     </div>

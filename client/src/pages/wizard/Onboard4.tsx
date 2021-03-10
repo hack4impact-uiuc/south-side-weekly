@@ -11,6 +11,11 @@ interface IProps {
   setReasonsForInvolvement: Dispatch<SetStateAction<string>>;
 }
 
+/**
+ * Builds and controls the form management for Onboard4 of the Onboarding Wizard
+ *
+ * @param {string} reasonsForInvolvement the user response to the reason they want to be involved
+ */
 const Onboard4: FC<IProps> = ({
   reasonsForInvolvement,
   setReasonsForInvolvement,

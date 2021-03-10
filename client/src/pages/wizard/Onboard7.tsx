@@ -14,6 +14,16 @@ interface IProps {
   setTwitter: Dispatch<SetStateAction<string>>;
 }
 
+/**
+ * Builds and controls the form management for Onboard7 of the Onboarding Wizard
+ *
+ * @param {string} portfolio the link to the users portfolio
+ * @param {string} linkedIn the link to the users linkedIn profile
+ * @param {string} twitter the link to the users twitter profile
+ * @param {Dispatch<SetStateAction<string>>} setPortfolio React setter function to update portfolio link
+ * @param {Dispatch<SetStateAction<string>>} setLinkedIn React setter function to update linkedIn link
+ * @param {Dispatch<SetStateAction<string>>} setTwitter React setter function to update twitter link
+ */
 const Onboard7: FC<IProps> = ({
   portfolio,
   linkedIn,

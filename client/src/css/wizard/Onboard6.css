@@ -1,5 +1,5 @@
 .onboard6-wrapper {
-  margin-left: 15vh;
+  margin-left: 20vh;
   text-align: center;
 }
 
@@ -21,13 +21,10 @@
 }
 
 .onboard6-wrapper .onboard6-content .select-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   margin: auto;
   margin-top: 5vh;
-  width: 60%;
-}
-
-.onboard6-wrapper .onboard6-content .select-group .select {
-  border-radius: 1rem;
-  margin: 10px 15px 10px 15px;
-  width: 150px;
+  width: 75%;
 }

@@ -4,7 +4,11 @@ import { Button } from 'semantic-ui-react';
 import CompletionSVG from '../../assets/completion-page.svg';
 import '../../css/wizard/Completion.css';
 
+/**
+ * Builds Completion page of the Onboarding Wizard
+ */
 const Completion = (): ReactElement => {
+  // All of the resource buttons to show
   const resourceBtns = [
     {
       buttonText: 'SSW Writer’s Guide',
@@ -38,6 +42,11 @@ const Completion = (): ReactElement => {
     },
   ];
 
+  /**
+   * Opens a link in a new tab
+   *
+   * @param link the link to open in the new tab
+   */
   const handleResourceClick = (link: string): void => {
     window.open(link, '_blank');
   };

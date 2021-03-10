@@ -5,32 +5,50 @@ import React, {
   SetStateAction,
   MouseEvent,
 } from 'react';
-import { Button } from 'semantic-ui-react';
 
 import Onboard6SVG from '../../assets/onboard6.svg';
-
+import { handleSelectGroupArray } from '../../utils/helpers';
 import '../../css/wizard/Onboard6.css';
+import WizardSelectButton from '../../components/WizardSelectButton/WizardSelectButton';
 
 interface IProps {
   interests: Array<string>;
   setInterests: Dispatch<SetStateAction<Array<string>>>;
 }
 
-const NOT_FOUND_IDX = -1;
-
+/**
+ * Builds and controls the form management for Onboard7 of the Onboarding Wizard
+ *
+ * @param {string} interests the interests of the user
+ * @param {Dispatch<SetStateAction<Array<string>>} setInterests React setter function to update user interests
+ */
 const Onboard6: FC<IProps> = ({ interests, setInterests }): ReactElement => {
+  /**
+   * Adds selected interest to the interests form array if it isn't already there, otherwise removes it
+   *
+   * @param e the mouse event from clicking one of the interests select optoins
+   */
   const handleInterests = (e: MouseEvent<HTMLButtonElement>): void => {
-    const elementIdx = interests.indexOf(e.currentTarget.value);
-    if (elementIdx === NOT_FOUND_IDX) {
-      const addedGenders = interests.concat(e.currentTarget.value);
-      setInterests(addedGenders);
-    } else {
-      const removedGenders = interests.filter(
-        (race) => race !== e.currentTarget.value,
-      );
-      setInterests(removedGenders);
-    }
+    handleSelectGroupArray(e, interests, setInterests);
   };
+
+  // All of the interests buttons to show
+  const interestsButtons = [
+    { value: 'Cannabis', color: '#CFE7C4' },
+    { value: 'Education', color: '#A9D3E5' },
+    { value: 'Food and Land', color: '#BFEBE0' },
+    { value: 'Fun', color: '#F9B893' },
+    { value: 'Health', color: '#F9B893' },
+    { value: 'Housing', color: '#EF8B8B' },
+    { value: 'Immigration', color: '#D8ACE8' },
+    { value: 'Literature', color: '#A5C4F2' },
+    { value: 'Music', color: '#BFEBE0' },
+    { value: 'Nature', color: '#CFE7C4' },
+    { value: 'Politics', color: '#A5C4F2' },
+    { value: 'Stage and Screen', color: '#D8ACE8' },
+    { value: 'Transportation', color: '#F1D8B0' },
+    { value: 'Visual Arts', color: '#BAB9E9' },
+  ];
 
   return (
     <div className="onboard6-wrapper">
@@ -41,202 +59,17 @@ const Onboard6: FC<IProps> = ({ interests, setInterests }): ReactElement => {
           What topics are you interested in working on?
         </div>
         <div className="select-group">
-          <Button
-            value="Cannabis"
-            style={{
-              backgroundColor: `${
-                interests.indexOf('Cannabis') === NOT_FOUND_IDX
-                  ? '#CFE7C4'
-                  : '#CCD1D1'
-              }`,
-            }}
-            onClick={handleInterests}
-            className="select"
-          >
-            Cannabis
-          </Button>
-          <Button
-            value="Education"
-            style={{
-              backgroundColor: `${
-                interests.indexOf('Education') === NOT_FOUND_IDX
-                  ? '#A9D3E5'
-                  : '#CCD1D1'
-              }`,
-            }}
-            onClick={handleInterests}
-            className="select"
-          >
-            Education
-          </Button>
-          <Button
-            value="Food and Land"
-            style={{
-              backgroundColor: `${
-                interests.indexOf('Food and Land') === NOT_FOUND_IDX
-                  ? '#BFEBE0'
-                  : '#CCD1D1'
-              }`,
-            }}
-            onClick={handleInterests}
-            className="select"
-          >
-            Food and Land
-          </Button>
-          <Button
-            value="Fun"
-            style={{
-              backgroundColor: `${
-                interests.indexOf('Fun') === NOT_FOUND_IDX
-                  ? '#F9B893'
-                  : '#CCD1D1'
-              }`,
-            }}
-            onClick={handleInterests}
-            className="select"
-          >
-            Fun
-          </Button>
-          <Button
-            value="Health"
-            style={{
-              backgroundColor: `${
-                interests.indexOf('Health') === NOT_FOUND_IDX
-                  ? '#F9B893'
-                  : '#CCD1D1'
-              }`,
-            }}
-            onClick={handleInterests}
-            className="select"
-          >
-            Health
-          </Button>
-          <Button
-            value="Housing"
-            style={{
-              backgroundColor: `${
-                interests.indexOf('Housing') === NOT_FOUND_IDX
-                  ? '#EF8B8B'
-                  : '#CCD1D1'
-              }`,
-            }}
-            onClick={handleInterests}
-            className="select"
-          >
-            Housing
-          </Button>
-          <Button
-            value="Immigration"
-            style={{
-              backgroundColor: `${
-                interests.indexOf('Immigration') === NOT_FOUND_IDX
-                  ? '#D8ACE8'
-                  : '#CCD1D1'
-              }`,
-            }}
-            onClick={handleInterests}
-            className="select"
-          >
-            Immigration
-          </Button>
-          <Button
-            value="Literature"
-            style={{
-              backgroundColor: `${
-                interests.indexOf('Literature') === NOT_FOUND_IDX
-                  ? '#A5C4F2'
-                  : '#CCD1D1'
-              }`,
-            }}
-            onClick={handleInterests}
-            className="select"
-          >
-            Literature
-          </Button>
-          <Button
-            value="Music"
-            style={{
-              backgroundColor: `${
-                interests.indexOf('Music') === NOT_FOUND_IDX
-                  ? '#BFEBE0'
-                  : '#CCD1D1'
-              }`,
-            }}
-            onClick={handleInterests}
-            className="select"
-          >
-            Music
-          </Button>
-          <Button
-            value="Nature"
-            style={{
-              backgroundColor: `${
-                interests.indexOf('Nature') === NOT_FOUND_IDX
-                  ? '#CFE7C4'
-                  : '#CCD1D1'
-              }`,
-            }}
-            onClick={handleInterests}
-            className="select"
-          >
-            Nature
-          </Button>
-          <Button
-            value="Politics"
-            style={{
-              backgroundColor: `${
-                interests.indexOf('Politics') === NOT_FOUND_IDX
-                  ? '#A5C4F2'
-                  : '#CCD1D1'
-              }`,
-            }}
-            onClick={handleInterests}
-            className="select"
-          >
-            Politics
-          </Button>
-          <Button
-            value="Stage and Screen"
-            style={{
-              backgroundColor: `${
-                interests.indexOf('Stage and Screen') === NOT_FOUND_IDX
-                  ? '#D8ACE8'
-                  : '#CCD1D1'
-              }`,
-            }}
-            onClick={handleInterests}
-            className="select"
-          >
-            Stage and Screen
-          </Button>
-          <Button
-            value="Transportation"
-            style={{
-              backgroundColor: `${
-                interests.indexOf('Transportation') === NOT_FOUND_IDX
-                  ? '#F1D8B0'
-                  : '#CCD1D1'
-              }`,
-            }}
-            onClick={handleInterests}
-            className="select"
-          >
-            Transportation
-          </Button>
-          <Button
-            value="Visual Arts"
-            style={{
-              backgroundColor: `${
-                interests.indexOf('Visaul Arts') === NOT_FOUND_IDX
-                  ? '#BAB9E9'
-                  : '#CCD1D1'
-              }`,
-            }}
-            onClick={handleInterests}
-            className="select"
-          >
-            Visual Arts
-          </Button>
+          {interestsButtons.map((button) => (
+            <WizardSelectButton
+              key={button.value}
+              onClick={handleInterests}
+              selectedArray={interests}
+              width="150px"
+              margin="10px 15px 10px 15px"
+              value={button.value}
+              color={button.color}
+            />
+          ))}
         </div>
       </div>
     </div>

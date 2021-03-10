@@ -41,21 +41,7 @@
   margin-bottom: 15px;
 }
 
-.races-wrapper .races-content-wrapper .select-row-1 .select {
-  padding: 5px 20px 5px 20px;
-  margin: 20px 0px 20px 0px;
-  border-radius: 1rem;
-  color: black;
-}
-
 .races-wrapper .races-content-wrapper .select-row-2 {
   display: flex;
   justify-content: center;
-}
-
-.races-wrapper .races-content-wrapper .select-row-2 .select {
-  margin: 0px 60px 0px 60px;
-  padding: 5px 20px 5px 20px;
-  border-radius: 1rem;
-  color: black;
 }

@@ -49,17 +49,4 @@
   font-size: 24px;
   padding: 10px 0px 10px 0px;
   margin-bottom: 15px;
-  margin: auto;
-}
-
-.personal-information
-  .personal-information-wrapper
-  .personal-information-form
-  .section
-  .select {
-  color: black;
-  margin-top: 20px;
-  width: 80%;
-  border-radius: 1rem;
-  height: 30px;
 }

@@ -5,9 +5,10 @@ import React, {
   ReactElement,
   MouseEvent,
 } from 'react';
-import { Button } from 'semantic-ui-react';
 
 import PersonalInfoSvg from '../../assets/personal-information.svg';
+import WizardSelectButton from '../../components/WizardSelectButton/WizardSelectButton';
+import { handleSelectGroupArray } from '../../utils/helpers';
 
 import '../../css/wizard/Onboard2.css';
 
@@ -18,39 +19,54 @@ interface IProps {
   setPronouns: Dispatch<SetStateAction<Array<string>>>;
 }
 
-const NOT_FOUND_IDX = -1;
-
+/**
+ * Builds and controls the form management for Onboard2 of the Onboarding Wizard
+ *
+ * @param {Array<string>} genders the selected genders
+ * @param {Array<string>} pronouns the selected pronouns
+ * @param {Dispatch<SetStateAction<Array<string>>>} setGenders React setter funtion to update genders
+ * @param {Dispatch<SetStateAction<Array<string>>>} setPronouns React setter function to update pronouns
+ */
 const Onboard2: FC<IProps> = ({
   genders,
   pronouns,
   setGenders,
   setPronouns,
 }): ReactElement => {
+  /**
+   * Adds selected gender to the genders form array if it isn't already there, otherwise removes it
+   *
+   * @param e the mouse event from clicking one of the gender select optoins
+   */
   const handleGenders = (e: MouseEvent<HTMLButtonElement>): void => {
-    const elementIdx = genders.indexOf(e.currentTarget.value);
-    if (elementIdx === NOT_FOUND_IDX) {
-      const addedGenders = genders.concat(e.currentTarget.value);
-      setGenders(addedGenders);
-    } else {
-      const removedGenders = genders.filter(
-        (gender) => gender !== e.currentTarget.value,
-      );
-      setGenders(removedGenders);
-    }
+    handleSelectGroupArray(e, genders, setGenders);
   };
 
+  /**
+   * Adds selected pronoun to the pronouns form array if it isn't already there, otherwise removes it
+   *
+   * @param e the mouse event of clicking one of the pronoun select options
+   */
   const handlePronouns = (e: MouseEvent<HTMLButtonElement>): void => {
-    const elementIdx = pronouns.indexOf(e.currentTarget.value);
-    if (elementIdx === NOT_FOUND_IDX) {
-      const addedGenders = pronouns.concat(e.currentTarget.value);
-      setPronouns(addedGenders);
-    } else {
-      const removedGenders = pronouns.filter(
-        (pronoun) => pronoun !== e.currentTarget.value,
-      );
-      setPronouns(removedGenders);
-    }
+    handleSelectGroupArray(e, pronouns, setPronouns);
   };
+
+  // All of the gender buttons to render
+  const genderButtons = [
+    { value: 'Man', color: '#EF8B8B' },
+    { value: 'Woman', color: '#CFE7C4' },
+    { value: 'Nonbinary', color: '#F9B893' },
+    { value: 'Other', color: '#BFEBE0' },
+  ];
+
+  // All of the pronoun buttons to render
+  const pronounButtons = [
+    { value: 'He/his', color: '#EF8B8B' },
+    { value: 'She/her', color: '#CFE7C4' },
+    { value: 'They/them', color: '#F9B893' },
+    { value: 'Ze/hir', color: '#F1D8B0' },
+    { value: 'Other', color: '#BFEBE0' },
+  ];
 
   return (
     <div className="personal-information">
@@ -70,163 +86,33 @@ const Onboard2: FC<IProps> = ({
         <div className="personal-information-form">
           <div className="section">
             <div className="list-title">Gender</div>
-            <Button
-              onClick={handleGenders}
-              value="Man"
-              style={{
-                backgroundColor: `${
-                  genders.indexOf('Man') === NOT_FOUND_IDX
-                    ? '#EF8B8B'
-                    : '#CCD1D1'
-                }`,
-              }}
-              className="select"
-            >
-              Man
-            </Button>
-            <Button
-              onClick={handleGenders}
-              value="Woman"
-              style={{
-                backgroundColor: `${
-                  genders.indexOf('Woman') === NOT_FOUND_IDX
-                    ? '#CFE7C4'
-                    : '#CCD1D1'
-                }`,
-              }}
-              className="select"
-            >
-              Woman
-            </Button>
-            <Button
-              onClick={handleGenders}
-              value="Nonbinary"
-              style={{
-                backgroundColor: `${
-                  genders.indexOf('Nonbinary') === NOT_FOUND_IDX
-                    ? '#F9B893'
-                    : '#CCD1D1'
-                }`,
-              }}
-              className="select"
-            >
-              Nonbinary
-            </Button>
-            <Button
-              onClick={handleGenders}
-              value="Trans Man"
-              style={{
-                backgroundColor: `${
-                  genders.indexOf('Trans Man') === NOT_FOUND_IDX
-                    ? '#A5C4F2'
-                    : '#CCD1D1'
-                }`,
-              }}
-              className="select"
-            >
-              Trans Man
-            </Button>
-            <Button
-              onClick={handleGenders}
-              value="Trans Woman"
-              style={{
-                backgroundColor: `${
-                  genders.indexOf('Trans Woman') === NOT_FOUND_IDX
-                    ? '#BAB9E9'
-                    : '#CCD1D1'
-                }`,
-              }}
-              className="select"
-            >
-              Trans Woman
-            </Button>
-            <Button
-              onClick={handleGenders}
-              value="Other"
-              style={{
-                backgroundColor: `${
-                  genders.indexOf('Other') === NOT_FOUND_IDX
-                    ? '#BFEBE0'
-                    : '#CCD1D1'
-                }`,
-              }}
-              className="select"
-            >
-              Other
-            </Button>
+
+            {genderButtons.map((button) => (
+              <WizardSelectButton
+                key={button.value}
+                onClick={handleGenders}
+                selectedArray={genders}
+                value={button.value}
+                width="90%"
+                margin="25px 0px 0px 20px"
+                color={button.color}
+              />
+            ))}
           </div>
           <div className="section">
             <div className="list-title">Pronouns</div>
-            <Button
-              onClick={handlePronouns}
-              value="He/his"
-              style={{
-                backgroundColor: `${
-                  pronouns.indexOf('He/his') === NOT_FOUND_IDX
-                    ? '#EF8B8B'
-                    : '#CCD1D1'
-                }`,
-              }}
-              className="select"
-            >
-              He/his
-            </Button>
-            <Button
-              onClick={handlePronouns}
-              value="She/her"
-              style={{
-                backgroundColor: `${
-                  pronouns.indexOf('She/her') === NOT_FOUND_IDX
-                    ? '#CFE7C4'
-                    : '#CCD1D1'
-                }`,
-              }}
-              className="select"
-            >
-              She/her
-            </Button>
-            <Button
-              onClick={handlePronouns}
-              value="They/them"
-              style={{
-                backgroundColor: `${
-                  pronouns.indexOf('They/them') === NOT_FOUND_IDX
-                    ? '#F9B893'
-                    : '#CCD1D1'
-                }`,
-              }}
-              className="select"
-            >
-              They/them
-            </Button>
-            <Button
-              onClick={handlePronouns}
-              value="Ze/hir"
-              style={{
-                backgroundColor: `${
-                  pronouns.indexOf('Ze/hir') === NOT_FOUND_IDX
-                    ? '#F1D8B0'
-                    : '#CCD1D1'
-                }`,
-              }}
-              className="select"
-            >
-              Ze//hir
-            </Button>
-            <Button
-              onClick={handlePronouns}
-              value="Other"
-              style={{
-                backgroundColor: `${
-                  pronouns.indexOf('Other') === NOT_FOUND_IDX
-                    ? '#BFEBE0'
-                    : '#CCD1D1'
-                }`,
-              }}
-              className="select"
-            >
-              Other
-            </Button>
+
+            {pronounButtons.map((button) => (
+              <WizardSelectButton
+                key={button.value}
+                onClick={handlePronouns}
+                selectedArray={pronouns}
+                value={button.value}
+                width="90%"
+                margin="25px 0px 0px 20px"
+                color={button.color}
+              />
+            ))}
           </div>
         </div>
       </div>

@@ -6,6 +6,9 @@ import '../../css/wizard/Onboard8.css';
 import Onboard8SVG from '../../assets/onboard8.svg';
 import RequiredSVG from '../../assets/required.svg';
 
+/**
+ * Builds and controls the form management for Onboard8 of the Onboarding Wizard
+ */
 const Onboard8 = (): ReactElement => (
   <div className="onboard8-wrapper">
     <img className="page-svg" alt="Oboard 8" src={Onboard8SVG} />

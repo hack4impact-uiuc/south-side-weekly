@@ -55,6 +55,9 @@ const WizardWrapper = (): ReactElement => {
   const [linkedIn, setLinkedIn] = useState<string>('');
   const [twitter, setTwitter] = useState<string>('');
 
+  /**
+   * React hook to upate the viewable pages based on the role change
+   */
   useEffect(() => {
     let parsedPages = Object.values(WizardPage);
     if (role === 'STAFF') {
@@ -91,7 +94,7 @@ const WizardWrapper = (): ReactElement => {
   };
 
   /**
-   * Updatse the role and triggers the next page event
+   * Updates the role and triggers the next page event
    * @param event the mouse event from clicking on the button
    */
   const handleRole = (event: MouseEvent<HTMLButtonElement>): void => {
@@ -100,7 +103,8 @@ const WizardWrapper = (): ReactElement => {
   };
 
   /**
-   * @returns an array of stirngs representing the pages to count in the WizardPageCounter
+   * Gets all of
+   * @returns an array of strings representing the pages to count in the WizardPageCounter
    */
   const getCountablePages = (): Array<string> => {
     const countablePages = [...viewablePages];
