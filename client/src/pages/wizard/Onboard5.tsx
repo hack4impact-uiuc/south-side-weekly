@@ -30,6 +30,7 @@ const Onboard5: FC<IProps> = ({
 }): ReactElement => {
   /**
    * Adds selected current team to the current teams form array if it isn't already there, otherwise removes it
+   *
    * @param e the mouse event of clicking one of the current team select options
    */
   const handleCurrentTeams = (e: MouseEvent<HTMLButtonElement>): void => {

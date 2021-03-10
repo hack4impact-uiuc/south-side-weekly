@@ -11,6 +11,7 @@ interface IProps {
 
 /**
  * Builds and controls the form management for the Initial Prompt of the Onboarding Wizard
+ *
  * @param {(e: MouseEvent<HTMLButtonElement) : void} handleRole updates role React state variable
  */
 const WizardInitialPrompt: FC<IProps> = ({ handleRole }): ReactElement => (

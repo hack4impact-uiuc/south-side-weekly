@@ -19,6 +19,9 @@ import Onboard7 from './Onboard7';
 import Onboard8 from './Onboard8';
 import Compleition from './Completion';
 
+/**
+ * Enum to represent which on boarding page the user is on
+ */
 enum WizardPage {
   INITIAL_PAGE = 'INITIAL_PAGE',
   ONBOARD_1 = 'ONBOARD_1',
@@ -75,7 +78,6 @@ const WizardWrapper = (): ReactElement => {
    * Gos to the next page
    */
   const handlePageNext = (): void => {
-    // const pages = getPages();
     const currentIdx = viewablePages.indexOf(page);
     if (currentIdx <= viewablePages.length) {
       setPage(viewablePages[currentIdx + 1]);
@@ -86,7 +88,6 @@ const WizardWrapper = (): ReactElement => {
    * Gos back a page
    */
   const handlePagePrevious = (): void => {
-    // const pages = getPages();
     const currentIdx = viewablePages.indexOf(page);
     if (currentIdx > 0) {
       setPage(viewablePages[currentIdx - 1]);
@@ -95,6 +96,7 @@ const WizardWrapper = (): ReactElement => {
 
   /**
    * Updates the role and triggers the next page event
+   *
    * @param event the mouse event from clicking on the button
    */
   const handleRole = (event: MouseEvent<HTMLButtonElement>): void => {
@@ -104,6 +106,7 @@ const WizardWrapper = (): ReactElement => {
 
   /**
    * Gets all of
+   *
    * @returns an array of strings representing the pages to count in the WizardPageCounter
    */
   const getCountablePages = (): Array<string> => {
@@ -144,6 +147,12 @@ const WizardWrapper = (): ReactElement => {
     handlePageNext();
   };
 
+  /**
+   * Decides whether or not to show the next button on the page
+   * @returns true if role is staff and page is not equal to Onboard 7,
+   *          true if role is contributor and page is not equal to Onboard 8
+   *          else false
+   */
   const shouldShowNextBtn = (): boolean => {
     if (role === 'STAFF') {
       return page !== WizardPage.ONBOARD_7.toString();
