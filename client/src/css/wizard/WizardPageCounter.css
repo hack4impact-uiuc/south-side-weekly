@@ -4,14 +4,11 @@
 }
 
 .page-counter-wrapper .page-icon {
-  padding: 15px;
-  border-radius: 50%;
-  background-color: rgb(61, 79, 145, 0.55);
-  font-size: 24px;
-  color: white;
-  margin: 0px 5px 0px 5px;
+  background: rgb(61, 79, 145, 0.55) !important;
+  font-size: 17px !important;
+  color: white !important;
 }
 
 .page-counter-wrapper .active {
-  background-color: rgb(61, 79, 145, 0.95);
+  background: rgb(61, 79, 145, 0.95) !important;
 }

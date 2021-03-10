@@ -75,6 +75,15 @@ const WizardWrapper = (): ReactElement => {
   }, [role]);
 
   /**
+   * Sets the current page in view to a specific page
+   *
+   * @param page the page to change to
+   */
+  const updateCurrentPage = (page: string): void => {
+    setPage(page);
+  };
+
+  /**
    * Gos to the next page
    */
   const handlePageNext = (): void => {
@@ -270,6 +279,7 @@ const WizardWrapper = (): ReactElement => {
             <WizardPageCounter
               wizardPages={getCountablePages()}
               activePage={page}
+              pageChanger={updateCurrentPage}
             />
           )}
       </div>
