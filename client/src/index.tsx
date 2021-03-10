@@ -6,7 +6,6 @@ import 'semantic-ui-css/semantic.min.css';
 import Home from './pages/Home';
 import WizardWrapper from './pages/wizard/WizardWrapper';
 
-import 'semantic-ui-css/semantic.min.css';
 import './css/index.css';
 
 ReactDOM.render(
@@ -20,4 +19,3 @@ ReactDOM.render(
   </React.StrictMode>,
   document.getElementById('root'),
 );
-d
