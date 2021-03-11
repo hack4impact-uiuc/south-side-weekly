@@ -1,0 +1,14 @@
+.page-counter-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.page-counter-wrapper .page-icon {
+  background: rgb(61, 79, 145, 0.55) !important;
+  font-size: 17px !important;
+  color: white !important;
+}
+
+.page-counter-wrapper .active {
+  background: rgb(61, 79, 145, 0.95) !important;
+}

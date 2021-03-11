@@ -1,0 +1,22 @@
+.select-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-top: 20px;
+  padding-right: 15px;
+}
+
+.select-wrapper .selected-icon {
+  opacity: 0;
+  width: 20px;
+}
+
+.select-wrapper .active {
+  opacity: 1;
+}
+
+.select-wrapper .select-btn {
+  color: black !important;
+  border-radius: 1rem !important;
+}
