@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-
-import { IPitch } from '../../../api/src/utils/types';
+import { IPitch } from 'ssw-common';
 
 const BASE_URL = process.env.REACT_APP_VERCEL_URL
   ? `https://${process.env.REACT_APP_VERCEL_URL}/api`
