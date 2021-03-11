@@ -1,13 +1,14 @@
 import React, { ReactElement } from 'react';
-import { Input, Label} from 'semantic-ui-react';
+import { Input, Label, Button} from 'semantic-ui-react';
 
 import Sidebar from '../../components/Sidebar';
 import Logo from '../../assets/ssw-form-header.png'
-import Mail from '../../assets/mail.png'
-import Phone from '../../assets/phone.png'
-import Linkedin from '../../assets/linkedin.png'
+import Mail from '../../assets/mail.svg'
+import Phone from '../../assets/phone.svg'
+import Linkedin from '../../assets/linkedin.svg'
 import Globe from '../../assets/globe.png'
-import Twitter from '../../assets/twitter.png'
+import Twitter from '../../assets/twitter.svg'
+import Pfp from '../../assets/pfp.svg'
 
 import '../../css/Profile.css';
 
@@ -21,6 +22,13 @@ function Profile(): ReactElement {
     </div>
     <div className="section">
       
+
+      <div className="pfp-section">
+        <Button
+          content="Edit Profile"
+        />
+        <img src={Pfp} alt="pfp" className="pfp"></img>
+      </div>
 
       <div className="basic-input-section">
         <div className="section-title">
@@ -86,13 +94,19 @@ function Profile(): ReactElement {
         </div>
       </div>
 
+      <hr/>
+
       <div className="social-input-section">
         <div className="section-title">
           <h3>Socials/Contact</h3>
         </div>
         <div className="social-item-wrapper">
+            
           
           <div className="input-wrapper">
+          <div>
+              <img className="icon" src={Mail} alt="mail"/>
+            </div>
               {/*<Label horizontal circular>Name</Label>*/}
               <Input
                 className="input-field"
@@ -102,10 +116,11 @@ function Profile(): ReactElement {
         </div>
 
         <div className="social-item-wrapper">
-          <div className="icon">
-            <img src={Mail} alt="mail"/>
-          </div>
+          
           <div className="input-wrapper">
+          <div>
+            <img className="icon" src={Phone} alt="mail"/>
+          </div>
               <Input
                 className="input-field"
                 transparent
@@ -115,6 +130,9 @@ function Profile(): ReactElement {
         </div>
 
         <div className="input-wrapper">
+        <div>
+            <img className="icon" src={Linkedin} alt="mail"/>
+          </div>
             <span className="label">Gender:</span>
             {/*<Label horizontal circular>Name</Label>*/}
             <Input
@@ -125,16 +143,9 @@ function Profile(): ReactElement {
         </div>
 
         <div className="input-wrapper">
-            <span className="label">Pronouns:</span>
-            {/*<Label horizontal circular>Name</Label>*/}
-            <Input
-              className="input-field"
-              transparent
-              //fluid
-            />
-        </div>
-
-        <div className="input-wrapper">
+        <div>
+            <img className="icon" src={Globe} alt="mail"/>
+          </div>
             <span className="label">Position:</span>
             {/*<Label horizontal circular>Name</Label>*/}
             <Input
@@ -145,6 +156,9 @@ function Profile(): ReactElement {
         </div>
 
         <div className="input-wrapper">
+        <div>
+            <img className="icon" src={Twitter} alt="mail"/>
+          </div>
             <span className="label">Date Joined:</span>
             {/*<Label horizontal circular>Name</Label>*/}
             <Input
