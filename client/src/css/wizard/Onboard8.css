@@ -1,0 +1,56 @@
+.onboard8-wrapper {
+  width: 85%;
+  margin: auto;
+  margin-left: 20vh;
+}
+
+.onboard8-wrapper .page-svg {
+  position: absolute;
+  left: 0px;
+  bottom: 30px;
+  width: 30%;
+}
+
+.onboard8-wrapper .onboard8-content {
+  text-align: center;
+  margin: auto;
+  width: fit-content;
+}
+
+.onboard8-wrapper .onboard8-content .calendly-btn {
+  margin-top: 15vh;
+  font-size: 28px;
+  padding: 15px 50px 15px 50px;
+  border-radius: 1rem;
+  background-color: #3d4f91;
+  color: white;
+}
+
+.onboard8-wrapper .onboard8-content .calendly-btn:active {
+  background-color: #3d4f91;
+  color: white;
+}
+
+.onboard8-wrapper .onboard8-content .calendly-btn:hover {
+  background-color: #3d4f91;
+  color: white;
+}
+
+.onboard8-wrapper .onboard8-content .calendly-btn:focus {
+  background-color: #3d4f91;
+  color: white;
+}
+
+.onboard8-wrapper .onboard8-content .page-text {
+  position: relative;
+  font-size: 24px;
+  font-weight: 600;
+  padding-left: 30px;
+  line-height: 40px;
+}
+
+.onboard8-wrapper .onboard8-content .page-text .required-icon {
+  position: absolute;
+  top: 10px;
+  left: 0;
+}

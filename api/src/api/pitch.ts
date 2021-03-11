@@ -13,18 +13,52 @@ const router = express.Router();
  */
 const isValidMongoId = (id: string): boolean => ObjectId.isValid(id);
 
-// Gets all pitches
+// Gets pitches
 router.get(
   '/',
   errorWrap(async (req: Request, res: Response) => {
-    const pitch = await Pitch.find({});
-    res.status(200).json({
-      message: `Successfully retrieved all pitches.`,
-      success: true,
-      result: pitch,
-    });
+    if (req.query.filter === 'unclaimed') {
+      // Gets all unclaimed pitches
+      const pitch = await Pitch.find({
+        pitchStatus: pitchStatusEnum.APPROVED,
+        $expr: {
+          $or: [
+            { $lt: ['$currentWriters', '$targetWriters'] },
+            { $lt: ['$currentEditors', '$targetEditors'] },
+            { $lt: ['$currentData', '$targetData'] },
+            { $lt: ['$currentVisuals', '$targetVisuals'] },
+            { $lt: ['$currentIllustration', '$targetIllustration'] },
+            { $lt: ['$currentPhotography', '$targetPhotography'] },
+            { $lt: ['$currentFactChecking', '$targetFactChecking'] },
+            { $lt: ['$currentRadio', '$targetRadio'] },
+            { $lt: ['$currentLayout', '$targetLayout'] },
+          ],
+        },
+      });
+      res.status(200).json({
+        message: `Successfully retrieved unclaimed pitches.`,
+        success: true,
+        result: pitch,
+      });
+    } else {
+      // Gets all pitches
+      const pitch = await Pitch.find({});
+      res.status(200).json({
+        message: `Successfully retrieved all pitches.`,
+        success: true,
+        result: pitch,
+      });
+    }
   }),
 );
+
+// Gets all pitches on the Pitch Doc (all approved but unclaimed pitches)
+// router.get(
+//   '/?filter=unclaimed',
+//   errorWrap(async (req: Request, res: Response) => {
+
+//   }),
+// );
 
 // Gets pitch by pitch id
 router.get(
@@ -129,36 +163,6 @@ router.delete(
       success: true,
       message: 'Pitch successfully deleted',
       result: deletedPitch,
-    });
-  }),
-);
-
-// Gets all pitches on the Pitch Doc (all approved but unclaimed pitches)
-router.get(
-  // not sure about this URL, ideally it should just be "unclaimed"
-  // but it gives me error "bad id format" bc it thinks it's an id...
-  '/doc/unclaimed',
-  errorWrap(async (req: Request, res: Response) => {
-    const pitch = await Pitch.find({
-      pitchStatus: pitchStatusEnum.APPROVED,
-      $expr: {
-        $or: [
-          { $lt: ['$currentWriters', '$targetWriters'] },
-          { $lt: ['$currentEditors', '$targetEditors'] },
-          { $lt: ['$currentData', '$targetData'] },
-          { $lt: ['$currentVisuals', '$targetVisuals'] },
-          { $lt: ['$currentIllustration', '$targetIllustration'] },
-          { $lt: ['$currentPhotography', '$targetPhotography'] },
-          { $lt: ['$currentFactChecking', '$targetFactChecking'] },
-          { $lt: ['$currentRadio', '$targetRadio'] },
-          { $lt: ['$currentLayout', '$targetLayout'] },
-        ],
-      },
-    });
-    res.status(200).json({
-      message: `Successfully retrieved unclaimed pitches.`,
-      success: true,
-      result: pitch,
     });
   }),
 );

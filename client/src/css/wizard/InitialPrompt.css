@@ -1,0 +1,76 @@
+.initial-prompt {
+  width: 60%;
+  margin: auto;
+  margin-left: 25vw;
+}
+
+.initial-prompt .header-text {
+  margin-bottom: 15vh;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 2.5rem;
+  line-height: 58px;
+  color: #3b3f4c;
+}
+
+.initial-prompt .page-image {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 35%;
+}
+
+.initial-prompt .btn-group .btn-wrapper {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  margin: auto;
+  width: 45%;
+}
+
+.initial-prompt .btn-group .btn-wrapper .icon {
+  font-size: 12px;
+  margin-left: 10px;
+  height: fit-content;
+}
+
+.initial-prompt .btn-group .btn-wrapper .icon:hover {
+  font-size: 12px;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.initial-prompt .btn-group .btn-wrapper .icon:hover + .hide {
+  display: block;
+}
+
+.initial-prompt .btn-group .btn-wrapper .hide {
+  display: none;
+  position: absolute;
+  background-color: rgba(229, 229, 229, 0.75);
+  padding: 10px;
+  border-radius: 1rem;
+  width: 70%;
+  left: 100%;
+  margin-left: 20px;
+  font-size: 18px;
+  line-height: 25px;
+}
+
+.initial-prompt .btn-group .btn-wrapper .btn {
+  margin: 20px 0px 20px 0px;
+  padding: 20px 5px 20px 5px;
+  font-size: 36px;
+  align-items: center;
+  border-radius: 1rem;
+  background-color: #334a86;
+  color: white;
+  width: 100%;
+}
+
+.initial-prompt .btn-group .btn-wrapper .btn:hover {
+  background-color: #2c4b9b;
+  color: white;
+}

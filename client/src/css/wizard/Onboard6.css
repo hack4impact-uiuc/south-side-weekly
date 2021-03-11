@@ -1,0 +1,30 @@
+.onboard6-wrapper {
+  margin-left: 20vh;
+  text-align: center;
+}
+
+.onboard6-wrapper .page-svg {
+  position: absolute;
+  left: 30px;
+  bottom: 30px;
+  width: 35%;
+  z-index: -1;
+}
+
+.onboard6-wrapper .onboard6-content {
+  margin-top: 5vh;
+}
+
+.onboard6-wrapper .onboard6-content .page-text {
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.onboard6-wrapper .onboard6-content .select-group {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: auto;
+  margin-top: 5vh;
+  width: 75%;
+}

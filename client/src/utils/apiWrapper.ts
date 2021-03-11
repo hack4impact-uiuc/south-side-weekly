@@ -63,12 +63,12 @@ export const addSampleResponse = (
 
 /**
  * Returns all unclaimed and approved pitches
- * Returns GET_SAMPLE_FAIL upon failure
+ * Returns GET_UNCLAIMED_PITCHES_FAIL upon failure
  */
 export const getUnclaimedPitches = (): Promise<
   AxiosResponse<GetSampleResponseType> | ErrorWrapper
 > => {
-  const requestString = `${BASE_URL}/pitch/doc/unclaimed`;
+  const requestString = `${BASE_URL}/pitch/?filter=unclaimed`;
   return axios
     .get(requestString, {
       headers: {
@@ -76,7 +76,7 @@ export const getUnclaimedPitches = (): Promise<
       },
     })
     .catch((error) => ({
-      type: 'GET_SAMPLE_FAIL',
+      type: 'GET_UNCLAIMED_PITCHES_FAIL',
       error,
     }));
 };
