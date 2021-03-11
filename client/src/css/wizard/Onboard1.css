@@ -1,0 +1,54 @@
+.basic-info-wrapper {
+  display: flex;
+  margin: auto;
+  width: 80%;
+  margin-top: 50px;
+}
+
+.basic-info-wrapper .basic-info-image {
+  width: 50%;
+}
+
+.basic-info-wrapper .btn-wrapper {
+  display: flex;
+  margin-left: 5%;
+  width: 45%;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.basic-info-wrapper .btn-wrapper .input-wrapper {
+  display: flex;
+  position: relative;
+  width: 100%;
+  padding-left: 8%;
+}
+
+.basic-info-wrapper .btn-wrapper .input-wrapper .input .input-field {
+  width: 100%;
+  background-color: rgb(61, 79, 145, 0.25);
+  padding: 15px;
+  margin: 0;
+  border-radius: 1rem;
+}
+
+.basic-info-wrapper .btn-wrapper .input-wrapper .required-icon {
+  position: absolute;
+  left: 0%;
+  top: 50%;
+}
+
+.basic-info-wrapper .btn-wrapper .input-wrapper .input {
+  position: relative;
+  width: 100%;
+  padding-top: 6%;
+}
+
+.basic-info-wrapper .btn-wrapper .input-wrapper .input .label {
+  position: absolute;
+  top: 0;
+  left: 2%;
+  font-size: large;
+  font-weight: 600;
+}
