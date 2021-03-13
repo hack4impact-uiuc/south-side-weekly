@@ -5,6 +5,7 @@ import 'semantic-ui-css/semantic.min.css';
 
 import Home from './pages/Home';
 import WizardWrapper from './pages/wizard/WizardWrapper';
+import ResourcePage from './pages/ResourcePage';
 
 import './css/index.css';
 
@@ -14,6 +15,7 @@ ReactDOM.render(
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/join" component={WizardWrapper} />
+        <Route exact path="/resource" component={ResourcePage} />
       </Switch>
     </Router>
   </React.StrictMode>,
