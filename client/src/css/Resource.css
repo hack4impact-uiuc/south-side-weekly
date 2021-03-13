@@ -1,70 +1,61 @@
 .resource-page-wrapper {
-  position: relative;
-  /* TODO: remove this when in actual page context*/
-  height: 100vh;
+    position: relative;
+    /* TODO: remove this when in actual page context*/
+    height: 100vh;
 }
 
 .resource-page-wrapper .page-svg {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 30%;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 25%;
 }
 
 .resource-page-wrapper .resource-page-content {
-  width: 60%;
-  margin-left: 5vw;
+    width: 60%;
+    margin: auto;
 }
 
 .resource-page-wrapper .resource-page-content .page-text {
-  font-weight: 700;
-  font-size: 36px;
-  padding: 15vh 10vw 5vh 10vw;
-  text-shadow: rgb(0, 0, 4, 0.25);
+    font-weight: 700;
+    font-size: 36px;
+    padding: 15vh 0 10vh 0;
+    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 }
 
 .resource-page-wrapper .resource-page-content .resource-toggle-group {
-  display: flex;
-  justify-content: space-between;
-  width: 90%;
-  margin-left: 13vw;
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
 }
 
-.resource-page-wrapper
-  .resource-page-content
-  .resource-toggle-group
-  .toggle-button {
-  background-color: white !important;
-  color: black;
-  border: solid black 2px;
-  padding: 15px 30px 15px 30px;
-  border-radius: 10px;
-  font-size: 14px;
+.resource-page-wrapper .resource-page-content .resource-toggle-group .toggle-button {
+    background-color: white !important;
+    color: black;
+    border: solid black 2px;
+    border-radius: 10px;
+    font-size: 14px;
 }
 
 .resource-page-wrapper .resource-page-content .resource-toggle-group .active {
-  background-color: #3d4f91 !important;
-  color: white;
-  border-color: #3d4f91;
+    background-color: #3d4f91 !important;
+    color: white;
+    border-color: #3d4f91;
 }
 
 .resource-page-wrapper .resource-page-content .resource-btn-group {
-  width: 100%;
-  margin-left: 10vw;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
-.resource-page-wrapper
-  .resource-page-content
-  .resource-btn-group
-  .resource-btn {
-  border-radius: 1rem;
-  width: 200px;
-  height: 150px;
-  color: white;
-  background: linear-gradient(
-    to bottom right,
-    rgb(59, 63, 76),
-    rgb(61, 79, 145, 0.85)
-  );
-  margin: 50px 50px 0px 50px;
+.resource-page-wrapper .resource-page-content .resource-btn-group .resource-btn {
+    border-radius: 1rem;
+    width: 200px;
+    height: 150px;
+    color: white;
+    background: linear-gradient( to bottom right, rgb(59, 63, 76), rgb(61, 79, 145, 0.85));
+    margin: 50px 0px 0px 0px;
+    margin-right: 100px;
 }
