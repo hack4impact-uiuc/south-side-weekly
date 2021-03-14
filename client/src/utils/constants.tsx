@@ -17,20 +17,20 @@ const interestsButtons = [
 ];
 
 const enumToInterestButtons: { [key: string]: string } = {
-  "CANNABIS": 'Cannabis',
-  "EDUCATION": 'Education',
-  "FOOD AND LAND": 'Food and Land',
-  "FUN": 'Fun',
-  "HEALTH": 'Health',
-  "HOUSING": 'Housing',
-  "IMMIGRATION": 'Immigration',
-  "LITERATURE": 'Literature',
-  "MUSIC": 'Music',
-  "NATURE": 'Nature',
-  "POLITICS": 'Politics',
-  "STAGE AND SCREEN": 'Stage and Screen',
-  "TRANSPORTATION": 'Transportation',
-  "VISUAL ARTS": 'Visual Arts',
+  CANNABIS: 'Cannabis',
+  EDUCATION: 'Education',
+  'FOOD AND LAND': 'Food and Land',
+  FUN: 'Fun',
+  HEALTH: 'Health',
+  HOUSING: 'Housing',
+  IMMIGRATION: 'Immigration',
+  LITERATURE: 'Literature',
+  MUSIC: 'Music',
+  NATURE: 'Nature',
+  POLITICS: 'Politics',
+  'STAGE AND SCREEN': 'Stage and Screen',
+  TRANSPORTATION: 'Transportation',
+  'VISUAL ARTS': 'Visual Arts',
 };
 
 export { interestsButtons, enumToInterestButtons };

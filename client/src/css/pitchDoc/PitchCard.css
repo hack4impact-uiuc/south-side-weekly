@@ -9,12 +9,11 @@
   margin: 2%;
 }
 
-.ui.card,
-.ui.cards > .card {
+.ui.card {
   background-color: #334a86;
 }
 
-.ui.card,
-.ui.cards > .card.content.header {
+.ui.card > .content > .header,
+.ui.card > .content > .description {
   color: white;
 }

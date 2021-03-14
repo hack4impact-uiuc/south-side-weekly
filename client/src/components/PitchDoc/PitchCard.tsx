@@ -6,7 +6,7 @@ import { IPitch } from 'ssw-common';
 import { interestsButtons, enumToInterestButtons } from '../../utils/constants';
 import WizardSelectButton from '../WizardSelectButton/WizardSelectButton';
 
-const defaultOnClick= (): void => void 0;
+const defaultOnClick = (): void => void 0;
 
 interface IProps {
   pitch: IPitch;
