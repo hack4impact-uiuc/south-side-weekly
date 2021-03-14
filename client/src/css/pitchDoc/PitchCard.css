@@ -1,0 +1,20 @@
+.pitch-card {
+  position: relative;
+  text-align: center;
+  height: 100vh;
+}
+
+.logo {
+  width: 60%;
+  margin: 2%;
+}
+
+.ui.card,
+.ui.cards > .card {
+  background-color: #334a86;
+}
+
+.ui.card,
+.ui.cards > .card.content.header {
+  color: white;
+}

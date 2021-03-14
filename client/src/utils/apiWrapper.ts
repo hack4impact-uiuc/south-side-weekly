@@ -18,7 +18,11 @@ export function isError<T>(res: ApiResponse<T>): res is ErrorWrapper {
 
 export interface GetSampleResponseType {
   message: string;
-  result: IPitch;
+}
+
+export interface GetPitchesResponseType {
+  message: string;
+  result: [IPitch];
 }
 
 /**
@@ -66,7 +70,7 @@ export const addSampleResponse = (
  * Returns GET_UNCLAIMED_PITCHES_FAIL upon failure
  */
 export const getUnclaimedPitches = (): Promise<
-  AxiosResponse<GetSampleResponseType> | ErrorWrapper
+  AxiosResponse<GetPitchesResponseType> | ErrorWrapper
 > => {
   const requestString = `${BASE_URL}/pitch/?filter=unclaimed`;
   return axios
