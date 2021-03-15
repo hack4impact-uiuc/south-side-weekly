@@ -25,7 +25,7 @@ router.get(
   }),
 );
 
-// Gets resource by id
+// Gets a resource by id
 router.get(
   '/:resourceId',
   errorWrap(async (req: Request, res: Response) => {
