@@ -47,7 +47,7 @@ router.get(
       res.status(200).json({
         success: true,
         result: resource,
-        message: 'Successfully retreived resource',
+        message: 'Successfully retrieved resource',
       });
     }
   }),
