@@ -29,6 +29,7 @@ function Home(): ReactElement {
         <br />
         {text}
         <Link to="/join">Join</Link>
+        <Link to="/resource">Resource</Link>
       </p>
     </div>
   );
