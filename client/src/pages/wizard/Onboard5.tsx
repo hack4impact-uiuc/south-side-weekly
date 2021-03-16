@@ -11,6 +11,7 @@ import RequiredSvg from '../../assets/required.svg';
 import { handleSelectGroupArray } from '../../utils/helpers';
 import '../../css/wizard/Onboard5.css';
 import WizardSelectButton from '../../components/WizardSelectButton/WizardSelectButton';
+import { currentTeamsButtons } from '../../utils/constants';
 
 interface IProps {
   currentTeams: Array<string>;
@@ -36,19 +37,6 @@ const Onboard5: FC<IProps> = ({
   const handleCurrentTeams = (e: MouseEvent<HTMLButtonElement>): void => {
     handleSelectGroupArray(e, currentTeams, setCurrentTeams);
   };
-
-  // All of the buttons to show for the current teams
-  const currentTeamsButtons = [
-    { value: 'Data', color: '#EF8B8B' },
-    { value: 'Editing', color: '#A5C4F2' },
-    { value: 'Fact-checking', color: '#CFE7C4' },
-    { value: 'Illustration', color: '#BAB9E9' },
-    { value: 'Layout', color: '#F9B893' },
-    { value: 'Photography', color: '#D8ACE8' },
-    { value: 'Radio', color: '#F1D8B0' },
-    { value: 'Visuals', color: '#BFEBE0' },
-    { value: 'Writing', color: '#A9D3E5' },
-  ];
 
   return (
     <div className="onboard5-wrapper">

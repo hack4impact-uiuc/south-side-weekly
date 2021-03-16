@@ -28,17 +28,16 @@ const PitchCard: FC<IProps> = ({ pitch }): ReactElement => {
           </Card.Description>
         </Card.Content>
         <Card.Content>
-          {console.log(topics)}
-          {interestsButtons.map((button) => (
+          {topics.map((topic) => (
             <WizardSelectButton
-              disabled
               onClick={defaultOnClick}
-              key={button.value}
-              selectedArray={topics}
+              key={topic}
+              selectedArray={[]}
               width="150px"
               margin="10px 15px 10px 15px"
-              value={button.value}
-              color={button.color}
+              value={topic}
+              color={interestsButtons[topic]}
+              disabled
             />
           ))}
         </Card.Content>

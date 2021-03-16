@@ -3,7 +3,10 @@ import { IPitch } from 'ssw-common';
 
 import { getUnclaimedPitches, isError } from '../../utils/apiWrapper';
 import PitchGrid from '../../components/PitchDoc/PitchGrid';
+import ProfileSidebar from '../../components/PitchDoc/SideMenu';
 import Logo from '../../assets/ssw-form-header.png';
+
+import '../../css/pitchDoc/PitchDoc.css';
 
 function PitchDoc(): ReactElement {
   const [unclaimedPitches, setUnclaimedPitches] = useState<IPitch[]>([]);
@@ -23,10 +26,13 @@ function PitchDoc(): ReactElement {
 
   return (
     <div>
-      <div className="logo-header">
-        <img className="logo" alt="SSW Logo" src={Logo} />
+      <ProfileSidebar></ProfileSidebar>
+      <div className="content">
+        <div className="logo-header">
+          <img className="logo" alt="SSW Logo" src={Logo} />
+        </div>
+        <PitchGrid pitches={unclaimedPitches} />
       </div>
-      <PitchGrid pitches={unclaimedPitches} />
     </div>
   );
 }

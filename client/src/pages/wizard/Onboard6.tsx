@@ -42,15 +42,15 @@ const Onboard6: FC<IProps> = ({ interests, setInterests }): ReactElement => {
           What topics are you interested in working on?
         </div>
         <div className="select-group">
-          {interestsButtons.map((button) => (
+          {Object.keys(interestsButtons).map((interest) => (
             <WizardSelectButton
-              key={button.value}
+              key={interest}
               onClick={handleInterests}
               selectedArray={interests}
               width="150px"
               margin="10px 15px 10px 15px"
-              value={button.value}
-              color={button.color}
+              value={interest}
+              color={interestsButtons[interest]}
             />
           ))}
         </div>

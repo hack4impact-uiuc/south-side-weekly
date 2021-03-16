@@ -30,6 +30,7 @@ function Home(): ReactElement {
         {text}
         <Link to="/join">Join</Link>
         <Link to="/pitchDoc"> Pitch Doc </Link>
+        <Link to="/resource">Resource</Link>
       </p>
     </div>
   );

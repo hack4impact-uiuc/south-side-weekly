@@ -1,19 +1,17 @@
-.pitch-card {
-  position: relative;
-  text-align: center;
-  height: 100vh;
-}
-
 .logo {
   width: 60%;
   margin: 2%;
 }
 
 .ui.card {
-  background-color: #334a86;
+  background-color: rgba(61, 79, 145, 0.75);
+  box-shadow: 0px 3.31765px 3.31765px rgba(0, 0, 0, 0.25),
+    inset 0px 3.31765px 3.31765px rgba(0, 0, 0, 0.25);
+  border-radius: 9.95294px;
 }
 
 .ui.card > .content > .header,
 .ui.card > .content > .description {
-  color: white;
+  color: #f7fafb;
+  text-shadow: 0px 3.31765px 3.31765px rgba(0, 0, 0, 0.25);
 }

@@ -1,5 +1,6 @@
 import React, { FC, ReactElement } from 'react';
 import { IPitch } from 'ssw-common';
+import { Grid } from 'semantic-ui-react';
 
 import PitchCard from './PitchCard';
 
@@ -18,16 +19,17 @@ const PitchGrid: FC<IProps> = ({ pitches }): ReactElement => {
         index * 3 + 2 < pitches.length ? pitches[index * 3 + 2] : null;
 
       return (
-        <div key={first.name}>
-          <PitchCard pitch={first} />
-
-          {second && <PitchCard pitch={second} />}
-
-          {third && <PitchCard pitch={third} />}
-        </div>
+        <Grid.Row key={first.name}>
+          <Grid.Column>
+            <PitchCard pitch={first} />
+          </Grid.Column>
+          <Grid.Column>{second && <PitchCard pitch={second} />}</Grid.Column>
+          <Grid.Column>{third && <PitchCard pitch={third} />}</Grid.Column>
+        </Grid.Row>
       );
     });
-  return <div>{cards}</div>;
+
+  return <Grid columns={3}>{cards}</Grid>;
 };
 
 export default PitchGrid;

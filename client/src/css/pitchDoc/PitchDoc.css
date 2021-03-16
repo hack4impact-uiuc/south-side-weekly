@@ -1,0 +1,14 @@
+.ui.labeled.icon.menu {
+  float: left;
+  font-size: 1.5rem;
+  background: linear-gradient(
+    180deg,
+    rgba(61, 79, 145, 0.7125) 21.53%,
+    rgba(61, 79, 145, 0.2625) 110.95%
+  );
+  border-radius: 55px 55px 35px 35px;
+}
+
+.ui.vertical.icon.menu .item > .icon:not(.dropdown) {
+  color: #f7fafb;
+}
