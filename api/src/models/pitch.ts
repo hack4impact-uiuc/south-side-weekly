@@ -20,7 +20,11 @@ const Pitch = new mongoose.Schema({
   },
   assignmentGoogleDocLink: { type: String, default: null },
   assignmentContributors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  topic: { type: interestsEnum, default: interestsEnum.NONE },
+  topics: [{
+    type: String,
+    enum: Object.values(interestsEnum),
+    default: interestsEnum.NONE,
+  }],
   currentWriters: { type: Number, default: 0 },
   targetWriters: { type: Number, default: 0 },
   currentEditors: { type: Number, default: 0 },

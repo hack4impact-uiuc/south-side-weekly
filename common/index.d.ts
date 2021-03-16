@@ -34,7 +34,7 @@ export interface IPitch {
   assignmentStatus: string;
   assignmentGoogleDocLink: string;
   assignmentContributors: [IUser];
-  topic: string;
+  topics: [string];
   currentWriters: number;
   targetWriters: number;
   currentEditors: number;
