@@ -7,6 +7,23 @@ import {
   assignmentStatusEnum,
 } from '../utils/enums';
 
+export interface IStats extends Document<any> {
+  current: number;
+  target: number;
+}
+
+export interface ITeams extends Document<any> {
+  writers: IStats;
+  editors: IStats;
+  data: IStats;
+  visuals: IStats;
+  illustration: IStats;
+  photography: IStats;
+  factChecking: IStats;
+  radio: IStats;
+  layout: IStats;
+}
+
 export interface IPitch extends Document<any> {
   name: string;
   pitchAuthor: mongoose.Types.ObjectId;
@@ -15,28 +32,23 @@ export interface IPitch extends Document<any> {
   assignmentGoogleDocLink: string;
   assignmentContributors: [IUser];
   topic: string;
-  currentWriters: number;
-  targetWriters: number;
-  currentEditors: number;
-  targetEditors: number;
-  currentData: number;
-  targetData: number;
-  currentVisuals: number;
-  targetVisuals: number;
-  currentIllustration: number;
-  targetIllustration: number;
-  currentPhotography: number;
-  targetPhotography: number;
-  currentFactChecking: number;
-  targetFactChecking: number;
-  currentRadio: number;
-  targetRadio: number;
-  currentLayout: number;
-  targetLayout: number;
+  teams: ITeams;
   approvedBy: IUser;
   similarStories: [string];
   deadline: Date;
 }
+
+const defaultTeams: { [key: string]: { [key: string]: number } } = {
+  writers: { current: 1, target: 1 },
+  editors: { current: 1, target: 1 },
+  data: { current: 1, target: 1 },
+  visuals: { current: 1, target: 1 },
+  illustration: { current: 1, target: 1 },
+  photography: { current: 1, target: 1 },
+  factChecking: { current: 1, target: 1 },
+  radio: { current: 1, target: 1 },
+  layout: { current: 1, target: 1 },
+};
 
 /**
  * Mongoose Schema to represent a Pitch at South Side Weekly
@@ -52,24 +64,7 @@ const Pitch = new mongoose.Schema({
   assignmentGoogleDocLink: { type: String, default: null },
   assignmentContributors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   topic: { type: interestsEnum, default: interestsEnum.NONE },
-  currentWriters: { type: Number, default: 0 },
-  targetWriters: { type: Number, default: 0 },
-  currentEditors: { type: Number, default: 0 },
-  targetEditors: { type: Number, default: 0 },
-  currentData: { type: Number, default: 0 },
-  targetData: { type: Number, default: 0 },
-  currentVisuals: { type: Number, default: 0 },
-  targetVisuals: { type: Number, default: 0 },
-  currentIllustration: { type: Number, default: 0 },
-  targetIllustration: { type: Number, default: 0 },
-  currentPhotography: { type: Number, default: 0 },
-  targetPhotography: { type: Number, default: 0 },
-  currentFactChecking: { type: Number, default: 0 },
-  targetFactChecking: { type: Number, default: 0 },
-  currentRadio: { type: Number, default: 0 },
-  targetRadio: { type: Number, default: 0 },
-  currentLayout: { type: Number, default: 0 },
-  targetLayout: { type: Number, default: 0 },
+  teams: { type: Schema.Types.Map, default: defaultTeams },
   approvedBy: { type: Schema.Types.ObjectId, ref: 'User' },
   similarStories: [{ type: String, default: null }],
   deadline: { type: Date, default: null },

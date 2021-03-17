@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb';
 import { errorWrap } from '../middleware';
 
 import Pitch from '../models/pitch';
+import { pitchStatusEnum } from '../utils/enums';
 
 const router = express.Router();
 
@@ -12,16 +13,46 @@ const router = express.Router();
  */
 const isValidMongoId = (id: string): boolean => ObjectId.isValid(id);
 
-// Gets all pitches
+// Gets pitches
 router.get(
   '/',
   errorWrap(async (req: Request, res: Response) => {
-    const pitch = await Pitch.find({});
-    res.status(200).json({
-      message: `Successfully retrieved all pitches.`,
-      success: true,
-      result: pitch,
-    });
+    if (req.query.filter === 'unclaimed') {
+      // Gets all unclaimed pitches
+      const pitches = await Pitch.find({
+        pitchStatus: pitchStatusEnum.APPROVED,
+        $expr: {
+          $or: [
+            { $lt: ['teams.writers.current', 'teams.writers.target'] },
+            { $lt: ['teams.editors.current', 'teams.editors.target'] },
+            { $lt: ['teams.data.current', 'teams.data.target'] },
+            { $lt: ['teams.visuals.current', 'teams.visuals.target'] },
+            {
+              $lt: ['teams.illustration.current', 'teams.illustration.target'],
+            },
+            { $lt: ['teams.photography.current', 'teams.photography.target'] },
+            {
+              $lt: ['teams.factChecking.current', 'teams.factChecking.target'],
+            },
+            { $lt: ['teams.radio.current', 'teams.radio.target'] },
+            { $lt: ['teams.layout.current', 'teams.layout.target'] },
+          ],
+        },
+      });
+      res.status(200).json({
+        message: `Successfully retrieved unclaimed pitches.`,
+        success: true,
+        result: pitches,
+      });
+    } else {
+      // Gets all pitches
+      const pitch = await Pitch.find({});
+      res.status(200).json({
+        message: `Successfully retrieved all pitches.`,
+        success: true,
+        result: pitch,
+      });
+    }
   }),
 );
 
