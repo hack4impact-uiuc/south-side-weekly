@@ -36,7 +36,7 @@ To install and set up locally, follow the instructions in the [`/client`](https:
 
 ## Technologies
 
-This application is built with React/Typescript, Express, MongoDB, and tested with Cypress and Jest. Vercel is used for automatic deployment.
+This application is built with React + Semantic UI, Typescript, Express, MongoDB, and tested with Cypress and Jest. Vercel is used for automatic deployment.
 
 ## Team
 
