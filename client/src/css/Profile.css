@@ -1,7 +1,6 @@
 body {
-    position: relative;
-    font: Proxima Nova;
-
+  position: relative;
+  font: Proxima Nova;
 }
 /*
 @media only screen and (max-width: 600px) {
@@ -45,202 +44,181 @@ body {
 }*/
 
 .logo-header {
-    text-align: center;
+  text-align: center;
 }
 
 .logo-header .logo {
-    width: 45%;
-    /*height: 20%;*/
-    margin: 2%;
+  width: 45%;
+  /*height: 20%;*/
+  margin: 2%;
 }
-
 
 .basic-input-section {
-    position: absolute;
-    top: 160px;
-    left: 470px;
-
+  position: absolute;
+  top: 160px;
+  left: 470px;
 }
 
-.social-input-section{
-    position:absolute;
-    bottom: 50px;
-    left: 200px;
+.social-input-section {
+  position: absolute;
+  bottom: 50px;
+  left: 200px;
 }
 
 .basic-input-section .input-wrapper {
-    margin-top: 5px;
-    border-radius: 11.57px;
-    background-color: #F7FAFB;
-    /*border: 2px solid black;*/
-    width: 300px;
-    height: 24px;
-    padding-top: 2px;
-    padding-bottom: 3px;
-    opacity: 0.95;
-    -moz-box-shadow:    inset 0 0 3px #000000;
-    -webkit-box-shadow: inset 0 0 3px #000000;
-    box-shadow:         inset 0 0 3px #000000;
-    display: flex;
-    align-items: center;
-    text-align: right;
-    position: relative;
-    
+  margin-top: 5px;
+  border-radius: 11.57px;
+  background-color: #f7fafb;
+  /*border: 2px solid black;*/
+  width: 300px;
+  height: 24px;
+  padding-top: 2px;
+  padding-bottom: 3px;
+  opacity: 0.95;
+  -moz-box-shadow: inset 0 0 3px #000000;
+  -webkit-box-shadow: inset 0 0 3px #000000;
+  box-shadow: inset 0 0 3px #000000;
+  display: flex;
+  align-items: center;
+  text-align: right;
+  position: relative;
 }
 .label {
-    position: absolute;
-    left: 10px;
+  position: absolute;
+  left: 10px;
 }
-
 
 .input-field {
-    position: absolute;
-    left: 150px;
-   
+  position: absolute;
+  left: 150px;
 }
 
 .social-item-wrapper {
-    width: 400px;
-
+  width: 400px;
 }
 
 .social-item-wrapper {
-    position: relative;
+  position: relative;
 }
 
 .social-input-section .input-wrapper {
-    margin-top: 5px;
-    margin-left: 50px;
-    border-radius: 11.57px;
-    background-color: #F7FAFB;
-    /*border: 2px solid black;*/
-    width: 250px;
-    height: 24px;
-    padding-top: 2px;
-    padding-bottom: 3px;
-    opacity: 0.95;
-    -moz-box-shadow:    inset 0 0 3px #000000;
-    -webkit-box-shadow: inset 0 0 3px #000000;
-    box-shadow:         inset 0 0 3px #000000;
-    display: flex;
-    align-items: center;
-    text-align: right;
-    position: relative;
-    
+  margin-top: 5px;
+  margin-left: 50px;
+  border-radius: 11.57px;
+  background-color: #f7fafb;
+  /*border: 2px solid black;*/
+  width: 250px;
+  height: 24px;
+  padding-top: 2px;
+  padding-bottom: 3px;
+  opacity: 0.95;
+  -moz-box-shadow: inset 0 0 3px #000000;
+  -webkit-box-shadow: inset 0 0 3px #000000;
+  box-shadow: inset 0 0 3px #000000;
+  display: flex;
+  align-items: center;
+  text-align: right;
+  position: relative;
 }
 .icon {
-    width: 8.5%;
-    position: absolute;
-    left: -40px;
-    bottom: 0px;
-    top: 2px;
-
-
+  width: 8.5%;
+  position: absolute;
+  left: -40px;
+  bottom: 0px;
+  top: 2px;
 }
 
 hr {
-    position: absolute;
-    top: 400px;
-    width: 80%;
-    left: 0;
-    border: none;
-    right: 0;
-    margin-left: auto;
-    margin-right: auto;
-    text-align:center;
-    height: 3px;
-    background: #3B3F4C;
-    opacity: 0.75;
-    box-shadow: 0px 3.07494px 3.07494px rgba(0, 0, 0, 0.25);
+  position: absolute;
+  top: 400px;
+  width: 80%;
+  left: 0;
+  border: none;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  height: 3px;
+  background: #3b3f4c;
+  opacity: 0.75;
+  box-shadow: 0px 3.07494px 3.07494px rgba(0, 0, 0, 0.25);
 }
 
 .pfp-section {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: absolute;
-    left: 170px;
-    top: 130px;
-    text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  left: 170px;
+  top: 130px;
+  text-align: center;
 }
 
-
 .pfp {
-    margin-bottom: -30px;
-    width: 95%;
-
+  margin-bottom: -30px;
+  width: 95%;
 }
 
 .masthead-section {
-    margin-top: 0px;
-    padding-top: 0px;
-    position: relative;
-    text-align: center;
+  margin-top: 0px;
+  padding-top: 0px;
+  position: relative;
+  text-align: center;
 }
 
 .masthead-banner {
-    width: 200px;
+  width: 200px;
 }
 
 .masthead-text {
-    color: white;
-    position: absolute;
-    top: 18px;
-    left: 75px;
-
+  color: white;
+  position: absolute;
+  top: 18px;
+  left: 75px;
 }
 
 .masthead-logo {
-    position: absolute;
-    height: 50%;
-    top: 20px;
-    left: 40px;
-    
+  position: absolute;
+  height: 50%;
+  top: 20px;
+  left: 40px;
 }
 
 .edit-profile-button {
-    width: 100px;
-    height: 30px;
-    padding: 15px;
-    color: white !important;
-    background-color: #3D4F91 !important;
-    font-size: 12px !important;
-    margin-bottom: 15px !important;
-    
-    
+  width: 100px;
+  height: 30px;
+  padding: 15px;
+  color: white !important;
+  background-color: #3d4f91 !important;
+  font-size: 12px !important;
+  margin-bottom: 15px !important;
 }
 
-
 .topics-section {
-    position: absolute;
-    top: 140px;
-    right: 400px;
-    width: 100px;
-    text-align: center;
-    display: flex;
-    
+  position: absolute;
+  top: 140px;
+  right: 400px;
+  width: 100px;
+  text-align: center;
+  display: flex;
 }
 
 .role-topic-button {
-    width: 110px;
-    height: 24px;
-    border-radius: 1rem !important;
-    background-color: #CFE7C4 !important;
-    font-size: 11px !important;
-    text-align: center;
-    padding: 1px !important;
-    margin-bottom: 10px !important;
-
-
-
+  width: 110px;
+  height: 24px;
+  border-radius: 1rem !important;
+  background-color: #cfe7c4 !important;
+  font-size: 11px !important;
+  text-align: center;
+  padding: 1px !important;
+  margin-bottom: 10px !important;
 }
 
 .list-title {
-    margin-bottom: 35px;
-    font-size: 20px;
+  margin-bottom: 35px;
+  font-size: 20px;
 }
 
 .section {
-    margin: 20px 25px 20px 50px;
-
+  margin: 20px 25px 20px 50px;
 }

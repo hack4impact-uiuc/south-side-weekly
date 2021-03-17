@@ -1,21 +1,20 @@
 import React, { ReactElement } from 'react';
-import { Input, Label, Button} from 'semantic-ui-react';
+import { Input, Label, Button } from 'semantic-ui-react';
 
 import Sidebar from '../../components/Sidebar';
-import Logo from '../../assets/ssw-form-header.png'
-import Mail from '../../assets/mail.svg'
-import Phone from '../../assets/phone.svg'
-import Linkedin from '../../assets/linkedin.svg'
-import Globe from '../../assets/globe.svg'
-import Twitter from '../../assets/twitter.svg'
-import Pfp from '../../assets/pfp.svg'
-import Masthead from '../../assets/masthead.svg'
-import Banner from '../../assets/banner.svg'
+import Logo from '../../assets/ssw-form-header.png';
+import Mail from '../../assets/mail.svg';
+import Phone from '../../assets/phone.svg';
+import Linkedin from '../../assets/linkedin.svg';
+import Globe from '../../assets/globe.svg';
+import Twitter from '../../assets/twitter.svg';
+import Pfp from '../../assets/pfp.svg';
+import Masthead from '../../assets/masthead.svg';
+import Banner from '../../assets/banner.svg';
 
 import '../../css/Profile.css';
 
 function Profile(): ReactElement {
-  
   const currentTeamsButtons = [
     { value: 'Data', color: '#EF8B8B' },
     { value: 'Editing', color: '#A5C4F2' },
@@ -28,30 +27,25 @@ function Profile(): ReactElement {
     { value: 'Writing', color: '#A9D3E5' },
   ];
 
-  const currentTeams = [
-    {}
-  ]
+  const currentTeams = [{}];
 
   return (
-  <>
-    {/*<Sidebar />*/}
-    <div className="logo-header">
-      <img className="logo" alt="SSW Logo" src={Logo} />
-    </div>      
+    <>
+      {/*<Sidebar />*/}
+      <div className="logo-header">
+        <img className="logo" alt="SSW Logo" src={Logo} />
+      </div>
 
       <div className="pfp-section">
-      <div className="edit-button">
-        <Button
-          content="Edit Profile"
-          className="edit-profile-button"
-        />
-      </div>
-      <div className="pfp">
-        <img src={Pfp} alt="pfp" className="pfp"></img>
-      </div>
+        <div className="edit-button">
+          <Button content="Edit Profile" className="edit-profile-button" />
+        </div>
+        <div className="pfp">
+          <img src={Pfp} alt="pfp" className="pfp"></img>
+        </div>
         <div className="masthead-section">
           <img src={Banner} className="masthead-banner" alt="banner"></img>
-          <img src={Masthead} className="masthead-logo" alt="masthead"/>
+          <img src={Masthead} className="masthead-logo" alt="masthead" />
           <div className="masthead-text">Masthead</div>
         </div>
       </div>
@@ -61,173 +55,150 @@ function Profile(): ReactElement {
           <h3>Basic Information</h3>
         </div>
         <div className="input-wrapper">
-            <span className="label">Name:</span>
-            {/*<Label horizontal circular>Name</Label>*/}
-            <Input
-              className="input-field"
-              transparent
-              value="Mustafa Syed Ali"
-              readOnly={true}
-            />
+          <span className="label">Name:</span>
+          {/*<Label horizontal circular>Name</Label>*/}
+          <Input
+            className="input-field"
+            transparent
+            value="Mustafa Syed Ali"
+            readOnly={true}
+          />
         </div>
 
         <div className="input-wrapper">
-            <span className="label">Preferred Name:</span>
-            {/*<Label horizontal circular>Name</Label>*/}
-            <Input
-              className="input-field"
-              transparent
-              //fluid
-            />
+          <span className="label">Preferred Name:</span>
+          {/*<Label horizontal circular>Name</Label>*/}
+          <Input
+            className="input-field"
+            transparent
+            //fluid
+          />
         </div>
 
         <div className="input-wrapper">
-            <span className="label">Gender:</span>
-            {/*<Label horizontal circular>Name</Label>*/}
-            <Input
-              className="input-field"
-              transparent
-              //fluid
-            />
+          <span className="label">Gender:</span>
+          {/*<Label horizontal circular>Name</Label>*/}
+          <Input
+            className="input-field"
+            transparent
+            //fluid
+          />
         </div>
 
         <div className="input-wrapper">
-            <span className="label">Pronouns:</span>
-            {/*<Label horizontal circular>Name</Label>*/}
-            <Input
-              className="input-field"
-              transparent
-              //fluid
-            />
+          <span className="label">Pronouns:</span>
+          {/*<Label horizontal circular>Name</Label>*/}
+          <Input
+            className="input-field"
+            transparent
+            //fluid
+          />
         </div>
 
         <div className="input-wrapper">
-            <span className="label">Position:</span>
-            {/*<Label horizontal circular>Name</Label>*/}
-            <Input
-              className="input-field"
-              transparent
-              //fluid
-            />
+          <span className="label">Position:</span>
+          {/*<Label horizontal circular>Name</Label>*/}
+          <Input
+            className="input-field"
+            transparent
+            //fluid
+          />
         </div>
 
         <div className="input-wrapper">
-            <span className="label">Date Joined:</span>
-            {/*<Label horizontal circular>Name</Label>*/}
-            <Input
-              className="input-field"
-              transparent
-              //fluid
-            />
+          <span className="label">Date Joined:</span>
+          {/*<Label horizontal circular>Name</Label>*/}
+          <Input
+            className="input-field"
+            transparent
+            //fluid
+          />
         </div>
       </div>
 
-      <hr/>
+      <hr />
 
       <div className="social-input-section">
         <div className="section-title">
           <h3>Socials/Contact</h3>
         </div>
         <div className="social-item-wrapper">
-            
-          
           <div className="input-wrapper">
-          <div>
-              <img className="icon" src={Mail} alt="mail"/>
+            <div>
+              <img className="icon" src={Mail} alt="mail" />
             </div>
-              {/*<Label horizontal circular>Name</Label>*/}
-              <Input
-                className="input-field"
-                transparent
-              />
+            {/*<Label horizontal circular>Name</Label>*/}
+            <Input className="input-field" transparent />
           </div>
         </div>
 
         <div className="social-item-wrapper">
-          
           <div className="input-wrapper">
+            <div>
+              <img className="icon" src={Phone} alt="mail" />
+            </div>
+            <Input
+              className="input-field"
+              transparent
+              //fluid
+            />
+          </div>
+        </div>
+
+        <div className="input-wrapper">
           <div>
-            <img className="icon" src={Phone} alt="mail"/>
+            <img className="icon" src={Linkedin} alt="mail" />
           </div>
-              <Input
-                className="input-field"
-                transparent
-                //fluid
-              />
-          </div>
+          <span className="label">Gender:</span>
+          {/*<Label horizontal circular>Name</Label>*/}
+          <Input
+            className="input-field"
+            transparent
+            //fluid
+          />
         </div>
 
         <div className="input-wrapper">
-        <div>
-            <img className="icon" src={Linkedin} alt="mail"/>
+          <div>
+            <img className="icon" src={Globe} alt="mail" />
           </div>
-            <span className="label">Gender:</span>
-            {/*<Label horizontal circular>Name</Label>*/}
-            <Input
-              className="input-field"
-              transparent
-              //fluid
-            />
+          <span className="label">Position:</span>
+          {/*<Label horizontal circular>Name</Label>*/}
+          <Input
+            className="input-field"
+            transparent
+            //fluid
+          />
         </div>
 
         <div className="input-wrapper">
-        <div>
-            <img className="icon" src={Globe} alt="mail"/>
+          <div>
+            <img className="icon" src={Twitter} alt="mail" />
           </div>
-            <span className="label">Position:</span>
-            {/*<Label horizontal circular>Name</Label>*/}
-            <Input
-              className="input-field"
-              transparent
-              //fluid
-            />
-        </div>
-
-        <div className="input-wrapper">
-        <div>
-            <img className="icon" src={Twitter} alt="mail"/>
-          </div>
-            <span className="label">Date Joined:</span>
-            {/*<Label horizontal circular>Name</Label>*/}
-            <Input
-              className="input-field"
-              transparent
-              //fluid
-            />
+          <span className="label">Date Joined:</span>
+          {/*<Label horizontal circular>Name</Label>*/}
+          <Input
+            className="input-field"
+            transparent
+            //fluid
+          />
         </div>
       </div>
 
       <div className="topics-section">
         <div className="section">
           <div className="list-title">My Topics</div>
-          <Button
-            className="role-topic-button"
-            content="Cannabis"
-          />
-          <Button
-            className="role-topic-button"
-            content="Fun"
-          />
+          <Button className="role-topic-button" content="Cannabis" />
+          <Button className="role-topic-button" content="Fun" />
         </div>
 
         <div className="section">
           <div className="list-title">My Roles</div>
-          <Button
-            className="role-topic-button"
-            content="Cannabis"
-          />
-          <Button
-            className="role-topic-button"
-            content="Fun"
-          />
+          <Button className="role-topic-button" content="Cannabis" />
+          <Button className="role-topic-button" content="Fun" />
         </div>
       </div>
-
-      
-  
-
-    
-  </>
+    </>
   );
 }
 
