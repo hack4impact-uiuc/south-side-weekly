@@ -34,7 +34,7 @@ export interface IUser {
   assignmentStatus: string;
   assignmentGoogleDocLink: string;
   assignmentContributors: [IUser];
-  topics: string;
+  topics: [string];
   teams: ITeams;
   approvedBy: IUser;
   similarStories: [string];
