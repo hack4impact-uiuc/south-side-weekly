@@ -56,13 +56,13 @@ body {
 .basic-input-section {
   position: absolute;
   top: 160px;
-  left: 470px;
+  left: 500px;
 }
 
 .social-input-section {
   position: absolute;
   bottom: 50px;
-  left: 200px;
+  left: 230px;
 }
 
 .basic-input-section .input-wrapper {
@@ -97,9 +97,7 @@ body {
   width: 400px;
 }
 
-.social-item-wrapper {
-  position: relative;
-}
+
 
 .social-input-section .input-wrapper {
   margin-top: 5px;
@@ -120,7 +118,7 @@ body {
   text-align: right;
   position: relative;
 }
-.icon {
+.social-input-section .input-wrapper .icon {
   width: 8.5%;
   position: absolute;
   left: -40px;
@@ -131,12 +129,9 @@ body {
 hr {
   position: absolute;
   top: 400px;
-  width: 80%;
-  left: 0;
+  width: 1000px;
+  left: 200px;
   border: none;
-  right: 0;
-  margin-left: auto;
-  margin-right: auto;
   text-align: center;
   height: 3px;
   background: #3b3f4c;
@@ -149,7 +144,7 @@ hr {
   flex-direction: column;
   align-items: center;
   position: absolute;
-  left: 170px;
+  left: 200px;
   top: 130px;
   text-align: center;
 }
@@ -197,7 +192,7 @@ hr {
 .topics-section {
   position: absolute;
   top: 140px;
-  right: 400px;
+  right: 350px;
   width: 100px;
   text-align: center;
   display: flex;

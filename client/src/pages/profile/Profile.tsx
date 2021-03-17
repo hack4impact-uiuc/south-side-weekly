@@ -31,7 +31,7 @@ function Profile(): ReactElement {
 
   return (
     <>
-      {/*<Sidebar />*/}
+      <Sidebar />
       <div className="logo-header">
         <img className="logo" alt="SSW Logo" src={Logo} />
       </div>
@@ -122,7 +122,6 @@ function Profile(): ReactElement {
         <div className="section-title">
           <h3>Socials/Contact</h3>
         </div>
-        <div className="social-item-wrapper">
           <div className="input-wrapper">
             <div>
               <img className="icon" src={Mail} alt="mail" />
@@ -130,9 +129,7 @@ function Profile(): ReactElement {
             {/*<Label horizontal circular>Name</Label>*/}
             <Input className="input-field" transparent />
           </div>
-        </div>
 
-        <div className="social-item-wrapper">
           <div className="input-wrapper">
             <div>
               <img className="icon" src={Phone} alt="mail" />
@@ -143,7 +140,6 @@ function Profile(): ReactElement {
               //fluid
             />
           </div>
-        </div>
 
         <div className="input-wrapper">
           <div>
