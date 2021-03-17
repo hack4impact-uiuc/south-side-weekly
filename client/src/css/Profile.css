@@ -49,7 +49,7 @@ body {
 }
 
 .logo-header .logo {
-    width: 50%;
+    width: 45%;
     /*height: 20%;*/
     margin: 2%;
 }
@@ -58,7 +58,7 @@ body {
 .basic-input-section {
     position: absolute;
     top: 160px;
-    left: 420px;
+    left: 470px;
 
 }
 
@@ -157,15 +157,17 @@ hr {
 .pfp-section {
     display: flex;
     flex-direction: column;
+    align-items: center;
     position: absolute;
-    left: 80px;
-    top: 120px;
+    left: 170px;
+    top: 130px;
     text-align: center;
 }
 
 
 .pfp {
-    margin-bottom: 0px;
+    margin-bottom: -30px;
+    width: 95%;
 
 }
 
@@ -176,12 +178,15 @@ hr {
     text-align: center;
 }
 
+.masthead-banner {
+    width: 200px;
+}
 
 .masthead-text {
     color: white;
     position: absolute;
-    top: 30%;
-    left: 40%;
+    top: 18px;
+    left: 75px;
 
 }
 
@@ -190,4 +195,52 @@ hr {
     height: 50%;
     top: 20px;
     left: 40px;
+    
+}
+
+.edit-profile-button {
+    width: 100px;
+    height: 30px;
+    padding: 15px;
+    color: white !important;
+    background-color: #3D4F91 !important;
+    font-size: 12px !important;
+    margin-bottom: 15px !important;
+    
+    
+}
+
+
+.topics-section {
+    position: absolute;
+    top: 140px;
+    right: 400px;
+    width: 100px;
+    text-align: center;
+    display: flex;
+    
+}
+
+.role-topic-button {
+    width: 110px;
+    height: 24px;
+    border-radius: 1rem !important;
+    background-color: #CFE7C4 !important;
+    font-size: 11px !important;
+    text-align: center;
+    padding: 1px !important;
+    margin-bottom: 10px !important;
+
+
+
+}
+
+.list-title {
+    margin-bottom: 35px;
+    font-size: 20px;
+}
+
+.section {
+    margin: 20px 25px 20px 50px;
+
 }
