@@ -19,26 +19,30 @@ router.get(
   errorWrap(async (req: Request, res: Response) => {
     if (req.query.filter === 'unclaimed') {
       // Gets all unclaimed pitches
-      const pitch = await Pitch.find({
+      const pitches = await Pitch.find({
         pitchStatus: pitchStatusEnum.APPROVED,
         $expr: {
           $or: [
-            { $lt: ['$currentWriters', '$targetWriters'] },
-            { $lt: ['$currentEditors', '$targetEditors'] },
-            { $lt: ['$currentData', '$targetData'] },
-            { $lt: ['$currentVisuals', '$targetVisuals'] },
-            { $lt: ['$currentIllustration', '$targetIllustration'] },
-            { $lt: ['$currentPhotography', '$targetPhotography'] },
-            { $lt: ['$currentFactChecking', '$targetFactChecking'] },
-            { $lt: ['$currentRadio', '$targetRadio'] },
-            { $lt: ['$currentLayout', '$targetLayout'] },
+            { $lt: ['teams.writers.current', 'teams.writers.target'] },
+            { $lt: ['teams.editors.current', 'teams.editors.target'] },
+            { $lt: ['teams.data.current', 'teams.data.target'] },
+            { $lt: ['teams.visuals.current', 'teams.visuals.target'] },
+            {
+              $lt: ['teams.illustration.current', 'teams.illustration.target'],
+            },
+            { $lt: ['teams.photography.current', 'teams.photography.target'] },
+            {
+              $lt: ['teams.factChecking.current', 'teams.factChecking.target'],
+            },
+            { $lt: ['teams.radio.current', 'teams.radio.target'] },
+            { $lt: ['teams.layout.current', 'teams.layout.target'] },
           ],
         },
       });
       res.status(200).json({
         message: `Successfully retrieved unclaimed pitches.`,
         success: true,
-        result: pitch,
+        result: pitches,
       });
     } else {
       // Gets all pitches
