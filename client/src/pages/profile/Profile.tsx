@@ -6,9 +6,11 @@ import Logo from '../../assets/ssw-form-header.png'
 import Mail from '../../assets/mail.svg'
 import Phone from '../../assets/phone.svg'
 import Linkedin from '../../assets/linkedin.svg'
-import Globe from '../../assets/globe.png'
+import Globe from '../../assets/globe.svg'
 import Twitter from '../../assets/twitter.svg'
 import Pfp from '../../assets/pfp.svg'
+import Masthead from '../../assets/masthead.svg'
+import Banner from '../../assets/banner.svg'
 
 import '../../css/Profile.css';
 
@@ -24,10 +26,19 @@ function Profile(): ReactElement {
       
 
       <div className="pfp-section">
+      {/*
         <Button
           content="Edit Profile"
-        />
+          className="edit-profile-button"
+        />*/}
+      <div className="pfp">
         <img src={Pfp} alt="pfp" className="pfp"></img>
+      </div>
+        <div className="masthead-section">
+          <img src={Banner} className="masthead-banner" alt="banner"></img>
+          <img src={Masthead} className="masthead-logo" alt="masthead"/>
+          <div className="masthead-text">Masthead</div>
+        </div>
       </div>
 
       <div className="basic-input-section">
@@ -40,6 +51,8 @@ function Profile(): ReactElement {
             <Input
               className="input-field"
               transparent
+              value="Mustafa Syed Ali"
+              readOnly={true}
             />
         </div>
 
