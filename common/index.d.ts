@@ -27,33 +27,33 @@ export interface IUser {
 /**
  * Interface for a Pitch Schema.
  */
-export interface IPitch {
+ export interface IPitch {
   name: string;
   // pitchAuthor: mongoose.Types.ObjectId;
   pitchStatus: string;
   assignmentStatus: string;
   assignmentGoogleDocLink: string;
   assignmentContributors: [IUser];
-  topics: [string];
-  currentWriters: number;
-  targetWriters: number;
-  currentEditors: number;
-  targetEditors: number;
-  currentData: number;
-  targetData: number;
-  currentVisuals: number;
-  targetVisuals: number;
-  currentIllustration: number;
-  targetIllustration: number;
-  currentPhotography: number;
-  targetPhotography: number;
-  currentFactChecking: number;
-  targetFactChecking: number;
-  currentRadio: number;
-  targetRadio: number;
-  currentLayout: number;
-  targetLayout: number;
+  topic: string;
+  teams: ITeams;
   approvedBy: IUser;
   similarStories: [string];
   deadline: Date;
+}
+
+export interface IStats {
+  current: number;
+  target: number;
+}
+
+export interface ITeams {
+  writers: IStats;
+  editors: IStats;
+  data: IStats;
+  visuals: IStats;
+  illustration: IStats;
+  photography: IStats;
+  factChecking: IStats;
+  radio: IStats;
+  layout: IStats;
 }
