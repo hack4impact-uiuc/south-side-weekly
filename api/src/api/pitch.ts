@@ -19,7 +19,7 @@ router.get(
   errorWrap(async (req: Request, res: Response) => {
     if (req.query.filter === 'unclaimed') {
       // Gets all unclaimed pitches
-      const pitches = await Pitch.find({
+      const pitch = await Pitch.find({
         pitchStatus: pitchStatusEnum.APPROVED,
         $expr: {
           $or: [
@@ -42,7 +42,7 @@ router.get(
       res.status(200).json({
         message: `Successfully retrieved unclaimed pitches.`,
         success: true,
-        result: pitches,
+        result: pitch,
       });
     } else {
       // Gets all pitches
