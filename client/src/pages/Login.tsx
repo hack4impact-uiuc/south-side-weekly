@@ -69,7 +69,7 @@ function Login(): ReactElement {
           </div>
           {loading ? (
             <div className="loader-wrapper">
-            <Loader type="Oval" color="#3D4F91" height={50} width={50} />
+              <Loader type="Oval" color="#3D4F91" height={50} width={50} />
             </div>
           ) : (
             <>
