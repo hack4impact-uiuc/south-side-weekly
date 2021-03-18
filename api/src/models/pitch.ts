@@ -15,13 +15,10 @@ export interface IStats extends Document<any> {
 export interface ITeams extends Document<any> {
   writers: IStats;
   editors: IStats;
-  data: IStats;
   visuals: IStats;
   illustration: IStats;
   photography: IStats;
   factChecking: IStats;
-  radio: IStats;
-  layout: IStats;
 }
 
 export interface IPitch extends Document<any> {
@@ -41,13 +38,10 @@ export interface IPitch extends Document<any> {
 const defaultTeams: { [key: string]: { [key: string]: number } } = {
   writers: { current: 1, target: 1 },
   editors: { current: 1, target: 1 },
-  data: { current: 1, target: 1 },
   visuals: { current: 1, target: 1 },
   illustration: { current: 1, target: 1 },
   photography: { current: 1, target: 1 },
   factChecking: { current: 1, target: 1 },
-  radio: { current: 1, target: 1 },
-  layout: { current: 1, target: 1 },
 };
 
 /**

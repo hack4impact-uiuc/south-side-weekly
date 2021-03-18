@@ -25,7 +25,6 @@ router.get(
           $or: [
             { $lt: ['teams.writers.current', 'teams.writers.target'] },
             { $lt: ['teams.editors.current', 'teams.editors.target'] },
-            { $lt: ['teams.data.current', 'teams.data.target'] },
             { $lt: ['teams.visuals.current', 'teams.visuals.target'] },
             {
               $lt: ['teams.illustration.current', 'teams.illustration.target'],
@@ -34,11 +33,10 @@ router.get(
             {
               $lt: ['teams.factChecking.current', 'teams.factChecking.target'],
             },
-            { $lt: ['teams.radio.current', 'teams.radio.target'] },
-            { $lt: ['teams.layout.current', 'teams.layout.target'] },
           ],
         },
       });
+
       res.status(200).json({
         message: `Successfully retrieved unclaimed pitches.`,
         success: true,
