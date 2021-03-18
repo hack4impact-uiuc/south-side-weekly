@@ -7,6 +7,7 @@ import axios from 'axios';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import WizardWrapper from './pages/wizard/WizardWrapper';
+import ResourcePage from './pages/ResourcePage';
 
 import './css/index.css';
 
@@ -19,6 +20,7 @@ ReactDOM.render(
         <Route exact path="/" component={Home} />
         <Route exact path="/join" component={WizardWrapper} />
         <Route exact path="/login" component={Login} />
+        <Route exact path="/resources" component={ResourcePage} />
       </Switch>
     </Router>
   </React.StrictMode>,

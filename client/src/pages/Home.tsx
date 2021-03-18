@@ -30,7 +30,6 @@ function Home(): ReactElement {
 
   return (
     <>
-      {' '}
       {!loggedOut ? (
         <div className="home-wrapper">
           <div className="logo-header">
