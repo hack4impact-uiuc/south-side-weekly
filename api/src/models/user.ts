@@ -12,6 +12,7 @@ import {
  * Interface for a User Schema.
  */
 interface IUser extends Document<any> {
+  _id: string;
   firstName: string;
   lastName: string;
   preferredName: string;
