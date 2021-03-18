@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { Input, Label, Button } from 'semantic-ui-react';
+import { Input, Button } from 'semantic-ui-react';
 
 import Sidebar from '../../components/Sidebar';
 import Logo from '../../assets/ssw-form-header.png';
@@ -15,19 +15,19 @@ import Banner from '../../assets/banner.svg';
 import '../../css/Profile.css';
 
 function Profile(): ReactElement {
-  const currentTeamsButtons = [
-    { value: 'Data', color: '#EF8B8B' },
-    { value: 'Editing', color: '#A5C4F2' },
-    { value: 'Fact-checking', color: '#CFE7C4' },
-    { value: 'Illustration', color: '#BAB9E9' },
-    { value: 'Layout', color: '#F9B893' },
-    { value: 'Photography', color: '#D8ACE8' },
-    { value: 'Radio', color: '#F1D8B0' },
-    { value: 'Visuals', color: '#BFEBE0' },
-    { value: 'Writing', color: '#A9D3E5' },
-  ];
+  // const currentTeamsButtons = [
+  //   { value: 'Data', color: '#EF8B8B' },
+  //   { value: 'Editing', color: '#A5C4F2' },
+  //   { value: 'Fact-checking', color: '#CFE7C4' },
+  //   { value: 'Illustration', color: '#BAB9E9' },
+  //   { value: 'Layout', color: '#F9B893' },
+  //   { value: 'Photography', color: '#D8ACE8' },
+  //   { value: 'Radio', color: '#F1D8B0' },
+  //   { value: 'Visuals', color: '#BFEBE0' },
+  //   { value: 'Writing', color: '#A9D3E5' },
+  // ];
 
-  const currentTeams = [{}];
+  // const currentTeams = [{}];
 
   return (
     <>
@@ -61,7 +61,7 @@ function Profile(): ReactElement {
             className="input-field"
             transparent
             value="Mustafa Syed Ali"
-            readOnly={true}
+            readOnly
           />
         </div>
 
@@ -122,24 +122,24 @@ function Profile(): ReactElement {
         <div className="section-title">
           <h3>Socials/Contact</h3>
         </div>
-          <div className="input-wrapper">
-            <div>
-              <img className="icon" src={Mail} alt="mail" />
-            </div>
-            {/*<Label horizontal circular>Name</Label>*/}
-            <Input className="input-field" transparent />
+        <div className="input-wrapper">
+          <div>
+            <img className="icon" src={Mail} alt="mail" />
           </div>
+          {/*<Label horizontal circular>Name</Label>*/}
+          <Input className="input-field" transparent />
+        </div>
 
-          <div className="input-wrapper">
-            <div>
-              <img className="icon" src={Phone} alt="mail" />
-            </div>
-            <Input
-              className="input-field"
-              transparent
-              //fluid
-            />
+        <div className="input-wrapper">
+          <div>
+            <img className="icon" src={Phone} alt="mail" />
           </div>
+          <Input
+            className="input-field"
+            transparent
+            //fluid
+          />
+        </div>
 
         <div className="input-wrapper">
           <div>
