@@ -2,12 +2,15 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import 'semantic-ui-css/semantic.min.css';
+import axios from 'axios';
 
 import Home from './pages/Home';
 import Login from './pages/Login';
 import WizardWrapper from './pages/wizard/WizardWrapper';
 
 import './css/index.css';
+
+axios.defaults.withCredentials = true;
 
 ReactDOM.render(
   <React.StrictMode>
