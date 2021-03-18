@@ -2,6 +2,7 @@ import React, { useEffect, useState, ReactElement } from 'react';
 import { useLocation, Redirect } from 'react-router-dom';
 import axios from 'axios';
 import { Button } from 'semantic-ui-react';
+import Loader from 'react-loader-spinner';
 
 import buildURI from '../utils/apiHelpers';
 import { BASE_URL, FRONTEND_BASE_URL } from '../utils/apiWrapper';
@@ -39,7 +40,10 @@ function Login(): ReactElement {
         }
         setLoading(false);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => {
+        console.error(err);
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
@@ -63,31 +67,39 @@ function Login(): ReactElement {
           <div className="logo-header">
             <img className="logo" alt="SSW Logo" src={Logo} />
           </div>
-          <h1>SSW Dashboard</h1>
-          <div className="btn-group">
-            <div className="btn-wrapper">
-              <a
-                href={buildURI(
-                  'auth/login',
-                  `${FRONTEND_BASE_URL}/login`,
-                  `${FRONTEND_BASE_URL}/login?${LOGIN_FAILURE_QUERY_PARAM}=1`,
-                )}
-              >
-                <Button className="btn">New User</Button>
-              </a>
+          {loading ? (
+            <div className="loader-wrapper">
+            <Loader type="Oval" color="#3D4F91" height={50} width={50} />
             </div>
-            <div className="btn-wrapper">
-              <a
-                href={buildURI(
-                  'auth/login',
-                  `${FRONTEND_BASE_URL}/login`,
-                  `${FRONTEND_BASE_URL}/login?${LOGIN_FAILURE_QUERY_PARAM}=1`,
-                )}
-              >
-                <Button className="btn">Returning User</Button>
-              </a>
-            </div>
-          </div>
+          ) : (
+            <>
+              <h1>SSW Dashboard</h1>
+              <div className="btn-group">
+                <div className="btn-wrapper">
+                  <a
+                    href={buildURI(
+                      'auth/login',
+                      `${FRONTEND_BASE_URL}/login`,
+                      `${FRONTEND_BASE_URL}/login?${LOGIN_FAILURE_QUERY_PARAM}=1`,
+                    )}
+                  >
+                    <Button className="btn">New User</Button>
+                  </a>
+                </div>
+                <div className="btn-wrapper">
+                  <a
+                    href={buildURI(
+                      'auth/login',
+                      `${FRONTEND_BASE_URL}/login`,
+                      `${FRONTEND_BASE_URL}/login?${LOGIN_FAILURE_QUERY_PARAM}=1`,
+                    )}
+                  >
+                    <Button className="btn">Returning User</Button>
+                  </a>
+                </div>
+              </div>
+            </>
+          )}
           {loginFailed && <p>Login failed!</p>}
         </div>
       ) : (
