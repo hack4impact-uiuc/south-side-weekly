@@ -1,16 +1,13 @@
-import express, { Request, Response } from 'express'; 
+import { Request } from 'express';
 
-import User from '../models/user';
+const validateRequestForRole = (req: Request, role: string): boolean => {
+  if (!req.isAuthenticated()) {
+    return false;
+  }
+  if (!req.user) {
+    return false;
+  }
+  return req.user.role === role;
+};
 
-const validateRequestForRole = (req: Request, role: String) => {
-    if (!req.isAuthenticated()) {
-      return false;
-    }
-    if (!req.user) {
-      return false;
-    }
-    return req.user.role === role;
-  };
-  
-  module.exports = { validateRequestForRole };
-
+export default validateRequestForRole;

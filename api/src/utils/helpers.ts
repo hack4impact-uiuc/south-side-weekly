@@ -1,6 +1,6 @@
 import { IPitch } from '../models/pitch';
 
-interface SessionUser {
+export interface SessionUser {
   firstName: string;
   lastName: string;
   preferredName: string;

@@ -1,46 +1,52 @@
-import express, { Request, Response } from 'express'; 
-const roleEnum = require("../models/user.ts").roleEnum;
-const authValidators = require("./authvalidators.ts");
+import { Request, Response, NextFunction } from 'express';
+import { rolesEnum } from '../utils/enums';
+import validateRequestForRole from './authvalidators';
 
-
-const requireContributorStatus = (req:Request, res: Response, next: Function) => {
-    if (
-        authValidators.validateRequestForRole(req, roleEnum.CONTRIBUTOR) ||
-        authValidators.validateRequestForRole(req, roleEnum.STAFF) || 
-        authValidators.validateRequestForRole(req, roleEnum.ADMIN)
-    ) {
-        return next();
-    }
-    res
-        .status(401)
-        .send("You are not authorized (requires contributor status).");
+export const requireContributorStatus = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void => {
+  if (
+    validateRequestForRole(req, rolesEnum.CONTRIBUTOR) ||
+    validateRequestForRole(req, rolesEnum.STAFF) ||
+    validateRequestForRole(req, rolesEnum.ADMIN)
+  ) {
+    return next();
+  }
+  res.status(401).json({
+    message: `You are not authorized (requires contributor status).`,
+    success: false,
+  });
 };
 
-const requireStaffStatus = (req:Request, res: Response, next: Function) => {
-    if (
-        authValidators.validateRequestForRole(req, roleEnum.STAFF) || 
-        authValidators.validateRequestForRole(req, roleEnum.ADMIN)
-    ) {
-        return next();
-    }
-    res
-        .status(401)
-        .send("You are not authorized (requires staff status).");
+export const requireStaffStatus = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void => {
+  if (
+    validateRequestForRole(req, rolesEnum.STAFF) ||
+    validateRequestForRole(req, rolesEnum.ADMIN)
+  ) {
+    return next();
+  }
+  res.status(401).json({
+    message: `You are not authorized (requires staff status).`,
+    success: false,
+  });
 };
 
-const requireAdminStatus = (req:Request, res: Response, next: Function) => {
-    if (
-        authValidators.validateRequestForRole(req, roleEnum.ADMIN)
-    ) {
-        return next();
-    }
-    res
-        .status(401)
-        .send("You are not authorized (requires admin status).");
-};
-
-module.exports = {
-    requireContributorStatus,
-    requireStaffStatus,
-    requireAdminStatus,
+export const requireAdminStatus = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): void => {
+  if (validateRequestForRole(req, rolesEnum.ADMIN)) {
+    return next();
+  }
+  res.status(401).json({
+    message: `You are not authorized (requires admin status).`,
+    success: false,
+  });
 };
