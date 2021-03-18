@@ -3,7 +3,7 @@ import {
   VerifyCallback,
 } from 'passport-google-oauth20';
 import passport from 'passport';
-import User, {IUser} from '../models/user';
+import User, { IUser } from '../models/user';
 import { rolesEnum } from './enums';
 
 passport.serializeUser((user: IUser, done) => {
