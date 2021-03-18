@@ -23,15 +23,24 @@ router.get(
         pitchStatus: pitchStatusEnum.APPROVED,
         $expr: {
           $or: [
-            { $lt: ['$currentWriters', '$targetWriters'] },
-            { $lt: ['$currentEditors', '$targetEditors'] },
-            { $lt: ['$currentData', '$targetData'] },
-            { $lt: ['$currentVisuals', '$targetVisuals'] },
-            { $lt: ['$currentIllustration', '$targetIllustration'] },
-            { $lt: ['$currentPhotography', '$targetPhotography'] },
-            { $lt: ['$currentFactChecking', '$targetFactChecking'] },
-            { $lt: ['$currentRadio', '$targetRadio'] },
-            { $lt: ['$currentLayout', '$targetLayout'] },
+            { $lt: ['$teams.writers.current', '$teams.writers.target'] },
+            { $lt: ['$teams.editors.current', '$teams.editors.target'] },
+            { $lt: ['$teams.visuals.current', '$teams.visuals.target'] },
+            {
+              $lt: [
+                '$teams.illustration.current',
+                '$teams.illustration.target',
+              ],
+            },
+            {
+              $lt: ['$teams.photography.current', '$teams.photography.target'],
+            },
+            {
+              $lt: [
+                '$teams.factChecking.current',
+                '$teams.factChecking.target',
+              ],
+            },
           ],
         },
       });

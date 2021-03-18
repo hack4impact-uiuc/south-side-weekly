@@ -35,24 +35,32 @@ export interface IPitch {
   assignmentGoogleDocLink: string;
   assignmentContributors: [IUser];
   topics: [string];
-  currentWriters: number;
-  targetWriters: number;
-  currentEditors: number;
-  targetEditors: number;
-  currentData: number;
-  targetData: number;
-  currentVisuals: number;
-  targetVisuals: number;
-  currentIllustration: number;
-  targetIllustration: number;
-  currentPhotography: number;
-  targetPhotography: number;
-  currentFactChecking: number;
-  targetFactChecking: number;
-  currentRadio: number;
-  targetRadio: number;
-  currentLayout: number;
-  targetLayout: number;
+  teams: {
+    writers: {
+      current: number;
+      target: number;
+    };
+    editors: {
+      current: number;
+      target: number;
+    };
+    factChecking: {
+      current: number;
+      target: number;
+    };
+    visuals: {
+      current: number;
+      target: number;
+    };
+    photography: {
+      current: number;
+      target: number;
+    };
+    illustration: {
+      current: number;
+      target: number;
+    };
+  };
   approvedBy: IUser;
   similarStories: [string];
   deadline: Date;
