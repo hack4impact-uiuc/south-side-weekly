@@ -28,7 +28,7 @@ const PitchCard: FC<IProps> = ({ pitch }): ReactElement => {
           </Card.Description>
         </Card.Content>
         <Card.Content>
-          {topics.map((topic) => (
+          {topics.map((topic: string) => (
             <WizardSelectButton
               onClick={defaultOnClick}
               key={topic}

@@ -61,14 +61,6 @@ router.get(
   }),
 );
 
-// Gets all pitches on the Pitch Doc (all approved but unclaimed pitches)
-// router.get(
-//   '/?filter=unclaimed',
-//   errorWrap(async (req: Request, res: Response) => {
-
-//   }),
-// );
-
 // Gets pitch by pitch id
 router.get(
   '/:pitchId',

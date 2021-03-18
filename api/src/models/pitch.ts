@@ -13,9 +13,14 @@ import {
 const Pitch = new mongoose.Schema({
   name: { type: String, default: null, required: true },
   pitchAuthor: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  pitchStatus: { type: pitchStatusEnum, default: pitchStatusEnum.NONE },
+  pitchStatus: {
+    type: String,
+    enum: Object.values(pitchStatusEnum),
+    default: pitchStatusEnum.NONE,
+  },
   assignmentStatus: {
-    type: assignmentStatusEnum,
+    type: String,
+    enum: Object.values(assignmentStatusEnum),
     default: assignmentStatusEnum.NONE,
   },
   assignmentGoogleDocLink: { type: String, default: null },
