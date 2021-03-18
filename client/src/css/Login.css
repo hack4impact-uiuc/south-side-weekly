@@ -1,0 +1,41 @@
+.login-wrapper {
+  position: relative;
+  text-align: center;
+  height: 100vh;
+}
+
+.login-wrapper .logo {
+  width: 60%;
+  margin: 2%;
+}
+
+.login-wrapper .btn-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.login-wrapper .btn-group .btn-wrapper {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  margin: 20px 0px 20px 0px;
+  width: 45%;
+}
+
+.login-wrapper .btn-group .btn-wrapper .btn {
+  padding: 20px 5px 20px 5px;
+  font-size: 36px;
+  align-items: center;
+  border-radius: 1rem;
+  background-color: #334a86;
+  color: white;
+  width: 100%;
+}
+
+.login-wrapper .btn-group .btn-wrapper .btn:hover {
+  background-color: #2c4b9b;
+  color: white;
+}
