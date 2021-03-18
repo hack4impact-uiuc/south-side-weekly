@@ -1,16 +1,36 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
-
-h1,
-p {
-  font-family: 'Inter', sans-serif;
-  margin: 0 auto;
+.home-wrapper {
+  position: relative;
   text-align: center;
+  height: 100vh;
 }
 
-h1 {
-  padding-top: 15vh;
+.home-wrapper .logo {
+  width: 60%;
+  margin: 2%;
 }
 
-p {
-  padding-top: 2em;
+.home-wrapper .btn-group .btn-wrapper {
+  display: flex;
+  position: relative;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  margin: auto;
+  width: 45%;
+}
+
+.home-wrapper .btn-group .btn-wrapper .btn {
+  margin: 20px 0px 20px 0px;
+  padding: 20px 5px 20px 5px;
+  font-size: 36px;
+  align-items: center;
+  border-radius: 1rem;
+  background-color: #334a86;
+  color: white;
+  width: 100%;
+}
+
+.home-wrapper .btn-group .btn-wrapper .btn:hover {
+  background-color: #2c4b9b;
+  color: white;
 }

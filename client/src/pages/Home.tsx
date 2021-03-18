@@ -1,36 +1,54 @@
-import React, { ReactElement, useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { ReactElement, useState } from 'react';
+import axios from 'axios';
+import { Button } from 'semantic-ui-react';
+import { Redirect } from 'react-router';
 
-import { getSampleResponse, isError } from '../utils/apiWrapper';
+import { BASE_URL } from '../utils/apiWrapper';
+import Logo from '../assets/ssw-form-header.png';
 
 import '../css/Home.css';
 
 function Home(): ReactElement {
-  const [text, setText] = useState('You did not run local API!');
-
-  useEffect(() => {
-    const populateText = async (): Promise<void> => {
-      const resp = await getSampleResponse();
-      console.log(resp);
-
-      if (!isError(resp)) {
-        setText(resp.data.message);
-      }
-    };
-
-    populateText();
-  }, []);
+  const [loggedOut, setLoggedOut] = useState(false);
+  const logout = (): void => {
+    const requestString = `${BASE_URL}/auth/logout`;
+    axios
+      .post(requestString, {
+        headers: {
+          'Content-Type': 'application/JSON',
+        },
+      })
+      .then((res) => {
+        console.log(res);
+        setLoggedOut(true);
+      })
+      .catch((err) => {
+        console.error(err);
+        setLoggedOut(true);
+      });
+  };
 
   return (
-    <div style={{ border: 'solid black' }}>
-      <h1>MERN Template</h1>
-      <p>
-        Below will tell you if the API is running.
-        <br />
-        {text}
-        <Link to="/join">Join</Link>
-      </p>
-    </div>
+    <>
+      {' '}
+      {!loggedOut ? (
+        <div className="home-wrapper">
+          <div className="logo-header">
+            <img className="logo" alt="SSW Logo" src={Logo} />
+          </div>
+          <h1>SSW Dashboard</h1>
+          <div className="btn-group">
+            <div className="btn-wrapper">
+              <Button onClick={logout} className="btn">
+                Logout
+              </Button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <Redirect to="/login" />
+      )}
+    </>
   );
 }
 
