@@ -1,78 +1,78 @@
 .sidebar {
-    font-family: Roboto;
-    position: fixed;
-    top: 50%;
-    transform: translateY(-50%);
-    left: 0;
-    width: 200px;
-    height: 85%;
-    margin-left: 40px;
-    background-color: #777eab;
-    border-radius: 40px;
-    transition: 0.5s all;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  font-family: Roboto;
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 0;
+  width: 200px;
+  height: 85%;
+  margin-left: 40px;
+  background-color: #777eab;
+  border-radius: 40px;
+  transition: 0.5s all;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 @media only screen and (max-width: 600px) {
-    .sidebar {
-        margin-left: 20px;
-        height: 90%;
-        width: 100px;
-    }
+  .sidebar {
+    margin-left: 20px;
+    height: 90%;
+    width: 100px;
+  }
 }
 
 .profile-pic {
-    margin-top: 40px;
-    width: 180px;
-    height: 180px;
-    border-radius: 190px;
-    border: 10px solid #fff;
-    transition: 0.5s all;
+  margin-top: 40px;
+  width: 180px;
+  height: 180px;
+  border-radius: 190px;
+  border: 10px solid #fff;
+  transition: 0.5s all;
 }
 
 .profile-pic img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: 190px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 190px;
 }
 
 @media only screen and (max-width: 600px) {
-    .profile-pic {
-        margin-top: 20px;
-        width: 90px;
-        height: 90px;
-        border-radius: 90px;
-        border: 5px solid #fff;
-    }
+  .profile-pic {
+    margin-top: 20px;
+    width: 90px;
+    height: 90px;
+    border-radius: 90px;
+    border: 5px solid #fff;
+  }
 }
 
 .active::before {
-    content: '';
-    background-color: #fff;
-    width: 20px;
-    height: 20px;
-    border-radius: 20px;
-    display: inline-block;
-    position: relative;
-    top: 16px;
-    left: -20px;
-    border: 1px solid #777eab;
+  content: '';
+  background-color: #fff;
+  width: 20px;
+  height: 20px;
+  border-radius: 20px;
+  display: inline-block;
+  position: relative;
+  top: 16px;
+  left: -20px;
+  border: 1px solid #777eab;
 }
 
 .nav-link {
-    margin: 20px;
-    margin-left: 36px;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-start;
+  margin: 20px;
+  margin-left: 36px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
 }
 
 .icon {
-    color: #777eab;
-    padding: 16px;
-    border-radius: 10px;
-    background-color: #fff;
+  color: #777eab;
+  padding: 16px;
+  border-radius: 10px;
+  background-color: #fff;
 }
