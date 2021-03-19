@@ -58,6 +58,9 @@ const WizardWrapper = (): ReactElement => {
   const [linkedIn, setLinkedIn] = useState<string>('');
   const [twitter, setTwitter] = useState<string>('');
 
+  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [scheduleConfirmed, setScheduleConfirmed] = useState<boolean>(false);
+
   /**
    * React hook to upate the viewable pages based on the role change
    */
@@ -131,6 +134,11 @@ const WizardWrapper = (): ReactElement => {
    * Submits the form and collects the data
    */
   const handleFormSubmit = (): void => {
+    if (!scheduleConfirmed) {
+      setOpenModal(true);
+      return;
+    }
+
     const formData = {
       firstName: firstName,
       lastName: lastName,
@@ -249,7 +257,14 @@ const WizardWrapper = (): ReactElement => {
             />
           )}
 
-          {page === WizardPage.ONBOARD_8.toString() && <Onboard8 />}
+          {page === WizardPage.ONBOARD_8.toString() && (
+            <Onboard8
+              isModalOpen={openModal}
+              setScheduleConfirmed={setScheduleConfirmed}
+              setModalOpen={setOpenModal}
+              handlePageNext={handlePageNext}
+            />
+          )}
           {page === WizardPage.COMPLETION.toString() && <Compleition />}
         </div>
 

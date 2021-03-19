@@ -17,6 +17,48 @@
   width: fit-content;
 }
 
+.confirmation-modal {
+  position: relative;
+  background-color: transparent !important;
+}
+
+.close-icon {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: transparent !important;
+}
+
+.confirmation-modal-content {
+  display: flex;
+  justify-content: center;
+  border: solid #3d4f91;
+  border-radius: 2rem !important;
+  background: #3d4f91 !important;
+  color: white;
+  font-size: 30px !important;
+  padding: 100px 35px 80px 45px !important;
+}
+
+.confirmation-modal-content .button-wrapper .modal-button {
+  background-color: #8cb076;
+  color: white;
+  font-size: 20px;
+  width: 200px;
+  border-radius: 1rem;
+}
+
+.confirmation-modal-content .button-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.confirmation-modal-content .button-wrapper .modal-button:hover {
+  background-color: #8cb076;
+  color: white;
+}
+
 .onboard8-wrapper .onboard8-content .calendly-btn {
   margin-top: 15vh;
   font-size: 28px;
