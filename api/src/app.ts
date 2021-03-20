@@ -22,8 +22,8 @@ app.use(express.urlencoded({ limit: '2.1mb', extended: false }));
 
 // Session support
 const sessionConfig = {
-  secret: process.env.SESS_SECRET,
   secure: false,
+  keys: [process.env.SESS_SECRET],
 };
 if (process.env.NODE_ENV === 'production') {
   app.set('trust proxy', 1);
