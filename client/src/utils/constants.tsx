@@ -17,17 +17,26 @@ const interestsButtons: { [key: string]: string } = {
 };
 
 // All of the buttons to show for the current teams
-const currentTeamsButtons = [
-  { value: 'Data', color: '#EF8B8B' },
-  { value: 'Editing', color: '#A5C4F2' },
-  { value: 'Fact-checking', color: '#CFE7C4' },
-  { value: 'Illustration', color: '#BAB9E9' },
-  { value: 'Layout', color: '#F9B893' },
-  { value: 'Photography', color: '#D8ACE8' },
-  { value: 'Radio', color: '#F1D8B0' },
-  { value: 'Visuals', color: '#BFEBE0' },
-  { value: 'Writing', color: '#A9D3E5' },
-];
+const currentTeamsButtons: { [key: string]: string } = {
+  Data: '#EF8B8B',
+  Editing: '#A5C4F2',
+  'Fact-checking': '#CFE7C4',
+  Illustration: '#BAB9E9',
+  Layout: '#F9B893',
+  Photography: '#D8ACE8',
+  Radio: '#F1D8B0',
+  Visuals: '#BFEBE0',
+  Writing: '#A9D3E5',
+};
+
+const teamToTeamsButtons: { [key: string]: string } = {
+  writers: 'Writing',
+  editors: 'Editing',
+  visuals: 'Visuals',
+  illustration: 'Illustration',
+  photography: 'Photography',
+  factChecking: 'Fact-checking',
+};
 
 const enumToInterestButtons: { [key: string]: string } = {
   CANNABIS: 'Cannabis',
@@ -46,4 +55,9 @@ const enumToInterestButtons: { [key: string]: string } = {
   'VISUAL ARTS': 'Visual Arts',
 };
 
-export { interestsButtons, currentTeamsButtons, enumToInterestButtons };
+export {
+  interestsButtons,
+  currentTeamsButtons,
+  enumToInterestButtons,
+  teamToTeamsButtons,
+};

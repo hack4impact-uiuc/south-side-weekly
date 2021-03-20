@@ -51,15 +51,15 @@ const Onboard5: FC<IProps> = ({
         </div>
 
         <div className="select-group">
-          {currentTeamsButtons.map((button) => (
+          {Object.keys(currentTeamsButtons).map((button) => (
             <WizardSelectButton
-              key={button.value}
+              key={button}
               onClick={handleCurrentTeams}
               selectedArray={currentTeams}
               width="150px"
               margin="15px 30px 15px 30px"
-              value={button.value}
-              color={button.color}
+              value={button}
+              color={currentTeamsButtons[button]}
             />
           ))}
         </div>
