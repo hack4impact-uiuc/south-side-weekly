@@ -5,7 +5,6 @@ import { openPopupWidget } from 'react-calendly';
 import '../../css/wizard/Onboard8.css';
 import Onboard8SVG from '../../assets/onboard8.svg';
 import RequiredSVG from '../../assets/required.svg';
-import CloseSVG from '../../assets/close.svg';
 
 interface IProps {
   isModalOpen: boolean;
@@ -35,17 +34,11 @@ const Onboard8: FC<IProps> = ({
         onClose={() => setModalOpen(false)}
         className="confirmation-modal"
         open={isModalOpen}
+        closeIcon
       >
         <ModalContent className="confirmation-modal-content">
-          <Button
-            onClick={() => setModalOpen(false)}
-            className="close-icon"
-            icon
-          >
-            <img src={CloseSVG} alt="X" />
-          </Button>
           <div>
-            Please make sure you have scheduled a meeting with a Southside
+            Please make sure you have scheduled a meeting with a South Side
             Weekly Staff Member. If you couldn’t find a day that works for you,
             please reach out to a Staff Member at amitplaystrumpet@ssw.com.
           </div>
@@ -54,7 +47,7 @@ const Onboard8: FC<IProps> = ({
               onClick={handleScheduleConfirmation}
               className="modal-button"
             >
-              Submit
+              Complete Sign-Up
             </Button>
           </div>
         </ModalContent>

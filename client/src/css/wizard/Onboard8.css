@@ -18,14 +18,6 @@
 }
 
 .confirmation-modal {
-  position: relative;
-  background-color: transparent !important;
-}
-
-.close-icon {
-  position: absolute;
-  top: 10px;
-  left: 10px;
   background-color: transparent !important;
 }
 
@@ -44,7 +36,7 @@
   background-color: #8cb076;
   color: white;
   font-size: 20px;
-  width: 200px;
+  width: fit-content;
   border-radius: 1rem;
 }
 
