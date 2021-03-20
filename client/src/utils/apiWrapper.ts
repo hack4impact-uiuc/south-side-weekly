@@ -72,7 +72,7 @@ export const addSampleResponse = (
 export const getUnclaimedPitches = (): Promise<
   AxiosResponse<GetPitchesResponseType> | ErrorWrapper
 > => {
-  const requestString = `${BASE_URL}/pitch/?filter=unclaimed`;
+  const requestString = `${BASE_URL}/pitch?filter=unclaimed`;
   return axios
     .get(requestString, {
       headers: {
