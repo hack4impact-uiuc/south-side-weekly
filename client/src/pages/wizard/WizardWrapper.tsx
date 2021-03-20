@@ -134,7 +134,7 @@ const WizardWrapper = (): ReactElement => {
    * Submits the form and collects the data
    */
   const handleFormSubmit = (): void => {
-    if (!scheduleConfirmed) {
+    if (!scheduleConfirmed && role === 'CONTRIBUTOR') {
       setOpenModal(true);
       return;
     }
