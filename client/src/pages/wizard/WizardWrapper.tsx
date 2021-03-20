@@ -1,4 +1,10 @@
-import React, { ReactElement, useState, MouseEvent, useEffect } from 'react';
+import React, {
+  ReactElement,
+  useState,
+  MouseEvent,
+  useEffect,
+  useCallback,
+} from 'react';
 import { Button } from 'semantic-ui-react';
 
 import '../../css/wizard/WizardWrapper.css';
@@ -62,7 +68,7 @@ const WizardWrapper = (): ReactElement => {
   const [scheduleConfirmed, setScheduleConfirmed] = useState<boolean>(false);
 
   /**
-   * React hook to upate the viewable pages based on the role change
+   * React hook to update the viewable pages based on the role change
    */
   useEffect(() => {
     let parsedPages = Object.values(WizardPage);
@@ -89,12 +95,12 @@ const WizardWrapper = (): ReactElement => {
   /**
    * Gos to the next page
    */
-  const handlePageNext = (): void => {
+  const handlePageNext = useCallback((): void => {
     const currentIdx = viewablePages.indexOf(page);
     if (currentIdx <= viewablePages.length) {
       setPage(viewablePages[currentIdx + 1]);
     }
-  };
+  }, [viewablePages, page]);
 
   /**
    * Gos back a page
@@ -133,7 +139,7 @@ const WizardWrapper = (): ReactElement => {
   /**
    * Submits the form and collects the data
    */
-  const handleFormSubmit = (): void => {
+  const submitForm = useCallback(() => {
     if (!scheduleConfirmed && role === 'CONTRIBUTOR') {
       setOpenModal(true);
       return;
@@ -162,7 +168,37 @@ const WizardWrapper = (): ReactElement => {
 
     console.log(formData);
     handlePageNext();
-  };
+  }, [
+    firstName,
+    lastName,
+    preferredName,
+    phoneNumber,
+    genders,
+    pronouns,
+    portfolio,
+    linkedIn,
+    twitter,
+    currentTeams,
+    role,
+    races,
+    interests,
+    scheduleConfirmed,
+    handlePageNext,
+  ]);
+
+  /**
+   * React hook to call formSubmit after the user confirms they scheduled a meeting
+   */
+  useEffect(() => {
+    if (
+      scheduleConfirmed &&
+      page === WizardPage.ONBOARD_8.toString() &&
+      role === 'CONTRIBUTOR'
+    ) {
+      submitForm();
+      setOpenModal(false);
+    }
+  }, [scheduleConfirmed, submitForm, role, page]);
 
   /**
    * Decides whether or not to show the next button on the page
@@ -262,7 +298,6 @@ const WizardWrapper = (): ReactElement => {
               isModalOpen={openModal}
               setScheduleConfirmed={setScheduleConfirmed}
               setModalOpen={setOpenModal}
-              handlePageNext={handlePageNext}
             />
           )}
           {page === WizardPage.COMPLETION.toString() && <Compleition />}
@@ -276,11 +311,7 @@ const WizardWrapper = (): ReactElement => {
                   <img src={ArrowNext} alt="next arrow" />
                 </Button>
               ) : (
-                <Button
-                  circular
-                  onClick={handleFormSubmit}
-                  className="check-icon"
-                >
+                <Button circular onClick={submitForm} className="check-icon">
                   <img src={SubmitSVG} alt="submit" />
                 </Button>
               )}
