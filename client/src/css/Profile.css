@@ -90,12 +90,11 @@ body {
   z-index: 2;
   font-size: 14px !important;
 }
-#gender{
-    z-index: 150;
- 
+#gender {
+  z-index: 150;
 }
 #pronoun {
-    z-index: 149;
+  z-index: 149;
 }
 
 .input-wrapper .info-label {
@@ -111,8 +110,6 @@ body {
 .social-item-wrapper {
   width: 400px;
 }
-
-
 
 .social-input-section .input-wrapper {
   margin-top: 5px;
@@ -134,17 +131,14 @@ body {
   position: relative;
   margin-left: 100px;
   font-size: 14px !important;
-
-  
 }
 
 .social-input-section .input-field {
-    position: absolute;
-    left: 10px;
-    width: 235px;
+  position: absolute;
+  left: 10px;
+  width: 235px;
 }
 
-  
 .social-input-section .input-wrapper .icon {
   width: 8.5%;
   position: absolute;
@@ -175,7 +169,6 @@ hr {
   top: 140px;
   width: 260px;
   text-align: center;
-
 }
 
 .pfp {
@@ -220,13 +213,13 @@ hr {
 }
 
 .list-title {
-    font-size: 20px;
-    margin-bottom: 13px;
+  font-size: 20px;
+  margin-bottom: 13px;
 }
 
 .social-input-section .list-title {
-    margin-left: 60px;
-    font-size: 20px;
+  margin-left: 60px;
+  font-size: 20px;
 }
 
 .topics-section {
@@ -258,22 +251,22 @@ hr {
 }
 
 .save-edit-section {
-    position: absolute;
-    top: 245px;
-    margin-top: 10px;
+  position: absolute;
+  top: 245px;
+  margin-top: 10px;
 }
 .save-changes-button {
-    width: 115px;
+  width: 115px;
   height: 30px;
   color: white !important;
-  background-color: #8CB076 !important;
+  background-color: #8cb076 !important;
   padding: 1px !important;
   font-size: 12px !important;
   margin-bottom: 15px !important;
 }
 
 .cancel-changes-button {
-    width: 115px;
+  width: 115px;
   height: 30px;
   color: white !important;
   background-color: rgba(61, 79, 145, 0.55) !important;
@@ -283,90 +276,78 @@ hr {
 }
 
 .dropdown-wrapper {
-    position: absolute;
-    height: 24px !important;
-    
-    left: 100px;
-    
-    
+  position: absolute;
+  height: 24px !important;
+
+  left: 100px;
 }
 
 .dropdown-field {
-    position: relative;
-    min-height: 24px !important;
-    width: 230px !important;
-    border: none !important;
-    background: none !important;
-    z-index: 100;
-    opacity: 1 !important;
-    
-    
+  position: relative;
+  min-height: 24px !important;
+  width: 230px !important;
+  border: none !important;
+  background: none !important;
+  z-index: 100;
+  opacity: 1 !important;
 }
 
 .dropdown-field .icon {
-    height: 2px !important;
-    line-height: 4px !important;
-
+  height: 2px !important;
+  line-height: 4px !important;
 }
 
 .dropdown-field .label {
-    background: none !important;
-    font-size: 12px !important;
-    color: black !important;
-    margin-top: -1px !important;
- 
+  background: none !important;
+  font-size: 12px !important;
+  color: black !important;
+  margin-top: -1px !important;
 }
 
 .dropdown-field .menu {
-    background: #f7fafb !important;
-    text-align: center !important;
-    border-radius: 5px !important;
-    opacity: 1 !important;
-    
-    
-
+  background: #f7fafb !important;
+  text-align: center !important;
+  border-radius: 5px !important;
+  opacity: 1 !important;
 }
 .dropdown-field .menu .item {
-    width: 140px !important;
-    height: 20px !important;
-    line-height: 0px !important;
-    font-size: 12px !important;
-    text-align: center !important;
-    border-radius: 1rem !important;
-    border: 1px black !important;
-    background: #CFE7C4 !important;
-    margin-bottom: 10px !important;
-    margin-top: 10px !important;
-    margin-left: auto !important;
-    margin-right: auto !important;
-    padding: 10px 0 !important;
-    opacity: 1 !important;
-
+  width: 140px !important;
+  height: 20px !important;
+  line-height: 0px !important;
+  font-size: 12px !important;
+  text-align: center !important;
+  border-radius: 1rem !important;
+  border: 1px black !important;
+  background: #cfe7c4 !important;
+  margin-bottom: 10px !important;
+  margin-top: 10px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding: 10px 0 !important;
+  opacity: 1 !important;
 }
 
-.dropdown-field .menu .item[color="#EF8B8B"] {
-    background: #EF8B8B !important;
+.dropdown-field .menu .item[color='#EF8B8B'] {
+  background: #ef8b8b !important;
 }
-.dropdown-field .menu .item[color="#CFE7C4"] {
-    background: #CFE7C4 !important;
+.dropdown-field .menu .item[color='#CFE7C4'] {
+  background: #cfe7c4 !important;
 }
-.dropdown-field .menu .item[color="#F9B893"] {
-    background: #F9B893 !important;
+.dropdown-field .menu .item[color='#F9B893'] {
+  background: #f9b893 !important;
 }
-.dropdown-field .menu .item[color="#BFEBE0"] {
-    background: #BFEBE0 !important;
+.dropdown-field .menu .item[color='#BFEBE0'] {
+  background: #bfebe0 !important;
 }
-.dropdown-field .menu .item[color="#F1D8B0"] {
-    background: #F1D8B0 !important;
+.dropdown-field .menu .item[color='#F1D8B0'] {
+  background: #f1d8b0 !important;
 }
-
 
 .interests-section-scroll {
-    height: 200px;
-    overflow: auto;
-    overflow-x: hidden;
+  height: 200px;
+  overflow: auto;
+  overflow-x: hidden;
 }
-
 
 /*
 .dropdown-field .menu .item .text {
@@ -374,4 +355,3 @@ hr {
 
 
 }*/
-
