@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useEffect } from 'react';
-import { Input, Label, Button, Dropdown } from 'semantic-ui-react';
+import { Input, Button, Dropdown } from 'semantic-ui-react';
 
 import Sidebar from '../../components/Sidebar';
 import Logo from '../../assets/ssw-form-header.png';
@@ -13,7 +13,6 @@ import Masthead from '../../assets/masthead.svg';
 import Banner from '../../assets/banner.svg';
 
 import '../../css/Profile.css';
-import { check } from 'prettier';
 
 const exampleUser = {
   firstName: 'Mustafa',
@@ -171,10 +170,10 @@ function Profile(): ReactElement {
     }
   }
 
-  function extractGenderString(data: any) {
+  function extractGenderString(data: any): void {
     setGenders(data);
   }
-  function extractPronounString(data: any) {
+  function extractPronounString(data: any): void {
     setPronouns(data);
   }
 
@@ -324,7 +323,7 @@ function Profile(): ReactElement {
             className="input-field"
             transparent
             value={exampleUser.role}
-            readOnly={true}
+            readOnly="true"
             //fluid
           />
         </div>
@@ -449,7 +448,7 @@ function Profile(): ReactElement {
                       : 'white',
                     border: `2px solid ${button.color}`,
                   }}
-                  onClick={(e) => setFilled(button.value)}
+                  onClick={() => setFilled(button.value)}
                 />
               ))}
             </div>
