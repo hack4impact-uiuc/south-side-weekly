@@ -1,5 +1,5 @@
-import React, { ReactElement } from 'react';
-import { Input, Label, Button } from 'semantic-ui-react';
+import React, { ReactElement, useState, useEffect } from 'react';
+import { Input, Label, Button, Dropdown } from 'semantic-ui-react';
 
 import Sidebar from '../../components/Sidebar';
 import Logo from '../../assets/ssw-form-header.png';
@@ -13,21 +13,193 @@ import Masthead from '../../assets/masthead.svg';
 import Banner from '../../assets/banner.svg';
 
 import '../../css/Profile.css';
+import { check } from 'prettier';
+
+const exampleUser = {
+  firstName: "Mustafa",
+  lastName: "Ali",
+  preferredName: "Mustafa",
+  email: "mustafas.designs@gmail.com",
+  phone: "630-935-0063",
+  genders: ["Man"],
+  pronouns: ["He/his"],
+  dateJoined: "02/27/21",
+  masthead: true,
+  portfolio: "mustafa-designs.com",
+  linkedIn: "linkedin.com/in/mustafasyedali",
+  twitter: "@mustardseedali",
+  role: "Contributor",
+  currentTeams: ["Photography", "Visuals", "Layout"],
+  interests: ["Fun", "Cannabis", "Visual Arts", "Music"]
+}
 
 function Profile(): ReactElement {
-  const currentTeamsButtons = [
-    { value: 'Data', color: '#EF8B8B' },
-    { value: 'Editing', color: '#A5C4F2' },
-    { value: 'Fact-checking', color: '#CFE7C4' },
-    { value: 'Illustration', color: '#BAB9E9' },
-    { value: 'Layout', color: '#F9B893' },
-    { value: 'Photography', color: '#D8ACE8' },
-    { value: 'Radio', color: '#F1D8B0' },
-    { value: 'Visuals', color: '#BFEBE0' },
-    { value: 'Writing', color: '#A9D3E5' },
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [fullName, setFullName] = useState<string>('');
+  const [preferredName, setPreferredName] = useState<string>('');
+  //const [email, setEmail] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
+  const [genders, setGenders] = useState<Array<string>>([]);
+  const [pronouns, setPronouns] = useState<Array<string>>([]);
+  const [dateJoined, setDateJoined] = useState<string>('');
+  //const [masthead, setMasthead] = useState<boolean>(false);
+  const [portfolio, setPortfolio] = useState<string>('');
+  const [linkedIn, setLinkedIn] = useState<string>('');
+  const [twitter, setTwitter] = useState<string>(''); 
+  //const [role, setRole] = useState<string>('');
+  //const [currentTeams, setCurrentTeams] = useState<Array<string>>([]);
+  const [interests, setInterests] = useState<Array<string>>([]);
+  const [edit, setEdit] = useState<boolean>(false);
+  const teamColors: {[key: string]: string} = {
+    "Data": '#EF8B8B',
+    "Editing": '#A5C4F2',
+    "Factchecking": '#CFE7C4',
+    "Illustration": '#BAB9E9',
+    "Layout": '#F9B893',
+    "Photography": '#D8ACE8',
+    "Radio": '#F1D8B0',
+    "Visuals": '#BFEBE0',
+    "Writing": '#A9D3E5'
+  };
+  const interestColors: {[key: string]: string} = {
+    "Cannabis":  "#CFE7C4",
+    "Education":  "#A9D3E5",
+    "Food and Land":  "#BFEBE0",
+    "Fun":  "#F9B893",
+    "Health":  "#F9B893",
+    "Housing":  "#EF8B8B",
+    "Immigration":  "#D8ACE8",
+    "Literature":  "#A5C4F2",
+    "Music":  "#BFEBE0",
+    "Nature":  "#CFE7C4",
+    "Politics":  "#A5C4F2",
+    "Stage and Screen":  "#D8ACE8",
+    "Transportation":  "#F1D8B0",
+    "Visual Arts":  "#BAB9E9",
+  };
+  const interestsButtons = [
+    { value: 'Cannabis', color: '#CFE7C4' },
+    { value: 'Education', color: '#A9D3E5' },
+    { value: 'Food and Land', color: '#BFEBE0' },
+    { value: 'Fun', color: '#F9B893' },
+    { value: 'Health', color: '#F9B893' },
+    { value: 'Housing', color: '#EF8B8B' },
+    { value: 'Immigration', color: '#D8ACE8' },
+    { value: 'Literature', color: '#A5C4F2' },
+    { value: 'Music', color: '#BFEBE0' },
+    { value: 'Nature', color: '#CFE7C4' },
+    { value: 'Politics', color: '#A5C4F2' },
+    { value: 'Stage and Screen', color: '#D8ACE8' },
+    { value: 'Transportation', color: '#F1D8B0' },
+    { value: 'Visual Arts', color: '#BAB9E9' },
   ];
+  const genderOptions = [
+    {key: 'Man', color: '#EF8B8B', text: 'Man', value: 'Man'},
+    {key: 'Woman', color: '#CFE7C4', text: 'Woman', value: 'Woman'},
+    {key: 'Nonbinary', color: '#F9B893', text:'Nonbinary', value: 'Nonbinary'},
+    {key: 'Other', color: '#BFEBE0', text: 'Other', value: 'Other'}
+  ]
 
-  const currentTeams = [{}];
+  const pronounOptions = [
+    {key: 'He/his', color: '#EF8B8B', text: 'He/his', value: 'He/his'},
+    {key: 'She/her', color: '#CFE7C4', text: 'She/her', value: 'She/her'},
+    {key: 'They/them', color: '#F9B893', text:'They/them', value: 'They/them'},
+    {key: 'Ze/hir', color: '#F1D8B0', text: 'Ze/hir', value: 'Ze/hir'},
+    {key: 'Other', color: '#BFEBE0', text: 'Other', value: 'Other'}
+  ]
+
+  function loadUser(): void {
+    setFirstName(exampleUser.firstName);
+    setLastName(exampleUser.lastName);
+    setFullName(`${exampleUser.firstName} ${exampleUser.lastName}`);
+    setPreferredName(exampleUser.preferredName);
+    setPhoneNumber(exampleUser.phone);
+    setGenders(exampleUser.genders);
+    setPronouns(exampleUser.pronouns);
+    setDateJoined(exampleUser.dateJoined);
+    //setMasthead(exampleUser.masthead);
+    setPortfolio(exampleUser.portfolio);
+    setLinkedIn(exampleUser.linkedIn);
+    setTwitter(exampleUser.twitter);
+    //setCurrentTeams(exampleUser.currentTeams);
+    setInterests(exampleUser.interests);
+  }
+
+  function enableEdit(): void {
+    setEdit(true);
+
+  }
+
+  function saveEdit(): void {
+    nameSplitter(fullName);
+    exampleUser.firstName = firstName;
+    exampleUser.lastName = lastName;
+    exampleUser.preferredName = preferredName;
+    exampleUser.phone = phoneNumber;
+    exampleUser.genders = genders;
+    exampleUser.pronouns = pronouns;
+    exampleUser.dateJoined = dateJoined;
+    exampleUser.portfolio = portfolio;
+    exampleUser.linkedIn = linkedIn;
+    exampleUser.twitter = twitter;
+    exampleUser.interests = interests;
+    setEdit(false);
+  }
+
+  function cancelEdit(): void {
+    loadUser();
+    setEdit(false);
+  }
+
+  function nameSplitter(fullName: string): void {
+    const splitName = fullName.split(" ");
+    setFirstName(splitName[0]);
+    if (splitName[1] !== undefined) {
+      setLastName(splitName[1]);
+    }
+    else {
+      setLastName("");
+    }
+  }
+
+  function extractGenderString(data: any){
+    setGenders(data);
+  }
+  function extractPronounString(data: any){
+    setPronouns(data);
+  }
+
+  function checkFilled(value: string): boolean {
+    const notFoundIdx = -1;
+    return !(interests.indexOf(value) === notFoundIdx)
+  }
+
+  function setFilled(value: string): void {
+    const notFoundIdx = -1;
+    if(interests.indexOf(value) === notFoundIdx) {
+      const addedElements = interests.concat(value);
+      setInterests(addedElements);
+    }
+    else {
+      const removedElements = interests.filter(
+        (element) => element !== value,
+      );
+      setInterests(removedElements);
+
+      
+    }
+  }
+
+  useEffect(() => {
+    loadUser();
+
+    
+  }, []);
+
+  
+
+  
 
   return (
     <>
@@ -38,96 +210,135 @@ function Profile(): ReactElement {
 
       <div className="pfp-section">
         <div className="edit-button">
-          <Button content="Edit Profile" className="edit-profile-button" />
+          <Button content="Edit Profile" className="edit-profile-button" onClick={enableEdit}/>
         </div>
         <div className="pfp">
           <img src={Pfp} alt="pfp" className="pfp"></img>
         </div>
-        <div className="masthead-section">
-          <img src={Banner} className="masthead-banner" alt="banner"></img>
-          <img src={Masthead} className="masthead-logo" alt="masthead" />
-          <div className="masthead-text">Masthead</div>
+        {exampleUser.masthead && (
+          <div className="masthead-section">
+            <img src={Banner} className="masthead-banner" alt="banner"></img>
+            <img src={Masthead} className="masthead-logo" alt="masthead" />
+            <div className="masthead-text">Masthead</div>
+          </div>
+        )}
+        <div className="save-edit-section">
+        {edit && (
+          <Button content="Save Changes" className="save-changes-button" onClick={saveEdit}/>)}
+        {edit && (
+          <Button content="Cancel Changes" className="cancel-changes-button" onClick={cancelEdit}/>)}
         </div>
       </div>
 
       <div className="basic-input-section">
-        <div className="section-title">
-          <h3>Basic Information</h3>
-        </div>
+        <div className="list-title">Basic Information</div>
         <div className="input-wrapper">
-          <span className="label">Name:</span>
+          <span className="info-label">Name:</span>
           {/*<Label horizontal circular>Name</Label>*/}
           <Input
             className="input-field"
             transparent
-            value="Mustafa Syed Ali"
+            value={fullName}
+            readOnly={!edit}
+            onChange={(e) => setFullName(e.currentTarget.value)}
+
+          />
+        </div>
+
+        <div className="input-wrapper">
+          <span className="info-label">Preferred Name:</span>
+          {/*<Label horizontal circular>Name</Label>*/}
+          <Input
+            className="input-field"
+            transparent
+            value={preferredName}
+            readOnly={!edit}
+            onChange={(e) => setPreferredName(e.currentTarget.value)}
+          />
+        </div>
+
+        <div className="input-wrapper" id="gender">
+          <span className="info-label">Gender:</span>
+          {/*<Label horizontal circular>Name</Label>*/}
+          {!edit && (
+          <Input
+            className="input-field"
+            transparent
+            value={genders.join(", ")}
+            //fluid
+          />)}
+          {edit && (
+          <div className="dropdown-wrapper">
+            <Dropdown
+              multiple selection options={genderOptions}
+              className="dropdown-field"    
+              onChange={(e, data) => extractGenderString(data.value!)}
+              defaultValue={genders}        
+            />
+          </div>)}
+        </div>
+
+        <div className="input-wrapper" id="pronoun">
+          <span className="info-label">Pronouns:</span>
+          {/*<Label horizontal circular>Name</Label>*/}
+          {!edit && (
+          <Input
+            className="input-field"
+            transparent
+            value={pronouns.join(", ")}
+            //fluid
+          />)}
+          {edit && (
+          <div className="dropdown-wrapper">
+            <Dropdown
+              multiple selection options={pronounOptions}
+              className="dropdown-field"    
+              onChange={(e, data) => extractPronounString(data.value!)}        
+              defaultValue={pronouns}
+            />
+          </div>)}
+        </div>
+
+        <div className="input-wrapper">
+          <span className="info-label">Position:</span>
+          {/*<Label horizontal circular>Name</Label>*/}
+          <Input
+            className="input-field"
+            transparent
+            value={exampleUser.role}
             readOnly={true}
-          />
-        </div>
-
-        <div className="input-wrapper">
-          <span className="label">Preferred Name:</span>
-          {/*<Label horizontal circular>Name</Label>*/}
-          <Input
-            className="input-field"
-            transparent
             //fluid
           />
         </div>
 
         <div className="input-wrapper">
-          <span className="label">Gender:</span>
+          <span className="info-label">Date Joined:</span>
           {/*<Label horizontal circular>Name</Label>*/}
           <Input
             className="input-field"
             transparent
-            //fluid
+            value={dateJoined}
+            readOnly={!edit}
+            onChange={(e) => setDateJoined(e.currentTarget.value)}
           />
         </div>
-
-        <div className="input-wrapper">
-          <span className="label">Pronouns:</span>
-          {/*<Label horizontal circular>Name</Label>*/}
-          <Input
-            className="input-field"
-            transparent
-            //fluid
-          />
-        </div>
-
-        <div className="input-wrapper">
-          <span className="label">Position:</span>
-          {/*<Label horizontal circular>Name</Label>*/}
-          <Input
-            className="input-field"
-            transparent
-            //fluid
-          />
-        </div>
-
-        <div className="input-wrapper">
-          <span className="label">Date Joined:</span>
-          {/*<Label horizontal circular>Name</Label>*/}
-          <Input
-            className="input-field"
-            transparent
-            //fluid
-          />
-        </div>
+        
       </div>
 
       <hr />
 
       <div className="social-input-section">
-        <div className="section-title">
-          <h3>Socials/Contact</h3>
-        </div>
+        <div className="list-title">Socials/Contact</div>
           <div className="input-wrapper">
             <div>
               <img className="icon" src={Mail} alt="mail" />
             </div>
             {/*<Label horizontal circular>Name</Label>*/}
-            <Input className="input-field" transparent />
+            <Input 
+              className="input-field" transparent 
+              value={exampleUser.email}            
+            />
+            
           </div>
 
           <div className="input-wrapper">
@@ -137,46 +348,53 @@ function Profile(): ReactElement {
             <Input
               className="input-field"
               transparent
+              value={phoneNumber}
+              readOnly={!edit}
+              onChange={(e) => setPhoneNumber(e.currentTarget.value)} 
+              
               //fluid
             />
           </div>
 
         <div className="input-wrapper">
           <div>
-            <img className="icon" src={Linkedin} alt="mail" />
+            <img className="icon" src={Linkedin} alt="linkedin" />
           </div>
-          <span className="label">Gender:</span>
           {/*<Label horizontal circular>Name</Label>*/}
           <Input
             className="input-field"
             transparent
-            //fluid
+            value={linkedIn} 
+            readOnly={!edit}
+            onChange={(e) => setLinkedIn(e.currentTarget.value)}
           />
         </div>
 
         <div className="input-wrapper">
           <div>
-            <img className="icon" src={Globe} alt="mail" />
+            <img className="icon" src={Globe} alt="globe" />
           </div>
-          <span className="label">Position:</span>
           {/*<Label horizontal circular>Name</Label>*/}
           <Input
             className="input-field"
             transparent
-            //fluid
+            value={portfolio} 
+            readOnly={!edit}
+            onChange={(e) => setPortfolio(e.currentTarget.value)}
           />
         </div>
 
         <div className="input-wrapper">
           <div>
-            <img className="icon" src={Twitter} alt="mail" />
+            <img className="icon" src={Twitter} alt="twitter" />
           </div>
-          <span className="label">Date Joined:</span>
           {/*<Label horizontal circular>Name</Label>*/}
           <Input
             className="input-field"
             transparent
-            //fluid
+            value={twitter} 
+            readOnly={!edit}
+            onChange={(e) => setTwitter(e.currentTarget.value)}
           />
         </div>
       </div>
@@ -184,14 +402,52 @@ function Profile(): ReactElement {
       <div className="topics-section">
         <div className="section">
           <div className="list-title">My Topics</div>
-          <Button className="role-topic-button" content="Cannabis" />
-          <Button className="role-topic-button" content="Fun" />
+
+          {/*<Button className="role-topic-button" content="Cannabis" style={{backgroundColor: teamColors[exampleUser.currentTeams[0]]}}/>
+          <Button className="role-topic-button" content="Fun" />*/}
+          
+            {!edit && (
+              <div className="interests-section-scroll">
+            {interests.map((button, idx) => (
+              <Button
+                key={idx}
+                className="role-topic-button"
+                content={button}
+                style={{backgroundColor: interestColors[button]}}
+              />
+            ))}
+            </div>)
+            }
+
+            {edit && (
+              <div className="interests-section-scroll">
+            {interestsButtons.map((button, idx) => (
+
+              <Button
+                key={idx}
+                className="role-topic-button"
+                content={button.value}
+                style={{backgroundColor: checkFilled(button.value) ? button.color : "white" , border: `2px solid ${button.color}`}}
+                onClick={(e) => setFilled(button.value)}
+              />
+              
+            ))}
+            </div>)
+            }
+          
         </div>
 
         <div className="section">
           <div className="list-title">My Roles</div>
-          <Button className="role-topic-button" content="Cannabis" />
-          <Button className="role-topic-button" content="Fun" />
+          {exampleUser.currentTeams.map((button, idx) => (
+            <Button
+              key={idx}
+              className="role-topic-button"
+              content={button}
+              style={{backgroundColor: teamColors[button]}}
+              
+            />
+          ))}
         </div>
       </div>
     </>
