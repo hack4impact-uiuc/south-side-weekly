@@ -200,273 +200,297 @@ function Profile(): ReactElement {
   return (
     <>
       <Sidebar />
-      <div className="logo-header">
-        <img className="logo" alt="SSW Logo" src={Logo} />
-      </div>
-
-      <div className="pfp-section">
-        <div className="edit-button">
-          <Button
-            content="Edit Profile"
-            className="edit-profile-button"
-            onClick={enableEdit}
-          />
+      <div className="pfp-page">
+        <div className="logo-header">
+          <img className="logo" alt="SSW Logo" src={Logo} />
         </div>
-        <div className="pfp">
-          <img src={Pfp} alt="pfp" className="pfp"></img>
-        </div>
-        {exampleUser.masthead && (
-          <div className="masthead-section">
-            <img src={Banner} className="masthead-banner" alt="banner"></img>
-            <img src={Masthead} className="masthead-logo" alt="masthead" />
-            <div className="masthead-text">Masthead</div>
+      <div className="pfp-page-content">
+        <div className="top-section-wrapper">
+          <div className="pf-section">
+              <div className="edit-button-wrapper">
+                <Button
+                  content="Edit Profile"
+                  className="edit-profile-button"
+                  onClick={enableEdit}
+                />
+              </div>
+              <div className="pf-image-wrapper">
+                <img src={Pfp} alt="pfp" className="pf-image"></img>
+                {exampleUser.masthead && (
+                <div className="masthead-section">
+                  <img src={Banner} className="masthead-banner" alt="banner"></img>
+                  <img src={Masthead} className="masthead-logo" alt="masthead" />
+                  <div className="masthead-text">Masthead</div>
+                </div>
+              )}
+              </div>
+              
+              <div className="save-edit-section">
+                {edit && (
+                  <Button
+                    content="Save Changes"
+                    className="save-changes-button"
+                    onClick={saveEdit}
+                  />
+                )}
+                {edit && (
+                  <Button
+                    content="Cancel Changes"
+                    className="cancel-changes-button"
+                    onClick={cancelEdit}
+                  />
+                )}
+              </div>
           </div>
-        )}
-        <div className="save-edit-section">
-          {edit && (
-            <Button
-              content="Save Changes"
-              className="save-changes-button"
-              onClick={saveEdit}
-            />
-          )}
-          {edit && (
-            <Button
-              content="Cancel Changes"
-              className="cancel-changes-button"
-              onClick={cancelEdit}
-            />
-          )}
-        </div>
-      </div>
 
-      <div className="basic-input-section">
-        <div className="list-title">Basic Information</div>
-        <div className="input-wrapper">
-          <span className="info-label">Name:</span>
-          {/*<Label horizontal circular>Name</Label>*/}
-          <Input
-            className="input-field"
-            transparent
-            value={fullName}
-            readOnly={!edit}
-            onChange={(e) => setFullName(e.currentTarget.value)}
-          />
+          <div className="basic-input-section">
+            <div className="list-title">Basic Information</div>
+            <div className="input-wrapper">
+              <span className="info-label">Name:</span>
+              {/*<Label horizontal circular>Name</Label>*/}
+              <Input
+                className="input-field"
+                transparent
+                value={fullName}
+                readOnly={!edit}
+                onChange={(e) => setFullName(e.currentTarget.value)}
+              />
+            </div>
+
+            <div className="input-wrapper">
+              <span className="info-label">Preferred Name:</span>
+              {/*<Label horizontal circular>Name</Label>*/}
+              <Input
+                className="input-field"
+                transparent
+                value={preferredName}
+                readOnly={!edit}
+                onChange={(e) => setPreferredName(e.currentTarget.value)}
+              />
+            </div>
+
+            <div className="input-wrapper" id="gender">
+              <span className="info-label">Gender:</span>
+              {/*<Label horizontal circular>Name</Label>*/}
+              {!edit && (
+                <Input
+                  className="input-field"
+                  transparent
+                  value={genders.join(', ')}
+                  //fluid
+                />
+              )}
+              {edit && (
+
+                  <Dropdown
+                    multiple
+                    selection
+                    options={genderOptions}
+                    className="dropdown-field"
+                    onChange={(e, data) => extractGenderString(data.value!)}
+                    defaultValue={genders}
+                  />
+              )}
+            </div>
+
+            <div className="input-wrapper" id="pronoun">
+              <span className="info-label">Pronouns:</span>
+              {/*<Label horizontal circular>Name</Label>*/}
+              {!edit && (
+                <Input
+                  className="input-field"
+                  transparent
+                  value={pronouns.join(', ')}
+                  //fluid
+                />
+              )}
+              {edit && (
+
+                  <Dropdown
+                    multiple
+                    selection
+                    options={pronounOptions}
+                    className="dropdown-field"
+                    onChange={(e, data) => extractPronounString(data.value!)}
+                    defaultValue={pronouns}
+                  />
+              )}
+            </div>
+
+            <div className="input-wrapper">
+              <span className="info-label">Position:</span>
+              {/*<Label horizontal circular>Name</Label>*/}
+              <Input
+                className="input-field"
+                transparent
+                value={exampleUser.role}
+                readOnly="true"
+                //fluid
+              />
+            </div>
+
+            <div className="input-wrapper">
+              <span className="info-label">Date Joined:</span>
+              {/*<Label horizontal circular>Name</Label>*/}
+              <Input
+                className="input-field"
+                transparent
+                value={dateJoined}
+                readOnly={!edit}
+                onChange={(e) => setDateJoined(e.currentTarget.value)}
+              />
+            </div>
+          </div>
+
+          <div className="topics-section">
+            <div className="list-section">
+              <div className="list-title">My Topics</div>
+
+              {/*<Button className="role-topic-button" content="Cannabis" style={{backgroundColor: teamColors[exampleUser.currentTeams[0]]}}/>
+              <Button className="role-topic-button" content="Fun" />*/}
+
+              {!edit && (
+                <div className="interests-section-scroll">
+                  {interests.map((button, idx) => (
+                    <Button
+                      key={idx}
+                      className="role-topic-button"
+                      content={button}
+                      style={{ backgroundColor: interestColors[button] }}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {edit && (
+                <div className="interests-section-scroll">
+                  {interestsButtons.map((button, idx) => (
+                    <Button
+                      key={idx}
+                      className="role-topic-button"
+                      content={button.value}
+                      style={{
+                        backgroundColor: checkFilled(button.value)
+                          ? button.color
+                          : 'white',
+                        border: `2px solid ${button.color}`,
+                      }}
+                      onClick={() => setFilled(button.value)}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="roles-section">            
+          <div className="list-section">
+            <div className="list-title">My Roles</div>
+            <div className="interests-section-scroll">
+            {exampleUser.currentTeams.map((button, idx) => (
+              <Button
+                key={idx}
+                className="role-topic-button"
+                content={button}
+                style={{ backgroundColor: teamColors[button] }}
+              />
+            ))}
+          </div>
+          </div>
+          </div>
+          
         </div>
 
-        <div className="input-wrapper">
-          <span className="info-label">Preferred Name:</span>
-          {/*<Label horizontal circular>Name</Label>*/}
-          <Input
-            className="input-field"
-            transparent
-            value={preferredName}
-            readOnly={!edit}
-            onChange={(e) => setPreferredName(e.currentTarget.value)}
-          />
-        </div>
+        <hr />
+        <div className="bottom-section-wrapper">
 
-        <div className="input-wrapper" id="gender">
-          <span className="info-label">Gender:</span>
-          {/*<Label horizontal circular>Name</Label>*/}
-          {!edit && (
+          <div className="left-col">
+          <div className="list-title">Socials/Contact</div>
+          <div className="input-wrapper">
+            <div>
+              <img className="icon" src={Mail} alt="mail" />
+            </div>
+            {/*<Label horizontal circular>Name</Label>*/}
             <Input
               className="input-field"
               transparent
-              value={genders.join(', ')}
-              //fluid
+              value={exampleUser.email}
             />
-          )}
-          {edit && (
-            <div className="dropdown-wrapper">
-              <Dropdown
-                multiple
-                selection
-                options={genderOptions}
-                className="dropdown-field"
-                onChange={(e, data) => extractGenderString(data.value!)}
-                defaultValue={genders}
-              />
-            </div>
-          )}
-        </div>
+          </div>
 
-        <div className="input-wrapper" id="pronoun">
-          <span className="info-label">Pronouns:</span>
-          {/*<Label horizontal circular>Name</Label>*/}
-          {!edit && (
+          <div className="input-wrapper">
+            <div>
+              <img className="icon" src={Phone} alt="mail" />
+            </div>
             <Input
               className="input-field"
               transparent
-              value={pronouns.join(', ')}
+              value={phoneNumber}
+              readOnly={!edit}
+              onChange={(e) => setPhoneNumber(e.currentTarget.value)}
+
               //fluid
             />
-          )}
-          {edit && (
-            <div className="dropdown-wrapper">
-              <Dropdown
-                multiple
-                selection
-                options={pronounOptions}
-                className="dropdown-field"
-                onChange={(e, data) => extractPronounString(data.value!)}
-                defaultValue={pronouns}
-              />
+          </div>
+          </div>
+          <div className="right-col">
+          <div className="input-wrapper">
+            <div>
+              <img className="icon" src={Linkedin} alt="linkedin" />
             </div>
-          )}
-        </div>
-
-        <div className="input-wrapper">
-          <span className="info-label">Position:</span>
-          {/*<Label horizontal circular>Name</Label>*/}
-          <Input
-            className="input-field"
-            transparent
-            value={exampleUser.role}
-            readOnly="true"
-            //fluid
-          />
-        </div>
-
-        <div className="input-wrapper">
-          <span className="info-label">Date Joined:</span>
-          {/*<Label horizontal circular>Name</Label>*/}
-          <Input
-            className="input-field"
-            transparent
-            value={dateJoined}
-            readOnly={!edit}
-            onChange={(e) => setDateJoined(e.currentTarget.value)}
-          />
-        </div>
-      </div>
-
-      <hr />
-
-      <div className="social-input-section">
-        <div className="list-title">Socials/Contact</div>
-        <div className="input-wrapper">
-          <div>
-            <img className="icon" src={Mail} alt="mail" />
-          </div>
-          {/*<Label horizontal circular>Name</Label>*/}
-          <Input
-            className="input-field"
-            transparent
-            value={exampleUser.email}
-          />
-        </div>
-
-        <div className="input-wrapper">
-          <div>
-            <img className="icon" src={Phone} alt="mail" />
-          </div>
-          <Input
-            className="input-field"
-            transparent
-            value={phoneNumber}
-            readOnly={!edit}
-            onChange={(e) => setPhoneNumber(e.currentTarget.value)}
-
-            //fluid
-          />
-        </div>
-
-        <div className="input-wrapper">
-          <div>
-            <img className="icon" src={Linkedin} alt="linkedin" />
-          </div>
-          {/*<Label horizontal circular>Name</Label>*/}
-          <Input
-            className="input-field"
-            transparent
-            value={linkedIn}
-            readOnly={!edit}
-            onChange={(e) => setLinkedIn(e.currentTarget.value)}
-          />
-        </div>
-
-        <div className="input-wrapper">
-          <div>
-            <img className="icon" src={Globe} alt="globe" />
-          </div>
-          {/*<Label horizontal circular>Name</Label>*/}
-          <Input
-            className="input-field"
-            transparent
-            value={portfolio}
-            readOnly={!edit}
-            onChange={(e) => setPortfolio(e.currentTarget.value)}
-          />
-        </div>
-
-        <div className="input-wrapper">
-          <div>
-            <img className="icon" src={Twitter} alt="twitter" />
-          </div>
-          {/*<Label horizontal circular>Name</Label>*/}
-          <Input
-            className="input-field"
-            transparent
-            value={twitter}
-            readOnly={!edit}
-            onChange={(e) => setTwitter(e.currentTarget.value)}
-          />
-        </div>
-      </div>
-
-      <div className="topics-section">
-        <div className="section">
-          <div className="list-title">My Topics</div>
-
-          {/*<Button className="role-topic-button" content="Cannabis" style={{backgroundColor: teamColors[exampleUser.currentTeams[0]]}}/>
-          <Button className="role-topic-button" content="Fun" />*/}
-
-          {!edit && (
-            <div className="interests-section-scroll">
-              {interests.map((button, idx) => (
-                <Button
-                  key={idx}
-                  className="role-topic-button"
-                  content={button}
-                  style={{ backgroundColor: interestColors[button] }}
-                />
-              ))}
-            </div>
-          )}
-
-          {edit && (
-            <div className="interests-section-scroll">
-              {interestsButtons.map((button, idx) => (
-                <Button
-                  key={idx}
-                  className="role-topic-button"
-                  content={button.value}
-                  style={{
-                    backgroundColor: checkFilled(button.value)
-                      ? button.color
-                      : 'white',
-                    border: `2px solid ${button.color}`,
-                  }}
-                  onClick={() => setFilled(button.value)}
-                />
-              ))}
-            </div>
-          )}
-        </div>
-
-        <div className="section">
-          <div className="list-title">My Roles</div>
-          {exampleUser.currentTeams.map((button, idx) => (
-            <Button
-              key={idx}
-              className="role-topic-button"
-              content={button}
-              style={{ backgroundColor: teamColors[button] }}
+            {/*<Label horizontal circular>Name</Label>*/}
+            <Input
+              className="input-field"
+              transparent
+              value={linkedIn}
+              readOnly={!edit}
+              onChange={(e) => setLinkedIn(e.currentTarget.value)}
             />
-          ))}
+          </div>
+
+          <div className="input-wrapper">
+            <div>
+              <img className="icon" src={Globe} alt="globe" />
+            </div>
+            {/*<Label horizontal circular>Name</Label>*/}
+            <Input
+              className="input-field"
+              transparent
+              value={portfolio}
+              readOnly={!edit}
+              onChange={(e) => setPortfolio(e.currentTarget.value)}
+            />
+          </div>
+
+          <div className="input-wrapper">
+            <div>
+              <img className="icon" src={Twitter} alt="twitter" />
+            </div>
+            {/*<Label horizontal circular>Name</Label>*/}
+            <Input
+              className="input-field"
+              transparent
+              value={twitter}
+              readOnly={!edit}
+              onChange={(e) => setTwitter(e.currentTarget.value)}
+            />
+          </div>
+          </div>
+        </div> 
+
+
+
+  
+
+
         </div>
+
+
       </div>
+
+   
+        
+
     </>
   );
 }
