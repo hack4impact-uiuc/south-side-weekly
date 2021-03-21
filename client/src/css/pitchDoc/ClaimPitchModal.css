@@ -79,3 +79,20 @@
   background: #8cb076;
   border-radius: 6.88302px;
 }
+
+.success-wrapper {
+  padding-left: 20px;
+  padding-top: 20px;
+}
+
+.success-wrapper .text {
+  font-size: 30.9009px;
+  line-height: 38px;
+}
+
+.success-wrapper .image {
+  float: right;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-right: 20px;
+}

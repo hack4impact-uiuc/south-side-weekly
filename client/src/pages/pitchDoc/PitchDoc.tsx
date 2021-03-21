@@ -19,7 +19,6 @@ function PitchDoc(): ReactElement {
 
       if (!isError(resp) && resp.data) {
         setUnclaimedPitches(resp.data.result);
-        console.log(resp.data.result);
       }
     };
 

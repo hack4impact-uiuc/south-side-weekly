@@ -3,10 +3,7 @@ import { Card } from 'semantic-ui-react';
 import '../../css/pitchDoc/PitchCard.css';
 import { IPitch } from 'ssw-common';
 
-import {
-  currentTeamsButtons,
-  teamToTeamsButtons,
-} from '../../utils/constants';
+import { currentTeamsButtons, teamToTeamsButtons } from '../../utils/constants';
 import WizardSelectButton from '../WizardSelectButton/WizardSelectButton';
 
 const defaultOnClick = (): void => void 0;
