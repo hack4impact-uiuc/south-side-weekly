@@ -2,7 +2,7 @@ import React, { FC, ReactElement } from 'react';
 import { IPitch } from 'ssw-common';
 import { Grid } from 'semantic-ui-react';
 
-import PitchCard from './PitchCard';
+import ClaimPitchModal from './ClaimPitchModal';
 
 interface IProps {
   pitches: IPitch[];
@@ -21,10 +21,14 @@ const PitchGrid: FC<IProps> = ({ pitches }): ReactElement => {
       return (
         <Grid.Row key={first.name}>
           <Grid.Column>
-            <PitchCard pitch={first} />
+            <ClaimPitchModal pitch={first} />
           </Grid.Column>
-          <Grid.Column>{second && <PitchCard pitch={second} />}</Grid.Column>
-          <Grid.Column>{third && <PitchCard pitch={third} />}</Grid.Column>
+          <Grid.Column>
+            {second && <ClaimPitchModal pitch={second} />}
+          </Grid.Column>
+          <Grid.Column>
+            {third && <ClaimPitchModal pitch={third} />}
+          </Grid.Column>
         </Grid.Row>
       );
     });

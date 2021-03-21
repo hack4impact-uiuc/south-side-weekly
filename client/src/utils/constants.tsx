@@ -18,13 +18,13 @@ const interestsButtons: { [key: string]: string } = {
 
 // All of the buttons to show for the current teams
 const currentTeamsButtons: { [key: string]: string } = {
-  Data: '#EF8B8B',
+  // Data: '#EF8B8B',
   Editing: '#A5C4F2',
   'Fact-checking': '#CFE7C4',
   Illustration: '#BAB9E9',
-  Layout: '#F9B893',
+  // Layout: '#F9B893',
   Photography: '#D8ACE8',
-  Radio: '#F1D8B0',
+  // Radio: '#F1D8B0',
   Visuals: '#BFEBE0',
   Writing: '#A9D3E5',
 };

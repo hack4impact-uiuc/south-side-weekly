@@ -1,0 +1,81 @@
+.ui.form {
+  font-size: 18px;
+}
+
+.ui.modal {
+  background: #3d4f91;
+  box-shadow: 0px 3.43343px 3.43343px rgba(0, 0, 0, 0.25),
+    inset 0px 3.43343px 3.43343px rgba(0, 0, 0, 0.25);
+  border-radius: 10.3003px;
+}
+
+.ui.modal > .actions {
+  text-align: left;
+  background: #3d4f91;
+  color: #f7fafb;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 24px;
+}
+
+.claim-pitches-wrapper {
+  padding-left: 20px;
+  padding-bottom: 20px;
+  padding-right: 20px;
+}
+
+.pitch-info {
+  font-style: normal;
+  font-weight: 600;
+  color: #f7fafb;
+  text-shadow: 0px 3.43343px 3.43343px rgba(0, 0, 0, 0.25);
+}
+
+.pitch-info .pitch-name {
+  height: 49.78470230102539px;
+  width: 632.6090698242188px;
+  font-size: 41.2011px;
+  line-height: 50px;
+}
+
+.pitch-info .submitted-by {
+  font-size: 18px;
+  line-height: 22px;
+}
+
+.pitch-info .summary {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 19px;
+  letter-spacing: 0em;
+}
+
+.claim-pitches-wrapper .image {
+  padding-top: 20px;
+}
+
+.claim-pitches-wrapper .container {
+  padding-bottom: 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+.roles-needed {
+  padding-top: 50px;
+  font-size: 21px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 25px;
+  letter-spacing: 0em;
+}
+
+.modal-submit-button .ui.button {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18.0594px;
+  line-height: 15px;
+  color: #f7fafb;
+  background: #8cb076;
+  border-radius: 6.88302px;
+}
