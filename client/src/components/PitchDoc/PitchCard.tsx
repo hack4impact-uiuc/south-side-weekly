@@ -1,7 +1,8 @@
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, useState, useEffect } from 'react';
 import { Card } from 'semantic-ui-react';
 import '../../css/pitchDoc/PitchCard.css';
 import { IPitch } from 'ssw-common';
+import { getOpenTeams, isError } from '../../utils/apiWrapper';
 
 import { currentTeamsButtons, teamToTeamsButtons } from '../../utils/constants';
 import WizardSelectButton from '../WizardSelectButton/WizardSelectButton';
@@ -12,20 +13,26 @@ interface IProps {
   pitch: IPitch;
 }
 
+interface ITeams {
+  string: { [key: string]: number }
+}
+
 const PitchCard: FC<IProps> = ({ pitch, ...rest }): ReactElement => {
-  // Filter all teams needed
-  const teamsNeeded = Object.keys(pitch.teams)
-    .filter(function (team) {
-      if (pitch.teams[team].current >= pitch.teams[team].target) {
-        return false;
+  const [openTeams, setOpenTeams] = useState<ITeams[]>([]);
+
+  useEffect(() => {
+    const getAllUnclaimedPitches = async (): Promise<void> => {
+      const resp = await getOpenTeams(pitch._id);
+
+      if (!isError(resp) && resp.data) {
+        console.log(resp);
+        // setOpenTeams(resp.data.result);
+        console.log(resp.data.result);
       }
-      return true;
-    })
-    .map((team: string) =>
-      pitch.teams[team].current < pitch.teams[team].target
-        ? teamToTeamsButtons[team]
-        : '',
-    );
+    };
+
+    getAllUnclaimedPitches();
+  }, []);
 
   return (
     <div className="pitch-card-wrapper">
@@ -40,7 +47,7 @@ const PitchCard: FC<IProps> = ({ pitch, ...rest }): ReactElement => {
         </Card.Content>
         <Card.Content>
           <div className="container">
-            {teamsNeeded.map((team: string) => (
+            {/* {openTeams.map((team: string) => (
               <WizardSelectButton
                 onClick={defaultOnClick}
                 key={team}
@@ -48,7 +55,7 @@ const PitchCard: FC<IProps> = ({ pitch, ...rest }): ReactElement => {
                 value={team}
                 color={currentTeamsButtons[team]}
               />
-            ))}
+            ))} */}
           </div>
         </Card.Content>
       </Card>

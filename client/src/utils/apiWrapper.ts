@@ -72,7 +72,7 @@ export const addSampleResponse = (
 export const getUnclaimedPitches = (): Promise<
   AxiosResponse<GetPitchesResponseType> | ErrorWrapper
 > => {
-  const requestString = `${BASE_URL}/pitch?filter=unclaimed`;
+  const requestString = `${BASE_URL}/pitch?unclaimed=true`;
   return axios
     .get(requestString, {
       headers: {
@@ -83,4 +83,24 @@ export const getUnclaimedPitches = (): Promise<
       type: 'GET_UNCLAIMED_PITCHES_FAIL',
       error,
     }));
+};
+
+/**
+ * Returns all open teams
+ * Returns GET_OPEN_TEAMS_FAIL upon failure
+ */
+ export const getOpenTeams = (pitchId: string): Promise<
+ AxiosResponse<GetPitchesResponseType> | ErrorWrapper
+> => {
+ const requestString = `${BASE_URL}/${pitchId}/openTeams`;
+ return axios
+   .get(requestString, {
+     headers: {
+       'Content-Type': 'application/JSON',
+     },
+   })
+   .catch((error) => ({
+     type: 'GET_OPEN_TEAMS_FAIL',
+     error,
+   }));
 };

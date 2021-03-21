@@ -29,6 +29,7 @@ export interface IUser {
  */
 export interface IPitch {
   name: string;
+  _id: string;
   // pitchAuthor: mongoose.Types.ObjectId;
   pitchStatus: string;
   assignmentStatus: string;
@@ -65,17 +66,3 @@ export interface IPitch {
   similarStories: [string];
   deadline: Date;
 }
-
-// export interface IStats {
-//   current: number,
-//   target: number,
-// }
-
-// export interface ITeams {
-//   writers: IStats,
-//   editors: IStats,
-//   visuals: IStats,
-//   photography: IStats,
-//   illustration: IStats,
-//   factChecking: IStats
-// }
