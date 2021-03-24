@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useEffect } from 'react';
-import { Input, Button, Dropdown } from 'semantic-ui-react';
+import { Input, Button, Dropdown, Label } from 'semantic-ui-react';
 
 import Sidebar from '../../components/Sidebar';
 import Logo from '../../assets/ssw-form-header.png';
@@ -285,7 +285,7 @@ function Profile(): ReactElement {
                     className="input-field"
                     transparent
                     value={genders.join(', ')}
-                    //fluid
+                    readOnly={!edit}
                   />
                 )}
                 {edit && (
@@ -308,7 +308,7 @@ function Profile(): ReactElement {
                     className="input-field"
                     transparent
                     value={pronouns.join(', ')}
-                    //fluid
+                    readOnly={!edit}
                   />
                 )}
                 {edit && (
@@ -358,9 +358,9 @@ function Profile(): ReactElement {
                 {!edit && (
                   <div className="interests-section-scroll">
                     {interests.map((button, idx) => (
-                      <Button
+                      <Label
                         key={idx}
-                        className="role-topic-button"
+                        className="role-topic-label"
                         content={button}
                         style={{ backgroundColor: interestColors[button] }}
                       />
@@ -394,9 +394,9 @@ function Profile(): ReactElement {
                 <div className="list-title">My Roles</div>
                 <div className="interests-section-scroll">
                   {exampleUser.currentTeams.map((button, idx) => (
-                    <Button
+                    <Label
                       key={idx}
-                      className="role-topic-button"
+                      className="role-topic-label"
                       content={button}
                       style={{ backgroundColor: teamColors[button] }}
                     />
@@ -419,6 +419,7 @@ function Profile(): ReactElement {
                   className="input-field"
                   transparent
                   value={exampleUser.email}
+                  readOnly
                 />
               </div>
 
