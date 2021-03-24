@@ -4,11 +4,6 @@
   height: 100vh;
 }
 
-.wizard-wrapper .logo {
-  width: 60%;
-  margin: 2%;
-}
-
 .wizard-wrapper .wizard-page-counter {
   position: absolute;
   left: 41.9%;

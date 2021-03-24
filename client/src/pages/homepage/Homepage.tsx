@@ -1,5 +1,6 @@
 import React, { ReactElement, useState } from 'react';
 
+import Header from '../../components/Header';
 import Sidebar from '../../components/Sidebar';
 import PitchCard from '../../components/PitchCard';
 
@@ -99,9 +100,9 @@ function Homepage(): ReactElement {
   return (
     <>
       <Sidebar />
+      <Header large={false} />
       <div className="body">
         <div className="header">
-          <h1>SOUTH SIDE WEEKLY</h1>
           <h2 className="sub-heading">Welcome back, Mustafa!</h2>
         </div>
         <div className="tabs">

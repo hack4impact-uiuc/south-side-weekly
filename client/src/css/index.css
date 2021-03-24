@@ -3,3 +3,18 @@ body {
   padding: 0 !important;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+.logo {
+  width: 60%;
+  margin: 2%;
+}
+
+.logo-small {
+  width: 40%;
+  margin-top: 2%;
+  margin-left: 5%;
+}
+
+.logo-header {
+  text-align: center;
+}

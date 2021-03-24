@@ -3,15 +3,6 @@
   flex-direction: column;
 }
 
-.pfp-page .logo-header {
-  text-align: center;
-}
-
-.pfp-page .logo {
-  width: 45%;
-  margin-top: 1%;
-}
-
 .pfp-page-content {
   position: relative;
   margin-left: 12%;

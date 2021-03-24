@@ -1,8 +1,8 @@
 import React, { ReactElement, useState, useEffect } from 'react';
 import { Input, Button, Dropdown, Label } from 'semantic-ui-react';
 
+import Header from '../../components/Header';
 import Sidebar from '../../components/Sidebar';
-import Logo from '../../assets/ssw-form-header.png';
 import Mail from '../../assets/mail.svg';
 import Phone from '../../assets/phone.svg';
 import Linkedin from '../../assets/linkedin.svg';
@@ -201,9 +201,7 @@ function Profile(): ReactElement {
     <>
       <Sidebar />
       <div className="pfp-page">
-        <div className="logo-header">
-          <img className="logo" alt="SSW Logo" src={Logo} />
-        </div>
+        <Header large={false} />
         <div className="pfp-page-content">
           <div className="top-section-wrapper">
             <div className="pf-section">
