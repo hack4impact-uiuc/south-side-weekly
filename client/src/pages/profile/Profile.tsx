@@ -331,7 +331,7 @@ function Profile(): ReactElement {
                   transparent
                   value={exampleUser.role}
                   readOnly="true"
-                  //fluid
+                  disabled={edit}
                 />
               </div>
 
@@ -420,6 +420,7 @@ function Profile(): ReactElement {
                   transparent
                   value={exampleUser.email}
                   readOnly
+                  disabled={edit}
                 />
               </div>
 
