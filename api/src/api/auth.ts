@@ -7,11 +7,11 @@ import { errorWrap } from '../middleware';
 
 const CALLBACK_ROUTE = '/api/auth/google/callback';
 
-interface queryI {
+interface IQuery {
   state: any;
 }
 
-interface stateI {
+interface IState {
   callbackUrl: string;
   successRedirect: string | ParsedQs | string[] | ParsedQs[];
   failureRedirect: string | ParsedQs | string[] | ParsedQs[];
@@ -57,7 +57,7 @@ router.get('/login', (req: Request, res: Response, next: NextFunction) => {
 
   const callbackUrl = `${req.protocol}://${req.get('host')}${CALLBACK_ROUTE}`;
 
-  const state: stateI = {
+  const state: IState = {
     callbackUrl,
     successRedirect,
     failureRedirect,
@@ -73,7 +73,7 @@ router.get('/login', (req: Request, res: Response, next: NextFunction) => {
 router.get(
   '/google/callback',
   (
-    req: Request<unknown, unknown, unknown, queryI>,
+    req: Request<unknown, unknown, unknown, IQuery>,
     res: Response,
     next: NextFunction,
   ) => {
