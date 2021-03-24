@@ -1,4 +1,5 @@
 import React, { ReactElement } from 'react';
+import { Link } from 'react-router-dom';
 
 import Pfp from '../assets/pfp.svg';
 import Home from '../assets/home.svg';
@@ -17,16 +18,22 @@ function Sidebar(): ReactElement {
       </div>
       <div className="vertical-nav">
         <div className="nav-link">
-          <img src={Home} alt="home" />
+          <Link to="/homepage">
+            <img src={Home} alt="home" />
+          </Link>
         </div>
         <div className="nav-link">
-          <img src={Person} alt="person" />
+          <Link to="/profile">
+            <img src={Person} alt="person" />
+          </Link>
         </div>
         <div className="nav-link">
           <img src={Pitch} alt="pitch" />
         </div>
         <div className="nav-link">
-          <img src={Library} alt="library" />
+          <Link to="/resources">
+            <img src={Library} alt="library" />
+          </Link>
         </div>
         <div className="nav-link">
           <img src={People} alt="people" />
