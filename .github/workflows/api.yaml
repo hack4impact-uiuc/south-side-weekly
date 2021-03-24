@@ -80,6 +80,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       DEV_MONGO_URL: ${{ secrets.DEV_MONGO_URL }}
+      GOOGLE_CLIENT_ID: ${{ secrets.GOOGLE_CLIENT_ID }}
+      GOOGLE_CALLBACK_URL: ${{ secrets.GOOGLE_CALLBACK_URL }}
+      SESS_SECRET: ${{ secrets.SESS_SECRET }}
     steps:
       - name: Check out repository
         uses: actions/checkout@v2

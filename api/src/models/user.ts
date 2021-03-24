@@ -11,7 +11,8 @@ import {
 /**
  * Interface for a User Schema.
  */
-interface IUser extends Document<any> {
+export interface IUser extends Document<any> {
+  _id: string;
   firstName: string;
   lastName: string;
   preferredName: string;
@@ -85,4 +86,3 @@ const User = new mongoose.Schema({
 });
 
 export default mongoose.model<IUser>('User', User);
-export { IUser };

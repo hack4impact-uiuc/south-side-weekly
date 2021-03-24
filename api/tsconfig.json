@@ -6,7 +6,8 @@
     "noImplicitAny": true,
     "moduleResolution": "node",
     "sourceMap": true,
-    "outDir": "dist"
+    "outDir": "dist",
+    "typeRoots": ["./src/types"]
   },
   "include": ["src/**/*"]
 }
