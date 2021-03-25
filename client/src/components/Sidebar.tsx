@@ -1,43 +1,72 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Icon } from "semantic-ui-react";
+import {pages} from "../utils/enums";
 
-import Pfp from '../assets/pfp.svg';
-import Home from '../assets/home.svg';
-import Person from '../assets/person.svg';
-import Pitch from '../assets/pitch.svg';
-import Library from '../assets/library.svg';
-import People from '../assets/people.svg';
 
 import '../css/Sidebar.css';
 
-function Sidebar(): ReactElement {
+interface IProps {
+  currentPage: string;
+}
+
+function Sidebar({currentPage}: IProps): ReactElement {
+  useEffect(() => {
+    switch (currentPage) {
+      case pages.ACCOUNT_HOME:
+        window.document.getElementById('home')!.classList.add('active');
+        break;
+      case pages.PROFILE:
+        window.document.getElementById('profile')!.classList.add('active');
+        break;
+      case pages.PITCHES:
+        window.document.getElementById('pitches')!.classList.add('active');
+        break;
+      case pages.RESOURCES:
+        window.document.getElementById('resources')!.classList.add('active');
+        break;
+      case pages.USERS:
+        window.document.getElementById('users')!.classList.add('active');
+        break;
+    }
+  })
+
   return (
     <div className="sidebar">
       <div className="profile-pic">
-        <img src={Pfp} alt="IMG-5592" />
+        <img src="https://i.ibb.co/RPcYkT7/IMG-5592.jpg" alt="IMG-5592" />
       </div>
       <div className="vertical-nav">
-        <div className="nav-link">
-          <Link to="/homepage">
-            <img src={Home} alt="home" />
-          </Link>
-        </div>
-        <div className="nav-link">
-          <Link to="/profile">
-            <img src={Person} alt="person" />
-          </Link>
-        </div>
-        <div className="nav-link">
-          <img src={Pitch} alt="pitch" />
-        </div>
-        <div className="nav-link">
-          <Link to="/resources">
-            <img src={Library} alt="library" />
-          </Link>
-        </div>
-        <div className="nav-link">
-          <img src={People} alt="people" />
-        </div>
+        <Link to="/homepage">
+          <div id="home" className="nav-link">
+            <Icon className="icon" name="home" size="large" />
+            <div className="icon-text">Home</div>
+          </div>
+        </Link>
+        <Link to="/profile">
+          <div id="profile" className="nav-link">
+            <Icon className="icon" name="user" size="large" />
+            <div className="icon-text">Profile</div>
+          </div>
+        </Link>
+        <Link to="/pitches">
+          <div id="pitches" className="nav-link">
+            <Icon className="icon" name="clipboard" size="large" />
+            <div className="icon-text">Pitches</div>
+          </div>
+        </Link>
+        <Link to="/resources">
+          <div id="resources" className="nav-link">
+            <Icon className="icon" name="book" size="large" />
+            <div className="icon-text">Resources</div>
+          </div>
+        </Link>
+        <Link to="/users">
+          <div id="users" className="nav-link">
+            <Icon className="icon" name="users" size="large" />
+            <div className="icon-text">Users</div>
+          </div>
+        </Link>
       </div>
     </div>
   );
