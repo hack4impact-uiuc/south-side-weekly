@@ -1,5 +1,5 @@
 import React, { ReactElement, useState } from 'react';
-import { Button, Grid } from 'semantic-ui-react';
+import { Button, Grid, Search } from 'semantic-ui-react';
 
 import SSWTitle from '../assets/ssw-form-header.png';
 import Sidebar from '../components/Sidebar';
@@ -26,15 +26,17 @@ const Pitches = (): ReactElement => {
     pitchStatus === status;
 
   return (
-    <>
+    <div>
       <Sidebar />
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
         <img style={{ width: '40%' }} src={SSWTitle} alt="South Side Weekly" />
       </div>
       <div className="pitches-wrapper">
-        <h2>Pitch Approval</h2>
+        <h2 style={{ marginLeft: '200px', marginBottom: '50px' }}>
+          Pitch Approval
+        </h2>
         <Grid centered>
-          <Button.Group>
+          <Button.Group style={{ marginBottom: '50px' }}>
             <Button
               active={isPitchStatusActive(PitchStatus.UNCLAIMED_PITCH)}
               className={`pitch-status-btn ${
@@ -64,8 +66,16 @@ const Pitches = (): ReactElement => {
             </Button>
           </Button.Group>
         </Grid>
+        <Grid centered>
+          <Search
+            className="search"
+            input={{ iconPosition: 'left', fluid: true }}
+            fluid
+            icon="search"
+          />
+        </Grid>
       </div>
-    </>
+    </div>
   );
 };
 

@@ -1,6 +1,4 @@
 .pitches-wrapper {
-  width: 85%;
-  float: right;
   margin-top: 50px;
 }
 
@@ -16,4 +14,16 @@
   background-color: #3d4f91 !important;
   border-color: #3d4f91 !important;
   color: white !important;
+}
+
+.pitches-wrapper .search {
+  width: 50%;
+}
+
+.pitches-wrapper .search input {
+  background-color: rgba(61, 79, 145, 0.45);
+}
+
+.pitches-wrapper .search input:focus {
+  background-color: rgba(61, 79, 145, 0.45);
 }
