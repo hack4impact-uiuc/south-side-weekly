@@ -9,6 +9,7 @@ import Profile from './pages/profile/Profile';
 import Login from './pages/Login';
 import WizardWrapper from './pages/wizard/WizardWrapper';
 import ResourcePage from './pages/ResourcePage';
+import Pitches from './pages/Pitches';
 
 import './css/index.css';
 
@@ -23,6 +24,7 @@ ReactDOM.render(
         <Route exact path="/resources" component={ResourcePage} />
         <Route exact path="/profile" component={Profile} />
         <Route exact path="/login" component={Login} />
+        <Route exact path="/pitches" component={Pitches} />
       </Switch>
     </Router>
   </React.StrictMode>,
