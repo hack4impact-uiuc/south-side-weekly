@@ -1,16 +1,29 @@
 import React, { ReactElement, useState, useEffect } from 'react';
+import { Button, Container, Grid } from 'semantic-ui-react';
 
 import SSWTitle from '../assets/ssw-form-header.png';
 import Sidebar from '../components/Sidebar';
 
-const Pitches = (): ReactElement => {
-  const [temp, setTemp] = useState<string>('DEFAULT_TEMP');
+import '../css/Pitches.css';
 
-  useEffect(() => {
-    if (temp === 'DEFAULT_TEMP') {
-      setTemp('PASS LINT');
-    }
-  }, [temp]);
+enum PitchStatus {
+  UNCLAIMED_PITCH,
+  PENDING_PITCH,
+  PENDING_CLAIM,
+}
+
+const Pitches = (): ReactElement => {
+  const [pitchStatus, setPitchStatus] = useState<PitchStatus>(
+    PitchStatus.UNCLAIMED_PITCH,
+  );
+
+  /**
+   * Determiens if the status passed in is the active status or not
+   * @param status the status that is being checked if active
+   * @returns true if the status is active, else false
+   */
+  const isPitchStatusActive = (status: PitchStatus): boolean =>
+    pitchStatus === status;
 
   return (
     <>
@@ -18,7 +31,40 @@ const Pitches = (): ReactElement => {
       <div style={{ textAlign: 'center', marginTop: '20px' }}>
         <img style={{ width: '40%' }} src={SSWTitle} alt="South Side Weekly" />
       </div>
-      <div className="pitches-wrapper"></div>
+      <div className="pitches-wrapper">
+        <h2>Pitch Approval</h2>
+        <Grid centered>
+          <Button.Group>
+            <Button
+              active={isPitchStatusActive(PitchStatus.UNCLAIMED_PITCH)}
+              className={`pitch-status-btn ${
+                isPitchStatusActive(PitchStatus.UNCLAIMED_PITCH) && 'active'
+              }`}
+              onClick={() => setPitchStatus(PitchStatus.UNCLAIMED_PITCH)}
+            >
+              Unclaimed pitches: 24
+            </Button>
+            <Button
+              active={isPitchStatusActive(PitchStatus.PENDING_PITCH)}
+              className={`pitch-status-btn ${
+                isPitchStatusActive(PitchStatus.PENDING_PITCH) && 'active'
+              }`}
+              onClick={() => setPitchStatus(PitchStatus.PENDING_PITCH)}
+            >
+              Pitches Pending Approval: 14
+            </Button>
+            <Button
+              active={isPitchStatusActive(PitchStatus.PENDING_CLAIM)}
+              className={`pitch-status-btn ${
+                isPitchStatusActive(PitchStatus.PENDING_CLAIM) && 'active'
+              }`}
+              onClick={() => setPitchStatus(PitchStatus.PENDING_CLAIM)}
+            >
+              Claims Pending Approval: 64
+            </Button>
+          </Button.Group>
+        </Grid>
+      </div>
     </>
   );
 };

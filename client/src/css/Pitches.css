@@ -1,0 +1,19 @@
+.pitches-wrapper {
+  width: 85%;
+  float: right;
+  margin-top: 50px;
+}
+
+.pitches-wrapper .pitch-status-btn {
+  margin: 0px 10px 0px 10px !important;
+  border-radius: 1rem !important;
+  background-color: white;
+  color: black;
+  border: solid black !important;
+}
+
+.pitches-wrapper .pitch-status-btn.active {
+  background-color: #3d4f91 !important;
+  border-color: #3d4f91 !important;
+  color: white !important;
+}
