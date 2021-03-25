@@ -10,3 +10,11 @@ export const onboardingStatusEnum = {
   STALLED: 'STALLED',
   ONBOARDED: 'ONBOARDED',
 };
+
+export const pages = {
+  ACCOUNT_HOME: 'ACCOUNT_HOME',
+  PROFILE: 'PROFILE',
+  PITCHES: 'PITCHES',
+  RESOURCES: 'RESOURCES',
+  USERS: 'USERS'
+}

@@ -3,6 +3,7 @@ import React, { ReactElement, useState } from 'react';
 import Header from '../../components/Header';
 import Sidebar from '../../components/Sidebar';
 import PitchCard from '../../components/PitchCard';
+import { pages } from '../../utils/enums';
 
 import '../../css/Homepage.css';
 
@@ -99,7 +100,7 @@ function Homepage(): ReactElement {
 
   return (
     <>
-      <Sidebar />
+      <Sidebar currentPage={pages.ACCOUNT_HOME}/>
       <Header large={false} />
       <div className="body">
         <div className="header">

@@ -11,6 +11,7 @@ import Twitter from '../../assets/twitter.svg';
 import Pfp from '../../assets/pfp.svg';
 import Masthead from '../../assets/masthead.svg';
 import Banner from '../../assets/banner.svg';
+import { pages } from '../../utils/enums';
 
 import '../../css/Profile.css';
 
@@ -199,7 +200,7 @@ function Profile(): ReactElement {
 
   return (
     <>
-      <Sidebar />
+      <Sidebar currentPage={pages.PROFILE}/>
       <div className="pfp-page">
         <Header large={false} />
         <div className="pfp-page-content">
