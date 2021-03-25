@@ -1,5 +1,5 @@
-import React, { ReactElement, useState, useEffect } from 'react';
-import { Button, Container, Grid } from 'semantic-ui-react';
+import React, { ReactElement, useState } from 'react';
+import { Button, Grid } from 'semantic-ui-react';
 
 import SSWTitle from '../assets/ssw-form-header.png';
 import Sidebar from '../components/Sidebar';
