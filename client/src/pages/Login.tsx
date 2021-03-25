@@ -6,7 +6,7 @@ import Loader from 'react-loader-spinner';
 
 import buildURI from '../utils/apiHelpers';
 import { BASE_URL, FRONTEND_BASE_URL } from '../utils/apiWrapper';
-import { rolesEnum } from '../utils/enums';
+import { rolesEnum, onboardingStatusEnum } from '../utils/enums';
 import Logo from '../assets/ssw-form-header.png';
 
 const LOGIN_FAILURE_QUERY_PARAM = 'failure';
@@ -22,7 +22,7 @@ function useQuery(): URLSearchParams {
 function Login(): ReactElement {
   const [loading, setLoading] = useState(true);
   const [authed, setAuthed] = useState(false);
-  const [user, setUser] = useState({ role: '' });
+  const [user, setUser] = useState({ role: '', onboardingStatus: '' });
 
   const checkLoggedIn = (): void => {
     const requestString = `${BASE_URL}/auth/currentuser`;
@@ -53,11 +53,14 @@ function Login(): ReactElement {
   const loginFailed = useQuery().get(LOGIN_FAILURE_QUERY_PARAM);
 
   const returnRedirect = (): ReactElement => {
-    console.log(user);
     if (user.role === rolesEnum.TBD) {
       return <Redirect to="/join" />;
-    }
-    return <Redirect to="/resources" />;
+    } else if (user.onboardingStatus === onboardingStatusEnum.ONBOARDING_SCHEDULED || user.onboardingStatus === onboardingStatusEnum.STALLED) {
+      return <Redirect to="/resources" />;
+    } else if (user.onboardingStatus === onboardingStatusEnum.ONBOARDED) {
+      return <Redirect to="/homepage"/>;
+    } 
+    return <Redirect to="/login"/>
   };
 
   return (
