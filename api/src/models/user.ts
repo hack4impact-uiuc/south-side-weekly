@@ -25,7 +25,7 @@ const User = new mongoose.Schema({
   onboardingStatus: {
     type: String,
     enum: Object.values(onboardingStatusEnum),
-    default: onboardingStatusEnum.ONBOARDING_SCHEDULED,
+    default: onboardingStatusEnum.NONE,
   },
   portfolio: { type: String, default: null },
   profilePic: { type: String, default: null },
