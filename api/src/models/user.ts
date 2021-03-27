@@ -6,6 +6,7 @@ import {
   onboardingStatusEnum,
   rolesEnum,
   racesEnum,
+  teamEnum,
 } from '../utils/enums';
 
 /**
@@ -34,7 +35,7 @@ const User = new mongoose.Schema({
   reasonForInvolvement: { type: String, default: null },
   claimedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
   submittedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
-  currentTeams: [{ type: String, default: null }],
+  currentTeams: [{ type: String, enum: Object.values(teamEnum), default: null }],
 
   role: {
     type: String,
