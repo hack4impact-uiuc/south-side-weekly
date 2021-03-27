@@ -81,9 +81,14 @@ router.put(
       return;
     }
 
+    const user = req.body;
+    Object.keys(user).forEach(
+      (key) => user[key] === null && delete user[key]
+    );
+
     const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
-      req.body,
+      user,
       { new: true, runValidators: true },
     );
 
