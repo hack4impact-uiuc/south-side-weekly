@@ -13,9 +13,9 @@ passport.serializeUser((user: SessionUser, done) => {
 
 passport.deserializeUser((id, done) => {
   User.findById(id, (err: any, user: IUser) => {
-    if (err) {
-      console.error('Error');
-      done(err);
+    if (err || !user) {
+      done(err, false);
+      return;
     }
     done(null, sessionizeUser(user));
   });
