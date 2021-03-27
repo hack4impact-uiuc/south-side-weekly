@@ -8,6 +8,7 @@ import React, {
 
 import RacesSVG from '../../assets/races-page.svg';
 import { handleSelectGroupArray } from '../../utils/helpers';
+import { racesEnum } from '../../utils/enums';
 import '../../css/wizard/Onboard3.css';
 import WizardSelectButton from '../../components/WizardSelectButton/WizardSelectButton';
 
@@ -34,18 +35,26 @@ const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
 
   // All of the race buttons to show in the first row
   const raceButtonsRow1 = [
-    { value: 'American Indian or Alaskan Native', color: '#EF8B8B' },
-    { value: 'Black or African American', color: '#A5C4F2' },
-    { value: 'Middle Eastern or North African', color: '#BAB9E9' },
-    { value: 'Native Hawaiian or Pacific Islander', color: '#A9D3E5' },
+    {
+      display: 'American Indian or Alaskan Native',
+      value: racesEnum.AMERICAN_INDIAN_OR_ALASKAN_NATIVE,
+      color: '#EF8B8B',
+    },
+    { display: 'Black or African American', value: racesEnum.BLACK_OR_AFRICAN_AMERICAN, color: '#A5C4F2' },
+    { display: 'Middle Eastern or North African', value: racesEnum.MIDDLE_EASTERN_OR_NORTH_AFRICAN, color: '#BAB9E9' },
+    { display: 'Native Hawaiian or Pacific Islander', value: racesEnum.NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER, color: '#A9D3E5' },
   ];
 
   // All of the race buttons to show in the second row
   const raceButtonsRow2 = [
-    { value: 'Latinx or Hispanic', color: '#F9B893' },
-    { value: 'White', color: '#F1D8B0' },
-    { value: 'Asian', color: '#CFE7C4' },
-    { value: 'Other', color: '#BFEBE0' },
+    {
+      display: 'Latinx or Hispanic',
+      value: racesEnum.LATINX_OR_HISPANIC,
+      color: '#F9B893',
+    },
+    { display: 'White', value: racesEnum.WHITE, color: '#F1D8B0' },
+    { display: 'Asian', value: racesEnum.ASIAN, color: '#CFE7C4' },
+    { display: 'Other', value: racesEnum.OTHER, color: '#BFEBE0' },
   ];
 
   return (
@@ -63,6 +72,7 @@ const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
             <WizardSelectButton
               key={button.value}
               onClick={handleRaces}
+              buttonText={button.display}
               value={button.value}
               selectedArray={races}
               color={button.color}
@@ -75,6 +85,7 @@ const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
           {raceButtonsRow2.map((button) => (
             <WizardSelectButton
               key={button.value}
+              buttonText={button.display}
               onClick={handleRaces}
               value={button.value}
               selectedArray={races}
