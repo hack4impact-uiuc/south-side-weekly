@@ -1,12 +1,12 @@
 import React, { ReactElement } from 'react';
 import { Modal, Button, Form, Image } from 'semantic-ui-react';
 
-import { currentTeamsButtons } from '../../utils/constants';
+// import { currentTeamsButtons } from '../../utils/constants';
 import '../../css/pitchDoc/SubmitPitchModal.css';
 import GoogleDriveScreenshot from '../../assets/GoogleDriveScreenshot.png';
-import WizardSelectButton from '../WizardSelectButton/WizardSelectButton';
+// import WizardSelectButton from '../WizardSelectButton/WizardSelectButton';
 
-const defaultOnClick = (): void => void 0;
+// const defaultOnClick = (): void => void 0;
 
 function SubmitPitchModal(): ReactElement {
   const [open, setOpen] = React.useState(false);

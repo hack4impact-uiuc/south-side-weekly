@@ -25,19 +25,16 @@ const PitchCard: FC<IProps> = ({ pitch, ...rest }): ReactElement => {
       const resp = await getOpenTeams(pitch._id);
 
       if (!isError(resp) && resp.data) {
-        console.log(resp.data.result);
         const allOpenTeams = [];
-        for (const team in Object.keys(resp.data.result)) {
-          allOpenTeams.push(team);
+        for (const team in resp.data.result) {
+          allOpenTeams.push(teamToTeamsButtons[team]);
         }
         setOpenTeams(allOpenTeams);
       }
     };
 
     getAllUnclaimedPitches();
-  }, []);
-
-  console.log(openTeams);
+  }, [pitch._id]);
 
   return (
     <div className="pitch-card-wrapper">
@@ -52,7 +49,7 @@ const PitchCard: FC<IProps> = ({ pitch, ...rest }): ReactElement => {
         </Card.Content>
         <Card.Content>
           <div className="container">
-            {/* {openTeams.map((team: string) => (
+            {openTeams.map((team: string) => (
               <WizardSelectButton
                 onClick={defaultOnClick}
                 key={team}
@@ -60,7 +57,7 @@ const PitchCard: FC<IProps> = ({ pitch, ...rest }): ReactElement => {
                 value={team}
                 color={currentTeamsButtons[team]}
               />
-            ))} */}
+            ))}
           </div>
         </Card.Content>
       </Card>
