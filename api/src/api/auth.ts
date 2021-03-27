@@ -2,7 +2,6 @@ import express, { Request, Response, NextFunction } from 'express';
 const router = express.Router();
 import passport from 'passport';
 import { ParsedQs } from 'qs';
-import { sessionizeUser } from '../utils/helpers';
 import { errorWrap } from '../middleware';
 
 const CALLBACK_ROUTE = '/api/auth/google/callback';
@@ -24,7 +23,7 @@ router.get(
       res.status(200).json({
         message: `Logged in.`,
         success: true,
-        result: sessionizeUser(req.user),
+        result: req.user,
       });
     } else {
       res.status(401).json({
