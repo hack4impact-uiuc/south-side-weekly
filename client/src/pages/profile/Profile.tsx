@@ -24,9 +24,9 @@ const exampleUser = {
   pronouns: ['He/his'],
   dateJoined: '02/27/21',
   masthead: true,
-  portfolio: 'mustafa-designs.com',
-  linkedIn: 'linkedin.com/in/mustafasyedali',
-  twitter: '@mustardseedali',
+  portfolio: 'www.mustafa-designs.com',
+  linkedIn: 'www.linkedin.com/in/mustafasyedali',
+  twitter: 'www.twitter.com/mustardseedali',
   role: 'Contributor',
   currentTeams: ['Photography', 'Visuals', 'Layout'],
   interests: ['Fun', 'Cannabis', 'Visual Arts', 'Music'],
@@ -414,7 +414,6 @@ function Profile(): ReactElement {
                 <div>
                   <img className="icon" src={Mail} alt="mail" />
                 </div>
-                {/*<Label horizontal circular>Name</Label>*/}
                 <Input
                   className="input-field"
                   transparent
@@ -434,8 +433,6 @@ function Profile(): ReactElement {
                   value={phoneNumber}
                   readOnly={!edit}
                   onChange={(e) => setPhoneNumber(e.currentTarget.value)}
-
-                  //fluid
                 />
               </div>
             </div>
@@ -444,42 +441,54 @@ function Profile(): ReactElement {
                 <div>
                   <img className="icon" src={Linkedin} alt="linkedin" />
                 </div>
-                {/*<Label horizontal circular>Name</Label>*/}
-                <Input
-                  className="input-field"
-                  transparent
-                  value={linkedIn}
-                  readOnly={!edit}
-                  onChange={(e) => setLinkedIn(e.currentTarget.value)}
-                />
+                {!edit &&
+                  <a className="link" href={`//${linkedIn}`}>{linkedIn}</a>
+                } 
+                {edit && (
+                  <Input
+                    className="input-field"
+                    transparent
+                    value={linkedIn}
+                    readOnly={!edit}
+                    onChange={(e) => setLinkedIn(e.currentTarget.value)}
+                  />
+                )}
               </div>
 
               <div className="input-wrapper">
                 <div>
                   <img className="icon" src={Globe} alt="globe" />
                 </div>
-                {/*<Label horizontal circular>Name</Label>*/}
-                <Input
-                  className="input-field"
-                  transparent
-                  value={portfolio}
-                  readOnly={!edit}
-                  onChange={(e) => setPortfolio(e.currentTarget.value)}
-                />
+                {!edit &&
+                  <a className="link" href={`//${portfolio}`}>{portfolio}</a>
+                } 
+                {edit && (
+                  <Input
+                    className="input-field"
+                    transparent
+                    value={portfolio}
+                    readOnly={!edit}
+                    onChange={(e) => setPortfolio(e.currentTarget.value)}
+                  />
+                )}
               </div>
 
               <div className="input-wrapper">
                 <div>
                   <img className="icon" src={Twitter} alt="twitter" />
                 </div>
-                {/*<Label horizontal circular>Name</Label>*/}
-                <Input
-                  className="input-field"
-                  transparent
-                  value={twitter}
-                  readOnly={!edit}
-                  onChange={(e) => setTwitter(e.currentTarget.value)}
-                />
+                {!edit &&
+                  <a className="link" href={`//${twitter}`}>{twitter}</a>
+                } 
+                {edit && (
+                  <Input
+                    className="input-field"
+                    transparent
+                    value={twitter}
+                    readOnly={!edit}
+                    onChange={(e) => setTwitter(e.currentTarget.value)}
+                  />
+                )}
               </div>
             </div>
           </div>
