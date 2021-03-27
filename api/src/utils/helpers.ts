@@ -1,5 +1,8 @@
 import { IPitch } from '../models/pitch';
+import {IUser} from '../models/user';
+
 export interface SessionUser {
+  _id: string;
   firstName: string;
   lastName: string;
   preferredName: string;
@@ -21,7 +24,8 @@ export interface SessionUser {
   interests: [string];
 }
 
-export const sessionizeUser = (user: SessionUser): SessionUser => ({
+export const sessionizeUser = (user: IUser): SessionUser => ({
+  _id: user._id,
   firstName: user.firstName,
   lastName: user.lastName,
   preferredName: user.preferredName,

@@ -4,19 +4,20 @@ import {
 } from 'passport-google-oauth20';
 import passport from 'passport';
 import User, { IUser } from '../models/user';
+import { SessionUser, sessionizeUser } from '../utils/helpers';
 import { rolesEnum } from './enums';
 
-passport.serializeUser((user: IUser, done) => {
+passport.serializeUser((user: SessionUser, done) => {
   done(null, user._id);
 });
 
 passport.deserializeUser((id, done) => {
-  User.findById(id, (err: any, user: any) => {
+  User.findById(id, (err: any, user: IUser) => {
     if (err) {
       console.error('Error');
       done(err);
     }
-    done(null, user);
+    done(null, sessionizeUser(user));
   });
 });
 
