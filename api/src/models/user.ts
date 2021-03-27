@@ -25,6 +25,7 @@ export interface IUser extends Document<any> {
   masthead: boolean;
   onboarding: string;
   portfolio: string;
+  profilePic: string;
   linkedIn: string;
   twitter: string;
   claimedPitches: [IPitch];
@@ -54,8 +55,8 @@ const User = new mongoose.Schema({
     enum: Object.values(onboardingStatusEnum),
     default: onboardingStatusEnum.ONBOARDING_SCHEDULED,
   },
-
   portfolio: { type: String, default: null },
+  profilePic: {type: String, default: null},
   linkedIn: { type: String, default: null },
   twitter: { type: String, default: null },
   claimedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
