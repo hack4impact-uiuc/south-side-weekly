@@ -1,5 +1,5 @@
 import { IPitch } from '../models/pitch';
-import {IUser} from '../models/user';
+import { IUser } from '../models/user';
 
 export interface SessionUser {
   _id: string;

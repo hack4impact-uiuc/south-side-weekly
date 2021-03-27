@@ -40,9 +40,21 @@ const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
       value: racesEnum.AMERICAN_INDIAN_OR_ALASKAN_NATIVE,
       color: '#EF8B8B',
     },
-    { display: 'Black or African American', value: racesEnum.BLACK_OR_AFRICAN_AMERICAN, color: '#A5C4F2' },
-    { display: 'Middle Eastern or North African', value: racesEnum.MIDDLE_EASTERN_OR_NORTH_AFRICAN, color: '#BAB9E9' },
-    { display: 'Native Hawaiian or Pacific Islander', value: racesEnum.NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER, color: '#A9D3E5' },
+    {
+      display: 'Black or African American',
+      value: racesEnum.BLACK_OR_AFRICAN_AMERICAN,
+      color: '#A5C4F2',
+    },
+    {
+      display: 'Middle Eastern or North African',
+      value: racesEnum.MIDDLE_EASTERN_OR_NORTH_AFRICAN,
+      color: '#BAB9E9',
+    },
+    {
+      display: 'Native Hawaiian or Pacific Islander',
+      value: racesEnum.NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER,
+      color: '#A9D3E5',
+    },
   ];
 
   // All of the race buttons to show in the second row

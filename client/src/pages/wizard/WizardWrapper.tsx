@@ -5,10 +5,10 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import axios from "axios";
+import axios from 'axios';
 import { Button } from 'semantic-ui-react';
 
-import {BASE_URL} from "../../utils/apiWrapper";
+import { BASE_URL } from '../../utils/apiWrapper';
 import '../../css/wizard/WizardWrapper.css';
 import Logo from '../../assets/ssw-form-header.png';
 import ArrowBack from '../../assets/arrow-back.svg';
@@ -182,7 +182,8 @@ const WizardWrapper = (): ReactElement => {
       portfolio: portfolio !== '' ? portfolio : null,
       linkedIn: linkedIn !== '' ? linkedIn : null,
       twitter: twitter !== '' ? twitter : null,
-      reasonForInvolvement: reasonForInvolvement !== '' ? reasonForInvolvement : null,
+      reasonForInvolvement:
+        reasonForInvolvement !== '' ? reasonForInvolvement : null,
       currentTeams: currentTeams !== [] ? currentTeams : null,
       role: role !== '' ? role : null,
       races: races !== [] ? races : null,

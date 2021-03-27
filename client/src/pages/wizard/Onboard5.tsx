@@ -9,7 +9,7 @@ import React, {
 import Onboard5SVG from '../../assets/onboard5.svg';
 import RequiredSvg from '../../assets/required.svg';
 import { handleSelectGroupArray } from '../../utils/helpers';
-import { teamEnum } from "../../utils/enums";
+import { teamEnum } from '../../utils/enums';
 import '../../css/wizard/Onboard5.css';
 import WizardSelectButton from '../../components/WizardSelectButton/WizardSelectButton';
 
@@ -41,7 +41,11 @@ const Onboard5: FC<IProps> = ({
   // All of the buttons to show for the current teams
   const currentTeamsButtons = [
     { display: 'Editing', value: teamEnum.EDITING, color: '#A5C4F2' },
-    { display: 'Fact-checking', value: teamEnum.FACT_CHECKING, color: '#CFE7C4' },
+    {
+      display: 'Fact-checking',
+      value: teamEnum.FACT_CHECKING,
+      color: '#CFE7C4',
+    },
     { display: 'Illustration', value: teamEnum.ILLUSTRATION, color: '#BAB9E9' },
     { display: 'Photography', value: teamEnum.PHOTOGRAPHY, color: '#D8ACE8' },
     { display: 'Visuals', value: teamEnum.VISUALS, color: '#BFEBE0' },
