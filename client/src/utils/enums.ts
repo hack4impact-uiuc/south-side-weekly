@@ -41,3 +41,12 @@ export const racesEnum = {
   OTHER: 'OTHER',
   NONE: 'NONE',
 };
+
+export const teamEnum = {
+  EDITING: 'EDITING',
+  FACT_CHECKING: 'FACT-CHECKING',
+  ILLUSTRATION: 'ILLUSTRATION',
+  PHOTOGRAPHY: 'PHOTOGRAPHY',
+  VISUALS: 'VISUALS',
+  WRITING: 'WRITING'
+};
