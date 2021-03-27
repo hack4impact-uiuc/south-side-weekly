@@ -12,6 +12,7 @@ export interface SessionUser {
   masthead: boolean;
   onboarding: string;
   portfolio: string;
+  profilePic: string;
   linkedIn: string;
   twitter: string;
   claimedPitches: [IPitch];
@@ -35,6 +36,7 @@ export const sessionizeUser = (user: IUser): SessionUser => ({
   masthead: user.masthead,
   onboarding: user.onboarding,
   portfolio: user.portfolio,
+  profilePic: user.profilePic,
   linkedIn: user.linkedIn,
   twitter: user.twitter,
   claimedPitches: user.claimedPitches,
