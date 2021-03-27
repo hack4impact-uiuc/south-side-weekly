@@ -5,8 +5,10 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
+import axios from 'axios';
 import { Button } from 'semantic-ui-react';
 
+import { BASE_URL } from '../../utils/apiWrapper';
 import '../../css/wizard/WizardWrapper.css';
 import Header from '../../components/Header';
 import ArrowBack from '../../assets/arrow-back.svg';
@@ -43,6 +45,11 @@ const WizardWrapper = (): ReactElement => {
   const [viewablePages, setViewablePages] = useState<Array<string>>(
     Object.values(WizardPage),
   );
+  const [user, setUser] = useState({
+    _id: '',
+    firstName: '',
+    lastName: '',
+  });
   const [role, setRole] = useState<string>('');
   const [firstName, setFirstName] = useState<string>('');
   const [lastName, setLastName] = useState<string>('');
@@ -57,6 +64,26 @@ const WizardWrapper = (): ReactElement => {
 
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [scheduleConfirmed, setScheduleConfirmed] = useState<boolean>(false);
+
+  useEffect(() => {
+    const userUrl = `${BASE_URL}/auth/currentuser`;
+    axios
+      .get(userUrl, {
+        headers: {
+          'Content-Type': 'application/JSON',
+        },
+      })
+      .then((res) => {
+        setUser(res.data.result);
+        if (user.firstName) {
+          setFirstName(user.firstName);
+        }
+        if (user.lastName) {
+          setLastName(user.lastName);
+        }
+      })
+      .catch((err) => console.error(err));
+  }, [user.firstName, user.lastName]);
 
   /**
    * React hook to update the viewable pages based on the role change
@@ -135,37 +162,49 @@ const WizardWrapper = (): ReactElement => {
     }
 
     const formData = {
-      firstName: firstName,
-      lastName: lastName,
-      preferredName: preferredName,
-      email: '',
-      phone: phoneNumber,
-      oauthID: '',
-      genders: genders,
-      pronouns: pronouns,
-      masthead: false,
-      claimedPitches: [],
-      submittedPitches: [],
-      currentTeams: currentTeams,
-      role: role,
-      races: races,
-      interests: interests,
+      firstName: firstName !== '' ? firstName : null,
+      lastName: lastName !== '' ? lastName : null,
+      preferredName: preferredName !== '' ? preferredName : null,
+      phone: phoneNumber !== '' ? phoneNumber : null,
+      genders: genders !== [] ? genders : null,
+      pronouns: pronouns !== [] ? pronouns : null,
+      reasonForInvolvement:
+        reasonForInvolvement !== '' ? reasonForInvolvement : null,
+      currentTeams: currentTeams !== [] ? currentTeams : null,
+      role: role !== '' ? role : null,
+      races: races !== [] ? races : null,
+      interests: interests !== [] ? interests : null,
     };
 
-    console.log(formData);
+    const userUrl = `${BASE_URL}/users/${user._id}`;
+    axios
+      .put(userUrl, formData, {
+        headers: {
+          'Content-Type': 'application/JSON',
+        },
+      })
+      .then((res) => {
+        setUser(res.data.result);
+      })
+      .catch((err) => {
+        console.error(err);
+      });
+
     handlePageNext();
   }, [
+    scheduleConfirmed,
+    role,
     firstName,
     lastName,
     preferredName,
     phoneNumber,
     genders,
     pronouns,
+    reasonForInvolvement,
     currentTeams,
-    role,
     races,
     interests,
-    scheduleConfirmed,
+    user._id,
     handlePageNext,
   ]);
 
@@ -266,7 +305,7 @@ const WizardWrapper = (): ReactElement => {
               setModalOpen={setOpenModal}
             />
           )}
-          {page === WizardPage.COMPLETION.toString() && <Compleition />}
+          {page === WizardPage.COMPLETION.toString() && <Completion />}
         </div>
       </div>
       {page !== WizardPage.INITIAL_PAGE.toString() &&
