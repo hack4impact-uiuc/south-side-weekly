@@ -200,7 +200,7 @@ function Profile(): ReactElement {
 
   return (
     <>
-      <Sidebar currentPage={pages.PROFILE}/>
+      <Sidebar currentPage={pages.PROFILE} />
       <div className="pfp-page">
         <Header large={false} />
         <div className="pfp-page-content">

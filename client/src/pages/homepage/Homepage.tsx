@@ -100,7 +100,7 @@ function Homepage(): ReactElement {
 
   return (
     <>
-      <Sidebar currentPage={pages.ACCOUNT_HOME}/>
+      <Sidebar currentPage={pages.ACCOUNT_HOME} />
       <Header large={false} />
       <div className="body">
         <div className="header">

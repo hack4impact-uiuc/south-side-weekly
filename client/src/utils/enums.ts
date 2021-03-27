@@ -16,5 +16,5 @@ export const pages = {
   PROFILE: 'PROFILE',
   PITCHES: 'PITCHES',
   RESOURCES: 'RESOURCES',
-  USERS: 'USERS'
-}
+  USERS: 'USERS',
+};

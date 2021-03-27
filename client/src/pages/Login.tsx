@@ -55,12 +55,15 @@ function Login(): ReactElement {
   const returnRedirect = (): ReactElement => {
     if (user.role === rolesEnum.TBD) {
       return <Redirect to="/join" />;
-    } else if (user.onboardingStatus === onboardingStatusEnum.ONBOARDING_SCHEDULED || user.onboardingStatus === onboardingStatusEnum.STALLED) {
+    } else if (
+      user.onboardingStatus === onboardingStatusEnum.ONBOARDING_SCHEDULED ||
+      user.onboardingStatus === onboardingStatusEnum.STALLED
+    ) {
       return <Redirect to="/resources" />;
     } else if (user.onboardingStatus === onboardingStatusEnum.ONBOARDED) {
-      return <Redirect to="/homepage"/>;
-    } 
-    return <Redirect to="/login"/>
+      return <Redirect to="/homepage" />;
+    }
+    return <Redirect to="/login" />;
   };
 
   return (
