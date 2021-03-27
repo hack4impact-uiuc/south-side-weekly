@@ -89,18 +89,18 @@ export const getUnclaimedPitches = (): Promise<
  * Returns all open teams
  * Returns GET_OPEN_TEAMS_FAIL upon failure
  */
- export const getOpenTeams = (pitchId: string): Promise<
- AxiosResponse<GetPitchesResponseType> | ErrorWrapper
-> => {
- const requestString = `${BASE_URL}/${pitchId}/openTeams`;
- return axios
-   .get(requestString, {
-     headers: {
-       'Content-Type': 'application/JSON',
-     },
-   })
-   .catch((error) => ({
-     type: 'GET_OPEN_TEAMS_FAIL',
-     error,
-   }));
+export const getOpenTeams = (
+  pitchId: string,
+): Promise<AxiosResponse<GetPitchesResponseType> | ErrorWrapper> => {
+  const requestString = `${BASE_URL}/pitch/${pitchId}/openTeams`;
+  return axios
+    .get(requestString, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'GET_OPEN_TEAMS_FAIL',
+      error,
+    }));
 };

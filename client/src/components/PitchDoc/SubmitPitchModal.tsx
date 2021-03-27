@@ -41,7 +41,7 @@ function SubmitPitchModal(): ReactElement {
 
             <div className="teams-section">
               <Form.Group widths="equal">
-                {Object.keys(currentTeamsButtons).map((team: string) => (
+                {/* {Object.keys(currentTeamsButtons).map((team: string) => (
                   <div key={team}>
                     <WizardSelectButton
                       onClick={defaultOnClick}
@@ -58,7 +58,7 @@ function SubmitPitchModal(): ReactElement {
                       <input />
                     </Form.Field>
                   </div>
-                ))}
+                ))} */}
               </Form.Group>
             </div>
 

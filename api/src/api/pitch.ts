@@ -17,7 +17,7 @@ const isValidMongoId = (id: string): boolean => ObjectId.isValid(id);
 router.get(
   '/',
   errorWrap(async (req: Request, res: Response) => {
-    if (req.query.unclaimed === "true") {
+    if (req.query.unclaimed === 'true') {
       // Gets all unclaimed pitches
       const pitches = await Pitch.find({
         pitchStatus: pitchStatusEnum.APPROVED,
@@ -89,7 +89,6 @@ router.get(
   }),
 );
 
-
 // Gets open teams by pitch id
 router.get(
   '/:pitchId/openTeams',
@@ -106,7 +105,7 @@ router.get(
     const openTeams = Object.fromEntries(
       Object.entries(pitch.teams).filter(
         ([, spots]) => spots.current < spots.target,
-      )
+      ),
     );
 
     if (!pitch) {
@@ -118,7 +117,7 @@ router.get(
       res.status(200).json({
         success: true,
         result: openTeams,
-        message: `Successfully retrieved pitch`,
+        message: `Successfully retrieved open pitches`,
       });
     }
   }),

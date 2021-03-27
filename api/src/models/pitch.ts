@@ -12,7 +12,6 @@ import {
  */
 const Pitch = new mongoose.Schema({
   name: { type: String, default: null, required: true },
-  _id: { type: String, default: null, required: true },
   pitchAuthor: { type: Schema.Types.ObjectId, ref: 'User', required: true },
   pitchStatus: {
     type: String,

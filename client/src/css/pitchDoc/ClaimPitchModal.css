@@ -70,6 +70,10 @@
   letter-spacing: 0em;
 }
 
+.modal-submit-button {
+  padding-top: 40px;
+}
+
 .modal-submit-button .ui.button {
   font-style: normal;
   font-weight: 600;

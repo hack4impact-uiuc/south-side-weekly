@@ -2,8 +2,8 @@ import React, { FC, ReactElement, useState, useEffect } from 'react';
 import { Card } from 'semantic-ui-react';
 import '../../css/pitchDoc/PitchCard.css';
 import { IPitch } from 'ssw-common';
-import { getOpenTeams, isError } from '../../utils/apiWrapper';
 
+import { getOpenTeams, isError } from '../../utils/apiWrapper';
 import { currentTeamsButtons, teamToTeamsButtons } from '../../utils/constants';
 import WizardSelectButton from '../WizardSelectButton/WizardSelectButton';
 
@@ -13,26 +13,31 @@ interface IProps {
   pitch: IPitch;
 }
 
-interface ITeams {
-  string: { [key: string]: number }
-}
+// interface ITeams {
+//   string: { [key: string]: number }
+// }
 
 const PitchCard: FC<IProps> = ({ pitch, ...rest }): ReactElement => {
-  const [openTeams, setOpenTeams] = useState<ITeams[]>([]);
+  const [openTeams, setOpenTeams] = useState<string[]>([]);
 
   useEffect(() => {
     const getAllUnclaimedPitches = async (): Promise<void> => {
       const resp = await getOpenTeams(pitch._id);
 
       if (!isError(resp) && resp.data) {
-        console.log(resp);
-        // setOpenTeams(resp.data.result);
         console.log(resp.data.result);
+        const allOpenTeams = [];
+        for (const team in Object.keys(resp.data.result)) {
+          allOpenTeams.push(team);
+        }
+        setOpenTeams(allOpenTeams);
       }
     };
 
     getAllUnclaimedPitches();
   }, []);
+
+  console.log(openTeams);
 
   return (
     <div className="pitch-card-wrapper">

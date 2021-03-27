@@ -41,7 +41,7 @@ const ClaimPitchModal: FC<IProps> = ({ pitch }): ReactElement => {
             </div>
 
             <div className="container">
-              <div className="roles-needed">Roles Needed:</div>
+              {/* <div className="roles-needed">Roles Needed:</div> */}
 
               <div className="modal-submit-button">
                 <Button type="submit" onClick={() => setSecondOpen(true)}>
