@@ -1,8 +1,8 @@
 import React, { ReactElement, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Icon } from "semantic-ui-react";
-import {pages} from "../utils/enums";
+import { Icon } from 'semantic-ui-react';
 
+import { pages } from '../utils/enums';
 
 import '../css/Sidebar.css';
 
@@ -10,7 +10,7 @@ interface IProps {
   currentPage: string;
 }
 
-function Sidebar({currentPage}: IProps): ReactElement {
+function Sidebar({ currentPage }: IProps): ReactElement {
   useEffect(() => {
     switch (currentPage) {
       case pages.ACCOUNT_HOME:
@@ -29,7 +29,7 @@ function Sidebar({currentPage}: IProps): ReactElement {
         window.document.getElementById('users')!.classList.add('active');
         break;
     }
-  })
+  });
 
   return (
     <div className="sidebar">
