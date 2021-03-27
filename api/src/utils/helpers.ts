@@ -17,6 +17,7 @@ export interface SessionUser {
   profilePic: string;
   linkedIn: string;
   twitter: string;
+  reasonForInvolvement: string;
   claimedPitches: [IPitch];
   submittedPitches: [IPitch];
   currentTeams: [string];
@@ -41,6 +42,7 @@ export const sessionizeUser = (user: IUser): SessionUser => ({
   profilePic: user.profilePic,
   linkedIn: user.linkedIn,
   twitter: user.twitter,
+  reasonForInvolvement: user.reasonForInvolvement,
   claimedPitches: user.claimedPitches,
   submittedPitches: user.submittedPitches,
   currentTeams: user.currentTeams,
