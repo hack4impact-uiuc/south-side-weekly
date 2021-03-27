@@ -35,7 +35,6 @@ function Login(): ReactElement {
       .then((res) => {
         setAuthed(res.data.success);
         if (res.data.success) {
-          console.log(res.data.result);
           setUser(res.data.result);
         }
         setLoading(false);
@@ -53,7 +52,6 @@ function Login(): ReactElement {
   const loginFailed = useQuery().get(LOGIN_FAILURE_QUERY_PARAM);
 
   const returnRedirect = (): ReactElement => {
-    console.log(user);
     if (user.role === rolesEnum.TBD) {
       return <Redirect to="/join" />;
     }
