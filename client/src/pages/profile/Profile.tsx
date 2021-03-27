@@ -441,9 +441,11 @@ function Profile(): ReactElement {
                 <div>
                   <img className="icon" src={Linkedin} alt="linkedin" />
                 </div>
-                {!edit &&
-                  <a className="link" href={`//${linkedIn}`}>{linkedIn}</a>
-                } 
+                {!edit && (
+                  <a className="link" href={`//${linkedIn}`}>
+                    {linkedIn}
+                  </a>
+                )}
                 {edit && (
                   <Input
                     className="input-field"
@@ -459,9 +461,11 @@ function Profile(): ReactElement {
                 <div>
                   <img className="icon" src={Globe} alt="globe" />
                 </div>
-                {!edit &&
-                  <a className="link" href={`//${portfolio}`}>{portfolio}</a>
-                } 
+                {!edit && (
+                  <a className="link" href={`//${portfolio}`}>
+                    {portfolio}
+                  </a>
+                )}
                 {edit && (
                   <Input
                     className="input-field"
@@ -477,9 +481,11 @@ function Profile(): ReactElement {
                 <div>
                   <img className="icon" src={Twitter} alt="twitter" />
                 </div>
-                {!edit &&
-                  <a className="link" href={`//${twitter}`}>{twitter}</a>
-                } 
+                {!edit && (
+                  <a className="link" href={`//${twitter}`}>
+                    {twitter}
+                  </a>
+                )}
                 {edit && (
                   <Input
                     className="input-field"
