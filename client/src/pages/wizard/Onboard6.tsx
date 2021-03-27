@@ -8,6 +8,7 @@ import React, {
 
 import Onboard6SVG from '../../assets/onboard6.svg';
 import { handleSelectGroupArray } from '../../utils/helpers';
+import { interestsEnum } from "../../utils/enums";
 import '../../css/wizard/Onboard6.css';
 import WizardSelectButton from '../../components/WizardSelectButton/WizardSelectButton';
 
@@ -34,20 +35,36 @@ const Onboard6: FC<IProps> = ({ interests, setInterests }): ReactElement => {
 
   // All of the interests buttons to show
   const interestsButtons = [
-    { value: 'Cannabis', color: '#CFE7C4' },
-    { value: 'Education', color: '#A9D3E5' },
-    { value: 'Food and Land', color: '#BFEBE0' },
-    { value: 'Fun', color: '#F9B893' },
-    { value: 'Health', color: '#F9B893' },
-    { value: 'Housing', color: '#EF8B8B' },
-    { value: 'Immigration', color: '#D8ACE8' },
-    { value: 'Literature', color: '#A5C4F2' },
-    { value: 'Music', color: '#BFEBE0' },
-    { value: 'Nature', color: '#CFE7C4' },
-    { value: 'Politics', color: '#A5C4F2' },
-    { value: 'Stage and Screen', color: '#D8ACE8' },
-    { value: 'Transportation', color: '#F1D8B0' },
-    { value: 'Visual Arts', color: '#BAB9E9' },
+    { display: 'Cannabis', value: interestsEnum.CANNABIS, color: '#CFE7C4' },
+    { display: 'Education', value: interestsEnum.EDUCATION, color: '#A9D3E5' },
+    {
+      display: 'Food and Land',
+      value: interestsEnum.FOOD_AND_LAND,
+      color: '#BFEBE0',
+    },
+    { display: 'Fun', value: interestsEnum.FUN, color: '#F9B893' },
+    { display: 'Health', value: interestsEnum.HEALTH, color: '#F9B893' },
+    { display: 'Housing', value: interestsEnum.HOUSING, color: '#EF8B8B' },
+    {
+      display: 'Immigration',
+      value: interestsEnum.IMMIGRATION,
+      color: '#D8ACE8',
+    },
+    { display: 'Literature', value: interestsEnum.LIT, color: '#A5C4F2' },
+    { display: 'Music', value: interestsEnum.MUSIC, color: '#BFEBE0' },
+    { display: 'Nature', value: interestsEnum.NATURE, color: '#CFE7C4' },
+    { display: 'Politics', value: interestsEnum.POLITICS, color: '#A5C4F2' },
+    {
+      display: 'Stage and Screen',
+      value: interestsEnum.STAGE_AND_SCREEN,
+      color: '#D8ACE8',
+    },
+    {
+      display: 'Transportation',
+      value: interestsEnum.TRANSPORTATION,
+      color: '#F1D8B0',
+    },
+    { display: 'Visual Arts', value: interestsEnum.VISUAL_ARTS, color: '#BAB9E9' },
   ];
 
   return (
@@ -63,6 +80,7 @@ const Onboard6: FC<IProps> = ({ interests, setInterests }): ReactElement => {
             <WizardSelectButton
               key={button.value}
               onClick={handleInterests}
+              buttonText={button.display}
               selectedArray={interests}
               width="150px"
               margin="10px 15px 10px 15px"

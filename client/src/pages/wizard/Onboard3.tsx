@@ -8,6 +8,7 @@ import React, {
 
 import RacesSVG from '../../assets/races-page.svg';
 import { handleSelectGroupArray } from '../../utils/helpers';
+import { racesEnum } from '../../utils/enums';
 import '../../css/wizard/Onboard3.css';
 import WizardSelectButton from '../../components/WizardSelectButton/WizardSelectButton';
 import WizardListTitle from '../../components/WizardListTitle';
@@ -80,6 +81,7 @@ const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
             <WizardSelectButton
               key={button.value}
               onClick={handleRaces}
+              buttonText={button.display}
               value={button.value}
               selectedArray={races}
               color={button.color}
