@@ -9,6 +9,7 @@ import Profile from './pages/profile/Profile';
 import Login from './pages/Login';
 import WizardWrapper from './pages/wizard/WizardWrapper';
 import ResourcePage from './pages/ResourcePage';
+import Directory from './pages/Directory';
 
 import './css/index.css';
 
@@ -22,6 +23,7 @@ ReactDOM.render(
         <Route exact path="/join" component={WizardWrapper} />
         <Route exact path="/resources" component={ResourcePage} />
         <Route exact path="/profile" component={Profile} />
+        <Route exact path="/directory" component={Directory} />
         <Route exact path="/login" component={Login} />
       </Switch>
     </Router>
