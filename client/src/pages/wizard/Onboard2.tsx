@@ -71,7 +71,7 @@ const Onboard2: FC<IProps> = ({
   return (
     <div className="personal-information">
       <div className="page-text">
-        These field are optional. If you feel comfortable answering your
+        These fields are optional. If you feel comfortable answering, your
         responses will not be used to evaulate your submission. Select all that
         apply or leave it blank.
       </div>
