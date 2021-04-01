@@ -1,49 +1,70 @@
 .involvement-wrapper {
-  width: 50%;
-  float: right;
+    width: 50%;
+    float: right;
 }
 
 .involvement-wrapper .page-svg {
-  position: absolute;
-  bottom: 10px;
-  left: 30px;
-  width: 43%;
+    position: absolute;
+    bottom: 10px;
+    left: 30px;
+    width: 43%;
 }
 
 .involvement-wrapper .involvement-content {
-  position: relative;
-  margin-top: 10vh;
-  display: flex;
-  flex-direction: column;
-  align-items: left;
+    position: relative;
+    margin-top: 10vh;
+    display: flex;
+    flex-direction: column;
+    align-items: left;
 }
 
 .involvement-wrapper .involvement-content .page-text {
-  width: 80%;
-  font-size: 20px;
-  line-height: 30px;
-  text-align: left;
-  padding-left: 30px;
+    width: 80%;
+    font-size: 20px;
+    line-height: 30px;
+    text-align: left;
+    padding-left: 30px;
 }
 
 .involvement-wrapper .involvement-content .required-icon {
-  position: absolute;
-  top: 5px;
-  left: 0;
+    position: absolute;
+    top: 5px;
+    left: 0;
+    width: 15px;
+    height: 15px;
 }
 
 .involvement-wrapper .involvement-content .response-text-area {
-  margin-top: 5vh;
-  margin-left: 30px;
-  width: 80%;
-  height: 200px;
-  border: none !important;
-  border-radius: 1rem;
-  padding: 10px;
-  background-color: rgb(61, 79, 145, 0.25);
-  resize: none;
+    margin-top: 5vh;
+    margin-left: 30px;
+    width: 80%;
+    height: 200px;
+    border: none !important;
+    padding: 10px;
+    border-radius: 1rem;
+    background-color: rgb(61, 79, 145, 0.25);
+    resize: none;
+}
+
+.involvement-wrapper .involvement-content .response-text-area textarea {
+    height: 200px;
+    border: none !important;
+    border-radius: 1rem;
+    background: none !important;
+    background-color: rgb(61, 79, 145, 0.25);
+    resize: none;
 }
 
 .involvement-wrapper .involvement-content .response-text-area:focus {
-  outline: none !important;
+    outline: none !important;
 }
+
+.involvement-content .form .error {
+    border: 2px solid #D9796F !important;
+}
+
+
+/* .involvement-content .form .response-text-area>textarea {
+    background: none !important;
+    border: none;
+} */
