@@ -1,5 +1,8 @@
 import React, { ReactElement, useState, useEffect } from 'react';
 import { Input, Button, Dropdown, Label } from 'semantic-ui-react';
+import axios, { AxiosResponse } from 'axios';
+//import {loadProfile} from '../../utils/apiWrapper'
+import { BASE_URL } from '../../utils/apiWrapper'
 
 import Sidebar from '../../components/Sidebar';
 import Logo from '../../assets/ssw-form-header.png';
@@ -37,17 +40,17 @@ function Profile(): ReactElement {
   const [lastName, setLastName] = useState<string>('');
   const [fullName, setFullName] = useState<string>('');
   const [preferredName, setPreferredName] = useState<string>('');
-  //const [email, setEmail] = useState<string>('');
+  const [email, setEmail] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
   const [genders, setGenders] = useState<Array<string>>([]);
   const [pronouns, setPronouns] = useState<Array<string>>([]);
   const [dateJoined, setDateJoined] = useState<string>('');
-  //const [masthead, setMasthead] = useState<boolean>(false);
+  const [masthead, setMasthead] = useState<boolean>(false);
   const [portfolio, setPortfolio] = useState<string>('');
   const [linkedIn, setLinkedIn] = useState<string>('');
   const [twitter, setTwitter] = useState<string>('');
-  //const [role, setRole] = useState<string>('');
-  //const [currentTeams, setCurrentTeams] = useState<Array<string>>([]);
+  const [role, setRole] = useState<string>('');
+  const [currentTeams, setCurrentTeams] = useState<Array<string>>([]);
   const [interests, setInterests] = useState<Array<string>>([]);
   const [edit, setEdit] = useState<boolean>(false);
   const teamColors: { [key: string]: string } = {
@@ -138,7 +141,70 @@ function Profile(): ReactElement {
   function enableEdit(): void {
     setEdit(true);
   }
+  const profileData = {
+      firstName: firstName !== '' ? firstName : null,
+      lastName: lastName !== '' ? lastName : null,
+      preferredName: preferredName !== '' ? preferredName : null,
+      email: email !== '' ? email : null,
+      phone: phoneNumber !== '' ? phoneNumber : null,
+      genders: genders !== [] ? genders : null,
+      pronouns: pronouns !== [] ? pronouns : null,
+      dateJoined: dateJoined !== '' ? dateJoined : null,
+      masthead: masthead,
+      portfolio: portfolio !== '' ? portfolio : null,
+      linkedIn: linkedIn !== '' ? linkedIn : null,
+      twitter: twitter !== '' ? twitter : null,
+      role: role !== '' ? role : null,
+      currentTeams: currentTeams !== [] ? currentTeams : null,
+      interests: interests !== [] ? interests : null,
+  }
 
+  const user_id = "6031a866c70ec705736a79e5"
+  async function loadProfile() {
+    const userUrl = `${BASE_URL}/users/${user_id}`;
+    try {
+      const res = await axios.get(userUrl, {
+        headers: {
+          'Content-Type': 'application/JSON'
+        }})
+        const user = res.data.result;
+        console.log(user);
+        setFirstName(user.firstName === null ? "" : user.firstName);
+        setLastName(user.lastName === null ? "" : user.lastName);
+        setFullName(`${user.firstName === null ? "" : user.firstName} ${user.lastName === null ? "" : user.lastName}`);
+        setPreferredName(user.preferredName === null ? "" : user.preferredName);
+        setEmail(user.email === null ? "" : user.email);
+        setPhoneNumber(user.phone === null ? "" : user.phone);
+        setGenders(user.genders === null ? [] : user.genders);
+        setPronouns(user.pronouns === null ? [] : user.pronouns);
+        setDateJoined(user.dateJoined === null ? "" : user.dateJoined);
+        setMasthead(user.masthead === null ? false : user.masthead);
+        setPortfolio(user.portfolio === null ? "" : user.portfolio);
+        setLinkedIn(user.linkedIn === null ? "" : user.linkedIn);
+        setTwitter(user.twitter === null ? "" : user.twitter);
+        setRole(user.role === null ? "" : user.role)
+        setCurrentTeams(user.currentTeams === null ? [] : user.currentTeams);
+        setInterests(user.interests === null ? [] : user.interests);
+    } catch (err) {
+        console.error(err);
+    }
+  }
+
+  async function saveProfile() {
+    const userUrl = `${BASE_URL}/users/${user_id}`;
+    try { 
+      const res = await axios.put(userUrl, profileData, {
+        headers: {
+          'Content-Type': 'application/JSON'
+        }})
+      console.log(res.data);
+    } catch (err) {
+        console.error(err);
+    }
+    setEdit(false);
+  }
+
+  
   function saveEdit(): void {
     nameSplitter(fullName);
     exampleUser.firstName = firstName;
@@ -156,7 +222,7 @@ function Profile(): ReactElement {
   }
 
   function cancelEdit(): void {
-    loadUser();
+    loadProfile();
     setEdit(false);
   }
 
@@ -192,9 +258,14 @@ function Profile(): ReactElement {
       setInterests(removedElements);
     }
   }
-
+  
   useEffect(() => {
+    /* console.log("hello");
     loadUser();
+    const response = loadProfile();
+    console.log(response); */
+    loadProfile();
+
   }, []);
 
   return (
@@ -216,7 +287,7 @@ function Profile(): ReactElement {
               </div>
               <div className="pf-image-wrapper">
                 <img src={Pfp} alt="pfp" className="pf-image"></img>
-                {exampleUser.masthead && (
+                {masthead && (
                   <div className="masthead-section">
                     <img
                       src={Banner}
@@ -238,7 +309,7 @@ function Profile(): ReactElement {
                   <Button
                     content="Save Changes"
                     className="save-changes-button"
-                    onClick={saveEdit}
+                    onClick={saveProfile}
                   />
                 )}
                 {edit && (
@@ -329,7 +400,7 @@ function Profile(): ReactElement {
                 <Input
                   className="input-field"
                   transparent
-                  value={exampleUser.role}
+                  value={role}
                   readOnly="true"
                   disabled={edit}
                 />
@@ -393,7 +464,7 @@ function Profile(): ReactElement {
               <div className="list-section">
                 <div className="list-title">My Roles</div>
                 <div className="interests-section-scroll">
-                  {exampleUser.currentTeams.map((button, idx) => (
+                  {currentTeams.map((button, idx) => (
                     <Label
                       key={idx}
                       className="role-topic-label"
@@ -418,7 +489,7 @@ function Profile(): ReactElement {
                 <Input
                   className="input-field"
                   transparent
-                  value={exampleUser.email}
+                  value={email}
                   readOnly
                   disabled={edit}
                 />

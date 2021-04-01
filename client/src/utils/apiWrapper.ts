@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { IUser } from '../../../api/src/models/user'
 
 export const FRONTEND_BASE_URL = process.env.REACT_APP_VERCEL_URL
   ? `https://${process.env.REACT}`
@@ -62,3 +63,27 @@ export const addSampleResponse = (
       error,
     }));
 };
+
+const user_id = "6031a866c70ec705736a79e5"
+
+
+/* export async function loadProfile(): Promise<IUser|undefined> {
+    const userUrl = `${BASE_URL}/users/${user_id}`;
+    return axios
+      .get(userUrl, {
+        headers: {
+          'Content-Type': 'application/JSON'
+        },
+      }).then(res => res.data.result)
+      .catch((err) => console.error(err));
+
+    try {
+      const res = await axios.get(userUrl, {
+        headers: {
+          'Content-Type': 'application/JSON'
+        }})
+      return res;
+    } catch (err) {
+      console.error(err);
+    }
+} */
