@@ -1,21 +1,21 @@
 import React, { FC, ReactElement, useState, useEffect } from 'react';
-import { Card } from 'semantic-ui-react';
+import { Card, Label } from 'semantic-ui-react';
 import '../../css/pitchDoc/PitchCard.css';
 import { IPitch } from 'ssw-common';
 
 import { getOpenTeams, isError } from '../../utils/apiWrapper';
-import { currentTeamsButtons, teamToTeamsButtons } from '../../utils/constants';
-import WizardSelectButton from '../WizardSelectButton/WizardSelectButton';
+import {
+  currentTeamsButtons,
+  teamToTeamsButtons,
+  enumToInterestButtons,
+  interestsButtons,
+} from '../../utils/constants';
 
 const defaultOnClick = (): void => void 0;
 
 interface IProps {
   pitch: IPitch;
 }
-
-// interface ITeams {
-//   string: { [key: string]: number }
-// }
 
 const PitchCard: FC<IProps> = ({ pitch, ...rest }): ReactElement => {
   const [openTeams, setOpenTeams] = useState<string[]>([]);
@@ -37,31 +37,39 @@ const PitchCard: FC<IProps> = ({ pitch, ...rest }): ReactElement => {
   }, [pitch._id]);
 
   return (
-    <div className="pitch-card-wrapper">
-      <Card {...rest}>
-        <Card.Content>
-          <Card.Header> {pitch.name} </Card.Header>
-          <Card.Description>
-            {' '}
-            Here lies a two sentence summary of pitch. It will be two sentences
-            and no more.{' '}
-          </Card.Description>
-        </Card.Content>
-        <Card.Content>
-          <div className="container">
-            {openTeams.map((team: string) => (
-              <WizardSelectButton
-                onClick={defaultOnClick}
-                key={team}
-                selectedArray={[]}
-                value={team}
-                color={currentTeamsButtons[team]}
-              />
-            ))}
-          </div>
-        </Card.Content>
-      </Card>
-    </div>
+    <Card className="pitch-card" {...rest}>
+      <Card.Content>
+        <Label.Group style={{ marginBottom: 10 }} circular>
+          {pitch.topics.map((topic, idx) => (
+            <Label
+              style={{
+                backgroundColor: interestsButtons[enumToInterestButtons[topic]],
+              }}
+              key={idx}
+            >
+              {topic}
+            </Label>
+          ))}
+        </Label.Group>
+        <Card.Header> {pitch.name} </Card.Header>
+        <Card.Description>
+          {' '}
+          Here lies a two sentence summary of pitch. It will be two sentences
+          and no more.{' '}
+        </Card.Description>
+        <Label.Group style={{ marginTop: 10 }} circular>
+          {openTeams.map((team: string, idx) => (
+            <Label
+              style={{ backgroundColor: currentTeamsButtons[team] }}
+              onClick={defaultOnClick}
+              key={idx}
+            >
+              {team}
+            </Label>
+          ))}
+        </Label.Group>
+      </Card.Content>
+    </Card>
   );
 };
 

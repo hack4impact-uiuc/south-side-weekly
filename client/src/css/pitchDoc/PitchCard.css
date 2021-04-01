@@ -1,26 +1,14 @@
-.ui.card {
+.ui.card.pitch-card {
   background-color: rgba(61, 79, 145, 0.75);
   box-shadow: 0px 3.31765px 3.31765px rgba(0, 0, 0, 0.25),
     inset 0px 3.31765px 3.31765px rgba(0, 0, 0, 0.25);
   border-radius: 9.95294px;
-  height: 141px;
-  width: 401.435302734375px;
+  height: 13rem;
+  margin-bottom: 2rem;
 }
 
 .ui.card > .content > .header,
 .ui.card > .content > .description {
   color: #f7fafb;
   text-shadow: 0px 3.31765px 3.31765px rgba(0, 0, 0, 0.25);
-}
-
-.pitch-card-wrapper .ui.button {
-  font-style: normal;
-  font-weight: normal;
-  font-size: 12.8159px;
-  line-height: 16px;
-  text-align: center;
-}
-
-.pitch-card-wrapper .container {
-  display: flex;
 }
