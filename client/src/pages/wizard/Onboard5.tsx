@@ -55,7 +55,7 @@ const Onboard5: FC<IProps> = ({
         <div className="page-text">
           <b>What do you want to do at the Weekly?</b>
           <br />
-          Please limit to the 1-2 options you're interest in.
+          Please limit to 1-2 teams that you're interested in.
           <img className="required-icon" alt="required" src={RequiredSvg} />
         </div>
 
