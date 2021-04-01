@@ -1,6 +1,6 @@
 import React, { useEffect, useState, ReactElement } from 'react';
 import { IPitch } from 'ssw-common';
-import { Search } from 'semantic-ui-react';
+import { Grid, Search } from 'semantic-ui-react';
 
 import { getUnclaimedPitches, isError } from '../../utils/apiWrapper';
 import PitchGrid from '../../components/PitchDoc/PitchGrid';
@@ -36,14 +36,12 @@ function PitchDoc(): ReactElement {
       <div className="content-wrapper">
         <div className="top-section">
           <div className="pitchdoc-title">The Pitch Doc</div>
+          <div className="submit-search-section">
+            <SubmitPitchModal />
+            <Search className="search-bar"> </Search>
+          </div>
+
           <div className="container">
-            <SubmitPitchModal></SubmitPitchModal>
-            <div className="search-bar">
-              <Search> </Search>
-            </div>
-
-            <div className="break"></div>
-
             <div className="filter-section">
               <div className="filter-text"> Filter/Sort By: </div>
               {/* <Dropdown placeholder='Roles' /> */}

@@ -16,7 +16,9 @@ function SubmitPitchModal(): ReactElement {
       onClose={() => setOpen(false)}
       onOpen={() => setOpen(true)}
       open={open}
-      trigger={<Button> Submit a Pitch </Button>}
+      trigger={
+        <Button className="submit-pitch-button"> Submit a Pitch </Button>
+      }
       closeIcon
     >
       <Modal.Actions>
