@@ -1,5 +1,5 @@
 import React, { FC, Dispatch, SetStateAction, ReactElement } from 'react';
-import { TextArea } from 'semantic-ui-react';
+import { Form, TextArea } from 'semantic-ui-react';
 
 import InvolvementSVG from '../../assets/involvement-page.svg';
 import RequiredSvg from '../../assets/required.svg';
@@ -28,12 +28,15 @@ const Onboard4: FC<IProps> = ({
         experience, please briefly share too.
         <img alt="required" className="required-icon" src={RequiredSvg} />
       </div>
-
-      <TextArea
-        value={reasonsForInvolvement}
-        onChange={(e) => setReasonsForInvolvement(e.currentTarget.value)}
-        className="response-text-area"
-      />
+      <Form>
+          <Form.TextArea
+            required
+            value={reasonsForInvolvement}
+            onChange={(e) => setReasonsForInvolvement(e.currentTarget.value)}
+            className="response-text-area"
+            error={reasonsForInvolvement === ''}
+          />
+      </Form>
     </div>
   </div>
 );
