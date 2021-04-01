@@ -8,6 +8,7 @@ import React, {
 
 import PersonalInfoSvg from '../../assets/personal-information.svg';
 import WizardSelectButton from '../../components/WizardSelectButton/WizardSelectButton';
+import WizardListTitle from "../../components/WizardListTitle";
 import { handleSelectGroupArray } from '../../utils/helpers';
 
 import '../../css/wizard/Onboard2.css';
@@ -85,8 +86,7 @@ const Onboard2: FC<IProps> = ({
         </div>
         <div className="personal-information-form">
           <div className="section">
-            <div className="list-title">Gender</div>
-
+            <WizardListTitle value="Gender" />
             {genderButtons.map((button) => (
               <WizardSelectButton
                 key={button.value}
@@ -100,8 +100,7 @@ const Onboard2: FC<IProps> = ({
             ))}
           </div>
           <div className="section">
-            <div className="list-title">Pronouns</div>
-
+            <WizardListTitle value="Pronouns" />
             {pronounButtons.map((button) => (
               <WizardSelectButton
                 key={button.value}
