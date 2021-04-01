@@ -10,6 +10,7 @@ import RacesSVG from '../../assets/races-page.svg';
 import { handleSelectGroupArray } from '../../utils/helpers';
 import '../../css/wizard/Onboard3.css';
 import WizardSelectButton from '../../components/WizardSelectButton/WizardSelectButton';
+import WizardListTitle from '../../components/WizardListTitle';
 
 interface IProps {
   races: Array<string>;
@@ -57,7 +58,7 @@ const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
       </div>
       <div className="races-content-wrapper">
         <img src={RacesSVG} alt="Races Page" className="races-svg" />
-        <div className="select-title">Races</div>
+        <WizardListTitle value="Race"/>
         <div className="select-row-1">
           {raceButtonsRow1.map((button) => (
             <WizardSelectButton
