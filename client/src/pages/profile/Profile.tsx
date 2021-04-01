@@ -414,13 +414,20 @@ function Profile(): ReactElement {
                 <div>
                   <img className="icon" src={Mail} alt="mail" />
                 </div>
-                <Input
-                  className="input-field"
-                  transparent
-                  value={exampleUser.email}
-                  readOnly
-                  disabled={edit}
-                />
+                {!edit && (
+                  <a className="link" href={`mailto: ${exampleUser.email}`}>
+                    {exampleUser.email}
+                  </a>
+                )}
+                {edit && (
+                  <Input
+                    className="input-field"
+                    transparent
+                    value={exampleUser.email}
+                    readOnly
+                    disabled={edit}
+                  />
+                )}
               </div>
 
               <div className="input-wrapper">

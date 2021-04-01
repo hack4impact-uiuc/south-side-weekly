@@ -1,6 +1,7 @@
 .pfp-page {
   display: flex;
   flex-direction: column;
+  height: 100vh;
 }
 
 .pfp-page .logo-header {
@@ -16,6 +17,9 @@
   position: relative;
   margin-left: 12%;
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0%;
 }
 .pfp-page-content .top-section-wrapper {
   margin-top: 4%;
@@ -223,18 +227,17 @@
 }
 
 .pfp-page-content .bottom-section-wrapper {
+  margin-top: 3%;
   display: flex;
   flex-direction: row;
   height: 100%;
   margin-left: 17%;
-  margin-top: 3%;
 }
 
 .bottom-section-wrapper .left-col {
   width: 35%;
   display: flex;
   flex-direction: column;
-  height: 50vh;
 }
 
 .bottom-section-wrapper .right-col {
@@ -250,7 +253,7 @@
   background-color: #f7fafb;
   /*border: 2px solid black;*/
   width: 100%;
-  height: 8%;
+  height: 13%;
   opacity: 0.95;
   -moz-box-shadow: inset 0 0 3px #000000;
   -webkit-box-shadow: inset 0 0 3px #000000;
