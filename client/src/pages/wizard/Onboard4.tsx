@@ -1,5 +1,5 @@
 import React, { FC, Dispatch, SetStateAction, ReactElement } from 'react';
-import { Form, TextArea } from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 
 import InvolvementSVG from '../../assets/involvement-page.svg';
 import RequiredSvg from '../../assets/required.svg';
