@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
-import { IUser } from '../../../api/src/models/user'
+
+import { IUser } from '../../../api/src/models/user';
 
 export const FRONTEND_BASE_URL = process.env.REACT_APP_VERCEL_URL
   ? `https://${process.env.REACT}`
@@ -64,26 +65,35 @@ export const addSampleResponse = (
     }));
 };
 
-const user_id = "6031a866c70ec705736a79e5"
+const user_id = '6031a866c70ec705736a79e5';
 
+export const loadProfile = async (): Promise<any> => {
+  const userUrl = `${BASE_URL}/users/${user_id}`;
+  try {
+    const res = await axios.get(userUrl, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    });
+    console.log(res.data.result);
+    return res.data.result;
+  } catch (err) {
+    console.error(err);
+  }
+};
 
-/* export async function loadProfile(): Promise<IUser|undefined> {
-    const userUrl = `${BASE_URL}/users/${user_id}`;
-    return axios
-      .get(userUrl, {
-        headers: {
-          'Content-Type': 'application/JSON'
-        },
-      }).then(res => res.data.result)
-      .catch((err) => console.error(err));
-
-    try {
-      const res = await axios.get(userUrl, {
-        headers: {
-          'Content-Type': 'application/JSON'
-        }})
-      return res;
-    } catch (err) {
-      console.error(err);
-    }
-} */
+export const saveProfile = async (profileData: {
+  [key: string]: string | boolean | string[] | null;
+}): Promise<any> => {
+  const userUrl = `${BASE_URL}/users/${user_id}`;
+  try {
+    const res = await axios.put(userUrl, profileData, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    });
+    console.log(res.data);
+  } catch (err) {
+    console.error(err);
+  }
+};
