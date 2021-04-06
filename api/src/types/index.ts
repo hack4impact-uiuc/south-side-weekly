@@ -18,8 +18,9 @@ export interface IPitch extends Document<any>, IPitchBase {
 /**
  * Modules for express-session.
  */
-declare module 'Express' {
-  interface Request {
+// eslint-disable-next-line @typescript-eslint/no-namespace
+declare namespace Express {
+  export interface Request {
     user: SessionUser;
   }
 }
