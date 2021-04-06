@@ -8,6 +8,7 @@ import {
 } from '../utils/enums';
 
 export interface IPitch extends Document<any> {
+  _id: string;
   name: string;
   pitchAuthor: mongoose.Types.ObjectId;
   pitchStatus: string;
