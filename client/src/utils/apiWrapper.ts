@@ -1,6 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-
-import { IUser } from '../../../api/src/models/user';
+import { IUser } from 'ssw-common'
 
 export const FRONTEND_BASE_URL = process.env.REACT_APP_VERCEL_URL
   ? `https://${process.env.REACT}`
@@ -23,6 +22,11 @@ export function isError<T>(res: ApiResponse<T>): res is ErrorWrapper {
 
 export interface GetSampleResponseType {
   message: string;
+}
+
+export interface GetProfileResponseType {
+  message: string;
+  result: IUser;
 }
 
 /**
@@ -67,33 +71,32 @@ export const addSampleResponse = (
 
 const user_id = '6031a866c70ec705736a79e5';
 
-export const loadProfile = async (): Promise<any> => {
+export const loadProfile = (): Promise<AxiosResponse<GetProfileResponseType> | ErrorWrapper> => {
   const userUrl = `${BASE_URL}/users/${user_id}`;
-  try {
-    const res = await axios.get(userUrl, {
+  return axios
+    .get(userUrl, {
       headers: {
         'Content-Type': 'application/JSON',
       },
-    });
-    console.log(res.data.result);
-    return res.data.result;
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-export const saveProfile = async (profileData: {
-  [key: string]: string | boolean | string[] | null;
-}): Promise<any> => {
+    })
+    .catch((error) => ({
+      type: 'GET_PROFILE_FAIL',
+      error,
+    }));
+}
+  
+export const saveProfile = (profileData: {
+  [key: string]: string | boolean | string[] | Date | null;
+}): Promise<AxiosResponse<GetProfileResponseType> | ErrorWrapper> => {
   const userUrl = `${BASE_URL}/users/${user_id}`;
-  try {
-    const res = await axios.put(userUrl, profileData, {
+  return axios
+    .put(userUrl, profileData, {
       headers: {
         'Content-Type': 'application/JSON',
       },
-    });
-    console.log(res.data);
-  } catch (err) {
-    console.error(err);
-  }
+    })
+    .catch((error) => ({
+      type: 'POST_SAMPLE_FAIL',
+      error,
+    }));
 };

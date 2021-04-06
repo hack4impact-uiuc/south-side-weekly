@@ -1,8 +1,7 @@
 import React, { ReactElement, useState, useEffect } from 'react';
 import { Input, Button, Dropdown, Label } from 'semantic-ui-react';
-import { getSupportInfo } from 'prettier';
 
-import { loadProfile, saveProfile } from '../../utils/apiWrapper';
+import { isError, loadProfile, saveProfile } from '../../utils/apiWrapper';
 import { teamEnum, interestsEnum } from '../../utils/enums';
 import Sidebar from '../../components/Sidebar';
 import Logo from '../../assets/ssw-form-header.png';
@@ -16,6 +15,8 @@ import Masthead from '../../assets/masthead.svg';
 import Banner from '../../assets/banner.svg';
 
 import '../../css/Profile.css';
+
+
 
 function Profile(): ReactElement {
   //const [firstName, setFirstName] = useState<string>('');
@@ -129,7 +130,7 @@ function Profile(): ReactElement {
     phone: phoneNumber !== '' ? phoneNumber : null,
     genders: genders !== [] ? genders : null,
     pronouns: pronouns !== [] ? pronouns : null,
-    dateJoined: dateJoined !== '' ? dateJoined : null,
+    dateJoined: dateJoined !== '' ? new Date(dateJoined) : null,
     masthead: masthead,
     portfolio: portfolio !== '' ? portfolio : null,
     linkedIn: linkedIn !== '' ? linkedIn : null,
@@ -168,34 +169,46 @@ function Profile(): ReactElement {
   }
 
   async function getProfile(): Promise<void> {
-    const user = await loadProfile();
-    console.log(user);
-    //setFirstName(user.firstName === null ? '' : user.firstName);
-    //setLastName(user.lastName === null ? '' : user.lastName);
-    setFullName(
-      `${user.firstName === null ? '' : user.firstName} ${
-        user.lastName === null ? '' : user.lastName
-      }`,
-    );
-    setPreferredName(user.preferredName === null ? '' : user.preferredName);
-    setEmail(user.email === null ? '' : user.email);
-    setPhoneNumber(user.phone === null ? '' : user.phone);
-    setGenders(user.genders === null ? [] : user.genders);
-    setPronouns(user.pronouns === null ? [] : user.pronouns);
-    setDateJoined(
-      user.dateJoined === null ? '' : user.dateJoined.split('T')[0],
-    );
-    setMasthead(user.masthead === null ? false : user.masthead);
-    setPortfolio(user.portfolio === null ? '' : user.portfolio);
-    setLinkedIn(user.linkedIn === null ? '' : user.linkedIn);
-    setTwitter(user.twitter === null ? '' : user.twitter);
-    setRole(user.role === null ? '' : user.role);
-    setCurrentTeams(user.currentTeams === null ? [] : user.currentTeams);
-    setInterests(user.interests === null ? [] : user.interests);
+    const res = await loadProfile();
+    if (isError(res)) {
+      console.log(res.type);
+    }
+    else {
+      const user = res.data.result;
+      console.log(user);
+      //setFirstName(user.firstName === null ? '' : user.firstName);
+      //setLastName(user.lastName === null ? '' : user.lastName);
+      setFullName(
+        `${user.firstName === null ? '' : user.firstName} ${
+          user.lastName === null ? '' : user.lastName
+        }`,
+      );
+      setPreferredName(user.preferredName === null ? '' : user.preferredName);
+      setEmail(user.email === null ? '' : user.email);
+      setPhoneNumber(user.phone === null ? '' : user.phone);
+      setGenders(user.genders === null ? [] : user.genders);
+      setPronouns(user.pronouns === null ? [] : user.pronouns);
+      const date = new Date(user.dateJoined);
+      setDateJoined(
+        user.dateJoined === null ? '' : date.toISOString().split('T')[0]
+      );
+      console.log(date.toDateString());
+      setMasthead(user.masthead === null ? false : user.masthead);
+      setPortfolio(user.portfolio === null ? '' : user.portfolio);
+      setLinkedIn(user.linkedIn === null ? '' : user.linkedIn);
+      setTwitter(user.twitter === null ? '' : user.twitter);
+      setRole(user.role === null ? '' : user.role);
+      setCurrentTeams(user.currentTeams === null ? [] : user.currentTeams);
+      setInterests(user.interests === null ? [] : user.interests);
+    }
   }
 
   async function updateProfile(): Promise<void> {
+    console.log(dateJoined);
     const res = await saveProfile(profileData);
+    if (isError(res)) {
+      console.log(res.type);
+    }
     console.log(res);
     setEdit(false);
   }
@@ -351,6 +364,7 @@ function Profile(): ReactElement {
                   value={dateJoined}
                   readOnly={!edit}
                   onChange={(e) => setDateJoined(e.currentTarget.value)}
+                  type="date"
                 />
               </div>
             </div>
