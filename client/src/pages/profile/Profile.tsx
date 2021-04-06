@@ -16,8 +16,6 @@ import Banner from '../../assets/banner.svg';
 
 import '../../css/Profile.css';
 
-
-
 function Profile(): ReactElement {
   //const [firstName, setFirstName] = useState<string>('');
   //const [lastName, setLastName] = useState<string>('');
@@ -172,8 +170,7 @@ function Profile(): ReactElement {
     const res = await loadProfile();
     if (isError(res)) {
       console.log(res.type);
-    }
-    else {
+    } else {
       const user = res.data.result;
       console.log(user);
       //setFirstName(user.firstName === null ? '' : user.firstName);
@@ -190,7 +187,7 @@ function Profile(): ReactElement {
       setPronouns(user.pronouns === null ? [] : user.pronouns);
       const date = new Date(user.dateJoined);
       setDateJoined(
-        user.dateJoined === null ? '' : date.toISOString().split('T')[0]
+        user.dateJoined === null ? '' : date.toISOString().split('T')[0],
       );
       console.log(date.toDateString());
       setMasthead(user.masthead === null ? false : user.masthead);
