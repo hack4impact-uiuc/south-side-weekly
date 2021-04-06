@@ -1,5 +1,5 @@
 import mongoose, { Document } from 'mongoose';
-import { SessionUser } from './helpers';
+import { SessionUser } from '../utils/helpers';
 import { IUser as IUserBase, IPitch as IPitchBase } from 'ssw-common';
 
 /**
