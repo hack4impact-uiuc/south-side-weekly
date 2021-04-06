@@ -19,7 +19,7 @@ export interface IUser extends Document<any> {
   email: string;
   phone: string;
   oauthID: string;
-  gender: [string];
+  genders: [string];
   pronouns: [string];
   dateJoined: Date;
   masthead: boolean;
