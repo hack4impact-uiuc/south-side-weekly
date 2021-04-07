@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Search } from 'semantic-ui-react';
 
+import TempProfile from '../assets/pfp.svg';
 import Sidebar from '../components/Sidebar';
 import Dropdown from '../components/Dropdown';
 import SSW from '../assets/ssw-form-header.png';
@@ -53,6 +54,7 @@ const Directory = (): ReactElement => {
             <Search fluid />
           </div>
           <div className="filters">
+            <h2>Sort by: </h2>
             <Dropdown text="Roles" options={roleOptions} />
             <Dropdown
               text="Date Joined"
@@ -60,6 +62,14 @@ const Directory = (): ReactElement => {
               defaultValue={dateOptions[0].text}
             />
             <Dropdown text="Interest" options={interestOptions} />
+          </div>
+
+          <div className="directory">
+            <div className="result">
+              <img src={TempProfile} alt="Profile" className="profile-picture" />
+              <h2 className="text name">Name</h2>
+              <h2 className="text">Role</h2>
+            </div>
           </div>
         </div>
       </div>
