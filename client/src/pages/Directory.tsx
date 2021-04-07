@@ -12,32 +12,25 @@ const Directory = (): ReactElement => {
   // TODO: Fix this state type
   const [directoryResults, setDirectoryResults] = useState<Array<any>>();
 
-  const roleOptions = [
-    { text: 'Contributor', color: '' },
-    { text: 'Staff', color: '' },
-    { text: 'Admin', color: '' },
-  ];
+  const roleOptions = ['Contributor', 'Staff', 'Admin'];
 
-  const dateOptions = [
-    { text: 'Earliest to Latest', color: '' },
-    { text: 'Latest to Earliest', color: '' },
-  ];
+  const dateOptions = ['Earliest to Latest', 'Latest to Earliest'];
 
   const interestOptions = [
-    { text: 'Cannabis', color: '' },
-    { text: 'Education', color: '' },
-    { text: 'Food & Land', color: '' },
-    { text: 'Fun', color: '' },
-    { text: 'Health', color: '' },
-    { text: 'Housing', color: '' },
-    { text: 'Immigration', color: '' },
-    { text: 'Lit', color: '' },
-    { text: 'Music', color: '' },
-    { text: 'Nature', color: '' },
-    { text: 'Politics', color: '' },
-    { text: 'Stage and Screen', color: '' },
-    { text: 'Transportation', color: '' },
-    { text: 'Visual Arts', color: '' },
+    'Cannabis',
+    'Education',
+    'Food & Land',
+    'Fun',
+    'Health',
+    'Housing',
+    'Immigration',
+    'Lit',
+    'Music',
+    'Nature',
+    'Politics',
+    'Stage and Screen',
+    'Transportation',
+    'Visual Arts',
   ];
 
   useEffect(() => {
@@ -51,6 +44,10 @@ const Directory = (): ReactElement => {
 
     getDirectoryResults();
   }, []);
+
+  // const filterUsersByKey = (): void => {
+  //   console.log('test');
+  // };
 
   return (
     <>
@@ -70,7 +67,7 @@ const Directory = (): ReactElement => {
             <Dropdown
               text="Date Joined"
               options={dateOptions}
-              defaultValue={dateOptions[0].text}
+              defaultValue={dateOptions[0]}
             />
             <Dropdown text="Interest" options={interestOptions} />
           </div>
@@ -84,7 +81,9 @@ const Directory = (): ReactElement => {
                   className="profile-picture"
                 />
                 <h2 className="text name">{`${result.firstName} ${result.lastName}`}</h2>
-                <h2 className="text">{result.role}</h2>
+                <h2 className="text">
+                  {result.role.slice(0, 1) + result.role.slice(1).toLowerCase()}
+                </h2>
               </div>
             ))}
           </div>

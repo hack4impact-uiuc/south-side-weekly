@@ -3,11 +3,6 @@ import { Dropdown as SemanticDropDown } from 'semantic-ui-react';
 
 import '../css/Dropdown.css';
 
-interface IOptions {
-  text: string;
-  color: string;
-}
-
 interface ISemanticOptions {
   key: number;
   text: string;
@@ -16,19 +11,19 @@ interface ISemanticOptions {
 
 interface IProps {
   text?: string;
-  options?: Array<IOptions>;
+  options?: Array<string>;
   defaultValue?: string;
 }
 
 const parseOptionsToSemantic = (
-  options: Array<IOptions>,
+  options: Array<string>,
 ): Array<ISemanticOptions> => {
   const parsedOptions: Array<ISemanticOptions> = [];
   let countLooped = 1;
   options.map((option) => {
     const semanticOption: ISemanticOptions = {
       key: countLooped,
-      text: option.text,
+      text: option,
       value: countLooped,
     };
     parsedOptions.push(semanticOption);
