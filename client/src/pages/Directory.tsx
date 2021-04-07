@@ -1,4 +1,5 @@
 import React, { ReactElement } from 'react';
+import { Search } from 'semantic-ui-react';
 
 import Sidebar from '../components/Sidebar';
 import Dropdown from '../components/Dropdown';
@@ -33,18 +34,26 @@ const Directory = (): ReactElement => {
     { text: 'Visual Arts', color: '' },
   ];
 
+  //   useEffect(() => {
+
+  //   }, []);
+
   return (
     <div>
-      <div
-        style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}
-      >
+      <div style={{ textAlign: 'center', marginTop: '20px' }}>
         <img src={SSW} alt="South Side Weekly" style={{ width: '50%' }} />
       </div>
       <Sidebar />
       <div style={{ width: '90%', float: 'right' }}>
         <Dropdown text="Roles" options={roleOptions} />
-        <Dropdown text="Dates" options={dateOptions} />
+        <Dropdown
+          text="Date Joined"
+          options={dateOptions}
+          defaultValue={dateOptions[0].text}
+        />
         <Dropdown text="Interest" options={interestOptions} />
+
+        <Search />
       </div>
     </div>
   );

@@ -62,3 +62,23 @@ export const addSampleResponse = (
       error,
     }));
 };
+
+/**
+ * Returns a list of all of the users in the database
+ * Returns GET_USERS_FETCH_FAIL upon failure
+ */
+export const getUsers = (): Promise<
+  AxiosResponse<GetSampleResponseType> | ErrorWrapper
+> => {
+  const requestString = `${BASE_URL}/users`;
+  return axios
+    .get(requestString, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'GET_USERS_FETCH_FAIL',
+      error,
+    }));
+};

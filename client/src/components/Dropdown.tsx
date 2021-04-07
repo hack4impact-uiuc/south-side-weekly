@@ -1,6 +1,8 @@
 import React, { FC, ReactElement } from 'react';
 import { Dropdown as SemanticDropDown } from 'semantic-ui-react';
 
+import '../css/Dropdown.css';
+
 interface IOptions {
   text: string;
   color: string;
@@ -15,8 +17,7 @@ interface ISemanticOptions {
 interface IProps {
   text?: string;
   options?: Array<IOptions>;
-  multiple?: boolean;
-  width?: string | number;
+  defaultValue?: string;
 }
 
 const parseOptionsToSemantic = (
@@ -37,18 +38,16 @@ const parseOptionsToSemantic = (
 };
 
 const Dropdown: FC<IProps> = ({
-  text = 'Dropdwon',
+  text = 'Dropdown',
   options = [],
-  multiple = false,
-  width = 'fit-content',
+  defaultValue = '',
 }): ReactElement => (
   <SemanticDropDown
+    className="custom-dropdown"
     text={text}
     options={parseOptionsToSemantic(options)}
-    multiple={multiple}
-    simple
-    item
-    style={{ width: width }}
+    defaultValue={defaultValue}
+    scrolling
   />
 );
 
