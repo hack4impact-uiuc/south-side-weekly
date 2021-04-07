@@ -23,6 +23,12 @@ export interface GetSampleResponseType {
   message: string;
 }
 
+export interface GetUsersResponseType {
+  message: string;
+  // TODO: Fix this from being an any type
+  result: Array<any>;
+}
+
 /**
  * Returns a sample API response to demonstrate a working backend
  * Returns GET_SAMPLE_FAIL upon failure
@@ -68,7 +74,7 @@ export const addSampleResponse = (
  * Returns GET_USERS_FETCH_FAIL upon failure
  */
 export const getUsers = (): Promise<
-  AxiosResponse<GetSampleResponseType> | ErrorWrapper
+  AxiosResponse<GetUsersResponseType> | ErrorWrapper
 > => {
   const requestString = `${BASE_URL}/users`;
   return axios

@@ -1,7 +1,7 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { Search } from 'semantic-ui-react';
 
-import TempProfile from '../assets/pfp.svg';
+import { getUsers, isError } from '../utils/apiWrapper';
 import Sidebar from '../components/Sidebar';
 import Dropdown from '../components/Dropdown';
 import SSW from '../assets/ssw-form-header.png';
@@ -9,6 +9,9 @@ import SSW from '../assets/ssw-form-header.png';
 import '../css/Directory.css';
 
 const Directory = (): ReactElement => {
+  // TODO: Fix this state type
+  const [directoryResults, setDirectoryResults] = useState<Array<any>>();
+
   const roleOptions = [
     { text: 'Contributor', color: '' },
     { text: 'Staff', color: '' },
@@ -37,9 +40,17 @@ const Directory = (): ReactElement => {
     { text: 'Visual Arts', color: '' },
   ];
 
-  //   useEffect(() => {
+  useEffect(() => {
+    const getDirectoryResults = async (): Promise<void> => {
+      const resp = await getUsers();
 
-  //   }, []);
+      if (!isError(resp)) {
+        setDirectoryResults(resp.data.result);
+      }
+    };
+
+    getDirectoryResults();
+  }, []);
 
   return (
     <>
@@ -65,11 +76,17 @@ const Directory = (): ReactElement => {
           </div>
 
           <div className="directory">
-            <div className="result">
-              <img src={TempProfile} alt="Profile" className="profile-picture" />
-              <h2 className="text name">Name</h2>
-              <h2 className="text">Role</h2>
-            </div>
+            {directoryResults?.map((result) => (
+              <div key={result._id} className="result">
+                <img
+                  src={result.profilePic}
+                  alt="Profile"
+                  className="profile-picture"
+                />
+                <h2 className="text name">{`${result.firstName} ${result.lastName}`}</h2>
+                <h2 className="text">{result.role}</h2>
+              </div>
+            ))}
           </div>
         </div>
       </div>
