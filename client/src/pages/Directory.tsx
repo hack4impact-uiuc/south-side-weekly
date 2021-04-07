@@ -5,6 +5,8 @@ import Sidebar from '../components/Sidebar';
 import Dropdown from '../components/Dropdown';
 import SSW from '../assets/ssw-form-header.png';
 
+import '../css/Directory.css';
+
 const Directory = (): ReactElement => {
   const roleOptions = [
     { text: 'Contributor', color: '' },
@@ -39,23 +41,29 @@ const Directory = (): ReactElement => {
   //   }, []);
 
   return (
-    <div>
-      <div style={{ textAlign: 'center', marginTop: '20px' }}>
-        <img src={SSW} alt="South Side Weekly" style={{ width: '50%' }} />
-      </div>
+    <>
       <Sidebar />
-      <div style={{ width: '90%', float: 'right' }}>
-        <Dropdown text="Roles" options={roleOptions} />
-        <Dropdown
-          text="Date Joined"
-          options={dateOptions}
-          defaultValue={dateOptions[0].text}
-        />
-        <Dropdown text="Interest" options={interestOptions} />
-
-        <Search />
+      <div className="directory-wrapper">
+        <div style={{ textAlign: 'center', marginTop: '20px' }}>
+          <img src={SSW} alt="South Side Weekly" style={{ width: '50%' }} />
+        </div>
+        <div className="directory-content">
+          <h2>Directory</h2>
+          <div className="directory-search">
+            <Search fluid />
+          </div>
+          <div className="filters">
+            <Dropdown text="Roles" options={roleOptions} />
+            <Dropdown
+              text="Date Joined"
+              options={dateOptions}
+              defaultValue={dateOptions[0].text}
+            />
+            <Dropdown text="Interest" options={interestOptions} />
+          </div>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

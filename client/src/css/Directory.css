@@ -1,0 +1,25 @@
+.directory-wrapper {
+}
+
+.directory-wrapper .directory-content .filters {
+  width: 90%;
+  /* float: right; */
+}
+
+.directory-wrapper .directory-content {
+  width: 85%;
+  float: right;
+}
+
+.directory-wrapper .directory-content .directory-search {
+  width: 500px !important;
+}
+
+.directory-wrapper .directory-content .directory-search .input {
+  width: 100% !important;
+  border: 1rem;
+}
+
+.directory-wrapper .directory-content .directory-search .input .prompt {
+  background-color: rgba(61, 79, 145, 0.45) !important;
+}
