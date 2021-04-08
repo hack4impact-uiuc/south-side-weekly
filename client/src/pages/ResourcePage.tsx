@@ -1,6 +1,7 @@
 import React, { ReactElement, useState } from 'react';
 import { Button } from 'semantic-ui-react';
 
+import AddResourceModal from '../components/ResourceHub/AddResourceModal';
 import Sidebar from '../components/Sidebar';
 import ResourcePageSVG from '../assets/resource-page.svg';
 import '../css/Resource.css';
@@ -296,16 +297,7 @@ const ResourcePage = (): ReactElement => {
               </Button>
             ))
           ) : (
-            <div>
-              <div className="toggle-item">
-                <Button className={'toggle-button' && 'active'}>
-                  Add Resource
-                </Button>
-              </div>
-              {/* <div className="toggle-item">
-                Filter/Sort By:
-              </div> */}
-            </div>
+            <AddResourceModal />
           )}
         </div>
         <div className="resource-btn-group">
@@ -319,8 +311,8 @@ const ResourcePage = (): ReactElement => {
                   {button.buttonText}
                 </Button>
               ))
-            : resources.map((button) => (
-                <div key={button.buttonText} className="editable-resource">
+            : resources.map((button, index) => (
+                <div key={index} className="editable-resource">
                   <Button
                     className="delete-btn"
                     circular

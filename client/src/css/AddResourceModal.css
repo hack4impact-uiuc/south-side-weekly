@@ -1,0 +1,90 @@
+.ui.button.add-resource-button {
+  font-style: normal;
+  font-weight: 520;
+  font-size: 15px;
+  line-height: 15px;
+  color: #f7fafb;
+  background: #3d4f91;
+  border-radius: 8.96604px;
+  box-shadow: 0px 3.31765px 3.31765px rgba(0, 0, 0, 0.25),
+    inset 0px 3.31765px 3.31765px rgba(0, 0, 0, 0.25);
+  height: 75%;
+  margin-top: 1.8rem;
+}
+
+.ui.form {
+  font-size: 18px;
+  padding: 30px;
+}
+
+.add-resource-wrapper .add-resource-content {
+  display: flex;
+}
+
+.add-resource-wrapper .add-resource-content .add-resource-inputs {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 5;
+  padding-right: 30px;
+}
+
+.add-resource-wrapper .add-resource-content .role-btns-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-resource-wrapper .add-resource-content .role-btns-wrapper .role-btns {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 7px;
+}
+
+.add-resource-wrapper .add-resource-content .role-btns .ui.button {
+  color: #f7fafb;
+  border-radius: 8.78163px;
+}
+
+.ui.form .edit-resource-label {
+  padding-top: 8px;
+}
+
+.ui.form input:not([type]) {
+  border-radius: 14.9355px;
+  background: #f7fafb;
+  opacity: 0.75;
+}
+
+.ui.form input:not([type]):focus {
+  border-radius: 14.9355px;
+  background: #f7fafb;
+  opacity: 0.75;
+}
+
+.ui.modal {
+  box-shadow: 0px 3.43343px 3.43343px rgba(0, 0, 0, 0.25),
+    inset 0px 3.43343px 3.43343px rgba(0, 0, 0, 0.25);
+  border-radius: 10.3003px;
+}
+
+.ui.modal > .actions {
+  text-align: left;
+  background: #3d4f91;
+  color: #f7fafb;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 24px;
+}
+
+.modal-add-button {
+  padding-top: 20px;
+}
+
+.modal-add-button .ui.button {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18.0594px;
+  line-height: 15px;
+  color: #f7fafb;
+  background: #8cb076;
+  border-radius: 6.88302px;
+}
