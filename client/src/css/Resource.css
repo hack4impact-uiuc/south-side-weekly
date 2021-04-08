@@ -16,17 +16,31 @@
   margin: auto;
 }
 
-.resource-page-wrapper .resource-page-content .page-text {
+.resource-page-wrapper .resource-title-container {
+  display: flex;
+}
+
+.resource-page-wrapper .resource-title-container .resource-title-item {
   font-weight: 700;
   font-size: 36px;
   padding: 15vh 0 10vh 0;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  padding-right: 80px;
+  width: 90%;
 }
 
 .resource-page-wrapper .resource-page-content .resource-toggle-group {
   display: flex;
   justify-content: space-between;
+  flex-direction: row;
   width: 90%;
+}
+
+.resource-page-wrapper
+  .resource-page-content
+  .resource-toggle-group
+  .toggle-item {
+  padding-right: 20px;
 }
 
 .resource-page-wrapper
@@ -68,4 +82,13 @@
   );
   margin: 50px 0px 0px 0px;
   margin-right: 100px;
+}
+
+.resource-page-wrapper
+  .resource-page-content
+  .resource-btn-group
+  .editable-resource
+  .delete-btn {
+  background: transparent;
+  color: #c17979;
 }

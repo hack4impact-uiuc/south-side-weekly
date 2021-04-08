@@ -1,6 +1,7 @@
 import React, { ReactElement, useState } from 'react';
 import { Button } from 'semantic-ui-react';
 
+import Sidebar from '../components/Sidebar';
 import ResourcePageSVG from '../assets/resource-page.svg';
 import '../css/Resource.css';
 
@@ -11,7 +12,7 @@ const generalResources = [
     key: 0,
   },
   {
-    buttonText: 'Other Resource',
+    buttonText: 'Organizational Structure',
     link: 'https://southsideweekly.com/',
     key: 1,
   },
@@ -44,7 +45,7 @@ const role1Resources = [
     key: 0,
   },
   {
-    buttonText: 'Other Resource',
+    buttonText: 'Organizational Structure',
     link: 'https://southsideweekly.com/',
     key: 1,
   },
@@ -76,7 +77,7 @@ const role2Resources = [
     key: 0,
   },
   {
-    buttonText: 'Other Resource',
+    buttonText: 'Organizational Structure',
     link: 'https://southsideweekly.com/',
     key: 1,
   },
@@ -109,7 +110,7 @@ const role3Resources = [
     key: 0,
   },
   {
-    buttonText: 'Other Resource',
+    buttonText: 'Organizational Structure',
     link: 'https://southsideweekly.com/',
     key: 1,
   },
@@ -142,7 +143,7 @@ const role4Resources = [
     key: 0,
   },
   {
-    buttonText: 'Other Resource',
+    buttonText: 'Organizational Structure',
     link: 'https://southsideweekly.com/',
     key: 1,
   },
@@ -175,7 +176,7 @@ const role5Resources = [
     key: 0,
   },
   {
-    buttonText: 'Other Resource',
+    buttonText: 'Organizational Structure',
     link: 'https://southsideweekly.com/',
     key: 1,
   },
@@ -212,6 +213,7 @@ const ResourcePage = (): ReactElement => {
   const [resources, setResources] = useState<Array<IResource>>(
     generalResources,
   );
+  const [edit, setEdit] = useState<boolean>(false);
 
   const resourceRoleBtns = [
     { value: 'General', resources: generalResources },
@@ -244,36 +246,91 @@ const ResourcePage = (): ReactElement => {
     setCurrentValue(value);
   };
 
+  function enableEdit(): void {
+    setEdit(true);
+  }
+
+  function cancelEdit(): void {
+    setEdit(false);
+  }
+
   return (
     <div className="resource-page-wrapper">
+      {console.log(edit)}
+      <Sidebar></Sidebar>
       <img className="page-svg" alt="Resource Page" src={ResourcePageSVG} />
       <div className="resource-page-content">
-        <div className="page-text">Resource Hub</div>
+        <div className="resource-title-container">
+          <div className="resource-title-item">Resource Hub</div>
+          <div className="resource-title-item">
+            <div className="resource-toggle-group">
+              <Button
+                className={'toggle-button' && (!edit ? 'active' : '')}
+                onClick={cancelEdit}
+              >
+                View Resources
+              </Button>
+              <Button
+                className={'toggle-button' && (edit ? 'active' : '')}
+                onClick={enableEdit}
+              >
+                Edit Resources
+              </Button>
+            </div>
+          </div>
+        </div>
+
         <div className="resource-toggle-group">
-          {resourceRoleBtns.map((button) => (
-            <Button
-              key={button.value}
-              className={`toggle-button ${
-                button.value === currentValue && 'active'
-              }`}
-              onClick={() =>
-                handleResourceChange(button.resources, button.value)
-              }
-            >
-              {button.value}
-            </Button>
-          ))}
+          {!edit ? (
+            resourceRoleBtns.map((button) => (
+              <Button
+                key={button.value}
+                className={`toggle-button ${
+                  button.value === currentValue && 'active'
+                }`}
+                onClick={() =>
+                  handleResourceChange(button.resources, button.value)
+                }
+              >
+                {button.value}
+              </Button>
+            ))
+          ) : (
+            <div>
+              <div className="toggle-item">
+                <Button className={'toggle-button' && 'active'}>
+                  Add Resource
+                </Button>
+              </div>
+              {/* <div className="toggle-item">
+                Filter/Sort By:
+              </div> */}
+            </div>
+          )}
         </div>
         <div className="resource-btn-group">
-          {resources.map((button) => (
-            <Button
-              onClick={() => handleResourceClick(button.link)}
-              className="resource-btn"
-              key={button.key}
-            >
-              {button.buttonText}
-            </Button>
-          ))}
+          {!edit
+            ? resources.map((button) => (
+                <Button
+                  onClick={() => handleResourceClick(button.link)}
+                  className="resource-btn"
+                  key={button.key}
+                >
+                  {button.buttonText}
+                </Button>
+              ))
+            : resources.map((button) => (
+                <div key={button.buttonText} className="editable-resource">
+                  <Button
+                    className="delete-btn"
+                    circular
+                    icon="minus circle"
+                  ></Button>
+                  <Button className="resource-btn" key={button.key}>
+                    {button.buttonText}
+                  </Button>
+                </div>
+              ))}
         </div>
       </div>
     </div>
