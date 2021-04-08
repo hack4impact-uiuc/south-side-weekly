@@ -7,10 +7,10 @@ import React, {
 } from 'react';
 
 import Onboard5SVG from '../../assets/onboard5.svg';
-import RequiredSvg from '../../assets/required.svg';
 import { handleSelectGroupArray } from '../../utils/helpers';
 import '../../css/wizard/Onboard5.css';
 import WizardSelectButton from '../../components/WizardSelectButton/WizardSelectButton';
+import WizardStar from '../../components/WizardStar';
 
 interface IProps {
   currentTeams: Array<string>;
@@ -53,10 +53,10 @@ const Onboard5: FC<IProps> = ({
 
       <div className="onboard5-content">
         <div className="page-text">
+          <WizardStar />
           <b>What do you want to do at the Weekly?</b>
           <br />
           Please limit to 1-2 teams that you're interested in.
-          <img className="required-icon" alt="required" src={RequiredSvg} />
         </div>
 
         <div className="select-group">

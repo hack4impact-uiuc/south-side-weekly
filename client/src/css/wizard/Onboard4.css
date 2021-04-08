@@ -26,14 +26,6 @@
   padding-left: 30px;
 }
 
-.involvement-wrapper .involvement-content .required-icon {
-  position: absolute;
-  top: 5px;
-  left: 0;
-  width: 15px;
-  height: 15px;
-}
-
 .involvement-wrapper .involvement-content .response-text-area {
   margin-top: 5vh;
   margin-left: 30px;

@@ -39,8 +39,6 @@
 }
 
 .basic-info-wrapper .btn-wrapper .input-wrapper .required-icon {
-  width: 15px;
-  height: 15px;
   grid-area: star;
 }
 

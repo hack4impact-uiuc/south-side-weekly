@@ -2,7 +2,7 @@ import React, { FC, Dispatch, SetStateAction, ReactElement } from 'react';
 import { Form } from 'semantic-ui-react';
 
 import InvolvementSVG from '../../assets/involvement-page.svg';
-import RequiredSvg from '../../assets/required.svg';
+import WizardStar from '../../components/WizardStar';
 
 import '../../css/wizard/Onboard4.css';
 
@@ -24,9 +24,9 @@ const Onboard4: FC<IProps> = ({
     <img alt="Involvement" className="page-svg" src={InvolvementSVG} />
     <div className="involvement-content">
       <div className="page-text">
+        <WizardStar />
         Tell us how you want to get involved and why. If you have relevant
         experience, please briefly share too.
-        <img alt="required" className="required-icon" src={RequiredSvg} />
       </div>
       <Form>
         <Form.TextArea
