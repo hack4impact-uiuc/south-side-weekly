@@ -8,7 +8,7 @@ import React, {
 
 import PersonalInfoSvg from '../../assets/personal-information.svg';
 import WizardSelectButton from '../../components/WizardSelectButton/WizardSelectButton';
-import WizardListTitle from "../../components/WizardListTitle";
+import WizardListTitle from '../../components/WizardListTitle';
 import { handleSelectGroupArray } from '../../utils/helpers';
 
 import '../../css/wizard/Onboard2.css';

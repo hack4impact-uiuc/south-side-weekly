@@ -1,31 +1,31 @@
 .races-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-left: 10%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-left: 10%;
 }
 
 .races-wrapper .page-text {
-    width: 100%;
-    font-size: 24px;
-    line-height: 30px;
-    text-align: center;
+  width: 100%;
+  font-size: 24px;
+  line-height: 30px;
+  text-align: center;
 }
 
 .races-wrapper .races-content-wrapper {
-    margin-top: 20px;
-    width: 90%;
+  margin-top: 20px;
+  width: 90%;
 }
 
 .races-wrapper .races-content-wrapper .races-svg {
-    width: 30%;
-    position: absolute;
-    bottom: 0;
-    left: 1%;
+  width: 30%;
+  position: absolute;
+  bottom: 0;
+  left: 1%;
 }
 
 .races-wrapper .races-content-wrapper .race-button-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    justify-items: center;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-items: center;
 }
