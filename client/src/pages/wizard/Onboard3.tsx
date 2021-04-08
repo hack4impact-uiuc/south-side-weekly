@@ -34,8 +34,8 @@ const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
     handleSelectGroupArray(e, races, setRaces);
   };
 
-  // All of the race buttons to show in the first row
-  const raceButtonsRow1 = [
+  // All of the race buttons
+  const raceButtons = [
     {
       display: 'American Indian or Alaskan Native',
       value: racesEnum.AMERICAN_INDIAN_OR_ALASKAN_NATIVE,
@@ -56,10 +56,6 @@ const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
       value: racesEnum.NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER,
       color: '#A9D3E5',
     },
-  ];
-
-  // All of the race buttons to show in the second row
-  const raceButtonsRow2 = [
     {
       display: 'Latinx or Hispanic',
       value: racesEnum.LATINX_OR_HISPANIC,
@@ -80,8 +76,8 @@ const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
       <div className="races-content-wrapper">
         <img src={RacesSVG} alt="Races Page" className="races-svg" />
         <WizardListTitle value="Race"/>
-        <div className="select-row-1">
-          {raceButtonsRow1.map((button) => (
+        <div className="race-button-wrapper">
+          {raceButtons.map((button) => (
             <WizardSelectButton
               key={button.value}
               onClick={handleRaces}
@@ -91,21 +87,6 @@ const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
               color={button.color}
               padding="5px 18px 5px 18px"
               margin="20px 0px 20px 0px"
-            />
-          ))}
-        </div>
-        <div className="select-row-2">
-          {raceButtonsRow2.map((button) => (
-            <WizardSelectButton
-              key={button.value}
-              buttonText={button.display}
-              onClick={handleRaces}
-              value={button.value}
-              selectedArray={races}
-              color={button.color}
-              width="150px"
-              padding="5px 10px 5px 10px"
-              margin="0px 30px 0px 30px"
             />
           ))}
         </div>
