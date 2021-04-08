@@ -1,65 +1,65 @@
 .basic-info-wrapper {
-    display: flex;
-    margin: auto;
-    width: 80%;
+  display: flex;
+  margin: auto;
+  width: 80%;
 }
 
 .basic-info-wrapper .basic-info-image {
-    width: 50%;
+  width: 50%;
 }
 
 .basic-info-wrapper .basic-info-form {
-    width: 100%;
+  width: 100%;
 }
 
 .basic-info-wrapper .btn-wrapper {
-    display: flex;
-    margin-left: 10%;
-    margin-bottom: 10%;
-    flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  margin-left: 10%;
+  margin-bottom: 10%;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .basic-info-wrapper .btn-wrapper .input-wrapper {
-    display: grid;
-    grid-template-areas: 'auto label' 'star input';
-    grid-template-columns: 20px auto;
-    align-items: center;
-    width: 100%;
-    padding-left: 16px;
+  display: grid;
+  grid-template-areas: 'auto label' 'star input';
+  grid-template-columns: 20px auto;
+  align-items: center;
+  width: 100%;
+  padding-left: 16px;
 }
 
 .basic-info-wrapper .btn-wrapper .input-wrapper .input .input-field {
-    width: 100%;
-    background-color: rgb(61, 79, 145, 0.25);
-    padding: 10px;
-    margin: 0;
-    border-radius: 1rem;
+  width: 100%;
+  background-color: rgb(61, 79, 145, 0.25);
+  padding: 10px;
+  margin: 0;
+  border-radius: 1rem;
 }
 
 .basic-info-wrapper .btn-wrapper .input-wrapper .required-icon {
-    width: 15px;
-    height: 15px;
-    grid-area: star;
+  width: 15px;
+  height: 15px;
+  grid-area: star;
 }
 
 .basic-info-wrapper .btn-wrapper .input-wrapper .input {
-    width: 100%;
-    grid-area: input;
+  width: 100%;
+  grid-area: input;
 }
 
 .basic-info-wrapper .btn-wrapper .input-wrapper .label {
-    text-align: left;
-    margin-left: 4%;
-    margin-top: 8%;
-    margin-bottom: 2%;
-    font-size: large;
-    font-weight: 600;
-    grid-column-start: 2;
-    grid-area: label;
+  text-align: left;
+  margin-left: 4%;
+  margin-top: 8%;
+  margin-bottom: 2%;
+  font-size: large;
+  font-weight: 600;
+  grid-column-start: 2;
+  grid-area: label;
 }
 
 .basic-info-wrapper .btn-wrapper .input-wrapper .error {
-    border: 2px solid #D9796F;
+  border: 2px solid #d9796f;
 }

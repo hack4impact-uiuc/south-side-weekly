@@ -8,7 +8,7 @@ import React, {
 
 import Onboard6SVG from '../../assets/onboard6.svg';
 import { handleSelectGroupArray } from '../../utils/helpers';
-import { interestsEnum } from "../../utils/enums";
+import { interestsEnum } from '../../utils/enums';
 import '../../css/wizard/Onboard6.css';
 import WizardSelectButton from '../../components/WizardSelectButton/WizardSelectButton';
 
@@ -64,7 +64,11 @@ const Onboard6: FC<IProps> = ({ interests, setInterests }): ReactElement => {
       value: interestsEnum.TRANSPORTATION,
       color: '#F1D8B0',
     },
-    { display: 'Visual Arts', value: interestsEnum.VISUAL_ARTS, color: '#BAB9E9' },
+    {
+      display: 'Visual Arts',
+      value: interestsEnum.VISUAL_ARTS,
+      color: '#BAB9E9',
+    },
   ];
 
   return (

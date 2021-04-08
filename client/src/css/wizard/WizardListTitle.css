@@ -1,16 +1,16 @@
-  .list-title-wrapper {
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-  }
-  
-  .list-title {
-      background-color: rgb(61, 79, 145, 0.55);
-      color: white;
-      border-radius: 1.2rem;
-      font-size: 24px;
-      padding: 12px 28px 12px 28px;
-      margin-bottom: 15px;
-      width: fit-content;
-      height: fit-content;
-  }
+.list-title-wrapper {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.list-title {
+  background-color: rgb(61, 79, 145, 0.55);
+  color: white;
+  border-radius: 1.2rem;
+  font-size: 24px;
+  padding: 12px 28px 12px 28px;
+  margin-bottom: 15px;
+  width: fit-content;
+  height: fit-content;
+}

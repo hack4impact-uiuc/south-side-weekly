@@ -29,13 +29,13 @@ const Onboard4: FC<IProps> = ({
         <img alt="required" className="required-icon" src={RequiredSvg} />
       </div>
       <Form>
-          <Form.TextArea
-            required
-            value={reasonsForInvolvement}
-            onChange={(e) => setReasonsForInvolvement(e.currentTarget.value)}
-            className="response-text-area"
-            error={reasonsForInvolvement === ''}
-          />
+        <Form.TextArea
+          required
+          value={reasonsForInvolvement}
+          onChange={(e) => setReasonsForInvolvement(e.currentTarget.value)}
+          className="response-text-area"
+          error={reasonsForInvolvement === ''}
+        />
       </Form>
     </div>
   </div>
