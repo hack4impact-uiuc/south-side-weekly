@@ -79,12 +79,5 @@
   position: relative;
   font-size: 24px;
   font-weight: 600;
-  padding-left: 30px;
   line-height: 40px;
-}
-
-.onboard8-wrapper .onboard8-content .page-text .required-icon {
-  position: absolute;
-  top: 10px;
-  left: 0;
 }

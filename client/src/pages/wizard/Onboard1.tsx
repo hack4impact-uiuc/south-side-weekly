@@ -2,7 +2,7 @@ import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
 import { Form } from 'semantic-ui-react';
 
 import BasicInfoSvg from '../../assets/basic-info.svg';
-import Required from '../../assets/required.svg';
+import WizardStar from '../../components/WizardStar';
 
 import '../../css/wizard/Onboard1.css';
 
@@ -45,7 +45,7 @@ const OnBoard1: FC<IProps> = ({
       <div className="btn-wrapper">
         <div className="input-wrapper">
           <div className="label">First Name</div>
-          <img alt="required" className="required-icon" src={Required} />
+          <WizardStar />
           <div className="input">
             <Form.Input
               required
@@ -61,7 +61,7 @@ const OnBoard1: FC<IProps> = ({
         </div>
         <div className="input-wrapper">
           <div className="label">Last Name</div>
-          <img alt="required" className="required-icon" src={Required} />
+          <WizardStar />
           <div className="input">
             <Form.Input
               required
@@ -90,7 +90,7 @@ const OnBoard1: FC<IProps> = ({
         </div>
         <div className="input-wrapper">
           <div className="label">Phone Number</div>
-          <img alt="required" className="required-icon" src={Required} />
+          <WizardStar />
           <div className="input">
             <Form.Input
               required

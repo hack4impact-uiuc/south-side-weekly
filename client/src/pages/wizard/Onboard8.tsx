@@ -4,7 +4,7 @@ import { openPopupWidget } from 'react-calendly';
 
 import '../../css/wizard/Onboard8.css';
 import Onboard8SVG from '../../assets/onboard8.svg';
-import RequiredSVG from '../../assets/required.svg';
+import WizardStar from '../../components/WizardStar';
 
 interface IProps {
   isModalOpen: boolean;
@@ -46,8 +46,8 @@ const Onboard8: FC<IProps> = ({
     <img className="page-svg" alt="Oboard 8" src={Onboard8SVG} />
     <div className="onboard8-content">
       <div className="page-text">
+        <WizardStar />
         Please schedule an Onboarding Session with a Staff Member.
-        <img className="required-icon" alt="required" src={RequiredSVG} />
       </div>
       <Button
         className="calendly-btn"
