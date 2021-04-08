@@ -93,7 +93,7 @@ const Onboard2: FC<IProps> = ({
                 onClick={handleGenders}
                 selectedArray={genders}
                 value={button.value}
-                width="90%"
+                width="120px"
                 margin="25px 0px 0px 20px"
                 color={button.color}
               />
@@ -107,7 +107,7 @@ const Onboard2: FC<IProps> = ({
                 onClick={handlePronouns}
                 selectedArray={pronouns}
                 value={button.value}
-                width="90%"
+                width="120px"
                 margin="25px 0px 0px 20px"
                 color={button.color}
               />

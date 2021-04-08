@@ -24,13 +24,8 @@
     left: 1%;
 }
 
-.races-wrapper .races-content-wrapper .select-row-1 {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
-}
-
-.races-wrapper .races-content-wrapper .select-row-2 {
-    display: flex;
-    justify-content: center;
+.races-wrapper .races-content-wrapper .race-button-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    justify-items: center;
 }
