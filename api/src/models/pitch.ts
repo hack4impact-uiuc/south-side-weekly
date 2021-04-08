@@ -1,4 +1,4 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Schema, Document } from 'mongoose';
 import { IPitch } from '../utils/types';
 
 import {
@@ -6,6 +6,7 @@ import {
   pitchStatusEnum,
   assignmentStatusEnum,
 } from '../utils/enums';
+
 
 /**
  * Mongoose Schema to represent a Pitch at South Side Weekly

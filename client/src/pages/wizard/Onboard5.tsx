@@ -38,6 +38,16 @@ const Onboard5: FC<IProps> = ({
     handleSelectGroupArray(e, currentTeams, setCurrentTeams);
   };
 
+  // All of the buttons to show for the current teams
+  const currentTeamsButtons = [
+    { value: 'Editing', color: '#A5C4F2' },
+    { value: 'Fact-checking', color: '#CFE7C4' },
+    { value: 'Illustration', color: '#BAB9E9' },
+    { value: 'Photography', color: '#D8ACE8' },
+    { value: 'Visuals', color: '#BFEBE0' },
+    { value: 'Writing', color: '#A9D3E5' },
+  ];
+
   return (
     <div className="onboard5-wrapper">
       <img className="page-svg" alt="onboard5" src={Onboard5SVG} />

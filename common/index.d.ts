@@ -36,7 +36,7 @@ export interface IPitch {
   assignmentGoogleDocLink: string;
   assignmentContributors: [IUser];
   topics: [string];
-  teams: { 
+  teams: {
     writers: {
       current: number;
       target: number;
@@ -60,7 +60,7 @@ export interface IPitch {
     illustration: {
       current: number;
       target: number;
-    }
+    };
   };
   approvedBy: IUser;
   similarStories: [string];
