@@ -8,7 +8,7 @@ if (process.env.NODE_ENV === 'production') {
 mongoose.connect(mongoUrl, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useFindAndModify: false
+  useFindAndModify: false,
 });
 
 mongoose.Promise = global.Promise;
