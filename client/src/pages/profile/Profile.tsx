@@ -13,6 +13,7 @@ import Twitter from '../../assets/twitter.svg';
 import Pfp from '../../assets/pfp.svg';
 import Masthead from '../../assets/masthead.svg';
 import Banner from '../../assets/banner.svg';
+import Header from '../../components/Header';
 
 import '../../css/Profile.css';
 
@@ -218,9 +219,7 @@ function Profile(): ReactElement {
       <Sidebar />
 
       <div className="pfp-page">
-        <div className="logo-header">
-          <img className="logo" alt="SSW Logo" src={Logo} />
-        </div>
+        <Header large={false} />
         <div className="pfp-page-content">
           <div className="top-section-wrapper">
             <div className="pf-section">
