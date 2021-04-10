@@ -1,4 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
+import { IUser } from 'ssw-common';
 
 export const FRONTEND_BASE_URL = process.env.REACT_APP_VERCEL_URL
   ? `https://${process.env.REACT}`
@@ -21,6 +22,11 @@ export function isError<T>(res: ApiResponse<T>): res is ErrorWrapper {
 
 export interface GetSampleResponseType {
   message: string;
+}
+
+export interface GetProfileResponseType {
+  message: string;
+  result: IUser;
 }
 
 /**
@@ -59,6 +65,40 @@ export const addSampleResponse = (
     })
     .catch((error) => ({
       type: 'POST_SAMPLE_FAIL',
+      error,
+    }));
+};
+
+const user_id = '6031a866c70ec705736a79e5';
+
+export const loadProfile = (): Promise<
+  AxiosResponse<GetProfileResponseType> | ErrorWrapper
+> => {
+  const userUrl = `${BASE_URL}/users/${user_id}`;
+  return axios
+    .get(userUrl, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'GET_PROFILE_FAIL',
+      error,
+    }));
+};
+
+export const saveProfile = (profileData: {
+  [key: string]: string | boolean | string[] | Date | null;
+}): Promise<AxiosResponse<GetProfileResponseType> | ErrorWrapper> => {
+  const userUrl = `${BASE_URL}/users/${user_id}`;
+  return axios
+    .put(userUrl, profileData, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'POST_PROFILE_FAIL',
       error,
     }));
 };
