@@ -4,10 +4,10 @@ import axios from 'axios';
 import { Button } from 'semantic-ui-react';
 import Loader from 'react-loader-spinner';
 
+import Header from '../components/Header';
 import buildURI from '../utils/apiHelpers';
 import { BASE_URL, FRONTEND_BASE_URL } from '../utils/apiWrapper';
 import { rolesEnum } from '../utils/enums';
-import Logo from '../assets/ssw-form-header.png';
 
 const LOGIN_FAILURE_QUERY_PARAM = 'failure';
 
@@ -64,9 +64,7 @@ function Login(): ReactElement {
     <>
       {loading || !authed ? (
         <div className="login-wrapper">
-          <div className="logo-header">
-            <img className="logo" alt="SSW Logo" src={Logo} />
-          </div>
+          <Header large />
           {loading ? (
             <div className="loader-wrapper">
               <Loader type="Oval" color="#3D4F91" height={50} width={50} />
