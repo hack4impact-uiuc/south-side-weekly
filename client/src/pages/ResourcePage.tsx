@@ -3,7 +3,9 @@ import { Button } from 'semantic-ui-react';
 
 import ResourcePageSVG from '../assets/resource-page.svg';
 import Header from '../components/Header';
+import Sidebar from '../components/Sidebar';
 import '../css/Resource.css';
+import { pages } from '../utils/enums';
 
 const generalResources = [
   {
@@ -247,6 +249,7 @@ const ResourcePage = (): ReactElement => {
 
   return (
     <div className="resource-page-wrapper">
+      <Sidebar currentPage={pages.RESOURCES} />
       <Header large={false} />
       <img className="page-svg" alt="Resource Page" src={ResourcePageSVG} />
       <div className="resource-page-content">
