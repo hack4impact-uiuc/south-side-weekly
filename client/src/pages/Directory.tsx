@@ -64,6 +64,7 @@ const Directory = (): ReactElement => {
    */
   const sortUsersByDate = (value: string): void => {
     if (value.length === 0) {
+      setDisplayDirectory(directory);
       return;
     }
 
