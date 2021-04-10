@@ -4,7 +4,6 @@ import { Message, Input, Button, Dropdown, Label } from 'semantic-ui-react';
 import { isError, loadProfile, saveProfile } from '../../utils/apiWrapper';
 import { teamEnum, interestsEnum } from '../../utils/enums';
 import Sidebar from '../../components/Sidebar';
-import Logo from '../../assets/ssw-form-header.png';
 import Mail from '../../assets/mail.svg';
 import Phone from '../../assets/phone.svg';
 import Linkedin from '../../assets/linkedin.svg';
