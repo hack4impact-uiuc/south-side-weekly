@@ -98,7 +98,7 @@ export const saveProfile = (profileData: {
       },
     })
     .catch((error) => ({
-      type: 'POST_SAMPLE_FAIL',
+      type: 'POST_PROFILE_FAIL',
       error,
     }));
 };

@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useEffect } from 'react';
-import { Input, Button, Dropdown, Label } from 'semantic-ui-react';
+import { Message, Input, Button, Dropdown, Label } from 'semantic-ui-react';
 
 import { isError, loadProfile, saveProfile } from '../../utils/apiWrapper';
 import { teamEnum, interestsEnum } from '../../utils/enums';
@@ -17,8 +17,6 @@ import Banner from '../../assets/banner.svg';
 import '../../css/Profile.css';
 
 function Profile(): ReactElement {
-  //const [firstName, setFirstName] = useState<string>('');
-  //const [lastName, setLastName] = useState<string>('');
   const [fullName, setFullName] = useState<string>('');
   const [preferredName, setPreferredName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -34,6 +32,8 @@ function Profile(): ReactElement {
   const [currentTeams, setCurrentTeams] = useState<Array<string>>([]);
   const [interests, setInterests] = useState<Array<string>>([]);
   const [edit, setEdit] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
 
   const currentTeamsButtons = [
     { display: 'Editing', value: teamEnum.EDITING, color: '#A5C4F2' },
@@ -169,12 +169,11 @@ function Profile(): ReactElement {
   async function getProfile(): Promise<void> {
     const res = await loadProfile();
     if (isError(res)) {
-      console.log(res.type);
+      setError(true);
+      setErrorMessage(res.type);
     } else {
+      setError(false);
       const user = res.data.result;
-      console.log(user);
-      //setFirstName(user.firstName === null ? '' : user.firstName);
-      //setLastName(user.lastName === null ? '' : user.lastName);
       setFullName(
         `${user.firstName === null ? '' : user.firstName} ${
           user.lastName === null ? '' : user.lastName
@@ -189,7 +188,6 @@ function Profile(): ReactElement {
       setDateJoined(
         user.dateJoined === null ? '' : date.toISOString().split('T')[0],
       );
-      console.log(date.toDateString());
       setMasthead(user.masthead === null ? false : user.masthead);
       setPortfolio(user.portfolio === null ? '' : user.portfolio);
       setLinkedIn(user.linkedIn === null ? '' : user.linkedIn);
@@ -201,13 +199,14 @@ function Profile(): ReactElement {
   }
 
   async function updateProfile(): Promise<void> {
-    console.log(dateJoined);
     const res = await saveProfile(profileData);
     if (isError(res)) {
-      console.log(res.type);
+      setError(true);
+      setErrorMessage(res.type);
+    } else {
+      setError(false);
+      setEdit(false);
     }
-    console.log(res);
-    setEdit(false);
   }
 
   useEffect(() => {
@@ -217,6 +216,7 @@ function Profile(): ReactElement {
   return (
     <>
       <Sidebar />
+
       <div className="pfp-page">
         <div className="logo-header">
           <img className="logo" alt="SSW Logo" src={Logo} />
@@ -272,7 +272,7 @@ function Profile(): ReactElement {
               <div className="list-title">Basic Information</div>
               <div className="input-wrapper">
                 <span className="info-label">Name:</span>
-                {/*<Label horizontal circular>Name</Label>*/}
+
                 <Input
                   className="input-field"
                   transparent
@@ -284,7 +284,7 @@ function Profile(): ReactElement {
 
               <div className="input-wrapper">
                 <span className="info-label">Preferred Name:</span>
-                {/*<Label horizontal circular>Name</Label>*/}
+
                 <Input
                   className="input-field"
                   transparent
@@ -296,7 +296,7 @@ function Profile(): ReactElement {
 
               <div className="input-wrapper" id="gender">
                 <span className="info-label">Gender:</span>
-                {/*<Label horizontal circular>Name</Label>*/}
+
                 {!edit && (
                   <Input
                     className="input-field"
@@ -319,7 +319,7 @@ function Profile(): ReactElement {
 
               <div className="input-wrapper" id="pronoun">
                 <span className="info-label">Pronouns:</span>
-                {/*<Label horizontal circular>Name</Label>*/}
+
                 {!edit && (
                   <Input
                     className="input-field"
@@ -342,7 +342,7 @@ function Profile(): ReactElement {
 
               <div className="input-wrapper">
                 <span className="info-label">Position:</span>
-                {/*<Label horizontal circular>Name</Label>*/}
+
                 <Input
                   className="input-field"
                   transparent
@@ -354,7 +354,7 @@ function Profile(): ReactElement {
 
               <div className="input-wrapper">
                 <span className="info-label">Date Joined:</span>
-                {/*<Label horizontal circular>Name</Label>*/}
+
                 <Input
                   className="input-field"
                   transparent
@@ -369,9 +369,6 @@ function Profile(): ReactElement {
             <div className="topics-section">
               <div className="list-section">
                 <div className="list-title">My Topics</div>
-
-                {/*<Button className="role-topic-button" content="Cannabis" style={{backgroundColor: teamColors[exampleUser.currentTeams[0]]}}/>
-              <Button className="role-topic-button" content="Fun" />*/}
 
                 {!edit && (
                   <div className="interests-section-scroll">
@@ -526,6 +523,11 @@ function Profile(): ReactElement {
                 )}
               </div>
             </div>
+            {error && (
+              <Message className="message-wrapper" negative>
+                <Message.Header>{errorMessage}</Message.Header>
+              </Message>
+            )}
           </div>
         </div>
       </div>
