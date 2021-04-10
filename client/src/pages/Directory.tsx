@@ -48,7 +48,6 @@ const Directory = (): ReactElement => {
       const resp = await getUsers();
 
       if (!isError(resp)) {
-        console.log(resp);
         setDirectory(resp.data.result);
         setDisplayDirectory(resp.data.result);
       }
@@ -134,8 +133,6 @@ const Directory = (): ReactElement => {
       });
       return hasInterest;
     });
-
-    console.log(filteredDirectory);
 
     setDisplayDirectory([...filteredDirectory]);
   };
