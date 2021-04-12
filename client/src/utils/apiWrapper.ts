@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { IUser } from 'ssw-common';
+import { IUser, IResource } from 'ssw-common';
 
 export const FRONTEND_BASE_URL = process.env.REACT_APP_VERCEL_URL
   ? `https://${process.env.REACT}`
@@ -27,6 +27,11 @@ export interface GetSampleResponseType {
 export interface GetProfileResponseType {
   message: string;
   result: IUser;
+}
+
+export interface CreateResourceResponseType {
+  message: string;
+  result: IResource;
 }
 
 /**
@@ -99,6 +104,26 @@ export const saveProfile = (profileData: {
     })
     .catch((error) => ({
       type: 'POST_PROFILE_FAIL',
+      error,
+    }));
+};
+
+/**
+ * Creates a new resource
+ * Returns CREATE_RESOURCE_FAIL upon failure
+ */
+export const createResource = (
+  newResource: IResource,
+): Promise<AxiosResponse<CreateResourceResponseType> | ErrorWrapper> => {
+  const requestString = `${BASE_URL}/resources`;
+  return axios
+    .post(requestString, newResource, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'CREATE_RESOURCE_FAIL',
       error,
     }));
 };

@@ -1,5 +1,8 @@
 import React, { ReactElement } from 'react';
-import { Modal, Button, Form } from 'semantic-ui-react';
+import { Modal, Button, Form, Input } from 'semantic-ui-react';
+
+import { createResource, isError } from '../../utils/apiWrapper';
+
 import '../../css/AddResourceModal.css';
 
 const teamColors: { [key: string]: string } = {
@@ -16,6 +19,40 @@ const teamColors: { [key: string]: string } = {
 
 function AddResourceModal(): ReactElement {
   const [open, setOpen] = React.useState(false);
+  const [resourceTitle, setResourceTitle] = React.useState('');
+  const [resourceURL, setResourceURL] = React.useState('');
+  const [selectedTags, setSelectedTags] = React.useState<Set<string>>(
+    new Set(),
+  );
+
+  const newResource = {
+    name: resourceTitle,
+    link: resourceURL,
+    teamRoles: Array<string>(),
+  };
+
+  const handleTagSelect = (tag: string): void => {
+    const newTags = new Set(selectedTags);
+    if (newTags.has(tag)) {
+      newTags.delete(tag);
+    } else {
+      newTags.add(tag);
+    }
+    setSelectedTags(newTags);
+  };
+
+  async function addResource(): Promise<void> {
+    newResource.teamRoles = Array.from(selectedTags);
+    console.log(newResource);
+    const res = await createResource(newResource);
+    if (isError(res)) {
+      // error
+    } else {
+      // update page of resources
+      console.log(res);
+      setOpen(false);
+    }
+  }
 
   return (
     <Modal
@@ -31,27 +68,34 @@ function AddResourceModal(): ReactElement {
             <div className="add-resource-inputs">
               <Form.Field>
                 Resource Title
-                <label className="edit-resource-label">
-                  <input />
-                </label>
+                <Input
+                  className="edit-resource-label"
+                  value={resourceTitle}
+                  onChange={(e) => setResourceTitle(e.currentTarget.value)}
+                />
               </Form.Field>
               <Form.Field>
                 URL/File Upload
-                <label className="edit-resource-label">
-                  <input />
-                </label>
+                <Input
+                  className="edit-resource-label"
+                  value={resourceURL}
+                  onChange={(e) => setResourceURL(e.currentTarget.value)}
+                />
               </Form.Field>
             </div>
 
-            <div className="role-btns-wrapper">
+            <div className="resource-tags-wrapper">
               Resource Tags:
-              <div className="role-btns">
+              <div className="resource-tag-grid">
                 {Object.keys(teamColors).map((button, idx) => (
                   <Button
                     key={idx}
-                    className="role-topic-label"
+                    className={`resource-tag ${
+                      selectedTags.has(button) ? 'active' : 'false'
+                    }`}
                     content={button}
                     style={{ backgroundColor: teamColors[button] }}
+                    onClick={() => handleTagSelect(button)}
                   />
                 ))}
               </div>
@@ -59,7 +103,7 @@ function AddResourceModal(): ReactElement {
           </div>
 
           <div className="modal-add-button">
-            <Button type="submit" onClick={() => setOpen(false)}>
+            <Button type="submit" onClick={addResource}>
               Add Resource
             </Button>
           </div>

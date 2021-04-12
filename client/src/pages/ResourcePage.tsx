@@ -257,7 +257,6 @@ const ResourcePage = (): ReactElement => {
 
   return (
     <div className="resource-page-wrapper">
-      {console.log(edit)}
       <Sidebar></Sidebar>
       <img className="page-svg" alt="Resource Page" src={ResourcePageSVG} />
       <div className="resource-page-content">
@@ -300,6 +299,7 @@ const ResourcePage = (): ReactElement => {
             <AddResourceModal />
           )}
         </div>
+
         <div className="resource-btn-group">
           {!edit
             ? resources.map((button) => (

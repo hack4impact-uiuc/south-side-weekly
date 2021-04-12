@@ -66,3 +66,12 @@ export interface IPitch {
   similarStories: [string];
   deadline: Date;
 }
+
+/**
+ * Interface for a Resource Schema.
+ */
+ interface IResource {
+  name: string;
+  link: string;
+  teamRoles: [string];
+}
