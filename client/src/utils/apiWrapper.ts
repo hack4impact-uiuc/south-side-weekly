@@ -29,6 +29,11 @@ export interface GetProfileResponseType {
   result: IUser;
 }
 
+export interface GetAllResourcesResponseType {
+  message: string;
+  result: [IResource];
+}
+
 export interface CreateResourceResponseType {
   message: string;
   result: IResource;
@@ -104,6 +109,26 @@ export const saveProfile = (profileData: {
     })
     .catch((error) => ({
       type: 'POST_PROFILE_FAIL',
+      error,
+    }));
+};
+
+/**
+ * Gets all resources
+ * Returns GET_ALL_RESOURCES_FAIL upon failure
+ */
+export const getAllResources = (): Promise<
+  AxiosResponse<GetAllResourcesResponseType> | ErrorWrapper
+> => {
+  const requestString = `${BASE_URL}/resources`;
+  return axios
+    .get(requestString, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'GET_ALL_RESOURCES_FAIL',
       error,
     }));
 };

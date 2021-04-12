@@ -1,229 +1,73 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { Button } from 'semantic-ui-react';
+import { IResource } from 'ssw-common';
 
+import { getAllResources, isError } from '../utils/apiWrapper';
 import AddResourceModal from '../components/ResourceHub/AddResourceModal';
 import Sidebar from '../components/Sidebar';
 import ResourcePageSVG from '../assets/resource-page.svg';
 import '../css/Resource.css';
 
-const generalResources = [
-  {
-    buttonText: 'SSW Writer’s Guide',
-    link: 'https://southsideweekly.com/',
-    key: 0,
-  },
-  {
-    buttonText: 'Organizational Structure',
-    link: 'https://southsideweekly.com/',
-    key: 1,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 2,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 3,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 4,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 5,
-  },
-];
+// const roles = [
+//   'General',
+//   'Editing',
+//   'Factchecking',
+//   'Illustration',
+//   'Photography',
+//   'Onboarding',
+//   'Visuals',
+//   'Writing',
+// ];
 
-const role1Resources = [
-  {
-    buttonText: 'SSW Writer’s Guide 1',
-    link: 'https://southsideweekly.com/',
-    key: 0,
-  },
-  {
-    buttonText: 'Organizational Structure',
-    link: 'https://southsideweekly.com/',
-    key: 1,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 2,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 3,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 4,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 5,
-  },
-];
-const role2Resources = [
-  {
-    buttonText: 'SSW Writer’s Guide 2',
-    link: 'https://southsideweekly.com/',
-    key: 0,
-  },
-  {
-    buttonText: 'Organizational Structure',
-    link: 'https://southsideweekly.com/',
-    key: 1,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 2,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 3,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 4,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 5,
-  },
-];
-
-const role3Resources = [
-  {
-    buttonText: 'SSW Writer’s Guide 3',
-    link: 'https://southsideweekly.com/',
-    key: 0,
-  },
-  {
-    buttonText: 'Organizational Structure',
-    link: 'https://southsideweekly.com/',
-    key: 1,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 2,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 3,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 4,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 5,
-  },
-];
-
-const role4Resources = [
-  {
-    buttonText: 'SSW Writer’s Guide 4',
-    link: 'https://southsideweekly.com/',
-    key: 0,
-  },
-  {
-    buttonText: 'Organizational Structure',
-    link: 'https://southsideweekly.com/',
-    key: 1,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 2,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 3,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 4,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 5,
-  },
-];
-
-const role5Resources = [
-  {
-    buttonText: 'SSW Writer’s Guide 5',
-    link: 'https://southsideweekly.com/',
-    key: 0,
-  },
-  {
-    buttonText: 'Organizational Structure',
-    link: 'https://southsideweekly.com/',
-    key: 1,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 2,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 3,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 4,
-  },
-  {
-    buttonText: 'Other Resource',
-    link: 'https://southsideweekly.com/',
-    key: 5,
-  },
-];
+const resourcesPerRole: { [key: string]: Array<IResource> } = {
+  General: Array<IResource>(),
+  Editing: Array<IResource>(),
+  Factchecking: Array<IResource>(),
+  Illustration: Array<IResource>(),
+  Photography: Array<IResource>(),
+  Onboarding: Array<IResource>(),
+  Visuals: Array<IResource>(),
+  Writing: Array<IResource>(),
+};
 
 const ResourcePage = (): ReactElement => {
-  interface IResource {
-    buttonText: string;
-    link: string;
-    key: number;
-  }
-
   const [currentValue, setCurrentValue] = useState<string>('General');
   const [resources, setResources] = useState<Array<IResource>>(
-    generalResources,
+    resourcesPerRole['General'],
   );
   const [edit, setEdit] = useState<boolean>(false);
 
   const resourceRoleBtns = [
-    { value: 'General', resources: generalResources },
-    { value: 'Role 1', resources: role1Resources },
-    { value: 'Role 2', resources: role2Resources },
-    { value: 'Role 3', resources: role3Resources },
-    { value: 'Role 4', resources: role4Resources },
-    { value: 'Role 5', resources: role5Resources },
+    { value: 'General', resources: resourcesPerRole['General'] },
+    { value: 'Editing', resources: resourcesPerRole['Editing'] },
+    { value: 'Factchecking', resources: resourcesPerRole['Factchecking'] },
+    { value: 'Illustration', resources: resourcesPerRole['Illustration'] },
+    { value: 'Photography', resources: resourcesPerRole['Photography'] },
+    { value: 'Onboarding', resources: resourcesPerRole['Onboarding'] },
+    { value: 'Visuals', resources: resourcesPerRole['Visuals'] },
+    { value: 'Writing', resources: resourcesPerRole['Writing'] },
   ];
+
+  useEffect(() => {
+    async function filterResources(): Promise<void> {
+      const res = await getAllResources();
+      if (!isError(res)) {
+        const allResources = res.data.result;
+
+        for (const i in allResources) {
+          const resource = allResources[i];
+          for (const j in resource.teamRoles) {
+            const role = resource.teamRoles[j];
+            resourcesPerRole[role].push(resource);
+          }
+        }
+      }
+    }
+
+    if (resourcesPerRole['General'].length === 0) {
+      filterResources();
+    }
+  });
 
   /**
    * Opens a link in a new tab
@@ -302,24 +146,24 @@ const ResourcePage = (): ReactElement => {
 
         <div className="resource-btn-group">
           {!edit
-            ? resources.map((button) => (
+            ? resources.map((resource, idx) => (
                 <Button
-                  onClick={() => handleResourceClick(button.link)}
+                  onClick={() => handleResourceClick(resource.link)}
                   className="resource-btn"
-                  key={button.key}
+                  key={idx}
                 >
-                  {button.buttonText}
+                  {resource.name}
                 </Button>
               ))
-            : resources.map((button, index) => (
-                <div key={index} className="editable-resource">
+            : resources.map((resource, idx) => (
+                <div key={idx} className="editable-resource">
                   <Button
                     className="delete-btn"
                     circular
                     icon="minus circle"
                   ></Button>
-                  <Button className="resource-btn" key={button.key}>
-                    {button.buttonText}
+                  <Button className="resource-btn" key={idx}>
+                    {resource.name}
                   </Button>
                 </div>
               ))}

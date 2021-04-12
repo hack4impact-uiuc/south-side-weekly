@@ -6,13 +6,12 @@ import { createResource, isError } from '../../utils/apiWrapper';
 import '../../css/AddResourceModal.css';
 
 const teamColors: { [key: string]: string } = {
-  Data: '#EF8B8B',
+  General: '#EF8B8B',
   Editing: '#A5C4F2',
   Factchecking: '#CFE7C4',
   Illustration: '#BAB9E9',
-  Layout: '#F9B893',
   Photography: '#D8ACE8',
-  Radio: '#F1D8B0',
+  Onboarding: '#F1D8B0',
   Visuals: '#BFEBE0',
   Writing: '#A9D3E5',
 };
