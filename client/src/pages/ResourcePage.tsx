@@ -8,66 +8,45 @@ import Sidebar from '../components/Sidebar';
 import ResourcePageSVG from '../assets/resource-page.svg';
 import '../css/Resource.css';
 
-// const roles = [
-//   'General',
-//   'Editing',
-//   'Factchecking',
-//   'Illustration',
-//   'Photography',
-//   'Onboarding',
-//   'Visuals',
-//   'Writing',
-// ];
-
-const resourcesPerRole: { [key: string]: Array<IResource> } = {
-  General: Array<IResource>(),
-  Editing: Array<IResource>(),
-  Factchecking: Array<IResource>(),
-  Illustration: Array<IResource>(),
-  Photography: Array<IResource>(),
-  Onboarding: Array<IResource>(),
-  Visuals: Array<IResource>(),
-  Writing: Array<IResource>(),
-};
+function defaultResources(): { [key: string]: Array<IResource> } {
+  return {
+    General: Array<IResource>(),
+    Editing: Array<IResource>(),
+    Factchecking: Array<IResource>(),
+    Illustration: Array<IResource>(),
+    Photography: Array<IResource>(),
+    Onboarding: Array<IResource>(),
+    Visuals: Array<IResource>(),
+    Writing: Array<IResource>(),
+  };
+}
 
 const ResourcePage = (): ReactElement => {
   const [currentValue, setCurrentValue] = useState<string>('General');
-  const [resources, setResources] = useState<Array<IResource>>(
-    resourcesPerRole['General'],
-  );
   const [edit, setEdit] = useState<boolean>(false);
+  const [resourcesPerRole, setResourcesPerRole] = useState(defaultResources);
 
-  const resourceRoleBtns = [
-    { value: 'General', resources: resourcesPerRole['General'] },
-    { value: 'Editing', resources: resourcesPerRole['Editing'] },
-    { value: 'Factchecking', resources: resourcesPerRole['Factchecking'] },
-    { value: 'Illustration', resources: resourcesPerRole['Illustration'] },
-    { value: 'Photography', resources: resourcesPerRole['Photography'] },
-    { value: 'Onboarding', resources: resourcesPerRole['Onboarding'] },
-    { value: 'Visuals', resources: resourcesPerRole['Visuals'] },
-    { value: 'Writing', resources: resourcesPerRole['Writing'] },
-  ];
+  async function filterResources(): Promise<void> {
+    const res = await getAllResources();
+    if (!isError(res)) {
+      const allResources = res.data.result;
 
-  useEffect(() => {
-    async function filterResources(): Promise<void> {
-      const res = await getAllResources();
-      if (!isError(res)) {
-        const allResources = res.data.result;
-
-        for (const i in allResources) {
-          const resource = allResources[i];
-          for (const j in resource.teamRoles) {
-            const role = resource.teamRoles[j];
-            resourcesPerRole[role].push(resource);
-          }
+      const newResourcesPerRole = defaultResources();
+      for (const i in allResources) {
+        const resource = allResources[i];
+        for (const j in resource.teamRoles) {
+          const role = resource.teamRoles[j];
+          newResourcesPerRole[role].push(resource);
         }
       }
-    }
 
-    if (resourcesPerRole['General'].length === 0) {
-      filterResources();
+      setResourcesPerRole(newResourcesPerRole);
     }
-  });
+  }
+
+  useEffect(() => {
+    filterResources();
+  }, [edit]);
 
   /**
    * Opens a link in a new tab
@@ -83,11 +62,7 @@ const ResourcePage = (): ReactElement => {
    * @param resources the list of resources
    * @param value the current role's resources that is being shown
    */
-  const handleResourceChange = (
-    resources: Array<IResource>,
-    value: string,
-  ): void => {
-    setResources(resources);
+  const handleResourceChange = (value: string): void => {
     setCurrentValue(value);
   };
 
@@ -126,27 +101,23 @@ const ResourcePage = (): ReactElement => {
 
         <div className="resource-toggle-group">
           {!edit ? (
-            resourceRoleBtns.map((button) => (
+            Object.keys(resourcesPerRole).map((role) => (
               <Button
-                key={button.value}
-                className={`toggle-button ${
-                  button.value === currentValue && 'active'
-                }`}
-                onClick={() =>
-                  handleResourceChange(button.resources, button.value)
-                }
+                key={role}
+                className={`toggle-button ${role === currentValue && 'active'}`}
+                onClick={() => handleResourceChange(role)}
               >
-                {button.value}
+                {role}
               </Button>
             ))
           ) : (
-            <AddResourceModal />
+            <AddResourceModal onAdd={filterResources} />
           )}
         </div>
 
         <div className="resource-btn-group">
           {!edit
-            ? resources.map((resource, idx) => (
+            ? resourcesPerRole[currentValue].map((resource, idx) => (
                 <Button
                   onClick={() => handleResourceClick(resource.link)}
                   className="resource-btn"
@@ -155,14 +126,14 @@ const ResourcePage = (): ReactElement => {
                   {resource.name}
                 </Button>
               ))
-            : resources.map((resource, idx) => (
+            : resourcesPerRole[currentValue].map((resource, idx) => (
                 <div key={idx} className="editable-resource">
-                  <Button
-                    className="delete-btn"
-                    circular
-                    icon="minus circle"
-                  ></Button>
                   <Button className="resource-btn" key={idx}>
+                    <Button
+                      className="delete-btn"
+                      circular
+                      icon="big minus circle"
+                    />
                     {resource.name}
                   </Button>
                 </div>

@@ -65,12 +65,14 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  padding-bottom: 50px;
 }
 
 .resource-page-wrapper
   .resource-page-content
   .resource-btn-group
   .resource-btn {
+  position: relative;
   border-radius: 1rem;
   width: 200px;
   height: 150px;
@@ -89,6 +91,12 @@
   .resource-btn-group
   .editable-resource
   .delete-btn {
+  position: absolute;
+  top: -18px;
+  left: -18px;
+  padding: 0;
+  height: 36px;
+  width: 36px;
   background: transparent;
   color: #c17979;
 }

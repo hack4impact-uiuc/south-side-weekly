@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, FC, Dispatch } from 'react';
 import { Modal, Button, Form, Input } from 'semantic-ui-react';
 
 import { createResource, isError } from '../../utils/apiWrapper';
@@ -16,19 +16,17 @@ const teamColors: { [key: string]: string } = {
   Writing: '#A9D3E5',
 };
 
-function AddResourceModal(): ReactElement {
-  const [open, setOpen] = React.useState(false);
-  const [resourceTitle, setResourceTitle] = React.useState('');
-  const [resourceURL, setResourceURL] = React.useState('');
+interface IProps {
+  onAdd: Dispatch<void>;
+}
+
+const AddResourceModal: FC<IProps> = ({ onAdd }): ReactElement => {
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [resourceTitle, setResourceTitle] = React.useState<string>('');
+  const [resourceURL, setResourceURL] = React.useState<string>('');
   const [selectedTags, setSelectedTags] = React.useState<Set<string>>(
     new Set(),
   );
-
-  const newResource = {
-    name: resourceTitle,
-    link: resourceURL,
-    teamRoles: Array<string>(),
-  };
 
   const handleTagSelect = (tag: string): void => {
     const newTags = new Set(selectedTags);
@@ -41,15 +39,16 @@ function AddResourceModal(): ReactElement {
   };
 
   async function addResource(): Promise<void> {
-    newResource.teamRoles = Array.from(selectedTags);
-    console.log(newResource);
+    const newResource = {
+      name: resourceTitle !== '' ? resourceTitle : null,
+      link: resourceURL !== '' ? resourceURL : null,
+      teamRoles: Array.from(selectedTags),
+    };
+
     const res = await createResource(newResource);
-    if (isError(res)) {
-      // error
-    } else {
-      // update page of resources
-      console.log(res);
+    if (!isError(res)) {
       setOpen(false);
+      onAdd();
     }
   }
 
@@ -110,6 +109,6 @@ function AddResourceModal(): ReactElement {
       </Modal.Actions>
     </Modal>
   );
-}
+};
 
 export default AddResourceModal;

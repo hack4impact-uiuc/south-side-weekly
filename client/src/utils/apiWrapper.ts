@@ -137,9 +137,9 @@ export const getAllResources = (): Promise<
  * Creates a new resource
  * Returns CREATE_RESOURCE_FAIL upon failure
  */
-export const createResource = (
-  newResource: IResource,
-): Promise<AxiosResponse<CreateResourceResponseType> | ErrorWrapper> => {
+export const createResource = (newResource: {
+  [key: string]: string | string[] | null;
+}): Promise<AxiosResponse<CreateResourceResponseType> | ErrorWrapper> => {
   const requestString = `${BASE_URL}/resources`;
   return axios
     .post(requestString, newResource, {
