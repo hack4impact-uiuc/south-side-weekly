@@ -6,7 +6,7 @@ import React, {
   MouseEvent,
 } from 'react';
 
-import PersonalInfoSvg from '../../assets/personal-information.svg';
+import WizardSvg from '../../components/WizardSvg';
 import WizardSelectButton from '../../components/WizardSelectButton/WizardSelectButton';
 import WizardListTitle from '../../components/WizardListTitle';
 import { handleSelectGroupArray } from '../../utils/helpers';
@@ -78,11 +78,7 @@ const Onboard2: FC<IProps> = ({
       </div>
       <div className="personal-information-wrapper">
         <div className="personal-information-svg">
-          <img
-            className="svg"
-            src={PersonalInfoSvg}
-            alt="personal information"
-          />
+          <WizardSvg page="onboard2" />
         </div>
         <div className="personal-information-form">
           <div className="section">

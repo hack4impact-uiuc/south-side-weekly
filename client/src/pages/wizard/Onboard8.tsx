@@ -3,7 +3,7 @@ import { Button, Modal, ModalContent } from 'semantic-ui-react';
 import { openPopupWidget } from 'react-calendly';
 
 import '../../css/wizard/Onboard8.css';
-import Onboard8SVG from '../../assets/onboard8.svg';
+import WizardSvg from '../../components/WizardSvg';
 import WizardStar from '../../components/WizardStar';
 
 interface IProps {
@@ -43,7 +43,7 @@ const Onboard8: FC<IProps> = ({
         </div>
       </ModalContent>
     </Modal>
-    <img className="page-svg" alt="Oboard 8" src={Onboard8SVG} />
+    <WizardSvg page="onboard8" />
     <div className="onboard8-content">
       <div className="page-text">
         <WizardStar />

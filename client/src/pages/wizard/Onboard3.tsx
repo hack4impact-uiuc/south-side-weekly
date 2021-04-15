@@ -6,7 +6,7 @@ import React, {
   MouseEvent,
 } from 'react';
 
-import RacesSVG from '../../assets/races-page.svg';
+import WizardSvg from '../../components/WizardSvg';
 import { handleSelectGroupArray } from '../../utils/helpers';
 import { racesEnum } from '../../utils/enums';
 import '../../css/wizard/Onboard3.css';
@@ -74,7 +74,7 @@ const Onboard3: FC<IProps> = ({ races, setRaces }): ReactElement => {
         apply or leave it blank.
       </div>
       <div className="races-content-wrapper">
-        <img src={RacesSVG} alt="Races Page" className="races-svg" />
+        <WizardSvg page="onboard3" />
         <WizardListTitle value="Race" />
         <div className="race-button-wrapper">
           {raceButtons.map((button) => (

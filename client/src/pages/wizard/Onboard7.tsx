@@ -1,7 +1,7 @@
 import React, { Dispatch, FC, ReactElement, SetStateAction } from 'react';
 import { Input } from 'semantic-ui-react';
 
-import Onboard7SVG from '../../assets/onboard7.svg';
+import WizardSvg from '../../components/WizardSvg';
 
 import '../../css/wizard/Onboard7.css';
 
@@ -33,7 +33,7 @@ const Onboard7: FC<IProps> = ({
   setTwitter,
 }): ReactElement => (
   <div className="onboard7-wrapper">
-    <img className="page-svg" alt="onboard7" src={Onboard7SVG} />
+    <WizardSvg page="onboard7" />
     <div className="onboard7-content">
       <div className="input-wrapper">
         <div className="label">Portfolio Link</div>

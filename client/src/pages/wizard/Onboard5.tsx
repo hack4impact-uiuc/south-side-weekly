@@ -6,7 +6,7 @@ import React, {
   MouseEvent,
 } from 'react';
 
-import Onboard5SVG from '../../assets/onboard5.svg';
+import WizardSvg from '../../components/WizardSvg';
 import { handleSelectGroupArray } from '../../utils/helpers';
 import '../../css/wizard/Onboard5.css';
 import WizardSelectButton from '../../components/WizardSelectButton/WizardSelectButton';
@@ -49,7 +49,7 @@ const Onboard5: FC<IProps> = ({
 
   return (
     <div className="onboard5-wrapper">
-      <img className="page-svg" alt="onboard5" src={Onboard5SVG} />
+      <WizardSvg page="onboard5" />
 
       <div className="onboard5-content">
         <div className="page-text">

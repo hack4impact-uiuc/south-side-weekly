@@ -1,7 +1,7 @@
 import React, { FC, Dispatch, SetStateAction, ReactElement } from 'react';
 import { Form } from 'semantic-ui-react';
 
-import InvolvementSVG from '../../assets/involvement-page.svg';
+import WizardSvg from '../../components/WizardSvg';
 import WizardStar from '../../components/WizardStar';
 
 import '../../css/wizard/Onboard4.css';
@@ -21,7 +21,7 @@ const Onboard4: FC<IProps> = ({
   setReasonsForInvolvement,
 }): ReactElement => (
   <div className="involvement-wrapper">
-    <img alt="Involvement" className="page-svg" src={InvolvementSVG} />
+    <WizardSvg page="onboard4" />
     <div className="involvement-content">
       <div className="page-text">
         <WizardStar />
