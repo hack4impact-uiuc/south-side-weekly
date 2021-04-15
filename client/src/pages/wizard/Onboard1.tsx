@@ -1,7 +1,7 @@
 import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
 import { Form } from 'semantic-ui-react';
 
-import BasicInfoSvg from '../../assets/basic-info.svg';
+import WizardSvg from '../../components/WizardSvg';
 import WizardStar from '../../components/WizardStar';
 
 import '../../css/wizard/Onboard1.css';
@@ -40,7 +40,7 @@ const OnBoard1: FC<IProps> = ({
   setPhoneNumber,
 }): ReactElement => (
   <div className="basic-info-wrapper">
-    <img className="basic-info-image" alt="info-graphic" src={BasicInfoSvg} />
+    <WizardSvg page="onboard1" />
     <Form className="basic-info-form" size="huge">
       <div className="btn-wrapper">
         <div className="input-wrapper">

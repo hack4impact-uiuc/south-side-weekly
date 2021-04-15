@@ -6,7 +6,7 @@ import React, {
   MouseEvent,
 } from 'react';
 
-import Onboard6SVG from '../../assets/onboard6.svg';
+import WizardSvg from '../../components/WizardSvg';
 import { handleSelectGroupArray } from '../../utils/helpers';
 import { interestsEnum } from '../../utils/enums';
 import '../../css/wizard/Onboard6.css';
@@ -73,7 +73,7 @@ const Onboard6: FC<IProps> = ({ interests, setInterests }): ReactElement => {
 
   return (
     <div className="onboard6-wrapper">
-      <img className="page-svg" alt="onboard6" src={Onboard6SVG} />
+      <WizardSvg page="onboard6" />
 
       <div className="onboard6-content">
         <div className="page-text">
