@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { Button } from 'semantic-ui-react';
 import { IResource } from 'ssw-common';
 
-import { getAllResources, isError } from '../utils/apiWrapper';
+import { getAllResources, deleteResource, isError } from '../utils/apiWrapper';
 import AddResourceModal from '../components/ResourceHub/AddResourceModal';
 import Sidebar from '../components/Sidebar';
 import ResourcePageSVG from '../assets/resource-page.svg';
@@ -74,8 +74,16 @@ const ResourcePage = (): ReactElement => {
     setEdit(false);
   }
 
+  async function removeResource(resourceId: string): Promise<void> {
+    const res = await deleteResource(resourceId);
+    if (!isError(res)) {
+      filterResources();
+    }
+  }
+
   return (
     <div className="resource-page-wrapper">
+      {console.log(resourcesPerRole)}
       <Sidebar></Sidebar>
       <img className="page-svg" alt="Resource Page" src={ResourcePageSVG} />
       <div className="resource-page-content">
@@ -133,6 +141,7 @@ const ResourcePage = (): ReactElement => {
                       className="delete-btn"
                       circular
                       icon="big minus circle"
+                      onClick={() => removeResource(resource._id)}
                     />
                     {resource.name}
                   </Button>

@@ -74,4 +74,5 @@ export interface IPitch {
   name: string;
   link: string;
   teamRoles: [string];
+  _id: string;
 }

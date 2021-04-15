@@ -39,6 +39,10 @@ export interface CreateResourceResponseType {
   result: IResource;
 }
 
+export interface DeleteResourceResponseType {
+  message: string;
+}
+
 /**
  * Returns a sample API response to demonstrate a working backend
  * Returns GET_SAMPLE_FAIL upon failure
@@ -149,6 +153,26 @@ export const createResource = (newResource: {
     })
     .catch((error) => ({
       type: 'CREATE_RESOURCE_FAIL',
+      error,
+    }));
+};
+
+/**
+ * Deletes a resource
+ * Returns DELETE_RESOURCE_FAIL upon failure
+ */
+export const deleteResource = (
+  resourceId: string,
+): Promise<AxiosResponse<CreateResourceResponseType> | ErrorWrapper> => {
+  const requestString = `${BASE_URL}/resources/${resourceId}`;
+  return axios
+    .delete(requestString, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'DELETE_RESOURCE_FAIL',
       error,
     }));
 };
