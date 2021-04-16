@@ -247,7 +247,7 @@ const ResourcePage = (): ReactElement => {
 
   return (
     <div className="resource-page-wrapper">
-      <Header large={false} />
+      <Header />
       <img className="page-svg" alt="Resource Page" src={ResourcePageSVG} />
       <div className="resource-page-content">
         <div className="page-title">Resource Hub</div>

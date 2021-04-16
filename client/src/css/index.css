@@ -5,15 +5,10 @@ body {
 }
 
 /* SSW Header Logo Styling */
-.logo {
-  width: 60%;
-  margin: 2%;
-}
 
-.logo-small {
+.logo {
   width: 40%;
   margin-top: 2%;
-  margin-left: 5%;
 }
 
 .logo-header {

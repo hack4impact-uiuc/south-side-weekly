@@ -64,7 +64,7 @@ function Login(): ReactElement {
     <>
       {loading || !authed ? (
         <div className="login-wrapper">
-          <Header large />
+          <Header />
           {loading ? (
             <div className="loader-wrapper">
               <Loader type="Oval" color="#3D4F91" height={50} width={50} />

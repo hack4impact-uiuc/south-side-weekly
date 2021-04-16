@@ -217,7 +217,7 @@ const WizardWrapper = (): ReactElement => {
 
   return (
     <div className="wizard-wrapper">
-      <Header large />
+      <Header />
       {page !== WizardPage.INITIAL_PAGE.toString() &&
         page !== WizardPage.COMPLETION.toString() && (
           <div className="previous-page">
