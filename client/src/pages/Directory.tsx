@@ -1,5 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Search, Dropdown } from 'semantic-ui-react';
+import { Search, Dropdown, Button } from 'semantic-ui-react';
+import { useHistory } from 'react-router-dom';
 
 import { IUser } from '../../../common/index';
 import { getUsers, isError } from '../utils/apiWrapper';
@@ -9,6 +10,7 @@ import SSW from '../assets/ssw-form-header.png';
 import '../css/Directory.css';
 
 const Directory = (): ReactElement => {
+  const history = useHistory();
   // TODO: Fix this state type
   const [directory, setDirectory] = useState<Array<IUser>>([]);
   const [displayDirectory, setDisplayDirectory] = useState<Array<IUser>>();
@@ -137,6 +139,12 @@ const Directory = (): ReactElement => {
     setDisplayDirectory([...filteredDirectory]);
   };
 
+  const openContributorModal = (user: IUser): void => {
+    if (user) {
+      history.push('/profile');
+    }
+  };
+
   return (
     <>
       <Sidebar />
@@ -150,7 +158,7 @@ const Directory = (): ReactElement => {
             <Search fluid />
           </div>
           <div className="filters">
-            <h2>Sort by: </h2>
+            <h2>Filter by: </h2>
             <Dropdown
               className="custom-dropdown"
               text="Roles"
@@ -184,18 +192,22 @@ const Directory = (): ReactElement => {
             />
           </div>
           <div className="directory">
-            {displayDirectory?.map((result) => (
-              <div key={result.oauthID} className="result">
+            {displayDirectory?.map((user) => (
+              <Button
+                onClick={() => openContributorModal(user)}
+                key={user.oauthID}
+                className="result"
+              >
                 <img
-                  src={result.profilePic}
+                  src={user.profilePic}
                   alt="Profile"
                   className="profile-picture"
                 />
-                <h2 className="text name">{`${result.firstName} ${result.lastName}`}</h2>
-                <h2 className="text">
-                  {result.role.slice(0, 1) + result.role.slice(1).toLowerCase()}
+                <h2 className="text name">{`${user.firstName} ${user.lastName}`}</h2>
+                <h2 className="text end">
+                  {user.role.slice(0, 1) + user.role.slice(1).toLowerCase()}
                 </h2>
-              </div>
+              </Button>
             ))}
           </div>
         </div>

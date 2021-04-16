@@ -36,6 +36,7 @@
   color: white;
   padding: 5px 20px 5px 20px;
   margin-top: 10px;
+  width: 100%;
 }
 
 .directory-wrapper .directory-content .directory .result .profile-picture {
@@ -43,6 +44,8 @@
 }
 
 .directory-wrapper .directory-content .directory .result .text {
+  display: flex;
+  justify-content: right;
   margin: 0;
   padding: 0;
   margin-left: 10px;
@@ -51,6 +54,10 @@
 .directory-wrapper .directory-content .directory .result .name {
   flex-grow: 1;
 }
+
+/* .directory-wrapper .directory-content .directory .result .end {
+  float: right;
+} */
 
 .custom-dropdown {
   display: flex;
