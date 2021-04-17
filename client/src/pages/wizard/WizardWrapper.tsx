@@ -218,10 +218,13 @@ const WizardWrapper = (): ReactElement => {
               onClick={handlePagePrevious}
               className="previous-icon"
             >
-              <img width="70%" src={ArrowBack} alt="back arrow" />
+              <img src={ArrowBack} alt="back arrow" />
             </Button>
           </div>
         )}
+      <div className="logo-header">
+        <img className="logo" alt="SSW Logo" src={Logo} />
+      </div>
 
       <div className="wizard-content">
         <div className="wizard-pages">
@@ -277,23 +280,21 @@ const WizardWrapper = (): ReactElement => {
           )}
           {page === WizardPage.COMPLETION.toString() && <Compleition />}
         </div>
-
-        {page !== WizardPage.INITIAL_PAGE.toString() &&
-          page !== WizardPage.COMPLETION && (
-            <div className="next-page">
-              {shouldShowNextBtn() ? (
-                <Button circular onClick={handlePageNext} className="next-icon">
-                  <img src={ArrowNext} alt="next arrow" />
-                </Button>
-              ) : (
-                <Button circular onClick={submitForm} className="check-icon">
-                  <img src={SubmitSVG} alt="submit" />
-                </Button>
-              )}
-            </div>
-          )}
       </div>
-
+      {page !== WizardPage.INITIAL_PAGE.toString() &&
+        page !== WizardPage.COMPLETION && (
+          <div className="next-page">
+            {shouldShowNextBtn() ? (
+              <Button circular onClick={handlePageNext} className="next-icon">
+                <img src={ArrowNext} alt="next arrow" />
+              </Button>
+            ) : (
+              <Button circular onClick={submitForm} className="check-icon">
+                <img src={SubmitSVG} alt="submit" />
+              </Button>
+            )}
+          </div>
+        )}
       <div className="wizard-page-counter">
         {page !== WizardPage.INITIAL_PAGE.toString() &&
           page !== WizardPage.COMPLETION.toString() && (

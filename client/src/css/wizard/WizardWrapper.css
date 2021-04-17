@@ -1,50 +1,73 @@
 .wizard-wrapper {
   position: relative;
   text-align: center;
-  height: 100vh;
-}
-
-.wizard-wrapper .wizard-page-counter {
-  position: absolute;
-  left: 41.9%;
-  right: 39.17%;
-  bottom: 15px;
+  height: 100%;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 12% 76% 12%;
+  grid-template-rows: 20% 70% 10%;
+  grid-template-areas:
+    'previous logo .'
+    '. content next'
+    '. page-counter .';
+  justify-items: center;
+  align-items: center;
 }
 
 .wizard-wrapper .previous-page {
-  position: absolute;
-  left: 5%;
-  top: 5%;
+  grid-area: previous;
+  justify-self: end;
 }
 
 .wizard-wrapper .previous-page .previous-icon {
   padding: 0;
   background-color: transparent;
+  margin-left: 24px;
+  transition: 0.3s all;
+  width: 50%;
+  height: 50%;
+  max-width: 80px;
+  min-width: 50px;
+}
+
+.wizard-wrapper .previous-icon img {
+  width: 100%;
+  height: 100%;
 }
 
 .wizard-wrapper .previous-page .previous-icon:hover {
-  background-color: transparent !important;
+  background-color: rgb(61, 79, 145, 0.15) !important;
 }
 
 .wizard-wrapper .previous-page .previous-icon:focus {
-  background-color: transparent !important;
+  background-color: rgb(61, 79, 145, 0.15) !important;
+}
+
+.wizard-wrapper .logo-header {
+  grid-area: logo;
+}
+
+.wizard-wrapper .logo {
+  width: 60%;
+  margin: 2%;
 }
 
 .wizard-wrapper .wizard-content {
   display: flex;
-  width: 90%;
+  width: 100%;
+  height: 100%;
   margin-top: 2%;
+  grid-area: content;
 }
 
 .wizard-wrapper .wizard-content .wizard-pages {
   width: 100%;
-  min-height: 50vh;
+  height: 100%;
 }
 
 .wizard-wrapper .next-page {
-  position: absolute;
-  right: 5vh;
-  bottom: 50vh;
+  grid-area: next;
+  justify-self: start;
 }
 
 .wizard-wrapper .next-page .next-icon {
@@ -52,6 +75,14 @@
   align-items: center;
   background-color: rgb(140, 176, 118, 0.9);
   padding: 0;
+  width: 70%;
+  height: 70%;
+  max-width: 80px;
+  min-width: 50px;
+}
+
+.wizard-wrapper .next-page .next-icon img {
+  width: 100%;
 }
 
 .wizard-wrapper .next-page .next-icon:hover {
@@ -75,4 +106,9 @@
 
 .wizard-wrapper .next-page .check-icon:focus {
   background-color: #8cb076 !important;
+}
+
+.wizard-wrapper .wizard-page-counter {
+  grid-area: page-counter;
+  margin-bottom: 8px;
 }

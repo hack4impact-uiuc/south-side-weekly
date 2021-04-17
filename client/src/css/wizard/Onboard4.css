@@ -1,13 +1,13 @@
 .involvement-wrapper {
-  width: 50%;
-  float: right;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .involvement-wrapper .page-svg {
-  position: absolute;
-  bottom: 10px;
-  left: 30px;
-  width: 43%;
+  align-self: flex-end;
+  width: 35%;
+  margin-right: 10%;
 }
 
 .involvement-wrapper .involvement-content {

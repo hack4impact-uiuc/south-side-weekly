@@ -44,12 +44,8 @@ const WizardListTitle: FC<IProps> = ({ page }): ReactElement => {
         return (
           <img alt="Involvement" className="page-svg" src={InvolvementSVG} />
         );
-      case 'onboard6':
-        return <img className="page-svg" alt="onboard6" src={Onboard6SVG} />;
-      case 'onboard7':
-        return <img className="page-svg" alt="onboard7" src={Onboard7SVG} />;
-      case 'onboard8':
-        return <img className="page-svg" alt="Oboard 8" src={Onboard8SVG} />;
+      case 'onboard5':
+        return <img className="page-svg" alt="Onboard 5" src={Onboard8SVG} />;
       default:
         return <></>;
     }
