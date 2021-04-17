@@ -129,7 +129,7 @@ const Onboard3: FC<IProps> = ({
           <div className="select-group">
             {interestsButtons.map((button) => (
               <Form.Field key={button.value} className="select-item">
-                <Checkbox label={button.value} onChange={handleInterests} />
+                <Checkbox label={button.display} onChange={handleInterests} />
               </Form.Field>
             ))}
           </div>
