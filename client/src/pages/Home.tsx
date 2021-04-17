@@ -33,6 +33,7 @@ function Home(): ReactElement {
       {!loggedOut ? (
         <div className="home-wrapper">
           <Header />
+
           <h1>SSW Dashboard</h1>
           <div className="btn-group">
             <div className="btn-wrapper">

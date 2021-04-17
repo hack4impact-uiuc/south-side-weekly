@@ -50,3 +50,11 @@ export const teamEnum = {
   VISUALS: 'VISUALS',
   WRITING: 'WRITING',
 };
+
+export const pages = {
+  HOME: 'HOME',
+  PROFILE: 'PROFILE',
+  PITCHES: 'PITCHES',
+  RESOURCES: 'RESOURCES',
+  USERS: 'USERS',
+};
