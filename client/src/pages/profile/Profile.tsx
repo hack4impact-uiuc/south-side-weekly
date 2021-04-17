@@ -2,9 +2,8 @@ import React, { ReactElement, useState, useEffect } from 'react';
 import { Message, Input, Button, Dropdown, Label } from 'semantic-ui-react';
 
 import { isError, loadProfile, saveProfile } from '../../utils/apiWrapper';
-import { teamEnum, interestsEnum } from '../../utils/enums';
+import { teamEnum, interestsEnum, pages } from '../../utils/enums';
 import Sidebar from '../../components/Sidebar';
-import Logo from '../../assets/ssw-form-header.png';
 import Mail from '../../assets/mail.svg';
 import Phone from '../../assets/phone.svg';
 import Linkedin from '../../assets/linkedin.svg';
@@ -13,6 +12,7 @@ import Twitter from '../../assets/twitter.svg';
 import Pfp from '../../assets/pfp.svg';
 import Masthead from '../../assets/masthead.svg';
 import Banner from '../../assets/banner.svg';
+import Header from '../../components/Header';
 
 import '../../css/Profile.css';
 
@@ -215,12 +215,10 @@ function Profile(): ReactElement {
 
   return (
     <>
-      <Sidebar />
+      <Sidebar currentPage={pages.PROFILE} />
 
       <div className="pfp-page">
-        <div className="logo-header">
-          <img className="logo" alt="SSW Logo" src={Logo} />
-        </div>
+        <Header />
         <div className="pfp-page-content">
           <div className="top-section-wrapper">
             <div className="pf-section">

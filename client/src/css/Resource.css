@@ -1,14 +1,8 @@
-.resource-page-wrapper {
-  position: relative;
-  /* TODO: remove this when in actual page context*/
-  height: 100vh;
-}
-
 .resource-page-wrapper .page-svg {
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 25%;
+  width: 20%;
 }
 
 .resource-page-wrapper .resource-page-content {

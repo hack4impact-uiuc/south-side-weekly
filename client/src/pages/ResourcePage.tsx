@@ -5,9 +5,11 @@ import { IResource } from 'ssw-common';
 import { getAllResources, deleteResource, isError } from '../utils/apiWrapper';
 import AddResourceModal from '../components/ResourceHub/AddResourceModal';
 import EditResourceModal from '../components/ResourceHub/EditResourceModal';
-import Sidebar from '../components/Sidebar';
 import ResourcePageSVG from '../assets/resource-page.svg';
+import Header from '../components/Header';
+import Sidebar from '../components/Sidebar';
 import '../css/Resource.css';
+import { pages } from '../utils/enums';
 
 function defaultResources(): { [key: string]: Array<IResource> } {
   return {
@@ -90,7 +92,8 @@ const ResourcePage = (): ReactElement => {
 
   return (
     <div className="resource-page-wrapper">
-      <Sidebar></Sidebar>
+      <Sidebar currentPage={pages.RESOURCES}></Sidebar>
+      <Header />
       <img className="page-svg" alt="Resource Page" src={ResourcePageSVG} />
       <div className="resource-page-content">
         <div className="resource-title-container">
