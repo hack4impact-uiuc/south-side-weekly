@@ -1,36 +1,83 @@
-.onboard5-wrapper {
-  width: 60%;
-  float: right;
-  margin-top: 10vh;
+.onboard8-wrapper {
+  width: 85%;
+  margin: auto;
+  margin-left: 20vh;
 }
 
-.onboard5-wrapper .page-svg {
+.onboard8-wrapper .page-svg {
   position: absolute;
-  left: 0;
-  bottom: 10%;
-  width: 40%;
+  left: 0px;
+  bottom: 30px;
+  width: 30%;
 }
 
-.onboard5-wrapper .onboard5-content {
+.onboard8-wrapper .onboard8-content {
+  text-align: center;
+  margin: auto;
   width: fit-content;
-  margin-left: 5vh;
 }
 
-.onboard5-wrapper .onboard5-content .page-text {
-  font-size: 18px;
-  text-align: left;
-  line-height: 30px;
-  position: relative;
-  padding-left: 30px;
+.confirmation-modal {
+  background-color: transparent !important;
 }
 
-.onboard5-wrapper .onboard5-content .page-text b {
-  font-weight: 600;
-}
-
-.onboard5-wrapper .onboard5-content .select-group {
-  margin-top: 5vh;
-  text-align: left;
+.confirmation-modal-content {
   display: flex;
-  flex-wrap: wrap;
+  justify-content: center;
+  border: solid #3d4f91;
+  border-radius: 2rem !important;
+  background: #3d4f91 !important;
+  color: white;
+  font-size: 30px !important;
+  padding: 100px 35px 80px 45px !important;
+}
+
+.confirmation-modal-content .button-wrapper .modal-button {
+  background-color: #8cb076;
+  color: white;
+  font-size: 20px;
+  width: fit-content;
+  border-radius: 1rem;
+}
+
+.confirmation-modal-content .button-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 50px;
+}
+
+.confirmation-modal-content .button-wrapper .modal-button:hover {
+  background-color: #8cb076;
+  color: white;
+}
+
+.onboard8-wrapper .onboard8-content .calendly-btn {
+  margin-top: 15vh;
+  font-size: 28px;
+  padding: 15px 50px 15px 50px;
+  border-radius: 1rem;
+  background-color: #3d4f91;
+  color: white;
+}
+
+.onboard8-wrapper .onboard8-content .calendly-btn:active {
+  background-color: #3d4f91;
+  color: white;
+}
+
+.onboard8-wrapper .onboard8-content .calendly-btn:hover {
+  background-color: #3d4f91;
+  color: white;
+}
+
+.onboard8-wrapper .onboard8-content .calendly-btn:focus {
+  background-color: #3d4f91;
+  color: white;
+}
+
+.onboard8-wrapper .onboard8-content .page-text {
+  position: relative;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 40px;
 }
