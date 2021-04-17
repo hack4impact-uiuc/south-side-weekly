@@ -43,6 +43,11 @@ export interface DeleteResourceResponseType {
   message: string;
 }
 
+export interface EditResourceResponseType {
+  message: string;
+  result: IResource;
+}
+
 /**
  * Returns a sample API response to demonstrate a working backend
  * Returns GET_SAMPLE_FAIL upon failure
@@ -163,7 +168,7 @@ export const createResource = (newResource: {
  */
 export const deleteResource = (
   resourceId: string,
-): Promise<AxiosResponse<CreateResourceResponseType> | ErrorWrapper> => {
+): Promise<AxiosResponse<DeleteResourceResponseType> | ErrorWrapper> => {
   const requestString = `${BASE_URL}/resources/${resourceId}`;
   return axios
     .delete(requestString, {
@@ -173,6 +178,29 @@ export const deleteResource = (
     })
     .catch((error) => ({
       type: 'DELETE_RESOURCE_FAIL',
+      error,
+    }));
+};
+
+/**
+ * Edits a resource
+ * Returns EDIT_RESOURCE_FAIL upon failure
+ */
+export const editResource = (
+  resourceId: string | undefined,
+  editedResource: {
+    [key: string]: string | string[] | null;
+  },
+): Promise<AxiosResponse<EditResourceResponseType> | ErrorWrapper> => {
+  const requestString = `${BASE_URL}/resources/${resourceId}`;
+  return axios
+    .put(requestString, editedResource, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'EDIT_RESOURCE_FAIL',
       error,
     }));
 };

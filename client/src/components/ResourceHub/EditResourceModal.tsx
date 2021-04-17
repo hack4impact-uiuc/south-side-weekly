@@ -2,7 +2,7 @@ import React, { ReactElement, FC, Dispatch, useEffect } from 'react';
 import { Modal, Button, Form, Input } from 'semantic-ui-react';
 import { IResource } from 'ssw-common';
 
-import { createResource, isError } from '../../utils/apiWrapper';
+import { editResource, isError } from '../../utils/apiWrapper';
 
 import '../../css/EditResourceModal.css';
 
@@ -29,7 +29,6 @@ const EditResourceModal: FC<IProps> = ({
   closeModal,
 }): ReactElement => {
   const [open, setOpen] = React.useState<boolean>(false);
-  const [resourceTitle, setResourceTitle] = React.useState<string>('');
   const [resourceURL, setResourceURL] = React.useState<string>('');
   const [selectedTags, setSelectedTags] = React.useState<Set<string>>(
     new Set(),
@@ -45,14 +44,16 @@ const EditResourceModal: FC<IProps> = ({
     setSelectedTags(newTags);
   };
 
-  async function addResource(): Promise<void> {
-    const newResource = {
-      name: resourceTitle !== '' ? resourceTitle : null,
+  async function modifyResource(): Promise<void> {
+    const editedResource = {
+      name: resource ? resource.name : null,
       link: resourceURL !== '' ? resourceURL : null,
       teamRoles: Array.from(selectedTags),
     };
 
-    const res = await createResource(newResource);
+    console.log(editedResource);
+
+    const res = await editResource(resource?._id, editedResource);
     if (!isError(res)) {
       setOpen(false);
     }
@@ -68,13 +69,7 @@ const EditResourceModal: FC<IProps> = ({
   }
 
   return (
-    <Modal
-      onClose={close}
-      onOpen={() => setOpen(true)}
-      open={open}
-      trigger={<Button> edit </Button>}
-      closeIcon
-    >
+    <Modal onClose={close} onOpen={() => setOpen(true)} open={open} closeIcon>
       <Modal.Actions>
         <Form className="edit-resource-wrapper">
           <div className="edit-resource-content">
@@ -100,11 +95,7 @@ const EditResourceModal: FC<IProps> = ({
                 <div className="edit-resource-inputs">
                   <Form.Field>
                     Description
-                    <Input
-                      className="edit-resource-label"
-                      value={resourceTitle}
-                      onChange={(e) => setResourceTitle(e.currentTarget.value)}
-                    />
+                    <Input className="edit-resource-label" />
                   </Form.Field>
                   <Form.Field>
                     URL/File Upload
@@ -117,7 +108,7 @@ const EditResourceModal: FC<IProps> = ({
                 </div>
                 <div className="edit-resource-btns">
                   <div className="edit-resource-save-btn">
-                    <Button type="submit" onClick={addResource}>
+                    <Button type="submit" onClick={modifyResource}>
                       Save Changes
                     </Button>
                   </div>
