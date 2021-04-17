@@ -100,8 +100,8 @@ function Homepage(): ReactElement {
 
   return (
     <>
-      <Sidebar currentPage={pages.ACCOUNT_HOME} />
-      <Header large={false} />
+      <Sidebar currentPage={pages.HOME} />
+      <Header />
       <div className="body">
         <div className="header">
           <h2 className="sub-heading">Welcome back, Mustafa!</h2>

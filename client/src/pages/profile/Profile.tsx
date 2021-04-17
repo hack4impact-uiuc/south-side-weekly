@@ -1,5 +1,6 @@
 import React, { ReactElement, useState, useEffect } from 'react';
 import { Message, Input, Button, Dropdown, Label } from 'semantic-ui-react';
+
 import { isError, loadProfile, saveProfile } from '../../utils/apiWrapper';
 import { teamEnum, interestsEnum, pages } from '../../utils/enums';
 import Sidebar from '../../components/Sidebar';
@@ -11,7 +12,6 @@ import Twitter from '../../assets/twitter.svg';
 import Pfp from '../../assets/pfp.svg';
 import Masthead from '../../assets/masthead.svg';
 import Banner from '../../assets/banner.svg';
-import { pages } from '../../utils/enums';
 import Header from '../../components/Header';
 
 import '../../css/Profile.css';

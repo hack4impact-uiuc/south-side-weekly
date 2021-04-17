@@ -25,8 +25,8 @@ const WizardPageCounter: FC<IProps> = ({
     {wizardPages.map((wizardPage, index) => (
       <Button
         onClick={() => pageChanger(wizardPage)}
-        circular
         className={`page-icon ${wizardPage === activePage ? 'active' : ''}`}
+        circular
         key={index}
       >
         {index + 1}
