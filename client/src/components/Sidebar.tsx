@@ -13,7 +13,7 @@ interface IProps {
 function Sidebar({ currentPage }: IProps): ReactElement {
   useEffect(() => {
     switch (currentPage) {
-      case pages.ACCOUNT_HOME:
+      case pages.HOME:
         window.document.getElementById('home')!.classList.add('active');
         break;
       case pages.PROFILE:

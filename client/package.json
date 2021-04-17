@@ -26,7 +26,8 @@
     "cypress": "^6.3.0",
     "eslint": "^7.18.0",
     "prettier": "^2.2.1",
-    "typescript": "^4.1.5"
+    "typescript": "^4.1.5",
+    "ssw-common": "file:../common"
   },
   "scripts": {
     "start": "react-scripts start",
