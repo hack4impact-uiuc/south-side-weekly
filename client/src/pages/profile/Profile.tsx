@@ -218,7 +218,7 @@ function Profile(): ReactElement {
       <Sidebar currentPage={pages.PROFILE} />
 
       <div className="pfp-page">
-        <Header large={false} />
+        <Header />
         <div className="pfp-page-content">
           <div className="top-section-wrapper">
             <div className="pf-section">

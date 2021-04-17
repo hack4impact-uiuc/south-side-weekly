@@ -4,11 +4,6 @@
   height: 100vh;
 }
 
-.home-wrapper .logo {
-  width: 60%;
-  margin: 2%;
-}
-
 .home-wrapper .btn-group .btn-wrapper {
   display: flex;
   position: relative;
