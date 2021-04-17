@@ -1,7 +1,7 @@
 .onboard8-wrapper {
-  width: 85%;
-  margin: auto;
-  margin-left: 20vh;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .onboard8-wrapper .page-svg {

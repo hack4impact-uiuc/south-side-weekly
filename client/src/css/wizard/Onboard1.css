@@ -6,6 +6,7 @@
 
 .basic-info-wrapper .basic-info-image {
   width: 50%;
+  margin-right: 10%;
 }
 
 .basic-info-wrapper .basic-info-form {
@@ -14,8 +15,6 @@
 
 .basic-info-wrapper .btn-wrapper {
   display: flex;
-  margin-left: 10%;
-  margin-bottom: 10%;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;

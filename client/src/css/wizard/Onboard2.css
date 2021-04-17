@@ -1,6 +1,6 @@
 .personal-information .page-text {
   width: 100%;
-  font-size: 24px;
+  font-size: 1.2em;
   line-height: 30px;
   text-align: center;
 }
@@ -8,13 +8,11 @@
 .personal-information .personal-information-wrapper .svg {
   width: 100%;
   margin-top: 50px;
-}
-
-.personal-information-wrapper .personal-information-svg {
-  padding: 16px;
+  padding-right: 10%;
 }
 
 .personal-information-wrapper {
+  height: 100%;
   padding: 16px;
   display: flex;
 }
