@@ -1,13 +1,12 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { Dropdown, Button, Input } from 'semantic-ui-react';
-import { useHistory } from 'react-router-dom';
 
 import { IUser } from '../../../common/index';
 import { getUsers, isError } from '../utils/apiWrapper';
 import Sidebar from '../components/Sidebar';
 import SSW from '../assets/ssw-form-header.png';
-
 import '../css/Directory.css';
+import UserModal from '../components/UserModal/UserModal';
 
 interface IFilterKeys {
   role: string;
@@ -50,16 +49,27 @@ const interestOptions = [
   { key: 13, text: 'Visual Arts', value: 'Visual Arts' },
 ];
 
+const teamOptions = [
+  { key: 1, text: 'Editing', value: 'Editing' },
+  { key: 2, text: 'Writing', value: 'Writing' },
+  { key: 3, text: 'Fact-Checking', value: 'Fact-Checking' },
+  { key: 4, text: 'Illustration', value: 'Illustration' },
+  { key: 5, text: 'Visuals', value: 'Visuals' },
+  { key: 6, text: 'Photography', value: 'Photography' },
+];
+
 const Directory = (): ReactElement => {
-  const history = useHistory();
   const [directory, setDirectory] = useState<IUser[]>([]);
+
+  // TODO: Loading, searched directory, and search Term should be a reducer
   const [searchedDirectory, setSearchedDirectory] = useState<IUser[]>(
     directory,
   );
-
-  // TODO: Loading, searched directory, and search Term should be a reducer
   const [searchLoading, setSearchLoading] = useState<boolean>(false);
   const [searchTerm, setSearchTerm] = useState<string>('');
+
+  const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false);
+  const [selectedUser, setSelectedUser] = useState<IUser>();
 
   const [filterKeys, setFilterKeys] = useState<IFilterKeys>(initialFilterKeys);
 
@@ -118,7 +128,7 @@ const Directory = (): ReactElement => {
   );
 
   /**
-   * Adds a 1 second delay before searching
+   * Adds a 1/2 second delay before searching
    */
   useEffect(() => {
     if (searchTerm === null || searchTerm === undefined || searchTerm === '') {
@@ -158,6 +168,7 @@ const Directory = (): ReactElement => {
       filterKeys.interests,
       filteredDirectory,
     );
+    filteredDirectory = filterUsersByTeams(filterKeys.teams, filteredDirectory);
     // TODO: add filter by teams
 
     return filteredDirectory;
@@ -191,6 +202,8 @@ const Directory = (): ReactElement => {
         break;
     }
 
+    console.log(currentFilterKeys);
+    console.log(directory);
     setFilterKeys({ ...currentFilterKeys });
   };
 
@@ -290,7 +303,7 @@ const Directory = (): ReactElement => {
 
     let filteredDirectory: IUser[] = [...directory];
 
-    filteredDirectory = filteredDirectory.filter(function (user: IUser) {
+    filteredDirectory = filteredDirectory.filter((user: IUser) => {
       let hasInterest = true;
 
       interests.forEach((interest) => {
@@ -306,18 +319,61 @@ const Directory = (): ReactElement => {
   };
 
   /**
+   * Filters out the users that have any of the selected teams
+   *
+   * @param interests the interests to filter by
+   */
+  const filterUsersByTeams = (teams: string[], directory: IUser[]): IUser[] => {
+    if (typeof teams !== 'object' || teams.length === 0) {
+      return directory;
+    }
+
+    let filteredDirectory: IUser[] = [...directory];
+
+    console.log('New loop');
+    filteredDirectory = filteredDirectory.filter((user: IUser) => {
+      let hasTeam = true;
+
+      teams.forEach((team) => {
+        console.log(user.currentTeams);
+        console.log(team.toUpperCase());
+        console.log(user.currentTeams.includes(team.toUpperCase()));
+        if (!user.currentTeams.includes(team.toUpperCase())) {
+          hasTeam = false;
+        }
+      });
+
+      return hasTeam;
+    });
+
+    return filteredDirectory;
+  };
+
+  /**
    * Opens the contributor modal for a specific user
    *
    * @param user ther current modal user
    */
   const openContributorModal = (user: IUser): void => {
     if (user) {
-      history.push('/profile');
+      setIsUserModalOpen(true);
+      setSelectedUser(user);
     }
+  };
+
+  const closeContributorModal = (): void => {
+    setIsUserModalOpen(false);
   };
 
   return (
     <>
+      {selectedUser !== undefined && (
+        <UserModal
+          open={isUserModalOpen}
+          handleClose={closeContributorModal}
+          user={selectedUser}
+        />
+      )}
       <Sidebar />
       <div className="directory-wrapper">
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
@@ -356,7 +412,7 @@ const Directory = (): ReactElement => {
             />
             <Dropdown
               className="custom-dropdown"
-              text="Interests"
+              text="Topics of Interest"
               options={interestOptions}
               scrolling
               multiple
@@ -368,6 +424,19 @@ const Directory = (): ReactElement => {
                   'interests',
                   parseSemanticMultiSelectTypes(value!),
                 )
+              }
+            />
+            <Dropdown
+              className="custom-dropdown"
+              text="Teams"
+              options={teamOptions}
+              scrolling
+              multiple
+              clearable
+              selectOnNavigation={false}
+              selectOnBlur={false}
+              onChange={(e, { value }) =>
+                updateFilterKeys('teams', parseSemanticMultiSelectTypes(value!))
               }
             />
           </div>
