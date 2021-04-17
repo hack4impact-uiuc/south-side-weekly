@@ -9,69 +9,170 @@ import SSW from '../assets/ssw-form-header.png';
 
 import '../css/Directory.css';
 
+interface IFilterKeys {
+  role: string;
+  date: string;
+  interests: string[];
+  teams: string[];
+}
+
+const initialFilterKeys: IFilterKeys = {
+  role: '',
+  date: '',
+  interests: [],
+  teams: [],
+};
+
+const roleOptions = [
+  { key: 1, text: 'Contributor', value: 'Contributor' },
+  { key: 2, text: 'Staff', value: 'Staff' },
+  { key: 3, text: 'Admin', value: 'Admin' },
+];
+
+const dateOptions = [
+  { key: 1, text: 'Earliest to Latest', value: 'Earliest to Latest' },
+  { key: 2, text: 'Latest to Earliest', value: 'Latest to Earliest' },
+];
+
+const interestOptions = [
+  { key: 1, text: 'Cannabis', value: 'Cannabis' },
+  { key: 2, text: 'Food & Land', value: 'Food & Land' },
+  { key: 3, text: 'Fun', value: 'Fun' },
+  { key: 4, text: 'Health', value: 'Health' },
+  { key: 5, text: 'Housing', value: 'Housing' },
+  { key: 6, text: 'Immigration', value: 'Immigration' },
+  { key: 7, text: 'Lit', value: 'Lit' },
+  { key: 8, text: 'Music', value: 'Music' },
+  { key: 9, text: 'Nature', value: 'Nature' },
+  { key: 10, text: 'Politics', value: 'Politics' },
+  { key: 11, text: 'Stage and Screen', value: 'Stage and Screen' },
+  { key: 12, text: 'Transportation', value: 'Transportation' },
+  { key: 13, text: 'Visual Arts', value: 'Visual Arts' },
+];
+
 const Directory = (): ReactElement => {
   const history = useHistory();
-  // TODO: Fix this state type
-  const [directory, setDirectory] = useState<Array<IUser>>([]);
-  const [displayDirectory, setDisplayDirectory] = useState<Array<IUser>>();
-
-  const roleOptions = [
-    { key: 1, text: 'Contributor', value: 'Contributor' },
-    { key: 2, text: 'Staff', value: 'Staff' },
-    { key: 3, text: 'Admin', value: 'Admin' },
-  ];
-
-  const dateOptions = [
-    { key: 1, text: 'Earliest to Latest', value: 'Earliest to Latest' },
-    { key: 2, text: 'Latest to Earliest', value: 'Latest to Earliest' },
-  ];
-
-  const interestOptions = [
-    { key: 1, text: 'Cannabis', value: 'Cannabis' },
-    { key: 2, text: 'Food & Land', value: 'Food & Land' },
-    { key: 3, text: 'Fun', value: 'Fun' },
-    { key: 4, text: 'Health', value: 'Health' },
-    { key: 5, text: 'Housing', value: 'Housing' },
-    { key: 6, text: 'Immigration', value: 'Immigration' },
-    { key: 7, text: 'Lit', value: 'Lit' },
-    { key: 8, text: 'Music', value: 'Music' },
-    { key: 9, text: 'Nature', value: 'Nature' },
-    { key: 10, text: 'Politics', value: 'Politics' },
-    { key: 11, text: 'Stage and Screen', value: 'Stage and Screen' },
-    { key: 12, text: 'Transportation', value: 'Transportation' },
-    { key: 13, text: 'Visual Arts', value: 'Visual Arts' },
-  ];
+  const [directory, setDirectory] = useState<IUser[]>([]);
+  const [filterKeys, setFilterKeys] = useState<IFilterKeys>(initialFilterKeys);
 
   /**
    * Populated the directory and connect to the API
    */
   useEffect(() => {
-    const getDirectoryResults = async (): Promise<void> => {
+    const populateDirectory = async (): Promise<void> => {
       const resp = await getUsers();
 
       if (!isError(resp)) {
         setDirectory(resp.data.result);
-        setDisplayDirectory(resp.data.result);
       }
     };
 
-    getDirectoryResults();
+    populateDirectory();
   }, []);
+
+  /**
+   * Recevies a directory and filters it with all of the selected keys
+   *
+   * @param directory the full directory of SSW users
+   * @returns a filtered directory
+   */
+  const handleDirectoryFilter = (directory: IUser[]): IUser[] => {
+    if (isFilterKeysEmpty()) {
+      return directory;
+    }
+
+    let filteredDirectory = [...directory];
+
+    const isAscending = filterKeys.date === 'Earliest to Latest';
+
+    filteredDirectory = sortUsersByDate(isAscending, filteredDirectory);
+    filteredDirectory = filterUsersByRole(filterKeys.role, filteredDirectory);
+    filteredDirectory = filterUsersByInterests(
+      filterKeys.interests,
+      filteredDirectory,
+    );
+    // TODO: add filter by teams
+
+    return filteredDirectory;
+  };
+
+  /**
+   * Updates the filter key state
+   *
+   * @param filterKey the filter key to update
+   * @param newValue the new value to set the filter key's value to
+   */
+  const updateFilterKeys = (
+    filterKey: keyof IFilterKeys,
+    newValue: string | string[],
+  ): void => {
+    const currentFilterKeys: IFilterKeys = { ...filterKeys };
+
+    switch (filterKey) {
+      case 'role':
+      case 'date':
+        currentFilterKeys[filterKey] = `${newValue}`;
+        break;
+      case 'interests':
+      case 'teams':
+        if (Array.isArray(newValue)) {
+          currentFilterKeys[filterKey] = newValue;
+        }
+        break;
+      default:
+        console.error('Invalid filter key');
+        break;
+    }
+
+    setFilterKeys({ ...currentFilterKeys });
+  };
+
+  /**
+   * Parses a semantic multi select into the filter key usable types
+   *
+   * @param value the value from the multiselect
+   * @returns a conversion from semantic's type to string | string[]
+   */
+  const parseSemanticMultiSelectTypes = (
+    value: string | number | boolean | (string | number | boolean)[],
+  ): string | string[] => {
+    if (typeof value === 'string') {
+      return value;
+    } else if (Array.isArray(value)) {
+      const parsedArray: string[] = [];
+
+      value.forEach((element) => {
+        parsedArray.push(`${element}`);
+      });
+
+      return parsedArray;
+    }
+
+    console.error('Invalid datatype to convert');
+    return [];
+  };
+
+  /**
+   * Determines if the filter state is empty
+   *
+   * @returns true if filter keys are empty, else false
+   */
+  const isFilterKeysEmpty = (): boolean =>
+    filterKeys.role === '' &&
+    filterKeys.date === '' &&
+    filterKeys.interests.length === 0 &&
+    filterKeys.teams.length === 0;
 
   /**
    * Sorts all of the users in the directory by date
    *
-   * @param value the filter string representation, Earliest to Latest, Latest to Earliest, [empty]
+   * @param isAscending the filter string representation, Earliest to Latest, Latest to Earliest, [empty]
    */
-  const sortUsersByDate = (value: string): void => {
-    if (value.length === 0) {
-      setDisplayDirectory(directory);
-      return;
-    }
-
-    const ascending = value === 'Earliest to Latest';
-
-    const sortedDirectory: Array<IUser> = [...displayDirectory!];
+  const sortUsersByDate = (
+    isAscending: boolean,
+    directory: IUser[],
+  ): IUser[] => {
+    const sortedDirectory: IUser[] = [...directory];
 
     sortedDirectory.sort(function (first: IUser, second: IUser): number {
       const firstUserDate: Date = new Date(first.dateJoined);
@@ -79,32 +180,32 @@ const Directory = (): ReactElement => {
 
       if (firstUserDate > secondUserDate) {
         // -1 is a magic number
-        return ascending ? 1 : 0 - 1;
+        return isAscending ? 1 : 0 - 1;
       } else if (firstUserDate < secondUserDate) {
-        return ascending ? 0 - 1 : 1;
+        return isAscending ? 0 - 1 : 1;
       }
       return 0;
     });
-    setDisplayDirectory([...sortedDirectory]);
+
+    return sortedDirectory;
   };
 
   /**
-   * Filters out hte users that have the specified role
+   * Filters out the users that have the specified role
    *
    * @param role the role to filter by
    */
-  const filterUsersByRole = (role: string): void => {
+  const filterUsersByRole = (role: string, directory: IUser[]): IUser[] => {
     if (role === '') {
-      setDisplayDirectory(directory);
-      return;
+      return directory;
     }
-    let filteredDirectory: Array<IUser> = [...displayDirectory!];
+    let filteredDirectory: IUser[] = [...directory];
 
     filteredDirectory = filteredDirectory.filter(function (result: IUser) {
       return result.role === role.toUpperCase();
     });
 
-    setDisplayDirectory([...filteredDirectory]);
+    return filteredDirectory;
   };
 
   /**
@@ -113,32 +214,35 @@ const Directory = (): ReactElement => {
    * @param interests the interests to filter by
    */
   const filterUsersByInterests = (
-    interests: string | number | boolean | (string | number | boolean)[],
-  ): void => {
-    console.log(interests);
-    if (typeof interests !== 'object') {
-      console.error('Bad argument');
-      return;
-    } else if (interests.length === 0) {
-      setDisplayDirectory(directory);
-      return;
+    interests: string[],
+    directory: IUser[],
+  ): IUser[] => {
+    if (typeof interests !== 'object' || interests.length === 0) {
+      return directory;
     }
 
-    let filteredDirectory: Array<IUser> = [...directory!];
+    let filteredDirectory: IUser[] = [...directory];
 
     filteredDirectory = filteredDirectory.filter(function (user: IUser) {
       let hasInterest = true;
+
       interests.forEach((interest) => {
         if (!user.interests.includes(interest.toString().toUpperCase())) {
           hasInterest = false;
         }
       });
+
       return hasInterest;
     });
 
-    setDisplayDirectory([...filteredDirectory]);
+    return filteredDirectory;
   };
 
+  /**
+   * Opens the contributor modal for a specific user
+   *
+   * @param user ther current modal user
+   */
   const openContributorModal = (user: IUser): void => {
     if (user) {
       history.push('/profile');
@@ -167,7 +271,7 @@ const Directory = (): ReactElement => {
               clearable
               selectOnBlur={false}
               selectOnNavigation={false}
-              onChange={(e, { value }) => filterUsersByRole(value!.toString())}
+              onChange={(e, { value }) => updateFilterKeys('role', `${value}`)}
             />
             <Dropdown
               className="custom-dropdown"
@@ -177,7 +281,7 @@ const Directory = (): ReactElement => {
               clearable
               selectOnNavigation={false}
               selectOnBlur={false}
-              onChange={(e, { value }) => sortUsersByDate(`${value}`)}
+              onChange={(e, { value }) => updateFilterKeys('date', `${value}`)}
             />
             <Dropdown
               className="custom-dropdown"
@@ -188,11 +292,16 @@ const Directory = (): ReactElement => {
               clearable
               selectOnNavigation={false}
               selectOnBlur={false}
-              onChange={(e, { value }) => filterUsersByInterests(value!)}
+              onChange={(e, { value }) =>
+                updateFilterKeys(
+                  'interests',
+                  parseSemanticMultiSelectTypes(value!),
+                )
+              }
             />
           </div>
           <div className="directory">
-            {displayDirectory?.map((user) => (
+            {handleDirectoryFilter(directory).map((user) => (
               <Button
                 onClick={() => openContributorModal(user)}
                 key={user.oauthID}

@@ -2,6 +2,7 @@ import { MouseEvent, Dispatch, SetStateAction } from 'react';
 
 /**
  * Adds selected element to the specific form array if it isn't already there, otherwise removes it
+ *
  * @param e the MouseEvent of clicking the select button
  * @param selectedArray the selected array to check from
  * @param setArray React setter for the selected array
