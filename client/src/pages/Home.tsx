@@ -4,7 +4,7 @@ import { Button } from 'semantic-ui-react';
 import { Redirect } from 'react-router';
 
 import { BASE_URL } from '../utils/apiWrapper';
-import Logo from '../assets/ssw-form-header.png';
+import Header from '../components/Header';
 
 import '../css/Home.css';
 
@@ -32,9 +32,8 @@ function Home(): ReactElement {
     <>
       {!loggedOut ? (
         <div className="home-wrapper">
-          <div className="logo-header">
-            <img className="logo" alt="SSW Logo" src={Logo} />
-          </div>
+          <Header />
+
           <h1>SSW Dashboard</h1>
           <div className="btn-group">
             <div className="btn-wrapper">

@@ -18,7 +18,7 @@ const UserModal: FC<IProps> = ({ open, handleClose, user }): ReactElement => (
       <div>{user.email}</div>
       <div>{user.phone}</div>
       <div>{user.oauthID}</div>
-      <div>{user.gender}</div>
+      <div>{user.genders}</div>
       <div>{user.pronouns}</div>
       <div>{user.dateJoined}</div>
       <div>{user.masthead}</div>

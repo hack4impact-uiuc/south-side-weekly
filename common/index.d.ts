@@ -8,7 +8,7 @@ export interface IUser {
   email: string;
   phone: string;
   oauthID: string;
-  gender: [string];
+  genders: [string];
   pronouns: [string];
   dateJoined: Date;
   masthead: boolean;

@@ -12,6 +12,7 @@ const handleSelectGroupArray = (
   selectedArray: Array<string>,
   setArray: Dispatch<SetStateAction<Array<string>>>,
 ): void => {
+
   const notFoundIdx = -1;
   const elementIdx = selectedArray.indexOf(e.currentTarget.value);
 

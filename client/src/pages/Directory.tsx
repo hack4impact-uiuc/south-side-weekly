@@ -7,6 +7,7 @@ import Sidebar from '../components/Sidebar';
 import SSW from '../assets/ssw-form-header.png';
 import '../css/Directory.css';
 import UserModal from '../components/UserModal/UserModal';
+import { pages } from '../utils/enums';
 
 interface IFilterKeys {
   role: string;
@@ -101,19 +102,11 @@ const Directory = (): ReactElement => {
       let searchedDirectory = [...directory];
 
       searchedDirectory = directory.filter((user: IUser) => {
-        let firstName = user.firstName;
-        let lastName = user.lastName;
-        let email = user.email;
 
-        if (firstName === null) {
-          firstName = '';
-        }
-        if (lastName === null) {
-          lastName = '';
-        }
-        if (email === null) {
-          email = '';
-        }
+        // Avoid null fields in database
+        const firstName = user.firstName ? user.firstName : '';
+        const lastName = user.lastName ? user.lastName : '';
+        const email = user.email ? user.email : '';
 
         return (
           firstName.includes(searchTerm) ||
@@ -169,7 +162,6 @@ const Directory = (): ReactElement => {
       filteredDirectory,
     );
     filteredDirectory = filterUsersByTeams(filterKeys.teams, filteredDirectory);
-    // TODO: add filter by teams
 
     return filteredDirectory;
   };
@@ -202,8 +194,6 @@ const Directory = (): ReactElement => {
         break;
     }
 
-    console.log(currentFilterKeys);
-    console.log(directory);
     setFilterKeys({ ...currentFilterKeys });
   };
 
@@ -330,14 +320,10 @@ const Directory = (): ReactElement => {
 
     let filteredDirectory: IUser[] = [...directory];
 
-    console.log('New loop');
     filteredDirectory = filteredDirectory.filter((user: IUser) => {
       let hasTeam = true;
 
       teams.forEach((team) => {
-        console.log(user.currentTeams);
-        console.log(team.toUpperCase());
-        console.log(user.currentTeams.includes(team.toUpperCase()));
         if (!user.currentTeams.includes(team.toUpperCase())) {
           hasTeam = false;
         }
@@ -374,7 +360,7 @@ const Directory = (): ReactElement => {
           user={selectedUser}
         />
       )}
-      <Sidebar />
+      <Sidebar currentPage={pages.USERS} />
       <div className="directory-wrapper">
         <div style={{ textAlign: 'center', marginTop: '20px' }}>
           <img src={SSW} alt="South Side Weekly" style={{ width: '50%' }} />
@@ -383,7 +369,7 @@ const Directory = (): ReactElement => {
           <h2>Directory</h2>
           <div className="directory-search">
             <Input
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => setSearchTerm(e.currentTarget.value)}
               icon="search"
               loading={searchLoading}
             />
@@ -453,7 +439,8 @@ const Directory = (): ReactElement => {
                   className="profile-picture"
                 />
                 <h2 className="text name">{`${user.firstName} ${user.lastName}`}</h2>
-                <h2 className="text end">
+                <h2 className="text">
+                  {/* Capitalize the first letter */}
                   {user.role.slice(0, 1) + user.role.slice(1).toLowerCase()}
                 </h2>
               </Button>
