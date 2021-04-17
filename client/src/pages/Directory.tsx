@@ -102,7 +102,6 @@ const Directory = (): ReactElement => {
       let searchedDirectory = [...directory];
 
       searchedDirectory = directory.filter((user: IUser) => {
-
         // Avoid null fields in database
         const firstName = user.firstName ? user.firstName : '';
         const lastName = user.lastName ? user.lastName : '';

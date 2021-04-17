@@ -24,7 +24,6 @@ export interface GetSampleResponseType {
   message: string;
 }
 
-
 export interface GetUsersResponseType {
   message: string;
   // TODO: Fix this from being an any type
@@ -81,20 +80,20 @@ export const addSampleResponse = (
  * Returns GET_USERS_FETCH_FAIL upon failure
  */
 
- export const getUsers = (): Promise<
- AxiosResponse<GetUsersResponseType> | ErrorWrapper
+export const getUsers = (): Promise<
+  AxiosResponse<GetUsersResponseType> | ErrorWrapper
 > => {
- const requestString = `${BASE_URL}/users`;
- return axios
-   .get(requestString, {
-     headers: {
-       'Content-Type': 'application/JSON',
-     },
-   })
-   .catch((error) => ({
-     type: 'GET_USERS_FETCH_FAIL',
-     error,
-   }));
+  const requestString = `${BASE_URL}/users`;
+  return axios
+    .get(requestString, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'GET_USERS_FETCH_FAIL',
+      error,
+    }));
 };
 
 const user_id = '6031a866c70ec705736a79e5';

@@ -13,7 +13,6 @@ import Pfp from '../../assets/pfp.svg';
 import Masthead from '../../assets/masthead.svg';
 import Banner from '../../assets/banner.svg';
 import Header from '../../components/Header';
-import { IUser } from '../../../../common/index';
 
 import '../../css/Profile.css';
 
