@@ -3,21 +3,24 @@ import React, {
   FC,
   SetStateAction,
   ReactElement,
-  MouseEvent,
+  FormEvent,
 } from 'react';
+import { Checkbox, CheckboxProps, Form } from 'semantic-ui-react';
 
 import WizardSvg from '../../components/WizardSvg';
-import WizardSelectButton from '../../components/WizardSelectButton/WizardSelectButton';
 import WizardListTitle from '../../components/WizardListTitle';
 import { handleSelectGroupArray } from '../../utils/helpers';
+import { racesEnum } from '../../utils/enums';
 
 import '../../css/wizard/Onboard2.css';
 
 interface IProps {
   genders: Array<string>;
   pronouns: Array<string>;
+  races: Array<string>;
   setGenders: Dispatch<SetStateAction<Array<string>>>;
   setPronouns: Dispatch<SetStateAction<Array<string>>>;
+  setRaces: Dispatch<SetStateAction<Array<string>>>;
 }
 
 /**
@@ -25,22 +28,26 @@ interface IProps {
  *
  * @param {Array<string>} genders the selected genders
  * @param {Array<string>} pronouns the selected pronouns
+ * @param {Array<string>} races the selected races
  * @param {Dispatch<SetStateAction<Array<string>>>} setGenders React setter funtion to update genders
  * @param {Dispatch<SetStateAction<Array<string>>>} setPronouns React setter function to update pronouns
+ * @param {Dispatch<SetStateAction<Array<string>>>} setRaces React setter function to update races
  */
 const Onboard2: FC<IProps> = ({
   genders,
   pronouns,
+  races,
   setGenders,
   setPronouns,
+  setRaces,
 }): ReactElement => {
   /**
    * Adds selected gender to the genders form array if it isn't already there, otherwise removes it
    *
    * @param e the mouse event from clicking one of the gender select optoins
    */
-  const handleGenders = (e: MouseEvent<HTMLButtonElement>): void => {
-    handleSelectGroupArray(e, genders, setGenders);
+  const handleGenders = (event: FormEvent<HTMLInputElement>): void => {
+    handleSelectGroupArray(event, genders, setGenders);
   };
 
   /**
@@ -48,8 +55,17 @@ const Onboard2: FC<IProps> = ({
    *
    * @param e the mouse event of clicking one of the pronoun select options
    */
-  const handlePronouns = (e: MouseEvent<HTMLButtonElement>): void => {
-    handleSelectGroupArray(e, pronouns, setPronouns);
+  const handlePronouns = (event: FormEvent<HTMLInputElement>): void => {
+    handleSelectGroupArray(event, pronouns, setPronouns);
+  };
+
+  /**
+   * Adds selected race to the races form array if it isn't already there, otherwise removes it
+   *
+   * @param e the mouse event of clicking one of the pronoun select options
+   */
+  const handleRaces = (event: FormEvent<HTMLInputElement>): void => {
+    handleSelectGroupArray(event, races, setRaces);
   };
 
   // All of the gender buttons to render
@@ -69,6 +85,38 @@ const Onboard2: FC<IProps> = ({
     { value: 'Other', color: '#BFEBE0' },
   ];
 
+  // All of the race buttons
+  const raceButtons = [
+    {
+      display: 'American Indian or Alaskan Native',
+      value: racesEnum.AMERICAN_INDIAN_OR_ALASKAN_NATIVE,
+      color: '#EF8B8B',
+    },
+    {
+      display: 'Black or African American',
+      value: racesEnum.BLACK_OR_AFRICAN_AMERICAN,
+      color: '#A5C4F2',
+    },
+    {
+      display: 'Middle Eastern or North African',
+      value: racesEnum.MIDDLE_EASTERN_OR_NORTH_AFRICAN,
+      color: '#BAB9E9',
+    },
+    {
+      display: 'Native Hawaiian or Pacific Islander',
+      value: racesEnum.NATIVE_HAWAIIAN_OR_PACIFIC_ISLANDER,
+      color: '#A9D3E5',
+    },
+    {
+      display: 'Latinx or Hispanic',
+      value: racesEnum.LATINX_OR_HISPANIC,
+      color: '#F9B893',
+    },
+    { display: 'White', value: racesEnum.WHITE, color: '#F1D8B0' },
+    { display: 'Asian', value: racesEnum.ASIAN, color: '#CFE7C4' },
+    { display: 'Other', value: racesEnum.OTHER, color: '#BFEBE0' },
+  ];
+
   return (
     <div className="personal-information">
       <div className="page-text">
@@ -80,36 +128,34 @@ const Onboard2: FC<IProps> = ({
         <div className="personal-information-svg">
           <WizardSvg page="onboard2" />
         </div>
-        <div className="personal-information-form">
-          <div className="section">
-            <WizardListTitle value="Gender" />
-            {genderButtons.map((button) => (
-              <WizardSelectButton
-                key={button.value}
-                onClick={handleGenders}
-                selectedArray={genders}
-                value={button.value}
-                width="120px"
-                margin="25px 0px 0px 20px"
-                color={button.color}
-              />
-            ))}
+        <Form>
+          <div className="personal-information-form">
+            <div className="section">
+              <WizardListTitle value="Gender" />
+              {genderButtons.map((button) => (
+                <Form.Field key={button.value}>
+                  <Checkbox label={button.value} onChange={handleGenders} />
+                </Form.Field>
+              ))}
+            </div>
+            <div className="section">
+              <WizardListTitle value="Pronouns" />
+              {pronounButtons.map((button) => (
+                <Form.Field key={button.value}>
+                  <Checkbox label={button.value} onChange={handlePronouns} />
+                </Form.Field>
+              ))}
+            </div>
+            <div className="section">
+              <WizardListTitle value="Race" />
+              {raceButtons.map((button) => (
+                <Form.Field key={button.value}>
+                  <Checkbox label={button.display} onChange={handleRaces} />
+                </Form.Field>
+              ))}
+            </div>
           </div>
-          <div className="section">
-            <WizardListTitle value="Pronouns" />
-            {pronounButtons.map((button) => (
-              <WizardSelectButton
-                key={button.value}
-                onClick={handlePronouns}
-                selectedArray={pronouns}
-                value={button.value}
-                width="120px"
-                margin="25px 0px 0px 20px"
-                color={button.color}
-              />
-            ))}
-          </div>
-        </div>
+        </Form>
       </div>
     </div>
   );

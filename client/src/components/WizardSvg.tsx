@@ -4,7 +4,6 @@ import '../css/wizard/WizardSvg.css';
 
 import BasicInfoSvg from '../assets/basic-info.svg';
 import PersonalInfoSvg from '../assets/personal-information.svg';
-import RacesSVG from '../assets/races-page.svg';
 import InvolvementSVG from '../assets/involvement-page.svg';
 import Onboard5SVG from '../assets/onboard5.svg';
 import Onboard6SVG from '../assets/onboard6.svg';
@@ -40,15 +39,11 @@ const WizardListTitle: FC<IProps> = ({ page }): ReactElement => {
           />
         );
       case 'onboard3':
-        return (
-          <img src={RacesSVG} alt="Races Page" className="races-svg page-svg" />
-        );
+        return <img className="page-svg" alt="onboard5" src={Onboard5SVG} />;
       case 'onboard4':
         return (
           <img alt="Involvement" className="page-svg" src={InvolvementSVG} />
         );
-      case 'onboard5':
-        return <img className="page-svg" alt="onboard5" src={Onboard5SVG} />;
       case 'onboard6':
         return <img className="page-svg" alt="onboard6" src={Onboard6SVG} />;
       case 'onboard7':

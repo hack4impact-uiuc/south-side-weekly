@@ -1,31 +1,41 @@
-.races-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-left: 10%;
-}
-
-.races-wrapper .page-text {
+.onboard5-wrapper {
   width: 100%;
-  font-size: 24px;
-  line-height: 30px;
-  text-align: center;
+  margin-top: 10vh;
+  display: flex;
 }
 
-.races-wrapper .races-content-wrapper {
-  margin-top: 20px;
-  width: 90%;
+.onboard5-wrapper .page-svg {
+  width: 40%;
 }
 
-.races-wrapper .races-content-wrapper .races-svg {
-  width: 30%;
-  position: absolute;
-  bottom: 0;
-  left: 1%;
-}
-
-.races-wrapper .races-content-wrapper .race-button-wrapper {
+.onboard5-wrapper .onboard5-content {
+  margin: 16px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  justify-items: center;
+  grid-template-columns: 1fr 1fr;
+}
+
+.onboard5-wrapper .onboard5-content .section .page-text {
+  font-size: 18px;
+  text-align: left;
+  line-height: 30px;
+  position: relative;
+}
+
+.onboard5-wrapper .onboard5-content .page-text b {
+  font-weight: 600;
+}
+
+.onboard5-wrapper .onboard5-content .section {
+  margin: 16px;
+}
+
+.onboard5-wrapper .onboard5-content .section .select-group {
+  margin-top: 5vh;
+  text-align: left;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.onboard5-wrapper .onboard5-content .section .select-group .select-item {
+  margin: 6px;
 }

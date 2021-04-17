@@ -1,4 +1,4 @@
-import { MouseEvent, Dispatch, SetStateAction } from 'react';
+import { FormEvent, Dispatch, SetStateAction } from 'react';
 
 /**
  * Adds selected element to the specific form array if it isn't already there, otherwise removes it
@@ -7,7 +7,7 @@ import { MouseEvent, Dispatch, SetStateAction } from 'react';
  * @param setArray React setter for the selected array
  */
 const handleSelectGroupArray = (
-  e: MouseEvent<HTMLButtonElement>,
+  e: FormEvent<HTMLInputElement>,
   selectedArray: Array<string>,
   setArray: Dispatch<SetStateAction<Array<string>>>,
 ): void => {
