@@ -16,11 +16,11 @@
 
 .directory-wrapper .directory-content .directory-search .input {
   width: 100% !important;
-  border: 1rem;
 }
 
-.directory-wrapper .directory-content .directory-search .input .prompt {
-  background-color: rgba(61, 79, 145, 0.45) !important;
+.directory-wrapper .directory-content .directory-search .input input {
+  background: rgba(61, 79, 145, 0.45) !important;
+  border-radius: 1rem !important;
 }
 
 .directory-wrapper .directory-content .directory {
@@ -54,10 +54,6 @@
 .directory-wrapper .directory-content .directory .result .name {
   flex-grow: 1;
 }
-
-/* .directory-wrapper .directory-content .directory .result .end {
-  float: right;
-} */
 
 .custom-dropdown {
   display: flex;

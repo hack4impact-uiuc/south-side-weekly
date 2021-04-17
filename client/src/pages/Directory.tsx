@@ -1,5 +1,5 @@
-import React, { ReactElement, useEffect, useState } from 'react';
-import { Search, Dropdown, Button } from 'semantic-ui-react';
+import React, { ReactElement, useCallback, useEffect, useState } from 'react';
+import { Dropdown, Button, Input } from 'semantic-ui-react';
 import { useHistory } from 'react-router-dom';
 
 import { IUser } from '../../../common/index';
@@ -53,6 +53,14 @@ const interestOptions = [
 const Directory = (): ReactElement => {
   const history = useHistory();
   const [directory, setDirectory] = useState<IUser[]>([]);
+  const [searchedDirectory, setSearchedDirectory] = useState<IUser[]>(
+    directory,
+  );
+
+  // TODO: Loading, searched directory, and search Term should be a reducer
+  const [searchLoading, setSearchLoading] = useState<boolean>(false);
+  const [searchTerm, setSearchTerm] = useState<string>('');
+
   const [filterKeys, setFilterKeys] = useState<IFilterKeys>(initialFilterKeys);
 
   /**
@@ -64,11 +72,70 @@ const Directory = (): ReactElement => {
 
       if (!isError(resp)) {
         setDirectory(resp.data.result);
+        setSearchedDirectory(resp.data.result);
       }
     };
 
     populateDirectory();
   }, []);
+
+  /**
+   * Searches through the directory and returns a set of directory member who's name or
+   * email contains the search term
+   *
+   * @param searchTerm the user input to search for
+   * @returns an arary of directory members corresponding to the uesrs search
+   */
+  const handleSearch = useCallback(
+    (searchTerm: string): IUser[] => {
+      let searchedDirectory = [...directory];
+
+      searchedDirectory = directory.filter((user: IUser) => {
+        let firstName = user.firstName;
+        let lastName = user.lastName;
+        let email = user.email;
+
+        if (firstName === null) {
+          firstName = '';
+        }
+        if (lastName === null) {
+          lastName = '';
+        }
+        if (email === null) {
+          email = '';
+        }
+
+        return (
+          firstName.includes(searchTerm) ||
+          lastName.includes(searchTerm) ||
+          email.includes(searchTerm)
+        );
+      });
+
+      return searchedDirectory;
+    },
+    [directory],
+  );
+
+  /**
+   * Adds a 1 second delay before searching
+   */
+  useEffect(() => {
+    if (searchTerm === null || searchTerm === undefined || searchTerm === '') {
+      setSearchedDirectory(directory);
+      setSearchLoading(false);
+      return;
+    }
+
+    setSearchLoading(true);
+
+    const delaySearch = setTimeout(() => {
+      setSearchedDirectory([...handleSearch(searchTerm)]);
+      setSearchLoading(false);
+    }, 500);
+
+    return () => clearTimeout(delaySearch);
+  }, [searchTerm, directory, handleSearch]);
 
   /**
    * Recevies a directory and filters it with all of the selected keys
@@ -174,7 +241,7 @@ const Directory = (): ReactElement => {
   ): IUser[] => {
     const sortedDirectory: IUser[] = [...directory];
 
-    sortedDirectory.sort(function (first: IUser, second: IUser): number {
+    sortedDirectory.sort((first: IUser, second: IUser): number => {
       const firstUserDate: Date = new Date(first.dateJoined);
       const secondUserDate: Date = new Date(second.dateJoined);
 
@@ -201,9 +268,9 @@ const Directory = (): ReactElement => {
     }
     let filteredDirectory: IUser[] = [...directory];
 
-    filteredDirectory = filteredDirectory.filter(function (result: IUser) {
-      return result.role === role.toUpperCase();
-    });
+    filteredDirectory = filteredDirectory.filter(
+      (result: IUser) => result.role === role.toUpperCase(),
+    );
 
     return filteredDirectory;
   };
@@ -259,7 +326,11 @@ const Directory = (): ReactElement => {
         <div className="directory-content">
           <h2>Directory</h2>
           <div className="directory-search">
-            <Search fluid />
+            <Input
+              onChange={(e) => setSearchTerm(e.target.value)}
+              icon="search"
+              loading={searchLoading}
+            />
           </div>
           <div className="filters">
             <h2>Filter by: </h2>
@@ -301,7 +372,7 @@ const Directory = (): ReactElement => {
             />
           </div>
           <div className="directory">
-            {handleDirectoryFilter(directory).map((user) => (
+            {handleDirectoryFilter(searchedDirectory).map((user) => (
               <Button
                 onClick={() => openContributorModal(user)}
                 key={user.oauthID}
