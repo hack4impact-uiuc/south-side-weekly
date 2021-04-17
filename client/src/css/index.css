@@ -3,3 +3,21 @@ body {
   padding: 0 !important;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
+
+/* SSW Header Logo Styling */
+
+.logo {
+  width: 40%;
+  margin-top: 2%;
+}
+
+.logo-header {
+  text-align: center;
+}
+
+/* Page Title */
+.page-title {
+  font-weight: 700;
+  font-size: 36px;
+  padding: 5vh 0 5vh 0;
+}
