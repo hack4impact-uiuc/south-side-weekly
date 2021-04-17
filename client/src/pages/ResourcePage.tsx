@@ -4,6 +4,7 @@ import { IResource } from 'ssw-common';
 
 import { getAllResources, deleteResource, isError } from '../utils/apiWrapper';
 import AddResourceModal from '../components/ResourceHub/AddResourceModal';
+import EditResourceModal from '../components/ResourceHub/EditResourceModal';
 import Sidebar from '../components/Sidebar';
 import ResourcePageSVG from '../assets/resource-page.svg';
 import '../css/Resource.css';
@@ -25,6 +26,8 @@ const ResourcePage = (): ReactElement => {
   const [currentValue, setCurrentValue] = useState<string>('General');
   const [edit, setEdit] = useState<boolean>(false);
   const [resourcesPerRole, setResourcesPerRole] = useState(defaultResources);
+  const [resourceToEdit, setResourceToEdit] = useState<IResource | null>(null);
+  const [showEditModal, setShowEditModal] = useState<boolean>(false);
 
   async function filterResources(): Promise<void> {
     const res = await getAllResources();
@@ -81,9 +84,12 @@ const ResourcePage = (): ReactElement => {
     }
   }
 
+  function closeModal(): void {
+    setShowEditModal(false);
+  }
+
   return (
     <div className="resource-page-wrapper">
-      {console.log(resourcesPerRole)}
       <Sidebar></Sidebar>
       <img className="page-svg" alt="Resource Page" src={ResourcePageSVG} />
       <div className="resource-page-content">
@@ -136,7 +142,14 @@ const ResourcePage = (): ReactElement => {
               ))
             : resourcesPerRole[currentValue].map((resource, idx) => (
                 <div key={idx} className="editable-resource">
-                  <Button className="resource-btn" key={idx}>
+                  <Button
+                    className="resource-btn"
+                    key={idx}
+                    onClick={() => {
+                      setShowEditModal(true);
+                      setResourceToEdit(resource);
+                    }}
+                  >
                     <Button
                       className="delete-btn"
                       circular
@@ -147,6 +160,18 @@ const ResourcePage = (): ReactElement => {
                   </Button>
                 </div>
               ))}
+        </div>
+
+        <div>
+          {showEditModal ? (
+            <EditResourceModal
+              isOpen
+              resource={resourceToEdit}
+              closeModal={closeModal}
+            />
+          ) : (
+            ''
+          )}
         </div>
       </div>
     </div>

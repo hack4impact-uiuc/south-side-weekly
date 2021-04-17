@@ -1,0 +1,125 @@
+.ui.form {
+  font-size: 18px;
+  padding: 30px;
+}
+
+.edit-resource-wrapper .edit-resource-content {
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit-resource-wrapper .edit-resource-content .edit-resource-left {
+  padding-right: 20px; /** change to flex*/
+}
+
+.edit-resource-wrapper .edit-resource-content .edit-resource-right {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-resource-wrapper .edit-resource-content .edit-resource-inputs {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 5;
+  padding-top: 20px;
+}
+
+.edit-resource-wrapper .edit-resource-content .resource-tags-wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+.edit-resource-wrapper
+  .edit-resource-content
+  .resource-tags-wrapper
+  .resource-tag-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-gap: 7px;
+  grid-row-gap: 20px;
+  padding-top: 12px;
+}
+
+.edit-resource-wrapper
+  .edit-resource-content
+  .resource-tags-wrapper
+  .resource-tag-grid
+  .resource-tag {
+  color: #f7fafb;
+  border-radius: 1rem;
+  height: 32px;
+  width: 120px;
+  font-size: 12px;
+}
+
+.edit-resource-wrapper
+  .edit-resource-content
+  .resource-tags-wrapper
+  .resource-tag-grid
+  .false {
+  background-color: #3d4f91 !important;
+  border: solid #cfe7c4 1px;
+}
+
+.edit-resource-wrapper
+  .edit-resource-content
+  .resource-tags-wrapper
+  .resource-tag-grid
+  .active {
+  border-color: #3d4f91;
+}
+
+.edit-resource-wrapper
+  .edit-resource-content
+  .edit-resource-inputs
+  .edit-resource-label {
+  padding-top: 8px;
+}
+
+.ui.form .field .ui.input input {
+  border-radius: 1rem;
+  background: #f7fafb;
+  opacity: 0.75;
+}
+
+.ui.modal {
+  box-shadow: 0px 3.43343px 3.43343px rgba(0, 0, 0, 0.25),
+    inset 0px 3.43343px 3.43343px rgba(0, 0, 0, 0.25);
+  border-radius: 10.3003px;
+}
+
+.ui.modal > .actions {
+  text-align: left;
+  background: #3d4f91;
+  color: #f7fafb;
+  font-style: normal;
+  font-weight: normal;
+  line-height: 24px;
+}
+
+.edit-resource-btns {
+  text-align: center;
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.edit-resource-btns .edit-resource-save-btn .ui.button {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18.0594px;
+  line-height: 15px;
+  color: #f7fafb;
+  background: #8cb076;
+  border-radius: 6.88302px;
+}
+
+.edit-resource-btns .edit-resource-discard-btn .ui.button {
+  font-style: normal;
+  font-weight: 600;
+  font-size: 18.0594px;
+  line-height: 15px;
+  color: #f7fafb;
+  background: #b07676;
+  border-radius: 6.88302px;
+}
