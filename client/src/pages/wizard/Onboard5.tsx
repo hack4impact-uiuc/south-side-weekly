@@ -11,7 +11,6 @@ import RequiredSvg from '../../assets/required.svg';
 import { handleSelectGroupArray } from '../../utils/helpers';
 import '../../css/wizard/Onboard5.css';
 import WizardSelectButton from '../../components/WizardSelectButton/WizardSelectButton';
-import { currentTeamsButtons } from '../../utils/constants';
 
 interface IProps {
   currentTeams: Array<string>;
@@ -61,15 +60,15 @@ const Onboard5: FC<IProps> = ({
         </div>
 
         <div className="select-group">
-          {Object.keys(currentTeamsButtons).map((button) => (
+          {currentTeamsButtons.map((button) => (
             <WizardSelectButton
-              key={button}
+              key={button.value}
               onClick={handleCurrentTeams}
               selectedArray={currentTeams}
               width="150px"
               margin="15px 30px 15px 30px"
-              value={button}
-              color={currentTeamsButtons[button]}
+              value={button.value}
+              color={button.color}
             />
           ))}
         </div>

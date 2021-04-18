@@ -21,14 +21,11 @@ ReactDOM.render(
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/join" component={WizardWrapper} />
-<<<<<<< HEAD
         <Route exact path="/pitchDoc" component={PitchDoc} />
         <Route exact path="/resource" component={ResourcePage} />
-=======
         <Route exact path="/resources" component={ResourcePage} />
         <Route exact path="/profile" component={Profile} />
         <Route exact path="/login" component={Login} />
->>>>>>> main
       </Switch>
     </Router>
   </React.StrictMode>,
