@@ -1,5 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
-import { IPitch } from '../utils/types';
+import { IPitch } from '../types/index'
 
 import {
   interestsEnum,

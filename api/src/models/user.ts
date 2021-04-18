@@ -1,5 +1,5 @@
 import mongoose, { Schema } from 'mongoose';
-import { IUser } from '../utils/types';
+import { IUser } from '../types/index';
 
 import {
   interestsEnum,
