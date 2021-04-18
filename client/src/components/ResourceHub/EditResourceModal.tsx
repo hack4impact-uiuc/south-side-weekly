@@ -1,21 +1,21 @@
 import React, { ReactElement, FC, Dispatch, useEffect } from 'react';
-import { Modal, Button, Form, Input } from 'semantic-ui-react';
+import { Modal, Button, Form, Input, Checkbox } from 'semantic-ui-react';
 import { IResource } from 'ssw-common';
 
 import { editResource, isError } from '../../utils/apiWrapper';
 
 import '../../css/EditResourceModal.css';
 
-const teamColors: { [key: string]: string } = {
-  General: '#EF8B8B',
-  Editing: '#A5C4F2',
-  Factchecking: '#CFE7C4',
-  Illustration: '#BAB9E9',
-  Photography: '#D8ACE8',
-  Onboarding: '#F1D8B0',
-  Visuals: '#BFEBE0',
-  Writing: '#A9D3E5',
-};
+const teams = [
+  'General',
+  'Editing',
+  'Factchecking',
+  'Illustration',
+  'Photography',
+  'Onboarding',
+  'Visuals',
+  'Writing',
+];
 
 interface IProps {
   isOpen: boolean;
@@ -29,12 +29,14 @@ const EditResourceModal: FC<IProps> = ({
   closeModal,
 }): ReactElement => {
   const [open, setOpen] = React.useState<boolean>(false);
-  const [resourceURL, setResourceURL] = React.useState<string>('');
+  const [resourceURL, setResourceURL] = React.useState<string>(
+    resource ? resource.link : '',
+  );
   const [selectedTags, setSelectedTags] = React.useState<Set<string>>(
     new Set(),
   );
 
-  const handleTagSelect = (tag: string): void => {
+  function handleTagSelect(tag: string): void {
     const newTags = new Set(selectedTags);
     if (newTags.has(tag)) {
       newTags.delete(tag);
@@ -42,16 +44,14 @@ const EditResourceModal: FC<IProps> = ({
       newTags.add(tag);
     }
     setSelectedTags(newTags);
-  };
+  }
 
   async function modifyResource(): Promise<void> {
     const editedResource = {
       name: resource ? resource.name : null,
-      link: resourceURL !== '' ? resourceURL : null,
+      link: resourceURL,
       teamRoles: Array.from(selectedTags),
     };
-
-    console.log(editedResource);
 
     const res = await editResource(resource?._id, editedResource);
     if (!isError(res)) {
@@ -60,12 +60,30 @@ const EditResourceModal: FC<IProps> = ({
   }
 
   useEffect(() => {
+    if (resource) {
+      // Populate selectedTags set with resource's current teams
+      const newTags = new Set<string>();
+      for (const idx in Object.keys(resource.teamRoles)) {
+        newTags.add(resource.teamRoles[idx]);
+        setSelectedTags(newTags);
+      }
+    }
+  }, [resource]);
+
+  useEffect(() => {
     setOpen(isOpen);
   }, [isOpen]);
 
   function close(): void {
     setOpen(false);
     closeModal();
+  }
+
+  function isTeam(team: string): boolean {
+    if (resource && selectedTags.has(team)) {
+      return true;
+    }
+    return false;
   }
 
   return (
@@ -80,15 +98,12 @@ const EditResourceModal: FC<IProps> = ({
               <div className="resource-tags-wrapper">
                 Resource Tags:
                 <div className="resource-tag-grid">
-                  {Object.keys(teamColors).map((button, idx) => (
-                    <Button
+                  {teams.map((team, idx) => (
+                    <Checkbox
                       key={idx}
-                      className={`resource-tag ${
-                        selectedTags.has(button) ? 'active' : 'false'
-                      }`}
-                      content={button}
-                      style={{ backgroundColor: teamColors[button] }}
-                      onClick={() => handleTagSelect(button)}
+                      label={team}
+                      onClick={() => handleTagSelect(team)}
+                      defaultChecked={isTeam(team) ? true : false}
                     />
                   ))}
                 </div>

@@ -1,20 +1,20 @@
 import React, { ReactElement, FC, Dispatch } from 'react';
-import { Modal, Button, Form, Input } from 'semantic-ui-react';
+import { Modal, Button, Form, Input, Checkbox } from 'semantic-ui-react';
 
 import { createResource, isError } from '../../utils/apiWrapper';
 
 import '../../css/AddResourceModal.css';
 
-const teamColors: { [key: string]: string } = {
-  General: '#EF8B8B',
-  Editing: '#A5C4F2',
-  Factchecking: '#CFE7C4',
-  Illustration: '#BAB9E9',
-  Photography: '#D8ACE8',
-  Onboarding: '#F1D8B0',
-  Visuals: '#BFEBE0',
-  Writing: '#A9D3E5',
-};
+const teams = [
+  'General',
+  'Editing',
+  'Factchecking',
+  'Illustration',
+  'Photography',
+  'Onboarding',
+  'Visuals',
+  'Writing',
+];
 
 interface IProps {
   onAdd: Dispatch<void>;
@@ -85,15 +85,11 @@ const AddResourceModal: FC<IProps> = ({ onAdd }): ReactElement => {
             <div className="resource-tags-wrapper">
               Resource Tags:
               <div className="resource-tag-grid">
-                {Object.keys(teamColors).map((button, idx) => (
-                  <Button
+                {teams.map((team, idx) => (
+                  <Checkbox
                     key={idx}
-                    className={`resource-tag ${
-                      selectedTags.has(button) ? 'active' : 'false'
-                    }`}
-                    content={button}
-                    style={{ backgroundColor: teamColors[button] }}
-                    onClick={() => handleTagSelect(button)}
+                    label={team}
+                    onClick={() => handleTagSelect(team)}
                   />
                 ))}
               </div>
