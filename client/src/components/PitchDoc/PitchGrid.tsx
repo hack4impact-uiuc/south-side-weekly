@@ -3,6 +3,7 @@ import { IPitch } from 'ssw-common';
 import { Grid } from 'semantic-ui-react';
 
 import PitchCard from './PitchCard';
+import ClaimPitchModal from '../../components/PitchDoc/ClaimPitchModal';
 interface IProps {
   pitches: IPitch[];
 }
@@ -12,7 +13,7 @@ const PitchGrid: FC<IProps> = ({ pitches }): ReactElement => (
     <Grid.Row columns={3}>
       {pitches.map((pitch, idx) => (
         <Grid.Column key={idx}>
-          <PitchCard pitch={pitch} />
+          <ClaimPitchModal pitch={pitch}/>
         </Grid.Column>
       ))}
     </Grid.Row>

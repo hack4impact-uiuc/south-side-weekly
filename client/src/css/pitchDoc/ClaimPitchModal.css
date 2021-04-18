@@ -7,6 +7,7 @@
   box-shadow: 0px 3.43343px 3.43343px rgba(0, 0, 0, 0.25),
     inset 0px 3.43343px 3.43343px rgba(0, 0, 0, 0.25);
   border-radius: 10.3003px;
+  width: 70%;
 }
 
 .ui.modal > .actions {
@@ -28,7 +29,6 @@
   font-style: normal;
   font-weight: 600;
   color: #f7fafb;
-  text-shadow: 0px 3.43343px 3.43343px rgba(0, 0, 0, 0.25);
 }
 
 .pitch-info .pitch-name {
@@ -50,28 +50,51 @@
   letter-spacing: 0em;
 }
 
-.claim-pitches-wrapper .image {
-  padding-top: 20px;
-}
 
 .claim-pitches-wrapper .container {
   padding-bottom: 20px;
   display: flex;
   align-items: center;
   flex-direction: column;
+
 }
 
-.roles-needed {
-  padding-top: 50px;
+
+.claim-pitches-wrapper 
+.role-section {
+  display: flex;
+  padding-top: 20px;
+}
+
+.claim-pitches-wrapper 
+.role-section
+ {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+
+}
+.claim-pitches-wrapper 
+.role-section
+.role-items {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+
+.claim-pitches-wrapper 
+.role-section
+.roles-needed-title {
   font-size: 21px;
   font-style: normal;
-  font-weight: 600;
   line-height: 25px;
   letter-spacing: 0em;
 }
 
 .modal-submit-button {
-  padding-top: 40px;
+  padding-top: 20px;
+  text-align: center;
 }
 
 .modal-submit-button .ui.button {
@@ -99,4 +122,46 @@
   padding-top: 20px;
   padding-bottom: 20px;
   padding-right: 20px;
+}
+
+.claim-pitches-wrapper
+.topics-wrapper
+.ui.circular.labels .label {
+  width: 15% !important;
+  font-size: 10px !important;
+  font-weight: 100 !important;
+}
+
+.claim-pitches-wrapper
+.ui.circular.label {
+  width: 90px !important;
+  font-size: 10px !important;
+  font-weight: 100 !important;
+}
+
+.claim-pitches-wrapper
+.role-section
+.role-item {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+
+.claim-pitches-wrapper
+.role-section
+.role-items {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.claim-pitches-wrapper
+.role-section
+.role-items
+.role-number {
+  font-size: 30px;
+  margin-top: 10px;
 }

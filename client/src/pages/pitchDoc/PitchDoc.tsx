@@ -24,7 +24,7 @@ function PitchDoc(): ReactElement {
     };
 
     getAllUnclaimedPitches();
-  }, []);
+  }, []);  
 
   return (
     <>

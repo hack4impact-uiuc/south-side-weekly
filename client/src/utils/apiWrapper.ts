@@ -29,6 +29,11 @@ export interface GetPitchesResponseType {
   result: [IPitch];
 }
 
+export interface GetOpenTeamsResponseType {
+  message: string;
+  result: IPitch["teams"];
+}
+
 /**
  * Returns a sample API response to demonstrate a working backend
  * Returns GET_SAMPLE_FAIL upon failure
@@ -95,7 +100,7 @@ export const getUnclaimedPitches = (): Promise<
  */
 export const getOpenTeams = (
   pitchId: string,
-): Promise<AxiosResponse<GetPitchesResponseType> | ErrorWrapper> => {
+): Promise<AxiosResponse<GetOpenTeamsResponseType> | ErrorWrapper> => {
   const requestString = `${BASE_URL}/pitch/${pitchId}/openTeams`;
   return axios
     .get(requestString, {
@@ -108,3 +113,45 @@ export const getOpenTeams = (
       error,
     }));
 };
+
+
+
+const user_id = '6031a866c70ec705736a79e5';
+/**
+ * Updates a pitch's Contributor Array
+ * Returns POST_PITCH_FAIL upon failure
+ */
+ export const updatePitchContributors = (userId: string, pitchId: string): Promise<AxiosResponse<GetPitchesResponseType> | ErrorWrapper> => {
+  const pitchUrl = `${BASE_URL}/pitch/${pitchId}/contributors`;
+  return axios
+    .put(pitchUrl, { userId }, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'POST_PITCH_FAIL',
+      error,
+    }));
+};
+
+/**
+ * Updates a user's claimed pitches
+ * Returns POST_PITCH_FAIL upon failure
+ */
+ export const updateClaimedPitches = (userId: string, pitchId: string): Promise<AxiosResponse<GetPitchesResponseType> | ErrorWrapper> => {
+  const userUrl = `${BASE_URL}/users/${userId}/pitches`;
+  return axios
+    .put(userUrl, { pitchId }, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'POST_USER_FAIL',
+      error,
+    }));
+};
+
+
+
