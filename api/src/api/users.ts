@@ -134,7 +134,7 @@ router.delete(
 );
 
 // Add pitch to a user's claimed pitches
-router.post(
+router.put(
   '/:userId/pitches',
   errorWrap(async (req: Request, res: Response) => {
     if (!isValidMongoId(req.params.userId)) {
@@ -151,15 +151,6 @@ router.post(
       return;
     }
 
-    const user = await User.findById(req.params.userId);
-    if (!user) {
-      res.status(404).json({
-        success: false,
-        message: 'User not found with id',
-      });
-      return;
-    }
-
     const pitch = await Pitch.findById(req.body.pitchId);
     if (!pitch) {
       res.status(404).json({
@@ -169,13 +160,23 @@ router.post(
       return;
     }
 
-    user.claimedPitches.push(pitch);
-    await user.save();
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.userId,
+      { $addToSet: req.body },
+      { new: true, runValidators: true },
+    );
+    if (!updatedUser) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found with id',
+      });
+      return;
+    }
 
     res.status(200).json({
       success: true,
       message: 'Successfully added pitch to user',
-      result: user,
+      result: updatedUser,
     });
   }),
 );

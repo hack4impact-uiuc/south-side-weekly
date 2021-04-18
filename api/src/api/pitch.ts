@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb';
 import { errorWrap } from '../middleware';
 
 import Pitch from '../models/pitch';
+import User from '../models/user'
 import { pitchStatusEnum } from '../utils/enums';
 
 const router = express.Router();
@@ -171,6 +172,57 @@ router.put(
     });
   }),
 );
+
+// Adds a contributor to the assignmentContributors array
+router.put(
+  '/:pitchId/contributors',
+  errorWrap(async (req: Request, res: Response) => {
+    if (!isValidMongoId(req.params.pitchId)) {
+      res.status(400).json({
+        success: false,
+        message: 'Bad pitch ID format',
+      });
+      return;
+    } else if (!isValidMongoId(req.body.userId)) {
+      res.status(400).json({
+        success: false,
+        message: 'Bad user ID format',
+      });
+      return;
+    }
+
+    const user = await User.findById(req.body.userId);
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found with id',
+      });
+      return;
+    }
+
+    const updatedPitch = await Pitch.findByIdAndUpdate(
+      req.params.pitchId,
+      { $addToSet: req.body },
+      { new: true, runValidators: true },
+    );
+    
+    if (!updatedPitch) {
+      res.status(404).json({
+        success: false,
+        message: 'Pitch not found with id',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully updated assignmentContributors',
+      result: updatedPitch,
+    });
+  }),
+);
+
+
 
 // Deletes a pitch
 router.delete(
