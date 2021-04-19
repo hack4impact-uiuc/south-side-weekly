@@ -1,4 +1,10 @@
-import React, { ReactElement, useCallback, useEffect, useState } from 'react';
+import React, {
+  ReactElement,
+  useCallback,
+  useEffect,
+  useReducer,
+  useState,
+} from 'react';
 import { Dropdown, Button, Input } from 'semantic-ui-react';
 
 import { IUser } from '../../../common/index';
@@ -14,6 +20,29 @@ interface IFilterKeys {
   date: string;
   interests: string[];
   teams: string[];
+}
+
+interface ISearchState {
+  users: IUser[];
+  query: string;
+  isLoading: boolean;
+}
+
+interface ISearchAction {
+  type: SearchAction;
+  query: string;
+  users: IUser[];
+}
+
+interface IModalState {
+  isOpen: boolean;
+  user?: IUser;
+}
+
+interface IModalAction {
+  type: ModalAction;
+  isOpen: boolean;
+  user?: IUser;
 }
 
 const initialFilterKeys: IFilterKeys = {
@@ -59,18 +88,76 @@ const teamOptions = [
   { key: 6, text: 'Photography', value: 'Photography' },
 ];
 
+enum SearchAction {
+  CLEAN_QUERY = 'CLEAN_QUERY',
+  INITIALIZE_USERS = 'INITIALIZE_USERS',
+  START_SEARCH = 'START_SEARCH',
+  UPDATE_QUERY = 'UPDATE_QUERY',
+  FINISH_SEARCH = 'FINISH_SEARCH',
+}
+
+const initialSearchState: ISearchState = {
+  users: [],
+  query: '',
+  isLoading: false,
+};
+
+const searchReducer = (
+  state: ISearchState,
+  action: ISearchAction,
+): ISearchState => {
+  switch (action.type) {
+    case 'CLEAN_QUERY':
+      return initialSearchState;
+    case 'INITIALIZE_USERS':
+      return { ...state, users: action.users };
+    case 'START_SEARCH':
+      return { ...state, isLoading: true, query: action.query };
+    case 'UPDATE_QUERY':
+      return { ...state, query: action.query };
+    case 'FINISH_SEARCH':
+      return { ...state, isLoading: false, users: action.users };
+    default:
+      throw new Error();
+  }
+};
+
+enum ModalAction {
+  OPEN_MODAL = 'OPEN_MODAL',
+  CLOSE_MODAL = 'CLOSE_MODAL',
+}
+
+const initialModalState: IModalState = {
+  isOpen: false,
+  user: undefined,
+};
+
+const modalReducer = (
+  state: IModalState,
+  action: IModalAction,
+): IModalState => {
+  switch (action.type) {
+    case 'OPEN_MODAL':
+      return { isOpen: true, user: action.user };
+    case 'CLOSE_MODAL':
+      return { isOpen: false };
+    default:
+      throw new Error();
+  }
+};
+
 const Directory = (): ReactElement => {
   const [directory, setDirectory] = useState<IUser[]>([]);
 
-  // TODO: Loading, searched directory, and search Term should be a reducer
-  const [searchedDirectory, setSearchedDirectory] = useState<IUser[]>(
-    directory,
+  const [searchState, dispatchSearch] = useReducer(
+    searchReducer,
+    initialSearchState,
   );
-  const [searchLoading, setSearchLoading] = useState<boolean>(false);
-  const [searchTerm, setSearchTerm] = useState<string>('');
 
-  const [isUserModalOpen, setIsUserModalOpen] = useState<boolean>(false);
-  const [selectedUser, setSelectedUser] = useState<IUser>();
+  const [modalState, dispatchModal] = useReducer(
+    modalReducer,
+    initialModalState,
+  );
 
   const [filterKeys, setFilterKeys] = useState<IFilterKeys>(initialFilterKeys);
 
@@ -83,7 +170,12 @@ const Directory = (): ReactElement => {
 
       if (!isError(resp)) {
         setDirectory(resp.data.result);
-        setSearchedDirectory(resp.data.result);
+        // setSearchedDirectory(resp.data.result);
+        dispatchSearch({
+          type: SearchAction.INITIALIZE_USERS,
+          query: '',
+          users: resp.data.result,
+        });
       }
     };
 
@@ -120,24 +212,42 @@ const Directory = (): ReactElement => {
   );
 
   /**
-   * Adds a 1/2 second delay before searching
+   * Delay before searching
    */
   useEffect(() => {
-    if (searchTerm === null || searchTerm === undefined || searchTerm === '') {
-      setSearchedDirectory(directory);
-      setSearchLoading(false);
+    if (
+      searchState.query === null ||
+      searchState.query === undefined ||
+      searchState.query === ''
+    ) {
+      dispatchSearch({
+        type: SearchAction.FINISH_SEARCH,
+        query: '',
+        users: directory,
+      });
       return;
     }
 
-    setSearchLoading(true);
+    dispatchSearch({
+      type: SearchAction.START_SEARCH,
+      query: searchState.query,
+      users: [],
+    });
+
+    const millisecondDelay = 500;
 
     const delaySearch = setTimeout(() => {
-      setSearchedDirectory([...handleSearch(searchTerm)]);
-      setSearchLoading(false);
-    }, 500);
+      const users = [...handleSearch(searchState.query)];
+
+      dispatchSearch({
+        type: SearchAction.FINISH_SEARCH,
+        query: searchState.query,
+        users: users,
+      });
+    }, millisecondDelay);
 
     return () => clearTimeout(delaySearch);
-  }, [searchTerm, directory, handleSearch]);
+  }, [searchState.query, directory, handleSearch]);
 
   /**
    * Recevies a directory and filters it with all of the selected keys
@@ -341,22 +451,26 @@ const Directory = (): ReactElement => {
    */
   const openContributorModal = (user: IUser): void => {
     if (user) {
-      setIsUserModalOpen(true);
-      setSelectedUser(user);
+      dispatchModal({ type: ModalAction.OPEN_MODAL, isOpen: true, user: user });
+      console.log(modalState.isOpen);
     }
   };
 
   const closeContributorModal = (): void => {
-    setIsUserModalOpen(false);
+    dispatchModal({
+      type: ModalAction.CLOSE_MODAL,
+      isOpen: false,
+      user: modalState.user,
+    });
   };
 
   return (
     <>
-      {selectedUser !== undefined && (
+      {modalState.user !== undefined && (
         <UserModal
-          open={isUserModalOpen}
+          open={modalState.isOpen}
           handleClose={closeContributorModal}
-          user={selectedUser}
+          user={modalState.user!}
         />
       )}
       <Sidebar currentPage={pages.USERS} />
@@ -368,9 +482,15 @@ const Directory = (): ReactElement => {
           <h2>Directory</h2>
           <div className="directory-search">
             <Input
-              onChange={(e) => setSearchTerm(e.currentTarget.value)}
+              onChange={(e) =>
+                dispatchSearch({
+                  ...searchState,
+                  type: SearchAction.UPDATE_QUERY,
+                  query: e.currentTarget.value,
+                })
+              }
               icon="search"
-              loading={searchLoading}
+              loading={searchState.isLoading}
             />
           </div>
           <div className="filters">
@@ -426,7 +546,7 @@ const Directory = (): ReactElement => {
             />
           </div>
           <div className="directory">
-            {handleDirectoryFilter(searchedDirectory).map((user) => (
+            {handleDirectoryFilter(searchState.users).map((user) => (
               <Button
                 onClick={() => openContributorModal(user)}
                 key={user.oauthID}
