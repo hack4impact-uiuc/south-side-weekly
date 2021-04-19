@@ -28,4 +28,28 @@ const handleSelectGroupArray = (
   }
 };
 
-export { handleSelectGroupArray };
+interface ISemanticDropdownOptions {
+  key: number;
+  text: string;
+  value: string;
+}
+
+const parseArrayToSemanticDropdownOptions = (
+  arr: string[],
+): ISemanticDropdownOptions[] => {
+  const semanticOptions: ISemanticDropdownOptions[] = [];
+
+  for (let count = 0; count < arr.length; ++count) {
+    const newOption: ISemanticDropdownOptions = {
+      key: count + 1,
+      text: arr[count],
+      value: arr[count],
+    };
+
+    semanticOptions.push(newOption);
+  }
+
+  return semanticOptions;
+};
+
+export { handleSelectGroupArray, parseArrayToSemanticDropdownOptions };

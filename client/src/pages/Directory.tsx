@@ -2,6 +2,7 @@ import React, {
   ReactElement,
   useCallback,
   useEffect,
+  useMemo,
   useReducer,
   useState,
 } from 'react';
@@ -14,6 +15,7 @@ import SSW from '../assets/ssw-form-header.png';
 import '../css/Directory.css';
 import UserModal from '../components/UserModal/UserModal';
 import { pages } from '../utils/enums';
+import { parseArrayToSemanticDropdownOptions } from '../utils/helpers';
 
 interface IFilterKeys {
   role: string;
@@ -51,42 +53,6 @@ const initialFilterKeys: IFilterKeys = {
   interests: [],
   teams: [],
 };
-
-const roleOptions = [
-  { key: 1, text: 'Contributor', value: 'Contributor' },
-  { key: 2, text: 'Staff', value: 'Staff' },
-  { key: 3, text: 'Admin', value: 'Admin' },
-];
-
-const dateOptions = [
-  { key: 1, text: 'Earliest to Latest', value: 'Earliest to Latest' },
-  { key: 2, text: 'Latest to Earliest', value: 'Latest to Earliest' },
-];
-
-const interestOptions = [
-  { key: 1, text: 'Cannabis', value: 'Cannabis' },
-  { key: 2, text: 'Food & Land', value: 'Food & Land' },
-  { key: 3, text: 'Fun', value: 'Fun' },
-  { key: 4, text: 'Health', value: 'Health' },
-  { key: 5, text: 'Housing', value: 'Housing' },
-  { key: 6, text: 'Immigration', value: 'Immigration' },
-  { key: 7, text: 'Lit', value: 'Lit' },
-  { key: 8, text: 'Music', value: 'Music' },
-  { key: 9, text: 'Nature', value: 'Nature' },
-  { key: 10, text: 'Politics', value: 'Politics' },
-  { key: 11, text: 'Stage and Screen', value: 'Stage and Screen' },
-  { key: 12, text: 'Transportation', value: 'Transportation' },
-  { key: 13, text: 'Visual Arts', value: 'Visual Arts' },
-];
-
-const teamOptions = [
-  { key: 1, text: 'Editing', value: 'Editing' },
-  { key: 2, text: 'Writing', value: 'Writing' },
-  { key: 3, text: 'Fact-Checking', value: 'Fact-Checking' },
-  { key: 4, text: 'Illustration', value: 'Illustration' },
-  { key: 5, text: 'Visuals', value: 'Visuals' },
-  { key: 6, text: 'Photography', value: 'Photography' },
-];
 
 enum SearchAction {
   CLEAN_QUERY = 'CLEAN_QUERY',
@@ -157,6 +123,50 @@ const Directory = (): ReactElement => {
   const [modalState, dispatchModal] = useReducer(
     modalReducer,
     initialModalState,
+  );
+
+  const roleOptions = useMemo(
+    () => parseArrayToSemanticDropdownOptions(['Contributor', 'Staff', 'Admin']),
+    [],
+  );
+  const dateOptions = useMemo(
+    () =>
+      parseArrayToSemanticDropdownOptions([
+        'Earliest to Latest',
+        'Latest to Earliest',
+      ]),
+    [],
+  );
+  const interestOptions = useMemo(
+    () =>
+      parseArrayToSemanticDropdownOptions([
+        'Cannabis',
+        'Food & Land',
+        'Fun',
+        'Health',
+        'Housing',
+        'Immigration',
+        'Lit',
+        'Music',
+        'Nature',
+        'Politics',
+        'Stage and Screen',
+        'Transportation',
+        'Visual Arts',
+      ]),
+    [],
+  );
+  const teamOptions = useMemo(
+    () =>
+      parseArrayToSemanticDropdownOptions([
+        'Editing',
+        'Writing',
+        'Fact-Checking',
+        'Illustration',
+        'Visuals',
+        'Photography',
+      ]),
+    [],
   );
 
   const [filterKeys, setFilterKeys] = useState<IFilterKeys>(initialFilterKeys);
