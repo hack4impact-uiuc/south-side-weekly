@@ -68,6 +68,12 @@ const initialSearchState: ISearchState = {
   isLoading: false,
 };
 
+/**
+ * Reducer for the search state
+ * @param state the current state of the search
+ * @param action the action to perform on the search state
+ * @returns new search state
+ */
 const searchReducer = (
   state: ISearchState,
   action: ISearchAction,
@@ -98,6 +104,13 @@ const initialModalState: IModalState = {
   user: undefined,
 };
 
+/**
+ * Reducer for the modal state
+ *
+ * @param state the state of the current modal
+ * @param action the action to perform on the modal state
+ * @returns new modal state
+ */
 const modalReducer = (
   state: IModalState,
   action: IModalAction,
@@ -114,19 +127,18 @@ const modalReducer = (
 
 const Directory = (): ReactElement => {
   const [directory, setDirectory] = useState<IUser[]>([]);
-
   const [searchState, dispatchSearch] = useReducer(
     searchReducer,
     initialSearchState,
   );
-
   const [modalState, dispatchModal] = useReducer(
     modalReducer,
     initialModalState,
   );
 
   const roleOptions = useMemo(
-    () => parseArrayToSemanticDropdownOptions(['Contributor', 'Staff', 'Admin']),
+    () =>
+      parseArrayToSemanticDropdownOptions(['Contributor', 'Staff', 'Admin']),
     [],
   );
   const dateOptions = useMemo(
@@ -195,6 +207,8 @@ const Directory = (): ReactElement => {
   /**
    * Searches through the directory and returns a set of directory member who's name or
    * email contains the search term
+   *
+   * Callback prevents infinite re-rendering with the useEffect hook
    *
    * @param searchTerm the user input to search for
    * @returns an arary of directory members corresponding to the uesrs search
@@ -466,6 +480,9 @@ const Directory = (): ReactElement => {
     }
   };
 
+  /**
+   * Closes the contributor modal
+   */
   const closeContributorModal = (): void => {
     dispatchModal({
       type: ModalAction.CLOSE_MODAL,
