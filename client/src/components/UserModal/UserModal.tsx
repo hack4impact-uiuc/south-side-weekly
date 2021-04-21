@@ -1,40 +1,115 @@
 import React, { FC, ReactElement } from 'react';
-import { Modal } from 'semantic-ui-react';
+import { Modal, Image, Grid, Button, Icon } from 'semantic-ui-react';
 
 import { IUser } from '../../../../common/index';
+import '../../css/UserModal.css';
+import { colorEnum } from '../../utils/enums';
 
-interface IProps {
+interface ILabelProps {
+  text: string;
+}
+
+/**
+ * Builds a Label for the User Modal
+ *
+ * @param text the text to display within the label
+ * @returns a formatted label
+ */
+const ModalLabel: FC<ILabelProps> = ({ text }): ReactElement => {
+  const getLabelColor = (colorText: string): string => {
+    const value_index: number = Object.keys(colorEnum).indexOf(colorText);
+
+    // Return a default color
+    if (value_index < 0) {
+      return 'grey';
+    }
+
+    return Object.values(colorEnum)[value_index];
+  };
+
+  return (
+    <div style={{ background: getLabelColor(text) }} className="modal-label">
+      {text.toLowerCase()}
+    </div>
+  );
+};
+
+interface IModalProps {
   open: boolean;
   handleClose: () => void;
   user: IUser;
 }
 
-const UserModal: FC<IProps> = ({ open, handleClose, user }): ReactElement => (
-  <Modal open={open} onClose={handleClose}>
-    <Modal.Content>
-      <div>{user.firstName}</div>
-      <div>{user.lastName}</div>
-      <div>{user.preferredName}</div>
-      <div>{user.email}</div>
-      <div>{user.phone}</div>
-      <div>{user.oauthID}</div>
-      <div>{user.genders}</div>
-      <div>{user.pronouns}</div>
-      <div>{user.dateJoined}</div>
-      <div>{user.masthead}</div>
-      <div>{user.onboarding}</div>
-      <img src={user.profilePic} alt={user.firstName} />
-      <div>{user.portfolio}</div>
-      <div>{user.linkedIn}</div>
-      <div>{user.twitter}</div>
-      <div>{user.claimedPitches}</div>
-      <div>{user.submittedPitches}</div>
-      <div>{user.currentTeams}</div>
-      <div>{user.role}</div>
-      <div>{user.races}</div>
-      <div>{user.interests}</div>
-    </Modal.Content>
-  </Modal>
-);
+const UserModal: FC<IModalProps> = ({
+  open,
+  handleClose,
+  user,
+}): ReactElement => {
+  /**
+   * Opens up a user's profile page according to their ID
+   */
+  const openUserProfile = (): void => {
+    const profileWindow: Window = window.open(`/profile/${user.oauthID}`)!;
+
+    // Switch to this tab
+    profileWindow.focus();
+  };
+
+  return (
+    <Modal open={open} onClose={handleClose}>
+      <Modal.Content>
+        <Grid columns="equal" padded>
+          <Grid.Column verticalAlign="middle">
+            <Grid.Row>
+              <Image
+                circular
+                size="small"
+                src={user.profilePic}
+                alt={`${user.firstName} ${user.lastName}`}
+              />
+            </Grid.Row>
+            <Grid.Row>
+              <Button icon className="profile-button" onClick={openUserProfile}>
+                <Icon name="external alternate" />
+                Open in New Tab
+              </Button>
+            </Grid.Row>
+          </Grid.Column>
+          <Grid.Column verticalAlign="middle" width={5}>
+            <Grid.Row>
+              <h1 className="user-information name">
+                <b>{`${user.firstName} ${user.lastName}`}</b>
+              </h1>
+            </Grid.Row>
+            <Grid.Row>
+              <h3 className="user-information role">
+                {user.role.toLowerCase()}
+              </h3>
+            </Grid.Row>
+            <Grid.Row>
+              <h3 className="user-information email">{user.email}</h3>
+            </Grid.Row>
+          </Grid.Column>
+          <Grid.Column>
+            <h1 className="list-header">Topics</h1>
+            {user.interests.map((interest: string, index: number) => (
+              <Grid.Row key={index}>
+                <ModalLabel text={interest} />
+              </Grid.Row>
+            ))}
+          </Grid.Column>
+          <Grid.Column>
+            <h1 className="list-header">Teams</h1>
+            {user.currentTeams.map((team: string, index: number) => (
+              <Grid.Row key={index}>
+                <ModalLabel text={team} />
+              </Grid.Row>
+            ))}
+          </Grid.Column>
+        </Grid>
+      </Modal.Content>
+    </Modal>
+  );
+};
 
 export default UserModal;

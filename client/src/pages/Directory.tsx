@@ -9,13 +9,13 @@ import React, {
 import { Dropdown, Button, Input } from 'semantic-ui-react';
 
 import { IUser } from '../../../common/index';
-import { getUsers, isError } from '../utils/apiWrapper';
 import Sidebar from '../components/Sidebar';
-import SSW from '../assets/ssw-form-header.png';
-import '../css/Directory.css';
 import UserModal from '../components/UserModal/UserModal';
+import { getUsers, isError } from '../utils/apiWrapper';
 import { pages } from '../utils/enums';
 import { parseArrayToSemanticDropdownOptions } from '../utils/helpers';
+import SSW from '../assets/ssw-form-header.png';
+import '../css/Directory.css';
 
 interface IFilterKeys {
   role: string;
@@ -119,7 +119,7 @@ const modalReducer = (
     case 'OPEN_MODAL':
       return { isOpen: true, user: action.user };
     case 'CLOSE_MODAL':
-      return { isOpen: false };
+      return { ...state, isOpen: false };
     default:
       throw new Error();
   }
@@ -127,6 +127,7 @@ const modalReducer = (
 
 const Directory = (): ReactElement => {
   const [directory, setDirectory] = useState<IUser[]>([]);
+  const [filterKeys, setFilterKeys] = useState<IFilterKeys>(initialFilterKeys);
   const [searchState, dispatchSearch] = useReducer(
     searchReducer,
     initialSearchState,
@@ -181,8 +182,6 @@ const Directory = (): ReactElement => {
     [],
   );
 
-  const [filterKeys, setFilterKeys] = useState<IFilterKeys>(initialFilterKeys);
-
   /**
    * Populated the directory and connect to the API
    */
@@ -226,7 +225,8 @@ const Directory = (): ReactElement => {
         return (
           firstName.includes(searchTerm) ||
           lastName.includes(searchTerm) ||
-          email.includes(searchTerm)
+          email.includes(searchTerm) ||
+          `${firstName} ${lastName}`.includes(searchTerm)
         );
       });
 
@@ -239,11 +239,7 @@ const Directory = (): ReactElement => {
    * Delay before searching
    */
   useEffect(() => {
-    if (
-      searchState.query === null ||
-      searchState.query === undefined ||
-      searchState.query === ''
-    ) {
+    if (searchState.query === '') {
       dispatchSearch({
         type: SearchAction.FINISH_SEARCH,
         query: '',
@@ -302,24 +298,24 @@ const Directory = (): ReactElement => {
   /**
    * Updates the filter key state
    *
-   * @param filterKey the filter key to update
+   * @param key the filter key to update
    * @param newValue the new value to set the filter key's value to
    */
   const updateFilterKeys = (
-    filterKey: keyof IFilterKeys,
+    key: keyof IFilterKeys,
     newValue: string | string[],
   ): void => {
-    const currentFilterKeys: IFilterKeys = { ...filterKeys };
+    const keys: IFilterKeys = { ...filterKeys };
 
-    switch (filterKey) {
+    switch (key) {
       case 'role':
       case 'date':
-        currentFilterKeys[filterKey] = `${newValue}`;
+        keys[key] = `${newValue}`;
         break;
       case 'interests':
       case 'teams':
         if (Array.isArray(newValue)) {
-          currentFilterKeys[filterKey] = newValue;
+          keys[key] = newValue;
         }
         break;
       default:
@@ -327,7 +323,7 @@ const Directory = (): ReactElement => {
         break;
     }
 
-    setFilterKeys({ ...currentFilterKeys });
+    setFilterKeys({ ...keys });
   };
 
   /**
@@ -493,7 +489,7 @@ const Directory = (): ReactElement => {
 
   return (
     <>
-      {modalState.user !== undefined && (
+      {modalState.user && (
         <UserModal
           open={modalState.isOpen}
           handleClose={closeContributorModal}
