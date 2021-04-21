@@ -8,7 +8,6 @@ import {
   racesEnum,
 } from '../utils/enums';
 
-
 /**
  * Mongoose Schema to represent a User at South Side Weekly.
  */

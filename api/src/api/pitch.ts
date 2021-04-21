@@ -3,7 +3,7 @@ import { ObjectId } from 'mongodb';
 import { errorWrap } from '../middleware';
 
 import Pitch from '../models/pitch';
-import User from '../models/user'
+import User from '../models/user';
 import { pitchStatusEnum } from '../utils/enums';
 
 const router = express.Router();
@@ -202,10 +202,10 @@ router.put(
 
     const updatedPitch = await Pitch.findByIdAndUpdate(
       req.params.pitchId,
-      { $addToSet: { "assignmentContributors": req.body.userId } },
+      { $addToSet: { assignmentContributors: req.body.userId } },
       { new: true, runValidators: true },
     );
-    
+
     if (!updatedPitch) {
       res.status(404).json({
         success: false,
@@ -221,8 +221,6 @@ router.put(
     });
   }),
 );
-
-
 
 // Deletes a pitch
 router.delete(
