@@ -202,7 +202,7 @@ router.put(
 
     const updatedPitch = await Pitch.findByIdAndUpdate(
       req.params.pitchId,
-      { $addToSet: req.body },
+      { $addToSet: { "assignmentContributors": req.body.userId } },
       { new: true, runValidators: true },
     );
     

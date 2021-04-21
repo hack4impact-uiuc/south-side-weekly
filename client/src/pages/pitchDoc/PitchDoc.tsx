@@ -9,20 +9,21 @@ import SubmitPitchModal from '../../components/PitchDoc/SubmitPitchModal';
 import Logo from '../../assets/ssw-form-header.png';
 
 import '../../css/pitchDoc/PitchDoc.css';
+import PitchCard from '../../components/PitchDoc/PitchCard';
 
 function PitchDoc(): ReactElement {
   const [unclaimedPitches, setUnclaimedPitches] = useState<IPitch[]>([]);
 
+  const getAllUnclaimedPitches = async (): Promise<void> => {
+    const resp = await getUnclaimedPitches();
+
+    if (!isError(resp) && resp.data) {
+      setUnclaimedPitches(resp.data.result);
+      console.log(resp.data.result);
+    }
+  };
+  
   useEffect(() => {
-    const getAllUnclaimedPitches = async (): Promise<void> => {
-      const resp = await getUnclaimedPitches();
-
-      if (!isError(resp) && resp.data) {
-        setUnclaimedPitches(resp.data.result);
-        console.log(resp.data.result);
-      }
-    };
-
     getAllUnclaimedPitches();
   }, []);  
 
@@ -50,7 +51,7 @@ function PitchDoc(): ReactElement {
         </div>
 
         <div className="pitch-grid">
-          <PitchGrid pitches={unclaimedPitches} />
+          <PitchGrid pitches={unclaimedPitches} getAllUnclaimedPitches={getAllUnclaimedPitches} />
         </div>
       </div>
     </>

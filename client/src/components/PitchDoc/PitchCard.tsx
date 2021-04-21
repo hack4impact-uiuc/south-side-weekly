@@ -15,7 +15,7 @@ const defaultOnClick = (): void => void 0;
 
 interface IProps {
   pitch: IPitch;
-  openTeams: {[key: string]: number};
+  openTeams: {[key: string]: {current: number, target: number}};
 }
 
 const PitchCard: FC<IProps> = ({ pitch, openTeams, ...rest }): ReactElement => {

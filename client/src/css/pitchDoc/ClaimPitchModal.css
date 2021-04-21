@@ -1,5 +1,6 @@
-.ui.form {
-  font-size: 18px;
+
+.ui.modals {
+  justify-content: center !important;
 }
 
 .ui.modal {
@@ -7,93 +8,142 @@
   box-shadow: 0px 3.43343px 3.43343px rgba(0, 0, 0, 0.25),
     inset 0px 3.43343px 3.43343px rgba(0, 0, 0, 0.25);
   border-radius: 10.3003px;
-  width: 70%;
+  width: 60%;
 }
 
 .ui.modal > .actions {
-  text-align: left;
-  background: #3d4f91;
-  color: #f7fafb;
-  font-style: normal;
-  font-weight: normal;
-  line-height: 24px;
+  padding: 0px !important;
 }
 
 .claim-pitches-wrapper {
-  padding-left: 20px;
-  padding-bottom: 20px;
-  padding-right: 20px;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 30px;
+  padding-top: 20px;
 }
 
-.pitch-info {
-  font-style: normal;
-  font-weight: 600;
-  color: #f7fafb;
+.claim-pitches-wrapper
+.pitch-info
+.topics-wrapper
+.ui.circular.labels .label {
+  width: 15% !important;
+  font-size: 10px !important;
+  font-weight: 100 !important;
 }
 
-.pitch-info .pitch-name {
+.claim-pitches-wrapper
+.pitch-info 
+.pitch-name {
   height: 49.78470230102539px;
   width: 632.6090698242188px;
   font-size: 41.2011px;
   line-height: 50px;
+  font-weight: 600;
 }
 
-.pitch-info .submitted-by {
-  font-size: 18px;
+.claim-pitches-wrapper
+.pitch-info 
+.submitted-reviewed-by {
+  font-size: 16px;
   line-height: 22px;
+  font-weight: 100;
+  margin-right: 10px;
 }
 
-.pitch-info .summary {
-  font-size: 15px;
-  font-weight: 400;
+.claim-pitches-wrapper 
+.section-description {
+  font-size: 13px;
   line-height: 19px;
+  font-weight: normal;
   letter-spacing: 0em;
 }
 
-
-.claim-pitches-wrapper .container {
-  padding-bottom: 20px;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-
+.claim-pitches-wrapper
+.pitch-link
+.pitch-link-input {
+  width: 60% !important;
+  height: 35px !important;
+  background: #F7FAFB !important;
+  opacity: 0.75 !important;
+  border-radius: 100.9355px !important;
 }
 
-
 .claim-pitches-wrapper 
-.role-section {
+.role-contributor-section {
   display: flex;
   padding-top: 20px;
-}
-
-.claim-pitches-wrapper 
-.role-section
- {
   position: relative;
   display: flex;
   flex-direction: column;
-
-}
-.claim-pitches-wrapper 
-.role-section
-.role-items {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
 }
 
-
-.claim-pitches-wrapper 
-.role-section
-.roles-needed-title {
+.claim-pitches-wrapper
+.role-contributor-section
+.section-title {
   font-size: 21px;
   font-style: normal;
   line-height: 25px;
   letter-spacing: 0em;
 }
 
+.claim-pitches-wrapper
+.role-contributor-section
+.role-items {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin-top: 30px;
+  justify-content: center;
+}
+
+.claim-pitches-wrapper
+.role-contributor-section
+.role-item {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  margin-right: 10px;
+  margin-bottom: 20px;
+}
+
+.claim-pitches-wrapper
+.role-contributor-section
+.role-item 
+.ui.circular.label {
+  width: 100px !important;
+  font-size: 11px !important;
+  font-weight: 100 !important;
+}
+
+.claim-pitches-wrapper
+.role-contributor-section
+.role-items
+.role-item
+.role-number {
+  font-size: 30px;
+  margin-top: 10px;
+}
+
+.claim-pitches-wrapper
+.role-contributor-section
+.pitch-contributors {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: row;
+}
+
+.claim-pitches-wrapper
+.role-contributor-section
+.pitch-contributors
+.pfp {
+  width: 50px;
+  margin-right: 10px;
+  border-radius: 50%;
+
+}
+
 .modal-submit-button {
-  padding-top: 20px;
+  padding-top: 5px;
   text-align: center;
 }
 
@@ -124,44 +174,7 @@
   padding-right: 20px;
 }
 
-.claim-pitches-wrapper
-.topics-wrapper
-.ui.circular.labels .label {
-  width: 15% !important;
-  font-size: 10px !important;
-  font-weight: 100 !important;
-}
 
-.claim-pitches-wrapper
-.ui.circular.label {
-  width: 90px !important;
-  font-size: 10px !important;
-  font-weight: 100 !important;
-}
 
-.claim-pitches-wrapper
-.role-section
-.role-item {
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  margin-right: 10px;
-  margin-bottom: 20px;
-}
 
-.claim-pitches-wrapper
-.role-section
-.role-items {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  margin-top: 30px;
-}
 
-.claim-pitches-wrapper
-.role-section
-.role-items
-.role-number {
-  font-size: 30px;
-  margin-top: 10px;
-}

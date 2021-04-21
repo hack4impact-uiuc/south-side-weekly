@@ -1,9 +1,9 @@
 import React, { FC, ReactElement, useState, useEffect } from 'react';
-import { Modal, Button, Image, Label, Input, Checkbox, Radio} from 'semantic-ui-react';
+import { Modal, Button, Image, Label, Input, Checkbox, Popup} from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
-import { getOpenTeams, updatePitchContributors, updateClaimedPitches, isError } from '../../utils/apiWrapper'
-import GoogleDriveScreenshot from '../../assets/GoogleDriveScreenshot.png';
+import { getOpenTeams, updatePitchContributors, updateClaimedPitches, updatePitch, loadUser, isError } from '../../utils/apiWrapper'
 import Homerun from '../../assets/homerun.svg';
+import Pfp from '../../assets/pfp.svg'
 
 import PitchCard from './PitchCard';
 import '../../css/pitchDoc/ClaimPitchModal.css';
@@ -16,35 +16,43 @@ import {
 
 interface IProps {
   pitch: IPitch;
+  getAllUnclaimedPitches: () => Promise<void>;
 }
 
 
-const ClaimPitchModal: FC<IProps> = ({ pitch }): ReactElement => {
+const ClaimPitchModal: FC<IProps> = ({ pitch, getAllUnclaimedPitches}): ReactElement => {
   const [firstOpen, setFirstOpen] = useState<boolean>(false);
   const [secondOpen, setSecondOpen] = useState<boolean>(false);
-  const [openTeams, setOpenTeams] = useState<{[key: string]: number}>({});
+  const [openTeams, setOpenTeams] = useState<{[key: string]: {current: number, target: number}}>({});
   const [selectedTeams, setSelectedTeams] = useState<string[]>([]);
+  const [pitchContributors, setPitchContributors] = useState<{[key: string]: string}>({});
+  const [pitchLink, setPitchLink] = useState<string>("");
+  const [pitchAuthor, setPitchAuthor] = useState<string>("");
+  const [approvedBy, setApprovedBy] = useState<string>("");
   const userId = "6031a866c70ec705736a79e5";
+  const temp_pfp = Pfp;
+  const pitchData: {[key: string]: number | string} = {};
+
   
   const claimPitch = async (): Promise<void> => {
-    let res = await updatePitchContributors(userId, pitch._id);
-    if (isError(res)) {
-      console.log("error");
-      return;
+    const pitchRes = await updatePitchContributors(userId, pitch._id);
+    const claimedRes = await updateClaimedPitches(userId, pitch._id)
+    setData();
+    const updateRes = await updatePitch(pitchData, pitch._id); 
+    if (!isError(pitchRes) && !isError(claimedRes) && !isError(updateRes)){
+      setSecondOpen(true);
     }
-    res = await updateClaimedPitches(userId, pitch._id)
-    if (isError(res)) {
-      console.log("error");
-      return;
-    }
-    console.log(selectedTeams);
-    setSecondOpen(true);
-    setSelectedTeams([]);
+    getAllUnclaimedPitches();
+  }
 
+  const setData = () => {
+    selectedTeams.map((team, idx) => {
+      pitchData[`teams.${team}.current`] = openTeams[team].current+1;
+    })
+    pitchData["assignmentGoogleDocLink"] = pitchLink;
   }
 
   const handleCheckboxes = (team: string) => {
-    console.log("fjsdlkfjdslkfjsdlfkjsdlkfjsdlkfjsdlkfjsdlkfjds");
     const notFoundIdx = -1;
     const elementIdx = selectedTeams.indexOf(team);
     if (elementIdx === notFoundIdx) {
@@ -60,34 +68,47 @@ const ClaimPitchModal: FC<IProps> = ({ pitch }): ReactElement => {
     }
   }
  
-  const getAllUnclaimedPitches = async (): Promise<void> => {
+  const getTeams = async (): Promise<void> => {
     const resp = await getOpenTeams(pitch._id);
-    console.log(resp);
 
     if (!isError(resp) && resp.data) {
-      console.log(resp.data.result);
-      const teamTemp:{[key: string]: number}= {};
-      for (const [key, values] of Object.entries(resp.data.result)) {
-        teamTemp[key] = values.target-values.current;
-      }
-      setOpenTeams(teamTemp);
+      setOpenTeams(resp.data.result);
     }
   };
 
-  const getPitchContributors = async (): Promise<void> => {
-    console.log('f');
+  const getUser = async () => {
+    const contributors: {[name: string]: string} = {};
+    for (const userId of pitch.assignmentContributors) {
+      const res = await loadUser(userId);
+      if (!isError(res)) {
+        contributors[`${res.data.result.firstName} ${res.data.result.lastName}`] = temp_pfp;
+      }
+    }
+    setPitchContributors(contributors);
+
+    let res = await loadUser(pitch.pitchAuthor);
+    if (!isError(res)) {
+      setPitchAuthor(`${res.data.result.firstName} ${res.data.result.lastName}`)
+    }
+    res = await loadUser(pitch.approvedBy);
+    if (!isError(res)) {
+      setApprovedBy(`${res.data.result.firstName} ${res.data.result.lastName}`)
+    }  
   }
 
   useEffect(() => {
-    getAllUnclaimedPitches();
-  }, []);
+    getTeams();
+    setSelectedTeams([]);
+    getUser();
+    setPitchLink("");
+  }, [firstOpen]);
 
   return (
     <>
-      {console.log(openTeams)}
       <Modal
-        onClose={() => setFirstOpen(false)}
-        onOpen={() => setFirstOpen(true)}
+        className="claim-pitch-modal"
+        onClose={() => {setFirstOpen(false)}}
+        onOpen={() => {setFirstOpen(true)}}
         open={firstOpen}
         trigger={<PitchCard pitch={pitch} openTeams={openTeams}></PitchCard>}
         closeIcon
@@ -97,21 +118,25 @@ const ClaimPitchModal: FC<IProps> = ({ pitch }): ReactElement => {
             <div className="pitch-info">
               <div className="topics-wrapper">
                 <Label.Group style={{ marginBottom: 10 }} circular>
+                  
                   {pitch.topics.map((topic, idx) => (
-                    <Label
-                      style={{
-                        backgroundColor: interestsButtons[enumToInterestButtons[topic]],
-                      }}
-                      key={idx}
-                    >
-                      {enumToInterestButtons[topic]}
-                    </Label>
+                    <>
+                      <Label
+                        style={{
+                          backgroundColor: interestsButtons[enumToInterestButtons[topic]],
+                        }}
+                        key={idx}
+                      >
+                        {enumToInterestButtons[topic]}
+                      </Label>
+                    </>
                   ))}
                 </Label.Group>
               </div>
               <div className="pitch-name"> {pitch.name} </div>
-              <div className="submitted-by"> Submitted by: Mustafa Ali </div>
-              <div className="summary">
+              <span className="submitted-reviewed-by"> Submitted By: {pitchAuthor}</span>
+              <span className="submitted-reviewed-by"> Reviewed By: {approvedBy}</span>
+              <div className="section-description">
                 Here lies a two sentence summary of pitch. It will be two
                 sentences and no more.
               </div>
@@ -121,12 +146,17 @@ const ClaimPitchModal: FC<IProps> = ({ pitch }): ReactElement => {
               <Input
                 className="pitch-link-input"
                 placeholder="Pitch link"
+                onChange={(e) => {setPitchLink(e.currentTarget.value)}}
               />
             </div>      
-            <div className="role-section">
-                <div className="roles-needed-title">Roles Needed:</div>
+            <div className="role-contributor-section">
+                <div className="section-title">Roles Available Per Team:</div>
+                <div className="section-description">
+                  Please select the team that you will be filling the role 
+                  for before claiming this pitch.
+                </div>
                 <div className="role-items">
-                    {Object.entries(openTeams).map(([team,target], idx) => (
+                    {Object.entries(openTeams).map(([team,value], idx) => (
                       <>
                         <div className="role-item">
                           <div className="checkbox">
@@ -143,15 +173,26 @@ const ClaimPitchModal: FC<IProps> = ({ pitch }): ReactElement => {
                           >
                             {teamToTeamsButtons[team]}
                           </Label>  
-                          <div className="role-number">{target}</div>
+                          <div className="role-number">{value.target-value.current}</div>
                         </div>
                       </>
                     ))}
                 </div>
+                <div className="section-title">Pitch Claimed By:</div>
+                <div className="pitch-contributors">
+                  {Object.entries(pitchContributors).map(([name,pfpLink], idx) => (
+                    <>
+                      <Popup
+                        content={name}
+                        trigger={<img key={idx} src={pfpLink} className="pfp" alt="pfp"/>}
+                      />
+                    </>
+                  ))}
+                </div>
           
                 <div className="modal-submit-button">
                   <Button type="submit" onClick={claimPitch}>
-                    Claim Pitch!
+                    Submit My Claim for Approval
                   </Button>
                 </div>
             </div>
