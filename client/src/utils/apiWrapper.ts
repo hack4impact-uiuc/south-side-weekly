@@ -121,7 +121,6 @@ export const getOpenTeams = (
 
 
 
-const user_id = '6031a866c70ec705736a79e5';
 /**
  * Updates a pitch's Contributor Array
  * Returns POST_PITCH_FAIL upon failure
@@ -129,7 +128,7 @@ const user_id = '6031a866c70ec705736a79e5';
  export const updatePitchContributors = (userId: string, pitchId: string): Promise<AxiosResponse<GetPitchesResponseType> | ErrorWrapper> => {
   const pitchUrl = `${BASE_URL}/pitch/${pitchId}/contributors`;
   return axios
-    .put(pitchUrl, userId, {
+    .put(pitchUrl, { userId }, {
       headers: {
         'Content-Type': 'application/JSON',
       },
@@ -147,7 +146,7 @@ const user_id = '6031a866c70ec705736a79e5';
  export const updateClaimedPitches = (userId: string, pitchId: string): Promise<AxiosResponse<GetPitchesResponseType> | ErrorWrapper> => {
   const userUrl = `${BASE_URL}/users/${userId}/pitches`;
   return axios
-    .put(userUrl, pitchId, {
+    .put(userUrl, { pitchId }, {
       headers: {
         'Content-Type': 'application/JSON',
       },
@@ -195,5 +194,24 @@ const user_id = '6031a866c70ec705736a79e5';
       }));
   };
 
+/**
+ * Updates a user
+ * Returns GET_USER_FAIL upon failure
+ */
+  export const saveUser = (profileData: {
+    [key: string]: string | boolean | string[] | Date | null;
+  }, userId: string): Promise<AxiosResponse<GetProfileResponseType> | ErrorWrapper> => {
+    const userUrl = `${BASE_URL}/users/${userId}`;
+    return axios
+      .put(userUrl, profileData, {
+        headers: {
+          'Content-Type': 'application/JSON',
+        },
+      })
+      .catch((error) => ({
+        type: 'POST_USER_FAIL',
+        error,
+      }));
+  };
 
 

@@ -1,15 +1,15 @@
 import React, { useEffect, useState, ReactElement } from 'react';
 import { IPitch } from 'ssw-common';
-import { Grid, Search } from 'semantic-ui-react';
+import { Search } from 'semantic-ui-react';
 
+import { pages } from '../../utils/enums';
+import Sidebar from '../../components/Sidebar';
 import { getUnclaimedPitches, isError } from '../../utils/apiWrapper';
 import PitchGrid from '../../components/PitchDoc/PitchGrid';
-import ProfileSidebar from '../../components/PitchDoc/Sidebar';
 import SubmitPitchModal from '../../components/PitchDoc/SubmitPitchModal';
 import Logo from '../../assets/ssw-form-header.png';
 
 import '../../css/pitchDoc/PitchDoc.css';
-import PitchCard from '../../components/PitchDoc/PitchCard';
 
 function PitchDoc(): ReactElement {
   const [unclaimedPitches, setUnclaimedPitches] = useState<IPitch[]>([]);
@@ -19,7 +19,6 @@ function PitchDoc(): ReactElement {
 
     if (!isError(resp) && resp.data) {
       setUnclaimedPitches(resp.data.result);
-      console.log(resp.data.result);
     }
   };
   
@@ -29,7 +28,7 @@ function PitchDoc(): ReactElement {
 
   return (
     <>
-      <ProfileSidebar></ProfileSidebar>
+      <Sidebar currentPage={pages.PITCHES}/>
       <div className="logo-header">
         <img className="logo" alt="SSW Logo" src={Logo} />
       </div>
@@ -45,7 +44,6 @@ function PitchDoc(): ReactElement {
           <div className="container">
             <div className="filter-section">
               <div className="filter-text"> Filter/Sort By: </div>
-              {/* <Dropdown placeholder='Roles' /> */}
             </div>
           </div>
         </div>

@@ -2,7 +2,6 @@ import React, { FC, ReactElement } from 'react';
 import { IPitch } from 'ssw-common';
 import { Grid } from 'semantic-ui-react';
 
-import PitchCard from './PitchCard';
 import ClaimPitchModal from '../../components/PitchDoc/ClaimPitchModal';
 interface IProps {
   pitches: IPitch[];

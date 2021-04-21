@@ -1,18 +1,21 @@
-import React, { FC, ReactElement, useState, useEffect } from 'react';
+import React, { FC, ReactElement, useState, useEffect, useCallback } from 'react';
 import { Modal, Button, Image, Label, Input, Checkbox, Popup} from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
+
 import { getOpenTeams, updatePitchContributors, updateClaimedPitches, updatePitch, loadUser, isError } from '../../utils/apiWrapper'
 import Homerun from '../../assets/homerun.svg';
 import Pfp from '../../assets/pfp.svg'
-
-import PitchCard from './PitchCard';
-import '../../css/pitchDoc/ClaimPitchModal.css';
 import {
   currentTeamsButtons,
   teamToTeamsButtons,
   enumToInterestButtons,
   interestsButtons,
 } from '../../utils/constants';
+
+import PitchCard from './PitchCard';
+
+import '../../css/pitchDoc/ClaimPitchModal.css';
+
 
 interface IProps {
   pitch: IPitch;
@@ -29,7 +32,7 @@ const ClaimPitchModal: FC<IProps> = ({ pitch, getAllUnclaimedPitches}): ReactEle
   const [pitchLink, setPitchLink] = useState<string>("");
   const [pitchAuthor, setPitchAuthor] = useState<string>("");
   const [approvedBy, setApprovedBy] = useState<string>("");
-  const userId = "6031a866c70ec705736a79e5";
+  const userId = '6031a866c70ec705736a79e5';
   const temp_pfp = Pfp;
   const pitchData: {[key: string]: number | string} = {};
 
@@ -45,14 +48,14 @@ const ClaimPitchModal: FC<IProps> = ({ pitch, getAllUnclaimedPitches}): ReactEle
     getAllUnclaimedPitches();
   }
 
-  const setData = () => {
-    selectedTeams.map((team, idx) => {
+  const setData = (): void => {
+    selectedTeams.map((team) => {
       pitchData[`teams.${team}.current`] = openTeams[team].current+1;
     })
     pitchData["assignmentGoogleDocLink"] = pitchLink;
   }
 
-  const handleCheckboxes = (team: string) => {
+  const handleCheckboxes = (team: string): void => {
     const notFoundIdx = -1;
     const elementIdx = selectedTeams.indexOf(team);
     if (elementIdx === notFoundIdx) {
@@ -68,15 +71,15 @@ const ClaimPitchModal: FC<IProps> = ({ pitch, getAllUnclaimedPitches}): ReactEle
     }
   }
  
-  const getTeams = async (): Promise<void> => {
+  const getTeams = useCallback( async (): Promise<void> => {
     const resp = await getOpenTeams(pitch._id);
 
     if (!isError(resp) && resp.data) {
       setOpenTeams(resp.data.result);
     }
-  };
+  }, [pitch._id]);
 
-  const getUser = async () => {
+  const getUser = useCallback( async () => {
     const contributors: {[name: string]: string} = {};
     for (const userId of pitch.assignmentContributors) {
       const res = await loadUser(userId);
@@ -85,23 +88,26 @@ const ClaimPitchModal: FC<IProps> = ({ pitch, getAllUnclaimedPitches}): ReactEle
       }
     }
     setPitchContributors(contributors);
-
-    let res = await loadUser(pitch.pitchAuthor);
-    if (!isError(res)) {
-      setPitchAuthor(`${res.data.result.firstName} ${res.data.result.lastName}`)
+    if (pitch.pitchAuthor) {
+      const res = await loadUser(pitch.pitchAuthor);
+      if (!isError(res)) {
+        setPitchAuthor(`${res.data.result.firstName} ${res.data.result.lastName}`)
+      }
     }
-    res = await loadUser(pitch.approvedBy);
-    if (!isError(res)) {
-      setApprovedBy(`${res.data.result.firstName} ${res.data.result.lastName}`)
-    }  
-  }
+    if (pitch.approvedBy) {
+      const res = await loadUser(pitch.approvedBy);
+      if (!isError(res)) {
+        setApprovedBy(`${res.data.result.firstName} ${res.data.result.lastName}`)
+      }  
+    }
+  }, [pitch.assignmentContributors, pitch.pitchAuthor, pitch.approvedBy, temp_pfp]);
 
   useEffect(() => {
     getTeams();
     setSelectedTeams([]);
     getUser();
     setPitchLink("");
-  }, [firstOpen]);
+  }, [firstOpen, getTeams, getUser]);
 
   return (
     <>
@@ -158,7 +164,7 @@ const ClaimPitchModal: FC<IProps> = ({ pitch, getAllUnclaimedPitches}): ReactEle
                 <div className="role-items">
                     {Object.entries(openTeams).map(([team,value], idx) => (
                       <>
-                        <div className="role-item">
+                        <div className="role-item" key={idx}>
                           <div className="checkbox">
                             <Checkbox
                               className="checkbox"
@@ -169,7 +175,6 @@ const ClaimPitchModal: FC<IProps> = ({ pitch, getAllUnclaimedPitches}): ReactEle
                             className="role-name"
                             circular
                             style={{ backgroundColor: currentTeamsButtons[teamToTeamsButtons[team]] }}
-                            key={idx}
                           >
                             {teamToTeamsButtons[team]}
                           </Label>  

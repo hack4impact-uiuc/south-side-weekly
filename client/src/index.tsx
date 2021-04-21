@@ -21,7 +21,7 @@ ReactDOM.render(
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/join" component={WizardWrapper} />
-        <Route exact path="/pitchDoc" component={PitchDoc} />
+        <Route exact path="/pitches" component={PitchDoc} />
         <Route exact path="/resource" component={ResourcePage} />
         <Route exact path="/resources" component={ResourcePage} />
         <Route exact path="/profile" component={Profile} />

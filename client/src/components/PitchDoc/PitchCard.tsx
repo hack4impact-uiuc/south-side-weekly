@@ -1,9 +1,8 @@
-import React, { FC, ReactElement, useState, useEffect } from 'react';
+import React, { FC, ReactElement } from 'react';
 import { Card, Label } from 'semantic-ui-react';
 import '../../css/pitchDoc/PitchCard.css';
 import { IPitch } from 'ssw-common';
 
-import { getOpenTeams, isError } from '../../utils/apiWrapper';
 import {
   currentTeamsButtons,
   teamToTeamsButtons,
@@ -18,9 +17,7 @@ interface IProps {
   openTeams: {[key: string]: {current: number, target: number}};
 }
 
-const PitchCard: FC<IProps> = ({ pitch, openTeams, ...rest }): ReactElement => {
-  const [x, setX] = useState<string>("");
-  return (
+const PitchCard: FC<IProps> = ({ pitch, openTeams, ...rest }): ReactElement => (
     <div className="pitch-card-wrapper">
       <Card className="pitch-card" {...rest}>
         <Card.Content>
@@ -57,6 +54,5 @@ const PitchCard: FC<IProps> = ({ pitch, openTeams, ...rest }): ReactElement => {
       </Card>
     </div>
   );
-};
 
 export default PitchCard;

@@ -14,7 +14,6 @@ export interface IUser extends Document<any>, IUserBase {
  */
 export interface IPitch extends Document<any>, IPitchBase {
   _id: string;
-  pitchAuthor: mongoose.Types.ObjectId;
 }
 
 /**

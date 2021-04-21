@@ -4,15 +4,6 @@
   height: 100vh;
 }
 
-.pfp-page .logo-header {
-  text-align: center;
-}
-
-.pfp-page .logo {
-  width: 45%;
-  margin-top: 1%;
-}
-
 .pfp-page-content {
   position: relative;
   margin-left: 12%;
@@ -231,7 +222,10 @@
   display: flex;
   flex-direction: row;
   height: 100%;
-  margin-left: 17%;
+  margin-left: 0%;
+  justify-content: center;
+  padding-left: 5%;
+  padding-right: 5%;
 }
 
 .bottom-section-wrapper .left-col {
@@ -289,6 +283,13 @@
   margin-left: -7%;
   margin-bottom: 5%;
   font-size: 20px;
+}
+
+.bottom-section-wrapper .message-wrapper {
+  position: absolute !important;
+  margin: auto !important;
+  bottom: 20px !important;
+  width: 30% !important;
 }
 
 #gender {
