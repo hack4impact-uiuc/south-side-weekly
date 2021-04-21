@@ -21,14 +21,14 @@ function PitchDoc(): ReactElement {
       setUnclaimedPitches(resp.data.result);
     }
   };
-  
+
   useEffect(() => {
     getAllUnclaimedPitches();
-  }, []);  
+  }, []);
 
   return (
     <>
-      <Sidebar currentPage={pages.PITCHES}/>
+      <Sidebar currentPage={pages.PITCHES} />
       <div className="logo-header">
         <img className="logo" alt="SSW Logo" src={Logo} />
       </div>
@@ -49,7 +49,10 @@ function PitchDoc(): ReactElement {
         </div>
 
         <div className="pitch-grid">
-          <PitchGrid pitches={unclaimedPitches} getAllUnclaimedPitches={getAllUnclaimedPitches} />
+          <PitchGrid
+            pitches={unclaimedPitches}
+            getAllUnclaimedPitches={getAllUnclaimedPitches}
+          />
         </div>
       </div>
     </>

@@ -34,7 +34,7 @@ function Profile(): ReactElement {
   const [edit, setEdit] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const userId = "6031a866c70ec705736a79e5";
+  const userId = '6031a866c70ec705736a79e5';
 
   const currentTeamsButtons = [
     { display: 'Editing', value: teamEnum.EDITING, color: '#A5C4F2' },

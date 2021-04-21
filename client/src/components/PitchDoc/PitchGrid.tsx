@@ -8,12 +8,18 @@ interface IProps {
   getAllUnclaimedPitches: () => Promise<void>;
 }
 
-const PitchGrid: FC<IProps> = ({ pitches, getAllUnclaimedPitches }): ReactElement => (
+const PitchGrid: FC<IProps> = ({
+  pitches,
+  getAllUnclaimedPitches,
+}): ReactElement => (
   <Grid>
     <Grid.Row columns={3}>
       {pitches.map((pitch, idx) => (
         <Grid.Column key={idx}>
-          <ClaimPitchModal pitch={pitch} getAllUnclaimedPitches={getAllUnclaimedPitches}/>
+          <ClaimPitchModal
+            pitch={pitch}
+            getAllUnclaimedPitches={getAllUnclaimedPitches}
+          />
         </Grid.Column>
       ))}
     </Grid.Row>
