@@ -28,9 +28,7 @@ const WizardPageCounter: FC<IProps> = ({
         circular
         className={`page-icon ${wizardPage === activePage ? 'active' : ''}`}
         key={index}
-      >
-        {index + 1}
-      </Button>
+      />
     ))}
   </div>
 );
