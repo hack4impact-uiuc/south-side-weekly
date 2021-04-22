@@ -2,12 +2,11 @@ import React, { FC, ReactElement } from 'react';
 
 import '../css/wizard/WizardSvg.css';
 
+import RolePageSVG from '../assets/role-page.svg';
 import BasicInfoSvg from '../assets/basic-info.svg';
 import PersonalInfoSvg from '../assets/personal-information.svg';
 import InvolvementSVG from '../assets/involvement-page.svg';
 import Onboard5SVG from '../assets/onboard5.svg';
-import Onboard6SVG from '../assets/onboard6.svg';
-import Onboard7SVG from '../assets/onboard7.svg';
 import Onboard8SVG from '../assets/onboard8.svg';
 
 interface IProps {
@@ -22,6 +21,8 @@ interface IProps {
 const WizardListTitle: FC<IProps> = ({ page }): ReactElement => {
   const getSvg = (): ReactElement => {
     switch (page) {
+      case 'onboard0':
+        return <img className="page-image" src={RolePageSVG} alt="role page" />;
       case 'onboard1':
         return (
           <img
