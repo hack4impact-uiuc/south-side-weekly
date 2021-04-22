@@ -12,7 +12,7 @@ import Logo from '../../assets/ssw-form-header.png';
 import ArrowBack from '../../assets/arrow-back.svg';
 import ArrowNext from '../../assets/arrow-next.svg';
 import SubmitSVG from '../../assets/check.svg';
-import WizardPageCounter from '../../components/WizardPageCounter/WizardPageCounter';
+import WizardPageCounter from '../../components/WizardPageCounter';
 
 import WizardInitialPrompt from './InitialPrompt';
 import Onboard1 from './Onboard1';
