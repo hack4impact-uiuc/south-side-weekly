@@ -39,10 +39,6 @@
   background-color: rgb(61, 79, 145, 0.15) !important;
 }
 
-.wizard-wrapper .previous-page .previous-icon:focus {
-  background-color: transparent !important;
-}
-
 .wizard-wrapper .logo-header {
   grid-area: logo;
 }
@@ -87,10 +83,6 @@
 
 .wizard-wrapper .next-page .next-icon:hover {
   background-color: #548d31 !important;
-}
-
-.wizard-wrapper .next-page .next-icon:focus {
-  background-color: #8cb076 !important;
 }
 
 .wizard-wrapper .next-page .check-icon {
