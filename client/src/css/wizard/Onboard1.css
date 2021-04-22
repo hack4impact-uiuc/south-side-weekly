@@ -1,7 +1,8 @@
 .basic-info-wrapper {
   display: flex;
-  margin: auto;
-  width: 80%;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10%;
 }
 
 .basic-info-wrapper .basic-info-image {
@@ -26,7 +27,6 @@
   grid-template-columns: 20px auto;
   align-items: center;
   width: 100%;
-  padding-left: 16px;
 }
 
 .basic-info-wrapper .btn-wrapper .input-wrapper .input .input-field {
