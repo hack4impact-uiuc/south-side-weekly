@@ -1,14 +1,15 @@
 .initial-prompt {
-  width: 60%;
-  margin: auto;
-  margin-left: 25vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .initial-prompt .header-text {
-  margin-bottom: 15vh;
+  margin-bottom: 6vh;
   font-style: normal;
   font-weight: bold;
-  font-size: 2.5rem;
+  font-size: 2rem;
   line-height: 58px;
   color: #3b3f4c;
 }
@@ -17,17 +18,17 @@
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 35%;
+  width: 35vh;
+  min-width: 35%;
 }
 
 .initial-prompt .btn-group .btn-wrapper {
   display: flex;
+  flex-direction: row;
   position: relative;
   justify-content: center;
   align-items: center;
-  flex-direction: row;
   margin: auto;
-  width: 45%;
 }
 
 .initial-prompt .btn-group .btn-wrapper .icon {
@@ -37,8 +38,6 @@
 }
 
 .initial-prompt .btn-group .btn-wrapper .icon:hover {
-  font-size: 12px;
-  margin-left: 10px;
   cursor: pointer;
 }
 
@@ -61,10 +60,10 @@
 
 .initial-prompt .btn-group .btn-wrapper .btn {
   margin: 20px 0px 20px 0px;
-  padding: 20px 5px 20px 5px;
-  font-size: 36px;
+  padding: 12px 28px 12px 28px;
+  font-size: 1.5em;
   align-items: center;
-  border-radius: 1rem;
+  border-radius: 10px;
   background-color: #334a86;
   color: white;
   width: 100%;
