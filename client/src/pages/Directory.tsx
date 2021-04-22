@@ -69,7 +69,7 @@ const initialSearchState: ISearchState = {
 };
 
 /**
- * Reducer for the search state
+ * Reducer for the search state.
  *
  * @param state the current state of the search
  * @param action the action to perform on the search state
@@ -106,7 +106,7 @@ const initialModalState: IModalState = {
 };
 
 /**
- * Reducer for the modal state
+ * Reducer for the modal state.
  *
  * @param state the state of the current modal
  * @param action the action to perform on the modal state
@@ -186,7 +186,7 @@ const Directory = (): ReactElement => {
   );
 
   /**
-   * Populated the directory and connect to the API
+   * Populated the directory and connect to the API.
    */
   useEffect(() => {
     const populateDirectory = async (): Promise<void> => {
@@ -208,9 +208,9 @@ const Directory = (): ReactElement => {
 
   /**
    * Searches through the directory and returns a set of directory member who's name or
-   * email contains the search term
+   * email contains the search term.
    *
-   * Callback prevents infinite re-rendering with the useEffect hook
+   * Callback prevents infinite re-rendering with the useEffect hook.
    *
    * @param searchTerm the user input to search for
    * @returns an arary of directory members corresponding to the uesrs search
@@ -239,7 +239,7 @@ const Directory = (): ReactElement => {
   );
 
   /**
-   * Delay before searching
+   * Delay before searching.
    */
   useEffect(() => {
     if (searchState.query === '') {
@@ -273,7 +273,7 @@ const Directory = (): ReactElement => {
   }, [searchState.query, directory, handleSearch]);
 
   /**
-   * Recevies a directory and filters it with all of the selected keys
+   * Recevies a directory and filters it with all of the selected keys.
    *
    * @param directory the full directory of SSW users
    * @returns a filtered directory
@@ -299,7 +299,7 @@ const Directory = (): ReactElement => {
   };
 
   /**
-   * Updates the filter key state
+   * Updates the filter key state.
    *
    * @param key the filter key to update
    * @param newValue the new value to set the filter key's value to
@@ -330,7 +330,7 @@ const Directory = (): ReactElement => {
   };
 
   /**
-   * Parses a semantic multi select into the filter key usable types
+   * Parses a semantic multi select into the filter key usable types.
    *
    * @param value the value from the multiselect
    * @returns a conversion from semantic's type to string | string[]
@@ -355,7 +355,7 @@ const Directory = (): ReactElement => {
   };
 
   /**
-   * Determines if the filter state is empty
+   * Determines if the filter state is empty.
    *
    * @returns true if filter keys are empty, else false
    */
@@ -366,7 +366,7 @@ const Directory = (): ReactElement => {
     filterKeys.teams.length === 0;
 
   /**
-   * Sorts all of the users in the directory by date
+   * Sorts all of the users in the directory by date.
    *
    * @param isAscending the filter string representation, Earliest to Latest, Latest to Earliest, [empty]
    */
@@ -393,7 +393,7 @@ const Directory = (): ReactElement => {
   };
 
   /**
-   * Filters out the users that have the specified role
+   * Filters out the users that have the specified role.
    *
    * @param role the role to filter by
    */
@@ -411,7 +411,7 @@ const Directory = (): ReactElement => {
   };
 
   /**
-   * Filters out the users that have any of the selected interests
+   * Filters out the users that have any of the selected interests.
    *
    * @param interests the interests to filter by
    */
@@ -441,7 +441,7 @@ const Directory = (): ReactElement => {
   };
 
   /**
-   * Filters out the users that have any of the selected teams
+   * Filters out the users that have any of the selected teams.
    *
    * @param interests the interests to filter by
    */
@@ -468,7 +468,7 @@ const Directory = (): ReactElement => {
   };
 
   /**
-   * Opens the contributor modal for a specific user
+   * Opens the contributor modal for a specific user.
    *
    * @param user ther current modal user
    */
