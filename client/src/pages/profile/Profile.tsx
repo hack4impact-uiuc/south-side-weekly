@@ -1,7 +1,20 @@
-import React, { ReactElement, useState, useEffect } from 'react';
-import { Message, Input, Button, Dropdown, Label } from 'semantic-ui-react';
+import React, { ReactElement, useState, useEffect, useCallback } from 'react';
+import {
+  Message,
+  Input,
+  Button,
+  Dropdown,
+  Label,
+  Image,
+} from 'semantic-ui-react';
+import { useParams } from 'react-router-dom';
 
-import { isError, loadProfile, saveProfile } from '../../utils/apiWrapper';
+import {
+  isError,
+  loadProfile,
+  saveProfile,
+  getCurrentUser,
+} from '../../utils/apiWrapper';
 import { teamEnum, interestsEnum, pages } from '../../utils/enums';
 import Sidebar from '../../components/Sidebar';
 import Mail from '../../assets/mail.svg';
@@ -9,14 +22,20 @@ import Phone from '../../assets/phone.svg';
 import Linkedin from '../../assets/linkedin.svg';
 import Globe from '../../assets/globe.svg';
 import Twitter from '../../assets/twitter.svg';
-import Pfp from '../../assets/pfp.svg';
 import Masthead from '../../assets/masthead.svg';
 import Banner from '../../assets/banner.svg';
+import DefaultProfile from '../../assets/default_profile.png';
 import Header from '../../components/Header';
-
 import '../../css/Profile.css';
+import { IUser } from '../../../../common';
 
 function Profile(): ReactElement {
+  interface ParamTypes {
+    userId: string;
+  }
+
+  const { userId } = useParams<ParamTypes>();
+
   const [fullName, setFullName] = useState<string>('');
   const [preferredName, setPreferredName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
@@ -24,6 +43,7 @@ function Profile(): ReactElement {
   const [genders, setGenders] = useState<Array<string>>([]);
   const [pronouns, setPronouns] = useState<Array<string>>([]);
   const [dateJoined, setDateJoined] = useState<string>('');
+  const [profilePicture, setProfilePicture] = useState<string>('');
   const [masthead, setMasthead] = useState<boolean>(false);
   const [portfolio, setPortfolio] = useState<string>('');
   const [linkedIn, setLinkedIn] = useState<string>('');
@@ -33,7 +53,9 @@ function Profile(): ReactElement {
   const [interests, setInterests] = useState<Array<string>>([]);
   const [edit, setEdit] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string>(DefaultProfile);
+
+  const [isEditable, setIsEditable] = useState<boolean>(false);
 
   const currentTeamsButtons = [
     { display: 'Editing', value: teamEnum.EDITING, color: '#A5C4F2' },
@@ -129,6 +151,7 @@ function Profile(): ReactElement {
     genders: genders !== [] ? genders : null,
     pronouns: pronouns !== [] ? pronouns : null,
     dateJoined: dateJoined !== '' ? new Date(dateJoined) : null,
+    profilePicture: profilePicture !== '' ? profilePicture : DefaultProfile,
     masthead: masthead,
     portfolio: portfolio !== '' ? portfolio : null,
     linkedIn: linkedIn !== '' ? linkedIn : null,
@@ -166,8 +189,8 @@ function Profile(): ReactElement {
     }
   }
 
-  async function getProfile(): Promise<void> {
-    const res = await loadProfile();
+  const getProfile = useCallback(async (): Promise<void> => {
+    const res = await loadProfile(userId);
     if (isError(res)) {
       setError(true);
       setErrorMessage(res.type);
@@ -188,6 +211,9 @@ function Profile(): ReactElement {
       setDateJoined(
         user.dateJoined === null ? '' : date.toISOString().split('T')[0],
       );
+      setProfilePicture(
+        user.profilePic !== undefined ? user.profilePic : DefaultProfile,
+      );
       setMasthead(user.masthead === null ? false : user.masthead);
       setPortfolio(user.portfolio === null ? '' : user.portfolio);
       setLinkedIn(user.linkedIn === null ? '' : user.linkedIn);
@@ -196,10 +222,10 @@ function Profile(): ReactElement {
       setCurrentTeams(user.currentTeams === null ? [] : user.currentTeams);
       setInterests(user.interests === null ? [] : user.interests);
     }
-  }
+  }, [userId]);
 
   async function updateProfile(): Promise<void> {
-    const res = await saveProfile(profileData);
+    const res = await saveProfile(userId, profileData);
     if (isError(res)) {
       setError(true);
       setErrorMessage(res.type);
@@ -210,8 +236,18 @@ function Profile(): ReactElement {
   }
 
   useEffect(() => {
+    const getActiveUser = async (): Promise<void> => {
+      const res = await getCurrentUser();
+
+      if (!isError(res)) {
+        const currentUser: IUser = res.data.result;
+        setIsEditable(userId === currentUser._id);
+      }
+    };
+
+    getActiveUser();
     getProfile();
-  }, []);
+  }, [getProfile, userId]);
 
   return (
     <>
@@ -223,14 +259,22 @@ function Profile(): ReactElement {
           <div className="top-section-wrapper">
             <div className="pf-section">
               <div className="edit-button-wrapper">
-                <Button
-                  content="Edit Profile"
-                  className="edit-profile-button"
-                  onClick={enableEdit}
-                />
+                {isEditable && (
+                  <Button
+                    content="Edit Profile"
+                    className="edit-profile-button"
+                    onClick={enableEdit}
+                  />
+                )}
               </div>
               <div className="pf-image-wrapper">
-                <img src={Pfp} alt="pfp" className="pf-image"></img>
+                <Image
+                  className="pf-image"
+                  size="medium"
+                  circular
+                  src={profilePicture}
+                  alt="pfp"
+                />
                 {masthead && (
                   <div className="masthead-section">
                     <img
@@ -466,7 +510,12 @@ function Profile(): ReactElement {
                   <img className="icon" src={Linkedin} alt="linkedin" />
                 </div>
                 {!edit && (
-                  <a className="link" href={`//${linkedIn}`}>
+                  <a
+                    rel="noreferrer"
+                    target="_blank"
+                    className="link"
+                    href={`${linkedIn}`}
+                  >
                     {linkedIn}
                   </a>
                 )}
@@ -486,7 +535,12 @@ function Profile(): ReactElement {
                   <img className="icon" src={Globe} alt="globe" />
                 </div>
                 {!edit && (
-                  <a className="link" href={`//${portfolio}`}>
+                  <a
+                    rel="noreferrer"
+                    target="_blank"
+                    className="link"
+                    href={`${portfolio}`}
+                  >
                     {portfolio}
                   </a>
                 )}
@@ -506,7 +560,12 @@ function Profile(): ReactElement {
                   <img className="icon" src={Twitter} alt="twitter" />
                 </div>
                 {!edit && (
-                  <a className="link" href={`//${twitter}`}>
+                  <a
+                    rel="noreferrer"
+                    target="_blank"
+                    className="link"
+                    href={`${twitter}`}
+                  >
                     {twitter}
                   </a>
                 )}

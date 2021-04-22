@@ -70,6 +70,7 @@ const initialSearchState: ISearchState = {
 
 /**
  * Reducer for the search state
+ *
  * @param state the current state of the search
  * @param action the action to perform on the search state
  * @returns new search state
@@ -128,10 +129,12 @@ const modalReducer = (
 const Directory = (): ReactElement => {
   const [directory, setDirectory] = useState<IUser[]>([]);
   const [filterKeys, setFilterKeys] = useState<IFilterKeys>(initialFilterKeys);
+
   const [searchState, dispatchSearch] = useReducer(
     searchReducer,
     initialSearchState,
   );
+
   const [modalState, dispatchModal] = useReducer(
     modalReducer,
     initialModalState,

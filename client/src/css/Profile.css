@@ -49,7 +49,9 @@
 }
 
 .pfp-page-content .top-section-wrapper .pf-section .pf-image-wrapper .pf-image {
-  width: 100%;
+  /* width: 100%; */
+  margin: auto;
+  margin-bottom: 10px;
 }
 
 .pfp-page-content

@@ -22,7 +22,7 @@ ReactDOM.render(
         <Route exact path="/" component={Home} />
         <Route exact path="/join" component={WizardWrapper} />
         <Route exact path="/resources" component={ResourcePage} />
-        <Route exact path="/profile" component={Profile} />
+        <Route exact path="/profile/:userId" component={Profile} />
         <Route exact path="/users" component={Directory} />
         <Route exact path="/login" component={Login} />
       </Switch>

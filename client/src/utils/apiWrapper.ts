@@ -30,6 +30,11 @@ export interface GetUsersResponseType {
   result: Array<any>;
 }
 
+export interface GetCurrentUserResponseType {
+  message: string;
+  result: IUser;
+}
+
 export interface GetProfileResponseType {
   message: string;
   result: IUser;
@@ -96,12 +101,33 @@ export const getUsers = (): Promise<
     }));
 };
 
-const user_id = '6031a866c70ec705736a79e5';
+/**
+ * Returns a list of all of the users in the database
+ * Returns GET_USERS_FETCH_FAIL upon failure
+ */
 
-export const loadProfile = (): Promise<
-  AxiosResponse<GetProfileResponseType> | ErrorWrapper
+export const getCurrentUser = (): Promise<
+  AxiosResponse<GetCurrentUserResponseType> | ErrorWrapper
 > => {
-  const userUrl = `${BASE_URL}/users/${user_id}`;
+  const requestString = `${BASE_URL}/auth/currentUser`;
+  return axios
+    .get(requestString, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'GET_CURRENT_USER_FAIL',
+      error,
+    }));
+};
+
+// const user_id = '6031a866c70ec705736a79e5';
+
+export const loadProfile = (
+  userId: string,
+): Promise<AxiosResponse<GetProfileResponseType> | ErrorWrapper> => {
+  const userUrl = `${BASE_URL}/users/${userId}`;
   return axios
     .get(userUrl, {
       headers: {
@@ -114,10 +140,13 @@ export const loadProfile = (): Promise<
     }));
 };
 
-export const saveProfile = (profileData: {
-  [key: string]: string | boolean | string[] | Date | null;
-}): Promise<AxiosResponse<GetProfileResponseType> | ErrorWrapper> => {
-  const userUrl = `${BASE_URL}/users/${user_id}`;
+export const saveProfile = (
+  userId: string,
+  profileData: {
+    [key: string]: string | boolean | string[] | Date | null;
+  },
+): Promise<AxiosResponse<GetProfileResponseType> | ErrorWrapper> => {
+  const userUrl = `${BASE_URL}/users/${userId}`;
   return axios
     .put(userUrl, profileData, {
       headers: {

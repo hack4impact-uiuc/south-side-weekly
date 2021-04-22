@@ -4,6 +4,7 @@ import { Modal, Image, Grid, Button, Icon } from 'semantic-ui-react';
 import { IUser } from '../../../../common/index';
 import '../../css/UserModal.css';
 import { colorEnum } from '../../utils/enums';
+import DefaultProfile from '../../assets/default_profile.png';
 
 interface ILabelProps {
   text: string;
@@ -49,7 +50,7 @@ const UserModal: FC<IModalProps> = ({
    * Opens up a user's profile page according to their ID
    */
   const openUserProfile = (): void => {
-    const profileWindow: Window = window.open(`/profile/${user.oauthID}`)!;
+    const profileWindow: Window = window.open(`/profile/${user._id}`)!;
 
     // Switch to this tab
     profileWindow.focus();
@@ -64,7 +65,7 @@ const UserModal: FC<IModalProps> = ({
               <Image
                 circular
                 size="small"
-                src={user.profilePic}
+                src={user.profilePic ? user.profilePic : DefaultProfile}
                 alt={`${user.firstName} ${user.lastName}`}
               />
             </Grid.Row>
