@@ -1,7 +1,7 @@
 import React, { FC, ReactElement } from 'react';
 import { Button } from 'semantic-ui-react';
 
-import '../../css/wizard/WizardPageCounter.css';
+import '../css/wizard/WizardPageCounter.css';
 
 interface IProps {
   wizardPages: Array<string>;
