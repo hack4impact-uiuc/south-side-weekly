@@ -5,7 +5,7 @@ import React, {
   ReactElement,
   FormEvent,
 } from 'react';
-import { Checkbox, CheckboxProps, Form } from 'semantic-ui-react';
+import { Checkbox, Form } from 'semantic-ui-react';
 
 import WizardSvg from '../../components/WizardSvg';
 import WizardListTitle from '../../components/WizardListTitle';
