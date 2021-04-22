@@ -51,7 +51,8 @@
   background-color: rgba(229, 229, 229, 0.75);
   padding: 10px;
   border-radius: 1rem;
-  width: 70%;
+  width: 100%;
+  max-width: 20vw;
   left: 100%;
   margin-left: 20px;
   font-size: 18px;
