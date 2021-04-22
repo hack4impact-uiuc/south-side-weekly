@@ -54,9 +54,6 @@ const WizardWrapper = (): ReactElement => {
   const [reasonForInvolvement, setReasonForInvolvement] = useState<string>('');
   const [currentTeams, setCurrentTeams] = useState<Array<string>>([]);
   const [interests, setInterests] = useState<Array<string>>([]);
-  const [portfolio, setPortfolio] = useState<string>('');
-  const [linkedIn, setLinkedIn] = useState<string>('');
-  const [twitter, setTwitter] = useState<string>('');
 
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [scheduleConfirmed, setScheduleConfirmed] = useState<boolean>(false);
@@ -147,9 +144,6 @@ const WizardWrapper = (): ReactElement => {
       genders: genders,
       pronouns: pronouns,
       masthead: false,
-      portfolio: portfolio,
-      linkedIn: linkedIn,
-      twitter: twitter,
       claimedPitches: [],
       submittedPitches: [],
       currentTeams: currentTeams,
@@ -167,9 +161,6 @@ const WizardWrapper = (): ReactElement => {
     phoneNumber,
     genders,
     pronouns,
-    portfolio,
-    linkedIn,
-    twitter,
     currentTeams,
     role,
     races,

@@ -2,7 +2,7 @@ import React, { FC, ReactElement, MouseEvent, useState } from 'react';
 import { Button } from 'semantic-ui-react';
 
 import CheckSVG from '../assets/check.svg';
-import '../css/WizardSelectButton.css';
+import '../css/wizard/WizardSelectButton.css';
 
 interface IProps {
   onClick(e: MouseEvent<HTMLButtonElement>): void;
