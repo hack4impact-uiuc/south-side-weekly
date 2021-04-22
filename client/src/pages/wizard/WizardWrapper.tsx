@@ -8,7 +8,7 @@ import React, {
 import { Button } from 'semantic-ui-react';
 
 import '../../css/wizard/WizardWrapper.css';
-import Logo from '../../assets/ssw-form-header.png';
+import Header from '../../components/Header';
 import ArrowBack from '../../assets/arrow-back.svg';
 import ArrowNext from '../../assets/arrow-next.svg';
 import SubmitSVG from '../../assets/check.svg';
@@ -200,6 +200,7 @@ const WizardWrapper = (): ReactElement => {
 
   return (
     <div className="wizard-wrapper">
+      <Header />
       {page !== WizardPage.INITIAL_PAGE.toString() &&
         page !== WizardPage.COMPLETION.toString() && (
           <div className="previous-page">

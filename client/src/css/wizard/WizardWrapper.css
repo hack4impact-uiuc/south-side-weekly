@@ -43,11 +43,6 @@
   grid-area: logo;
 }
 
-.wizard-wrapper .logo {
-  width: 60%;
-  margin: 2%;
-}
-
 .wizard-wrapper .wizard-content {
   display: flex;
   width: 100%;
