@@ -5,11 +5,11 @@
 }
 
 .list-title {
-  background-color: rgb(61, 79, 145, 0.55);
-  color: white;
-  border-radius: 10px;
+  font-weight: 600;
+  color: #3d4f91;
+  border-bottom: 2px solid #3d4f91;
   font-size: 1.2em;
-  padding: 8px 24px 8px 24px;
+  padding: 0px 2px 2px 2px;
   margin-bottom: 15px;
   width: fit-content;
   height: fit-content;
