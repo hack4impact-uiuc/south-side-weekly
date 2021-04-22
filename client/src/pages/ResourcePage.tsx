@@ -28,10 +28,12 @@ const ResourcePage = (): ReactElement => {
   const [currentValue, setCurrentValue] = useState<string>('General');
   const [edit, setEdit] = useState<boolean>(false);
   const [resourcesPerRole, setResourcesPerRole] = useState(defaultResources);
-  const [resourceToEdit, setResourceToEdit] = useState<IResource | null>(null);
+  const [resourceToEdit, setResourceToEdit] = useState<IResource | undefined>(
+    undefined,
+  );
   const [showEditModal, setShowEditModal] = useState<boolean>(false);
 
-  async function filterResources(): Promise<void> {
+  const filterResources = async (): Promise<void> => {
     const res = await getAllResources();
     if (!isError(res)) {
       const allResources = res.data.result;
@@ -47,7 +49,7 @@ const ResourcePage = (): ReactElement => {
 
       setResourcesPerRole(newResourcesPerRole);
     }
-  }
+  };
 
   useEffect(() => {
     filterResources();
@@ -71,20 +73,20 @@ const ResourcePage = (): ReactElement => {
     setCurrentValue(value);
   };
 
-  function enableEdit(): void {
+  const enableEdit = (): void => {
     setEdit(true);
-  }
+  };
 
-  function cancelEdit(): void {
+  const cancelEdit = (): void => {
     setEdit(false);
-  }
+  };
 
-  async function removeResource(resourceId: string): Promise<void> {
+  const removeResource = async (resourceId: string): Promise<void> => {
     const res = await deleteResource(resourceId);
     if (!isError(res)) {
       filterResources();
     }
-  }
+  };
 
   function closeModal(): void {
     setShowEditModal(false);

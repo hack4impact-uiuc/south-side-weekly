@@ -1,4 +1,4 @@
-import React, { ReactElement, FC, Dispatch } from 'react';
+import React, { ReactElement, FC, Dispatch, useState } from 'react';
 import { Modal, Button, Form, Input, Checkbox } from 'semantic-ui-react';
 
 import { createResource, isError } from '../../utils/apiWrapper';
@@ -21,12 +21,10 @@ interface IProps {
 }
 
 const AddResourceModal: FC<IProps> = ({ onAdd }): ReactElement => {
-  const [open, setOpen] = React.useState<boolean>(false);
-  const [resourceTitle, setResourceTitle] = React.useState<string>('');
-  const [resourceURL, setResourceURL] = React.useState<string>('');
-  const [selectedTags, setSelectedTags] = React.useState<Set<string>>(
-    new Set(),
-  );
+  const [open, setOpen] = useState<boolean>(false);
+  const [resourceTitle, setResourceTitle] = useState<string>('');
+  const [resourceURL, setResourceURL] = useState<string>('');
+  const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
 
   const handleTagSelect = (tag: string): void => {
     const newTags = new Set(selectedTags);
@@ -38,7 +36,7 @@ const AddResourceModal: FC<IProps> = ({ onAdd }): ReactElement => {
     setSelectedTags(newTags);
   };
 
-  async function addResource(): Promise<void> {
+  const addResource = async (): Promise<void> => {
     const newResource = {
       name: resourceTitle !== '' ? resourceTitle : null,
       link: resourceURL !== '' ? resourceURL : null,
@@ -50,7 +48,7 @@ const AddResourceModal: FC<IProps> = ({ onAdd }): ReactElement => {
       setOpen(false);
       onAdd();
     }
-  }
+  };
 
   return (
     <Modal

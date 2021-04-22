@@ -1,4 +1,4 @@
-import React, { ReactElement, FC, Dispatch, useEffect } from 'react';
+import React, { ReactElement, FC, Dispatch, useEffect, useState } from 'react';
 import { Modal, Button, Form, Input, Checkbox } from 'semantic-ui-react';
 import { IResource } from 'ssw-common';
 
@@ -19,7 +19,7 @@ const teams = [
 
 interface IProps {
   isOpen: boolean;
-  resource: IResource | null;
+  resource?: IResource;
   closeModal: Dispatch<void>;
 }
 
@@ -28,15 +28,13 @@ const EditResourceModal: FC<IProps> = ({
   resource,
   closeModal,
 }): ReactElement => {
-  const [open, setOpen] = React.useState<boolean>(false);
-  const [resourceURL, setResourceURL] = React.useState<string>(
+  const [open, setOpen] = useState<boolean>(false);
+  const [resourceURL, setResourceURL] = useState<string>(
     resource ? resource.link : '',
   );
-  const [selectedTags, setSelectedTags] = React.useState<Set<string>>(
-    new Set(),
-  );
+  const [selectedTags, setSelectedTags] = useState<Set<string>>(new Set());
 
-  function handleTagSelect(tag: string): void {
+  const handleTagSelect = (tag: string): void => {
     const newTags = new Set(selectedTags);
     if (newTags.has(tag)) {
       newTags.delete(tag);
@@ -44,20 +42,7 @@ const EditResourceModal: FC<IProps> = ({
       newTags.add(tag);
     }
     setSelectedTags(newTags);
-  }
-
-  async function modifyResource(): Promise<void> {
-    const editedResource = {
-      name: resource ? resource.name : null,
-      link: resourceURL,
-      teamRoles: Array.from(selectedTags),
-    };
-
-    const res = await editResource(resource?._id, editedResource);
-    if (!isError(res)) {
-      setOpen(false);
-    }
-  }
+  };
 
   useEffect(() => {
     if (resource) {
@@ -74,17 +59,30 @@ const EditResourceModal: FC<IProps> = ({
     setOpen(isOpen);
   }, [isOpen]);
 
-  function close(): void {
+  const modifyResource = async (): Promise<void> => {
+    const editedResource = {
+      name: resource ? resource.name : null,
+      link: resourceURL,
+      teamRoles: Array.from(selectedTags),
+    };
+
+    const res = await editResource(resource?._id, editedResource);
+    if (!isError(res)) {
+      setOpen(false);
+    }
+  };
+
+  const close = (): void => {
     setOpen(false);
     closeModal();
-  }
+  };
 
-  function isTeam(team: string): boolean {
-    if (resource && selectedTags.has(team)) {
-      return true;
+  const isTeam = (team: string): boolean => {
+    if (resource) {
+      return selectedTags.has(team);
     }
     return false;
-  }
+  };
 
   return (
     <Modal onClose={close} onOpen={() => setOpen(true)} open={open} closeIcon>
@@ -103,7 +101,7 @@ const EditResourceModal: FC<IProps> = ({
                       key={idx}
                       label={team}
                       onClick={() => handleTagSelect(team)}
-                      defaultChecked={isTeam(team) ? true : false}
+                      defaultChecked={isTeam(team)}
                     />
                   ))}
                 </div>
