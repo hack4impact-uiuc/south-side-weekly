@@ -4,7 +4,7 @@ import {
 } from 'passport-google-oauth20';
 import passport from 'passport';
 import User from '../models/user';
-import { IUser } from '../types'
+import { IUser } from '../types';
 import { rolesEnum } from './enums';
 
 passport.serializeUser((user: IUser, done) => {
