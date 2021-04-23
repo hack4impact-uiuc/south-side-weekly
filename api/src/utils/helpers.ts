@@ -1,7 +1,6 @@
-import { ObjectId } from 'mongoose';
 import { IPitch } from '../models/pitch';
 export interface SessionUser {
-  _id: ObjectId;
+  _id: string;
   firstName: string;
   lastName: string;
   preferredName: string;

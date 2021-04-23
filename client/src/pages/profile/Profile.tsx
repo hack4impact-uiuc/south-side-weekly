@@ -27,7 +27,7 @@ import Banner from '../../assets/banner.svg';
 import DefaultProfile from '../../assets/default_profile.png';
 import Header from '../../components/Header';
 import '../../css/Profile.css';
-import { IUser } from '../../../../common';
+import { IUser } from 'ssw-common';
 
 function Profile(): ReactElement {
   interface ParamTypes {
