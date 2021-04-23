@@ -1,4 +1,4 @@
-import { IPitch } from '../models/pitch';
+import { IPitch } from '../types';
 export interface SessionUser {
   _id: string;
   firstName: string;
