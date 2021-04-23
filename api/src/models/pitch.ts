@@ -1,43 +1,11 @@
-import mongoose, { Document, Schema } from 'mongoose';
-import { IUser } from './user';
+import mongoose, { Schema } from 'mongoose';
+import { IPitch } from '../types';
 
 import {
   interestsEnum,
   pitchStatusEnum,
   assignmentStatusEnum,
 } from '../utils/enums';
-
-export interface IPitch extends Document<any> {
-  _id: string;
-  name: string;
-  pitchAuthor: mongoose.Types.ObjectId;
-  pitchStatus: string;
-  assignmentStatus: string;
-  assignmentGoogleDocLink: string;
-  assignmentContributors: [IUser];
-  topic: string;
-  currentWriters: number;
-  targetWriters: number;
-  currentEditors: number;
-  targetEditors: number;
-  currentData: number;
-  targetData: number;
-  currentVisuals: number;
-  targetVisuals: number;
-  currentIllustration: number;
-  targetIllustration: number;
-  currentPhotography: number;
-  targetPhotography: number;
-  currentFactChecking: number;
-  targetFactChecking: number;
-  currentRadio: number;
-  targetRadio: number;
-  currentLayout: number;
-  targetLayout: number;
-  approvedBy: IUser;
-  similarStories: [string];
-  deadline: Date;
-}
 
 /**
  * Mongoose Schema to represent a Pitch at South Side Weekly
