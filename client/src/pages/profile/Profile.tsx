@@ -410,7 +410,7 @@ function Profile(): ReactElement {
 
             <div className="topics-section">
               <div className="list-section">
-                <div className="list-title">My Topics</div>
+                <div className="list-title">My Interests</div>
 
                 {!edit && (
                   <div className="interests-section-scroll">

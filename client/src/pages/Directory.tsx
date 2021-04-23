@@ -15,6 +15,7 @@ import { getUsers, isError } from '../utils/apiWrapper';
 import { pages } from '../utils/enums';
 import { parseArrayToSemanticDropdownOptions } from '../utils/helpers';
 import SSW from '../assets/ssw-form-header.png';
+import DefaultProfile from '../assets/default_profile.png';
 import '../css/Directory.css';
 
 interface IFilterKeys {
@@ -579,7 +580,7 @@ const Directory = (): ReactElement => {
                 className="result"
               >
                 <img
-                  src={user.profilePic}
+                  src={user.profilePic ? user.profilePic : DefaultProfile}
                   alt="Profile"
                   className="profile-picture"
                 />
