@@ -8,6 +8,7 @@ import {
   Image,
 } from 'semantic-ui-react';
 import { useParams } from 'react-router-dom';
+import { IUser } from 'ssw-common';
 
 import {
   isError,
@@ -27,7 +28,6 @@ import Banner from '../../assets/banner.svg';
 import DefaultProfile from '../../assets/default_profile.png';
 import Header from '../../components/Header';
 import '../../css/Profile.css';
-import { IUser } from 'ssw-common';
 
 function Profile(): ReactElement {
   interface ParamTypes {
