@@ -24,14 +24,14 @@ export interface SessionUser {
   interests: [string];
 }
 
-export const sessionizeUser = (user: IUser): SessionUser => ({
+export const sessionizeUser = (user: SessionUser): SessionUser => ({
   _id: user._id,
   firstName: user.firstName,
   lastName: user.lastName,
   preferredName: user.preferredName,
   email: user.email,
   phone: user.phone,
-  gender: user.genders,
+  gender: user.gender,
   pronouns: user.pronouns,
   dateJoined: user.dateJoined,
   masthead: user.masthead,
