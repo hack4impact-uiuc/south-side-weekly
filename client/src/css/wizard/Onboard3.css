@@ -1,40 +1,44 @@
-.onboard5-wrapper {
+.teams-topics-wrapper {
   width: 100%;
   display: flex;
 }
 
-.onboard5-wrapper .page-svg {
+.teams-topics-wrapper .page-svg {
   width: 40%;
 }
 
-.onboard5-wrapper .onboard5-content {
+.teams-topics-wrapper .teams-topics-content {
   margin: 16px;
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 
-.onboard5-wrapper .onboard5-content .section .page-text {
+.teams-topics-wrapper .teams-topics-content .section .page-text {
   font-size: 18px;
   text-align: left;
   line-height: 30px;
   position: relative;
 }
 
-.onboard5-wrapper .onboard5-content .page-text b {
+.teams-topics-wrapper .teams-topics-content .page-text b {
   font-weight: 600;
 }
 
-.onboard5-wrapper .onboard5-content .section {
+.teams-topics-wrapper .teams-topics-content .section {
   margin: 16px;
 }
 
-.onboard5-wrapper .onboard5-content .section .select-group {
+.teams-topics-wrapper .teams-topics-content .section .select-group {
   margin-top: 5vh;
   text-align: left;
   display: grid;
   grid-template-columns: 1fr 1fr;
 }
 
-.onboard5-wrapper .onboard5-content .section .select-group .select-item {
+.teams-topics-wrapper
+  .teams-topics-content
+  .section
+  .select-group
+  .select-item {
   margin: 6px;
 }
