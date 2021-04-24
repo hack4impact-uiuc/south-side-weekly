@@ -2,6 +2,7 @@
  * Interface for a User Schema.
  */
 export interface IUser {
+  _id: string;
   firstName: string;
   lastName: string;
   preferredName: string;
@@ -16,8 +17,8 @@ export interface IUser {
   portfolio: string;
   linkedIn: string;
   twitter: string;
-  claimedPitches: [IPitch];
-  submittedPitches: [IPitch];
+  claimedPitches: [string];
+  submittedPitches: [string];
   currentTeams: [string];
   role: string;
   races: [string];
@@ -30,11 +31,12 @@ export interface IUser {
 export interface IPitch {
   name: string;
   _id: string;
-  // pitchAuthor: mongoose.Types.ObjectId;
+  pitchAuthor: string;
+  pitchDescription: string;
   pitchStatus: string;
   assignmentStatus: string;
   assignmentGoogleDocLink: string;
-  assignmentContributors: [IUser];
+  assignmentContributors: [string];
   topics: [string];
   teams: {
     writers: {
@@ -62,7 +64,7 @@ export interface IPitch {
       target: number;
     };
   };
-  approvedBy: IUser;
+  approvedBy: string;
   similarStories: [string];
   deadline: Date;
 }
