@@ -1,4 +1,5 @@
-import { IPitch } from '../types/index';
+import { IUser } from '../types/index';
+
 export interface SessionUser {
   _id: string;
   firstName: string;
@@ -16,22 +17,22 @@ export interface SessionUser {
   linkedIn: string;
   twitter: string;
   reasonForInvolvement: string;
-  claimedPitches: [IPitch];
-  submittedPitches: [IPitch];
+  claimedPitches: [string];
+  submittedPitches: [string];
   currentTeams: [string];
   role: string;
   races: [string];
   interests: [string];
 }
 
-export const sessionizeUser = (user: SessionUser): SessionUser => ({
+export const sessionizeUser = (user: IUser): SessionUser => ({
   _id: user._id,
   firstName: user.firstName,
   lastName: user.lastName,
   preferredName: user.preferredName,
   email: user.email,
   phone: user.phone,
-  gender: user.gender,
+  gender: user.genders,
   pronouns: user.pronouns,
   dateJoined: user.dateJoined,
   masthead: user.masthead,

@@ -15,8 +15,10 @@ export interface IUser {
   masthead: boolean;
   onboarding: string;
   portfolio: string;
+  profilePic: string;
   linkedIn: string;
   twitter: string;
+  reasonForInvolvement: string;
   claimedPitches: [string];
   submittedPitches: [string];
   currentTeams: [string];
