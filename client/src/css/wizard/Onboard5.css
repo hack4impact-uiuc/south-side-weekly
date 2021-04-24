@@ -1,17 +1,17 @@
-.onboard8-wrapper {
+.scheduling-wrapper {
   display: flex;
   flex-direction: row;
   justify-content: center;
 }
 
-.onboard8-wrapper .page-svg {
+.scheduling-wrapper .page-svg {
   position: absolute;
   left: 0px;
   bottom: 30px;
   width: 30%;
 }
 
-.onboard8-wrapper .onboard8-content {
+.scheduling-wrapper .scheduling-content {
   text-align: center;
   margin: auto;
   width: fit-content;
@@ -51,7 +51,7 @@
   color: white;
 }
 
-.onboard8-wrapper .onboard8-content .calendly-btn {
+.scheduling-wrapper .scheduling-content .calendly-btn {
   margin-top: 15vh;
   font-size: 28px;
   padding: 15px 50px 15px 50px;
@@ -60,22 +60,22 @@
   color: white;
 }
 
-.onboard8-wrapper .onboard8-content .calendly-btn:active {
+.scheduling-wrapper .scheduling-content .calendly-btn:active {
   background-color: #3d4f91;
   color: white;
 }
 
-.onboard8-wrapper .onboard8-content .calendly-btn:hover {
+.scheduling-wrapper .scheduling-content .calendly-btn:hover {
   background-color: #3d4f91;
   color: white;
 }
 
-.onboard8-wrapper .onboard8-content .calendly-btn:focus {
+.scheduling-wrapper .scheduling-content .calendly-btn:focus {
   background-color: #3d4f91;
   color: white;
 }
 
-.onboard8-wrapper .onboard8-content .page-text {
+.scheduling-wrapper .scheduling-content .page-text {
   position: relative;
   font-size: 24px;
   font-weight: 600;

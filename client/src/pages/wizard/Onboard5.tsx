@@ -13,14 +13,14 @@ interface IProps {
 }
 
 /**
- * Builds and controls the form management for Onboard8 of the Onboarding Wizard
+ * Builds and controls the form management for scheduling of the Onboarding Wizard
  */
 const Onboard5: FC<IProps> = ({
   isModalOpen,
   setModalOpen,
   setScheduleConfirmed,
 }): ReactElement => (
-  <div className="onboard8-wrapper">
+  <div className="scheduling-wrapper">
     <Modal
       onClose={() => setModalOpen(false)}
       className="confirmation-modal"
@@ -44,7 +44,7 @@ const Onboard5: FC<IProps> = ({
       </ModalContent>
     </Modal>
     <WizardSvg page="onboard5" />
-    <div className="onboard8-content">
+    <div className="scheduling-content">
       <div className="page-text">
         <WizardStar />
         Please schedule an Onboarding Session with a Staff Member.

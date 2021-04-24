@@ -6,8 +6,8 @@ import RolePageSVG from '../assets/role-page.svg';
 import BasicInfoSvg from '../assets/basic-info.svg';
 import PersonalInfoSvg from '../assets/personal-information.svg';
 import InvolvementSVG from '../assets/involvement-page.svg';
-import Onboard5SVG from '../assets/onboard5.svg';
-import Onboard8SVG from '../assets/onboard8.svg';
+import TasksSVG from '../assets/tasks.svg';
+import ScheduleSVG from '../assets/schedule.svg';
 
 interface IProps {
   page: string;
@@ -40,13 +40,15 @@ const WizardListTitle: FC<IProps> = ({ page }): ReactElement => {
           />
         );
       case 'onboard3':
-        return <img className="page-svg" alt="onboard5" src={Onboard5SVG} />;
+        return <img className="page-svg" alt="tasks svg" src={TasksSVG} />;
       case 'onboard4':
         return (
           <img alt="Involvement" className="page-svg" src={InvolvementSVG} />
         );
       case 'onboard5':
-        return <img className="page-svg" alt="Onboard 5" src={Onboard8SVG} />;
+        return (
+          <img className="page-svg" alt="schedule svg" src={ScheduleSVG} />
+        );
       default:
         return <></>;
     }

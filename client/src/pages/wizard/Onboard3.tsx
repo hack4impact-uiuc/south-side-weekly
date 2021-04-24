@@ -21,7 +21,7 @@ interface IProps {
 }
 
 /**
- * Builds and controls the form management for Onboard5 of the Onboarding Wizard
+ * Builds and controls the form management for the teams and topics page of the Onboarding Wizard
  *
  * @param {Array<string>} currentTeams the current teams that the user is interested in
  * @param {Dispatch<SetStateAction<Array<string>>>} setCurrentTeams React setter function to control
@@ -102,9 +102,9 @@ const Onboard3: FC<IProps> = ({
   ];
 
   return (
-    <div className="onboard5-wrapper">
+    <div className="teams-topics-wrapper">
       <WizardSvg page="onboard3" />
-      <div className="onboard5-content">
+      <div className="teams-topics-content">
         <div className="section">
           <div className="page-text">
             <WizardStar />
