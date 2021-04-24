@@ -29,6 +29,11 @@ export interface GetProfileResponseType {
   result: IUser;
 }
 
+export interface GetUsersResponseType {
+  message: string;
+  result: [IUser];
+}
+
 /**
  * Returns a sample API response to demonstrate a working backend
  * Returns GET_SAMPLE_FAIL upon failure
@@ -99,6 +104,22 @@ export const saveProfile = (profileData: {
     })
     .catch((error) => ({
       type: 'POST_PROFILE_FAIL',
+      error,
+    }));
+};
+
+export const getUsers = (): Promise<
+  AxiosResponse<GetUsersResponseType> | ErrorWrapper
+> => {
+  const userUrl = `${BASE_URL}/users`;
+  return axios
+    .get(userUrl, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'GET_USERS_FAIL',
       error,
     }));
 };

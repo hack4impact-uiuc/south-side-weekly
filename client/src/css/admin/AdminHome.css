@@ -1,0 +1,13 @@
+/* .admin-home-wrapper {
+  background-color: green;
+} */
+
+.admin-home-wrapper .admin-home-content {
+  padding-top: 10px;
+  width: 60%;
+  margin-left: 20rem;
+}
+
+/* .admin-home-wrapper .admin-home-content .admin-home-table {
+
+} */

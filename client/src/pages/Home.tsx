@@ -6,10 +6,14 @@ import { Redirect } from 'react-router';
 import { BASE_URL } from '../utils/apiWrapper';
 import Header from '../components/Header';
 
+import AdminHome from './admin/AdminHome';
+
 import '../css/Home.css';
 
 function Home(): ReactElement {
   const [loggedOut, setLoggedOut] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(true);
+
   const logout = (): void => {
     const requestString = `${BASE_URL}/auth/logout`;
     axios
@@ -33,15 +37,20 @@ function Home(): ReactElement {
       {!loggedOut ? (
         <div className="home-wrapper">
           <Header />
-
-          <h1>SSW Dashboard</h1>
-          <div className="btn-group">
-            <div className="btn-wrapper">
-              <Button onClick={logout} className="btn">
-                Logout
-              </Button>
+          {isAdmin ? (
+            <AdminHome />
+          ) : (
+            <div>
+              <h1>SSW Dashboard</h1>
+              <div className="btn-group">
+                <div className="btn-wrapper">
+                  <Button onClick={logout} className="btn">
+                    Logout
+                  </Button>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       ) : (
         <Redirect to="/login" />
