@@ -85,13 +85,11 @@ const ClaimPitchModal: FC<IProps> = ({
     const elementIdx = selectedTeams.indexOf(team);
     if (elementIdx === notFoundIdx) {
       const addedElements = selectedTeams.concat(team);
-
       setSelectedTeams(addedElements);
     } else {
       const removedElements = selectedTeams.filter(
         (element) => element !== team,
       );
-
       setSelectedTeams(removedElements);
     }
   };
@@ -181,11 +179,9 @@ const ClaimPitchModal: FC<IProps> = ({
               </div>
               <div className="pitch-name"> {pitch.name} </div>
               <span className="submitted-reviewed-by">
-                {' '}
                 Submitted By: {pitchAuthor}
               </span>
               <span className="submitted-reviewed-by">
-                {' '}
                 Reviewed By: {approvedBy}
               </span>
               <div className="section-description">

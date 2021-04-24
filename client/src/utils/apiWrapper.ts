@@ -212,7 +212,7 @@ export const loadUser = (
 
 /**
  * Updates a user
- * Returns GET_USER_FAIL upon failure
+ * Returns POST_USER_FAIL upon failure
  */
 export const saveUser = (
   profileData: {

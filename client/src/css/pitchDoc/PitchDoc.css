@@ -14,7 +14,6 @@ body {
 
 .content-wrapper {
   padding-left: 220px;
-  /* background-color: peachpuff; */
 }
 
 .pitchdoc-title {
@@ -60,9 +59,6 @@ body {
 
 .content-wrapper .top-section .filter-section .ui.dropdown {
   padding-left: 200px;
-  /* height: 42px;
-  width: 185.50003051757812px; */
-  /* background-color: #3D4F91; */
   border-radius: 8.4px;
 }
 
