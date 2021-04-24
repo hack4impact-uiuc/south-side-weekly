@@ -31,7 +31,7 @@ export const sessionizeUser = (user: IUser): SessionUser => ({
   preferredName: user.preferredName,
   email: user.email,
   phone: user.phone,
-  gender: user.gender,
+  gender: user.genders,
   pronouns: user.pronouns,
   dateJoined: user.dateJoined,
   masthead: user.masthead,
