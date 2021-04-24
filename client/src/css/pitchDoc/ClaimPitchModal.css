@@ -40,10 +40,20 @@
   line-height: 22px;
   font-weight: 100;
   margin-right: 10px;
+  margin-bottom: 10px;
 }
 
 .claim-pitches-wrapper .pitch-info .pitch-info-title a {
   color: #7fbbf7;
+}
+
+.claim-pitches-wrapper .pitch-description {
+  font-size: 13px;
+  line-height: 19px;
+  font-weight: normal;
+  letter-spacing: 0em;
+  margin-top: 7px;
+  margin-bottom: 7px;
 }
 
 .claim-pitches-wrapper .section-description {
@@ -63,7 +73,7 @@
 
 .claim-pitches-wrapper .role-contributor-section {
   display: flex;
-  padding-top: 10px;
+  padding-top: 0px;
   position: relative;
   display: flex;
   flex-direction: column;

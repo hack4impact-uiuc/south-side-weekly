@@ -32,6 +32,7 @@ export interface IPitch {
   name: string;
   _id: string;
   pitchAuthor: string;
+  pitchDescription: string;
   pitchStatus: string;
   assignmentStatus: string;
   assignmentGoogleDocLink: string;

@@ -10,7 +10,6 @@ import {
   Button,
   Image,
   Label,
-  Input,
   Checkbox,
   Popup,
 } from 'semantic-ui-react';
@@ -182,10 +181,7 @@ const ClaimPitchModal: FC<IProps> = ({
               <span className="pitch-info-title">
                 {`Reviewed By: ${approvedBy}`}
               </span>
-              <div className="section-description">
-                Here lies a two sentence summary of pitch. It will be two
-                sentences and no more.
-              </div>
+              <div className="pitch-description">{pitch.pitchDescription}</div>
               <div className="pitch-info-title">
                 Link to Pitch:{' '}
                 <a
