@@ -22,7 +22,7 @@ import Onboard2 from './Onboard2';
 import Onboard3 from './Onboard3';
 import Onboard4 from './Onboard4';
 import Onboard5 from './Onboard5';
-import Compleition from './Completion';
+import Completion from './Completion';
 
 /**
  * Enum to represent which on boarding page the user is on
