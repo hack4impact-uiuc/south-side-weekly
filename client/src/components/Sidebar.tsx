@@ -4,7 +4,6 @@ import { Icon } from 'semantic-ui-react';
 
 import { pages } from '../utils/enums';
 import { getCurrentUser, isError } from '../utils/apiWrapper';
-
 import '../css/Sidebar.css';
 
 interface IProps {

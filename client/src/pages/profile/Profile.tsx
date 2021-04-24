@@ -12,7 +12,7 @@ import { IUser } from 'ssw-common';
 
 import {
   isError,
-  loadProfile,
+  loadUser,
   saveUser,
   getCurrentUser,
 } from '../../utils/apiWrapper';
@@ -190,7 +190,7 @@ function Profile(): ReactElement {
   }
 
   const getProfile = useCallback(async (): Promise<void> => {
-    const res = await loadProfile(userId);
+    const res = await loadUser(userId);
     if (isError(res)) {
       setError(true);
       setErrorMessage(res.type);
@@ -225,7 +225,7 @@ function Profile(): ReactElement {
   }, [userId]);
 
   async function updateProfile(): Promise<void> {
-    const res = await saveUser(userId, profileData);
+    const res = await saveUser(profileData, userId);
     if (isError(res)) {
       setError(true);
       setErrorMessage(res.type);

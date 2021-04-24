@@ -33,6 +33,7 @@ export interface GetUsersResponseType {
 export interface GetCurrentUserResponseType {
   message: string;
   result: IUser;
+}
 
 export interface GetPitchesResponseType {
   message: string;
@@ -109,7 +110,6 @@ export const getUsers = (): Promise<
     }));
 };
 
-
 /**
  * Returns all unclaimed and approved pitches
  * Returns GET_UNCLAIMED_PITCHES_FAIL upon failure
@@ -146,9 +146,10 @@ export const getCurrentUser = (): Promise<
     })
     .catch((error) => ({
       type: 'GET_CURRENT_USER_FAIL',
+      error,
     }));
 };
-  
+
 /**
  * Returns all open teams
  * Returns GET_OPEN_TEAMS_FAIL upon failure
@@ -218,7 +219,6 @@ export const updateClaimedPitches = (
       error,
     }));
 };
-
 
 /**
  * Updates a pitch
