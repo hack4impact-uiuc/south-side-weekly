@@ -35,11 +35,15 @@
   font-weight: 600;
 }
 
-.claim-pitches-wrapper .pitch-info .submitted-reviewed-by {
+.claim-pitches-wrapper .pitch-info .pitch-info-title {
   font-size: 16px;
   line-height: 22px;
   font-weight: 100;
   margin-right: 10px;
+}
+
+.claim-pitches-wrapper .pitch-info .pitch-info-title a {
+  color: #7fbbf7;
 }
 
 .claim-pitches-wrapper .section-description {
@@ -59,7 +63,7 @@
 
 .claim-pitches-wrapper .role-contributor-section {
   display: flex;
-  padding-top: 20px;
+  padding-top: 10px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -76,7 +80,7 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  margin-top: 30px;
+  margin-top: 20px;
   justify-content: center;
 }
 
@@ -104,7 +108,7 @@
 }
 
 .claim-pitches-wrapper .role-contributor-section .pitch-contributors {
-  margin-top: 20px;
+  margin-top: 10px;
   display: flex;
   flex-direction: row;
 }

@@ -55,9 +55,9 @@ const ClaimPitchModal: FC<IProps> = ({
   const [pitchContributors, setPitchContributors] = useState<{
     [key: string]: string;
   }>({});
-  const [pitchLink, setPitchLink] = useState<string>('');
   const [pitchAuthor, setPitchAuthor] = useState<string>('');
   const [approvedBy, setApprovedBy] = useState<string>('');
+  //TODO: Change from hardcoded values to database values
   const userId = '6031a866c70ec705736a79e5';
   const temp_pfp = Pfp;
   const pitchData: { [key: string]: number | string } = {};
@@ -77,7 +77,6 @@ const ClaimPitchModal: FC<IProps> = ({
     selectedTeams.map((team) => {
       pitchData[`teams.${team}.current`] = openTeams[team].current + 1;
     });
-    pitchData['assignmentGoogleDocLink'] = pitchLink;
   };
 
   const handleCheckboxes = (team: string): void => {
@@ -140,7 +139,6 @@ const ClaimPitchModal: FC<IProps> = ({
     getTeams();
     setSelectedTeams([]);
     getUser();
-    setPitchLink('');
   }, [firstOpen, getTeams, getUser]);
 
   return (
@@ -154,7 +152,7 @@ const ClaimPitchModal: FC<IProps> = ({
           setFirstOpen(true);
         }}
         open={firstOpen}
-        trigger={<PitchCard pitch={pitch} openTeams={openTeams}></PitchCard>}
+        trigger={<PitchCard pitch={pitch} openTeams={openTeams} />}
         closeIcon
       >
         <Modal.Actions>
@@ -178,27 +176,28 @@ const ClaimPitchModal: FC<IProps> = ({
                 </Label.Group>
               </div>
               <div className="pitch-name"> {pitch.name} </div>
-              <span className="submitted-reviewed-by">
-                Submitted By: {pitchAuthor}
+              <span className="pitch-info-title">
+                {`Submitted By: ${pitchAuthor}`}
               </span>
-              <span className="submitted-reviewed-by">
-                Reviewed By: {approvedBy}
+              <span className="pitch-info-title">
+                {`Reviewed By: ${approvedBy}`}
               </span>
               <div className="section-description">
                 Here lies a two sentence summary of pitch. It will be two
                 sentences and no more.
               </div>
+              <div className="pitch-info-title">
+                Link to Pitch:{' '}
+                <a
+                  href={pitch.assignmentGoogleDocLink}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  {pitch.assignmentGoogleDocLink}
+                </a>
+              </div>
             </div>
-            <div className="pitch-link">
-              <div className="pitch-link-title">Link to Pitch:</div>
-              <Input
-                className="pitch-link-input"
-                placeholder="Pitch link"
-                onChange={(e) => {
-                  setPitchLink(e.currentTarget.value);
-                }}
-              />
-            </div>
+
             <div className="role-contributor-section">
               <div className="section-title">Roles Available Per Team:</div>
               <div className="section-description">
@@ -207,48 +206,40 @@ const ClaimPitchModal: FC<IProps> = ({
               </div>
               <div className="role-items">
                 {Object.entries(openTeams).map(([team, value], idx) => (
-                  <>
-                    <div className="role-item" key={idx}>
-                      <div className="checkbox">
-                        <Checkbox
-                          className="checkbox"
-                          onClick={() => handleCheckboxes(team)}
-                        />
-                      </div>
-                      <Label
-                        className="role-name"
-                        circular
-                        style={{
-                          backgroundColor:
-                            currentTeamsButtons[teamToTeamsButtons[team]],
-                        }}
-                      >
-                        {teamToTeamsButtons[team]}
-                      </Label>
-                      <div className="role-number">
-                        {value.target - value.current}
-                      </div>
+                  <div className="role-item" key={idx}>
+                    <div className="checkbox">
+                      <Checkbox
+                        className="checkbox"
+                        onClick={() => handleCheckboxes(team)}
+                      />
                     </div>
-                  </>
+                    <Label
+                      className="role-name"
+                      circular
+                      style={{
+                        backgroundColor:
+                          currentTeamsButtons[teamToTeamsButtons[team]],
+                      }}
+                    >
+                      {teamToTeamsButtons[team]}
+                    </Label>
+                    <div className="role-number">
+                      {value.target - value.current}
+                    </div>
+                  </div>
                 ))}
               </div>
               <div className="section-title">Pitch Claimed By:</div>
               <div className="pitch-contributors">
                 {Object.entries(pitchContributors).map(
                   ([name, pfpLink], idx) => (
-                    <>
-                      <Popup
-                        content={name}
-                        trigger={
-                          <img
-                            key={idx}
-                            src={pfpLink}
-                            className="pfp"
-                            alt="pfp"
-                          />
-                        }
-                      />
-                    </>
+                    <Popup
+                      key={idx}
+                      content={name}
+                      trigger={
+                        <img src={pfpLink} className="pfp" alt="Profile" />
+                      }
+                    />
                   ),
                 )}
               </div>
