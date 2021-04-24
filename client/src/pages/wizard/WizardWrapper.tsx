@@ -213,9 +213,6 @@ const WizardWrapper = (): ReactElement => {
             </Button>
           </div>
         )}
-      <div className="logo-header">
-        <img className="logo" alt="SSW Logo" src={Logo} />
-      </div>
 
       <div className="wizard-content">
         <div className="wizard-pages">
