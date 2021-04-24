@@ -27,7 +27,7 @@ export interface GetSampleResponseType {
 export interface GetUsersResponseType {
   message: string;
   // TODO: Fix this from being an any type
-  result: Array<any>;
+  result: IUser[];
 }
 
 export interface GetCurrentUserResponseType {

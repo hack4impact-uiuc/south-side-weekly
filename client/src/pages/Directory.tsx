@@ -7,8 +7,8 @@ import React, {
   useState,
 } from 'react';
 import { Dropdown, Button, Input } from 'semantic-ui-react';
+import { IUser } from 'ssw-common';
 
-import { IUser } from '../../../common/index';
 import Sidebar from '../components/Sidebar';
 import UserModal from '../components/UserModal/UserModal';
 import { getUsers, isError } from '../utils/apiWrapper';
@@ -195,7 +195,8 @@ const Directory = (): ReactElement => {
 
       if (!isError(resp)) {
         setDirectory(resp.data.result);
-        // setSearchedDirectory(resp.data.result);
+
+        // Initializes the search state of the users to start with all of the users
         dispatchSearch({
           type: SearchAction.INITIALIZE_USERS,
           query: '',
@@ -274,7 +275,7 @@ const Directory = (): ReactElement => {
   }, [searchState.query, directory, handleSearch]);
 
   /**
-   * Recevies a directory and filters it with all of the selected keys.
+   * Recieves a directory and filters it with all of the selected keys.
    *
    * @param directory the full directory of SSW users
    * @returns a filtered directory
