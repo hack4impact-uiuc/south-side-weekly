@@ -13,7 +13,7 @@ import { IUser } from 'ssw-common';
 import {
   isError,
   loadProfile,
-  saveProfile,
+  saveUser,
   getCurrentUser,
 } from '../../utils/apiWrapper';
 import { teamEnum, interestsEnum, pages } from '../../utils/enums';
@@ -225,7 +225,7 @@ function Profile(): ReactElement {
   }, [userId]);
 
   async function updateProfile(): Promise<void> {
-    const res = await saveProfile(userId, profileData);
+    const res = await saveUser(userId, profileData);
     if (isError(res)) {
       setError(true);
       setErrorMessage(res.type);

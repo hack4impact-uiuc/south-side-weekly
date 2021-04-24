@@ -3,8 +3,8 @@ import axios from 'axios';
 import { Button } from 'semantic-ui-react';
 import { Redirect } from 'react-router';
 
-import { BASE_URL } from '../utils/apiWrapper';
 import Header from '../components/Header';
+import { BASE_URL } from '../utils/apiWrapper';
 
 import '../css/Home.css';
 

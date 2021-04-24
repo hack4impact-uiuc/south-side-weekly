@@ -5,6 +5,7 @@ import 'semantic-ui-css/semantic.min.css';
 import axios from 'axios';
 
 import Home from './pages/Home';
+import PitchDoc from './pages/pitchDoc/PitchDoc';
 import Profile from './pages/profile/Profile';
 import Login from './pages/Login';
 import WizardWrapper from './pages/wizard/WizardWrapper';
@@ -21,6 +22,8 @@ ReactDOM.render(
       <Switch>
         <Route exact path="/" component={Home} />
         <Route exact path="/join" component={WizardWrapper} />
+        <Route exact path="/pitches" component={PitchDoc} />
+        <Route exact path="/resource" component={ResourcePage} />
         <Route exact path="/resources" component={ResourcePage} />
         <Route exact path="/profile/:userId" component={Profile} />
         <Route exact path="/users" component={Directory} />

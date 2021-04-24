@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { IUser } from 'ssw-common';
+import { IPitch, IUser } from 'ssw-common';
 
 export const FRONTEND_BASE_URL = process.env.REACT_APP_VERCEL_URL
   ? `https://${process.env.REACT}`
@@ -33,6 +33,15 @@ export interface GetUsersResponseType {
 export interface GetCurrentUserResponseType {
   message: string;
   result: IUser;
+
+export interface GetPitchesResponseType {
+  message: string;
+  result: [IPitch];
+}
+
+export interface GetOpenTeamsResponseType {
+  message: string;
+  result: IPitch['teams'];
 }
 
 export interface GetProfileResponseType {
@@ -84,7 +93,6 @@ export const addSampleResponse = (
  * Returns a list of all of the users in the database
  * Returns GET_USERS_FETCH_FAIL upon failure
  */
-
 export const getUsers = (): Promise<
   AxiosResponse<GetUsersResponseType> | ErrorWrapper
 > => {
@@ -101,11 +109,31 @@ export const getUsers = (): Promise<
     }));
 };
 
+
+/**
+ * Returns all unclaimed and approved pitches
+ * Returns GET_UNCLAIMED_PITCHES_FAIL upon failure
+ */
+export const getUnclaimedPitches = (): Promise<
+  AxiosResponse<GetPitchesResponseType> | ErrorWrapper
+> => {
+  const requestString = `${BASE_URL}/pitch?unclaimed=true`;
+  return axios
+    .get(requestString, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'GET_UNCLAIMED_PITCHES_FAIL',
+      error,
+    }));
+};
+
 /**
  * Returns a list of all of the users in the database
  * Returns GET_USERS_FETCH_FAIL upon failure
  */
-
 export const getCurrentUser = (): Promise<
   AxiosResponse<GetCurrentUserResponseType> | ErrorWrapper
 > => {
@@ -118,13 +146,106 @@ export const getCurrentUser = (): Promise<
     })
     .catch((error) => ({
       type: 'GET_CURRENT_USER_FAIL',
+    }));
+};
+  
+/**
+ * Returns all open teams
+ * Returns GET_OPEN_TEAMS_FAIL upon failure
+ */
+export const getOpenTeams = (
+  pitchId: string,
+): Promise<AxiosResponse<GetOpenTeamsResponseType> | ErrorWrapper> => {
+  const requestString = `${BASE_URL}/pitch/${pitchId}/openTeams`;
+  return axios
+    .get(requestString, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'GET_OPEN_TEAMS_FAIL',
       error,
     }));
 };
 
-// const user_id = '6031a866c70ec705736a79e5';
+/**
+ * Updates a pitch's Contributor Array
+ * Returns POST_PITCH_FAIL upon failure
+ */
+export const updatePitchContributors = (
+  userId: string,
+  pitchId: string,
+): Promise<AxiosResponse<GetPitchesResponseType> | ErrorWrapper> => {
+  const pitchUrl = `${BASE_URL}/pitch/${pitchId}/contributors`;
+  return axios
+    .put(
+      pitchUrl,
+      { userId },
+      {
+        headers: {
+          'Content-Type': 'application/JSON',
+        },
+      },
+    )
+    .catch((error) => ({
+      type: 'POST_PITCH_CONTRIBUTORS_FAIL',
+      error,
+    }));
+};
 
-export const loadProfile = (
+/**
+ * Updates a user's claimed pitches
+ * Returns POST_PITCH_FAIL upon failure
+ */
+export const updateClaimedPitches = (
+  userId: string,
+  pitchId: string,
+): Promise<AxiosResponse<GetPitchesResponseType> | ErrorWrapper> => {
+  const userUrl = `${BASE_URL}/users/${userId}/pitches`;
+  return axios
+    .put(
+      userUrl,
+      { pitchId },
+      {
+        headers: {
+          'Content-Type': 'application/JSON',
+        },
+      },
+    )
+    .catch((error) => ({
+      type: 'POST_USER_CLAIMED_PITCHES_FAIL',
+      error,
+    }));
+};
+
+
+/**
+ * Updates a pitch
+ * Returns POST_PITCH__FAIL upon failure
+ */
+export const updatePitch = (
+  pitchData: { [key: string]: number | string },
+  pitchId: string,
+): Promise<AxiosResponse<GetPitchesResponseType> | ErrorWrapper> => {
+  const pitchUrl = `${BASE_URL}/pitch/${pitchId}`;
+  return axios
+    .put(pitchUrl, pitchData, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'POST_PITCH_FAIL',
+      error,
+    }));
+};
+
+/**
+ * Returns a user
+ * Returns GET_PROFILE_FAIL upon failure
+ */
+export const loadUser = (
   userId: string,
 ): Promise<AxiosResponse<GetProfileResponseType> | ErrorWrapper> => {
   const userUrl = `${BASE_URL}/users/${userId}`;
@@ -140,11 +261,15 @@ export const loadProfile = (
     }));
 };
 
-export const saveProfile = (
-  userId: string,
+/**
+ * Updates a user
+ * Returns POST_USER_FAIL upon failure
+ */
+export const saveUser = (
   profileData: {
     [key: string]: string | boolean | string[] | Date | null;
   },
+  userId: string,
 ): Promise<AxiosResponse<GetProfileResponseType> | ErrorWrapper> => {
   const userUrl = `${BASE_URL}/users/${userId}`;
   return axios
@@ -154,7 +279,7 @@ export const saveProfile = (
       },
     })
     .catch((error) => ({
-      type: 'POST_PROFILE_FAIL',
+      type: 'POST_USER_FAIL',
       error,
     }));
 };
