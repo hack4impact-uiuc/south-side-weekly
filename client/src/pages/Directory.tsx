@@ -143,7 +143,12 @@ const Directory = (): ReactElement => {
 
   const roleOptions = useMemo(
     () =>
-      parseArrayToSemanticDropdownOptions(['Contributor', 'Staff', 'Admin']),
+      parseArrayToSemanticDropdownOptions([
+        'Contributor',
+        'Staff',
+        'Admin',
+        'Tbd',
+      ]),
     [],
   );
   const dateOptions = useMemo(
@@ -220,18 +225,20 @@ const Directory = (): ReactElement => {
   const handleSearch = useCallback(
     (searchTerm: string): IUser[] => {
       let searchedDirectory = [...directory];
+      searchTerm = searchTerm.toLowerCase().trim();
 
       searchedDirectory = directory.filter((user: IUser) => {
         // Avoid null fields in database
-        const firstName = user.firstName ? user.firstName : '';
-        const lastName = user.lastName ? user.lastName : '';
-        const email = user.email ? user.email : '';
+        const firstName = user.firstName ? user.firstName.toLowerCase() : '';
+        const lastName = user.lastName ? user.lastName.toLowerCase() : '';
+        const email = user.email ? user.email.toLowerCase() : '';
+        const fullName = `${firstName} ${lastName}`.toLowerCase();
 
         return (
           firstName.includes(searchTerm) ||
           lastName.includes(searchTerm) ||
           email.includes(searchTerm) ||
-          `${firstName} ${lastName}`.includes(searchTerm)
+          fullName.includes(searchTerm)
         );
       });
 
