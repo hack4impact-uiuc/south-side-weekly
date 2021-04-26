@@ -1,4 +1,4 @@
-import React, { ReactElement, FC, Dispatch, useState } from 'react';
+import React, { ReactElement, FC, Dispatch, useState, useEffect } from 'react';
 import { Modal, Button, Form, Input, Checkbox } from 'semantic-ui-react';
 
 import { createResource, isError } from '../../utils/apiWrapper';
@@ -28,13 +28,14 @@ const AddResourceModal: FC<IProps> = ({ onAdd }): ReactElement => {
 
   const handleTagSelect = (tag: string): void => {
     const newTags = new Set(selectedTags);
-    if (newTags.has(tag)) {
-      newTags.delete(tag);
-    } else {
-      newTags.add(tag);
-    }
+    newTags.has(tag) ? newTags.delete(tag) : newTags.add(tag);
     setSelectedTags(newTags);
   };
+
+  useEffect(() => {
+    // Clears selectedTags upon rendering
+    setSelectedTags(new Set<string>());
+  }, [open]);
 
   const addResource = async (): Promise<void> => {
     const newResource = {

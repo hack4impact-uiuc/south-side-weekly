@@ -101,17 +101,11 @@ const ResourcePage = (): ReactElement => {
         <div className="resource-title-container">
           <div className="resource-title-item">Resource Hub</div>
           <div className="resource-title-item">
-            <div className="resource-toggle-group">
-              <Button
-                className={'toggle-button' && (!edit ? 'active' : '')}
-                onClick={cancelEdit}
-              >
+            <div className="resource-edit-btns">
+              <Button className={!edit ? 'active' : ''} onClick={cancelEdit}>
                 View Resources
               </Button>
-              <Button
-                className={'toggle-button' && (edit ? 'active' : '')}
-                onClick={enableEdit}
-              >
+              <Button className={edit ? 'active' : ''} onClick={enableEdit}>
                 Edit Resources
               </Button>
             </div>

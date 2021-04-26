@@ -70,7 +70,7 @@ export interface IPitch {
 /**
  * Interface for a Resource Schema.
  */
- interface IResource {
+export interface IResource {
   name: string;
   link: string;
   teamRoles: [string];

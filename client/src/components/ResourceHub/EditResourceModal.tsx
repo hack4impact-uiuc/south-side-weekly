@@ -29,6 +29,9 @@ const EditResourceModal: FC<IProps> = ({
   closeModal,
 }): ReactElement => {
   const [open, setOpen] = useState<boolean>(false);
+  const [resourceName, setResourceName] = useState<string>(
+    resource ? resource.name : '',
+  );
   const [resourceURL, setResourceURL] = useState<string>(
     resource ? resource.link : '',
   );
@@ -36,11 +39,7 @@ const EditResourceModal: FC<IProps> = ({
 
   const handleTagSelect = (tag: string): void => {
     const newTags = new Set(selectedTags);
-    if (newTags.has(tag)) {
-      newTags.delete(tag);
-    } else {
-      newTags.add(tag);
-    }
+    newTags.has(tag) ? newTags.delete(tag) : newTags.add(tag);
     setSelectedTags(newTags);
   };
 
@@ -61,14 +60,14 @@ const EditResourceModal: FC<IProps> = ({
 
   const modifyResource = async (): Promise<void> => {
     const editedResource = {
-      name: resource ? resource.name : null,
+      name: resourceName,
       link: resourceURL,
       teamRoles: Array.from(selectedTags),
     };
 
     const res = await editResource(resource?._id, editedResource);
     if (!isError(res)) {
-      setOpen(false);
+      close();
     }
   };
 
@@ -107,8 +106,12 @@ const EditResourceModal: FC<IProps> = ({
                 </div>
                 <div className="edit-resource-inputs">
                   <Form.Field>
-                    Description
-                    <Input className="edit-resource-label" />
+                    New Name
+                    <Input
+                      className="edit-resource-label"
+                      value={resourceName}
+                      onChange={(e) => setResourceName(e.currentTarget.value)}
+                    />
                   </Form.Field>
                   <Form.Field>
                     URL/File Upload
