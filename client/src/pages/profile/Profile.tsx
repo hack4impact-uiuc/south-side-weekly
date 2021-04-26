@@ -1,7 +1,7 @@
 import React, { ReactElement, useState, useEffect } from 'react';
 import { Message, Input, Button, Dropdown, Label } from 'semantic-ui-react';
 
-import { isError, loadProfile, saveProfile } from '../../utils/apiWrapper';
+import { isError, loadUser, saveUser } from '../../utils/apiWrapper';
 import { teamEnum, interestsEnum, pages } from '../../utils/enums';
 import Sidebar from '../../components/Sidebar';
 import Mail from '../../assets/mail.svg';
@@ -34,6 +34,7 @@ function Profile(): ReactElement {
   const [edit, setEdit] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
+  const userId = '6031a866c70ec705736a79e5';
 
   const currentTeamsButtons = [
     { display: 'Editing', value: teamEnum.EDITING, color: '#A5C4F2' },
@@ -167,7 +168,7 @@ function Profile(): ReactElement {
   }
 
   async function getProfile(): Promise<void> {
-    const res = await loadProfile();
+    const res = await loadUser(userId);
     if (isError(res)) {
       setError(true);
       setErrorMessage(res.type);
@@ -199,7 +200,7 @@ function Profile(): ReactElement {
   }
 
   async function updateProfile(): Promise<void> {
-    const res = await saveProfile(profileData);
+    const res = await saveUser(profileData, userId);
     if (isError(res)) {
       setError(true);
       setErrorMessage(res.type);

@@ -5,14 +5,15 @@ import { IUser as IUserBase, IPitch as IPitchBase } from 'ssw-common';
 /**
  * Interface for a User Schema.
  */
-export interface IUser extends Document<any>, IUserBase {}
+export interface IUser extends Document<any>, IUserBase {
+  _id: string;
+}
 
 /**
  * Interface for a Pitch Schema.
  */
 export interface IPitch extends Document<any>, IPitchBase {
   _id: string;
-  pitchAuthor: mongoose.Types.ObjectId;
 }
 
 /**
