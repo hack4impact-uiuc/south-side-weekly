@@ -2,19 +2,9 @@ import React, { ReactElement, FC, Dispatch, useState, useEffect } from 'react';
 import { Modal, Button, Form, Input, Checkbox } from 'semantic-ui-react';
 
 import { createResource, isError } from '../../utils/apiWrapper';
+import { dbTeamToDisplay } from '../../utils/constants';
 
 import '../../css/AddResourceModal.css';
-
-const teams = [
-  'General',
-  'Editing',
-  'Factchecking',
-  'Illustration',
-  'Photography',
-  'Onboarding',
-  'Visuals',
-  'Writing',
-];
 
 interface IProps {
   onAdd: Dispatch<void>;
@@ -84,10 +74,10 @@ const AddResourceModal: FC<IProps> = ({ onAdd }): ReactElement => {
             <div className="resource-tags-wrapper">
               Resource Tags:
               <div className="resource-tag-grid">
-                {teams.map((team, idx) => (
+                {Object.keys(dbTeamToDisplay).map((team, idx) => (
                   <Checkbox
                     key={idx}
-                    label={team}
+                    label={dbTeamToDisplay[team]}
                     onClick={() => handleTagSelect(team)}
                   />
                 ))}

@@ -3,19 +3,8 @@ import { Modal, Button, Form, Input, Checkbox } from 'semantic-ui-react';
 import { IResource } from 'ssw-common';
 
 import { editResource, isError } from '../../utils/apiWrapper';
-
+import { dbTeamToDisplay } from '../../utils/constants';
 import '../../css/EditResourceModal.css';
-
-const teams = [
-  'General',
-  'Editing',
-  'Factchecking',
-  'Illustration',
-  'Photography',
-  'Onboarding',
-  'Visuals',
-  'Writing',
-];
 
 interface IProps {
   isOpen: boolean;
@@ -98,10 +87,10 @@ const EditResourceModal: FC<IProps> = ({
               <div className="resource-tags-wrapper">
                 Resource Tags:
                 <div className="resource-tag-grid">
-                  {teams.map((team, idx) => (
+                  {Object.keys(dbTeamToDisplay).map((team, idx) => (
                     <Checkbox
                       key={idx}
-                      label={team}
+                      label={dbTeamToDisplay[team]}
                       onClick={() => handleTagSelect(team)}
                       defaultChecked={isTeam(team)}
                     />

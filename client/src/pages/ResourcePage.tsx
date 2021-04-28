@@ -8,6 +8,7 @@ import EditResourceModal from '../components/ResourceHub/EditResourceModal';
 import ResourcePageSVG from '../assets/resource-page.svg';
 import Header from '../components/Header';
 import Sidebar from '../components/Sidebar';
+import { dbTeamToDisplay } from '../utils/constants';
 import '../css/Resource.css';
 import { pages } from '../utils/enums';
 
@@ -122,7 +123,7 @@ const ResourcePage = (): ReactElement => {
               className={`toggle-button ${role === currentValue && 'active'}`}
               onClick={() => handleResourceChange(role)}
             >
-              {role}
+              {dbTeamToDisplay[role]}
             </Button>
           ))}
         </div>
