@@ -1,9 +1,9 @@
-import React, { ReactElement, useEffect } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from 'semantic-ui-react';
 
 import { pages } from '../utils/enums';
-
+import { getCurrentUser, isError } from '../utils/apiWrapper';
 import '../css/Sidebar.css';
 
 interface IProps {
@@ -11,6 +11,20 @@ interface IProps {
 }
 
 function Sidebar({ currentPage }: IProps): ReactElement {
+  const [currentUserId, setCurrentUserId] = useState<string>('');
+
+  useEffect(() => {
+    const getUser = async (): Promise<void> => {
+      const res = await getCurrentUser();
+
+      if (!isError(res)) {
+        setCurrentUserId(res.data.result._id);
+      }
+    };
+
+    getUser();
+  }, []);
+
   useEffect(() => {
     switch (currentPage) {
       case pages.HOME:
@@ -43,7 +57,7 @@ function Sidebar({ currentPage }: IProps): ReactElement {
             <div className="icon-text">Home</div>
           </div>
         </Link>
-        <Link to="/profile">
+        <Link to={`/profile/${currentUserId}`}>
           <div id="profile" className="nav-link">
             <Icon className="icon" name="user" size="large" />
             <div className="icon-text">Profile</div>

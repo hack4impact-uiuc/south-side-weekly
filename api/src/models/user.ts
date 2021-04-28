@@ -1,5 +1,4 @@
 import mongoose, { Schema } from 'mongoose';
-import { IUser } from '../types/index';
 
 import {
   interestsEnum,
@@ -7,6 +6,7 @@ import {
   rolesEnum,
   racesEnum,
 } from '../utils/enums';
+import { IUser } from '../types';
 
 /**
  * Mongoose Schema to represent a User at South Side Weekly.

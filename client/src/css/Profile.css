@@ -49,7 +49,8 @@
 }
 
 .pfp-page-content .top-section-wrapper .pf-section .pf-image-wrapper .pf-image {
-  width: 100%;
+  margin: auto;
+  margin-bottom: 10px;
 }
 
 .pfp-page-content
@@ -132,7 +133,6 @@
   margin-top: 5px;
   border-radius: 11.57px;
   background-color: #f7fafb;
-  /*border: 2px solid black;*/
   width: 100%;
   height: 10%;
   opacity: 0.95;
@@ -245,7 +245,6 @@
   margin-top: 5px;
   border-radius: 11.57px;
   background-color: #f7fafb;
-  /*border: 2px solid black;*/
   width: 100%;
   height: 13%;
   opacity: 0.95;
@@ -371,10 +370,3 @@ hr {
 .dropdown-field .menu .item[color='#F1D8B0'] {
   background: #f1d8b0 !important;
 }
-
-/*
-.dropdown-field .menu .item .text {
-    margin-top: auto !important;
-
-
-}*/

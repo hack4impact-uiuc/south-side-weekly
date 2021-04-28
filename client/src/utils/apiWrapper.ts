@@ -24,6 +24,17 @@ export interface GetSampleResponseType {
   message: string;
 }
 
+export interface GetUsersResponseType {
+  message: string;
+  // TODO: Fix this from being an any type
+  result: IUser[];
+}
+
+export interface GetCurrentUserResponseType {
+  message: string;
+  result: IUser;
+}
+
 export interface GetPitchesResponseType {
   message: string;
   result: [IPitch];
@@ -80,6 +91,26 @@ export const addSampleResponse = (
 };
 
 /**
+ * Returns a list of all of the users in the database
+ * Returns GET_USERS_FETCH_FAIL upon failure
+ */
+export const getUsers = (): Promise<
+  AxiosResponse<GetUsersResponseType> | ErrorWrapper
+> => {
+  const requestString = `${BASE_URL}/users`;
+  return axios
+    .get(requestString, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'GET_USERS_FETCH_FAIL',
+      error,
+    }));
+};
+
+/**
  * Returns all unclaimed and approved pitches
  * Returns GET_UNCLAIMED_PITCHES_FAIL upon failure
  */
@@ -95,6 +126,26 @@ export const getUnclaimedPitches = (): Promise<
     })
     .catch((error) => ({
       type: 'GET_UNCLAIMED_PITCHES_FAIL',
+      error,
+    }));
+};
+
+/**
+ * Returns a list of all of the users in the database
+ * Returns GET_USERS_FETCH_FAIL upon failure
+ */
+export const getCurrentUser = (): Promise<
+  AxiosResponse<GetCurrentUserResponseType> | ErrorWrapper
+> => {
+  const requestString = `${BASE_URL}/auth/currentUser`;
+  return axios
+    .get(requestString, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'GET_CURRENT_USER_FAIL',
       error,
     }));
 };
