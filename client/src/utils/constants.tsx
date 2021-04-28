@@ -38,6 +38,18 @@ const teamToTeamsButtons: { [key: string]: string } = {
   factChecking: 'Fact-checking',
 };
 
+// Team name in database format to display format
+const dbTeamToDisplay: { [key: string]: string } = {
+  General: 'General',
+  Editing: 'Editing',
+  Factchecking: 'Fact-checking',
+  Illustration: 'Illustration',
+  Photography: 'Photography',
+  Onboarding: 'Onboarding',
+  Visuals: 'Visuals',
+  Writing: 'Writing',
+};
+
 const enumToInterestButtons: { [key: string]: string } = {
   CANNABIS: 'Cannabis',
   EDUCATION: 'Education',
@@ -58,6 +70,7 @@ const enumToInterestButtons: { [key: string]: string } = {
 export {
   interestsButtons,
   currentTeamsButtons,
+  dbTeamToDisplay,
   enumToInterestButtons,
   teamToTeamsButtons,
 };
