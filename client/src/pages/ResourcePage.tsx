@@ -152,7 +152,10 @@ const ResourcePage = (): ReactElement => {
                       className="delete-btn"
                       circular
                       icon="big minus circle"
-                      onClick={() => removeResource(resource._id)}
+                      onClick={(e) => {
+                        removeResource(resource._id);
+                        e.stopPropagation();
+                      }}
                     />
                     {resource.name}
                   </Button>
