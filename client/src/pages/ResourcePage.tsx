@@ -109,6 +109,9 @@ const ResourcePage = (): ReactElement => {
                 Edit Resources
               </Button>
             </div>
+            <div className="add-resource-btn">
+              {!edit ? '' : <AddResourceModal onAdd={filterResources} />}
+            </div>
           </div>
         </div>
 
@@ -122,7 +125,6 @@ const ResourcePage = (): ReactElement => {
               {role}
             </Button>
           ))}
-          {!edit ? '' : <AddResourceModal onAdd={filterResources} />}
         </div>
 
         <div className="resource-btn-group">

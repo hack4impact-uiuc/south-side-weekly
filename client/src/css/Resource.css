@@ -19,16 +19,17 @@
 .resource-page-wrapper .resource-title-container .resource-title-item {
   font-weight: 700;
   font-size: 36px;
-  padding: 0vh 0 5vh 0;
+  padding: 0 0 5vh 0;
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  width: 90%;
+  padding-right: 50px;
 }
 
 .resource-page-wrapper
   .resource-title-container
   .resource-title-item
   .resource-edit-btns {
-  float: right;
+  float: left;
+  padding-right: 85px;
 }
 
 .resource-page-wrapper
@@ -48,11 +49,18 @@
   .resource-title-item
   .resource-edit-btns
   .ui.button {
-  background-color: white !important;
+  background-color: white;
   color: black;
   border: solid black 2px;
   border-radius: 10px;
   font-size: 14px;
+}
+
+.resource-page-wrapper
+  .resource-title-container
+  .resource-title-item
+  .add-resource-btn {
+  display: inline;
 }
 
 .resource-page-wrapper .resource-page-content .resource-toggle-group {
@@ -60,10 +68,6 @@
   grid-template-columns: 1fr 1fr 1fr 1fr;
   grid-column-gap: 40px;
   grid-row-gap: 10px;
-}
-
-.resource-page-wrapper .resource-page-content .add-resource-btn {
-  padding-left: 350px;
 }
 
 .resource-page-wrapper
