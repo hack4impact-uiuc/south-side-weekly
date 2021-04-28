@@ -14,6 +14,7 @@ export interface IUser {
   dateJoined: Date;
   masthead: boolean;
   onboarding: string;
+  profilePic: string;
   portfolio: string;
   linkedIn: string;
   twitter: string;
