@@ -21,12 +21,14 @@ interface IProps {
   isOpen: boolean;
   resource?: IResource;
   closeModal: Dispatch<void>;
+  getUpdatedResources: Dispatch<void>;
 }
 
 const EditResourceModal: FC<IProps> = ({
   isOpen,
   resource,
   closeModal,
+  getUpdatedResources,
 }): ReactElement => {
   const [open, setOpen] = useState<boolean>(false);
   const [resourceName, setResourceName] = useState<string>(
@@ -67,6 +69,7 @@ const EditResourceModal: FC<IProps> = ({
 
     const res = await editResource(resource?._id, editedResource);
     if (!isError(res)) {
+      getUpdatedResources();
       close();
     }
   };

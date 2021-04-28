@@ -113,19 +113,16 @@ const ResourcePage = (): ReactElement => {
         </div>
 
         <div className="resource-toggle-group">
-          {!edit ? (
-            Object.keys(resourcesPerRole).map((role) => (
-              <Button
-                key={role}
-                className={`toggle-button ${role === currentValue && 'active'}`}
-                onClick={() => handleResourceChange(role)}
-              >
-                {role}
-              </Button>
-            ))
-          ) : (
-            <AddResourceModal onAdd={filterResources} />
-          )}
+          {Object.keys(resourcesPerRole).map((role) => (
+            <Button
+              key={role}
+              className={`toggle-button ${role === currentValue && 'active'}`}
+              onClick={() => handleResourceChange(role)}
+            >
+              {role}
+            </Button>
+          ))}
+          {!edit ? '' : <AddResourceModal onAdd={filterResources} />}
         </div>
 
         <div className="resource-btn-group">
@@ -167,6 +164,7 @@ const ResourcePage = (): ReactElement => {
               isOpen
               resource={resourceToEdit}
               closeModal={closeModal}
+              getUpdatedResources={filterResources}
             />
           ) : (
             ''
