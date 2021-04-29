@@ -15,6 +15,7 @@ interface IProps {
   padding?: string;
   buttonText?: string;
   clickedIcon?: string;
+  disabled?: boolean;
 }
 
 const NOT_FOUND_IDX = -1;
@@ -31,6 +32,7 @@ const NOT_FOUND_IDX = -1;
  * @param {string} padding
  * @param {string} buttonText
  * @param {string} clickedIcon
+ * @param {boolean} disabled
  */
 const WizardSelectButton: FC<IProps> = ({
   onClick,
@@ -43,6 +45,7 @@ const WizardSelectButton: FC<IProps> = ({
   padding = 'none',
   buttonText = value,
   clickedIcon = CheckSVG,
+  disabled = false,
 }): ReactElement => {
   const [selected, setSelected] = useState<boolean>(false);
 
@@ -62,6 +65,7 @@ const WizardSelectButton: FC<IProps> = ({
         onClick={onClick}
         value={value}
         className="select-btn"
+        disabled={disabled}
       >
         {buttonText}
       </Button>
