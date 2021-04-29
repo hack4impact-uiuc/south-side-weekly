@@ -339,37 +339,15 @@ const filterPitchesByClaimStatus = (
  * @returns true if pitch is claimed, else false
  */
 const isPitchClaimed = (pitch: IPitch, teams: string[]): boolean => {
-  if (teams.length === 0) {
-    const pitchTeams = Object.entries(pitch.teams);
-    let isClaimed = true;
-
-    pitchTeams.forEach((team) => {
-      // Essentially `continue`
-      if (!isClaimed) {
-        return;
-      }
-
-      const assignments = team[1];
-
-      if (assignments.current < assignments.target) {
-        // Cannot return early in for each loop
-        isClaimed = false;
-      }
-    });
-
-    return isClaimed;
-  }
-
   const pitchTeams = Object.entries(pitch.teams);
   let isClaimed = true;
 
   pitchTeams.forEach((team) => {
-    if (teams.includes(team[0])) {
-      // Essentially `continue`
+    // Essentially `continue`
+    if (teams.length === 0 || teams.includes(team[0])) {
       if (!isClaimed) {
         return;
       }
-
       const assignments = team[1];
 
       if (assignments.current < assignments.target) {
