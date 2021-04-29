@@ -218,11 +218,7 @@ const filterPitchesByTeams = (teams: string[], pitches: IPitch[]): IPitch[] => {
   filteredPitches = filteredPitches.filter((pitch: IPitch) => {
     let hasTeam = true;
 
-    console.log(pitch.name);
-
     const pitchTeams: string[] = getPitchTeams(pitch);
-    console.log(pitch.teams);
-    console.log(pitchTeams);
 
     teams.forEach((team) => {
       if (!pitchTeams.includes(team.toUpperCase())) {
