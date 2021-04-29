@@ -333,7 +333,7 @@ function PitchDoc(): ReactElement {
 
     pitchTeams.forEach((team) => {
       // Essentially `continue`
-      if (isClaimed) {
+      if (!isClaimed) {
         return;
       }
 
