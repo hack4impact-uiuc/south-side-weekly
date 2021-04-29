@@ -14,6 +14,7 @@ export interface IUser {
   dateJoined: Date;
   masthead: boolean;
   onboarding: string;
+  profilePic: string;
   portfolio: string;
   linkedIn: string;
   twitter: string;
@@ -67,4 +68,14 @@ export interface IPitch {
   approvedBy: string;
   similarStories: [string];
   deadline: Date;
+}
+
+/**
+ * Interface for a Resource Schema.
+ */
+export interface IResource {
+  name: string;
+  link: string;
+  teamRoles: [string];
+  _id: string;
 }
