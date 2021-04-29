@@ -1,13 +1,13 @@
 .involvement-wrapper {
-  width: 50%;
-  float: right;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .involvement-wrapper .page-svg {
-  position: absolute;
-  bottom: 10px;
-  left: 30px;
-  width: 43%;
+  align-self: flex-end;
+  width: 35%;
+  margin-right: 10%;
 }
 
 .involvement-wrapper .involvement-content {
@@ -26,24 +26,31 @@
   padding-left: 30px;
 }
 
-.involvement-wrapper .involvement-content .required-icon {
-  position: absolute;
-  top: 5px;
-  left: 0;
-}
-
 .involvement-wrapper .involvement-content .response-text-area {
   margin-top: 5vh;
   margin-left: 30px;
   width: 80%;
   height: 200px;
   border: none !important;
-  border-radius: 1rem;
   padding: 10px;
+  border-radius: 1rem;
+  background-color: rgb(61, 79, 145, 0.25);
+  resize: none;
+}
+
+.involvement-wrapper .involvement-content .response-text-area textarea {
+  height: 200px;
+  border: none !important;
+  border-radius: 1rem;
+  background: none !important;
   background-color: rgb(61, 79, 145, 0.25);
   resize: none;
 }
 
 .involvement-wrapper .involvement-content .response-text-area:focus {
   outline: none !important;
+}
+
+.involvement-content .form .error {
+  border: 2px solid #d9796f !important;
 }
