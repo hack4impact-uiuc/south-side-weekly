@@ -104,9 +104,7 @@ router.get(
 
     const pitch = await Pitch.findById(req.params.pitchId);
     const openTeams = Object.fromEntries(
-      Object.entries(pitch.teams).filter(
-        ([, spots]) => spots.target > 0,
-      ),
+      Object.entries(pitch.teams).filter(([, spots]) => spots.target > 0),
     );
 
     if (!pitch) {
