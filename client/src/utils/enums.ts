@@ -58,3 +58,10 @@ export const pages = {
   RESOURCES: 'RESOURCES',
   USERS: 'USERS',
 };
+
+export const pitchStatusEnum = {
+  APPROVED: 'APPROVED',
+  PENDING: 'PENDING',
+  REJECTED: 'REJECTED',
+  NONE: 'NONE',
+};

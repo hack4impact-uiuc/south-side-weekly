@@ -1,3 +1,4 @@
+import { interestsEnum } from './enums'
 // All of the interests buttons to show
 const interestsButtons: { [key: string]: string } = {
   Cannabis: '#CFE7C4',
@@ -55,9 +56,48 @@ const enumToInterestButtons: { [key: string]: string } = {
   'VISUAL ARTS': 'Visual Arts',
 };
 
+const interestsButtonsMap = [
+  { display: 'Cannabis', value: interestsEnum.CANNABIS, color: '#CFE7C4' },
+  { display: 'Education', value: interestsEnum.EDUCATION, color: '#A9D3E5' },
+  {
+    display: 'Food and Land',
+    value: interestsEnum.FOOD_AND_LAND,
+    color: '#BFEBE0',
+  },
+  { display: 'Fun', value: interestsEnum.FUN, color: '#F9B893' },
+  { display: 'Health', value: interestsEnum.HEALTH, color: '#F9B893' },
+  { display: 'Housing', value: interestsEnum.HOUSING, color: '#EF8B8B' },
+  {
+    display: 'Immigration',
+    value: interestsEnum.IMMIGRATION,
+    color: '#D8ACE8',
+  },
+  { display: 'Literature', value: interestsEnum.LIT, color: '#A5C4F2' },
+  { display: 'Music', value: interestsEnum.MUSIC, color: '#BFEBE0' },
+  { display: 'Nature', value: interestsEnum.NATURE, color: '#CFE7C4' },
+  { display: 'Politics', value: interestsEnum.POLITICS, color: '#A5C4F2' },
+  {
+    display: 'Stage and Screen',
+    value: interestsEnum.STAGE_AND_SCREEN,
+    color: '#D8ACE8',
+  },
+  {
+    display: 'Transportation',
+    value: interestsEnum.TRANSPORTATION,
+    color: '#F1D8B0',
+  },
+  {
+    display: 'Visual Arts',
+    value: interestsEnum.VISUAL_ARTS,
+    color: '#BAB9E9',
+  },
+];
+
 export {
   interestsButtons,
   currentTeamsButtons,
   enumToInterestButtons,
   teamToTeamsButtons,
+  interestsButtonsMap,
 };
+

@@ -12,18 +12,17 @@
   margin-top: 1.8rem;
 }
 
-.ui.form {
-  font-size: 18px;
-}
-
-.ui.modal {
+.ui.modal.submit-pitch-modal {
   background: #3d4f91;
   box-shadow: 0px 3.43343px 3.43343px rgba(0, 0, 0, 0.25),
     inset 0px 3.43343px 3.43343px rgba(0, 0, 0, 0.25);
   border-radius: 10.3003px;
+  width: 60%;
+  
 }
 
-.ui.modal > .actions {
+.ui.modal.submit-pitch-modal > .actions {
+  padding: 0px !important;
   text-align: left;
   background: #3d4f91;
   color: #f7fafb;
@@ -34,8 +33,62 @@
 
 .suggested-text {
   padding-left: 500px;
+  
 }
 
+.submit-pitch-wrapper {
+  color: white !important;
+  padding-left: 40px;
+  padding-right: 40px;
+  padding-bottom: 30px;
+  padding-top: 20px;
+
+}
+.submit-pitch-wrapper
+.header
+.title {
+  font-size: 34px;
+  line-height: 34px;
+  margin: 0 0 0.8rem;
+}
+
+.submit-pitch-wrapper
+.header
+.description {
+  color: white;
+  margin: 0 0 0.8rem;
+}
+
+.submit-pitch-wrapper
+.form-section
+.checkbox-section {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.submit-pitch-wrapper
+.form-section
+.checkbox-section
+.item {
+  margin-right: 13px;
+  margin-bottom: 15px;
+}
+
+.submit-pitch-wrapper
+.form-section
+.checkbox-section
+.ui.checkbox label {
+  color: white !important;
+  padding-left: 1.6em !important;
+}
+
+.form-section
+.input-section
+.disclosure-title {
+  font-weight: 600;
+
+}
 .gdrive-teams-container {
   display: flex;
   align-items: center;
@@ -60,4 +113,41 @@
   color: #f7fafb;
   background: #8cb076;
   border-radius: 6.88302px;
+}
+
+.radio-buttons {
+  justify-content: center !important;
+  align-items: center !important;
+}
+
+.radio-buttons .fields{
+  margin: 0px !important;
+}
+
+.top-row {
+  padding-bottom: 0px !important;
+}
+.bottom-row {
+  padding-top: 0px !important;
+}
+
+.yes-radio {
+  padding-left: 0px !important;
+}
+
+.submit-button {
+  background-color:#8CB076 !important;
+  color: white !important;
+}
+
+
+.submit-pitch-form label {
+  color: white !important;
+  font-weight: 500 !important;
+  font-size: 1rem !important;
+}
+
+.submit-pitch-form input, textarea{
+  background-color: #F7FAFB !important;
+  opacity: 0.75;
 }

@@ -191,6 +191,27 @@ export const updatePitch = (
 };
 
 /**
+ * Creates a pitch
+ * Returns CREATE_PITCH_FAIL upon failure
+ */
+ export const createPitch = (
+  pitchData: { [key: string]: number | string | string[] | boolean },
+): Promise<AxiosResponse<GetPitchesResponseType> | ErrorWrapper> => {
+  const pitchUrl = `${BASE_URL}/pitch/`;
+  return axios
+    .post(pitchUrl, pitchData, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'CREATE_PITCH_FAIL',
+      error,
+    }));
+};
+
+
+/**
  * Returns a user
  * Returns GET_PROFILE_FAIL upon failure
  */
