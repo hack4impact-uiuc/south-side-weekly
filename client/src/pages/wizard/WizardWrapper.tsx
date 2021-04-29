@@ -5,10 +5,10 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import axios from 'axios';
 import { Button } from 'semantic-ui-react';
+import { IUser } from 'ssw-common';
 
-import { BASE_URL, updateUser } from '../../utils/apiWrapper';
+import { getCurrentUser, isError, updateUser } from '../../utils/apiWrapper';
 import '../../css/wizard/WizardWrapper.css';
 import Header from '../../components/Header';
 import ArrowBack from '../../assets/arrow-back.svg';
@@ -66,23 +66,22 @@ const WizardWrapper = (): ReactElement => {
   const [scheduleConfirmed, setScheduleConfirmed] = useState<boolean>(false);
 
   useEffect(() => {
-    const userUrl = `${BASE_URL}/auth/currentuser`;
-    axios
-      .get(userUrl, {
-        headers: {
-          'Content-Type': 'application/JSON',
-        },
-      })
-      .then((res) => {
-        setUser(res.data.result);
+    const getActiveUser = async (): Promise<void> => {
+      const res = await getCurrentUser();
+
+      if (!isError(res)) {
+        const currentUser: IUser = res.data.result;
+        setUser(currentUser);
         if (user.firstName) {
           setFirstName(user.firstName);
         }
         if (user.lastName) {
           setLastName(user.lastName);
         }
-      })
-      .catch((err) => console.error(err));
+      }
+    };
+
+    getActiveUser();
   }, [user.firstName, user.lastName]);
 
   /**
