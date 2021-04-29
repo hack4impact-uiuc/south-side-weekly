@@ -1,4 +1,4 @@
-import { MouseEvent, Dispatch, SetStateAction } from 'react';
+import { FormEvent, Dispatch, SetStateAction } from 'react';
 import { IUser, IPitch } from 'ssw-common';
 
 /**
@@ -9,7 +9,7 @@ import { IUser, IPitch } from 'ssw-common';
  * @param setArray React setter for the selected array
  */
 const handleSelectGroupArray = (
-  e: MouseEvent<HTMLInputElement>,
+  e: FormEvent<HTMLInputElement>,
   selectedArray: Array<string>,
   setArray: Dispatch<SetStateAction<Array<string>>>,
 ): void => {
