@@ -163,7 +163,7 @@ export const updateUser = (
   role: string,
   races: string[],
   interests: string[],
-): any => {
+): Promise<AxiosResponse<GetUsersResponseType> | ErrorWrapper> => {
   const userUrl = `${BASE_URL}/users/${userId}`;
 
   const formData = {
@@ -181,7 +181,7 @@ export const updateUser = (
     interests: interests !== [] ? interests : null,
   };
 
-  axios
+  return axios
     .put(userUrl, formData, {
       headers: {
         'Content-Type': 'application/JSON',

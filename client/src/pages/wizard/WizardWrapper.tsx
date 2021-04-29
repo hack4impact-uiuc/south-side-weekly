@@ -72,17 +72,17 @@ const WizardWrapper = (): ReactElement => {
       if (!isError(res)) {
         const currentUser: IUser = res.data.result;
         setUser(currentUser);
-        if (user.firstName) {
-          setFirstName(user.firstName);
+        if (currentUser.firstName) {
+          setFirstName(currentUser.firstName);
         }
-        if (user.lastName) {
-          setLastName(user.lastName);
+        if (currentUser.lastName) {
+          setLastName(currentUser.lastName);
         }
       }
     };
 
     getActiveUser();
-  }, [user.firstName, user.lastName]);
+  }, []);
 
   /**
    * React hook to update the viewable pages based on the role change
@@ -159,21 +159,23 @@ const WizardWrapper = (): ReactElement => {
       setOpenModal(true);
       return;
     }
-    const newUser = updateUser(
-      user._id,
-      firstName,
-      lastName,
-      preferredName,
-      phoneNumber,
-      genders,
-      pronouns,
-      reasonForInvolvement,
-      currentTeams,
-      role,
-      races,
-      interests,
-    );
-    setUser(newUser);
+    const callUpdateUser = async (): Promise<void> => {
+      await updateUser(
+        user._id,
+        firstName,
+        lastName,
+        preferredName,
+        phoneNumber,
+        genders,
+        pronouns,
+        reasonForInvolvement,
+        currentTeams,
+        role,
+        races,
+        interests,
+      );
+    };
+    callUpdateUser();
 
     handlePageNext();
   }, [
