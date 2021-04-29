@@ -134,6 +134,22 @@ export const getUsers = (): Promise<
     }));
 };
 
+/**
+ * Updates user by userId and returns new user
+ * Returns UPDATE_USER_FAIL upon failure
+ * @param userId string user id in Mongo
+ * @param firstName string
+ * @param lastName string
+ * @param preferredName string
+ * @param phoneNumber string
+ * @param genders string[]
+ * @param pronouns string[]
+ * @param reasonForInvolvement string
+ * @param currentTeams string[]
+ * @param role string
+ * @param races string[]
+ * @param interests string[]
+ */
 export const updateUser = (
   userId: string,
   firstName: string,
