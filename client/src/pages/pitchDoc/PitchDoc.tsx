@@ -6,6 +6,7 @@ import { pages } from '../../utils/enums';
 import {
   parseArrayToSemanticDropdownOptions,
   parseSemanticMultiSelectTypes,
+  getPitchTeams
 } from '../../utils/helpers';
 import Sidebar from '../../components/Sidebar';
 import { getPitches, isError } from '../../utils/apiWrapper';
@@ -36,7 +37,7 @@ function PitchDoc(): ReactElement {
   const teamOptions = useMemo(
     () =>
       parseArrayToSemanticDropdownOptions([
-        'Editing',
+        'Editors',
         'Writing',
         'Fact-Checking',
         'Illustration',
@@ -112,15 +113,22 @@ function PitchDoc(): ReactElement {
     const isAscending = filterKeys.date === 'Earliest to Latest';
 
     filteredPitches = sortPitchesByDeadlineDate(isAscending, filteredPitches);
+
     filteredPitches = filterPitchesByTeams(filterKeys.teams, filteredPitches);
-    console.log(filteredPitches);
     filteredPitches = filterPitchesByInterests(
       filterKeys.interests,
       filteredPitches,
     );
+
+    // if a team has been selected, claim status filter must return all of the pitches
+    // with THAT team with that claim status
+
+    // filter all of pitches by whether the pitch is COMPLETELY claimed or not
+
     filteredPitches = filterPitchesByClaimStatus(
       filterKeys.status,
       filteredPitches,
+      filterKeys.teams,
     );
 
     return filteredPitches;
@@ -187,7 +195,11 @@ function PitchDoc(): ReactElement {
     filteredPitches = filteredPitches.filter((pitch: IPitch) => {
       let hasTeam = true;
 
+      console.log(pitch.name);
+
       const pitchTeams: string[] = getPitchTeams(pitch);
+      console.log(pitch.teams);
+      console.log(pitchTeams);
 
       teams.forEach((team) => {
         if (!pitchTeams.includes(team.toUpperCase())) {
@@ -199,31 +211,6 @@ function PitchDoc(): ReactElement {
     });
 
     return filteredPitches;
-  };
-
-  /**
-   * Gets all of the teams associated with a pitch
-   *
-   * A pitch has a team when the {TEAM}.target > 0
-   *
-   * @param pitch the pitch to pull the teams from
-   * @returns an array of all of teams belonging to the pitch
-   */
-  const getPitchTeams = (pitch: IPitch): string[] => {
-    const teams: string[] = [];
-
-    const pitchTeams = Object.entries(pitch.teams);
-
-    pitchTeams.forEach((team) => {
-      const teamName: string = team[0];
-      const assingments = team[1];
-
-      if (assingments.target > 0) {
-        teams.push(teamName.toUpperCase());
-      }
-    });
-
-    return teams;
   };
 
   /**
@@ -297,22 +284,23 @@ function PitchDoc(): ReactElement {
   const filterPitchesByClaimStatus = (
     claimStatus: string,
     pitches: IPitch[],
+    teams: string[],
   ): IPitch[] => {
     if (claimStatus === '') {
       return pitches;
     }
 
-    let filteredDirectory = [...pitches];
+    let filteredPitches = [...pitches];
 
-    filteredDirectory = filteredDirectory.filter((pitch: IPitch) => {
+    filteredPitches = filteredPitches.filter((pitch: IPitch) => {
       if (claimStatus === 'Claimed') {
-        return isPitchClaimed(pitch);
+        return isPitchClaimed(pitch, teams);
       } else if (claimStatus === 'Unclaimed') {
-        return !isPitchClaimed(pitch);
+        return !isPitchClaimed(pitch, teams);
       }
     });
 
-    return filteredDirectory;
+    return filteredPitches;
   };
 
   /**
@@ -327,21 +315,44 @@ function PitchDoc(): ReactElement {
    * @param pitch the pitch to check if claimed
    * @returns true if pitch is claimed, else false
    */
-  const isPitchClaimed = (pitch: IPitch): boolean => {
+  const isPitchClaimed = (pitch: IPitch, teams: string[]): boolean => {
+    if (teams.length === 0) {
+      const pitchTeams = Object.entries(pitch.teams);
+      let isClaimed = true;
+
+      pitchTeams.forEach((team) => {
+        // Essentially `continue`
+        if (!isClaimed) {
+          return;
+        }
+
+        const assignments = team[1];
+
+        if (assignments.current < assignments.target) {
+          // Cannot return early in for each loop
+          isClaimed = false;
+        }
+      });
+
+      return isClaimed;
+    }
+
     const pitchTeams = Object.entries(pitch.teams);
     let isClaimed = true;
 
     pitchTeams.forEach((team) => {
-      // Essentially `continue`
-      if (!isClaimed) {
-        return;
-      }
+      if (teams.includes(team[0])) {
+        // Essentially `continue`
+        if (!isClaimed) {
+          return;
+        }
 
-      const assignments = team[1];
+        const assignments = team[1];
 
-      if (assignments.current < assignments.target) {
-        // Cannot return early in for each loop
-        isClaimed = false;
+        if (assignments.current < assignments.target) {
+          // Cannot return early in for each loop
+          isClaimed = false;
+        }
       }
     });
 

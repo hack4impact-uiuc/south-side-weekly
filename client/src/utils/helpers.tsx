@@ -1,5 +1,5 @@
 import { MouseEvent, Dispatch, SetStateAction } from 'react';
-import { IUser } from 'ssw-common';
+import { IUser, IPitch } from 'ssw-common';
 
 /**
  * Adds selected element to the specific form array if it isn't already there, otherwise removes it
@@ -177,6 +177,31 @@ const filterUsersByTeams = (teams: string[], directory: IUser[]): IUser[] => {
   return filteredDirectory;
 };
 
+/**
+ * Gets all of the teams associated with a pitch
+ *
+ * A pitch has a team when the {TEAM}.target > 0
+ *
+ * @param pitch the pitch to pull the teams from
+ * @returns an array of all of teams belonging to the pitch
+ */
+const getPitchTeams = (pitch: IPitch): string[] => {
+  const teams: string[] = [];
+
+  const pitchTeams = Object.entries(pitch.teams);
+
+  pitchTeams.forEach((team) => {
+    const teamName: string = team[0];
+    const assingments = team[1];
+
+    if (assingments.target > 0) {
+      teams.push(teamName.toUpperCase());
+    }
+  });
+
+  return teams;
+};
+
 export {
   handleSelectGroupArray,
   parseArrayToSemanticDropdownOptions,
@@ -185,4 +210,5 @@ export {
   filterUsersByRole,
   filterUsersByTeams,
   filterUsersByInterests,
+  getPitchTeams,
 };
