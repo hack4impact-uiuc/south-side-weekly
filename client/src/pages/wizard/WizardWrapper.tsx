@@ -8,7 +8,7 @@ import React, {
 import axios from 'axios';
 import { Button } from 'semantic-ui-react';
 
-import { BASE_URL } from '../../utils/apiWrapper';
+import { BASE_URL, updateUser } from '../../utils/apiWrapper';
 import '../../css/wizard/WizardWrapper.css';
 import Header from '../../components/Header';
 import ArrowBack from '../../assets/arrow-back.svg';
@@ -160,35 +160,21 @@ const WizardWrapper = (): ReactElement => {
       setOpenModal(true);
       return;
     }
-
-    const formData = {
-      firstName: firstName !== '' ? firstName : null,
-      lastName: lastName !== '' ? lastName : null,
-      preferredName: preferredName !== '' ? preferredName : null,
-      phone: phoneNumber !== '' ? phoneNumber : null,
-      genders: genders !== [] ? genders : null,
-      pronouns: pronouns !== [] ? pronouns : null,
-      reasonForInvolvement:
-        reasonForInvolvement !== '' ? reasonForInvolvement : null,
-      currentTeams: currentTeams !== [] ? currentTeams : null,
-      role: role !== '' ? role : null,
-      races: races !== [] ? races : null,
-      interests: interests !== [] ? interests : null,
-    };
-
-    const userUrl = `${BASE_URL}/users/${user._id}`;
-    axios
-      .put(userUrl, formData, {
-        headers: {
-          'Content-Type': 'application/JSON',
-        },
-      })
-      .then((res) => {
-        setUser(res.data.result);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    const newUser = updateUser(
+      user._id,
+      firstName,
+      lastName,
+      preferredName,
+      phoneNumber,
+      genders,
+      pronouns,
+      reasonForInvolvement,
+      currentTeams,
+      role,
+      races,
+      interests,
+    );
+    setUser(newUser);
 
     handlePageNext();
   }, [
