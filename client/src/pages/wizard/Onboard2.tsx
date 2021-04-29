@@ -146,7 +146,11 @@ const Onboard2: FC<IProps> = ({
               <WizardListTitle value="Gender" />
               {genderButtons.map((button) => (
                 <Form.Field key={button.value}>
-                  <Checkbox label={button.value} onChange={handleGenders} />
+                  <Checkbox
+                    label={button.display}
+                    value={button.value}
+                    onChange={handleGenders}
+                  />
                 </Form.Field>
               ))}
             </div>
@@ -154,7 +158,11 @@ const Onboard2: FC<IProps> = ({
               <WizardListTitle value="Pronouns" />
               {pronounButtons.map((button) => (
                 <Form.Field key={button.value}>
-                  <Checkbox label={button.value} onChange={handlePronouns} />
+                  <Checkbox
+                    label={button.display}
+                    value={button.value}
+                    onChange={handlePronouns}
+                  />
                 </Form.Field>
               ))}
             </div>
@@ -162,7 +170,11 @@ const Onboard2: FC<IProps> = ({
               <WizardListTitle value="Race" />
               {raceButtons.map((button) => (
                 <Form.Field key={button.value}>
-                  <Checkbox label={button.display} onChange={handleRaces} />
+                  <Checkbox
+                    label={button.display}
+                    value={button.value}
+                    onChange={handleRaces}
+                  />
                 </Form.Field>
               ))}
             </div>
