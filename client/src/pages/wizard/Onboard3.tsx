@@ -5,7 +5,7 @@ import React, {
   SetStateAction,
   FormEvent,
 } from 'react';
-import { Checkbox, Form } from 'semantic-ui-react';
+import { Checkbox, CheckboxProps, Form } from 'semantic-ui-react';
 
 import WizardSvg from '../../components/WizardSvg';
 import { handleSelectGroupArray } from '../../utils/helpers';
@@ -40,8 +40,11 @@ const Onboard3: FC<IProps> = ({
    *
    * @param e the mouse event of clicking one of the current team select options
    */
-  const handleCurrentTeams = (event: FormEvent<HTMLInputElement>): void => {
-    handleSelectGroupArray(event, currentTeams, setCurrentTeams);
+  const handleCurrentTeams = (
+    _event: FormEvent<HTMLInputElement>,
+    data: CheckboxProps,
+  ): void => {
+    handleSelectGroupArray(data, currentTeams, setCurrentTeams);
   };
 
   /**
@@ -49,8 +52,11 @@ const Onboard3: FC<IProps> = ({
    *
    * @param e the mouse event from clicking one of the interests select optoins
    */
-  const handleInterests = (event: FormEvent<HTMLInputElement>): void => {
-    handleSelectGroupArray(event, interests, setInterests);
+  const handleInterests = (
+    _event: FormEvent<HTMLInputElement>,
+    data: CheckboxProps,
+  ): void => {
+    handleSelectGroupArray(data, interests, setInterests);
   };
 
   // All of the buttons to show for the current teams

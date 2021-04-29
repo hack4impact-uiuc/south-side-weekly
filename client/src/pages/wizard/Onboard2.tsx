@@ -4,13 +4,14 @@ import React, {
   SetStateAction,
   ReactElement,
   FormEvent,
+  useState,
 } from 'react';
-import { Checkbox, Form } from 'semantic-ui-react';
+import { Checkbox, CheckboxProps, Form } from 'semantic-ui-react';
 
 import WizardSvg from '../../components/WizardSvg';
 import WizardListTitle from '../../components/WizardListTitle';
 import { handleSelectGroupArray } from '../../utils/helpers';
-import { racesEnum } from '../../utils/enums';
+import { gendersEnum, pronounsEnum, racesEnum } from '../../utils/enums';
 
 import '../../css/wizard/Onboard2.css';
 
@@ -44,45 +45,57 @@ const Onboard2: FC<IProps> = ({
   /**
    * Adds selected gender to the genders form array if it isn't already there, otherwise removes it
    *
-   * @param e the mouse event from clicking one of the gender select optoins
+   * @param event the form event from clicking one of the gender select optoins
+   * @param data contains the value selected
    */
-  const handleGenders = (event: FormEvent<HTMLInputElement>): void => {
-    handleSelectGroupArray(event, genders, setGenders);
+  const handleGenders = (
+    _event: FormEvent<HTMLInputElement>,
+    data: CheckboxProps,
+  ): void => {
+    handleSelectGroupArray(data, genders, setGenders);
   };
 
   /**
    * Adds selected pronoun to the pronouns form array if it isn't already there, otherwise removes it
    *
-   * @param e the mouse event of clicking one of the pronoun select options
+   * @param event the form event of clicking one of the pronoun select options
+   * @param data contains the value selected
    */
-  const handlePronouns = (event: FormEvent<HTMLInputElement>): void => {
-    handleSelectGroupArray(event, pronouns, setPronouns);
+  const handlePronouns = (
+    _event: FormEvent<HTMLInputElement>,
+    data: CheckboxProps,
+  ): void => {
+    handleSelectGroupArray(data, pronouns, setPronouns);
   };
 
   /**
    * Adds selected race to the races form array if it isn't already there, otherwise removes it
    *
-   * @param e the mouse event of clicking one of the pronoun select options
+   * @param event the form event of clicking one of the pronoun select options
+   * @param data contains the value selected
    */
-  const handleRaces = (event: FormEvent<HTMLInputElement>): void => {
-    handleSelectGroupArray(event, races, setRaces);
+  const handleRaces = (
+    _event: FormEvent<HTMLInputElement>,
+    data: CheckboxProps,
+  ): void => {
+    handleSelectGroupArray(data, races, setRaces);
   };
 
   // All of the gender buttons to render
   const genderButtons = [
-    { value: 'Man', color: '#EF8B8B' },
-    { value: 'Woman', color: '#CFE7C4' },
-    { value: 'Nonbinary', color: '#F9B893' },
-    { value: 'Other', color: '#BFEBE0' },
+    { display: 'Man', value: gendersEnum.MAN, color: '#EF8B8B' },
+    { display: 'Woman', value: gendersEnum.WOMAN, color: '#CFE7C4' },
+    { display: 'Nonbinary', value: gendersEnum.NONBINARY, color: '#F9B893' },
+    { display: 'Other', value: gendersEnum.OTHER, color: '#BFEBE0' },
   ];
 
   // All of the pronoun buttons to render
   const pronounButtons = [
-    { value: 'He/his', color: '#EF8B8B' },
-    { value: 'She/her', color: '#CFE7C4' },
-    { value: 'They/them', color: '#F9B893' },
-    { value: 'Ze/hir', color: '#F1D8B0' },
-    { value: 'Other', color: '#BFEBE0' },
+    { display: 'He/his', value: pronounsEnum.HEHIS, color: '#EF8B8B' },
+    { display: 'She/her', value: pronounsEnum.SHEHER, color: '#CFE7C4' },
+    { display: 'They/them', value: pronounsEnum.THEYTHEM, color: '#F9B893' },
+    { display: 'Ze/hir', value: pronounsEnum.ZEHIR, color: '#F1D8B0' },
+    { display: 'Other', value: pronounsEnum.OTHER, color: '#BFEBE0' },
   ];
 
   // All of the race buttons
