@@ -7,13 +7,67 @@
 
 .resource-page-wrapper .resource-page-content {
   width: 60%;
-  margin-left: 25rem;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.resource-page-wrapper .resource-title-container {
+  display: flex;
+}
+
+.resource-page-wrapper .resource-title-container .resource-title-item {
+  font-weight: 700;
+  font-size: 36px;
+  padding: 0 0 5vh 0;
+  text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  padding-right: 50px;
+}
+
+.resource-page-wrapper
+  .resource-title-container
+  .resource-title-item
+  .resource-edit-btns {
+  float: left;
+  padding-right: 80px;
+}
+
+.resource-page-wrapper
+  .resource-title-container
+  .resource-title-item
+  .resource-edit-btns
+  .ui.button.active {
+  background-color: #3d4f91 !important;
+  color: white;
+  border: solid black 2px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.resource-page-wrapper
+  .resource-title-container
+  .resource-title-item
+  .resource-edit-btns
+  .ui.button {
+  background-color: white;
+  color: black;
+  border: solid black 2px;
+  border-radius: 10px;
+  font-size: 14px;
+}
+
+.resource-page-wrapper
+  .resource-title-container
+  .resource-title-item
+  .add-resource-btn {
+  display: inline;
 }
 
 .resource-page-wrapper .resource-page-content .resource-toggle-group {
-  display: flex;
-  justify-content: space-between;
-  width: 90%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-column-gap: 40px;
+  grid-row-gap: 10px;
 }
 
 .resource-page-wrapper
@@ -35,15 +89,16 @@
 
 .resource-page-wrapper .resource-page-content .resource-btn-group {
   width: 100%;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  padding-bottom: 50px;
 }
 
 .resource-page-wrapper
   .resource-page-content
   .resource-btn-group
   .resource-btn {
+  position: relative;
   border-radius: 1rem;
   width: 200px;
   height: 150px;
@@ -54,5 +109,19 @@
     rgb(61, 79, 145, 0.85)
   );
   margin: 50px 0px 0px 0px;
-  margin-right: 50px;
+}
+
+.resource-page-wrapper
+  .resource-page-content
+  .resource-btn-group
+  .editable-resource
+  .delete-btn {
+  position: absolute;
+  top: -18px;
+  left: -18px;
+  padding: 0;
+  height: 36px;
+  width: 36px;
+  background: transparent;
+  color: #c17979;
 }

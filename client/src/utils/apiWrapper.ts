@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { IPitch, IUser } from 'ssw-common';
+import { IPitch, IUser, IResource } from 'ssw-common';
 
 export const FRONTEND_BASE_URL = process.env.REACT_APP_VERCEL_URL
   ? `https://${process.env.REACT}`
@@ -24,6 +24,17 @@ export interface GetSampleResponseType {
   message: string;
 }
 
+export interface GetUsersResponseType {
+  message: string;
+  // TODO: Fix this from being an any type
+  result: IUser[];
+}
+
+export interface GetCurrentUserResponseType {
+  message: string;
+  result: IUser;
+}
+
 export interface GetPitchesResponseType {
   message: string;
   result: [IPitch];
@@ -37,6 +48,25 @@ export interface GetOpenTeamsResponseType {
 export interface GetProfileResponseType {
   message: string;
   result: IUser;
+}
+
+export interface GetAllResourcesResponseType {
+  message: string;
+  result: [IResource];
+}
+
+export interface CreateResourceResponseType {
+  message: string;
+  result: IResource;
+}
+
+export interface DeleteResourceResponseType {
+  message: string;
+}
+
+export interface EditResourceResponseType {
+  message: string;
+  result: IResource;
 }
 
 /**
@@ -80,6 +110,26 @@ export const addSampleResponse = (
 };
 
 /**
+ * Returns a list of all of the users in the database
+ * Returns GET_USERS_FETCH_FAIL upon failure
+ */
+export const getUsers = (): Promise<
+  AxiosResponse<GetUsersResponseType> | ErrorWrapper
+> => {
+  const requestString = `${BASE_URL}/users`;
+  return axios
+    .get(requestString, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'GET_USERS_FETCH_FAIL',
+      error,
+    }));
+};
+
+/**
  * Returns all unclaimed and approved pitches
  * Returns GET_UNCLAIMED_PITCHES_FAIL upon failure
  */
@@ -95,6 +145,26 @@ export const getUnclaimedPitches = (): Promise<
     })
     .catch((error) => ({
       type: 'GET_UNCLAIMED_PITCHES_FAIL',
+      error,
+    }));
+};
+
+/**
+ * Returns a list of all of the users in the database
+ * Returns GET_USERS_FETCH_FAIL upon failure
+ */
+export const getCurrentUser = (): Promise<
+  AxiosResponse<GetCurrentUserResponseType> | ErrorWrapper
+> => {
+  const requestString = `${BASE_URL}/auth/currentUser`;
+  return axios
+    .get(requestString, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'GET_CURRENT_USER_FAIL',
       error,
     }));
 };
@@ -229,6 +299,89 @@ export const saveUser = (
     })
     .catch((error) => ({
       type: 'POST_USER_FAIL',
+      error,
+    }));
+};
+
+/**
+ * Gets all resources
+ * Returns GET_ALL_RESOURCES_FAIL upon failure
+ */
+export const getAllResources = (): Promise<
+  AxiosResponse<GetAllResourcesResponseType> | ErrorWrapper
+> => {
+  const requestString = `${BASE_URL}/resources`;
+  return axios
+    .get(requestString, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'GET_ALL_RESOURCES_FAIL',
+      error,
+    }));
+};
+
+/**
+ * Creates a new resource
+ * Returns CREATE_RESOURCE_FAIL upon failure
+ */
+export const createResource = (newResource: {
+  [key: string]: string | string[] | null;
+}): Promise<AxiosResponse<CreateResourceResponseType> | ErrorWrapper> => {
+  const requestString = `${BASE_URL}/resources`;
+  return axios
+    .post(requestString, newResource, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'CREATE_RESOURCE_FAIL',
+      error,
+    }));
+};
+
+/**
+ * Deletes a resource
+ * Returns DELETE_RESOURCE_FAIL upon failure
+ */
+export const deleteResource = (
+  resourceId: string,
+): Promise<AxiosResponse<DeleteResourceResponseType> | ErrorWrapper> => {
+  const requestString = `${BASE_URL}/resources/${resourceId}`;
+  return axios
+    .delete(requestString, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'DELETE_RESOURCE_FAIL',
+      error,
+    }));
+};
+
+/**
+ * Edits a resource
+ * Returns EDIT_RESOURCE_FAIL upon failure
+ */
+export const editResource = (
+  resourceId: string | undefined,
+  editedResource: {
+    [key: string]: string | string[] | null;
+  },
+): Promise<AxiosResponse<EditResourceResponseType> | ErrorWrapper> => {
+  const requestString = `${BASE_URL}/resources/${resourceId}`;
+  return axios
+    .put(requestString, editedResource, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'EDIT_RESOURCE_FAIL',
       error,
     }));
 };
