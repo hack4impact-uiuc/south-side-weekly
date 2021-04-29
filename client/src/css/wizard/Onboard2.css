@@ -1,52 +1,28 @@
-.personal-information {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-left: 10%;
-}
-
 .personal-information .page-text {
   width: 100%;
-  font-size: 24px;
+  font-size: 1.2em;
   line-height: 30px;
   text-align: center;
-}
-
-.personal-information-wrapper {
-  display: flex;
-  justify-content: left;
-  width: 90%;
-  margin-top: 20px;
 }
 
 .personal-information .personal-information-wrapper .svg {
   width: 100%;
   margin-top: 50px;
+  padding-right: 10%;
 }
 
-.personal-information .personal-information-wrapper .personal-information-form {
+.personal-information-wrapper {
+  height: 100%;
+  padding: 16px;
   display: flex;
-  width: 70%;
-  justify-content: center;
 }
 
-.personal-information
-  .personal-information-wrapper
-  .personal-information-form
-  .section {
-  margin: 20px 50px 20px 50px;
-  width: 70%;
+.personal-information-wrapper .personal-information-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
 }
 
-.personal-information
-  .personal-information-wrapper
-  .personal-information-form
-  .section
-  .list-title {
-  background-color: rgb(61, 79, 145, 0.55);
-  color: white;
-  border-radius: 1rem;
-  font-size: 24px;
-  padding: 10px 0px 10px 0px;
-  margin-bottom: 15px;
+.personal-information-wrapper .personal-information-form .section {
+  padding: 8px;
+  text-align: left;
 }

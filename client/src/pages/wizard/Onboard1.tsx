@@ -1,8 +1,8 @@
 import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
-import { Input } from 'semantic-ui-react';
+import { Form } from 'semantic-ui-react';
 
-import BasicInfoSvg from '../../assets/basic-info.svg';
-import Required from '../../assets/required.svg';
+import WizardSvg from '../../components/WizardSvg';
+import WizardStar from '../../components/WizardStar';
 
 import '../../css/wizard/Onboard1.css';
 
@@ -40,64 +40,72 @@ const OnBoard1: FC<IProps> = ({
   setPhoneNumber,
 }): ReactElement => (
   <div className="basic-info-wrapper">
-    <img className="basic-info-image" alt="info-graphic" src={BasicInfoSvg} />
-    <div className="btn-wrapper">
-      <div className="input-wrapper">
-        <img alt="required" className="required-icon" src={Required} />
-        <div className="input">
+    <WizardSvg page="onboard1" />
+    <Form className="basic-info-form" size="huge">
+      <div className="btn-wrapper">
+        <div className="input-wrapper">
           <div className="label">First Name</div>
-          <Input
-            defaultValue={firstName}
-            onChange={(e) => setFirstName(e.currentTarget.value)}
-            id="first-name"
-            focus
-            transparent
-            className="input-field"
-          />
+          <WizardStar />
+          <div className="input">
+            <Form.Input
+              required
+              defaultValue={firstName}
+              onChange={(e) => setFirstName(e.currentTarget.value)}
+              id="first-name"
+              focus
+              transparent
+              className="input-field"
+              error={firstName === ''}
+            />
+          </div>
         </div>
-      </div>
-      <div className="input-wrapper">
-        <img alt="required" className="required-icon" src={Required} />
-        <div className="input">
+        <div className="input-wrapper">
           <div className="label">Last Name</div>
-          <Input
-            defaultValue={lastName}
-            onChange={(e) => setLastName(e.currentTarget.value)}
-            id="last-name"
-            focus
-            transparent
-            className="input-field"
-          />
+          <WizardStar />
+          <div className="input">
+            <Form.Input
+              required
+              defaultValue={lastName}
+              onChange={(e) => setLastName(e.currentTarget.value)}
+              id="last-name"
+              focus
+              transparent
+              className="input-field"
+              error={lastName === ''}
+            />
+          </div>
         </div>
-      </div>
-      <div className="input-wrapper">
-        <div className="input">
+        <div className="input-wrapper">
           <div className="label">Preferred Name</div>
-          <Input
-            defaultValue={preferredName}
-            onChange={(e) => setPreferredName(e.currentTarget.value)}
-            id="preferred-name"
-            focus
-            transparent
-            className="input-field"
-          />
+          <div className="input">
+            <Form.Input
+              defaultValue={preferredName}
+              onChange={(e) => setPreferredName(e.currentTarget.value)}
+              id="preferred-name"
+              focus
+              transparent
+              className="input-field"
+            />
+          </div>
         </div>
-      </div>
-      <div className="input-wrapper">
-        <img alt="required" className="required-icon" src={Required} />
-        <div className="input">
+        <div className="input-wrapper">
           <div className="label">Phone Number</div>
-          <Input
-            defaultValue={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.currentTarget.value)}
-            id="phone-number"
-            focus
-            transparent
-            className="input-field"
-          />
+          <WizardStar />
+          <div className="input">
+            <Form.Input
+              required
+              defaultValue={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.currentTarget.value)}
+              id="phone-number"
+              focus
+              transparent
+              className="input-field"
+              error={phoneNumber === ''}
+            />
+          </div>
         </div>
       </div>
-    </div>
+    </Form>
   </div>
 );
 
