@@ -1,7 +1,6 @@
 import { MouseEvent, Dispatch, SetStateAction } from 'react';
 import { IUser, IPitch } from 'ssw-common';
 
-
 /**
  * Adds selected element to the specific form array if it isn't already there, otherwise removes it
  *
@@ -10,7 +9,7 @@ import { IUser, IPitch } from 'ssw-common';
  * @param setArray React setter for the selected array
  */
 const handleSelectGroupArray = (
-  e: FormEvent<HTMLInputElement>,
+  e: MouseEvent<HTMLInputElement>,
   selectedArray: Array<string>,
   setArray: Dispatch<SetStateAction<Array<string>>>,
 ): void => {
