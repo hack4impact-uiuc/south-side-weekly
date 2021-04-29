@@ -26,3 +26,9 @@
   padding: 8px;
   text-align: left;
 }
+
+.personal-information-wrapper .ui.checkbox label::before,
+.personal-information-wrapper .ui.checkbox label::after {
+  background: #fff !important;
+  border: 1px solid #d4d4d5;
+}
