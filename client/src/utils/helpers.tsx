@@ -202,6 +202,186 @@ const getPitchTeams = (pitch: IPitch): string[] => {
   return teams;
 };
 
+/**
+ * Filters out the pitches that have any of the selected teams.
+ *
+ * @param teams the interests to filter by
+ * @param pitches the pitches to filter
+ */
+const filterPitchesByTeams = (teams: string[], pitches: IPitch[]): IPitch[] => {
+  if (typeof teams !== 'object' || teams.length === 0) {
+    return pitches;
+  }
+
+  let filteredPitches: IPitch[] = [...pitches];
+
+  filteredPitches = filteredPitches.filter((pitch: IPitch) => {
+    let hasTeam = true;
+
+    console.log(pitch.name);
+
+    const pitchTeams: string[] = getPitchTeams(pitch);
+    console.log(pitch.teams);
+    console.log(pitchTeams);
+
+    teams.forEach((team) => {
+      if (!pitchTeams.includes(team.toUpperCase())) {
+        hasTeam = false;
+      }
+    });
+
+    return hasTeam;
+  });
+
+  return filteredPitches;
+};
+
+/**
+ * Sorts a set of pitches by their deadline date
+ *
+ * @param isAscending whether to sort them earliest to latest or vis versa
+ * @param pitches the set of pithces to sort
+ * @returns the sorted pitches
+ */
+const sortPitchesByDeadlineDate = (
+  isAscending: boolean,
+  pitches: IPitch[],
+): IPitch[] => {
+  const sortedPitches = [...pitches];
+
+  sortedPitches.sort((first: IPitch, second: IPitch): number => {
+    const firstPitchDeadline: Date = new Date(first.deadline);
+    const secondPitchDeadline: Date = new Date(second.deadline);
+
+    if (firstPitchDeadline > secondPitchDeadline) {
+      // -1 is a magic number
+      return isAscending ? 1 : 0 - 1;
+    } else if (firstPitchDeadline < secondPitchDeadline) {
+      return isAscending ? 0 - 1 : 1;
+    }
+    return 0;
+  });
+
+  return sortedPitches;
+};
+
+/**
+ * Filters a set of pitches by interests
+ *
+ * @param interests the interests to filter by
+ * @param pitches the set of pitches
+ * @returns the filtered pitches
+ */
+const filterPitchesByInterests = (
+  interests: string[],
+  pitches: IPitch[],
+): IPitch[] => {
+  if (typeof interests !== 'object' || interests.length === 0) {
+    return pitches;
+  }
+
+  let filteredPitches = [...pitches];
+
+  filteredPitches = filteredPitches.filter((pitch: IPitch) => {
+    let hasInterest = true;
+
+    interests.forEach((interest) => {
+      if (!pitch.topics.includes(interest.toString().toUpperCase())) {
+        hasInterest = false;
+      }
+    });
+
+    return hasInterest;
+  });
+
+  return filteredPitches;
+};
+
+/**
+ * Filteres the pitches by claim status
+ *
+ * @param claimStatus the claim status to filter by
+ * @param pitches the pitches to filter
+ * @returns the filtered pitches
+ */
+const filterPitchesByClaimStatus = (
+  claimStatus: string,
+  pitches: IPitch[],
+  teams: string[],
+): IPitch[] => {
+  if (claimStatus === '') {
+    return pitches;
+  }
+
+  let filteredPitches = [...pitches];
+
+  filteredPitches = filteredPitches.filter((pitch: IPitch) => {
+    if (claimStatus === 'Claimed') {
+      return isPitchClaimed(pitch, teams);
+    } else if (claimStatus === 'Unclaimed') {
+      return !isPitchClaimed(pitch, teams);
+    }
+  });
+
+  return filteredPitches;
+};
+
+/**
+ * Determines if a pitch is claimed or not
+ *
+ * A pitch is claimed such that if for every team,
+ * the current amount of team claims is equivelant to
+ * the target amount of team claims
+ *
+ * {TEAM}.current === {TEAM.target} for all tams
+ *
+ * @param pitch the pitch to check if claimed
+ * @returns true if pitch is claimed, else false
+ */
+const isPitchClaimed = (pitch: IPitch, teams: string[]): boolean => {
+  if (teams.length === 0) {
+    const pitchTeams = Object.entries(pitch.teams);
+    let isClaimed = true;
+
+    pitchTeams.forEach((team) => {
+      // Essentially `continue`
+      if (!isClaimed) {
+        return;
+      }
+
+      const assignments = team[1];
+
+      if (assignments.current < assignments.target) {
+        // Cannot return early in for each loop
+        isClaimed = false;
+      }
+    });
+
+    return isClaimed;
+  }
+
+  const pitchTeams = Object.entries(pitch.teams);
+  let isClaimed = true;
+
+  pitchTeams.forEach((team) => {
+    if (teams.includes(team[0])) {
+      // Essentially `continue`
+      if (!isClaimed) {
+        return;
+      }
+
+      const assignments = team[1];
+
+      if (assignments.current < assignments.target) {
+        // Cannot return early in for each loop
+        isClaimed = false;
+      }
+    }
+  });
+
+  return isClaimed;
+};
+
 export {
   handleSelectGroupArray,
   parseArrayToSemanticDropdownOptions,
@@ -211,4 +391,9 @@ export {
   filterUsersByTeams,
   filterUsersByInterests,
   getPitchTeams,
+  isPitchClaimed,
+  filterPitchesByClaimStatus,
+  filterPitchesByInterests,
+  filterPitchesByTeams,
+  sortPitchesByDeadlineDate,
 };

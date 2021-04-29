@@ -30,16 +30,26 @@ body {
   flex-wrap: wrap;
 }
 
-.search-bar {
-  margin: 2rem;
-  margin-left: 4rem;
+.submit-search-section {
+  display: flex;
+  justify-content: space-between !important;
+  align-items: center;
+  margin-top: 1.8rem;
+  width: 90%;
 }
 
-.search-bar .ui.input > input {
-  width: 50rem;
-  border-radius: 8.482587814331055px;
-  background-color: rgba(61, 79, 145, 0.45);
-  border-radius: 8.48259px;
+.submit-search-section .pitch-search {
+  width: 70% !important;
+  justify-content: right !important;
+}
+
+.submit-search-section .pitch-search .input {
+  width: 100% !important;
+}
+
+.submit-search-section .pitch-search .input input {
+  background: rgba(61, 79, 145, 0.45) !important;
+  border-radius: 1rem !important;
 }
 
 .content-wrapper .top-section .filters {

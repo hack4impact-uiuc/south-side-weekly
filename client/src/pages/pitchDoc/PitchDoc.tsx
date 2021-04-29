@@ -1,12 +1,22 @@
-import React, { useEffect, useState, ReactElement, useMemo } from 'react';
+import React, {
+  useEffect,
+  useState,
+  ReactElement,
+  useMemo,
+  useReducer,
+  useCallback,
+} from 'react';
 import { IPitch } from 'ssw-common';
-import { Dropdown, Search } from 'semantic-ui-react';
+import { Dropdown, Input } from 'semantic-ui-react';
 
 import { pages } from '../../utils/enums';
 import {
   parseArrayToSemanticDropdownOptions,
   parseSemanticMultiSelectTypes,
-  getPitchTeams
+  filterPitchesByClaimStatus,
+  filterPitchesByInterests,
+  filterPitchesByTeams,
+  sortPitchesByDeadlineDate,
 } from '../../utils/helpers';
 import Sidebar from '../../components/Sidebar';
 import { getPitches, isError } from '../../utils/apiWrapper';
@@ -23,6 +33,18 @@ interface IFilterKeys {
   status: string;
 }
 
+interface ISearchState {
+  pitches: IPitch[];
+  query: string;
+  isLoading: boolean;
+}
+
+interface ISearchAction {
+  type: SearchAction;
+  query: string;
+  pitches: IPitch[];
+}
+
 const initialFilterKeys: IFilterKeys = {
   date: '',
   status: '',
@@ -30,9 +52,55 @@ const initialFilterKeys: IFilterKeys = {
   interests: [],
 };
 
+enum SearchAction {
+  CLEAN_QUERY = 'CLEAN_QUERY',
+  INITIALIZE_PITCHES = 'INITIALIZE_USERS',
+  START_SEARCH = 'START_SEARCH',
+  UPDATE_QUERY = 'UPDATE_QUERY',
+  FINISH_SEARCH = 'FINISH_SEARCH',
+}
+
+const initialSearchState: ISearchState = {
+  pitches: [],
+  query: '',
+  isLoading: false,
+};
+
+/**
+ * Reducer for the search state.
+ *
+ * @param state the current state of the search
+ * @param action the action to perform on the search state
+ * @returns new search state
+ */
+const searchReducer = (
+  state: ISearchState,
+  action: ISearchAction,
+): ISearchState => {
+  switch (action.type) {
+    case 'CLEAN_QUERY':
+      return initialSearchState;
+    case 'INITIALIZE_USERS':
+      return { ...state, pitches: action.pitches };
+    case 'START_SEARCH':
+      return { ...state, isLoading: true, query: action.query };
+    case 'UPDATE_QUERY':
+      return { ...state, query: action.query };
+    case 'FINISH_SEARCH':
+      return { ...state, isLoading: false, pitches: action.pitches };
+    default:
+      throw new Error();
+  }
+};
+
 function PitchDoc(): ReactElement {
   const [unclaimedPitches, setUnclaimedPitches] = useState<IPitch[]>([]);
   const [filterKeys, setFilterKeys] = useState<IFilterKeys>(initialFilterKeys);
+
+  const [searchState, dispatchSearch] = useReducer(
+    searchReducer,
+    initialSearchState,
+  );
 
   const teamOptions = useMemo(
     () =>
@@ -98,6 +166,63 @@ function PitchDoc(): ReactElement {
   }, []);
 
   /**
+   * Searches through all of the pitches to find pitches by name
+   */
+  const handleSearch = useCallback(
+    (searchTerm: string): IPitch[] => {
+      let searchPitches = [...unclaimedPitches];
+      searchTerm = searchTerm.toLowerCase().trim();
+
+      console.log(searchTerm);
+
+      searchPitches = unclaimedPitches.filter((pitch: IPitch) => {
+        // Avoid null fields in database
+        const pitchName = pitch.name ? pitch.name.toLowerCase() : '';
+        console.log(pitchName);
+        return pitchName.includes(searchTerm);
+      });
+
+      console.log(searchPitches);
+      return searchPitches;
+    },
+    [unclaimedPitches],
+  );
+
+  /**
+   * Delay before searching.
+   */
+  useEffect(() => {
+    if (searchState.query === '') {
+      dispatchSearch({
+        type: SearchAction.FINISH_SEARCH,
+        query: '',
+        pitches: unclaimedPitches,
+      });
+      return;
+    }
+
+    dispatchSearch({
+      type: SearchAction.START_SEARCH,
+      query: searchState.query,
+      pitches: [],
+    });
+
+    const millisecondDelay = 500;
+
+    const delaySearch = setTimeout(() => {
+      const pitches = [...handleSearch(searchState.query)];
+
+      dispatchSearch({
+        type: SearchAction.FINISH_SEARCH,
+        query: searchState.query,
+        pitches: pitches,
+      });
+    }, millisecondDelay);
+
+    return () => clearTimeout(delaySearch);
+  }, [searchState.query, unclaimedPitches, handleSearch]);
+
+  /**
    * Filters a set of pitches passed in
    *
    * @param pitches the passed in pitches
@@ -119,11 +244,6 @@ function PitchDoc(): ReactElement {
       filterKeys.interests,
       filteredPitches,
     );
-
-    // if a team has been selected, claim status filter must return all of the pitches
-    // with THAT team with that claim status
-
-    // filter all of pitches by whether the pitch is COMPLETELY claimed or not
 
     filteredPitches = filterPitchesByClaimStatus(
       filterKeys.status,
@@ -176,189 +296,6 @@ function PitchDoc(): ReactElement {
     setFilterKeys({ ...keys });
   };
 
-  /**
-   * Filters out the pitches that have any of the selected teams.
-   *
-   * @param teams the interests to filter by
-   * @param pitches the pitches to filter
-   */
-  const filterPitchesByTeams = (
-    teams: string[],
-    pitches: IPitch[],
-  ): IPitch[] => {
-    if (typeof teams !== 'object' || teams.length === 0) {
-      return pitches;
-    }
-
-    let filteredPitches: IPitch[] = [...pitches];
-
-    filteredPitches = filteredPitches.filter((pitch: IPitch) => {
-      let hasTeam = true;
-
-      console.log(pitch.name);
-
-      const pitchTeams: string[] = getPitchTeams(pitch);
-      console.log(pitch.teams);
-      console.log(pitchTeams);
-
-      teams.forEach((team) => {
-        if (!pitchTeams.includes(team.toUpperCase())) {
-          hasTeam = false;
-        }
-      });
-
-      return hasTeam;
-    });
-
-    return filteredPitches;
-  };
-
-  /**
-   * Sorts a set of pitches by their deadline date
-   *
-   * @param isAscending whether to sort them earliest to latest or vis versa
-   * @param pitches the set of pithces to sort
-   * @returns the sorted pitches
-   */
-  const sortPitchesByDeadlineDate = (
-    isAscending: boolean,
-    pitches: IPitch[],
-  ): IPitch[] => {
-    const sortedDirectory = [...pitches];
-
-    sortedDirectory.sort((first: IPitch, second: IPitch): number => {
-      const firstPitchDeadline: Date = new Date(first.deadline);
-      const secondPitchDeadline: Date = new Date(second.deadline);
-
-      if (firstPitchDeadline > secondPitchDeadline) {
-        // -1 is a magic number
-        return isAscending ? 1 : 0 - 1;
-      } else if (firstPitchDeadline < secondPitchDeadline) {
-        return isAscending ? 0 - 1 : 1;
-      }
-      return 0;
-    });
-
-    return sortedDirectory;
-  };
-
-  /**
-   * Filters a set of pitches by interests
-   *
-   * @param interests the interests to filter by
-   * @param pitches the set of pitches
-   * @returns the filtered pitches
-   */
-  const filterPitchesByInterests = (
-    interests: string[],
-    pitches: IPitch[],
-  ): IPitch[] => {
-    if (typeof interests !== 'object' || interests.length === 0) {
-      return pitches;
-    }
-
-    let filteredDirectory = [...pitches];
-
-    filteredDirectory = filteredDirectory.filter((pitch: IPitch) => {
-      let hasInterest = true;
-
-      interests.forEach((interest) => {
-        if (!pitch.topics.includes(interest.toString().toUpperCase())) {
-          hasInterest = false;
-        }
-      });
-
-      return hasInterest;
-    });
-
-    return filteredDirectory;
-  };
-
-  /**
-   * Filteres the pitches by claim status
-   *
-   * @param claimStatus the claim status to filter by
-   * @param pitches the pitches to filter
-   * @returns the filtered pitches
-   */
-  const filterPitchesByClaimStatus = (
-    claimStatus: string,
-    pitches: IPitch[],
-    teams: string[],
-  ): IPitch[] => {
-    if (claimStatus === '') {
-      return pitches;
-    }
-
-    let filteredPitches = [...pitches];
-
-    filteredPitches = filteredPitches.filter((pitch: IPitch) => {
-      if (claimStatus === 'Claimed') {
-        return isPitchClaimed(pitch, teams);
-      } else if (claimStatus === 'Unclaimed') {
-        return !isPitchClaimed(pitch, teams);
-      }
-    });
-
-    return filteredPitches;
-  };
-
-  /**
-   * Determines if a pitch is claimed or not
-   *
-   * A pitch is claimed such that if for every team,
-   * the current amount of team claims is equivelant to
-   * the target amount of team claims
-   *
-   * {TEAM}.current === {TEAM.target} for all tams
-   *
-   * @param pitch the pitch to check if claimed
-   * @returns true if pitch is claimed, else false
-   */
-  const isPitchClaimed = (pitch: IPitch, teams: string[]): boolean => {
-    if (teams.length === 0) {
-      const pitchTeams = Object.entries(pitch.teams);
-      let isClaimed = true;
-
-      pitchTeams.forEach((team) => {
-        // Essentially `continue`
-        if (!isClaimed) {
-          return;
-        }
-
-        const assignments = team[1];
-
-        if (assignments.current < assignments.target) {
-          // Cannot return early in for each loop
-          isClaimed = false;
-        }
-      });
-
-      return isClaimed;
-    }
-
-    const pitchTeams = Object.entries(pitch.teams);
-    let isClaimed = true;
-
-    pitchTeams.forEach((team) => {
-      if (teams.includes(team[0])) {
-        // Essentially `continue`
-        if (!isClaimed) {
-          return;
-        }
-
-        const assignments = team[1];
-
-        if (assignments.current < assignments.target) {
-          // Cannot return early in for each loop
-          isClaimed = false;
-        }
-      }
-    });
-
-    return isClaimed;
-  };
-
   return (
     <>
       <Sidebar currentPage={pages.PITCHES} />
@@ -371,7 +308,19 @@ function PitchDoc(): ReactElement {
           <div className="pitchdoc-title">The Pitch Doc</div>
           <div className="submit-search-section">
             <SubmitPitchModal />
-            <Search className="search-bar"> </Search>
+            <div className="pitch-search">
+              <Input
+                onChange={(e) =>
+                  dispatchSearch({
+                    ...searchState,
+                    type: SearchAction.UPDATE_QUERY,
+                    query: e.currentTarget.value,
+                  })
+                }
+                icon="search"
+                loading={searchState.isLoading}
+              />
+            </div>
           </div>
 
           <div className="container">
@@ -439,7 +388,7 @@ function PitchDoc(): ReactElement {
 
         <div className="pitch-grid">
           <PitchGrid
-            pitches={handlePitchDocFiltering(unclaimedPitches)}
+            pitches={handlePitchDocFiltering(searchState.pitches)}
             getAllUnclaimedPitches={getAllUnclaimedPitches}
           />
         </div>
