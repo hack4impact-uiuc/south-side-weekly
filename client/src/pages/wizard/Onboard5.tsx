@@ -1,80 +1,64 @@
-import React, {
-  Dispatch,
-  FC,
-  ReactElement,
-  SetStateAction,
-  MouseEvent,
-} from 'react';
+import React, { ReactElement, Dispatch, SetStateAction, FC } from 'react';
+import { Button, Modal, ModalContent } from 'semantic-ui-react';
+import { openPopupWidget } from 'react-calendly';
 
-import Onboard5SVG from '../../assets/onboard5.svg';
-import RequiredSvg from '../../assets/required.svg';
-import { handleSelectGroupArray } from '../../utils/helpers';
 import '../../css/wizard/Onboard5.css';
-import WizardSelectButton from '../../components/WizardSelectButton/WizardSelectButton';
+import WizardSvg from '../../components/WizardSvg';
+import WizardStar from '../../components/WizardStar';
 
 interface IProps {
-  currentTeams: Array<string>;
-  setCurrentTeams: Dispatch<SetStateAction<Array<string>>>;
+  isModalOpen: boolean;
+  setModalOpen: Dispatch<SetStateAction<boolean>>;
+  setScheduleConfirmed: Dispatch<SetStateAction<boolean>>;
 }
 
 /**
- * Builds and controls the form management for Onboard5 of the Onboarding Wizard
- *
- * @param {Array<string>} currentTeams the current teams that the user is interested in
- * @param {Dispatch<SetStateAction<Array<string>>>} setCurrentTeams React setter function to control
- *                                                                  current Teams state variable
+ * Builds and controls the form management for scheduling of the Onboarding Wizard
  */
 const Onboard5: FC<IProps> = ({
-  currentTeams,
-  setCurrentTeams,
-}): ReactElement => {
-  /**
-   * Adds selected current team to the current teams form array if it isn't already there, otherwise removes it
-   *
-   * @param e the mouse event of clicking one of the current team select options
-   */
-  const handleCurrentTeams = (e: MouseEvent<HTMLButtonElement>): void => {
-    handleSelectGroupArray(e, currentTeams, setCurrentTeams);
-  };
-
-  // All of the buttons to show for the current teams
-  const currentTeamsButtons = [
-    { value: 'Editing', color: '#A5C4F2' },
-    { value: 'Fact-checking', color: '#CFE7C4' },
-    { value: 'Illustration', color: '#BAB9E9' },
-    { value: 'Photography', color: '#D8ACE8' },
-    { value: 'Visuals', color: '#BFEBE0' },
-    { value: 'Writing', color: '#A9D3E5' },
-  ];
-
-  return (
-    <div className="onboard5-wrapper">
-      <img className="page-svg" alt="onboard5" src={Onboard5SVG} />
-
-      <div className="onboard5-content">
-        <div className="page-text">
-          <b>What do you want to do at the Weekly?</b>
-          <br />
-          Please limit to the 1-2 options you're interest in.
-          <img className="required-icon" alt="required" src={RequiredSvg} />
+  isModalOpen,
+  setModalOpen,
+  setScheduleConfirmed,
+}): ReactElement => (
+  <div className="scheduling-wrapper">
+    <Modal
+      onClose={() => setModalOpen(false)}
+      className="confirmation-modal"
+      open={isModalOpen}
+      closeIcon
+    >
+      <ModalContent className="confirmation-modal-content">
+        <div>
+          Please make sure you have scheduled a meeting with a South Side Weekly
+          Staff Member. If you couldn’t find a day that works for you, please
+          reach out to a Staff Member at amitplaystrumpet@ssw.com.
         </div>
-
-        <div className="select-group">
-          {currentTeamsButtons.map((button) => (
-            <WizardSelectButton
-              key={button.value}
-              onClick={handleCurrentTeams}
-              selectedArray={currentTeams}
-              width="150px"
-              margin="15px 30px 15px 30px"
-              value={button.value}
-              color={button.color}
-            />
-          ))}
+        <div className="button-wrapper">
+          <Button
+            onClick={() => setScheduleConfirmed(true)}
+            className="modal-button"
+          >
+            Complete Sign-Up
+          </Button>
         </div>
+      </ModalContent>
+    </Modal>
+    <WizardSvg page="onboard5" />
+    <div className="scheduling-content">
+      <div className="page-text">
+        <WizardStar />
+        Please schedule an Onboarding Session with a Staff Member.
       </div>
+      <Button
+        className="calendly-btn"
+        onClick={() =>
+          openPopupWidget({ url: 'https://calendly.com/sawhney4/60min' })
+        }
+      >
+        Schedule meeting
+      </Button>
     </div>
-  );
-};
+  </div>
+);
 
 export default Onboard5;
