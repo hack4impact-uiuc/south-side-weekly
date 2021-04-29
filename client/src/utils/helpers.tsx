@@ -1,5 +1,6 @@
-import { FormEvent, Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction } from 'react';
 import { IUser } from 'ssw-common';
+import { CheckboxProps } from 'semantic-ui-react';
 
 /**
  * Adds selected element to the specific form array if it isn't already there, otherwise removes it
@@ -9,20 +10,21 @@ import { IUser } from 'ssw-common';
  * @param setArray React setter for the selected array
  */
 const handleSelectGroupArray = (
-  e: FormEvent<HTMLInputElement>,
+  data: CheckboxProps,
   selectedArray: Array<string>,
   setArray: Dispatch<SetStateAction<Array<string>>>,
 ): void => {
   const notFoundIdx = -1;
-  const elementIdx = selectedArray.indexOf(e.currentTarget.value);
+  const value = String(data.value!);
+  const elementIdx = selectedArray.indexOf(value);
 
   if (elementIdx === notFoundIdx) {
-    const addedElements = selectedArray.concat(e.currentTarget.value);
+    const addedElements = selectedArray.concat(value);
 
     setArray(addedElements);
   } else {
     const removedElements = selectedArray.filter(
-      (element) => element !== e.currentTarget.value,
+      (element) => element !== value,
     );
 
     setArray(removedElements);
