@@ -42,15 +42,15 @@ This application is built with React + Semantic UI, Typescript, Express, MongoDB
 
 <table align="center">
   <tr>
-    <td align="center"><a href="https://www.linkedin.com/in/sahithimuthyala/"><img src="https://media-exp1.licdn.com/dms/image/C5603AQGjSoe8PD2D7Q/profile-displayphoto-shrink_400_400/0/1567143267652?e=1618444800&v=beta&t=9BpxkgdilrD2tBI2y3UrV_Q_tmZPhvNosyv9LkeArVU" width="75px;" alt="Sahithi Muthyala"/><br /><b>Sahithi Muthyala</b></a><br /><sub>Product Manager</sub></td>
-    <td align="center"><a href="https://www.linkedin.com/in/alicesf2/"><img src="https://media-exp1.licdn.com/dms/image/C4E03AQEbcXVbKMEG9g/profile-displayphoto-shrink_200_200/0/1614236516992?e=1620259200&v=beta&t=qUK6N3rDhYZzHfM1V-5cY02XppqYAC9TxXFLZIU3jjE" width="75px;" alt="Alice Fang"/><br /><b>Alice Fang</b></a><br /><sub>Technical Lead</sub></td>
-    <td align="center"><a href="https://www.linkedin.com/in/mustafasyedali/"><img src="https://media-exp1.licdn.com/dms/image/C4D03AQE03wF5UgwtEA/profile-displayphoto-shrink_400_400/0/1610007269207?e=1618444800&v=beta&t=DWIyVJDbwFIGRN5ln1tVaWj_5T_5JJaSvwA9nmygNoE" width="75px;" alt="Mustafa Ali"/><br /><b>Mustafa Ali</b></a><br /><sub>Product Designer</sub></td>
-    <td align="center"><a href="https://www.linkedin.com/in/danielle-yang-254308154/"><img src="https://ca.slack-edge.com/T6VL1BSEA-UFUGPEN01-1fea6ce5aadb-512" width="75px;" alt="Danielle Yang"/><br /><b>Danielle Yang</b></a><br /><sub>Software Developer</sub></td>
+    <td align="center"><a href="https://www.linkedin.com/in/sahithimuthyala/"><img src="./photos/sahi-muth.jpg" width="75px;" alt="Sahi Muthyala"/><br /><b>Sahithi Muthyala</b></a><br /><sub>Product Manager</sub></td>
+    <td align="center"><a href="https://www.linkedin.com/in/alicesf2/"><img src="./photos/alice-fang.jpeg" width="75px;" alt="Alice Fang"/><br /><b>Alice Fang</b></a><br /><sub>Technical Lead</sub></td>
+    <td align="center"><a href="https://www.linkedin.com/in/mustafasyedali/"><img src="./photos/mustafa-ali.jpg" width="75px;" alt="Mustafa Ali"/><br /><b>Mustafa Ali</b></a><br /><sub>Product Designer</sub></td>
+    <td align="center"><a href="https://www.linkedin.com/in/danielle-yang-254308154/"><img src="./photos/danielle-yang.jpg" width="75px;" height="75px;" alt="Danielle Yang"/><br /><b>Danielle Yang</b></a><br /><sub>Software Developer</sub></td>
     </tr>
     <tr>
-    <td align="center"><a href="https://www.linkedin.com/in/eugenia-chen-3aa251131/"><img src="https://i.ibb.co/yh1rTh4/ec-small.jpg" width="75px;" height="75px;" style="object-fit:cover;" alt="Eugenia Chen"/><br /><b>Eugenia Chen</b></a><br /><sub>Software Developer</sub></td>
-    <td align="center"><a href="https://neeraj.lol"><img src="https://ca.slack-edge.com/T6VL1BSEA-U01ARK8GBFX-cfbbe9789fc9-512" width="75px;" alt="Aditya Jain"/><br /><b>Aditya Jain</b></a><br /><sub>Software Developer</sub></td>
-    <td align="center"><a href="https://www.linkedin.com/in/amit-m-sawhney/"><img src="https://media-exp1.licdn.com/dms/image/C4D03AQF6eWCL4Z8_qg/profile-displayphoto-shrink_400_400/0/1595738823858?e=1618444800&v=beta&t=UBhqmIAi_KyPYmYAIpD1uXSllZpZ-KuAZm30ZL4Yt8M" width="75px;" alt="Amit Sawhney"/><br /><b>Amit Sawhney</b></a><br /><sub>Software Developer</sub></td>
+    <td align="center"><a href="https://www.linkedin.com/in/eugenia-chen-3aa251131/"><img src="./photos/eugenia-chen.jpg" width="75px;" height="75px;" style="object-fit:cover;" alt="Eugenia Chen"/><br /><b>Eugenia Chen</b></a><br /><sub>Software Developer</sub></td>
+    <td align="center"><a href="https://neeraj.lol"><img src="./photos/aditya-jain.jpg" width="75px;" alt="Aditya Jain"/><br /><b>Aditya Jain</b></a><br /><sub>Software Developer</sub></td>
+    <td align="center"><a href="https://www.linkedin.com/in/amit-m-sawhney/"><img src="./photos/amit-sawhney.jpg" width="75px;" alt="Amit Sawhney"/><br /><b>Amit Sawhney</b></a><br /><sub>Software Developer</sub></td>
 
   </tr>
 </table>
