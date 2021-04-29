@@ -81,6 +81,9 @@ function PitchDoc(): ReactElement {
     [],
   );
 
+  /**
+   * Calls /pitch api through api wrapper to get ALL pitches
+   */
   const getAllUnclaimedPitches = async (): Promise<void> => {
     const resp = await getPitches();
 
@@ -93,6 +96,12 @@ function PitchDoc(): ReactElement {
     getAllUnclaimedPitches();
   }, []);
 
+  /**
+   * Filters a set of pitches passed in
+   *
+   * @param pitches the passed in pitches
+   * @returns the filtered list of pitches
+   */
   const handlePitchDocFiltering = (pitches: IPitch[]): IPitch[] => {
     if (isFilterKeysEmpty()) {
       return pitches;
@@ -102,7 +111,7 @@ function PitchDoc(): ReactElement {
 
     const isAscending = filterKeys.date === 'Earliest to Latest';
 
-    filteredPitches = sortPitchesByDate(isAscending, filteredPitches);
+    filteredPitches = sortPitchesByDeadlineDate(isAscending, filteredPitches);
     filteredPitches = filterPitchesByTeams(filterKeys.teams, filteredPitches);
     console.log(filteredPitches);
     filteredPitches = filterPitchesByInterests(
@@ -193,9 +202,12 @@ function PitchDoc(): ReactElement {
   };
 
   /**
+   * Gets all of the teams associated with a pitch
    *
-   * @param pitch
-   * @returns
+   * A pitch has a team when the {TEAM}.target > 0
+   *
+   * @param pitch the pitch to pull the teams from
+   * @returns an array of all of teams belonging to the pitch
    */
   const getPitchTeams = (pitch: IPitch): string[] => {
     const teams: string[] = [];
@@ -214,11 +226,18 @@ function PitchDoc(): ReactElement {
     return teams;
   };
 
-  const sortPitchesByDate = (
+  /**
+   * Sorts a set of pitches by their deadline date
+   *
+   * @param isAscending whether to sort them earliest to latest or vis versa
+   * @param pitches the set of pithces to sort
+   * @returns the sorted pitches
+   */
+  const sortPitchesByDeadlineDate = (
     isAscending: boolean,
-    directory: IPitch[],
+    pitches: IPitch[],
   ): IPitch[] => {
-    const sortedDirectory = [...directory];
+    const sortedDirectory = [...pitches];
 
     sortedDirectory.sort((first: IPitch, second: IPitch): number => {
       const firstPitchDeadline: Date = new Date(first.deadline);
@@ -236,6 +255,13 @@ function PitchDoc(): ReactElement {
     return sortedDirectory;
   };
 
+  /**
+   * Filters a set of pitches by interests
+   *
+   * @param interests the interests to filter by
+   * @param pitches the set of pitches
+   * @returns the filtered pitches
+   */
   const filterPitchesByInterests = (
     interests: string[],
     pitches: IPitch[],
@@ -261,6 +287,13 @@ function PitchDoc(): ReactElement {
     return filteredDirectory;
   };
 
+  /**
+   * Filteres the pitches by claim status
+   *
+   * @param claimStatus the claim status to filter by
+   * @param pitches the pitches to filter
+   * @returns the filtered pitches
+   */
   const filterPitchesByClaimStatus = (
     claimStatus: string,
     pitches: IPitch[],
@@ -282,11 +315,28 @@ function PitchDoc(): ReactElement {
     return filteredDirectory;
   };
 
+  /**
+   * Determines if a pitch is claimed or not
+   *
+   * A pitch is claimed such that if for every team,
+   * the current amount of team claims is equivelant to
+   * the target amount of team claims
+   *
+   * {TEAM}.current === {TEAM.target} for all tams
+   *
+   * @param pitch the pitch to check if claimed
+   * @returns true if pitch is claimed, else false
+   */
   const isPitchClaimed = (pitch: IPitch): boolean => {
     const pitchTeams = Object.entries(pitch.teams);
     let isClaimed = true;
 
     pitchTeams.forEach((team) => {
+      // Essentially `continue`
+      if (isClaimed) {
+        return;
+      }
+
       const assignments = team[1];
 
       if (assignments.current < assignments.target) {
