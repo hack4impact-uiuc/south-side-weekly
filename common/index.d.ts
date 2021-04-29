@@ -16,7 +16,6 @@ export interface IUser {
   onboarding: string;
   profilePic: string;
   portfolio: string;
-  profilePic: string;
   linkedIn: string;
   twitter: string;
   reasonForInvolvement: string;
