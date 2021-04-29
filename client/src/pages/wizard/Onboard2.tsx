@@ -4,7 +4,6 @@ import React, {
   SetStateAction,
   ReactElement,
   FormEvent,
-  useState,
 } from 'react';
 import { Checkbox, CheckboxProps, Form } from 'semantic-ui-react';
 
