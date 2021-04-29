@@ -170,6 +170,7 @@ const Directory = (): ReactElement => {
     () =>
       parseArrayToSemanticDropdownOptions([
         'Cannabis',
+        'Education',
         'Food & Land',
         'Fun',
         'Health',
