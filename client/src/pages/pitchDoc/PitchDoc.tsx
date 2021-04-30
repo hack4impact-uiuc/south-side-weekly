@@ -307,7 +307,9 @@ function PitchDoc(): ReactElement {
         <div className="top-section">
           <div className="pitchdoc-title">The Pitch Doc</div>
           <div className="submit-search-section">
-            <SubmitPitchModal />
+            <span>
+              <SubmitPitchModal />
+            </span>
             <div className="pitch-search">
               <Input
                 onChange={(e) =>

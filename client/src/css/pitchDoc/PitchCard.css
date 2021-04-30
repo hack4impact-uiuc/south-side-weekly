@@ -3,14 +3,14 @@
   box-shadow: 0px 3.31765px 3.31765px rgba(0, 0, 0, 0.25),
     inset 0px 3.31765px 3.31765px rgba(105, 91, 91, 0.25);
   border-radius: 9.95294px;
-  width: 22rem;
+  width: 25rem;
   margin-bottom: 2rem;
 }
 
 .pitch-card-wrapper .ui.circular.labels .label {
-  width: 30% !important;
+  width: 28% !important;
   font-size: 10px !important;
-  font-weight: 100 !important;
+  font-weight: bold !important;
 }
 
 .pitch-card-wrapper .ui.card.pitch-card:hover {

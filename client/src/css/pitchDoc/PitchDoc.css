@@ -27,12 +27,14 @@ body {
 
 .content-wrapper .container {
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
+  margin-top: 10px;
 }
 
 .submit-search-section {
   display: flex;
-  justify-content: space-between !important;
+  justify-content: center !important;
   align-items: center;
   margin-top: 1.8rem;
   width: 90%;
@@ -40,7 +42,7 @@ body {
 
 .submit-search-section .pitch-search {
   width: 70% !important;
-  justify-content: right !important;
+  margin-left: 6%;
 }
 
 .submit-search-section .pitch-search .input {
