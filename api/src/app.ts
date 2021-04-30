@@ -13,6 +13,9 @@ const app = express();
 app.use(helmet());
 if (process.env.NODE_ENV !== 'production') {
   app.use(cors({ origin: /localhost:\d{4}/, credentials: true }));
+} else {
+  console.log("Enabling cors credentials");
+  app.use(cors({ credentials: true }));
 }
 
 app.use(logger('dev'));
