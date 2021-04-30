@@ -25,7 +25,7 @@ function Login(): ReactElement {
   const [user, setUser] = useState({ role: '' });
 
   const checkLoggedIn = (): void => {
-    const requestString = `${BASE_URL}/auth/currentuser`;
+    const requestString = `/auth/currentuser`;
     console.log(axios.defaults);
     axios
       .get(requestString, {
