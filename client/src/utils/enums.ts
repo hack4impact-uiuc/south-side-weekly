@@ -65,3 +65,10 @@ export const pitchStatusEnum = {
   REJECTED: 'REJECTED',
   NONE: 'NONE',
 };
+
+export const assignmentStatusEnum = {
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  ABANDONED: 'ABANDONED',
+  NONE: 'NONE',
+};

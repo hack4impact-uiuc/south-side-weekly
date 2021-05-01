@@ -1,8 +1,8 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Modal, Button, Form, Checkbox, Grid } from 'semantic-ui-react';
 import { interestsButtonsMap } from '../../utils/constants'
-import { pitchStatusEnum } from '../../utils/enums';
-import { createPitch } from '../../utils/apiWrapper'
+import { pitchStatusEnum, assignmentStatusEnum } from '../../utils/enums';
+import { createPitch, isError } from '../../utils/apiWrapper'
 import '../../css/pitchDoc/SubmitPitchModal.css';
 
 
@@ -21,6 +21,7 @@ function SubmitPitchModal(): ReactElement {
     pitchDescription: pitchDescription,
     assignmentGoogleDocLink: pitchLink,
     pitchStatus: pitchStatusEnum.PENDING,
+    assignmentStatus: assignmentStatusEnum.NONE,
     topics: selectedTopics,
     pitchAuthor: userId,
     conflictOfInterest: radioValue ? true : false,
@@ -42,8 +43,9 @@ function SubmitPitchModal(): ReactElement {
 
   const submitPitch = async (): Promise<void> => {
     const res = await createPitch(pitchData);
-    console.log(res);
-
+    if (!isError(res)) {
+      setSecondOpen(true);
+    }
   }
 
   useEffect(() => {
@@ -53,7 +55,7 @@ function SubmitPitchModal(): ReactElement {
     setPitchDescription("");
     setPitchLink("");
 
-  },[open]);  
+  },[firstOpen]);  
   return (
     <>
     <Modal
@@ -68,7 +70,6 @@ function SubmitPitchModal(): ReactElement {
     >
       <Modal.Actions>
         <div className="submit-pitch-wrapper">
-          {console.log(pitchData)}
           <div className="header">
             <div className="title">Submit a Pitch</div>
             <div className="description">Please select the relevant topics this pitch relates to:</div>
@@ -159,13 +160,14 @@ function SubmitPitchModal(): ReactElement {
       }}
       onOpen={() => setFirstOpen(false)}
       open={secondOpen}
+      className="submit-pitch-success"
       closeIcon
     >
       <Modal.Actions>
         <div className="success-wrapper">
           <div className="text">
-            You successfully claimed this Pitch! Once approved, it will show
-            up on your Home Page under “Claimed Pitches”.
+            You successfully submitted your Pitch! 
+            Once approved, it will show up on the Pitch Doc.
           </div>
         </div>
       </Modal.Actions>
