@@ -1,4 +1,4 @@
-import { interestsEnum } from './enums'
+import { interestsEnum } from './enums';
 // All of the interests buttons to show
 const interestsButtons: { [key: string]: string } = {
   Cannabis: '#CFE7C4',
@@ -100,4 +100,3 @@ export {
   teamToTeamsButtons,
   interestsButtonsMap,
 };
-

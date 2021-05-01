@@ -194,9 +194,9 @@ export const updatePitch = (
  * Creates a pitch
  * Returns CREATE_PITCH_FAIL upon failure
  */
- export const createPitch = (
-  pitchData: { [key: string]: number | string | string[] | boolean },
-): Promise<AxiosResponse<GetPitchesResponseType> | ErrorWrapper> => {
+export const createPitch = (pitchData: {
+  [key: string]: number | string | string[] | boolean;
+}): Promise<AxiosResponse<GetPitchesResponseType> | ErrorWrapper> => {
   const pitchUrl = `${BASE_URL}/pitch/`;
   return axios
     .post(pitchUrl, pitchData, {
@@ -209,7 +209,6 @@ export const updatePitch = (
       error,
     }));
 };
-
 
 /**
  * Returns a user

@@ -1,20 +1,19 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Modal, Button, Form, Checkbox, Grid } from 'semantic-ui-react';
-import { interestsButtonsMap } from '../../utils/constants'
+import { interestsButtonsMap } from '../../utils/constants';
 import { pitchStatusEnum, assignmentStatusEnum } from '../../utils/enums';
-import { createPitch, isError } from '../../utils/apiWrapper'
+import { createPitch, isError } from '../../utils/apiWrapper';
 import '../../css/pitchDoc/SubmitPitchModal.css';
-
 
 function SubmitPitchModal(): ReactElement {
   const [firstOpen, setFirstOpen] = useState<boolean>(false);
   const [secondOpen, setSecondOpen] = useState<boolean>(false);
-  const [radioValue, setRadioValue] = useState<string | number | undefined>("");
+  const [radioValue, setRadioValue] = useState<string | number | undefined>('');
   const [selectedTopics, setSelectedTopics] = useState<string[]>([]);
-  const [pitchTitle, setPitchTitle] = useState<string>("");
-  const [pitchDescription, setPitchDescription] = useState<string>("");
-  const [pitchLink, setPitchLink] = useState<string>("");
-  const userId = '6031a866c70ec705736a79e5'; 
+  const [pitchTitle, setPitchTitle] = useState<string>('');
+  const [pitchDescription, setPitchDescription] = useState<string>('');
+  const [pitchLink, setPitchLink] = useState<string>('');
+  const userId = '6031a866c70ec705736a79e5';
 
   const pitchData: { [key: string]: number | string | string[] | boolean } = {
     name: pitchTitle,
@@ -25,7 +24,7 @@ function SubmitPitchModal(): ReactElement {
     topics: selectedTopics,
     pitchAuthor: userId,
     conflictOfInterest: radioValue ? true : false,
-  }
+  };
 
   const handleCheckboxes = (topic: string): void => {
     const notFoundIdx = -1;
@@ -46,132 +45,138 @@ function SubmitPitchModal(): ReactElement {
     if (!isError(res)) {
       setSecondOpen(true);
     }
-  }
+  };
 
   useEffect(() => {
-    setRadioValue("");
+    setRadioValue('');
     setSelectedTopics([]);
-    setPitchTitle("");
-    setPitchDescription("");
-    setPitchLink("");
-
-  },[firstOpen]);  
+    setPitchTitle('');
+    setPitchDescription('');
+    setPitchLink('');
+  }, [firstOpen]);
   return (
     <>
-    <Modal
-      className="submit-pitch-modal"
-      onClose={() => setFirstOpen(false)}
-      onOpen={() => setFirstOpen(true)}
-      open={firstOpen}
-      trigger={
-        <Button className="submit-pitch-button"> Submit a Pitch </Button>
-      }
-      closeIcon
-    >
-      <Modal.Actions>
-        <div className="submit-pitch-wrapper">
-          <div className="header">
-            <div className="title">Submit a Pitch</div>
-            <div className="description">Please select the relevant topics this pitch relates to:</div>
-          </div>
-          <div className="form-section">
-            <div className="checkbox-section">
-              {interestsButtonsMap.map((interest, idx) => (
-                <Checkbox key={idx}
-                  className="item"
-                  label={interest.display}
-                  onClick={() => handleCheckboxes(interest.value)}
-                />
-              ))}
+      <Modal
+        className="submit-pitch-modal"
+        onClose={() => setFirstOpen(false)}
+        onOpen={() => setFirstOpen(true)}
+        open={firstOpen}
+        trigger={
+          <Button className="submit-pitch-button"> Submit a Pitch </Button>
+        }
+        closeIcon
+      >
+        <Modal.Actions>
+          <div className="submit-pitch-wrapper">
+            <div className="header">
+              <div className="title">Submit a Pitch</div>
+              <div className="description">
+                Please select the relevant topics this pitch relates to:
+              </div>
             </div>
-            <div className="input-section">
-              <Form className="submit-pitch-form">
-                  <Form.Input 
-                    fluid 
-                    label='Pitch Title' 
-                    placeholder='Pitch title' 
-                    onChange={(e)=>setPitchTitle(e.currentTarget.value)}
+            <div className="form-section">
+              <div className="checkbox-section">
+                {interestsButtonsMap.map((interest, idx) => (
+                  <Checkbox
+                    key={idx}
+                    className="item"
+                    label={interest.display}
+                    onClick={() => handleCheckboxes(interest.value)}
                   />
-                  <Form.TextArea 
-                    fluid 
-                    label='Summarize Pitch in 1-2 Sentences (300 character limit)' 
-                    placeholder='Pitch summary' 
-                    onChange={(e)=>setPitchDescription(e.currentTarget.value)}
+                ))}
+              </div>
+              <div className="input-section">
+                <Form className="submit-pitch-form">
+                  <Form.Input
+                    fluid
+                    label="Pitch Title"
+                    placeholder="Pitch title"
+                    onChange={(e) => setPitchTitle(e.currentTarget.value)}
+                  />
+                  <Form.TextArea
+                    fluid
+                    label="Summarize Pitch in 1-2 Sentences (300 character limit)"
+                    placeholder="Pitch summary"
+                    onChange={(e) => setPitchDescription(e.currentTarget.value)}
                   />
                   <Grid columns={2}>
                     <Grid.Row className="top-row">
                       <Grid.Column>
-                        <Form.Input 
-                          fluid 
-                          label='Link to Google Doc' 
-                          placeholder='Pitch Google Doc Link'
-                          onChange={(e)=>setPitchLink(e.currentTarget.value)}
+                        <Form.Input
+                          fluid
+                          label="Link to Google Doc"
+                          placeholder="Pitch Google Doc Link"
+                          onChange={(e) => setPitchLink(e.currentTarget.value)}
                         />
-                        
                       </Grid.Column>
                       <Grid.Column>
-                        <div className="disclosure-title">Conflict of Interest Disclosure</div>
-                        <div>Are you involved with the events or people covered in your pitch? 
-                        i.e. do you have a relationship with them as an employee, family member, friend, or donor?</div>
-                        
+                        <div className="disclosure-title">
+                          Conflict of Interest Disclosure
+                        </div>
+                        <div>
+                          Are you involved with the events or people covered in
+                          your pitch? i.e. do you have a relationship with them
+                          as an employee, family member, friend, or donor?
+                        </div>
                       </Grid.Column>
                     </Grid.Row>
                     <Grid.Row className="bottom-row">
                       <Grid.Column textAlign="center">
-                        <Button 
-                          fluid 
-                          className="submit-button" 
-                          content='Submit My Pitch For Review!'
+                        <Button
+                          fluid
+                          className="submit-button"
+                          content="Submit My Pitch For Review!"
                           onClick={submitPitch}
                         />
                       </Grid.Column>
-                      <Grid.Column className="radio-buttons" verticalAlign='middle'>
+                      <Grid.Column
+                        className="radio-buttons"
+                        verticalAlign="middle"
+                      >
                         <Form.Group>
-                          <Form.Radio 
-                            className="yes-radio" 
+                          <Form.Radio
+                            className="yes-radio"
                             value={1}
                             checked={radioValue === 1}
-                            onClick={(e, {value}) => setRadioValue(value)}
-                            label='Yes' 
+                            onClick={(e, { value }) => setRadioValue(value)}
+                            label="Yes"
                           />
                           <Form.Radio
                             value={0}
-                            checked={radioValue === 0} 
-                            onClick={(e, {value}) => setRadioValue(value)}
-                            label='No' 
+                            checked={radioValue === 0}
+                            onClick={(e, { value }) => setRadioValue(value)}
+                            label="No"
                           />
                         </Form.Group>
                       </Grid.Column>
                     </Grid.Row>
                   </Grid>
-                  
-              </Form>
+                </Form>
+              </div>
             </div>
           </div>
-        </div>
-        
-      </Modal.Actions>
-    </Modal>
+        </Modal.Actions>
+      </Modal>
 
-    <Modal
-      onClose={() => {
-        setSecondOpen(false);
-        setFirstOpen(false);
-      }}
-      onOpen={() => setFirstOpen(false)}
-      open={secondOpen}
-      className="submit-pitch-success"
-      closeIcon
-    >
-      <Modal.Actions>
-        <div className="success-wrapper">
-          <div className="text">
-            You successfully submitted your Pitch! 
-            Once approved, it will show up on the Pitch Doc.
+      <Modal
+        onClose={() => {
+          setSecondOpen(false);
+          setFirstOpen(false);
+        }}
+        onOpen={() => setFirstOpen(false)}
+        open={secondOpen}
+        className="submit-pitch-success"
+        closeIcon
+      >
+        <Modal.Actions>
+          <div className="success-wrapper">
+            <div className="text">
+              You successfully submitted your Pitch! Once approved, it will show
+              up on the Pitch Doc.
+            </div>
           </div>
-        </div>
-      </Modal.Actions>
-    </Modal>
+        </Modal.Actions>
+      </Modal>
     </>
   );
 }

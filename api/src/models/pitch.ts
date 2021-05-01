@@ -62,7 +62,7 @@ const Pitch = new mongoose.Schema({
   approvedBy: { type: Schema.Types.ObjectId, ref: 'User' },
   similarStories: [{ type: String, default: null }],
   deadline: { type: Date, default: null },
-  conflictOfInterest: { type: Boolean, default: null, required: true }
+  conflictOfInterest: { type: Boolean, default: null, required: true },
 });
 
 export default mongoose.model<IPitch>('Pitch', Pitch);

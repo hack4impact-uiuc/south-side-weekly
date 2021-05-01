@@ -156,7 +156,6 @@
     inset 0px 3.43343px 3.43343px rgba(0, 0, 0, 0.25);
   border-radius: 10.3003px;
   width: 60%;
-  
 }
 
 .ui.modal.claim-pitch-success > .actions {
@@ -169,17 +168,14 @@
   line-height: 24px;
 }
 
-.claim-pitch-success
-.success-wrapper {
+.claim-pitch-success .success-wrapper {
   padding: 40px;
 }
-.claim-pitch-success
-.success-wrapper .text {
+.claim-pitch-success .success-wrapper .text {
   font-size: 30.9009px;
   line-height: 38px;
 }
-.claim-pitch-success
-.success-wrapper .image {
+.claim-pitch-success .success-wrapper .image {
   width: 70%;
   float: right;
   padding-top: 20px;
