@@ -1,5 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Modal, Button, Form, Checkbox, Grid } from 'semantic-ui-react';
+
 import { interestsButtonsMap } from '../../utils/constants';
 import { pitchStatusEnum, assignmentStatusEnum } from '../../utils/enums';
 import { createPitch, isError } from '../../utils/apiWrapper';
