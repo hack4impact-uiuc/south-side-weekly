@@ -12,7 +12,7 @@ import Header from '../../components/Header';
 import ArrowBack from '../../assets/arrow-back.svg';
 import ArrowNext from '../../assets/arrow-next.svg';
 import SubmitSVG from '../../assets/check.svg';
-import WizardPageCounter from '../../components/WizardPageCounter/WizardPageCounter';
+import WizardPageCounter from '../../components/WizardPageCounter';
 
 import WizardInitialPrompt from './InitialPrompt';
 import Onboard1 from './Onboard1';
@@ -20,9 +20,6 @@ import Onboard2 from './Onboard2';
 import Onboard3 from './Onboard3';
 import Onboard4 from './Onboard4';
 import Onboard5 from './Onboard5';
-import Onboard6 from './Onboard6';
-import Onboard7 from './Onboard7';
-import Onboard8 from './Onboard8';
 import Compleition from './Completion';
 
 /**
@@ -35,9 +32,6 @@ enum WizardPage {
   ONBOARD_3 = 'ONBOARD_3',
   ONBOARD_4 = 'ONBOARD_4',
   ONBOARD_5 = 'ONBOARD_5',
-  ONBOARD_6 = 'ONBOARD_6',
-  ONBOARD_7 = 'ONBOARD_7',
-  ONBOARD_8 = 'ONBOARD_8',
   COMPLETION = 'COMPLETION',
 }
 
@@ -60,9 +54,6 @@ const WizardWrapper = (): ReactElement => {
   const [reasonForInvolvement, setReasonForInvolvement] = useState<string>('');
   const [currentTeams, setCurrentTeams] = useState<Array<string>>([]);
   const [interests, setInterests] = useState<Array<string>>([]);
-  const [portfolio, setPortfolio] = useState<string>('');
-  const [linkedIn, setLinkedIn] = useState<string>('');
-  const [twitter, setTwitter] = useState<string>('');
 
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [scheduleConfirmed, setScheduleConfirmed] = useState<boolean>(false);
@@ -75,9 +66,7 @@ const WizardWrapper = (): ReactElement => {
     if (role === 'STAFF') {
       parsedPages = parsedPages.filter(
         (page) =>
-          page !== WizardPage.ONBOARD_4 &&
-          page !== WizardPage.ONBOARD_8 &&
-          page !== WizardPage.ONBOARD_5,
+          page !== WizardPage.ONBOARD_4 && page !== WizardPage.ONBOARD_5,
       );
     }
     setViewablePages(parsedPages);
@@ -155,9 +144,6 @@ const WizardWrapper = (): ReactElement => {
       genders: genders,
       pronouns: pronouns,
       masthead: false,
-      portfolio: portfolio,
-      linkedIn: linkedIn,
-      twitter: twitter,
       claimedPitches: [],
       submittedPitches: [],
       currentTeams: currentTeams,
@@ -175,9 +161,6 @@ const WizardWrapper = (): ReactElement => {
     phoneNumber,
     genders,
     pronouns,
-    portfolio,
-    linkedIn,
-    twitter,
     currentTeams,
     role,
     races,
@@ -192,7 +175,7 @@ const WizardWrapper = (): ReactElement => {
   useEffect(() => {
     if (
       scheduleConfirmed &&
-      page === WizardPage.ONBOARD_8.toString() &&
+      page === WizardPage.ONBOARD_5.toString() &&
       role === 'CONTRIBUTOR'
     ) {
       submitForm();
@@ -208,9 +191,9 @@ const WizardWrapper = (): ReactElement => {
    */
   const shouldShowNextBtn = (): boolean => {
     if (role === 'STAFF') {
-      return page !== WizardPage.ONBOARD_7.toString();
+      return page !== WizardPage.ONBOARD_3.toString();
     } else if (role === 'CONTRIBUTOR') {
-      return page !== WizardPage.ONBOARD_8.toString();
+      return page !== WizardPage.ONBOARD_5.toString();
     }
     return false;
   };
@@ -226,7 +209,7 @@ const WizardWrapper = (): ReactElement => {
               onClick={handlePagePrevious}
               className="previous-icon"
             >
-              <img width="70%" src={ArrowBack} alt="back arrow" />
+              <img src={ArrowBack} alt="back arrow" />
             </Button>
           </div>
         )}
@@ -256,42 +239,28 @@ const WizardWrapper = (): ReactElement => {
               pronouns={pronouns}
               setGenders={setGenders}
               setPronouns={setPronouns}
+              races={races}
+              setRaces={setRaces}
             />
           )}
 
           {page === WizardPage.ONBOARD_3.toString() && (
-            <Onboard3 races={races} setRaces={setRaces} />
+            <Onboard3
+              currentTeams={currentTeams}
+              setCurrentTeams={setCurrentTeams}
+              interests={interests}
+              setInterests={setInterests}
+            />
           )}
-
           {page === WizardPage.ONBOARD_4.toString() && (
             <Onboard4
               reasonsForInvolvement={reasonForInvolvement}
               setReasonsForInvolvement={setReasonForInvolvement}
             />
           )}
+
           {page === WizardPage.ONBOARD_5.toString() && (
             <Onboard5
-              currentTeams={currentTeams}
-              setCurrentTeams={setCurrentTeams}
-            />
-          )}
-          {page === WizardPage.ONBOARD_6.toString() && (
-            <Onboard6 interests={interests} setInterests={setInterests} />
-          )}
-
-          {page === WizardPage.ONBOARD_7.toString() && (
-            <Onboard7
-              portfolio={portfolio}
-              linkedIn={linkedIn}
-              twitter={twitter}
-              setPortfolio={setPortfolio}
-              setLinkedIn={setLinkedIn}
-              setTwitter={setTwitter}
-            />
-          )}
-
-          {page === WizardPage.ONBOARD_8.toString() && (
-            <Onboard8
               isModalOpen={openModal}
               setScheduleConfirmed={setScheduleConfirmed}
               setModalOpen={setOpenModal}
@@ -299,23 +268,21 @@ const WizardWrapper = (): ReactElement => {
           )}
           {page === WizardPage.COMPLETION.toString() && <Compleition />}
         </div>
-
-        {page !== WizardPage.INITIAL_PAGE.toString() &&
-          page !== WizardPage.COMPLETION && (
-            <div className="next-page">
-              {shouldShowNextBtn() ? (
-                <Button circular onClick={handlePageNext} className="next-icon">
-                  <img src={ArrowNext} alt="next arrow" />
-                </Button>
-              ) : (
-                <Button circular onClick={submitForm} className="check-icon">
-                  <img src={SubmitSVG} alt="submit" />
-                </Button>
-              )}
-            </div>
-          )}
       </div>
-
+      {page !== WizardPage.INITIAL_PAGE.toString() &&
+        page !== WizardPage.COMPLETION && (
+          <div className="next-page">
+            {shouldShowNextBtn() ? (
+              <Button circular onClick={handlePageNext} className="next-icon">
+                <img src={ArrowNext} alt="next arrow" />
+              </Button>
+            ) : (
+              <Button circular onClick={submitForm} className="check-icon">
+                <img src={SubmitSVG} alt="submit" />
+              </Button>
+            )}
+          </div>
+        )}
       <div className="wizard-page-counter">
         {page !== WizardPage.INITIAL_PAGE.toString() &&
           page !== WizardPage.COMPLETION.toString() && (

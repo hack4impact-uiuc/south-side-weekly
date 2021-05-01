@@ -1,0 +1,95 @@
+.directory-wrapper .directory-content {
+  width: 85%;
+  float: right;
+  margin-top: 20px;
+}
+
+.directory-wrapper .directory-content .filters {
+  width: 90%;
+  display: flex;
+  align-items: center;
+}
+
+.directory-wrapper .directory-content .directory-search {
+  width: 70% !important;
+}
+
+.directory-wrapper .directory-content .directory-search .input {
+  width: 100% !important;
+}
+
+.directory-wrapper .directory-content .directory-search .input input {
+  background: rgba(61, 79, 145, 0.45) !important;
+  border-radius: 1rem !important;
+}
+
+.directory-wrapper .directory-content .directory {
+  width: 90%;
+}
+
+.directory-wrapper .directory-content .directory .result {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  background: rgba(61, 79, 145, 0.75);
+  border-radius: 1rem;
+  color: white;
+  padding: 5px 20px 5px 20px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.directory-wrapper .directory-content .directory .result .profile-picture {
+  width: 50px;
+}
+
+.directory-wrapper .directory-content .directory .result .text {
+  display: flex;
+  justify-content: right;
+  margin: 0;
+  padding: 0;
+  margin-left: 10px;
+}
+
+.directory-wrapper .directory-content .directory .result .name {
+  flex-grow: 1;
+}
+
+.custom-dropdown {
+  display: flex;
+  justify-content: space-between;
+  background-color: #3d4f91;
+  color: white;
+  margin: 20px;
+  padding: 10px;
+  border-radius: 1rem 1rem 0 0;
+  max-width: 300px;
+}
+
+.custom-dropdown .text {
+  width: 120px;
+}
+
+.custom-dropdown .menu {
+  background-color: white;
+}
+
+.custom-dropdown .menu .item {
+  margin: 10px !important;
+  border: 2.04459px solid rgba(61, 79, 145, 0.65) !important;
+  border-radius: 3rem;
+  text-align: center !important;
+}
+
+.custom-dropdown .menu .item .text {
+  text-align: center;
+  margin: auto;
+  padding: 0;
+  margin: 0;
+}
+
+.custom-dropdown .menu .item.active {
+  background: rgba(61, 79, 145, 0.65) !important;
+  border: 1px solid rgba(61, 79, 145, 0.65) !important;
+  font-weight: normal !important;
+}

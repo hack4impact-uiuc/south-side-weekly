@@ -1,8 +1,8 @@
 import React, { FC, ReactElement, MouseEvent } from 'react';
 import { Button } from 'semantic-ui-react';
 
-import RolePageSVG from '../../assets/role-page.svg';
 import Icon from '../../assets/info.svg';
+import WizardSvg from '../../components/WizardSvg';
 import '../../css/wizard/InitialPrompt.css';
 
 interface IProps {
@@ -17,7 +17,7 @@ interface IProps {
 const WizardInitialPrompt: FC<IProps> = ({ handleRole }): ReactElement => (
   <div className="initial-prompt">
     <div className="header-text">Are you joining as a...</div>
-    <img className="page-image" src={RolePageSVG} alt="role page" />
+    <WizardSvg page="onboard0" />
     <div className="btn-group">
       <div className="btn-wrapper">
         <Button

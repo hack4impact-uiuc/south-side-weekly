@@ -1,4 +1,4 @@
-import mongoose, { Document } from 'mongoose';
+import { Document } from 'mongoose';
 import { SessionUser } from '../utils/helpers';
 import { IUser as IUserBase, IPitch as IPitchBase } from 'ssw-common';
 
