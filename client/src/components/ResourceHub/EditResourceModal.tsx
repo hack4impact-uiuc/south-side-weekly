@@ -76,7 +76,13 @@ const EditResourceModal: FC<IProps> = ({
   };
 
   return (
-    <Modal onClose={close} onOpen={() => setOpen(true)} open={open} className="edit-resource-modal" closeIcon>
+    <Modal
+      onClose={close}
+      onOpen={() => setOpen(true)}
+      open={open}
+      className="edit-resource-modal"
+      closeIcon
+    >
       <Modal.Actions>
         <Form className="edit-resource-wrapper">
           <div className="edit-resource-content">
