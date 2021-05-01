@@ -5,6 +5,7 @@ import { IUser } from '../../../../common/index';
 import '../../css/UserModal.css';
 import { interestsColorEnum } from '../../utils/enums';
 import DefaultProfile from '../../assets/default_profile.png';
+import { getUserFirstName } from '../../utils/helpers';
 
 interface ILabelProps {
   text: string;
@@ -74,7 +75,7 @@ const UserModal: FC<IModalProps> = ({
                 circular
                 size="small"
                 src={user.profilePic ? user.profilePic : DefaultProfile}
-                alt={`${user.firstName} ${user.lastName}`}
+                alt={`${getUserFirstName(user)} ${user.lastName}`}
               />
             </Grid.Row>
             <Grid.Row>
@@ -87,7 +88,7 @@ const UserModal: FC<IModalProps> = ({
           <Grid.Column verticalAlign="middle" width={5}>
             <Grid.Row>
               <h1 className="user-information name">
-                <b>{`${user.firstName} ${user.lastName}`}</b>
+                <b>{`${getUserFirstName(user)} ${user.lastName}`}</b>
               </h1>
             </Grid.Row>
             <Grid.Row>

@@ -356,6 +356,14 @@ const isPitchClaimed = (pitch: IPitch, teams: string[]): boolean => {
   return isClaimed;
 };
 
+const getUserFirstName = (user: IUser): string => {
+  if (user.preferredName === null || user.preferredName === '') {
+    return user.firstName;
+  }
+
+  return user.preferredName;
+};
+
 export {
   handleSelectGroupArray,
   parseArrayToSemanticDropdownOptions,
@@ -370,4 +378,5 @@ export {
   filterPitchesByInterests,
   filterPitchesByTeams,
   sortPitchesByDeadlineDate,
+  getUserFirstName,
 };

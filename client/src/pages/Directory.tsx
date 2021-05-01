@@ -20,6 +20,7 @@ import {
   filterUsersByInterests,
   filterUsersByRole,
   filterUsersByTeams,
+  getUserFirstName,
 } from '../utils/helpers';
 import SSW from '../assets/ssw-form-header.png';
 import DefaultProfile from '../assets/default_profile.png';
@@ -238,15 +239,19 @@ const Directory = (): ReactElement => {
       searchedDirectory = directory.filter((user: IUser) => {
         // Avoid null fields in database
         const firstName = user.firstName ? user.firstName.toLowerCase() : '';
+        const preferredName = user.preferredName ? user.preferredName : '';
         const lastName = user.lastName ? user.lastName.toLowerCase() : '';
         const email = user.email ? user.email.toLowerCase() : '';
         const fullName = `${firstName} ${lastName}`.toLowerCase();
+        const fullPreferredName = `${preferredName} ${lastName}`.toLowerCase();
 
         return (
           firstName.includes(searchTerm) ||
+          preferredName.includes(searchTerm) ||
           lastName.includes(searchTerm) ||
           email.includes(searchTerm) ||
-          fullName.includes(searchTerm)
+          fullName.includes(searchTerm) ||
+          fullPreferredName.includes(searchTerm)
         );
       });
 
@@ -473,7 +478,9 @@ const Directory = (): ReactElement => {
                   alt="Profile"
                   className="profile-picture"
                 />
-                <h2 className="text name">{`${user.firstName} ${user.lastName}`}</h2>
+                <h2 className="text name">{`${getUserFirstName(user)} ${
+                  user.lastName
+                }`}</h2>
                 <h2 className="text">
                   {/* Capitalize the first letter */}
                   {user.role.slice(0, 1) + user.role.slice(1).toLowerCase()}
