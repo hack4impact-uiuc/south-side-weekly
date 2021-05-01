@@ -30,6 +30,11 @@ export interface GetUsersResponseType {
   result: IUser[];
 }
 
+export interface UpdateUserResponseType {
+  message: string;
+  result: IUser;
+}
+
 export interface GetCurrentUserResponseType {
   message: string;
   result: IUser;
@@ -125,6 +130,66 @@ export const getUsers = (): Promise<
     })
     .catch((error) => ({
       type: 'GET_USERS_FETCH_FAIL',
+      error,
+    }));
+};
+
+/**
+ * Updates user by userId and returns new user
+ * Returns UPDATE_USER_FAIL upon failure
+ * @param userId string user id in Mongo
+ * @param firstName string
+ * @param lastName string
+ * @param preferredName string
+ * @param phoneNumber string
+ * @param genders string[]
+ * @param pronouns string[]
+ * @param reasonForInvolvement string
+ * @param currentTeams string[]
+ * @param role string
+ * @param races string[]
+ * @param interests string[]
+ */
+export const updateUser = (
+  userId: string,
+  firstName: string,
+  lastName: string,
+  preferredName: string,
+  phoneNumber: string,
+  genders: string[],
+  pronouns: string[],
+  reasonForInvolvement: string,
+  currentTeams: string[],
+  role: string,
+  races: string[],
+  interests: string[],
+): Promise<AxiosResponse<GetUsersResponseType> | ErrorWrapper> => {
+  const userUrl = `${BASE_URL}/users/${userId}`;
+
+  const formData = {
+    firstName: firstName !== '' ? firstName : null,
+    lastName: lastName !== '' ? lastName : null,
+    preferredName: preferredName !== '' ? preferredName : null,
+    phone: phoneNumber !== '' ? phoneNumber : null,
+    genders: genders !== [] ? genders : null,
+    pronouns: pronouns !== [] ? pronouns : null,
+    reasonForInvolvement:
+      reasonForInvolvement !== '' ? reasonForInvolvement : null,
+    currentTeams: currentTeams !== [] ? currentTeams : null,
+    role: role !== '' ? role : null,
+    races: races !== [] ? races : null,
+    interests: interests !== [] ? interests : null,
+  };
+
+  return axios
+    .put(userUrl, formData, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .then((res) => res.data.result)
+    .catch((error) => ({
+      type: 'UPDATE_USER_FAIL',
       error,
     }));
 };

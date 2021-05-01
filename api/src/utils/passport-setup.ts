@@ -5,19 +5,20 @@ import {
 import passport from 'passport';
 import User from '../models/user';
 import { IUser } from '../types';
+import { SessionUser, sessionizeUser } from '../utils/helpers';
 import { rolesEnum } from './enums';
 
-passport.serializeUser((user: IUser, done) => {
+passport.serializeUser((user: SessionUser, done) => {
   done(null, user._id);
 });
 
 passport.deserializeUser((id, done) => {
-  User.findById(id, (err: any, user: any) => {
-    if (err) {
-      console.error('Error');
-      done(err);
+  User.findById(id, (err: any, user: IUser) => {
+    if (err || !user) {
+      done(err, false);
+      return;
     }
-    done(null, user);
+    done(null, sessionizeUser(user));
   });
 });
 
@@ -45,6 +46,7 @@ passport.use(
           firstName: profile.name.givenName,
           lastName: profile.name.familyName,
           email: profile.emails[0].value,
+          profilePic: profile.photos[0].value,
           role: rolesEnum.TBD,
         });
 

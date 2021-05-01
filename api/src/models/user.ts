@@ -5,6 +5,7 @@ import {
   onboardingStatusEnum,
   rolesEnum,
   racesEnum,
+  teamEnum,
 } from '../utils/enums';
 import { IUser } from '../types';
 
@@ -25,15 +26,18 @@ const User = new mongoose.Schema({
   onboardingStatus: {
     type: String,
     enum: Object.values(onboardingStatusEnum),
-    default: onboardingStatusEnum.ONBOARDING_SCHEDULED,
+    default: onboardingStatusEnum.NONE,
   },
-
   portfolio: { type: String, default: null },
+  profilePic: { type: String, default: null },
   linkedIn: { type: String, default: null },
   twitter: { type: String, default: null },
+  reasonForInvolvement: { type: String, default: null },
   claimedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
   submittedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
-  currentTeams: [{ type: String, default: null }],
+  currentTeams: [
+    { type: String, enum: Object.values(teamEnum), default: null },
+  ],
 
   role: {
     type: String,

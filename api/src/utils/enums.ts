@@ -35,10 +35,20 @@ const racesEnum = {
   NONE: 'NONE',
 };
 
+const teamEnum = {
+  EDITING: 'EDITING',
+  FACT_CHECKING: 'FACT-CHECKING',
+  ILLUSTRATION: 'ILLUSTRATION',
+  PHOTOGRAPHY: 'PHOTOGRAPHY',
+  VISUALS: 'VISUALS',
+  WRITING: 'WRITING',
+};
+
 const onboardingStatusEnum = {
   ONBOARDING_SCHEDULED: 'ONBOARDING_SCHEDULED',
   STALLED: 'STALLED',
   ONBOARDED: 'ONBOARDED',
+  NONE: 'NONE',
 };
 
 const pitchStatusEnum = {
@@ -59,6 +69,7 @@ export {
   interestsEnum,
   rolesEnum,
   racesEnum,
+  teamEnum,
   onboardingStatusEnum,
   pitchStatusEnum,
   assignmentStatusEnum,

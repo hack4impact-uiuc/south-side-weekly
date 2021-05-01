@@ -42,3 +42,9 @@
   .select-item {
   margin: 6px;
 }
+
+.teams-topics-wrapper .ui.checkbox label::before,
+.teams-topics-wrapper .ui.checkbox label::after {
+  background: #fff !important;
+  border: 1px solid #d4d4d5;
+}

@@ -5,11 +5,11 @@ import React, {
   SetStateAction,
   FormEvent,
 } from 'react';
-import { Checkbox, Form } from 'semantic-ui-react';
+import { Checkbox, CheckboxProps, Form } from 'semantic-ui-react';
 
 import WizardSvg from '../../components/WizardSvg';
 import { handleSelectGroupArray } from '../../utils/helpers';
-import { interestsEnum } from '../../utils/enums';
+import { interestsEnum, teamEnum } from '../../utils/enums';
 import '../../css/wizard/Onboard3.css';
 import WizardStar from '../../components/WizardStar';
 
@@ -40,8 +40,11 @@ const Onboard3: FC<IProps> = ({
    *
    * @param e the mouse event of clicking one of the current team select options
    */
-  const handleCurrentTeams = (event: FormEvent<HTMLInputElement>): void => {
-    handleSelectGroupArray(event, currentTeams, setCurrentTeams);
+  const handleCurrentTeams = (
+    _event: FormEvent<HTMLInputElement>,
+    data: CheckboxProps,
+  ): void => {
+    handleSelectGroupArray(data, currentTeams, setCurrentTeams);
   };
 
   /**
@@ -49,18 +52,25 @@ const Onboard3: FC<IProps> = ({
    *
    * @param e the mouse event from clicking one of the interests select optoins
    */
-  const handleInterests = (event: FormEvent<HTMLInputElement>): void => {
-    handleSelectGroupArray(event, interests, setInterests);
+  const handleInterests = (
+    _event: FormEvent<HTMLInputElement>,
+    data: CheckboxProps,
+  ): void => {
+    handleSelectGroupArray(data, interests, setInterests);
   };
 
   // All of the buttons to show for the current teams
   const currentTeamsButtons = [
-    { value: 'Editing', color: '#A5C4F2' },
-    { value: 'Fact-checking', color: '#CFE7C4' },
-    { value: 'Illustration', color: '#BAB9E9' },
-    { value: 'Photography', color: '#D8ACE8' },
-    { value: 'Visuals', color: '#BFEBE0' },
-    { value: 'Writing', color: '#A9D3E5' },
+    { display: 'Editing', value: teamEnum.EDITING, color: '#A5C4F2' },
+    {
+      display: 'Fact-checking',
+      value: teamEnum.FACT_CHECKING,
+      color: '#CFE7C4',
+    },
+    { display: 'Illustration', value: teamEnum.ILLUSTRATION, color: '#BAB9E9' },
+    { display: 'Photography', value: teamEnum.PHOTOGRAPHY, color: '#D8ACE8' },
+    { display: 'Visuals', value: teamEnum.VISUALS, color: '#BFEBE0' },
+    { display: 'Writing', value: teamEnum.WRITING, color: '#A9D3E5' },
   ];
 
   // All of the interests buttons to show
@@ -116,7 +126,11 @@ const Onboard3: FC<IProps> = ({
           <div className="select-group">
             {currentTeamsButtons.map((button) => (
               <Form.Field key={button.value} className="select-item">
-                <Checkbox label={button.value} onChange={handleCurrentTeams} />
+                <Checkbox
+                  label={button.display}
+                  value={button.value}
+                  onChange={handleCurrentTeams}
+                />
               </Form.Field>
             ))}
           </div>
@@ -129,7 +143,11 @@ const Onboard3: FC<IProps> = ({
           <div className="select-group">
             {interestsButtons.map((button) => (
               <Form.Field key={button.value} className="select-item">
-                <Checkbox label={button.display} onChange={handleInterests} />
+                <Checkbox
+                  label={button.display}
+                  value={button.value}
+                  onChange={handleInterests}
+                />
               </Form.Field>
             ))}
           </div>

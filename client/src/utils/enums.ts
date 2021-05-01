@@ -30,6 +30,21 @@ export const interestsEnum = {
   NONE: 'NONE',
 };
 
+export const gendersEnum = {
+  MAN: 'MAN',
+  WOMAN: 'WOMAN',
+  NONBINARY: 'NONBINARY',
+  OTHER: 'OTHER',
+};
+
+export const pronounsEnum = {
+  HEHIS: 'He/his',
+  SHEHER: 'She/her',
+  THEYTHEM: 'They/them',
+  ZEHIR: 'Ze/hir',
+  OTHER: 'Other',
+};
+
 export const racesEnum = {
   AMERICAN_INDIAN_OR_ALASKAN_NATIVE: 'AMERICAN INDIAN OR ALASKAN NATIVE',
   BLACK_OR_AFRICAN_AMERICAN: 'BLACK OR AFRICAN AMERICAN',
