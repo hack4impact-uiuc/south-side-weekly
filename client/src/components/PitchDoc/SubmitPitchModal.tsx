@@ -14,6 +14,7 @@ function SubmitPitchModal(): ReactElement {
   const [pitchTitle, setPitchTitle] = useState<string>('');
   const [pitchDescription, setPitchDescription] = useState<string>('');
   const [pitchLink, setPitchLink] = useState<string>('');
+  //TODO: replace hardcoded value with actual current user
   const userId = '6031a866c70ec705736a79e5';
 
   const pitchData: { [key: string]: number | string | string[] | boolean } = {
