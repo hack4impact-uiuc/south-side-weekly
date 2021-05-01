@@ -46,6 +46,7 @@ const AddResourceModal: FC<IProps> = ({ onAdd }): ReactElement => {
       onClose={() => setOpen(false)}
       onOpen={() => setOpen(true)}
       open={open}
+      className="add-resource-modal"
       trigger={<Button className="add-resource-button">Add Resource</Button>}
       closeIcon
     >
