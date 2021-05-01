@@ -257,6 +257,7 @@ const ClaimPitchModal: FC<IProps> = ({
         }}
         onOpen={() => setFirstOpen(false)}
         open={secondOpen}
+        className="claim-pitch-success"
         closeIcon
       >
         <Modal.Actions>

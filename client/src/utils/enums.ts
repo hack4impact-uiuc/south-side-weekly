@@ -59,6 +59,20 @@ export const pages = {
   USERS: 'USERS',
 };
 
+export const pitchStatusEnum = {
+  APPROVED: 'APPROVED',
+  PENDING: 'PENDING',
+  REJECTED: 'REJECTED',
+  NONE: 'NONE',
+};
+
+export const assignmentStatusEnum = {
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  ABANDONED: 'ABANDONED',
+  NONE: 'NONE',
+};
+
 export const colorEnum = {
   EDITING: '#D98E8E',
   WRITING: '#E4B28E',
