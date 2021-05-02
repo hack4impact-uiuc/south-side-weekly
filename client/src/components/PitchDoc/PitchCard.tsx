@@ -26,7 +26,7 @@ const PitchCard: FC<IProps> = ({ pitch, openTeams, ...rest }): ReactElement => {
       return '';
     }
 
-    const shortenedDescriptionLength = 97;
+    const shortenedDescriptionLength = MAX_DESCRIPTION_LENGTH - 3;
 
     if (description.length > MAX_DESCRIPTION_LENGTH) {
       return `${description.substring(0, shortenedDescriptionLength)}...`;
@@ -43,7 +43,7 @@ const PitchCard: FC<IProps> = ({ pitch, openTeams, ...rest }): ReactElement => {
             {pitch.topics.length < 1 && (
               <Label style={{ background: 'lightgrey' }}>{`N/A`}</Label>
             )}
-            {pitch.topics.slice(0, 3).map((topic, idx) => (
+            {pitch.topics.slice(0, MAX_LABELS).map((topic, idx) => (
               <Label
                 style={{
                   backgroundColor:
@@ -67,7 +67,7 @@ const PitchCard: FC<IProps> = ({ pitch, openTeams, ...rest }): ReactElement => {
               <Label style={{ background: 'lightgrey' }}>{`N/A`}</Label>
             )}
             {Object.keys(openTeams)
-              .slice(0, 3)
+              .slice(0, MAX_LABELS)
               .map((team: string, idx: number) => (
                 <Label
                   style={{
@@ -82,18 +82,6 @@ const PitchCard: FC<IProps> = ({ pitch, openTeams, ...rest }): ReactElement => {
             {Object.keys(openTeams).length > MAX_LABELS && (
               <span>{`+${Object.keys(openTeams).length - MAX_LABELS}`}</span>
             )}
-
-            {/* {Object.entries(openTeams).map(([team], idx) => (
-              <Label
-                style={{
-                  backgroundColor: currentTeamsButtons[teamToTeamsButtons[team]],
-                }}
-                onClick={defaultOnClick}
-                key={idx}
-              >
-                {teamToTeamsButtons[team]}
-              </Label>
-            ))} */}
           </Label.Group>
         </Card.Content>
       </Card>

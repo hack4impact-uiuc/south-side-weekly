@@ -18,32 +18,10 @@ const isValidMongoId = (id: string): boolean => ObjectId.isValid(id);
 router.get(
   '/',
   errorWrap(async (req: Request, res: Response) => {
-    if (req.query.unclaimed === 'true') {
+    if (req.query.approved === 'true') {
       // Gets all unclaimed pitches
       const pitches = await Pitch.find({
         pitchStatus: pitchStatusEnum.APPROVED,
-        $expr: {
-          $or: [
-            { $lt: ['$teams.writers.current', '$teams.writers.target'] },
-            { $lt: ['$teams.editors.current', '$teams.editors.target'] },
-            { $lt: ['$teams.visuals.current', '$teams.visuals.target'] },
-            {
-              $lt: [
-                '$teams.illustration.current',
-                '$teams.illustration.target',
-              ],
-            },
-            {
-              $lt: ['$teams.photography.current', '$teams.photography.target'],
-            },
-            {
-              $lt: [
-                '$teams.factChecking.current',
-                '$teams.factChecking.target',
-              ],
-            },
-          ],
-        },
       });
       res.status(200).json({
         message: `Successfully retrieved unclaimed pitches.`,

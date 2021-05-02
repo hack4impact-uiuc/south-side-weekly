@@ -19,7 +19,7 @@ import {
   sortPitchesByDeadlineDate,
 } from '../../utils/helpers';
 import Sidebar from '../../components/Sidebar';
-import { getPitches, isError } from '../../utils/apiWrapper';
+import { getApprovedPitches, isError } from '../../utils/apiWrapper';
 import PitchGrid from '../../components/PitchDoc/PitchGrid';
 import SubmitPitchModal from '../../components/PitchDoc/SubmitPitchModal';
 import Logo from '../../assets/ssw-form-header.png';
@@ -94,7 +94,7 @@ const searchReducer = (
 };
 
 function PitchDoc(): ReactElement {
-  const [unclaimedPitches, setUnclaimedPitches] = useState<IPitch[]>([]);
+  const [approvedPitches, setApprovedPitches] = useState<IPitch[]>([]);
   const [filterKeys, setFilterKeys] = useState<IFilterKeys>(initialFilterKeys);
 
   const [searchState, dispatchSearch] = useReducer(
@@ -154,10 +154,10 @@ function PitchDoc(): ReactElement {
    * Calls /pitch api through api wrapper to get ALL pitches
    */
   const getAllUnclaimedPitches = async (): Promise<void> => {
-    const resp = await getPitches();
+    const resp = await getApprovedPitches();
 
     if (!isError(resp) && resp.data) {
-      setUnclaimedPitches(resp.data.result);
+      setApprovedPitches(resp.data.result);
     }
   };
 
@@ -170,22 +170,18 @@ function PitchDoc(): ReactElement {
    */
   const handleSearch = useCallback(
     (searchTerm: string): IPitch[] => {
-      let searchPitches = [...unclaimedPitches];
+      let searchPitches = [...approvedPitches];
       searchTerm = searchTerm.toLowerCase().trim();
 
-      console.log(searchTerm);
-
-      searchPitches = unclaimedPitches.filter((pitch: IPitch) => {
+      searchPitches = approvedPitches.filter((pitch: IPitch) => {
         // Avoid null fields in database
         const pitchName = pitch.name ? pitch.name.toLowerCase() : '';
-        console.log(pitchName);
         return pitchName.includes(searchTerm);
       });
 
-      console.log(searchPitches);
       return searchPitches;
     },
-    [unclaimedPitches],
+    [approvedPitches],
   );
 
   /**
@@ -196,7 +192,7 @@ function PitchDoc(): ReactElement {
       dispatchSearch({
         type: SearchAction.FINISH_SEARCH,
         query: '',
-        pitches: unclaimedPitches,
+        pitches: approvedPitches,
       });
       return;
     }
@@ -220,7 +216,7 @@ function PitchDoc(): ReactElement {
     }, millisecondDelay);
 
     return () => clearTimeout(delaySearch);
-  }, [searchState.query, unclaimedPitches, handleSearch]);
+  }, [searchState.query, approvedPitches, handleSearch]);
 
   /**
    * Filters a set of pitches passed in
