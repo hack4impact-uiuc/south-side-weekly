@@ -192,9 +192,9 @@ const getPitchTeams = (pitch: IPitch): string[] => {
 
   pitchTeams.forEach((team) => {
     const teamName: string = team[0];
-    const assingments = team[1];
+    const assignments = team[1];
 
-    if (assingments.target > 0) {
+    if (assignments.target > 0) {
       teams.push(teamName.toUpperCase());
     }
   });
