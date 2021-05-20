@@ -208,6 +208,7 @@ const ClaimPitchModal: FC<IProps> = ({
                       <Checkbox
                         className="checkbox"
                         onClick={() => handleCheckboxes(team)}
+                        disabled={value.target - value.current === 0}
                       />
                     </div>
                     <Label
