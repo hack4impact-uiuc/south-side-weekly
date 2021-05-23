@@ -23,6 +23,7 @@ import {
   loadUser,
   isError,
 } from '../../utils/apiWrapper';
+import { getUserFirstName } from '../../utils/helpers';
 import Homerun from '../../assets/homerun.svg';
 import Pfp from '../../assets/pfp.svg';
 import {
@@ -106,7 +107,7 @@ const ClaimPitchModal: FC<IProps> = ({
       const res = await loadUser(userId);
       if (!isError(res)) {
         contributors[
-          `${res.data.result.firstName} ${res.data.result.lastName}`
+          `${getUserFirstName(res.data.result)} ${res.data.result.lastName}`
         ] = temp_pfp;
       }
     }
@@ -115,7 +116,7 @@ const ClaimPitchModal: FC<IProps> = ({
       const res = await loadUser(pitch.pitchAuthor);
       if (!isError(res)) {
         setPitchAuthor(
-          `${res.data.result.firstName} ${res.data.result.lastName}`,
+          `${getUserFirstName(res.data.result)} ${res.data.result.lastName}`,
         );
       }
     }
@@ -123,7 +124,7 @@ const ClaimPitchModal: FC<IProps> = ({
       const res = await loadUser(pitch.approvedBy);
       if (!isError(res)) {
         setApprovedBy(
-          `${res.data.result.firstName} ${res.data.result.lastName}`,
+          `${getUserFirstName(res.data.result)} ${res.data.result.lastName}`,
         );
       }
     }
@@ -207,6 +208,7 @@ const ClaimPitchModal: FC<IProps> = ({
                       <Checkbox
                         className="checkbox"
                         onClick={() => handleCheckboxes(team)}
+                        disabled={value.target - value.current === 0}
                       />
                     </div>
                     <Label

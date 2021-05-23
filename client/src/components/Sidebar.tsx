@@ -1,9 +1,10 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Icon } from 'semantic-ui-react';
+import { Icon, Image } from 'semantic-ui-react';
 
 import { pages } from '../utils/enums';
 import { getCurrentUser, isError } from '../utils/apiWrapper';
+import DefaultProfile from '../assets/default_profile.png';
 import '../css/Sidebar.css';
 
 interface IProps {
@@ -12,6 +13,7 @@ interface IProps {
 
 function Sidebar({ currentPage }: IProps): ReactElement {
   const [currentUserId, setCurrentUserId] = useState<string>('');
+  const [profilePicture, setProfilePicture] = useState<string>(DefaultProfile);
 
   useEffect(() => {
     const getUser = async (): Promise<void> => {
@@ -19,6 +21,10 @@ function Sidebar({ currentPage }: IProps): ReactElement {
 
       if (!isError(res)) {
         setCurrentUserId(res.data.result._id);
+
+        if (res.data.result.profilePic) {
+          setProfilePicture(res.data.result.profilePic);
+        }
       }
     };
 
@@ -48,7 +54,7 @@ function Sidebar({ currentPage }: IProps): ReactElement {
   return (
     <div className="sidebar">
       <div className="profile-pic">
-        <img src="https://i.ibb.co/RPcYkT7/IMG-5592.jpg" alt="IMG-5592" />
+        <Image src={profilePicture} alt="IMG-5592" />
       </div>
       <div className="vertical-nav">
         <Link to="/homepage">

@@ -59,7 +59,7 @@ export const pages = {
   USERS: 'USERS',
 };
 
-export const colorEnum = {
+export const interestsColorEnum = {
   EDITING: '#D98E8E',
   WRITING: '#E4B28E',
   VISUALS: '#98B9D7',

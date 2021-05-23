@@ -133,10 +133,10 @@ export const getUsers = (): Promise<
  * Returns all unclaimed and approved pitches
  * Returns GET_UNCLAIMED_PITCHES_FAIL upon failure
  */
-export const getUnclaimedPitches = (): Promise<
+export const getApprovedPitches = (): Promise<
   AxiosResponse<GetPitchesResponseType> | ErrorWrapper
 > => {
-  const requestString = `${BASE_URL}/pitch?unclaimed=true`;
+  const requestString = `${BASE_URL}/pitch?approved=true`;
   return axios
     .get(requestString, {
       headers: {
