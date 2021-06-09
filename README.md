@@ -45,7 +45,7 @@ This application is built with React + Semantic UI, Typescript, Express, MongoDB
     <td align="center"><a href="https://www.linkedin.com/in/sahithimuthyala/"><img src="./photos/sahi-muth.jpg" width="75px;" alt="Sahi Muthyala"/><br /><b>Sahithi Muthyala</b></a><br /><sub>Product Manager</sub></td>
     <td align="center"><a href="https://www.linkedin.com/in/amit-m-sawhney/"><img src="./photos/amit-sawhney.jpg" width="75px;" alt="Amit Sawhney"/><br /><b>Amit Sawhney</b></a><br /><sub>Technical Lead</sub></td>
     <td align="center"><a href="https://www.linkedin.com/in/alicesf2/"><img src="./photos/alice-fang.jpeg" width="75px;" alt="Alice Fang"/><br /><b>Alice Fang</b></a><br /><sub>Former Technical Lead</sub></td>
-    <td align="center"><a href="https://www.linkedin.com/in/mustafasyedali/"><img src="./photos/mustafa-ali.jpg" width="75px;" alt="Mustafa Ali"/><br /><b>Mustafa Ali</b></a><br /><sub>Product Designer</sub></td>
+    <td align="center"><a href="https://www.linkedin.com/in/mustafasyedali/"><img src="./photos/mustafa-ali.jpg" width="75px;" alt="Mustafa Ali"/><br /><b>Mustafa Ali</b></a><br /><sub>Former Product Designer</sub></td>
     </tr>
     <tr>
     <td align="center"><a href="https://www.linkedin.com/in/danielle-yang-254308154/"><img src="./photos/danielle-yang.jpg" width="75px;" height="75px;" alt="Danielle Yang"/><br /><b>Danielle Yang</b></a><br /><sub>Software Developer</sub></td>
