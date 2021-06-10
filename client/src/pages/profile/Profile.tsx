@@ -15,6 +15,7 @@ import {
   loadUser,
   saveUser,
   getCurrentUser,
+  getUserPermissionsByID,
 } from '../../utils/apiWrapper';
 import { teamEnum, interestsEnum, pages } from '../../utils/enums';
 import Sidebar from '../../components/Sidebar';
@@ -53,6 +54,13 @@ function Profile(): ReactElement {
   const [interests, setInterests] = useState<Array<string>>([]);
   const [edit, setEdit] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
+  const [userPermissions, setUserPermissions] = useState<{
+    view: string[];
+    edit: string[];
+  }>({
+    view: [],
+    edit: [],
+  });
   const [errorMessage, setErrorMessage] = useState<string>(DefaultProfile);
 
   const [isEditable, setIsEditable] = useState<boolean>(false);
@@ -245,8 +253,17 @@ function Profile(): ReactElement {
       }
     };
 
+    const getUserPermissions = async (): Promise<void> => {
+      const res = await getUserPermissionsByID(userId);
+
+      if (!isError(res)) {
+        setUserPermissions(res.data.result);
+      }
+    };
+
     getActiveUser();
     getProfile();
+    getUserPermissions();
   }, [getProfile, userId]);
 
   return (
@@ -390,7 +407,7 @@ function Profile(): ReactElement {
                   transparent
                   value={roleOptions[role]}
                   readOnly="true"
-                  disabled={edit}
+                  disabled={!userPermissions.edit.includes('role')}
                 />
               </div>
 
@@ -486,23 +503,25 @@ function Profile(): ReactElement {
                     transparent
                     value={email}
                     readOnly
-                    disabled={edit}
+                    disabled={!userPermissions.edit.includes('email')}
                   />
                 )}
               </div>
 
-              <div className="input-wrapper">
-                <div>
-                  <img className="icon" src={Phone} alt="mail" />
+              {userPermissions.view.includes('phone') && (
+                <div className="input-wrapper">
+                  <div>
+                    <img className="icon" src={Phone} alt="mail" />
+                  </div>
+                  <Input
+                    className="input-field"
+                    transparent
+                    value={phoneNumber}
+                    readOnly={!edit}
+                    onChange={(e) => setPhoneNumber(e.currentTarget.value)}
+                  />
                 </div>
-                <Input
-                  className="input-field"
-                  transparent
-                  value={phoneNumber}
-                  readOnly={!edit}
-                  onChange={(e) => setPhoneNumber(e.currentTarget.value)}
-                />
-              </div>
+              )}
             </div>
             <div className="right-col">
               <div className="input-wrapper">

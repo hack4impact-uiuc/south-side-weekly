@@ -69,6 +69,13 @@ export interface EditResourceResponseType {
   result: IResource;
 }
 
+export interface UserPermissionsType {
+  result: {
+    view: string[];
+    edit: string[];
+  };
+}
+
 /**
  * Returns a sample API response to demonstrate a working backend
  * Returns GET_SAMPLE_FAIL upon failure
@@ -382,6 +389,26 @@ export const editResource = (
     })
     .catch((error) => ({
       type: 'EDIT_RESOURCE_FAIL',
+      error,
+    }));
+};
+
+/**
+ * Gets a user's permissions
+ * Returns GET_USER_PERMISSIONS_FAIL upon failure
+ */
+export const getUserPermissionsByID = (
+  userId: string,
+): Promise<AxiosResponse<UserPermissionsType> | ErrorWrapper> => {
+  const requestString = `${BASE_URL}/users/${userId}/permissions`;
+  return axios
+    .get(requestString, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'GET_USER_PERMISSIONS_FAIL',
       error,
     }));
 };
