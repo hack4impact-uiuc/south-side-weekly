@@ -157,11 +157,13 @@ export const getCurrentUser = (): Promise<
   AxiosResponse<GetCurrentUserResponseType> | ErrorWrapper
 > => {
   const requestString = `${BASE_URL}/auth/currentUser`;
+  console.log(axios.defaults);
   return axios
     .get(requestString, {
       headers: {
         'Content-Type': 'application/JSON',
       },
+      withCredentials: true
     })
     .catch((error) => ({
       type: 'GET_CURRENT_USER_FAIL',

@@ -25,12 +25,14 @@ function Login(): ReactElement {
   const [user, setUser] = useState({ role: '' });
 
   const checkLoggedIn = (): void => {
-    const requestString = `${BASE_URL}/auth/currentuser`;
+    const requestString = `/api/auth/currentuser`;
+    console.log(axios.defaults);
     axios
       .get(requestString, {
         headers: {
           'Content-Type': 'application/JSON',
         },
+        withCredentials: true
       })
       .then((res) => {
         setAuthed(res.data.success);
