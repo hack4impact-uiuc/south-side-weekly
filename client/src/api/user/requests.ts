@@ -17,7 +17,7 @@ const getCurrentUser = async (): Promise<
   AxiosResponse<Types.GetCurrentUserResponseType> | ErrorWrapper
 > => await get('/auth/currentUser', 'GET_CURRENT_USER_FAIL');
 
-// Gets a single user from the user's id
+// Returns a single user from the user's id
 const getUser = async (
   userId: string,
 ): Promise<AxiosResponse<Types.GetUserResponseType> | ErrorWrapper> =>
