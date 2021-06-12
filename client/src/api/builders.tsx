@@ -13,15 +13,15 @@ const instance = axios.create({
  * General GET request
  *
  * @param url the endpoint url to GET request to
- * @param failMessage a fail macro of the form GET_FUNCTION_FAIL
+ * @param type the type of error that is thrown
  * @returns API endpoint response object
  */
 const get = async <T,>(
   url: string,
-  failMessage: string,
+  type: string,
 ): Promise<AxiosResponse<T> | ErrorWrapper> =>
   await instance.get(url).catch((error) => ({
-    type: `GET_${failMessage}`,
+    type: type,
     error,
   }));
 
@@ -30,16 +30,16 @@ const get = async <T,>(
  *
  * @param url the endpoint url to POST request to
  * @param body the body of data to pass to the endpoint
- * @param failMessage a fail macro of the form POST_FUNCTION_FAIL
+ * @param type the type of error that is thrown
  * @returns API endpoint response object
  */
 const post = async <T,>(
   url: string,
   body: T,
-  failMessage: string,
+  type: string,
 ): Promise<AxiosResponse<T> | ErrorWrapper> =>
   await instance.post(url, { body }).catch((error) => ({
-    type: `POST_${failMessage}`,
+    type: type,
     error,
   }));
 
@@ -48,16 +48,16 @@ const post = async <T,>(
  *
  * @param url the endpoint url to PUT request to
  * @param body the body of data to pass to the endpoint
- * @param failMessage a fail macro of the form PUT_FUNCTION_FAIL
+ * @param type the type of error that is thrown
  * @returns API endopint response object
  */
 const put = async <T,>(
   url: string,
   body: T,
-  failMessage: string,
+  type: string,
 ): Promise<AxiosResponse<T> | ErrorWrapper> =>
   await instance.put(url, { body }).catch((error) => ({
-    type: `PUT_${failMessage}`,
+    type: type,
     error,
   }));
 
@@ -65,15 +65,15 @@ const put = async <T,>(
  * General DELETE request
  *
  * @param url the endpoint url to DELETE request to
- * @param failMessage a fail macro of the form DELETE_FUNCTION_FAIL
+ * @param type the type of error that is thrown
  * @returns API endpoint response object
  */
 const del = async <T,>(
   url: string,
-  failMessage: string,
+  type: string,
 ): Promise<AxiosResponse<T> | ErrorWrapper> =>
   await instance.put(url).catch((error) => ({
-    type: `DELETE_${failMessage}`,
+    type: type,
     error,
   }));
 
