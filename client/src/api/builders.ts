@@ -16,7 +16,7 @@ const instance = axios.create({
  * @param type the type of error that is thrown
  * @returns API endpoint response object
  */
-const get = async <T,>(
+const get = async <T>(
   url: string,
   type: string,
 ): Promise<AxiosResponse<T> | ErrorWrapper> =>

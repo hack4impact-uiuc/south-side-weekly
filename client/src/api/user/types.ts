@@ -1,4 +1,5 @@
 import { IUser, IPitch } from 'ssw-common';
+
 import { ApiResponseBase } from '../types';
 export interface GetUsersResponseType extends ApiResponseBase {
   result: IUser[];
