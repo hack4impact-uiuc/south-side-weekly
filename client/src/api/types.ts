@@ -6,3 +6,7 @@ export interface ErrorWrapper {
 }
 
 export type ApiResponse<T> = AxiosResponse<T> | ErrorWrapper;
+
+export interface ApiResponseBase {
+  message: string;
+}

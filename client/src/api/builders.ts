@@ -33,11 +33,11 @@ const get = async <T,>(
  * @param type the type of error that is thrown
  * @returns API endpoint response object
  */
-const post = async <T,>(
+const post = async <T1, T2>(
   url: string,
-  body: T,
+  body: T1,
   type: string,
-): Promise<AxiosResponse<T> | ErrorWrapper> =>
+): Promise<AxiosResponse<T2> | ErrorWrapper> =>
   await instance.post(url, { body }).catch((error) => ({
     type: type,
     error,
@@ -51,11 +51,11 @@ const post = async <T,>(
  * @param type the type of error that is thrown
  * @returns API endopint response object
  */
-const put = async <T,>(
+const put = async <T1, T2>(
   url: string,
-  body: T,
+  body: T1,
   type: string,
-): Promise<AxiosResponse<T> | ErrorWrapper> =>
+): Promise<AxiosResponse<T2> | ErrorWrapper> =>
   await instance.put(url, { body }).catch((error) => ({
     type: type,
     error,
@@ -68,7 +68,7 @@ const put = async <T,>(
  * @param type the type of error that is thrown
  * @returns API endpoint response object
  */
-const del = async <T,>(
+const del = async <T>(
   url: string,
   type: string,
 ): Promise<AxiosResponse<T> | ErrorWrapper> =>
@@ -83,7 +83,7 @@ const del = async <T,>(
  * @param res the response to check if errored
  * @returns true if response errored, else false
  */
-const isError = <T,>(res: ApiResponse<T>): res is ErrorWrapper =>
+const isError = <T>(res: ApiResponse<T>): res is ErrorWrapper =>
   (res as ErrorWrapper).error !== undefined;
 
 /**
