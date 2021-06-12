@@ -16,10 +16,10 @@ const instance = axios.create({
  * @param failMessage a fail macro of the form GET_FUNCTION_FAIL
  * @returns API endpoint response object
  */
-const get = async (
+const get = async <T,>(
   url: string,
   failMessage: string,
-): Promise<AxiosResponse<any> | ErrorWrapper> =>
+): Promise<AxiosResponse<T> | ErrorWrapper> =>
   await instance.get(url).catch((error) => ({
     type: `GET_${failMessage}`,
     error,
@@ -33,12 +33,11 @@ const get = async (
  * @param failMessage a fail macro of the form POST_FUNCTION_FAIL
  * @returns API endpoint response object
  */
-const post = async (
+const post = async <T,>(
   url: string,
-  // eslint-disable-next-line
-  body: any,
+  body: T,
   failMessage: string,
-): Promise<AxiosResponse<any> | ErrorWrapper> =>
+): Promise<AxiosResponse<T> | ErrorWrapper> =>
   await instance.post(url, { body }).catch((error) => ({
     type: `POST_${failMessage}`,
     error,
@@ -52,12 +51,11 @@ const post = async (
  * @param failMessage a fail macro of the form PUT_FUNCTION_FAIL
  * @returns API endopint response object
  */
-const put = async (
+const put = async <T,>(
   url: string,
-  // eslint-disable-next-line
-  body: any,
+  body: T,
   failMessage: string,
-): Promise<AxiosResponse<any> | ErrorWrapper> =>
+): Promise<AxiosResponse<T> | ErrorWrapper> =>
   await instance.put(url, { body }).catch((error) => ({
     type: `PUT_${failMessage}`,
     error,
@@ -70,10 +68,10 @@ const put = async (
  * @param failMessage a fail macro of the form DELETE_FUNCTION_FAIL
  * @returns API endpoint response object
  */
-const del = async (
+const del = async <T,>(
   url: string,
   failMessage: string,
-): Promise<AxiosResponse<any> | ErrorWrapper> =>
+): Promise<AxiosResponse<T> | ErrorWrapper> =>
   await instance.put(url).catch((error) => ({
     type: `DELETE_${failMessage}`,
     error,
@@ -85,9 +83,8 @@ const del = async (
  * @param res the response to check if errored
  * @returns true if response errored, else false
  */
-export function isError<T>(res: ApiResponse<T>): res is ErrorWrapper {
-  return (res as ErrorWrapper).error !== undefined;
-}
+const isError = <T,>(res: ApiResponse<T>): res is ErrorWrapper =>
+  (res as ErrorWrapper).error !== undefined;
 
 /**
  * Constructs an URI with url parameters based on endpoint
@@ -116,4 +113,4 @@ const buildURI = (
   return uri.href;
 };
 
-export { buildURI, get, post, put, del };
+export { buildURI, get, post, put, del, isError };
