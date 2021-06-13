@@ -63,7 +63,7 @@ const ClaimPitchModal: FC<IProps> = ({
   const pitchData: { [key: string]: number | string } = {};
 
   const claimPitch = async (): Promise<void> => {
-    const pitchRes = await updatePitchContributors(userId, pitch._id);
+    const pitchRes = await updatePitchContributors(pitch._id, userId);
     const claimedRes = await updateUserClaimedPitches(userId, pitch._id);
     setData();
     const updateRes = await updatePitch(pitchData, pitch._id);
