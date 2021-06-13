@@ -5,6 +5,7 @@ import { ErrorWrapper, ApiResponse } from './types';
 
 // Generalized axios configuration
 axios.defaults.headers.common['Content-Type'] = 'application/json';
+axios.defaults.withCredentials = true;
 const instance = axios.create({
   baseURL: BASE_URL,
 });
@@ -38,7 +39,7 @@ const post = async <T1, T2>(
   body: T1,
   type: string,
 ): Promise<AxiosResponse<T2> | ErrorWrapper> =>
-  await instance.post(url, { body }).catch((error) => ({
+  await instance.post(url, { ...body }).catch((error) => ({
     type: type,
     error,
   }));
@@ -56,7 +57,7 @@ const put = async <T1, T2>(
   body: T1,
   type: string,
 ): Promise<AxiosResponse<T2> | ErrorWrapper> =>
-  await instance.put(url, { body }).catch((error) => ({
+  await instance.put(url, { ...body }).catch((error) => ({
     type: type,
     error,
   }));
@@ -72,7 +73,7 @@ const del = async <T>(
   url: string,
   type: string,
 ): Promise<AxiosResponse<T> | ErrorWrapper> =>
-  await instance.put(url).catch((error) => ({
+  await instance.delete(url).catch((error) => ({
     type: type,
     error,
   }));
