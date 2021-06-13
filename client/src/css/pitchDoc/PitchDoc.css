@@ -25,6 +25,26 @@ body {
   text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
 }
 
+.content-wrapper .buttons-section {
+  text-align: center;
+  padding-right: 150px;
+}
+
+.content-wrapper .admin-pitch-btn {
+  font-style: normal;
+  font-weight: 520;
+  font-size: 15px;
+  line-height: 15px;
+  color: #f7fafb;
+  background: #3d4f91;
+  border-radius: 8.96604px;
+  box-shadow: 0px 3.31765px 3.31765px rgba(0, 0, 0, 0.25),
+    inset 0px 3.31765px 3.31765px rgba(0, 0, 0, 0.25);
+  height: 75%;
+  margin-top: 1.8rem;
+  margin-right: 30px;
+}
+
 .content-wrapper .container {
   display: flex;
   flex-wrap: wrap;
