@@ -1,5 +1,10 @@
 export { getCurrentUser } from './auth';
-export { getUser, getUsers, claimPitch, updateUser } from './user';
+export {
+  getUser,
+  getUsers,
+  updateUserClaimedPitches,
+  updateUser,
+} from './user';
 export {
   getApprovedPitches,
   getOpenTeams,

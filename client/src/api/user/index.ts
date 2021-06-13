@@ -19,7 +19,7 @@ const getUser = async (
   await get(`${USER_ENDPOINT}/${userId}`, 'GET_USER_FAIL');
 
 // Adds a pitch to a user's claimed pitches
-const claimPitch = async (
+const updateUserClaimedPitches = async (
   userId: string,
   pitchId: string,
 ): Promise<AxiosResponse<Types.GetUserPitchesResponseType> | ErrorWrapper> =>
@@ -38,4 +38,4 @@ const updateUser = async (
 ): Promise<AxiosResponse<Types.GetUserResponseType> | ErrorWrapper> =>
   await put(`${USER_ENDPOINT}/${userId}`, profileData, 'UPDATE_USER_FAIL');
 
-export { getUsers, getUser, claimPitch, updateUser };
+export { getUsers, getUser, updateUserClaimedPitches, updateUser };

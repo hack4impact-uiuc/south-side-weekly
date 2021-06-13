@@ -18,7 +18,7 @@ import { IPitch } from 'ssw-common';
 import {
   getOpenTeams,
   updatePitchContributors,
-  claimPitch as claimUserPitch,
+  updateUserClaimedPitches,
   updatePitch,
   getUser,
   isError,
@@ -64,7 +64,7 @@ const ClaimPitchModal: FC<IProps> = ({
 
   const claimPitch = async (): Promise<void> => {
     const pitchRes = await updatePitchContributors(userId, pitch._id);
-    const claimedRes = await claimUserPitch(userId, pitch._id);
+    const claimedRes = await updateUserClaimedPitches(userId, pitch._id);
     setData();
     const updateRes = await updatePitch(pitchData, pitch._id);
     if (!isError(pitchRes) && !isError(claimedRes) && !isError(updateRes)) {
