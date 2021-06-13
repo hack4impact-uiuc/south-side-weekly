@@ -12,11 +12,6 @@ const getUsers = async (): Promise<
   AxiosResponse<Types.GetUsersResponseType> | ErrorWrapper
 > => await get(USER_ENDPOINT, 'GET_USERS_FAIL');
 
-// Returns the logged in user
-const getCurrentUser = async (): Promise<
-  AxiosResponse<Types.GetCurrentUserResponseType> | ErrorWrapper
-> => await get('/auth/currentUser', 'GET_CURRENT_USER_FAIL');
-
 // Returns a single user from the user's id
 const getUser = async (
   userId: string,
@@ -30,7 +25,7 @@ const claimPitch = async (
 ): Promise<AxiosResponse<Types.GetUserPitchesResponseType> | ErrorWrapper> =>
   await put(
     `${USER_ENDPOINT}/${userId}/pitches`,
-    pitchId,
+    { pitchId },
     'UPDATE_USER_PITCHES_FAIL',
   );
 
@@ -43,4 +38,4 @@ const updateUser = async (
 ): Promise<AxiosResponse<Types.GetUserResponseType> | ErrorWrapper> =>
   await put(`${USER_ENDPOINT}/${userId}`, profileData, 'UPDATE_USER_FAIL');
 
-export { getUsers, getCurrentUser, getUser, claimPitch, updateUser };
+export { getUsers, getUser, claimPitch, updateUser };

@@ -5,10 +5,6 @@ export interface GetUsersResponseType extends ApiResponseBase {
   result: IUser[];
 }
 
-export interface GetCurrentUserResponseType extends ApiResponseBase {
-  result: IUser;
-}
-
 export interface GetUserPitchesResponseType extends ApiResponseBase {
   result: IPitch[];
 }
