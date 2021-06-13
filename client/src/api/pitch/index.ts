@@ -22,7 +22,7 @@ const updatePitchContributors = async (
 ): Promise<AxiosResponse<Types.GetPitchesResponseType> | ErrorWrapper> =>
   await put(
     `${PITCH_ENDPOINT}/${pitchId}/contributors`,
-    userId,
+    { userId },
     'UPDATE_PITCH_CONTRIBUTORS_FAIL',
   );
 
