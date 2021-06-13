@@ -133,10 +133,10 @@ export const getUsers = (): Promise<
  * Returns all unclaimed and approved pitches
  * Returns GET_UNCLAIMED_PITCHES_FAIL upon failure
  */
-export const getUnclaimedPitches = (): Promise<
+export const getApprovedPitches = (): Promise<
   AxiosResponse<GetPitchesResponseType> | ErrorWrapper
 > => {
-  const requestString = `${BASE_URL}/pitch?unclaimed=true`;
+  const requestString = `${BASE_URL}/pitch?approved=true`;
   return axios
     .get(requestString, {
       headers: {
@@ -145,6 +145,26 @@ export const getUnclaimedPitches = (): Promise<
     })
     .catch((error) => ({
       type: 'GET_UNCLAIMED_PITCHES_FAIL',
+      error,
+    }));
+};
+
+/**
+ * Returns all pending pitches
+ * Returns GET_PENDING_PITCHES_FAIL upon failure
+ */
+export const getPendingPitches = (): Promise<
+  AxiosResponse<GetPitchesResponseType> | ErrorWrapper
+> => {
+  const requestString = `${BASE_URL}/pitch?pending=true`;
+  return axios
+    .get(requestString, {
+      headers: {
+        'Content-Type': 'application/JSON',
+      },
+    })
+    .catch((error) => ({
+      type: 'GET_PENDING_PITCHES_FAIL',
       error,
     }));
 };

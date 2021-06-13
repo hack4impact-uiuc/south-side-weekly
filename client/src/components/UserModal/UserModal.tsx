@@ -3,8 +3,9 @@ import { Modal, Image, Grid, Button, Icon } from 'semantic-ui-react';
 
 import { IUser } from '../../../../common/index';
 import '../../css/UserModal.css';
-import { colorEnum } from '../../utils/enums';
+import { interestsColorEnum } from '../../utils/enums';
 import DefaultProfile from '../../assets/default_profile.png';
+import { getUserFirstName } from '../../utils/helpers';
 
 interface ILabelProps {
   text: string;
@@ -17,15 +18,23 @@ interface ILabelProps {
  * @returns a formatted label
  */
 const ModalLabel: FC<ILabelProps> = ({ text }): ReactElement => {
+  /**
+   * Determines what color a label should be based on its text
+   *
+   * @param colorText the text to decipher
+   * @returns the hex code of the color to display
+   */
   const getLabelColor = (colorText: string): string => {
-    const value_index: number = Object.keys(colorEnum).indexOf(colorText);
+    const value_index: number = Object.keys(interestsColorEnum).indexOf(
+      colorText,
+    );
 
     // Return a default color
     if (value_index < 0) {
       return 'grey';
     }
 
-    return Object.values(colorEnum)[value_index];
+    return Object.values(interestsColorEnum)[value_index];
   };
 
   return (
@@ -66,7 +75,7 @@ const UserModal: FC<IModalProps> = ({
                 circular
                 size="small"
                 src={user.profilePic ? user.profilePic : DefaultProfile}
-                alt={`${user.firstName} ${user.lastName}`}
+                alt={`${getUserFirstName(user)} ${user.lastName}`}
               />
             </Grid.Row>
             <Grid.Row>
@@ -79,7 +88,7 @@ const UserModal: FC<IModalProps> = ({
           <Grid.Column verticalAlign="middle" width={5}>
             <Grid.Row>
               <h1 className="user-information name">
-                <b>{`${user.firstName} ${user.lastName}`}</b>
+                <b>{`${getUserFirstName(user)} ${user.lastName}`}</b>
               </h1>
             </Grid.Row>
             <Grid.Row>
