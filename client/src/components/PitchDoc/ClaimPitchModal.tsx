@@ -18,11 +18,11 @@ import { IPitch } from 'ssw-common';
 import {
   getOpenTeams,
   updatePitchContributors,
-  updateClaimedPitches,
+  claimPitch as claimUserPitch,
   updatePitch,
-  loadUser,
+  getUser,
   isError,
-} from '../../utils/apiWrapper';
+} from '../../api';
 import { getUserFirstName } from '../../utils/helpers';
 import Homerun from '../../assets/homerun.svg';
 import Pfp from '../../assets/pfp.svg';
@@ -64,7 +64,7 @@ const ClaimPitchModal: FC<IProps> = ({
 
   const claimPitch = async (): Promise<void> => {
     const pitchRes = await updatePitchContributors(userId, pitch._id);
-    const claimedRes = await updateClaimedPitches(userId, pitch._id);
+    const claimedRes = await claimUserPitch(userId, pitch._id);
     setData();
     const updateRes = await updatePitch(pitchData, pitch._id);
     if (!isError(pitchRes) && !isError(claimedRes) && !isError(updateRes)) {
@@ -101,10 +101,10 @@ const ClaimPitchModal: FC<IProps> = ({
     }
   }, [pitch._id]);
 
-  const getUser = useCallback(async () => {
+  const loadUser = useCallback(async () => {
     const contributors: { [name: string]: string } = {};
     for (const userId of pitch.assignmentContributors) {
-      const res = await loadUser(userId);
+      const res = await getUser(userId);
       if (!isError(res)) {
         contributors[
           `${getUserFirstName(res.data.result)} ${res.data.result.lastName}`
@@ -113,7 +113,7 @@ const ClaimPitchModal: FC<IProps> = ({
     }
     setPitchContributors(contributors);
     if (pitch.pitchAuthor) {
-      const res = await loadUser(pitch.pitchAuthor);
+      const res = await getUser(pitch.pitchAuthor);
       if (!isError(res)) {
         setPitchAuthor(
           `${getUserFirstName(res.data.result)} ${res.data.result.lastName}`,
@@ -121,7 +121,7 @@ const ClaimPitchModal: FC<IProps> = ({
       }
     }
     if (pitch.approvedBy) {
-      const res = await loadUser(pitch.approvedBy);
+      const res = await getUser(pitch.approvedBy);
       if (!isError(res)) {
         setApprovedBy(
           `${getUserFirstName(res.data.result)} ${res.data.result.lastName}`,
@@ -138,8 +138,8 @@ const ClaimPitchModal: FC<IProps> = ({
   useEffect(() => {
     getTeams();
     setSelectedTeams([]);
-    getUser();
-  }, [firstOpen, getTeams, getUser]);
+    loadUser();
+  }, [firstOpen, getTeams, loadUser]);
 
   return (
     <>

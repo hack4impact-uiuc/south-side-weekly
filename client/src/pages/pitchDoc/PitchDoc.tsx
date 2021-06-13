@@ -19,7 +19,7 @@ import {
   sortPitchesByDeadlineDate,
 } from '../../utils/helpers';
 import Sidebar from '../../components/Sidebar';
-import { getApprovedPitches, isError } from '../../utils/apiWrapper';
+import { getApprovedPitches, isError } from '../../api';
 import PitchGrid from '../../components/PitchDoc/PitchGrid';
 import SubmitPitchModal from '../../components/PitchDoc/SubmitPitchModal';
 import Logo from '../../assets/ssw-form-header.png';

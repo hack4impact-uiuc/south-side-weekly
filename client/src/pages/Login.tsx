@@ -5,8 +5,8 @@ import { Button } from 'semantic-ui-react';
 import Loader from 'react-loader-spinner';
 
 import Header from '../components/Header';
-import buildURI from '../utils/apiHelpers';
-import { BASE_URL, FRONTEND_BASE_URL } from '../utils/apiWrapper';
+import { buildURI } from '../api';
+import { BASE_URL, FRONTEND_BASE_URL } from '../api/urls';
 import { rolesEnum } from '../utils/enums';
 
 const LOGIN_FAILURE_QUERY_PARAM = 'failure';
