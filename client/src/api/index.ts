@@ -1,30 +1,15 @@
-import {
-  getUser,
-  getUsers,
-  getCurrentUser,
-  claimPitch,
-  updateUser,
-} from './user';
-import {
-  getApprovedPitches,
-  getOpenTeams,
-  updatePitch,
-  updatePitchContributors,
-} from './pitch';
-import {
-  createResource,
-  getAllResources,
-  deleteResource,
-  editResource,
-} from './resource';
-import { isError } from './builders';
-
-export { getUser, getUsers, getCurrentUser, claimPitch, updateUser };
+export { getCurrentUser } from './auth';
+export { getUser, getUsers, claimPitch, updateUser } from './user';
 export {
   getApprovedPitches,
   getOpenTeams,
   updatePitch,
   updatePitchContributors,
-};
-export { createResource, getAllResources, deleteResource, editResource };
-export { isError };
+} from './pitch';
+export {
+  createResource,
+  getAllResources,
+  deleteResource,
+  editResource,
+} from './resource';
+export { isError, buildURI } from './builders';
