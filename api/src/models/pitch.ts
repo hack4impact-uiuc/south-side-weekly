@@ -26,6 +26,7 @@ const Pitch = new mongoose.Schema({
   },
   assignmentGoogleDocLink: { type: String, default: null },
   assignmentContributors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  pendingContributors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   topics: [
     {
       type: String,
