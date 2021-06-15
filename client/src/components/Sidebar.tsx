@@ -21,10 +21,7 @@ function Sidebar({ currentPage }: IProps): ReactElement {
 
       if (!isError(res)) {
         setCurrentUserId(res.data.result._id);
-
-        if (res.data.result.profilePic) {
-          setProfilePicture(res.data.result.profilePic);
-        }
+        setProfilePicture(res.data.result.profilePic);
       }
     };
 
