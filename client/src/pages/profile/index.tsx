@@ -88,8 +88,6 @@ const Profile = (): ReactElement => {
       currentOptions.filter((item) => standardOptions.indexOf(item) < 0),
     );
 
-    console.log(dropdownOptions);
-
     setDropdownOptions({ ...dropdownOptions });
   };
 
