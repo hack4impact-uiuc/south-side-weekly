@@ -8,19 +8,7 @@ import {
 } from 'semantic-ui-react';
 
 import './styles.css';
-
-interface InputOnChangeData extends InputProps {
-  value: string;
-}
-interface ISocialsInput {
-  icon: SemanticICONS;
-  value: string;
-  readOnly: boolean;
-  onChange?: (
-    event: React.ChangeEvent<HTMLInputElement>,
-    data: InputOnChangeData,
-  ) => void;
-}
+import { ISocialsInput } from './types';
 
 const SocialsInput: FC<ISocialsInput> = ({
   icon,
