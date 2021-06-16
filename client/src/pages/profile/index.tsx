@@ -40,7 +40,7 @@ import {
 
 import SocialsInput from './SocialsInput';
 import BasicInfoInput from './BasicInfoInput';
-import './Profile.css';
+import './styles.css';
 import { IDropdownOptions, ParamTypes } from './types';
 
 const Profile = (): ReactElement => {

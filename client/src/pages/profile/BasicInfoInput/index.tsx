@@ -2,6 +2,8 @@ import React, { FC, ReactElement } from 'react';
 import { IUser } from 'ssw-common';
 import { Input } from 'semantic-ui-react';
 
+import './styles.css';
+
 interface IBasicInfoInput {
   label: keyof IUser;
   value: string;

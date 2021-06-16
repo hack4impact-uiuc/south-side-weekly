@@ -2,6 +2,8 @@ import React, { ReactElement, FC } from 'react';
 import { SemanticICONS, Grid, Icon, Input } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
+import './styles.css';
+
 interface ISocialsInput {
   icon: SemanticICONS;
   label: keyof IUser;
