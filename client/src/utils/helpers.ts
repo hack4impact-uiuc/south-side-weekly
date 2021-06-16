@@ -364,6 +364,13 @@ const getUserFirstName = (user: IUser): string => {
   return user.preferredName;
 };
 
+const isISODate = (value: string): boolean => !isNaN(Date.parse(value));
+
+const formatDate = (date: string): string => date.split('T')[0];
+
+const convertToClassName = (str: string): string =>
+  str.toLowerCase().split(' ').join('-');
+
 export {
   handleSelectGroupArray,
   parseArrayToSemanticDropdownOptions,
@@ -379,4 +386,7 @@ export {
   filterPitchesByTeams,
   sortPitchesByDeadlineDate,
   getUserFirstName,
+  isISODate,
+  formatDate,
+  convertToClassName,
 };

@@ -1,3 +1,5 @@
+import { IUser } from 'ssw-common';
+
 // All of the interests buttons to show
 const interestsButtons: { [key: string]: string } = {
   Cannabis: '#CFE7C4',
@@ -67,10 +69,72 @@ const enumToInterestButtons: { [key: string]: string } = {
   'VISUAL ARTS': 'Visual Arts',
 };
 
+const allInterests = [
+  'POLITICS',
+  'EDUCATION',
+  'HOUSING',
+  'LIT',
+  'MUSIC',
+  'VISUAL ARTS',
+  'STAGE AND SCREEN',
+  'FOOD AND LAND',
+  'NATURE',
+  'TRANSPORTATION',
+  'HEALTH',
+  'CANNABIS',
+  'IMMIGRATION',
+  'IMMIGRATION',
+  'FUN',
+];
+
+const allTeams = [
+  'EDITING',
+  'WRITING',
+  'VISUALS',
+  'PHOTOGRAPHY',
+  'ILLUSTRATION',
+  'FACT-CHECKING',
+];
+
+const allGenders = ['Man', 'Woman', 'Nonbinary', 'Other'];
+const allPronouns = ['He/his', 'She/her', 'They/them', 'Ze/hir', 'Other'];
+const allRoles = ['ADMIN', 'STAFF', 'CONTRIBUTOR'];
+
+const emptyUser: IUser = {
+  _id: '',
+  firstName: '',
+  lastName: '',
+  preferredName: '',
+  email: '',
+  phone: '',
+  oauthID: '',
+  genders: [''],
+  pronouns: [''],
+  dateJoined: '',
+  masthead: false,
+  onboarding: '',
+  profilePic: '',
+  portfolio: '',
+  linkedIn: '',
+  twitter: '',
+  claimedPitches: [''],
+  submittedPitches: [''],
+  currentTeams: [''],
+  role: '',
+  races: [''],
+  interests: [''],
+};
+
 export {
   interestsButtons,
   currentTeamsButtons,
   dbTeamToDisplay,
   enumToInterestButtons,
   teamToTeamsButtons,
+  allInterests,
+  allTeams,
+  allGenders,
+  allPronouns,
+  allRoles,
+  emptyUser,
 };
