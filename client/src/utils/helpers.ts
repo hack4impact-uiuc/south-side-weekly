@@ -371,6 +371,16 @@ const formatDate = (date: string): string => date.split('T')[0];
 const convertToClassName = (str: string): string =>
   str.toLowerCase().split(' ').join('-');
 
+const updateUserField = <T extends keyof IUser>(
+  user: IUser,
+  key: T,
+  value: IUser[T],
+): IUser => {
+  const userCopy = { ...user };
+  userCopy[key] = value;
+  return userCopy;
+};
+
 export {
   handleSelectGroupArray,
   parseArrayToSemanticDropdownOptions,
@@ -389,4 +399,5 @@ export {
   isISODate,
   formatDate,
   convertToClassName,
+  updateUserField,
 };

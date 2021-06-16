@@ -110,7 +110,7 @@ const emptyUser: IUser = {
   oauthID: '',
   genders: [''],
   pronouns: [''],
-  dateJoined: '',
+  dateJoined: new Date(Date.now()).toISOString(),
   masthead: false,
   onboarding: '',
   profilePic: '',

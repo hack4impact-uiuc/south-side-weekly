@@ -1,3 +1,20 @@
+.input-field {
+  position: relative;
+  align-items: center;
+  display: flex;
+  border: solid black 1px;
+  border-radius: 1rem;
+  width: 100%;
+  height: 13%;
+  margin-top: 5px;
+  padding: 3px;
+  font-size: 14px !important;
+}
+
+.input-field span {
+  flex-grow: 1;
+}
+
 .edit-profile-btn {
   color: white !important;
   background-color: #3d4f91 !important;

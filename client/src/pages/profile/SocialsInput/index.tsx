@@ -1,23 +1,32 @@
 import React, { ReactElement, FC } from 'react';
-import { SemanticICONS, Grid, Icon, Input } from 'semantic-ui-react';
-import { IUser } from 'ssw-common';
+import {
+  SemanticICONS,
+  Grid,
+  Icon,
+  Input,
+  InputProps,
+} from 'semantic-ui-react';
 
 import './styles.css';
 
+interface InputOnChangeData extends InputProps {
+  value: string;
+}
 interface ISocialsInput {
   icon: SemanticICONS;
-  label: keyof IUser;
   value: string;
-  isEditMode: boolean;
-  updateUserField: <T extends keyof IUser>(key: T, value: IUser[T]) => void;
+  readOnly: boolean;
+  onChange?: (
+    event: React.ChangeEvent<HTMLInputElement>,
+    data: InputOnChangeData,
+  ) => void;
 }
 
 const SocialsInput: FC<ISocialsInput> = ({
   icon,
-  label,
   value,
-  isEditMode,
-  updateUserField,
+  readOnly,
+  onChange,
 }): ReactElement => (
   <Grid className="social-input" columns="equal">
     <Grid.Column className="col" width={2}>
@@ -29,9 +38,9 @@ const SocialsInput: FC<ISocialsInput> = ({
         style={{ border: 'solid 1px', borderRadius: '1rem', padding: '5px' }}
         fluid
         value={value}
-        readOnly={!isEditMode}
+        readOnly={readOnly}
         transparent
-        onChange={(e) => updateUserField(label, e.currentTarget.value)}
+        onChange={onChange}
       />
     </Grid.Column>
   </Grid>
