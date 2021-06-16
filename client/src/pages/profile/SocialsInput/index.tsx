@@ -1,11 +1,5 @@
 import React, { ReactElement, FC } from 'react';
-import {
-  SemanticICONS,
-  Grid,
-  Icon,
-  Input,
-  InputProps,
-} from 'semantic-ui-react';
+import { Grid, Icon, Input } from 'semantic-ui-react';
 
 import './styles.css';
 import { ISocialsInput } from './types';
