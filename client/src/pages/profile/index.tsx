@@ -84,6 +84,7 @@ const Profile = (): ReactElement => {
   ): void => {
     const currentOptions = dropdownOptions[dropdown];
     currentOptions.push(addedItem);
+
     dropdownOptions[dropdown] = standardOptions.concat(
       currentOptions.filter((item) => standardOptions.indexOf(item) < 0),
     );
@@ -123,6 +124,7 @@ const Profile = (): ReactElement => {
   const editTeams = (team: string): void => {
     const userCopy = { ...user };
     const currentIndex = user.currentTeams.indexOf(team);
+
     if (currentIndex >= 0) {
       user.currentTeams.splice(currentIndex, 1);
     } else if (user.currentTeams.length >= 2) {
@@ -130,6 +132,7 @@ const Profile = (): ReactElement => {
     } else {
       userCopy.currentTeams.push(team);
     }
+
     setUser(userCopy);
   };
 
@@ -137,6 +140,24 @@ const Profile = (): ReactElement => {
     const split = str.replace(/([a-z])([A-Z])/g, '$1 $2');
     return split.charAt(0).toUpperCase() + split.slice(1);
   };
+
+  const addGender = (value: string) =>
+    setUser(
+      updateUserField(
+        user,
+        'genders',
+        parseSemanticMultiSelectTypes(value!) as [string],
+      ),
+    );
+
+  const addPronoun = (value: string) =>
+    setUser(
+      updateUserField(
+        user,
+        'pronouns',
+        parseSemanticMultiSelectTypes(value!) as [string],
+      ),
+    );
 
   return (
     <>
@@ -243,15 +264,7 @@ const Profile = (): ReactElement => {
                           allGenders,
                         )
                       }
-                      onChange={(e, { value }) =>
-                        setUser(
-                          updateUserField(
-                            user,
-                            'genders',
-                            parseSemanticMultiSelectTypes(value!) as [string],
-                          ),
-                        )
-                      }
+                      onChange={(e, { value }) => addGender(value!.toString())}
                     />
                   </div>
                 ) : (
@@ -285,15 +298,7 @@ const Profile = (): ReactElement => {
                           allPronouns,
                         )
                       }
-                      onChange={(e, { value }) =>
-                        setUser(
-                          updateUserField(
-                            user,
-                            'pronouns',
-                            parseSemanticMultiSelectTypes(value!) as [string],
-                          ),
-                        )
-                      }
+                      onChange={(e, { value }) => addPronoun(value!.toString())}
                     />
                   </div>
                 ) : (
