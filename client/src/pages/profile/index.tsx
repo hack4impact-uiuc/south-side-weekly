@@ -141,7 +141,7 @@ const Profile = (): ReactElement => {
     return split.charAt(0).toUpperCase() + split.slice(1);
   };
 
-  const addGender = (value: string) =>
+  const addGender = (value: string): void =>
     setUser(
       updateUserField(
         user,
@@ -150,7 +150,7 @@ const Profile = (): ReactElement => {
       ),
     );
 
-  const addPronoun = (value: string) =>
+  const addPronoun = (value: string): void =>
     setUser(
       updateUserField(
         user,
