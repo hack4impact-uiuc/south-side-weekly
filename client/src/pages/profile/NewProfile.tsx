@@ -12,11 +12,28 @@ import {
   Dropdown,
 } from 'semantic-ui-react';
 
-import { isError, loadUser, saveUser } from '../../utils/apiWrapper';
+import {
+  isError,
+  loadUser,
+  saveUser,
+  getCurrentUser,
+} from '../../utils/apiWrapper';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import { pages } from '../../utils/enums';
+import DefaultProfile from '../../assets/default_profile.png';
 import {
+  allInterests,
+  allTeams,
+  allGenders,
+  allPronouns,
+  allRoles,
+  emptyUser,
+} from '../../utils/constants';
+import {
+  convertToClassName,
+  formatDate,
+  isISODate,
   parseArrayToSemanticDropdownOptions,
   parseSemanticMultiSelectTypes,
 } from '../../utils/helpers';
@@ -24,37 +41,9 @@ import {
 import SocialsInput from './SocialsInput';
 import BasicInfoInput from './BasicInfoInput';
 import './Profile.css';
-
-const emptyUser: IUser = {
-  _id: '',
-  firstName: '',
-  lastName: '',
-  preferredName: '',
-  email: '',
-  phone: '',
-  oauthID: '',
-  genders: [''],
-  pronouns: [''],
-  dateJoined: '',
-  masthead: false,
-  onboarding: '',
-  profilePic: '',
-  portfolio: '',
-  linkedIn: '',
-  twitter: '',
-  claimedPitches: [''],
-  submittedPitches: [''],
-  currentTeams: [''],
-  role: '',
-  races: [''],
-  interests: [''],
-};
+import { IDropdownOptions, ParamTypes } from './types';
 
 const Profile = (): ReactElement => {
-  interface ParamTypes {
-    userId: string;
-  }
-
   const basicInfoFields: (keyof IUser)[] = [
     'firstName',
     'lastName',
@@ -65,67 +54,13 @@ const Profile = (): ReactElement => {
     'dateJoined',
   ];
 
-  const interestFields = [
-    'POLITICS',
-    'EDUCATION',
-    'HOUSING',
-    'LIT',
-    'MUSIC',
-    'VISUAL ARTS',
-    'STAGE AND SCREEN',
-    'FOOD AND LAND',
-    'NATURE',
-    'TRANSPORTATION',
-    'HEALTH',
-    'CANNABIS',
-    'IMMIGRATION',
-    'IMMIGRATION',
-    'FUN',
-  ];
-
-  const teamFields = [
-    'EDITING',
-    'WRITING',
-    'VISUALS',
-    'PHOTOGRAPHY',
-    'ILLUSTRATION',
-    'FACT-CHECKING',
-  ];
-
-  const genderOptions = ['Man', 'Woman', 'Nonbinary', 'Other'];
-  const pronounOptions = ['He/his', 'She/her', 'They/them', 'Ze/hir', 'Other'];
-  const roleOptions = ['ADMIN', 'STAFF', 'CONTRIBUTOR'];
-
-  interface IDropdownOptions {
-    [key: string]: string[];
-  }
-
-  const dropdownOptions: IDropdownOptions = {
-    genders: genderOptions,
-    pronouns: pronounOptions,
-    role: roleOptions,
-  };
-
   const { userId } = useParams<ParamTypes>();
   const [user, setUser] = useState<IUser>(emptyUser);
+  const [currentUser, setCurrentUser] = useState<IUser>(emptyUser);
   const [tempUser, setTempUser] = useState<IUser>(emptyUser);
   const [isEditMode, setIsEditMode] = useState(false);
 
   // const [permissions, setPermissions] = useState();
-
-  const getDropDownOptions = (
-    genders: string[],
-    pronouns: string[],
-  ): IDropdownOptions => {
-    dropdownOptions['genders'] = genderOptions.concat(
-      genders.filter((item) => genderOptions.indexOf(item) < 0),
-    );
-    dropdownOptions['pronouns'] = pronounOptions.concat(
-      pronouns.filter((item) => pronounOptions.indexOf(item) < 0),
-    );
-
-    return dropdownOptions;
-  };
 
   useEffect(() => {
     const getUser = async (): Promise<void> => {
@@ -136,10 +71,37 @@ const Profile = (): ReactElement => {
       }
     };
 
+    const loadCurrentUser = async (): Promise<void> => {
+      const res = await getCurrentUser();
+
+      if (!isError(res)) {
+        setCurrentUser(res.data.result);
+      }
+    };
+
     getUser();
+    loadCurrentUser();
   }, [userId]);
 
-  const isISODate = (value: string): boolean => !isNaN(Date.parse(value));
+  const dropdownOptions: IDropdownOptions = {
+    genders: allGenders,
+    pronouns: allPronouns,
+    role: allRoles,
+  };
+
+  const getDropDownOptions = (
+    genders: string[],
+    pronouns: string[],
+  ): IDropdownOptions => {
+    dropdownOptions['genders'] = allGenders.concat(
+      genders.filter((item) => allGenders.indexOf(item) < 0),
+    );
+    dropdownOptions['pronouns'] = allPronouns.concat(
+      pronouns.filter((item) => allPronouns.indexOf(item) < 0),
+    );
+
+    return dropdownOptions;
+  };
 
   const formatFieldDisplay = (value: string): string => {
     if (value === 'null' || value === 'undefined') {
@@ -150,8 +112,6 @@ const Profile = (): ReactElement => {
 
     return value;
   };
-
-  const formatDate = (date: string): string => date.split('T')[0];
 
   const updateUserField = <T extends keyof IUser>(
     key: T,
@@ -180,14 +140,11 @@ const Profile = (): ReactElement => {
     }
   };
 
-  const convertToClassName = (str: string): string =>
-    str.toLowerCase().split(' ').join('-');
-
   const editInterests = (interest: string): void => {
     const userCopy = { ...user };
     const currentIndex = user.interests.indexOf(interest);
     if (currentIndex >= 0) {
-      user.interests.splice(currentIndex, 1);
+      userCopy.interests.splice(currentIndex, 1);
     } else {
       userCopy.interests.push(interest);
     }
@@ -221,13 +178,23 @@ const Profile = (): ReactElement => {
                 flexDirection: 'column',
               }}
             >
-              <Button
-                size="medium"
-                className="edit-profile-btn"
-                onClick={startEditMode}
-                content="Edit Profile"
+              {(userId === currentUser._id || currentUser.role === 'ADMIN') && (
+                <Button
+                  size="medium"
+                  className="edit-profile-btn"
+                  onClick={startEditMode}
+                  content="Edit Profile"
+                />
+              )}
+              <Image
+                size="small"
+                circular
+                src={
+                  user.profilePic !== '' && user.profilePic !== null
+                    ? user.profilePic
+                    : DefaultProfile
+                }
               />
-              <Image size="small" circular src={user.profilePic} />
               {isEditMode && (
                 <Button.Group>
                   <Button
@@ -304,7 +271,7 @@ const Profile = (): ReactElement => {
                       />
                     ) : (
                       <>
-                        {user.role === 'ADMIN' ? (
+                        {currentUser.role === 'ADMIN' ? (
                           <div key={index} className="input-field">
                             <span>{field}</span>
                             <Dropdown
@@ -383,7 +350,7 @@ const Profile = (): ReactElement => {
                 ))
               ) : (
                 <Container style={{ paddingLeft: '20%' }}>
-                  {interestFields.map((interest, index) => (
+                  {allInterests.map((interest, index) => (
                     <div key={index} style={{ textAlign: 'left' }}>
                       <Checkbox
                         value={interest}
@@ -409,9 +376,9 @@ const Profile = (): ReactElement => {
                 ))
               ) : (
                 <>
-                  {user.role === 'ADMIN' ? (
+                  {currentUser.role === 'ADMIN' ? (
                     <Container style={{ paddingLeft: '20%' }}>
-                      {teamFields.map((team, index) => (
+                      {allTeams.map((team, index) => (
                         <div key={index} style={{ textAlign: 'left' }}>
                           <Checkbox
                             value={team}
