@@ -12,7 +12,7 @@ interface ILabelProps {
 }
 
 /**
- * Builds a Label for the User Modal
+ * Builds a Label for the User Modal.
  *
  * @param text the text to display within the label
  * @returns a formatted label
