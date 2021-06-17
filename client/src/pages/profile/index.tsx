@@ -215,7 +215,7 @@ const Profile = (): ReactElement => {
                 </Button.Group>
               )}
             </Grid.Column>
-            <Grid.Column stretched width={5}>
+            <Grid.Column width={5}>
               <h2>Basic information</h2>
               <Container style={{ marginBottom: '5px' }}>
                 <div className="input-field">
