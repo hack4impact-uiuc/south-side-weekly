@@ -359,7 +359,7 @@ const Profile = (): ReactElement => {
                           updateUserField(
                             user,
                             'dateJoined',
-                            new Date(e.currentTarget.value).toISOString(),
+                            new Date(e.currentTarget.value),
                           ),
                         )
                       }

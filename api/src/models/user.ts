@@ -20,7 +20,7 @@ const User = new mongoose.Schema({
   oauthID: { type: String, default: null, unique: true, sparse: true },
   genders: [{ type: String, default: null }],
   pronouns: [{ type: String, default: null }],
-  dateJoined: { type: String, default: Date.now },
+  dateJoined: { type: Date, default: Date.now },
   masthead: { type: Boolean, default: false },
   onboardingStatus: {
     type: String,

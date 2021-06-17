@@ -11,7 +11,7 @@ export interface IUser {
   oauthID: string;
   genders: [string];
   pronouns: [string];
-  dateJoined: string;
+  dateJoined: Date;
   masthead: boolean;
   onboarding: string;
   profilePic: string;
