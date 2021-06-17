@@ -372,6 +372,7 @@ const Profile = (): ReactElement => {
                     <Input
                       value={new Date(user.dateJoined).toLocaleDateString(
                         'en-US',
+                        { timeZone: 'UTC' },
                       )}
                       transparent
                       readOnly={!isEditMode}
