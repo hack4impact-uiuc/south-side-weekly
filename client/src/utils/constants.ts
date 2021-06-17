@@ -83,7 +83,6 @@ const allInterests = [
   'HEALTH',
   'CANNABIS',
   'IMMIGRATION',
-  'IMMIGRATION',
   'FUN',
 ];
 
