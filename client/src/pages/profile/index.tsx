@@ -141,7 +141,7 @@ const Profile = (): ReactElement => {
     return split.charAt(0).toUpperCase() + split.slice(1);
   };
 
-  const addGender = (value: string): void =>
+  const addGender = (value: string[]): void =>
     setUser(
       updateUserField(
         user,
@@ -150,7 +150,7 @@ const Profile = (): ReactElement => {
       ),
     );
 
-  const addPronoun = (value: string): void =>
+  const addPronoun = (value: string[]): void =>
     setUser(
       updateUserField(
         user,
@@ -272,7 +272,7 @@ const Profile = (): ReactElement => {
                           allGenders,
                         )
                       }
-                      onChange={(e, { value }) => addGender(value!.toString())}
+                      onChange={(e, { value }) => addGender(value as string[])}
                     />
                   </div>
                 ) : (
@@ -306,7 +306,7 @@ const Profile = (): ReactElement => {
                           allPronouns,
                         )
                       }
-                      onChange={(e, { value }) => addPronoun(value!.toString())}
+                      onChange={(e, { value }) => addPronoun(value as string[])}
                     />
                   </div>
                 ) : (
