@@ -22,6 +22,7 @@ import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import { pages } from '../../utils/enums';
 import DefaultProfile from '../../assets/default_profile.png';
+import Masthead from '../../assets/masthead.svg';
 import {
   allInterests,
   allTeams,
@@ -32,7 +33,6 @@ import {
 } from '../../utils/constants';
 import {
   convertToClassName,
-  formatDate,
   parseArrayToSemanticDropdownOptions,
   parseSemanticMultiSelectTypes,
   updateUserField,
@@ -164,7 +164,7 @@ const Profile = (): ReactElement => {
       <Sidebar currentPage={pages.PROFILE} />
       <Header />
       <div style={{ marginLeft: '15%', marginTop: '5%' }}>
-        <Grid>
+        <Grid stackable>
           <Grid.Row columns={4}>
             <Grid.Column
               style={{
@@ -181,6 +181,7 @@ const Profile = (): ReactElement => {
                   content="Edit Profile"
                 />
               )}
+
               <Image
                 size="small"
                 circular
@@ -190,6 +191,13 @@ const Profile = (): ReactElement => {
                     : DefaultProfile
                 }
               />
+              {user.masthead && (
+                <Image
+                  style={{ marginTop: '-25px' }}
+                  size="small"
+                  src={Masthead}
+                />
+              )}
               {isEditMode && (
                 <Button.Group>
                   <Button
@@ -341,9 +349,9 @@ const Profile = (): ReactElement => {
                   <div className="input-field">
                     <span>{parseCamelCase('dateJoined')}</span>
                     <Input
-                      value={formatDate(
-                        new Date(user.dateJoined).toISOString(),
-                      )}
+                      value={
+                        new Date(user.dateJoined).toISOString().split('T')[0]
+                      }
                       readOnly={!isEditMode}
                       transparent
                       onChange={(e) =>
@@ -362,8 +370,8 @@ const Profile = (): ReactElement => {
                   <div className="input-field">
                     <span>{`${parseCamelCase('dateJoined')}:`}</span>
                     <Input
-                      value={formatDate(
-                        new Date(user.dateJoined).toISOString(),
+                      value={new Date(user.dateJoined).toLocaleDateString(
+                        'en-US',
                       )}
                       transparent
                       readOnly={!isEditMode}
