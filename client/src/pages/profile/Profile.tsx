@@ -21,7 +21,6 @@ import { teamEnum, interestsEnum, pages } from '../../utils/enums';
 import Sidebar from '../../components/Sidebar';
 import Mail from '../../assets/mail.svg';
 import Phone from '../../assets/phone.svg';
-import Linkedin from '../../assets/linkedin.svg';
 import Globe from '../../assets/globe.svg';
 import Twitter from '../../assets/twitter.svg';
 import Masthead from '../../assets/masthead.svg';
@@ -522,89 +521,72 @@ function Profile(): ReactElement {
                   />
                 </div>
               )}
+              {edit && (
+                <Input
+                  className="input-field"
+                  transparent
+                  value={linkedIn}
+                  readOnly={!edit}
+                  onChange={(e) => setLinkedIn(e.currentTarget.value)}
+                />
+              )}
             </div>
-            <div className="right-col">
-              <div className="input-wrapper">
-                <div>
-                  <img className="icon" src={Linkedin} alt="linkedin" />
-                </div>
-                {!edit && (
-                  <a
-                    rel="noreferrer"
-                    target="_blank"
-                    className="link"
-                    href={`${linkedIn}`}
-                  >
-                    {linkedIn}
-                  </a>
-                )}
-                {edit && (
-                  <Input
-                    className="input-field"
-                    transparent
-                    value={linkedIn}
-                    readOnly={!edit}
-                    onChange={(e) => setLinkedIn(e.currentTarget.value)}
-                  />
-                )}
-              </div>
 
-              <div className="input-wrapper">
-                <div>
-                  <img className="icon" src={Globe} alt="globe" />
-                </div>
-                {!edit && (
-                  <a
-                    rel="noreferrer"
-                    target="_blank"
-                    className="link"
-                    href={`${portfolio}`}
-                  >
-                    {portfolio}
-                  </a>
-                )}
-                {edit && (
-                  <Input
-                    className="input-field"
-                    transparent
-                    value={portfolio}
-                    readOnly={!edit}
-                    onChange={(e) => setPortfolio(e.currentTarget.value)}
-                  />
-                )}
+            <div className="input-wrapper">
+              <div>
+                <img className="icon" src={Globe} alt="globe" />
               </div>
-
-              <div className="input-wrapper">
-                <div>
-                  <img className="icon" src={Twitter} alt="twitter" />
-                </div>
-                {!edit && (
-                  <a
-                    rel="noreferrer"
-                    target="_blank"
-                    className="link"
-                    href={`${twitter}`}
-                  >
-                    {twitter}
-                  </a>
-                )}
-                {edit && (
-                  <Input
-                    className="input-field"
-                    transparent
-                    value={twitter}
-                    readOnly={!edit}
-                    onChange={(e) => setTwitter(e.currentTarget.value)}
-                  />
-                )}
-              </div>
+              {!edit && (
+                <a
+                  rel="noreferrer"
+                  target="_blank"
+                  className="link"
+                  href={`${portfolio}`}
+                >
+                  {portfolio}
+                </a>
+              )}
+              {edit && (
+                <Input
+                  className="input-field"
+                  transparent
+                  value={portfolio}
+                  readOnly={!edit}
+                  onChange={(e) => setPortfolio(e.currentTarget.value)}
+                />
+              )}
             </div>
-            {error && (
-              <Message className="message-wrapper" negative>
-                <Message.Header>{errorMessage}</Message.Header>
-              </Message>
-            )}
+
+            <div className="input-wrapper">
+              <div>
+                <img className="icon" src={Twitter} alt="twitter" />
+              </div>
+              {!edit && (
+                <a
+                  rel="noreferrer"
+                  target="_blank"
+                  className="link"
+                  href={`${twitter}`}
+                >
+                  {twitter}
+                </a>
+              )}
+              {edit && (
+                <Input
+                  className="input-field"
+                  transparent
+                  value={twitter}
+                  readOnly={!edit}
+                  onChange={(e) => setTwitter(e.currentTarget.value)}
+                />
+              )}
+            </div>
           </div>
+          {error && (
+            <Message className="message-wrapper" negative>
+              <Message.Header>{errorMessage}</Message.Header>
+            </Message>
+          )}
         </div>
       </div>
     </>

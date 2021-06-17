@@ -6,13 +6,13 @@ import { SessionUser } from './helpers';
 // All fields in user
 const allFields = Object.keys(User.schema.paths);
 
-const neverViewableFields = ['oauthID', '__v'];
+const nonViewableFields = ['oauthID', '__v'];
 
-const neverEditableFields = ['_id', 'oauthID', '__v'];
+const nonEditableFields = ['_id', 'oauthID', '__v'];
 // Fields that non-Admins and other users cannot view
-const nonViewableFiles = ['phone'];
+const privateFields = ['phone'];
 // Fields that non-Admins cannot edit
-const nonEditableFields = ['currentTeams', 'role', 'email'];
+const adminEditOnlyFields = ['currentTeams', 'role', 'email'];
 
 /**
  * Gets the fields of another user the current user can view
@@ -25,13 +25,13 @@ const getViewableFields = (
   currentUser: SessionUser,
   userId: string,
 ): string[] => {
-  const viewableFields = difference(allFields, neverViewableFields);
+  const viewableFields = difference(allFields, nonViewableFields);
 
   if (isAdmin(currentUser) || currentUser._id.toString() === userId) {
     return viewableFields;
   }
 
-  return difference(viewableFields, nonViewableFiles);
+  return difference(viewableFields, privateFields);
 };
 
 /**
@@ -45,11 +45,11 @@ const getEditableFields = (
   currentUser: SessionUser,
   userId: string,
 ): string[] => {
-  const editableFields = difference(allFields, neverEditableFields);
+  const editableFields = difference(allFields, nonEditableFields);
   if (isAdmin(currentUser)) {
     return editableFields;
   } else if (currentUser._id.toString() === userId) {
-    return difference(editableFields, nonEditableFields);
+    return difference(editableFields, adminEditOnlyFields);
   }
 
   return [];
