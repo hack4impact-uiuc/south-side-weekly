@@ -364,6 +364,7 @@ const Profile = (): ReactElement => {
                         )
                       }
                       type="date"
+                      max={new Date(Date.now()).toISOString().split('T')[0]}
                     />
                   </div>
                 ) : (
