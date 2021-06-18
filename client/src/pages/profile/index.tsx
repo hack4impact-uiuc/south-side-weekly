@@ -350,9 +350,10 @@ const Profile = (): ReactElement => {
                   <div className="input-field">
                     <span>{`${parseCamelCase('dateJoined')}:`}</span>
                     <Input
-                      value={new Date(
-                        user.dateJoined,
-                      ).toLocaleDateString('en-US', { timeZone: 'UTC' })}
+                      value={new Date(user.dateJoined).toLocaleDateString(
+                        'en-US',
+                        { timeZone: 'UTC' },
+                      )}
                       transparent
                     />
                   </div>
