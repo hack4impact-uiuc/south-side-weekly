@@ -388,7 +388,7 @@ const Profile = (): ReactElement => {
               )}
             </Grid.Column>
             <Grid.Column textAlign="center" width={3}>
-              <HeaderTag as="h2">My Roles</HeaderTag>
+              <HeaderTag as="h2">My Teams</HeaderTag>
               {!isEditMode || currentUser.role !== 'ADMIN' ? (
                 user.currentTeams.sort().map((team, index) => (
                   <div
@@ -401,16 +401,16 @@ const Profile = (): ReactElement => {
               ) : (
                 <Container>
                   <div className="checkbox-group">
-                  {allTeams.map((team, index) => (
-                    <Checkbox
-                      key={index}
-                      className="checkbox"
-                      value={team}
-                      label={convertToCapitalized(team)}
-                      checked={user.currentTeams.includes(team)}
-                      onChange={(e, data) => editTeams(`${data.value!}`)}
-                    />
-                  ))}
+                    {allTeams.map((team, index) => (
+                      <Checkbox
+                        key={index}
+                        className="checkbox"
+                        value={team}
+                        label={convertToCapitalized(team)}
+                        checked={user.currentTeams.includes(team)}
+                        onChange={(e, data) => editTeams(`${data.value!}`)}
+                      />
+                    ))}
                   </div>
                 </Container>
               )}
