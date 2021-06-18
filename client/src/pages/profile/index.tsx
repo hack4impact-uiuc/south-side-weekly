@@ -32,6 +32,7 @@ import {
   emptyUser,
 } from '../../utils/constants';
 import {
+  convertToCapitalized,
   convertToClassName,
   parseArrayToSemanticDropdownOptions,
   parseSemanticMultiSelectTypes,
@@ -339,7 +340,7 @@ const Profile = (): ReactElement => {
                   <div className="input-field">
                     <span>{`${parseCamelCase('role')}:`}</span>
                     <Input
-                      value={user.role}
+                      value={convertToCapitalized(user.role)}
                       transparent
                       readOnly={!isEditMode}
                     />
@@ -390,7 +391,7 @@ const Profile = (): ReactElement => {
                     className={`field-label ${convertToClassName(interest)}`}
                     key={index}
                   >
-                    {interest}
+                    {convertToCapitalized(interest)}
                   </div>
                 ))
               ) : (
@@ -399,7 +400,7 @@ const Profile = (): ReactElement => {
                     <div key={index} style={{ textAlign: 'left' }}>
                       <Checkbox
                         value={interest}
-                        label={interest}
+                        label={convertToCapitalized(interest)}
                         checked={user.interests.includes(interest)}
                         onChange={(e, data) => editInterests(`${data.value!}`)}
                       />
@@ -416,7 +417,7 @@ const Profile = (): ReactElement => {
                     className={`field-label ${convertToClassName(team)}`}
                     key={index}
                   >
-                    {team}
+                    {convertToCapitalized(team)}
                   </div>
                 ))
               ) : (
@@ -425,7 +426,7 @@ const Profile = (): ReactElement => {
                     <div key={index} style={{ textAlign: 'left' }}>
                       <Checkbox
                         value={team}
-                        label={team}
+                        label={convertToCapitalized(team)}
                         checked={user.currentTeams.includes(team)}
                         onChange={(e, data) => editTeams(`${data.value!}`)}
                       />

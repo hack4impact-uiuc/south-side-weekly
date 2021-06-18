@@ -377,6 +377,12 @@ const updateUserField = <T extends keyof IUser>(
   return userCopy;
 };
 
+const convertToCapitalized = (str: string): string => {
+  const lowercase = str.toLowerCase();
+
+  return lowercase.charAt(0).toUpperCase() + lowercase.slice(1);
+};
+
 export {
   handleSelectGroupArray,
   parseArrayToSemanticDropdownOptions,
@@ -394,4 +400,5 @@ export {
   getUserFirstName,
   convertToClassName,
   updateUserField,
+  convertToCapitalized,
 };
