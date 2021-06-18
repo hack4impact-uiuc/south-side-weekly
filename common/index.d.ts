@@ -38,6 +38,7 @@ export interface IPitch {
   assignmentStatus: string;
   assignmentGoogleDocLink: string;
   assignmentContributors: [string];
+  pendingContributors: [string];
   topics: [string];
   teams: {
     writers: {
