@@ -6,6 +6,7 @@ import { pages } from '../utils/enums';
 import { getCurrentUser, isError } from '../utils/apiWrapper';
 import DefaultProfile from '../assets/default_profile.png';
 import '../css/Sidebar.css';
+import { getUserProfilePic } from '../utils/helpers';
 
 interface IProps {
   currentPage: string;
@@ -20,8 +21,9 @@ function Sidebar({ currentPage }: IProps): ReactElement {
       const res = await getCurrentUser();
 
       if (!isError(res)) {
-        setCurrentUserId(res.data.result._id);
-        setProfilePicture(res.data.result.profilePic);
+        const user = res.data.result;
+        setCurrentUserId(user._id);
+        setProfilePicture(getUserProfilePic(user));
       }
     };
 
