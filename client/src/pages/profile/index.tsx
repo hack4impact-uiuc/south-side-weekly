@@ -22,7 +22,6 @@ import {
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import { pages } from '../../utils/enums';
-import DefaultProfile from '../../assets/default_profile.png';
 import Masthead from '../../assets/masthead.svg';
 import {
   allInterests,
@@ -35,6 +34,7 @@ import {
 import {
   convertToCapitalized,
   convertToClassName,
+  getUserProfilePic,
   parseArrayToSemanticDropdownOptions,
   parseSemanticMultiSelectTypes,
   updateUserField,
@@ -165,7 +165,7 @@ const Profile = (): ReactElement => {
     <>
       <Sidebar currentPage={pages.PROFILE} />
       <Header />
-      <div style={{ marginLeft: '15%', marginTop: '5%' }}>
+      <div style={{ marginLeft: '15%', marginTop: '3%' }}>
         <Grid stackable>
           <Grid.Row columns={4}>
             <Grid.Column
@@ -184,15 +184,7 @@ const Profile = (): ReactElement => {
                 />
               )}
 
-              <Image
-                size="small"
-                circular
-                src={
-                  user.profilePic !== '' && user.profilePic !== null
-                    ? user.profilePic
-                    : DefaultProfile
-                }
-              />
+              <Image size="small" circular src={getUserProfilePic(user)} />
               {user.masthead && (
                 <Image
                   style={{ marginTop: '-25px' }}
@@ -314,16 +306,12 @@ const Profile = (): ReactElement => {
                 ) : (
                   <div className="input-field">
                     <span>{`${parseCamelCase('pronouns')}:`}</span>
-                    <Input
-                      value={user.pronouns.join(', ')}
-                      transparent
-                      readOnly={!isEditMode}
-                    />
+                    <Input value={user.pronouns.join(', ')} transparent />
                   </div>
                 )}
                 {isEditMode && currentUser.role === 'ADMIN' ? (
                   <div className="input-field">
-                    <span>{parseCamelCase('pronouns')}</span>
+                    <span>{parseCamelCase('role')}</span>
                     <Dropdown
                       className="dropdown-field"
                       options={parseArrayToSemanticDropdownOptions(
@@ -343,7 +331,6 @@ const Profile = (): ReactElement => {
                     <Input
                       value={convertToCapitalized(user.role)}
                       transparent
-                      readOnly={!isEditMode}
                     />
                   </div>
                 )}
@@ -373,12 +360,10 @@ const Profile = (): ReactElement => {
                   <div className="input-field">
                     <span>{`${parseCamelCase('dateJoined')}:`}</span>
                     <Input
-                      value={new Date(user.dateJoined).toLocaleDateString(
-                        'en-US',
-                        { timeZone: 'UTC' },
-                      )}
+                      value={new Date(
+                        user.dateJoined,
+                      ).toLocaleDateString('en-US', { timeZone: 'UTC' })}
                       transparent
-                      readOnly={!isEditMode}
                     />
                   </div>
                 )}
@@ -387,7 +372,7 @@ const Profile = (): ReactElement => {
             <Grid.Column textAlign="center" width={3}>
               <HeaderTag as="h2">My Interests</HeaderTag>
               {!isEditMode ? (
-                user.interests.map((interest, index) => (
+                user.interests.sort().map((interest, index) => (
                   <div
                     className={`field-label ${convertToClassName(interest)}`}
                     key={index}
@@ -413,7 +398,7 @@ const Profile = (): ReactElement => {
             <Grid.Column textAlign="center" width={3}>
               <HeaderTag as="h2">My Roles</HeaderTag>
               {!isEditMode || currentUser.role !== 'ADMIN' ? (
-                user.currentTeams.map((team, index) => (
+                user.currentTeams.sort().map((team, index) => (
                   <div
                     className={`field-label ${convertToClassName(team)}`}
                     key={index}
@@ -438,8 +423,8 @@ const Profile = (): ReactElement => {
             </Grid.Column>
           </Grid.Row>
           <Divider />
-          <Grid.Row columns={2}>
-            <Grid.Column textAlign="left" floated="left" width={6}>
+          <Grid.Row centered columns={3}>
+            <Grid.Column textAlign="left" width={6}>
               <HeaderTag as="h2">Socials/Contact</HeaderTag>
               <SocialsInput
                 readOnly={!isEditMode}
@@ -458,7 +443,8 @@ const Profile = (): ReactElement => {
                 value={user.phone}
               />
             </Grid.Column>
-            <Grid.Column floated="left" width={6}>
+            <Grid.Column width={2} />
+            <Grid.Column textAlign="left" width={6}>
               <SocialsInput
                 icon="linkedin"
                 value={user.linkedIn}
