@@ -1,6 +1,8 @@
 import { FormEvent, Dispatch, SetStateAction } from 'react';
 import { IUser, IPitch } from 'ssw-common';
 
+import DefaultProfile from '../assets/default_profile.png';
+
 /**
  * Adds selected element to the specific form array if it isn't already there, otherwise removes it
  *
@@ -383,6 +385,11 @@ const convertToCapitalized = (str: string): string => {
   return lowercase.charAt(0).toUpperCase() + lowercase.slice(1);
 };
 
+const getUserProfilePic = (user: IUser): string =>
+  user.profilePic !== null && user.profilePic !== undefined
+    ? user.profilePic
+    : DefaultProfile;
+
 export {
   handleSelectGroupArray,
   parseArrayToSemanticDropdownOptions,
@@ -401,4 +408,5 @@ export {
   convertToClassName,
   updateUserField,
   convertToCapitalized,
+  getUserProfilePic,
 };
