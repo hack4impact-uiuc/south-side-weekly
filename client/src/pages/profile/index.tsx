@@ -400,6 +400,7 @@ const Profile = (): ReactElement => {
                 ))
               ) : (
                 <Container>
+                  <div className="checkbox-group">
                   {allTeams.map((team, index) => (
                     <Checkbox
                       key={index}
@@ -410,6 +411,7 @@ const Profile = (): ReactElement => {
                       onChange={(e, data) => editTeams(`${data.value!}`)}
                     />
                   ))}
+                  </div>
                 </Container>
               )}
             </Grid.Column>
