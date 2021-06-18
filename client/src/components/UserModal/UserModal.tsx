@@ -3,46 +3,8 @@ import { Modal, Image, Grid, Button, Icon } from 'semantic-ui-react';
 
 import { IUser } from '../../../../common/index';
 import '../../css/UserModal.css';
-import { interestsColorEnum } from '../../utils/enums';
 import DefaultProfile from '../../assets/default_profile.png';
-import { getUserFirstName } from '../../utils/helpers';
-
-interface ILabelProps {
-  text: string;
-}
-
-/**
- * Builds a Label for the User Modal
- *
- * @param text the text to display within the label
- * @returns a formatted label
- */
-const ModalLabel: FC<ILabelProps> = ({ text }): ReactElement => {
-  /**
-   * Determines what color a label should be based on its text
-   *
-   * @param colorText the text to decipher
-   * @returns the hex code of the color to display
-   */
-  const getLabelColor = (colorText: string): string => {
-    const value_index: number =
-      Object.keys(interestsColorEnum).indexOf(colorText);
-
-    // Return a default color
-    if (value_index < 0) {
-      return 'grey';
-    }
-
-    return Object.values(interestsColorEnum)[value_index];
-  };
-
-  return (
-    <div style={{ background: getLabelColor(text) }} className="modal-label">
-      {text.toLowerCase()}
-    </div>
-  );
-};
-
+import { convertToClassName, getUserFirstName } from '../../utils/helpers';
 interface IModalProps {
   open: boolean;
   handleClose: () => void;
@@ -103,7 +65,9 @@ const UserModal: FC<IModalProps> = ({
             <h1 className="list-header">Topics</h1>
             {user.interests.map((interest: string, index: number) => (
               <Grid.Row key={index}>
-                <ModalLabel text={interest} />
+                <div className={`modal-label ${convertToClassName(interest)}`}>
+                  {interest.toLowerCase()}
+                </div>
               </Grid.Row>
             ))}
           </Grid.Column>
@@ -111,7 +75,9 @@ const UserModal: FC<IModalProps> = ({
             <h1 className="list-header">Teams</h1>
             {user.currentTeams.map((team: string, index: number) => (
               <Grid.Row key={index}>
-                <ModalLabel text={team} />
+                <div className={`modal-label ${convertToClassName(team)}`}>
+                  {team.toLowerCase()}
+                </div>
               </Grid.Row>
             ))}
           </Grid.Column>
