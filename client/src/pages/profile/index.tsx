@@ -7,6 +7,7 @@ import {
   Checkbox,
   Divider,
   Grid,
+  Header as HeaderTag,
   Image,
   Input,
   Dropdown,
@@ -217,7 +218,7 @@ const Profile = (): ReactElement => {
               )}
             </Grid.Column>
             <Grid.Column width={5}>
-              <h2>Basic information</h2>
+              <HeaderTag as="h2">Basic Information</HeaderTag>
               <Container style={{ marginBottom: '5px' }}>
                 <div className="input-field">
                   <span>{`${parseCamelCase('firstName')}:`}</span>
@@ -384,7 +385,7 @@ const Profile = (): ReactElement => {
               </Container>
             </Grid.Column>
             <Grid.Column textAlign="center" width={3}>
-              <h2>My Interests</h2>
+              <HeaderTag as="h2">My Interests</HeaderTag>
               {!isEditMode ? (
                 user.interests.map((interest, index) => (
                   <div
@@ -410,7 +411,7 @@ const Profile = (): ReactElement => {
               )}
             </Grid.Column>
             <Grid.Column textAlign="center" width={3}>
-              <h2>My Roles</h2>
+              <HeaderTag as="h2">My Roles</HeaderTag>
               {!isEditMode || currentUser.role !== 'ADMIN' ? (
                 user.currentTeams.map((team, index) => (
                   <div
@@ -439,7 +440,7 @@ const Profile = (): ReactElement => {
           <Divider />
           <Grid.Row columns={2}>
             <Grid.Column textAlign="left" floated="left" width={6}>
-              <h2>Socials/Contact</h2>
+              <HeaderTag as="h2">Socials/Contact</HeaderTag>
               <SocialsInput
                 readOnly={!isEditMode}
                 onChange={(e, { value }) =>
