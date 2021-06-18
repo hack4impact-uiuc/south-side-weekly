@@ -17,7 +17,7 @@ const SocialsInput: FC<ISocialsInput> = ({
     <Grid.Column className="col">
       <Input
         size="big"
-        style={{ border: 'solid 1px', borderRadius: '1rem', padding: '5px' }}
+        className="input"
         fluid
         value={value}
         readOnly={readOnly}
