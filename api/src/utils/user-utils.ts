@@ -1,5 +1,5 @@
 import { difference } from 'lodash';
-import { isAdmin } from '../middleware/auth';
+import { isAdmin } from './auth-utils';
 import User from '../models/user';
 import { SessionUser } from './helpers';
 

@@ -1,57 +1,39 @@
-import { rolesEnum } from '../utils/enums';
-import { SessionUser } from '../utils/helpers';
-
-const allRoles = [
-  rolesEnum.TBD,
-  rolesEnum.CONTRIBUTOR,
-  rolesEnum.STAFF,
-  rolesEnum.ADMIN,
-];
+import { Request, Response, NextFunction } from 'express';
+import { hasRole, allRoles } from '../utils/auth-utils';
 
 /**
- * Determines whether or not a user has the minimum level role required
- * (e.g. Admin has same role functionality as Contributor)
+ * Middleware to prevent users that aren't registered or don't have a
+ * specified role from completing requests
  *
- * @param user the user to check
- * @param roles the list of roles a user must have one of in order to have a role
- * @returns true if the list of roles contains the user role, else false
+ * @param roles the set of roles allowed to make the given request
+ * @returns 401 HTTP Response if the user lacks the necessary role, else calls
+ *          next() to continue to request
  */
-const hasRole = (user: SessionUser, roles: typeof allRoles): boolean =>
-  user && roles.includes(user.role);
+const requireRole = (roles: typeof allRoles) => (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
+  if (req.isUnauthenticated() || !hasRole(req.user, roles)) {
+    return res.status(401).json({
+      success: false,
+      message: 'Unauthorized',
+    });
+  }
 
-/**
- * Determines if a user has logged in
- *
- * @param user the user to check
- * @returns true if user is logged in, else false
- */
-const isRegistered = (user: SessionUser): boolean => hasRole(user, allRoles);
+  next();
+};
 
-/**
- * Determines if a user has contributor level access
- *
- * @param user the user to check
- * @returns true if user is contributor, staff, or admin, else false
- */
-const isContributor = (user: SessionUser): boolean =>
-  hasRole(user, allRoles.slice(1));
+// Requires a user to have an account
+const requireRegistered = requireRole(allRoles);
 
-/**
- * Determines if a user has staff level access
- *
- * @param user the user to check
- * @returns true if user is staff or admin, else false
- */
-const isStaff = (user: SessionUser): boolean =>
-  hasRole(user, allRoles.slice(2));
+// Requires a user to have at least Contributor status
+const requireContributor = requireRole(allRoles.slice(1));
 
-/**
- * Determines if a user has admin level access
- *
- * @param user the user to check
- * @returns true if uesr is admin, else false
- */
-const isAdmin = (user: SessionUser): boolean =>
-  hasRole(user, allRoles.slice(3));
+// Requires a user to have at least Staff status
+const requireStaff = requireRole(allRoles.slice(2));
 
-export { hasRole, isRegistered, isContributor, isStaff, isAdmin };
+// Requires a user to have Admin status
+const requireAdmin = requireRole(allRoles.slice(3));
+
+export { requireRegistered, requireContributor, requireStaff, requireAdmin };
