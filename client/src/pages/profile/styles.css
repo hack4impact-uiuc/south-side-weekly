@@ -47,3 +47,21 @@
   background-color: transparent !important;
   font-size: 12px !important;
 }
+
+.profile-pic-col {
+  display: flex !important;
+  align-items: center;
+  flex-direction: column;
+}
+
+.masthead {
+  margin-top: -25px;
+}
+
+.checkbox-group {
+  text-align: left;
+}
+
+.checkbox {
+  padding-left: 20% !important;
+}

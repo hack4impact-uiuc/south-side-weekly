@@ -168,13 +168,7 @@ const Profile = (): ReactElement => {
       <div style={{ marginLeft: '15%', marginTop: '3%' }}>
         <Grid stackable>
           <Grid.Row columns={4}>
-            <Grid.Column
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                flexDirection: 'column',
-              }}
-            >
+            <Grid.Column className="profile-pic-col">
               {(userId === currentUser._id || currentUser.role === 'ADMIN') && (
                 <Button
                   size="medium"
@@ -186,11 +180,7 @@ const Profile = (): ReactElement => {
 
               <Image size="small" circular src={getUserProfilePic(user)} />
               {user.masthead && (
-                <Image
-                  style={{ marginTop: '-25px' }}
-                  size="small"
-                  src={Masthead}
-                />
+                <Image className="masthead" size="small" src={Masthead} />
               )}
               {isEditMode && (
                 <Button.Group>
@@ -211,7 +201,7 @@ const Profile = (): ReactElement => {
             </Grid.Column>
             <Grid.Column width={5}>
               <HeaderTag as="h2">Basic Information</HeaderTag>
-              <Container style={{ marginBottom: '5px' }}>
+              <Container>
                 <div className="input-field">
                   <span>{`${parseCamelCase('firstName')}:`}</span>
                   <Input
@@ -381,10 +371,11 @@ const Profile = (): ReactElement => {
                   </div>
                 ))
               ) : (
-                <Container style={{ paddingLeft: '20%' }}>
+                <Container>
                   {allInterests.map((interest, index) => (
-                    <div key={index} style={{ textAlign: 'left' }}>
+                    <div key={index} className="checkbox-group">
                       <Checkbox
+                        className="checkbox"
                         value={interest}
                         label={convertToCapitalized(interest)}
                         checked={user.interests.includes(interest)}
@@ -407,16 +398,16 @@ const Profile = (): ReactElement => {
                   </div>
                 ))
               ) : (
-                <Container style={{ paddingLeft: '20%' }}>
+                <Container>
                   {allTeams.map((team, index) => (
-                    <div key={index} style={{ textAlign: 'left' }}>
-                      <Checkbox
-                        value={team}
-                        label={convertToCapitalized(team)}
-                        checked={user.currentTeams.includes(team)}
-                        onChange={(e, data) => editTeams(`${data.value!}`)}
-                      />
-                    </div>
+                    <Checkbox
+                      key={index}
+                      className="checkbox"
+                      value={team}
+                      label={convertToCapitalized(team)}
+                      checked={user.currentTeams.includes(team)}
+                      onChange={(e, data) => editTeams(`${data.value!}`)}
+                    />
                   ))}
                 </Container>
               )}
