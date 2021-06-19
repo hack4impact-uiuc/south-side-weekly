@@ -4,7 +4,7 @@ import { Button } from 'semantic-ui-react';
 import { Redirect } from 'react-router';
 
 import Header from '../components/Header';
-import { BASE_URL } from '../utils/apiWrapper';
+import { BASE_URL } from '../api/urls';
 
 import '../css/Home.css';
 
