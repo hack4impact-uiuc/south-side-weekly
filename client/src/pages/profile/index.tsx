@@ -13,12 +13,7 @@ import {
   Dropdown,
 } from 'semantic-ui-react';
 
-import {
-  isError,
-  loadUser,
-  saveUser,
-  getCurrentUser,
-} from '../../utils/apiWrapper';
+import { isError, getUser, updateUser, getCurrentUser } from '../../api';
 import Sidebar from '../../components/Sidebar';
 import Header from '../../components/Header';
 import { pages } from '../../utils/enums';
@@ -59,8 +54,8 @@ const Profile = (): ReactElement => {
   // const [permissions, setPermissions] = useState();
 
   useEffect(() => {
-    const getUser = async (): Promise<void> => {
-      const res = await loadUser(userId);
+    const loadUser = async (): Promise<void> => {
+      const res = await getUser(userId);
       if (!isError(res)) {
         const user = res.data.result;
         setUser(user);
@@ -75,7 +70,7 @@ const Profile = (): ReactElement => {
       }
     };
 
-    getUser();
+    loadUser();
     loadCurrentUser();
   }, [userId]);
 
@@ -104,8 +99,8 @@ const Profile = (): ReactElement => {
     setUser(tempUser);
   };
 
-  const updateUser = async (): Promise<void> => {
-    const res = await saveUser({ ...user }, userId);
+  const saveUser = async (): Promise<void> => {
+    const res = await updateUser({ ...user }, userId);
 
     if (!isError(res)) {
       setIsEditMode(false);
@@ -187,7 +182,7 @@ const Profile = (): ReactElement => {
                   <Button
                     className="edit-mode-btn save"
                     content="Save Changes"
-                    onClick={updateUser}
+                    onClick={saveUser}
                     size="medium"
                   />
                   <Button
