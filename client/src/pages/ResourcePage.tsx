@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { Button } from 'semantic-ui-react';
 import { IResource } from 'ssw-common';
 
-import { getAllResources, deleteResource, isError } from '../utils/apiWrapper';
+import { getAllResources, deleteResource, isError } from '../api';
 import AddResourceModal from '../components/ResourceHub/AddResourceModal';
 import EditResourceModal from '../components/ResourceHub/EditResourceModal';
 import ResourcePageSVG from '../assets/resource-page.svg';

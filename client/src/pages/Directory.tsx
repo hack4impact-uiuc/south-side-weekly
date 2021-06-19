@@ -11,7 +11,7 @@ import { IUser } from 'ssw-common';
 
 import Sidebar from '../components/Sidebar';
 import UserModal from '../components/UserModal/UserModal';
-import { getUsers, isError } from '../utils/apiWrapper';
+import { getUsers, isError } from '../api';
 import { pages } from '../utils/enums';
 import {
   parseArrayToSemanticDropdownOptions,
