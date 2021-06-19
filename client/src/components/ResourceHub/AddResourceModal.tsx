@@ -1,7 +1,7 @@
 import React, { ReactElement, FC, Dispatch, useState, useEffect } from 'react';
 import { Modal, Button, Form, Input, Checkbox } from 'semantic-ui-react';
 
-import { createResource, isError } from '../../utils/apiWrapper';
+import { createResource, isError } from '../../api';
 import { dbTeamToDisplay } from '../../utils/constants';
 
 import '../../css/AddResourceModal.css';

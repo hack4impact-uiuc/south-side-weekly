@@ -12,11 +12,11 @@ import { IUser } from 'ssw-common';
 
 import {
   isError,
-  loadUser,
-  saveUser,
+  getUser,
+  updateUser,
   getCurrentUser,
   getUserPermissionsByID,
-} from '../../utils/apiWrapper';
+} from '../../api';
 import { teamEnum, interestsEnum, pages } from '../../utils/enums';
 import Sidebar from '../../components/Sidebar';
 import Mail from '../../assets/mail.svg';
@@ -197,7 +197,7 @@ function Profile(): ReactElement {
   }
 
   const getProfile = useCallback(async (): Promise<void> => {
-    const res = await loadUser(userId);
+    const res = await getUser(userId);
     if (isError(res)) {
       setError(true);
       setErrorMessage(res.type);
@@ -232,7 +232,7 @@ function Profile(): ReactElement {
   }, [userId]);
 
   async function updateProfile(): Promise<void> {
-    const res = await saveUser(profileData, userId);
+    const res = await updateUser(profileData, userId);
     if (isError(res)) {
       setError(true);
       setErrorMessage(res.type);
@@ -249,6 +249,8 @@ function Profile(): ReactElement {
       if (!isError(res)) {
         const currentUser: IUser = res.data.result;
         setIsEditable(userId === currentUser._id);
+      } else {
+        console.error(res);
       }
     };
 
