@@ -12,7 +12,7 @@ const nonEditableFields = ['_id', 'oauthID', '__v'];
 // Fields that non-Admins and other users cannot view
 const privateFields = ['phone'];
 // Fields that non-Admins cannot edit
-const adminEditOnlyFields = ['currentTeams', 'role', 'email'];
+const adminEditOnlyFields = ['currentTeams', 'role', 'email', 'races'];
 
 /**
  * Gets the fields of another user the current user can view
