@@ -12,7 +12,7 @@ export interface GetUserPitchesResponseType extends ApiResponseBase {
 export interface GetUserResponseType extends ApiResponseBase {
   result: IUser;
 }
-export interface UserPermissionsType {
+export interface UserPermissionsType extends ApiResponseBase {
   result: {
     view: string[];
     edit: string[];
