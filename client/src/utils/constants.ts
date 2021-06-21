@@ -98,6 +98,16 @@ const allTeams = [
 const allGenders = ['Man', 'Woman', 'Nonbinary', 'Other'];
 const allPronouns = ['He/his', 'She/her', 'They/them', 'Ze/hir', 'Other'];
 const allRoles = ['ADMIN', 'STAFF', 'CONTRIBUTOR'];
+const allRaces = [
+  'AMERICAN INDIAN OR ALASKAN NATIVE',
+  'BLACK OR AFRICAN AMERICAN',
+  'MIDDLE EASTERN OR NORTH AFRICAN',
+  'NATIVE HAWAIIAN OR PACIFIC ISLANDER',
+  'LATINX OR HISPANIC',
+  'WHITE',
+  'ASIAN',
+  'OTHER',
+];
 
 const emptyUser: IUser = {
   _id: '',
@@ -135,5 +145,6 @@ export {
   allGenders,
   allPronouns,
   allRoles,
+  allRaces,
   emptyUser,
 };
