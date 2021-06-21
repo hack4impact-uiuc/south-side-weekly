@@ -12,7 +12,7 @@ interface ILabelProps {
 }
 
 /**
- * Builds a Label for the User Modal
+ * Builds a Label for the User Modal.
  *
  * @param text the text to display within the label
  * @returns a formatted label
@@ -25,16 +25,14 @@ const ModalLabel: FC<ILabelProps> = ({ text }): ReactElement => {
    * @returns the hex code of the color to display
    */
   const getLabelColor = (colorText: string): string => {
-    const value_index: number = Object.keys(interestsColorEnum).indexOf(
-      colorText,
-    );
+    const valueIndex = Object.keys(interestsColorEnum).indexOf(colorText);
 
     // Return a default color
-    if (value_index < 0) {
+    if (valueIndex < 0) {
       return 'grey';
     }
 
-    return Object.values(interestsColorEnum)[value_index];
+    return Object.values(interestsColorEnum)[valueIndex];
   };
 
   return (

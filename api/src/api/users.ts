@@ -4,6 +4,7 @@ import { errorWrap } from '../middleware';
 
 import User from '../models/user';
 import Pitch from '../models/pitch';
+import { getEditableFields, getViewableFields } from '../utils/user-utils';
 
 const router = express.Router();
 
@@ -51,6 +52,20 @@ router.get(
         message: `Successfully retrieved user`,
       });
     }
+  }),
+);
+
+// Gets a users permissions
+router.get(
+  '/:userId/permissions',
+  errorWrap(async (req: Request, res: Response) => {
+    res.json({
+      success: true,
+      result: {
+        view: getViewableFields(req.user, req.params.userId),
+        edit: getEditableFields(req.user, req.params.userId),
+      },
+    });
   }),
 );
 
