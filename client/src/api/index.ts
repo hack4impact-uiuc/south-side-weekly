@@ -4,6 +4,7 @@ export {
   getUsers,
   updateUserClaimedPitches,
   updateUser,
+  getUserPermissionsByID,
 } from './user';
 export {
   getApprovedPitches,
