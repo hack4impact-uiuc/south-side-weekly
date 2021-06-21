@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
-import { hasRole, allRoles } from '../utils/auth-utils';
+import { hasRole } from '../utils/auth-utils';
+import { rolesEnum } from '../utils/enums';
 
 /**
  * Middleware to prevent users that aren't registered or don't have a
@@ -9,7 +10,7 @@ import { hasRole, allRoles } from '../utils/auth-utils';
  * @returns 401 HTTP Response if the user lacks the necessary role, else calls
  *          next() to continue to request
  */
-const requireRole = (roles: typeof allRoles) => (
+const requireRole = (roles: string[]) => (
   req: Request,
   res: Response,
   next: NextFunction,
@@ -25,15 +26,24 @@ const requireRole = (roles: typeof allRoles) => (
 };
 
 // Requires a user to have an account
-const requireRegistered = requireRole(allRoles);
+const requireRegistered = requireRole([
+  rolesEnum.TBD,
+  rolesEnum.CONTRIBUTOR,
+  rolesEnum.STAFF,
+  rolesEnum.ADMIN,
+]);
 
 // Requires a user to have at least Contributor status
-const requireContributor = requireRole(allRoles.slice(1));
+const requireContributor = requireRole([
+  rolesEnum.CONTRIBUTOR,
+  rolesEnum.STAFF,
+  rolesEnum.ADMIN,
+]);
 
 // Requires a user to have at least Staff status
-const requireStaff = requireRole(allRoles.slice(2));
+const requireStaff = requireRole([rolesEnum.STAFF, rolesEnum.ADMIN]);
 
 // Requires a user to have Admin status
-const requireAdmin = requireRole(allRoles.slice(3));
+const requireAdmin = requireRole([rolesEnum.ADMIN]);
 
 export { requireRegistered, requireContributor, requireStaff, requireAdmin };
