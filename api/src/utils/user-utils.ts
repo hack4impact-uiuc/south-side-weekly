@@ -9,10 +9,12 @@ const allFields = Object.keys(User.schema.paths);
 const nonViewableFields = ['oauthID', '__v'];
 
 const nonEditableFields = ['_id', 'oauthID', '__v'];
-// Fields that non-Admins and other users cannot view
-const privateFields = ['phone'];
-// Fields that non-Admins cannot edit
-const adminEditOnlyFields = ['currentTeams', 'role', 'email', 'races'];
+
+// Only Admin can view these fields
+const adminViewableFields = ['phone'];
+
+// Only Admin can edit these fields
+const adminEditableFields = ['currentTeams', 'role', 'email', 'races'];
 
 /**
  * Gets the fields of another user the current user can view
@@ -31,7 +33,7 @@ const getViewableFields = (
     return viewableFields;
   }
 
-  return difference(viewableFields, privateFields);
+  return difference(viewableFields, adminViewableFields);
 };
 
 /**
@@ -49,7 +51,7 @@ const getEditableFields = (
   if (isAdmin(currentUser)) {
     return editableFields;
   } else if (currentUser._id.toString() === userId) {
-    return difference(editableFields, adminEditOnlyFields);
+    return difference(editableFields, adminEditableFields);
   }
 
   return [];
