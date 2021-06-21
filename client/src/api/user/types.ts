@@ -14,7 +14,7 @@ export interface GetUserResponseType extends ApiResponseBase {
 }
 export interface UserPermissionsType extends ApiResponseBase {
   result: {
-    view: string[];
-    edit: string[];
+    view: (keyof IUser)[];
+    edit: (keyof IUser)[];
   };
 }
