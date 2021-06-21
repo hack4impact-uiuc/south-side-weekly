@@ -93,6 +93,13 @@ const Profile = (): ReactElement => {
     loadCurrentUserPermissions();
   }, [userId]);
 
+  /**
+   * Adds a dropdown option that was inputted by the user
+   *
+   * @param dropdown the dropdown to update
+   * @param addedItem the new item to add
+   * @param standardOptions the predefined options for the dropdown
+   */
   const updateDropdownOptions = (
     dropdown: string,
     addedItem: string,
@@ -108,16 +115,19 @@ const Profile = (): ReactElement => {
     setDropdownOptions({ ...dropdownOptions });
   };
 
+  // Starts edit mode for a profile page
   const startEditMode = (): void => {
     setIsEditMode(true);
     setTempUser({ ...user });
   };
 
+  // Ends edit mode for a profile page
   const cancelEditMode = (): void => {
     setIsEditMode(false);
     setUser(tempUser);
   };
 
+  // Calls the API to save the modified user
   const saveUser = async (): Promise<void> => {
     const res = await updateUser({ ...user }, userId);
 
@@ -126,7 +136,12 @@ const Profile = (): ReactElement => {
     }
   };
 
-  const editInterests = (interest: string): void => {
+  /**
+   * Adds an interest to a user's interest
+   *
+   * @param interest the interest to add
+   */
+  const addInterest = (interest: string): void => {
     const interests = [...user.interests] as [string];
     const currentIndex = interests.indexOf(interest);
     if (currentIndex >= 0) {
@@ -137,7 +152,12 @@ const Profile = (): ReactElement => {
     setUser(updateUserField(user, 'interests', interests));
   };
 
-  const editTeams = (team: string): void => {
+  /**
+   * Adds a team to a user's currentTeams
+   *
+   * @param team the team to add
+   */
+  const addTeam = (team: string): void => {
     const teams = [...user.currentTeams] as [string];
     const currentIndex = teams.indexOf(team);
     if (currentIndex >= 0) {
@@ -148,28 +168,66 @@ const Profile = (): ReactElement => {
     setUser(updateUserField(user, 'currentTeams', teams));
   };
 
+  /**
+   * Parses a camel cased string into Title-style format
+   *
+   * exampleName --> Example Name
+   *
+   * @param str the string to parse
+   * @returns the formatted string
+   */
   const parseCamelCase = (str: string): string => {
     const split = str.replace(/([a-z])([A-Z])/g, '$1 $2');
     return split.charAt(0).toUpperCase() + split.slice(1);
   };
 
-  const addArrayElement = (value: string[], field: keyof IUser): void =>
+  /**
+   * Generically updates a user's string array field
+   *
+   * @param arr the array to set the user's convert array to
+   * @param field the field of the user
+   */
+  const addArrayElement = (
+    arr: string[],
+    field: 'genders' | 'pronouns' | 'races',
+  ): void =>
     setUser(
       updateUserField(
         user,
         field,
-        parseSemanticMultiSelectTypes(value!) as [string],
+        parseSemanticMultiSelectTypes(arr!) as [string],
       ),
     );
 
-  const addGender = (value: string[]): void =>
-    addArrayElement(value, 'genders');
+  /**
+   * Adds a gender to a user's genders
+   *
+   * @param gender the gender to add
+   */
+  const addGender = (gender: string[]): void =>
+    addArrayElement(gender, 'genders');
 
-  const addPronoun = (value: string[]): void =>
-    addArrayElement(value, 'pronouns');
+  /**
+   * Adds a pronoun to a user's pronouns
+   *
+   * @param pronoun the pronoun to add
+   */
+  const addPronoun = (pronoun: string[]): void =>
+    addArrayElement(pronoun, 'pronouns');
 
-  const addRace = (value: string[]): void => addArrayElement(value, 'races');
+  /**
+   * Adds a race to a user's races
+   *
+   * @param race the race to add
+   */
+  const addRace = (race: string[]): void => addArrayElement(race, 'races');
 
+  /**
+   * Determines if a field is viewable to current user
+   *
+   * @param field the field to check
+   * @returns true if field is viewable, else false
+   */
   const isViewable = (field: keyof IUser): boolean =>
     permissions.view.includes(field);
 
@@ -465,7 +523,7 @@ const Profile = (): ReactElement => {
                           label={convertToCapitalized(interest)}
                           checked={user.interests.includes(interest)}
                           onChange={(e, data) => {
-                            editInterests(`${data.value!}`);
+                            addInterest(`${data.value!}`);
                           }}
                         />
                       </div>
@@ -497,7 +555,7 @@ const Profile = (): ReactElement => {
                           value={team}
                           label={convertToCapitalized(team)}
                           checked={user.currentTeams.includes(team)}
-                          onChange={(e, data) => editTeams(`${data.value!}`)}
+                          onChange={(e, data) => addTeam(`${data.value!}`)}
                         />
                       ))}
                     </div>
