@@ -9,23 +9,28 @@ const SocialsInput: FC<ISocialsInput> = ({
   value,
   readOnly,
   onChange,
+  viewable,
 }): ReactElement => (
-  <Grid className="social-input" columns="equal">
-    <Grid.Column className="col" width={2}>
-      <Icon size="big" name={icon} />
-    </Grid.Column>
-    <Grid.Column className="col">
-      <Input
-        size="big"
-        className="input"
-        fluid
-        value={value}
-        readOnly={readOnly}
-        transparent
-        onChange={onChange}
-      />
-    </Grid.Column>
-  </Grid>
+  <>
+    {viewable && (
+      <Grid className="social-input" columns="equal">
+        <Grid.Column className="col" width={2}>
+          <Icon size="big" name={icon} />
+        </Grid.Column>
+        <Grid.Column className="col">
+          <Input
+            size="big"
+            className="input"
+            fluid
+            value={value}
+            readOnly={readOnly}
+            transparent
+            onChange={onChange}
+          />
+        </Grid.Column>
+      </Grid>
+    )}
+  </>
 );
 
 export default SocialsInput;

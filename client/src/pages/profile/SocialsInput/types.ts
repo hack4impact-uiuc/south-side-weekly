@@ -12,4 +12,5 @@ export interface ISocialsInput {
     event: React.ChangeEvent<HTMLInputElement>,
     data: InputOnChangeData,
   ) => void;
+  viewable: boolean;
 }
