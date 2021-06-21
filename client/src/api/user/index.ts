@@ -38,4 +38,16 @@ const updateUser = async (
 ): Promise<AxiosResponse<Types.GetUserResponseType> | ErrorWrapper> =>
   await put(`${USER_ENDPOINT}/${userId}`, profileData, 'UPDATE_USER_FAIL');
 
+/**
+ * Gets a user's permissions
+ * Returns GET_USER_PERMISSIONS_FAIL upon failure
+ */
+export const getUserPermissionsByID = async (
+  userId: string,
+): Promise<AxiosResponse<Types.UserPermissionsType> | ErrorWrapper> =>
+  await get(
+    `${USER_ENDPOINT}/${userId}/permissions`,
+    'GET_USER_PERMISSIONS_FAIL',
+  );
+
 export { getUsers, getUser, updateUserClaimedPitches, updateUser };
