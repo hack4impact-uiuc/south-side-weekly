@@ -4,7 +4,8 @@ import { Modal, Image, Grid, Button, Icon } from 'semantic-ui-react';
 import { IUser } from '../../../../common/index';
 import '../../css/UserModal.css';
 import DefaultProfile from '../../assets/default_profile.png';
-import { convertToClassName, getUserFirstName } from '../../utils/helpers';
+import { getUserFirstName } from '../../utils/helpers';
+import { convertToClassName } from '../../utils/formatters';
 interface IModalProps {
   open: boolean;
   handleClose: () => void;
