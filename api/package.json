@@ -5,7 +5,7 @@
   "scripts": {
     "start": "yarn build && if-env NODE_ENV=production ?? npm run start:prod || npm run start:dev",
     "start:prod": "node -r dotenv/config ./bin/www",
-    "start:dev": "nodemon --ext 'ts,js,json' -r dotenv/config ./bin/www",
+    "start:dev": "nodemon --ext ts,js,json -r dotenv/config ./bin/www",
     "lint": "eslint src --ext ts",
     "lint:fix": "eslint --fix src --ext ts",
     "format": "prettier --write \"./**/*.{ts,json,md}\"",
