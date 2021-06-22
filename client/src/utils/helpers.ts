@@ -373,17 +373,6 @@ const getUserFirstName = (user: IUser): string => {
 };
 
 /**
- * Converst a string to class name format
- *
- * This is a test --> this-is-a-test
- *
- * @param str the string to format
- * @returns the formatted string
- */
-const convertToClassName = (str: string): string =>
-  str.toLowerCase().split(' ').join('-');
-
-/**
  * Updates a user's field generically
  *
  * @param user the user to update
@@ -399,18 +388,6 @@ const updateUserField = <T extends keyof IUser>(
   const userCopy = { ...user };
   userCopy[key] = value;
   return userCopy;
-};
-
-/**
- * Capitalizes the first letter of a string
- *
- * @param str the string to capitalize
- * @returns the capitalized string
- */
-const convertToCapitalized = (str: string): string => {
-  const lowercase = str.toLowerCase();
-
-  return lowercase.charAt(0).toUpperCase() + lowercase.slice(1);
 };
 
 /**
@@ -440,8 +417,6 @@ export {
   filterPitchesByTeams,
   sortPitchesByDeadlineDate,
   getUserFirstName,
-  convertToClassName,
   updateUserField,
-  convertToCapitalized,
   getUserProfilePic,
 };
