@@ -9,8 +9,7 @@ import {
   Grid,
   Header as HeaderTag,
   Image,
-  Input,
-  Dropdown,
+  DropdownItemProps,
 } from 'semantic-ui-react';
 
 import {
@@ -34,17 +33,36 @@ import {
   emptyUser,
 } from '../../utils/constants';
 import {
-  convertToCapitalized,
-  convertToClassName,
   getUserProfilePic,
   parseArrayToSemanticDropdownOptions,
   parseSemanticMultiSelectTypes,
   updateUserField,
 } from '../../utils/helpers';
+import {
+  convertToCapitalized,
+  convertToClassName,
+  parseCamelCase,
+} from '../../utils/formatters';
 
 import SocialsInput from './SocialsInput';
+import StringAttribute from './BasicInfoInput/StringAttribute';
+import ArrayAttribute from './BasicInfoInput/ArrayAttribute';
+import SelectAttribute from './BasicInfoInput/SelectAttribute';
+import DateAttribute from './BasicInfoInput/DateAttribute';
 import './styles.css';
-import { IDropdownOptions, IPermissions, ParamTypes } from './types';
+import {
+  IDropdownOptions,
+  IPermissions,
+  ParamTypes,
+  MultiDropdowns,
+} from './types';
+
+const stringAttributes: (keyof IUser)[] = [
+  'firstName',
+  'lastName',
+  'preferredName',
+];
+const arrayAttributes: MultiDropdowns[] = ['genders', 'pronouns', 'races'];
 
 const Profile = (): ReactElement => {
   const { userId } = useParams<ParamTypes>();
@@ -162,23 +180,12 @@ const Profile = (): ReactElement => {
     const currentIndex = teams.indexOf(team);
     if (currentIndex >= 0) {
       teams.splice(currentIndex, 1);
+    } else if (teams.length >= 2) {
+      return;
     } else {
       teams.push(team);
     }
     setUser(updateUserField(user, 'currentTeams', teams));
-  };
-
-  /**
-   * Parses a camel cased string into Title-style format
-   *
-   * exampleName --> Example Name
-   *
-   * @param str the string to parse
-   * @returns the formatted string
-   */
-  const parseCamelCase = (str: string): string => {
-    const split = str.replace(/([a-z])([A-Z])/g, '$1 $2');
-    return split.charAt(0).toUpperCase() + split.slice(1);
   };
 
   /**
@@ -187,10 +194,7 @@ const Profile = (): ReactElement => {
    * @param arr the array to set the user's convert array to
    * @param field the field of the user
    */
-  const addArrayElement = (
-    arr: string[],
-    field: 'genders' | 'pronouns' | 'races',
-  ): void =>
+  const addArrayElement = (arr: string[], field: MultiDropdowns): void =>
     setUser(
       updateUserField(
         user,
@@ -200,29 +204,6 @@ const Profile = (): ReactElement => {
     );
 
   /**
-   * Adds a gender to a user's genders
-   *
-   * @param gender the gender to add
-   */
-  const addGender = (gender: string[]): void =>
-    addArrayElement(gender, 'genders');
-
-  /**
-   * Adds a pronoun to a user's pronouns
-   *
-   * @param pronoun the pronoun to add
-   */
-  const addPronoun = (pronoun: string[]): void =>
-    addArrayElement(pronoun, 'pronouns');
-
-  /**
-   * Adds a race to a user's races
-   *
-   * @param race the race to add
-   */
-  const addRace = (race: string[]): void => addArrayElement(race, 'races');
-
-  /**
    * Determines if a field is viewable to current user
    *
    * @param field the field to check
@@ -230,6 +211,58 @@ const Profile = (): ReactElement => {
    */
   const isViewable = (field: keyof IUser): boolean =>
     permissions.view.includes(field);
+
+  /**
+   * Determines if a field is editable to the current user
+   *
+   * @param field the field to check
+   * @returns true if field is editable, else false
+   */
+  const isEditable = (field: keyof IUser): boolean =>
+    permissions.edit.includes(field) && isEditMode;
+
+  /**
+   * Edits and updates the local user state varialble
+   *
+   * @param field the field of the user to edit
+   * @param value the value corresponding to that field
+   */
+  const editUser = <T extends keyof IUser>(field: T, value: IUser[T]): void =>
+    setUser(updateUserField(user, field, value));
+
+  /**
+   * Gets the cumulative options for a dropdown including
+   * user's current options
+   *
+   * @param dropdown the dropdown to get
+   * @returns the parsed semantic UI dropdown options
+   */
+  const getMultiDropdownOptions = (
+    dropdown: MultiDropdowns,
+  ): DropdownItemProps[] =>
+    parseArrayToSemanticDropdownOptions(
+      dropdownOptions[dropdown].concat(user[dropdown]),
+    );
+
+  /**
+   * Adds an option to a dropdown
+   *
+   * @param dropdown the dropdown to add the option to
+   * @param value the value to add
+   */
+  const addDropdownOption = (dropdown: MultiDropdowns, value: string): void => {
+    let allOptions;
+
+    if (dropdown === 'genders') {
+      allOptions = allGenders;
+    } else if (dropdown === 'pronouns') {
+      allOptions = allPronouns;
+    } else {
+      allOptions = allRaces;
+    }
+
+    updateDropdownOptions(dropdown, value, allOptions);
+  };
 
   return (
     <>
@@ -274,246 +307,64 @@ const Profile = (): ReactElement => {
             <Grid.Column width={5}>
               <HeaderTag as="h2">Basic Information</HeaderTag>
               <Container>
-                {permissions.view.includes('firstName') && (
-                  <div className="input-field">
-                    <span>{`${parseCamelCase('firstName')}:`}</span>
-                    <Input
-                      value={user.firstName}
-                      transparent
-                      readOnly={
-                        !isEditMode || !permissions.edit.includes('firstName')
-                      }
-                      onChange={(e, { value }) =>
-                        setUser(updateUserField(user, 'firstName', value))
-                      }
-                    />
-                  </div>
-                )}
+                {stringAttributes.map((attribute, index) => (
+                  <StringAttribute
+                    key={index}
+                    label={parseCamelCase(attribute)}
+                    value={user[attribute] as string}
+                    onChange={(e, { value }) => editUser(attribute, value)}
+                    readOnly={!isEditable(attribute)}
+                    viewable={isViewable(attribute)}
+                  />
+                ))}
 
-                {permissions.view.includes('lastName') && (
-                  <div className="input-field">
-                    <span>{`${parseCamelCase('lastName')}:`}</span>
-                    <Input
-                      value={user.lastName}
-                      transparent
-                      readOnly={
-                        !isEditMode || !permissions.edit.includes('lastName')
-                      }
-                      onChange={(e, { value }) =>
-                        setUser(updateUserField(user, 'lastName', value))
-                      }
-                    />
-                  </div>
-                )}
-
-                {permissions.view.includes('preferredName') && (
-                  <div className="input-field">
-                    <span>{`${parseCamelCase('preferredName')}:`}</span>
-                    <Input
-                      value={user.preferredName}
-                      transparent
-                      readOnly={
-                        !isEditMode ||
-                        !permissions.edit.includes('preferredName')
-                      }
-                      onChange={(e, { value }) =>
-                        setUser(updateUserField(user, 'preferredName', value))
-                      }
-                    />
-                  </div>
-                )}
-
-                {permissions.view.includes('genders') && (
-                  <>
-                    {isEditMode && permissions.edit.includes('genders') ? (
-                      <div className="input-field">
-                        <span>{parseCamelCase('genders')}</span>
-                        <Dropdown
-                          className="dropdown-field"
-                          options={parseArrayToSemanticDropdownOptions(
-                            dropdownOptions['genders'].concat(user.genders),
-                          )}
-                          search
-                          selection
-                          floating
-                          multiple
-                          allowAdditions
-                          value={user.genders}
-                          onAddItem={(e, { value }) =>
-                            updateDropdownOptions(
-                              'genders',
-                              value!.toString(),
-                              allGenders,
-                            )
-                          }
-                          onChange={(e, { value }) =>
-                            addGender(value as string[])
-                          }
-                        />
-                      </div>
-                    ) : (
-                      <div className="input-field">
-                        <span>{`${parseCamelCase('genders')}:`}</span>
-                        <Input
-                          value={user.genders.join(', ')}
-                          transparent
-                          readOnly
-                        />
-                      </div>
+                {arrayAttributes.map((attribute, index) => (
+                  <ArrayAttribute
+                    key={index}
+                    label={parseCamelCase(attribute)}
+                    value={user[attribute].map(
+                      (el) =>
+                        el.charAt(0).toUpperCase() + el.slice(1).toLowerCase(),
                     )}
-                  </>
-                )}
+                    options={getMultiDropdownOptions(attribute)}
+                    onAddItem={(e, { value }) =>
+                      addDropdownOption(attribute, `${value}`)
+                    }
+                    onChange={(e, { value }) =>
+                      addArrayElement(value as string[], attribute)
+                    }
+                    viewable={isViewable(attribute)}
+                    editable={isEditable(attribute)}
+                  />
+                ))}
 
-                {permissions.view.includes('pronouns') && (
-                  <>
-                    {isEditMode && permissions.edit.includes('pronouns') ? (
-                      <div className="input-field">
-                        <span>{parseCamelCase('pronouns')}</span>
-                        <Dropdown
-                          className="dropdown-field"
-                          options={parseArrayToSemanticDropdownOptions(
-                            dropdownOptions['pronouns'].concat(user.pronouns),
-                          )}
-                          search
-                          selection
-                          floating
-                          multiple
-                          allowAdditions
-                          value={user.pronouns}
-                          onAddItem={(e, { value }) =>
-                            updateDropdownOptions(
-                              'pronouns',
-                              value!.toString(),
-                              allPronouns,
-                            )
-                          }
-                          onChange={(e, { value }) =>
-                            addPronoun(value as string[])
-                          }
-                        />
-                      </div>
-                    ) : (
-                      <div className="input-field">
-                        <span>{`${parseCamelCase('pronouns')}:`}</span>
-                        <Input value={user.pronouns.join(', ')} transparent />
-                      </div>
-                    )}
-                  </>
-                )}
+                <SelectAttribute
+                  label={parseCamelCase('role')}
+                  value={convertToCapitalized(user.role)}
+                  options={parseArrayToSemanticDropdownOptions(
+                    dropdownOptions['role'],
+                  )}
+                  onChange={(e, { value }) => editUser('role', `${value}`)}
+                  viewable={isViewable('role')}
+                  editable={isEditable('role')}
+                />
 
-                {permissions.view.includes('races') && (
-                  <>
-                    {isEditMode && permissions.edit.includes('races') ? (
-                      <div className="input-field">
-                        <span>{parseCamelCase('races')}</span>
-                        <Dropdown
-                          className="dropdown-field"
-                          options={parseArrayToSemanticDropdownOptions(
-                            dropdownOptions['races'].concat(user.races),
-                          )}
-                          search
-                          selection
-                          floating
-                          multiple
-                          allowAdditions
-                          value={user.races}
-                          onAddItem={(e, { value }) =>
-                            updateDropdownOptions(
-                              'races',
-                              value!.toString(),
-                              allRaces,
-                            )
-                          }
-                          onChange={(e, { value }) =>
-                            addRace(value as string[])
-                          }
-                        />
-                      </div>
-                    ) : (
-                      <div className="input-field">
-                        <span>{`${parseCamelCase('races')}:`}</span>
-                        <Input value={user.races.join(', ')} transparent />
-                      </div>
-                    )}
-                  </>
-                )}
-
-                {permissions.view.includes('role') && (
-                  <>
-                    {isEditMode && permissions.edit.includes('role') ? (
-                      <div className="input-field">
-                        <span>{parseCamelCase('role')}</span>
-                        <Dropdown
-                          className="dropdown-field"
-                          options={parseArrayToSemanticDropdownOptions(
-                            dropdownOptions['role'],
-                          )}
-                          onChange={(e, { value }) =>
-                            setUser(updateUserField(user, 'role', `${value}`))
-                          }
-                          selection
-                          floating
-                          value={user.role}
-                        />
-                      </div>
-                    ) : (
-                      <div className="input-field">
-                        <span>{`${parseCamelCase('role')}:`}</span>
-                        <Input
-                          value={convertToCapitalized(user.role)}
-                          transparent
-                        />
-                      </div>
-                    )}
-                  </>
-                )}
-
-                {permissions.view.includes('dateJoined') && (
-                  <>
-                    {isEditMode && permissions.edit.includes('dateJoined') ? (
-                      <div className="input-field">
-                        <span>{parseCamelCase('dateJoined')}</span>
-                        <Input
-                          value={
-                            new Date(user.dateJoined)
-                              .toISOString()
-                              .split('T')[0]
-                          }
-                          transparent
-                          onChange={(e) =>
-                            setUser(
-                              updateUserField(
-                                user,
-                                'dateJoined',
-                                new Date(e.currentTarget.value),
-                              ),
-                            )
-                          }
-                          type="date"
-                          max={new Date(Date.now()).toISOString().split('T')[0]}
-                        />
-                      </div>
-                    ) : (
-                      <div className="input-field">
-                        <span>{`${parseCamelCase('dateJoined')}:`}</span>
-                        <Input
-                          value={new Date(user.dateJoined).toLocaleDateString(
-                            'en-US',
-                            { timeZone: 'UTC' },
-                          )}
-                          transparent
-                        />
-                      </div>
-                    )}
-                  </>
-                )}
+                <DateAttribute
+                  label={parseCamelCase('dateJoined')}
+                  value={user.dateJoined}
+                  onChange={(e, { value }) =>
+                    editUser('dateJoined', new Date(value))
+                  }
+                  viewable={isViewable('dateJoined')}
+                  editable={isEditable('dateJoined')}
+                />
               </Container>
             </Grid.Column>
 
-            {permissions.view.includes('interests') && (
+            {isViewable('interests') && (
               <Grid.Column textAlign="center" width={3}>
                 <HeaderTag as="h2">My Interests</HeaderTag>
-                {isEditMode && permissions.edit.includes('interests') ? (
+                {isEditable('interests') ? (
                   <Container>
                     {allInterests.map((interest, index) => (
                       <div key={index} className="checkbox-group">
@@ -522,8 +373,8 @@ const Profile = (): ReactElement => {
                           value={interest}
                           label={convertToCapitalized(interest)}
                           checked={user.interests.includes(interest)}
-                          onChange={(e, data) => {
-                            addInterest(`${data.value!}`);
+                          onChange={(e, { value }) => {
+                            addInterest(`${value}`);
                           }}
                         />
                       </div>
@@ -542,10 +393,10 @@ const Profile = (): ReactElement => {
               </Grid.Column>
             )}
 
-            {permissions.view.includes('currentTeams') && (
+            {isViewable('currentTeams') && (
               <Grid.Column textAlign="center" width={3}>
                 <HeaderTag as="h2">My Teams</HeaderTag>
-                {isEditMode && permissions.edit.includes('currentTeams') ? (
+                {isEditable('currentTeams') ? (
                   <Container>
                     <div className="checkbox-group">
                       {allTeams.map((team, index) => (
@@ -578,20 +429,16 @@ const Profile = (): ReactElement => {
             <Grid.Column textAlign="left" width={6}>
               <HeaderTag as="h2">Socials/Contact</HeaderTag>
               <SocialsInput
-                readOnly={!isEditMode || !permissions.edit.includes('email')}
-                onChange={(e, { value }) =>
-                  setUser(updateUserField(user, 'email', value))
-                }
+                readOnly={!isEditable('email')}
+                onChange={(e, { value }) => editUser('email', value)}
                 icon="mail"
                 value={user.email}
                 viewable={isViewable('email')}
               />
 
               <SocialsInput
-                readOnly={!isEditMode || !permissions.edit.includes('phone')}
-                onChange={(e, { value }) =>
-                  setUser(updateUserField(user, 'phone', value))
-                }
+                readOnly={!isEditable('phone')}
+                onChange={(e, { value }) => editUser('phone', value)}
                 icon="phone"
                 value={user.phone}
                 viewable={isViewable('phone')}
@@ -602,28 +449,22 @@ const Profile = (): ReactElement => {
               <SocialsInput
                 icon="linkedin"
                 value={user.linkedIn}
-                readOnly={!isEditMode}
-                onChange={(e, { value }) =>
-                  setUser(updateUserField(user, 'linkedIn', value))
-                }
+                readOnly={!isEditable('linkedIn')}
+                onChange={(e, { value }) => editUser('linkedIn', value)}
                 viewable={isViewable('linkedIn')}
               />
               <SocialsInput
                 icon="globe"
                 value={user.portfolio}
-                readOnly={!isEditMode}
-                onChange={(e, { value }) =>
-                  setUser(updateUserField(user, 'portfolio', value))
-                }
+                readOnly={!isEditable('portfolio')}
+                onChange={(e, { value }) => editUser('portfolio', value)}
                 viewable={isViewable('portfolio')}
               />
               <SocialsInput
                 icon="twitter"
                 value={user.twitter}
-                readOnly={!isEditMode}
-                onChange={(e, { value }) =>
-                  setUser(updateUserField(user, 'twitter', value))
-                }
+                readOnly={!isEditable('twitter')}
+                onChange={(e, { value }) => editUser('twitter', value)}
                 viewable={isViewable('twitter')}
               />
             </Grid.Column>

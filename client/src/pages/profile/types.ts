@@ -12,3 +12,5 @@ export interface IPermissions {
   view: (keyof IUser)[];
   edit: (keyof IUser)[];
 }
+
+export type MultiDropdowns = 'genders' | 'pronouns' | 'races';
