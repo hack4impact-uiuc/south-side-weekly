@@ -30,7 +30,14 @@ const ArrayAttribute: FC<IArrayAttribute> = ({
             onChange={onChange}
           />
         ) : (
-          <Input value={value.join(', ')} transparent />
+          <Input
+            value={value
+              .map(
+                (el) => el.charAt(0).toUpperCase() + el.slice(1).toLowerCase(),
+              )
+              .join(', ')}
+            transparent
+          />
         )}
       </div>
     )}

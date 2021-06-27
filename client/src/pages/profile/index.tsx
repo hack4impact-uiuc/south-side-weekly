@@ -322,10 +322,7 @@ const Profile = (): ReactElement => {
                   <ArrayAttribute
                     key={index}
                     label={parseCamelCase(attribute)}
-                    value={user[attribute].map(
-                      (el) =>
-                        el.charAt(0).toUpperCase() + el.slice(1).toLowerCase(),
-                    )}
+                    value={user[attribute]}
                     options={getMultiDropdownOptions(attribute)}
                     onAddItem={(e, { value }) =>
                       addDropdownOption(attribute, `${value}`)
@@ -397,20 +394,18 @@ const Profile = (): ReactElement => {
               <Grid.Column textAlign="center" width={3}>
                 <HeaderTag as="h2">My Teams</HeaderTag>
                 {isEditable('currentTeams') ? (
-                  <Container>
-                    <div className="checkbox-group">
-                      {allTeams.map((team, index) => (
-                        <Checkbox
-                          key={index}
-                          className="checkbox"
-                          value={team}
-                          label={convertToCapitalized(team)}
-                          checked={user.currentTeams.includes(team)}
-                          onChange={(e, data) => addTeam(`${data.value!}`)}
-                        />
-                      ))}
-                    </div>
-                  </Container>
+                  <div className="checkbox-group">
+                    {allTeams.map((team, index) => (
+                      <Checkbox
+                        key={index}
+                        className="checkbox"
+                        value={team}
+                        label={convertToCapitalized(team)}
+                        checked={user.currentTeams.includes(team)}
+                        onChange={(e, data) => addTeam(`${data.value!}`)}
+                      />
+                    ))}
+                  </div>
                 ) : (
                   user.currentTeams.sort().map((team, index) => (
                     <div
