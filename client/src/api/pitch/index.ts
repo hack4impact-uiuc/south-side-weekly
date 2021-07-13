@@ -36,9 +36,14 @@ const updatePitch = async (
 ): Promise<AxiosResponse<Types.GetPitchesResponseType> | ErrorWrapper> =>
   await put(`${PITCH_ENDPOINT}/${pitchId}`, pitchData, 'UPDATE_PITCH_FAIL');
 
+const getPendingPitches = async (): Promise<
+  AxiosResponse<Types.GetPitchesResponseType> | ErrorWrapper
+> => await get(`${PITCH_ENDPOINT}?pending=true`, 'GET_PENDING_PITCHES_FAIL');
+
 export {
   getApprovedPitches,
   getOpenTeams,
   updatePitchContributors,
   updatePitch,
+  getPendingPitches,
 };

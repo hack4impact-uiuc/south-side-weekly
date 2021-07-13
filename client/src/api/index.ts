@@ -11,6 +11,7 @@ export {
   getOpenTeams,
   updatePitch,
   updatePitchContributors,
+  getPendingPitches,
 } from './pitch';
 export {
   createResource,
