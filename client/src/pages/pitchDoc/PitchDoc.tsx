@@ -24,6 +24,7 @@ import {
   isError,
   getCurrentUser,
   getPendingPitches,
+  getPendingContributorPitches,
 } from '../../api';
 import PitchGrid from '../../components/PitchDoc/PitchGrid';
 import SubmitPitchModal from '../../components/PitchDoc/SubmitPitchModal';
@@ -119,14 +120,20 @@ function PitchDoc(): ReactElement {
   );
 
   const getAllUnclaimedPitches = useCallback(async (): Promise<void> => {
+    console.log('here');
     const unclaimedPitchesResp = await getApprovedPitches();
     let pendingPitchesResp;
     let pendingContributorsResp;
+
+    let tempPitches: IPitch[] = [];
+    if (!isError(unclaimedPitchesResp) && unclaimedPitchesResp.data) {
+      tempPitches = unclaimedPitchesResp.data.result;
+      setUnclaimedPitches(unclaimedPitchesResp.data.result);
+    }
+
     if (isAdmin) {
       pendingPitchesResp = await getPendingPitches();
-
-      // TODO: Change this line when contributors endpoint is finished
-      pendingContributorsResp = await getPendingPitches();
+      pendingContributorsResp = await getPendingContributorPitches();
 
       if (
         !isError(pendingPitchesResp) &&
@@ -136,16 +143,12 @@ function PitchDoc(): ReactElement {
       ) {
         setPendingPitches(pendingPitchesResp.data.result);
         setPendingContributors(pendingContributorsResp.data.result);
-        setDisplayedCards(pendingPitches);
+        setDisplayedCards(pendingPitchesResp.data.result);
       }
     } else {
-      setDisplayedCards(unclaimedPitches);
+      setDisplayedCards(tempPitches);
     }
-
-    if (!isError(unclaimedPitchesResp) && unclaimedPitchesResp.data) {
-      setUnclaimedPitches(unclaimedPitchesResp.data.result);
-    }
-  }, [isAdmin, unclaimedPitches, pendingPitches]);
+  }, [isAdmin]);
 
   useEffect(() => {
     const getUser = async (): Promise<void> => {

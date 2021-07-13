@@ -238,4 +238,19 @@ router.delete(
   }),
 );
 
+router.get(
+  '/all/pending',
+  errorWrap(async (req: Request, res: Response) => {
+    const pitches = await Pitch.find({
+      'pendingContributors.0': { $exists: true },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Pending pitches successfully retrived',
+      result: pitches,
+    });
+  }),
+);
+
 export default router;

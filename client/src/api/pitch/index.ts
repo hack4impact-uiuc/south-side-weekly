@@ -40,10 +40,19 @@ const getPendingPitches = async (): Promise<
   AxiosResponse<Types.GetPitchesResponseType> | ErrorWrapper
 > => await get(`${PITCH_ENDPOINT}?pending=true`, 'GET_PENDING_PITCHES_FAIL');
 
+const getPendingContributorPitches = async (): Promise<
+  AxiosResponse<Types.GetPitchesResponseType> | ErrorWrapper
+> =>
+  await get(
+    `${PITCH_ENDPOINT}/all/pending`,
+    'GET_PENDING_CONTRIBUTOR_PITCH_FAIL',
+  );
+
 export {
   getApprovedPitches,
   getOpenTeams,
   updatePitchContributors,
   updatePitch,
   getPendingPitches,
+  getPendingContributorPitches,
 };
