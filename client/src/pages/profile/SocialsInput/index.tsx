@@ -11,6 +11,13 @@ const SocialsInput: FC<ISocialsInput> = ({
   onChange,
   viewable,
 }): ReactElement => {
+  /**
+   * Determines if to represent the social input as a link based on its icon
+   *
+   * @param icon the Semantic UI icon for the input
+   * @param link the potential link
+   * @returns an element with the proper wrapper tag
+   */
   const linkify = (icon: SemanticICONS, link: string): ReactElement => {
     if (icon.includes('mail')) {
       return <a href={`mailto:${link}`}>{link}</a>;
