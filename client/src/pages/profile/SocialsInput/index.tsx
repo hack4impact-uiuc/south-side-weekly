@@ -23,6 +23,8 @@ const SocialsInput: FC<ISocialsInput> = ({
       return <a href={`mailto:${link}`}>{link}</a>;
     } else if (icon === 'linkedin' || icon === 'globe' || icon === 'twitter') {
       return <a href={link}>{link}</a>;
+    } else if (icon.includes('phone')) {
+      return <a href={`tel:${link}`}>{link}</a>;
     }
 
     return <span>{link}</span>;
