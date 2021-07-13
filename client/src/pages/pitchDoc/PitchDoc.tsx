@@ -106,6 +106,9 @@ const searchReducer = (
 
 function PitchDoc(): ReactElement {
   const [displayedCards, setDisplayedCards] = useState<IPitch[]>([]);
+  const [unclaimedPitches, setUnclaimedPitches] = useState<IPitch[]>([]);
+  const [pendingPitches, setPendingPitches] = useState<IPitch[]>([]);
+  const [pendingContributors, setPendingContributors] = useState<IPitch[]>([]);
   const [filterKeys, setFilterKeys] = useState<IFilterKeys>(initialFilterKeys);
   const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>(tabs[1]);
@@ -114,6 +117,35 @@ function PitchDoc(): ReactElement {
     searchReducer,
     initialSearchState,
   );
+
+  const getAllUnclaimedPitches = useCallback(async (): Promise<void> => {
+    const unclaimedPitchesResp = await getApprovedPitches();
+    let pendingPitchesResp;
+    let pendingContributorsResp;
+    if (isAdmin) {
+      pendingPitchesResp = await getPendingPitches();
+
+      // TODO: Change this line when contributors endpoint is finished
+      pendingContributorsResp = await getPendingPitches();
+
+      if (
+        !isError(pendingPitchesResp) &&
+        !isError(pendingContributorsResp) &&
+        pendingPitchesResp.data &&
+        pendingContributorsResp.data
+      ) {
+        setPendingPitches(pendingPitchesResp.data.result);
+        setPendingContributors(pendingContributorsResp.data.result);
+        setDisplayedCards(pendingPitches);
+      }
+    } else {
+      setDisplayedCards(unclaimedPitches);
+    }
+
+    if (!isError(unclaimedPitchesResp) && unclaimedPitchesResp.data) {
+      setUnclaimedPitches(unclaimedPitchesResp.data.result);
+    }
+  }, [isAdmin, unclaimedPitches, pendingPitches]);
 
   useEffect(() => {
     const getUser = async (): Promise<void> => {
@@ -125,7 +157,8 @@ function PitchDoc(): ReactElement {
     };
 
     getUser();
-  }, []);
+    getAllUnclaimedPitches();
+  }, [getAllUnclaimedPitches]);
 
   const teamOptions = useMemo(
     () =>
@@ -193,23 +226,6 @@ function PitchDoc(): ReactElement {
     },
     [displayedCards],
   );
-
-  const getAllUnclaimedPitches = useCallback(async (): Promise<void> => {
-    let resp;
-    if (isAdmin) {
-      resp = await getPendingPitches();
-    } else {
-      resp = await getApprovedPitches();
-    }
-
-    if (!isError(resp) && resp.data) {
-      setDisplayedCards(resp.data.result);
-    }
-  }, [isAdmin]);
-
-  useEffect(() => {
-    getAllUnclaimedPitches();
-  }, [getAllUnclaimedPitches]);
 
   /**
    * Delay before searching.
@@ -319,6 +335,17 @@ function PitchDoc(): ReactElement {
     setFilterKeys({ ...keys });
   };
 
+  // Handles the admin changing tabs and changes the cards displayed
+  useEffect(() => {
+    if (currentTab === tabs[0]) {
+      setDisplayedCards(unclaimedPitches);
+    } else if (currentTab === tabs[1]) {
+      setDisplayedCards(pendingPitches);
+    } else if (currentTab === tabs[2]) {
+      setDisplayedCards(pendingContributors);
+    }
+  }, [currentTab, unclaimedPitches, pendingPitches, pendingContributors]);
+
   return (
     <>
       <Sidebar currentPage={pages.PITCHES} />
@@ -340,7 +367,7 @@ function PitchDoc(): ReactElement {
                 }`}
                 onClick={() => setCurrentTab(tabs[0])}
               >
-                Unclaimed Pitches
+                {tabs[0]}
               </Button>
               <Button
                 className={`admin-pitch-tab ${
@@ -348,7 +375,7 @@ function PitchDoc(): ReactElement {
                 }`}
                 onClick={() => setCurrentTab(tabs[1])}
               >
-                Pitches Pending Approval: {displayedCards.length}
+                {tabs[1]}: {pendingPitches.length}
               </Button>
               <Button
                 className={`admin-pitch-tab ${
@@ -356,7 +383,7 @@ function PitchDoc(): ReactElement {
                 }`}
                 onClick={() => setCurrentTab(tabs[2])}
               >
-                Claims Pending Approval
+                {tabs[2]}
               </Button>
             </div>
           ) : (
