@@ -478,7 +478,7 @@ function PitchDoc(): ReactElement {
             </div>
           </div>
 
-          {isAdmin ? <h2>Approve Contributor Pitches:</h2> : ''}
+          {isAdmin ? <h2>{`${currentTab}:`}</h2> : ''}
         </div>
 
         <div className="pitch-grid">
