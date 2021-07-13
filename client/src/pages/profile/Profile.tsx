@@ -12,15 +12,15 @@ import { IUser } from 'ssw-common';
 
 import {
   isError,
-  loadUser,
-  saveUser,
+  getUser,
+  updateUser,
   getCurrentUser,
-} from '../../utils/apiWrapper';
+  getUserPermissionsByID,
+} from '../../api';
 import { teamEnum, interestsEnum, pages } from '../../utils/enums';
 import Sidebar from '../../components/Sidebar';
 import Mail from '../../assets/mail.svg';
 import Phone from '../../assets/phone.svg';
-import Linkedin from '../../assets/linkedin.svg';
 import Globe from '../../assets/globe.svg';
 import Twitter from '../../assets/twitter.svg';
 import Masthead from '../../assets/masthead.svg';
@@ -53,6 +53,13 @@ function Profile(): ReactElement {
   const [interests, setInterests] = useState<Array<string>>([]);
   const [edit, setEdit] = useState<boolean>(false);
   const [error, setError] = useState<boolean>(false);
+  const [userPermissions, setUserPermissions] = useState<{
+    view: string[];
+    edit: string[];
+  }>({
+    view: [],
+    edit: [],
+  });
   const [errorMessage, setErrorMessage] = useState<string>(DefaultProfile);
 
   const [isEditable, setIsEditable] = useState<boolean>(false);
@@ -190,7 +197,7 @@ function Profile(): ReactElement {
   }
 
   const getProfile = useCallback(async (): Promise<void> => {
-    const res = await loadUser(userId);
+    const res = await getUser(userId);
     if (isError(res)) {
       setError(true);
       setErrorMessage(res.type);
@@ -225,7 +232,7 @@ function Profile(): ReactElement {
   }, [userId]);
 
   async function updateProfile(): Promise<void> {
-    const res = await saveUser(profileData, userId);
+    const res = await updateUser(profileData, userId);
     if (isError(res)) {
       setError(true);
       setErrorMessage(res.type);
@@ -242,11 +249,22 @@ function Profile(): ReactElement {
       if (!isError(res)) {
         const currentUser: IUser = res.data.result;
         setIsEditable(userId === currentUser._id);
+      } else {
+        console.error(res);
+      }
+    };
+
+    const getUserPermissions = async (): Promise<void> => {
+      const res = await getUserPermissionsByID(userId);
+
+      if (!isError(res)) {
+        setUserPermissions(res.data.result);
       }
     };
 
     getActiveUser();
     getProfile();
+    getUserPermissions();
   }, [getProfile, userId]);
 
   return (
@@ -390,7 +408,7 @@ function Profile(): ReactElement {
                   transparent
                   value={roleOptions[role]}
                   readOnly="true"
-                  disabled={edit}
+                  disabled={!userPermissions.edit.includes('role')}
                 />
               </div>
 
@@ -486,106 +504,91 @@ function Profile(): ReactElement {
                     transparent
                     value={email}
                     readOnly
-                    disabled={edit}
+                    disabled={!userPermissions.edit.includes('email')}
                   />
                 )}
               </div>
 
-              <div className="input-wrapper">
-                <div>
-                  <img className="icon" src={Phone} alt="mail" />
+              {userPermissions.view.includes('phone') && (
+                <div className="input-wrapper">
+                  <div>
+                    <img className="icon" src={Phone} alt="mail" />
+                  </div>
+                  <Input
+                    className="input-field"
+                    transparent
+                    value={phoneNumber}
+                    readOnly={!edit}
+                    onChange={(e) => setPhoneNumber(e.currentTarget.value)}
+                  />
                 </div>
+              )}
+              {edit && (
                 <Input
                   className="input-field"
                   transparent
-                  value={phoneNumber}
+                  value={linkedIn}
                   readOnly={!edit}
-                  onChange={(e) => setPhoneNumber(e.currentTarget.value)}
+                  onChange={(e) => setLinkedIn(e.currentTarget.value)}
                 />
-              </div>
+              )}
             </div>
-            <div className="right-col">
-              <div className="input-wrapper">
-                <div>
-                  <img className="icon" src={Linkedin} alt="linkedin" />
-                </div>
-                {!edit && (
-                  <a
-                    rel="noreferrer"
-                    target="_blank"
-                    className="link"
-                    href={`${linkedIn}`}
-                  >
-                    {linkedIn}
-                  </a>
-                )}
-                {edit && (
-                  <Input
-                    className="input-field"
-                    transparent
-                    value={linkedIn}
-                    readOnly={!edit}
-                    onChange={(e) => setLinkedIn(e.currentTarget.value)}
-                  />
-                )}
-              </div>
 
-              <div className="input-wrapper">
-                <div>
-                  <img className="icon" src={Globe} alt="globe" />
-                </div>
-                {!edit && (
-                  <a
-                    rel="noreferrer"
-                    target="_blank"
-                    className="link"
-                    href={`${portfolio}`}
-                  >
-                    {portfolio}
-                  </a>
-                )}
-                {edit && (
-                  <Input
-                    className="input-field"
-                    transparent
-                    value={portfolio}
-                    readOnly={!edit}
-                    onChange={(e) => setPortfolio(e.currentTarget.value)}
-                  />
-                )}
+            <div className="input-wrapper">
+              <div>
+                <img className="icon" src={Globe} alt="globe" />
               </div>
-
-              <div className="input-wrapper">
-                <div>
-                  <img className="icon" src={Twitter} alt="twitter" />
-                </div>
-                {!edit && (
-                  <a
-                    rel="noreferrer"
-                    target="_blank"
-                    className="link"
-                    href={`${twitter}`}
-                  >
-                    {twitter}
-                  </a>
-                )}
-                {edit && (
-                  <Input
-                    className="input-field"
-                    transparent
-                    value={twitter}
-                    readOnly={!edit}
-                    onChange={(e) => setTwitter(e.currentTarget.value)}
-                  />
-                )}
-              </div>
+              {!edit && (
+                <a
+                  rel="noreferrer"
+                  target="_blank"
+                  className="link"
+                  href={`${portfolio}`}
+                >
+                  {portfolio}
+                </a>
+              )}
+              {edit && (
+                <Input
+                  className="input-field"
+                  transparent
+                  value={portfolio}
+                  readOnly={!edit}
+                  onChange={(e) => setPortfolio(e.currentTarget.value)}
+                />
+              )}
             </div>
-            {error && (
-              <Message className="message-wrapper" negative>
-                <Message.Header>{errorMessage}</Message.Header>
-              </Message>
-            )}
+
+            <div className="input-wrapper">
+              <div>
+                <img className="icon" src={Twitter} alt="twitter" />
+              </div>
+              {!edit && (
+                <a
+                  rel="noreferrer"
+                  target="_blank"
+                  className="link"
+                  href={`${twitter}`}
+                >
+                  {twitter}
+                </a>
+              )}
+              {edit && (
+                <Input
+                  className="input-field"
+                  transparent
+                  value={twitter}
+                  readOnly={!edit}
+                  onChange={(e) => setTwitter(e.currentTarget.value)}
+                />
+              )}
+            </div>
           </div>
+          {error && (
+            <Message className="message-wrapper" negative>
+              <Message.Header>{errorMessage}</Message.Header>
+            </Message>
+          )}
         </div>
       </div>
     </>

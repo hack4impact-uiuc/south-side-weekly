@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Icon, Image } from 'semantic-ui-react';
 
 import { pages } from '../utils/enums';
-import { getCurrentUser, isError } from '../utils/apiWrapper';
+import { isError, getCurrentUser } from '../api';
 import DefaultProfile from '../assets/default_profile.png';
 import '../css/Sidebar.css';
 

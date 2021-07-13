@@ -20,11 +20,11 @@ import {
 } from '../../utils/helpers';
 import Sidebar from '../../components/Sidebar';
 import {
-  getCurrentUser,
   getApprovedPitches,
-  getPendingPitches,
   isError,
-} from '../../utils/apiWrapper';
+  getCurrentUser,
+  getPendingPitches,
+} from '../../api';
 import PitchGrid from '../../components/PitchDoc/PitchGrid';
 import SubmitPitchModal from '../../components/PitchDoc/SubmitPitchModal';
 import Logo from '../../assets/ssw-form-header.png';
