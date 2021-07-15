@@ -269,7 +269,7 @@ const Profile = (): ReactElement => {
       <Sidebar currentPage={pages.PROFILE} />
       <Header />
       <div style={{ marginLeft: '15%', marginTop: '3%' }}>
-        <Grid stackable>
+        <Grid padded stackable>
           <Grid.Row columns={4}>
             <Grid.Column className="profile-pic-col">
               {(userId === currentUser._id || currentUser.role === 'ADMIN') && (
@@ -288,7 +288,7 @@ const Profile = (): ReactElement => {
               )}
 
               {isEditMode && (
-                <Button.Group>
+                <div style={{ display: 'inline-block', textAlign: 'center' }}>
                   <Button
                     className="edit-mode-btn save"
                     content="Save Changes"
@@ -301,7 +301,7 @@ const Profile = (): ReactElement => {
                     onClick={cancelEditMode}
                     size="medium"
                   />
-                </Button.Group>
+                </div>
               )}
             </Grid.Column>
             <Grid.Column width={5}>
