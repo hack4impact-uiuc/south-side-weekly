@@ -19,6 +19,7 @@ import { IPitch, IUser } from 'ssw-common';
 import {
   getOpenTeams,
   updatePitchContributors,
+  getCurrentUser,
   updatePitch,
   getUser,
   isError,
@@ -46,16 +47,13 @@ interface IProps {
 }
 
 const ApprovePitchModal: FC<IProps> = ({ pitch }): ReactElement => {
-  interface ParamTypes {
-    userId: string;
-  }
-
-  const { userId } = useParams<ParamTypes>();
+  const [success, setSuccess] = useState<boolean>(false);
   const [firstOpen, setFirstOpen] = useState<boolean>(false);
   const [secondOpen, setSecondOpen] = useState<boolean>(false);
   const [pitchAuthor, setPitchAuthor] = useState<string>('');
   //TODO: Change from hardcoded values to database values
-  //const userId = '6031a866c70ec705736a79e5';
+  let userId = '';
+
   const pitchData: { [key: string]: number | string } = {};
 
   const claimPitch = async (): Promise<void> => {
@@ -63,9 +61,18 @@ const ApprovePitchModal: FC<IProps> = ({ pitch }): ReactElement => {
     const pitchRes = await updatePitch(pitchData, pitch._id);
     const userRes = await updateUserSubmittedPitches(userId, pitch._id);
     if (!isError(pitchRes) && !isError(userRes)) {
+      setSuccess(true);
       setSecondOpen(true);
     }
-    console.log(pitchData);
+  };
+
+  const declinePitch = async (): Promise<void> => {
+    pitchData['pitchStatus'] = pitchStatusEnum['REJECTED'];
+    const pitchRes = await updatePitch(pitchData, pitch._id);
+    if (!isError(pitchRes)) {
+      setSuccess(false);
+      setSecondOpen(true);
+    }
   };
 
   const loadUser = useCallback(async () => {
@@ -80,6 +87,14 @@ const ApprovePitchModal: FC<IProps> = ({ pitch }): ReactElement => {
   }, [pitch.pitchAuthor]);
 
   useEffect(() => {
+    const getActiveUser = async (): Promise<void> => {
+      const res = await getCurrentUser();
+      if (!isError(res)) {
+        const currentUser: IUser = res.data.result;
+        userId = currentUser._id;
+      }
+    };
+    getActiveUser();
     loadUser();
   }, [firstOpen, loadUser]);
 
@@ -169,7 +184,7 @@ const ApprovePitchModal: FC<IProps> = ({ pitch }): ReactElement => {
                 <Button id="submit" type="submit" onClick={claimPitch}>
                   Approve Pitch
                 </Button>
-                <Button id="decline" type="decline" onClick={claimPitch}>
+                <Button id="decline" type="decline" onClick={declinePitch}>
                   Decline Pitch
                 </Button>
               </div>
@@ -190,11 +205,9 @@ const ApprovePitchModal: FC<IProps> = ({ pitch }): ReactElement => {
         <Modal.Actions>
           <div className="success-wrapper">
             <div className="text">
-              You successfully claimed this Pitch! Once approved, it will show
-              up on your Home Page under “Claimed Pitches”.
-            </div>
-            <div className="image">
-              <Image src={Homerun} />
+              {success
+                ? 'You successfully approved this Pitch! The Pitch will be shown on the Pitch Doc.'
+                : 'You have successfully declined this Pitch.'}
             </div>
           </div>
         </Modal.Actions>

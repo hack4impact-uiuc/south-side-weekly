@@ -17,9 +17,14 @@ const PitchGrid: FC<IProps> = ({
     <Grid.Row columns={3}>
       {pitches.map((pitch, idx) => (
         <Grid.Column key={idx}>
-          <ApprovePitchModal
+          {/* <ApprovePitchModal
             pitch={pitch}
             //getAllUnclaimedPitches={getAllUnclaimedPitches}
+          /> */}
+          {console.log('FDKFLKD', pitch)}
+          <ClaimPitchModal
+            pitch={pitch}
+            getAllUnclaimedPitches={getAllUnclaimedPitches}
           />
         </Grid.Column>
       ))}

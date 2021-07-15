@@ -150,13 +150,19 @@
   background: #c17979;
 }
 .success-wrapper {
-  padding-left: 20px;
-  padding-top: 20px;
+  padding: 40px;
+  justify-content: center;
+  align-items: center;
+  display: flex;
 }
 
 .success-wrapper .text {
   font-size: 30.9009px;
   line-height: 38px;
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .success-wrapper .image {

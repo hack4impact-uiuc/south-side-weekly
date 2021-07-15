@@ -122,12 +122,14 @@ function PitchDoc(): ReactElement {
   const getAllUnclaimedPitches = useCallback(async (): Promise<void> => {
     console.log('here');
     const unclaimedPitchesResp = await getApprovedPitches();
+
     let pendingPitchesResp;
     let pendingContributorsResp;
 
     let tempPitches: IPitch[] = [];
     if (!isError(unclaimedPitchesResp) && unclaimedPitchesResp.data) {
       tempPitches = unclaimedPitchesResp.data.result;
+      console.log(unclaimedPitchesResp.data.result);
       setUnclaimedPitches(unclaimedPitchesResp.data.result);
     }
 
@@ -271,6 +273,7 @@ function PitchDoc(): ReactElement {
    * @returns the filtered list of pitches
    */
   const handlePitchDocFiltering = (pitches: IPitch[]): IPitch[] => {
+    console.log('fh', pitches);
     if (isFilterKeysEmpty()) {
       return pitches;
     }
