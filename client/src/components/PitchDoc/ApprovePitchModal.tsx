@@ -33,6 +33,7 @@ import {
   enumToInterestButtons,
   interestsButtons,
 } from '../../utils/constants';
+import { pitchStatusEnum } from '../../utils/enums';
 
 import PitchCard from './PitchCard';
 
@@ -46,28 +47,18 @@ interface IProps {
 const ApprovePitchModal: FC<IProps> = ({ pitch }): ReactElement => {
   const [firstOpen, setFirstOpen] = useState<boolean>(false);
   const [secondOpen, setSecondOpen] = useState<boolean>(false);
-  const [teams, setTeams] = useState<IPitch['teams']>();
-
   const [pitchAuthor, setPitchAuthor] = useState<string>('');
   //TODO: Change from hardcoded values to database values
   const userId = '6031a866c70ec705736a79e5';
-  const temp_pfp = Pfp;
   const pitchData: { [key: string]: number | string } = {};
 
   const claimPitch = async (): Promise<void> => {
-    const pitchRes = await updatePitchContributors(pitch._id, userId);
-    const claimedRes = await updateUserClaimedPitches(userId, pitch._id);
-    setData();
-    const updateRes = await updatePitch(pitchData, pitch._id);
-    if (!isError(pitchRes) && !isError(claimedRes) && !isError(updateRes)) {
+    pitchData['pitchStatus'] = pitchStatusEnum['APPROVED'];
+    const res = await updatePitch(pitchData, pitch._id);
+    if (!isError(res)) {
       setSecondOpen(true);
     }
-  };
-
-  const setData = (): void => {
-    selectedTeams.map((team) => {
-      pitchData[`teams.${team}.current`] = openTeams[team].current + 1;
-    });
+    console.log(pitchData);
   };
 
   const loadUser = useCallback(async () => {
@@ -96,7 +87,7 @@ const ApprovePitchModal: FC<IProps> = ({ pitch }): ReactElement => {
           setFirstOpen(true);
         }}
         open={firstOpen}
-        trigger={<PitchCard pitch={pitch} openTeams={openTeams} />}
+        trigger={<PitchCard pitch={pitch} />}
         closeIcon
       >
         <Modal.Actions>
@@ -145,18 +136,24 @@ const ApprovePitchModal: FC<IProps> = ({ pitch }): ReactElement => {
                 that each team will have for this Pitch:
               </div>
               <div className="role-items">
-                {Object.values(teamToTeamsButtons).map((team, idx) => (
+                {Object.keys(teamToTeamsButtons).map((team, idx) => (
                   <div className="role-item" key={idx}>
                     <Label
                       className="role-name"
                       circular
                       style={{
-                        backgroundColor: currentTeamsButtons[team],
+                        backgroundColor:
+                          currentTeamsButtons[teamToTeamsButtons[team]],
                       }}
                     >
-                      {team}
+                      {teamToTeamsButtons[team]}
                     </Label>
-                    <Input className="role-number-input" />
+                    <Input
+                      className="role-number-input"
+                      onChange={(e, { value }) =>
+                        (pitchData[`teams.${team}.target`] = value)
+                      }
+                    />
                   </div>
                 ))}
               </div>
