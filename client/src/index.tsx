@@ -11,6 +11,7 @@ import Login from './pages/Login';
 import WizardWrapper from './pages/wizard/WizardWrapper';
 import ResourcePage from './pages/ResourcePage';
 import Directory from './pages/Directory';
+import NotFound from './pages/NotFound';
 
 import './css/index.css';
 
@@ -28,6 +29,7 @@ ReactDOM.render(
         <Route exact path="/profile/:userId" component={Profile} />
         <Route exact path="/users" component={Directory} />
         <Route exact path="/login" component={Login} />
+        <Route exact path="*" component={NotFound} />
       </Switch>
     </Router>
   </React.StrictMode>,
