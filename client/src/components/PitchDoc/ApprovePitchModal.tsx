@@ -19,11 +19,11 @@ import { IPitch, IUser } from 'ssw-common';
 import {
   getOpenTeams,
   updatePitchContributors,
-  updateUserClaimedPitches,
   updatePitch,
   getUser,
   isError,
 } from '../../api';
+import { updateUserSubmittedPitches } from '../../api/user/index';
 import { getUserFirstName } from '../../utils/helpers';
 import Homerun from '../../assets/homerun.svg';
 import Pfp from '../../assets/pfp.svg';
@@ -34,6 +34,7 @@ import {
   interestsButtons,
 } from '../../utils/constants';
 import { pitchStatusEnum } from '../../utils/enums';
+import { useParams } from 'react-router-dom';
 
 import PitchCard from './PitchCard';
 
@@ -45,17 +46,23 @@ interface IProps {
 }
 
 const ApprovePitchModal: FC<IProps> = ({ pitch }): ReactElement => {
+  interface ParamTypes {
+    userId: string;
+  }
+
+  const { userId } = useParams<ParamTypes>();
   const [firstOpen, setFirstOpen] = useState<boolean>(false);
   const [secondOpen, setSecondOpen] = useState<boolean>(false);
   const [pitchAuthor, setPitchAuthor] = useState<string>('');
   //TODO: Change from hardcoded values to database values
-  const userId = '6031a866c70ec705736a79e5';
+  //const userId = '6031a866c70ec705736a79e5';
   const pitchData: { [key: string]: number | string } = {};
 
   const claimPitch = async (): Promise<void> => {
     pitchData['pitchStatus'] = pitchStatusEnum['APPROVED'];
-    const res = await updatePitch(pitchData, pitch._id);
-    if (!isError(res)) {
+    const pitchRes = await updatePitch(pitchData, pitch._id);
+    const userRes = await updateUserSubmittedPitches(userId, pitch._id);
+    if (!isError(pitchRes) && !isError(userRes)) {
       setSecondOpen(true);
     }
     console.log(pitchData);
