@@ -120,7 +120,6 @@ function PitchDoc(): ReactElement {
   );
 
   const getAllUnclaimedPitches = useCallback(async (): Promise<void> => {
-    console.log('here');
     const unclaimedPitchesResp = await getApprovedPitches();
     let pendingPitchesResp;
     let pendingContributorsResp;
@@ -340,14 +339,22 @@ function PitchDoc(): ReactElement {
 
   // Handles the admin changing tabs and changes the cards displayed
   useEffect(() => {
-    if (currentTab === tabs[0]) {
-      setDisplayedCards(unclaimedPitches);
-    } else if (currentTab === tabs[1]) {
-      setDisplayedCards(pendingPitches);
-    } else if (currentTab === tabs[2]) {
-      setDisplayedCards(pendingContributors);
+    if (isAdmin) {
+      if (currentTab === tabs[0]) {
+        setDisplayedCards(unclaimedPitches);
+      } else if (currentTab === tabs[1]) {
+        setDisplayedCards(pendingPitches);
+      } else if (currentTab === tabs[2]) {
+        setDisplayedCards(pendingContributors);
+      }
     }
-  }, [currentTab, unclaimedPitches, pendingPitches, pendingContributors]);
+  }, [
+    currentTab,
+    unclaimedPitches,
+    pendingPitches,
+    pendingContributors,
+    isAdmin,
+  ]);
 
   return (
     <>
@@ -390,7 +397,7 @@ function PitchDoc(): ReactElement {
               </Button>
             </div>
           ) : (
-            ''
+            <></>
           )}
 
           <div className="submit-search-section">
