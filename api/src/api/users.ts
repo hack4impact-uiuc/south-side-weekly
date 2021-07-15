@@ -225,7 +225,7 @@ router.put(
 
     const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
-      { $addToSet: { claimedPitches: req.body.pitchId } },
+      { $addToSet: { submittedPitches: req.body.pitchId } },
       { new: true, runValidators: true },
     );
     if (!updatedUser) {
