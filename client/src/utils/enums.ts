@@ -12,6 +12,13 @@ export const onboardingStatusEnum = {
   NONE: 'NONE',
 };
 
+export const pitchStatusEnum = {
+  APPROVED: 'APPROVED',
+  PENDING: 'PENDING',
+  REJECTED: 'REJECTED',
+  NONE: 'NONE',
+};
+
 export const interestsEnum = {
   POLITICS: 'POLITICS',
   EDUCATION: 'EDUCATION',

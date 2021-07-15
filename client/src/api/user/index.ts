@@ -28,6 +28,16 @@ const updateUserClaimedPitches = async (
     { pitchId },
     'UPDATE_USER_PITCHES_FAIL',
   );
+// Adds a pitch to a user's submitted pitches
+const updateUserSubmittedPitches = async (
+  userId: string,
+  pitchId: string,
+): Promise<AxiosResponse<Types.GetUserPitchesResponseType> | ErrorWrapper> =>
+  await put(
+    `${USER_ENDPOINT}/${userId}/submittedPitches`,
+    { pitchId },
+    'UPDATE_USER_SUBMITTED_PITCHES_FAIL',
+  );
 
 // Update a user's data
 const updateUser = async (
@@ -50,4 +60,10 @@ export const getUserPermissionsByID = async (
     'GET_USER_PERMISSIONS_FAIL',
   );
 
-export { getUsers, getUser, updateUserClaimedPitches, updateUser };
+export {
+  getUsers,
+  getUser,
+  updateUserClaimedPitches,
+  updateUserSubmittedPitches,
+  updateUser,
+};

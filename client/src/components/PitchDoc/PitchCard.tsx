@@ -14,7 +14,7 @@ const defaultOnClick = (): void => void 0;
 
 interface IProps {
   pitch: IPitch;
-  openTeams: { [key: string]: { current: number; target: number } };
+  openTeams?: { [key: string]: { current: number; target: number } };
 }
 
 const MAX_LABELS = 3;
@@ -62,27 +62,29 @@ const PitchCard: FC<IProps> = ({ pitch, openTeams, ...rest }): ReactElement => {
           <Card.Description>
             {formatPitchDescription(pitch.pitchDescription)}
           </Card.Description>
-          <Label.Group style={{ marginTop: 10 }} circular>
-            {Object.keys(openTeams).length < 1 && (
-              <Label style={{ background: 'lightgrey' }}>{`N/A`}</Label>
-            )}
-            {Object.keys(openTeams)
-              .slice(0, MAX_LABELS)
-              .map((team: string, idx: number) => (
-                <Label
-                  style={{
-                    background: currentTeamsButtons[teamToTeamsButtons[team]],
-                  }}
-                  onClick={defaultOnClick}
-                  key={idx}
-                >
-                  {team}
-                </Label>
-              ))}
-            {Object.keys(openTeams).length > MAX_LABELS && (
-              <span>{`+${Object.keys(openTeams).length - MAX_LABELS}`}</span>
-            )}
-          </Label.Group>
+          {openTeams && (
+            <Label.Group style={{ marginTop: 10 }} circular>
+              {Object.keys(openTeams).length < 1 && (
+                <Label style={{ background: 'lightgrey' }}>{`N/A`}</Label>
+              )}
+              {Object.keys(openTeams)
+                .slice(0, MAX_LABELS)
+                .map((team: string, idx: number) => (
+                  <Label
+                    style={{
+                      background: currentTeamsButtons[teamToTeamsButtons[team]],
+                    }}
+                    onClick={defaultOnClick}
+                    key={idx}
+                  >
+                    {team}
+                  </Label>
+                ))}
+              {Object.keys(openTeams).length > MAX_LABELS && (
+                <span>{`+${Object.keys(openTeams).length - MAX_LABELS}`}</span>
+              )}
+            </Label.Group>
+          )}
         </Card.Content>
       </Card>
     </div>
