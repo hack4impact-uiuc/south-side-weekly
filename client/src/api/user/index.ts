@@ -28,7 +28,7 @@ const updateUserClaimedPitches = async (
     { pitchId },
     'UPDATE_USER_PITCHES_FAIL',
   );
-
+// Adds a pitch to a user's submitted pitches
 const updateUserSubmittedPitches = async (
   userId: string,
   pitchId: string,
