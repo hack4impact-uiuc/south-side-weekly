@@ -29,6 +29,16 @@ const updateUserClaimedPitches = async (
     'UPDATE_USER_PITCHES_FAIL',
   );
 
+const updateUserSubmittedPitches = async (
+  userId: string,
+  pitchId: string,
+): Promise<AxiosResponse<Types.GetUserPitchesResponseType> | ErrorWrapper> =>
+  await put(
+    `${USER_ENDPOINT}/${userId}/submittedPitches`,
+    { pitchId },
+    'UPDATE_USER_SUBMITTED_PITCHES_FAIL',
+  );
+
 // Update a user's data
 const updateUser = async (
   profileData: {
@@ -50,4 +60,10 @@ export const getUserPermissionsByID = async (
     'GET_USER_PERMISSIONS_FAIL',
   );
 
-export { getUsers, getUser, updateUserClaimedPitches, updateUser };
+export {
+  getUsers,
+  getUser,
+  updateUserClaimedPitches,
+  updateUserSubmittedPitches,
+  updateUser,
+};
