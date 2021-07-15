@@ -140,10 +140,15 @@
   font-size: 18.0594px;
   line-height: 15px;
   color: #f7fafb;
-  background: #8cb076;
   border-radius: 6.88302px;
 }
 
+#submit {
+  background: #8cb076;
+}
+#decline {
+  background: #c17979;
+}
 .success-wrapper {
   padding-left: 20px;
   padding-top: 20px;

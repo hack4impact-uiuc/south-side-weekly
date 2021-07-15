@@ -12,8 +12,9 @@ import {
   Label,
   Checkbox,
   Popup,
+  Input,
 } from 'semantic-ui-react';
-import { IPitch } from 'ssw-common';
+import { IPitch, IUser } from 'ssw-common';
 
 import {
   getOpenTeams,
@@ -35,6 +36,7 @@ import {
 
 import PitchCard from './PitchCard';
 
+import '../../css/pitchDoc/ApprovePitchModal.css';
 import '../../css/pitchDoc/ClaimPitchModal.css';
 
 interface IProps {
@@ -44,15 +46,9 @@ interface IProps {
 const ApprovePitchModal: FC<IProps> = ({ pitch }): ReactElement => {
   const [firstOpen, setFirstOpen] = useState<boolean>(false);
   const [secondOpen, setSecondOpen] = useState<boolean>(false);
-  const [openTeams, setOpenTeams] = useState<{
-    [key: string]: { current: number; target: number };
-  }>({});
-  const [selectedTeams, setSelectedTeams] = useState<string[]>([]);
-  const [pitchContributors, setPitchContributors] = useState<{
-    [key: string]: string;
-  }>({});
+  const [teams, setTeams] = useState<IPitch['teams']>();
+
   const [pitchAuthor, setPitchAuthor] = useState<string>('');
-  const [approvedBy, setApprovedBy] = useState<string>('');
   //TODO: Change from hardcoded values to database values
   const userId = '6031a866c70ec705736a79e5';
   const temp_pfp = Pfp;
@@ -74,39 +70,7 @@ const ApprovePitchModal: FC<IProps> = ({ pitch }): ReactElement => {
     });
   };
 
-  const handleCheckboxes = (team: string): void => {
-    const notFoundIdx = -1;
-    const elementIdx = selectedTeams.indexOf(team);
-    if (elementIdx === notFoundIdx) {
-      const addedElements = selectedTeams.concat(team);
-      setSelectedTeams(addedElements);
-    } else {
-      const removedElements = selectedTeams.filter(
-        (element) => element !== team,
-      );
-      setSelectedTeams(removedElements);
-    }
-  };
-
-  const getTeams = useCallback(async (): Promise<void> => {
-    const resp = await getOpenTeams(pitch._id);
-
-    if (!isError(resp) && resp.data) {
-      setOpenTeams(resp.data.result);
-    }
-  }, [pitch._id]);
-
   const loadUser = useCallback(async () => {
-    const contributors: { [name: string]: string } = {};
-    for (const userId of pitch.assignmentContributors) {
-      const res = await getUser(userId);
-      if (!isError(res)) {
-        contributors[
-          `${getUserFirstName(res.data.result)} ${res.data.result.lastName}`
-        ] = temp_pfp;
-      }
-    }
-    setPitchContributors(contributors);
     if (pitch.pitchAuthor) {
       const res = await getUser(pitch.pitchAuthor);
       if (!isError(res)) {
@@ -115,26 +79,11 @@ const ApprovePitchModal: FC<IProps> = ({ pitch }): ReactElement => {
         );
       }
     }
-    if (pitch.approvedBy) {
-      const res = await getUser(pitch.approvedBy);
-      if (!isError(res)) {
-        setApprovedBy(
-          `${getUserFirstName(res.data.result)} ${res.data.result.lastName}`,
-        );
-      }
-    }
-  }, [
-    pitch.assignmentContributors,
-    pitch.pitchAuthor,
-    pitch.approvedBy,
-    temp_pfp,
-  ]);
+  }, [pitch.pitchAuthor]);
 
   useEffect(() => {
-    getTeams();
-    setSelectedTeams([]);
     loadUser();
-  }, [firstOpen, getTeams, loadUser]);
+  }, [firstOpen, loadUser]);
 
   return (
     <>
@@ -188,55 +137,36 @@ const ApprovePitchModal: FC<IProps> = ({ pitch }): ReactElement => {
             </div>
 
             <div className="role-contributor-section">
-              <div className="section-title">Roles Available Per Team:</div>
+              <div className="section-title">
+                Set Positions Available Per Team:
+              </div>
               <div className="section-description">
-                Please select the team that you will be filling the role for
-                before claiming this pitch.
+                If approving this Pitch, please indicate the amount of positions
+                that each team will have for this Pitch:
               </div>
               <div className="role-items">
-                {Object.entries(openTeams).map(([team, value], idx) => (
+                {Object.values(teamToTeamsButtons).map((team, idx) => (
                   <div className="role-item" key={idx}>
-                    <div className="checkbox">
-                      <Checkbox
-                        className="checkbox"
-                        onClick={() => handleCheckboxes(team)}
-                        disabled={value.target - value.current === 0}
-                      />
-                    </div>
                     <Label
                       className="role-name"
                       circular
                       style={{
-                        backgroundColor:
-                          currentTeamsButtons[teamToTeamsButtons[team]],
+                        backgroundColor: currentTeamsButtons[team],
                       }}
                     >
-                      {teamToTeamsButtons[team]}
+                      {team}
                     </Label>
-                    <div className="role-number">
-                      {value.target - value.current}
-                    </div>
+                    <Input className="role-number-input" />
                   </div>
                 ))}
               </div>
-              <div className="section-title">Pitch Claimed By:</div>
-              <div className="pitch-contributors">
-                {Object.entries(pitchContributors).map(
-                  ([name, pfpLink], idx) => (
-                    <Popup
-                      key={idx}
-                      content={name}
-                      trigger={
-                        <img src={pfpLink} className="pfp" alt="Profile" />
-                      }
-                    />
-                  ),
-                )}
-              </div>
 
               <div className="modal-submit-button">
-                <Button type="submit" onClick={claimPitch}>
-                  Submit My Claim for Approval
+                <Button id="submit" type="submit" onClick={claimPitch}>
+                  Approve Pitch
+                </Button>
+                <Button id="decline" type="decline" onClick={claimPitch}>
+                  Decline Pitch
                 </Button>
               </div>
             </div>
