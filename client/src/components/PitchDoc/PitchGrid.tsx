@@ -3,6 +3,7 @@ import { IPitch } from 'ssw-common';
 import { Grid } from 'semantic-ui-react';
 
 import ClaimPitchModal from '../../components/PitchDoc/ClaimPitchModal';
+import ApprovePitchModal from '../../components/PitchDoc/ApprovePitchModal';
 interface IProps {
   pitches: IPitch[];
   getAllUnclaimedPitches: () => Promise<void>;
@@ -16,9 +17,9 @@ const PitchGrid: FC<IProps> = ({
     <Grid.Row columns={3}>
       {pitches.map((pitch, idx) => (
         <Grid.Column key={idx}>
-          <ClaimPitchModal
+          <ApprovePitchModal
             pitch={pitch}
-            getAllUnclaimedPitches={getAllUnclaimedPitches}
+            //getAllUnclaimedPitches={getAllUnclaimedPitches}
           />
         </Grid.Column>
       ))}
