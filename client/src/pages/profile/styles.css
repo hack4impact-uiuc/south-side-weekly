@@ -1,0 +1,67 @@
+.input-field {
+  position: relative;
+  align-items: center;
+  display: flex;
+  border: solid black 1px;
+  border-radius: 1rem;
+  width: 100%;
+  height: 13%;
+  margin-top: 5px;
+  padding: 3px;
+  font-size: 14px !important;
+}
+
+.input-field span {
+  flex-grow: 1;
+}
+
+.dropdown-field {
+  border-color: transparent !important;
+  background-color: transparent !important;
+  font-size: 12px !important;
+}
+
+.edit-profile-btn {
+  color: white !important;
+  background-color: #3d4f91 !important;
+  margin-bottom: 10% !important;
+}
+
+.edit-mode-btn {
+  margin: 10px 5px 10px 5px !important;
+}
+
+.edit-mode-btn.cancel {
+  color: white !important;
+  background-color: rgba(61, 79, 145, 0.55) !important;
+}
+
+.edit-mode-btn.save {
+  color: white !important;
+  background-color: #8cb076 !important;
+}
+
+.field-label {
+  margin: auto;
+  margin-top: 5%;
+  border-radius: 1rem;
+  width: 65%;
+}
+
+.profile-pic-col {
+  display: flex !important;
+  align-items: center;
+  flex-direction: column;
+}
+
+.masthead {
+  margin-top: -25px;
+}
+
+.checkbox-group {
+  text-align: left;
+}
+
+.checkbox {
+  padding-left: 20% !important;
+}

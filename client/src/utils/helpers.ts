@@ -1,6 +1,8 @@
 import { FormEvent, Dispatch, SetStateAction } from 'react';
 import { IUser, IPitch } from 'ssw-common';
 
+import DefaultProfile from '../assets/default_profile.png';
+
 /**
  * Adds selected element to the specific form array if it isn't already there, otherwise removes it
  *
@@ -356,6 +358,12 @@ const isPitchClaimed = (pitch: IPitch, teams: string[]): boolean => {
   return isClaimed;
 };
 
+/**
+ * Determines a user's first name by prioritizing preferred name
+ *
+ * @param user the user to get the first name of
+ * @returns the user's first name
+ */
 const getUserFirstName = (user: IUser): string => {
   if (user.preferredName === null || user.preferredName === '') {
     return user.firstName;
@@ -363,6 +371,36 @@ const getUserFirstName = (user: IUser): string => {
 
   return user.preferredName;
 };
+
+/**
+ * Updates a user's field generically
+ *
+ * @param user the user to update
+ * @param key the field of the user to change
+ * @param value the corresponding to value to set the user's key to
+ * @returns the updated user object
+ */
+const updateUserField = <T extends keyof IUser>(
+  user: IUser,
+  key: T,
+  value: IUser[T],
+): IUser => {
+  const userCopy = { ...user };
+  userCopy[key] = value;
+  return userCopy;
+};
+
+/**
+ * Determines a user's profile picture and returns the Default Profile
+ * picture if user has none
+ *
+ * @param user the user to get the profile picture of
+ * @returns the profile picture
+ */
+const getUserProfilePic = (user: IUser): string =>
+  user.profilePic !== null && user.profilePic !== undefined
+    ? user.profilePic
+    : DefaultProfile;
 
 export {
   handleSelectGroupArray,
@@ -379,4 +417,6 @@ export {
   filterPitchesByTeams,
   sortPitchesByDeadlineDate,
   getUserFirstName,
+  updateUserField,
+  getUserProfilePic,
 };

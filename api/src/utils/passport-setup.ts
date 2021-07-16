@@ -46,6 +46,7 @@ passport.use(
           lastName: profile.name.familyName,
           email: profile.emails[0].value,
           role: rolesEnum.TBD,
+          profilePic: profile._json['picture'],
         });
 
         newUser.save();

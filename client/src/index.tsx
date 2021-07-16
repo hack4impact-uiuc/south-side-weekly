@@ -6,7 +6,7 @@ import axios from 'axios';
 
 import Home from './pages/Home';
 import PitchDoc from './pages/pitchDoc/PitchDoc';
-import Profile from './pages/profile/Profile';
+import Profile from './pages/profile';
 import Login from './pages/Login';
 import WizardWrapper from './pages/wizard/WizardWrapper';
 import ResourcePage from './pages/ResourcePage';
