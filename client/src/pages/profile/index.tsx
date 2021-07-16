@@ -313,7 +313,7 @@ const Profile = (): ReactElement => {
                     label={parseCamelCase(attribute)}
                     value={user[attribute] as string}
                     onChange={(e, { value }) => editUser(attribute, value)}
-                    readOnly={!isEditable(attribute)}
+                    disabled={!isEditable(attribute)}
                     viewable={isViewable(attribute)}
                   />
                 ))}
@@ -424,7 +424,7 @@ const Profile = (): ReactElement => {
             <Grid.Column textAlign="left" width={6}>
               <HeaderTag as="h2">Socials/Contact</HeaderTag>
               <SocialsInput
-                readOnly={!isEditable('email')}
+                disabled={!isEditable('email')}
                 onChange={(e, { value }) => editUser('email', value)}
                 icon="mail"
                 value={user.email}
@@ -432,7 +432,7 @@ const Profile = (): ReactElement => {
               />
 
               <SocialsInput
-                readOnly={!isEditable('phone')}
+                disabled={!isEditable('phone')}
                 onChange={(e, { value }) => editUser('phone', value)}
                 icon="phone"
                 value={user.phone}
@@ -444,21 +444,21 @@ const Profile = (): ReactElement => {
               <SocialsInput
                 icon="linkedin"
                 value={user.linkedIn}
-                readOnly={!isEditable('linkedIn')}
+                disabled={!isEditable('linkedIn')}
                 onChange={(e, { value }) => editUser('linkedIn', value)}
                 viewable={isViewable('linkedIn')}
               />
               <SocialsInput
                 icon="globe"
                 value={user.portfolio}
-                readOnly={!isEditable('portfolio')}
+                disabled={!isEditable('portfolio')}
                 onChange={(e, { value }) => editUser('portfolio', value)}
                 viewable={isViewable('portfolio')}
               />
               <SocialsInput
                 icon="twitter"
                 value={user.twitter}
-                readOnly={!isEditable('twitter')}
+                disabled={!isEditable('twitter')}
                 onChange={(e, { value }) => editUser('twitter', value)}
                 viewable={isViewable('twitter')}
               />

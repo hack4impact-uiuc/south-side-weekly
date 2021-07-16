@@ -6,7 +6,7 @@ import { IStringAttribute } from './types';
 const StringAttribute: FC<IStringAttribute> = ({
   label,
   value,
-  readOnly,
+  disabled,
   onChange,
   viewable,
 }): ReactElement => (
@@ -17,7 +17,7 @@ const StringAttribute: FC<IStringAttribute> = ({
         <Input
           value={value}
           transparent
-          readOnly={readOnly}
+          readOnly={disabled}
           onChange={onChange}
         />
       </div>

@@ -7,7 +7,7 @@ interface InputOnChangeData extends InputProps {
 export interface IStringAttribute {
   label: string;
   value: string;
-  readOnly: boolean;
+  disabled: boolean;
   onChange?: (
     event: React.ChangeEvent<HTMLInputElement>,
     data: InputOnChangeData,

@@ -7,7 +7,7 @@ interface InputOnChangeData extends InputProps {
 export interface ISocialsInput {
   icon: SemanticICONS;
   value: string;
-  readOnly: boolean;
+  disabled: boolean;
   onChange?: (
     event: React.ChangeEvent<HTMLInputElement>,
     data: InputOnChangeData,

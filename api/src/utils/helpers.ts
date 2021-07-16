@@ -9,7 +9,7 @@ export interface SessionUser {
   phone: string;
   gender: [string];
   pronouns: [string];
-  dateJoined: string;
+  dateJoined: Date;
   masthead: boolean;
   onboarding: string;
   portfolio: string;

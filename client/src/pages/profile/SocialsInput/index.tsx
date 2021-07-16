@@ -7,7 +7,7 @@ import { ISocialsInput } from './types';
 const SocialsInput: FC<ISocialsInput> = ({
   icon,
   value,
-  readOnly,
+  disabled,
   onChange,
   viewable,
 }): ReactElement => {
@@ -38,16 +38,26 @@ const SocialsInput: FC<ISocialsInput> = ({
             <Icon size="big" name={icon} />
           </Grid.Column>
           <Grid.Column className="col">
-            <Input
-              size="big"
-              className="input"
-              fluid
-              readOnly={readOnly}
-              transparent
-              onChange={onChange}
-            >
-              {linkify(icon, value)}
-            </Input>
+            {disabled ? (
+              <Input
+                className="input"
+                fluid
+                transparent
+                onChange={onChange}
+                value={value}
+              >
+                {linkify(icon, value)}
+              </Input>
+            ) : (
+              <Input
+                className="input"
+                fluid
+                disabled={disabled}
+                transparent
+                onChange={onChange}
+                value={value}
+              />
+            )}
           </Grid.Column>
         </Grid>
       )}
