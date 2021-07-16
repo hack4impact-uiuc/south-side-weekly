@@ -28,6 +28,7 @@ const User = new mongoose.Schema({
     default: onboardingStatusEnum.ONBOARDING_SCHEDULED,
   },
 
+  profilePic: { type: String, default: null },
   portfolio: { type: String, default: null },
   linkedIn: { type: String, default: null },
   twitter: { type: String, default: null },

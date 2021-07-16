@@ -4,6 +4,7 @@ export interface SessionUser {
   firstName: string;
   lastName: string;
   preferredName: string;
+  profilePic: string;
   email: string;
   phone: string;
   gender: [string];
@@ -27,6 +28,7 @@ export const sessionizeUser = (user: SessionUser): SessionUser => ({
   firstName: user.firstName,
   lastName: user.lastName,
   preferredName: user.preferredName,
+  profilePic: user.profilePic,
   email: user.email,
   phone: user.phone,
   gender: user.gender,

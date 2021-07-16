@@ -2,6 +2,7 @@ import { difference } from 'lodash';
 import { isAdmin } from './auth-utils';
 import User from '../models/user';
 import { SessionUser } from './helpers';
+import { IUser } from '../types';
 
 // All fields in user
 const allFields = Object.keys(User.schema.paths);
@@ -26,14 +27,17 @@ const adminEditableFields = ['currentTeams', 'role', 'email', 'races'];
 const getViewableFields = (
   currentUser: SessionUser,
   userId: string,
-): string[] => {
-  const viewableFields = difference(allFields, nonViewableFields);
+): (keyof IUser)[] => {
+  const viewableFields = difference(
+    allFields,
+    nonViewableFields,
+  ) as (keyof IUser)[];
 
   if (isAdmin(currentUser) || currentUser._id.toString() === userId) {
     return viewableFields;
   }
 
-  return difference(viewableFields, adminViewableFields);
+  return difference(viewableFields, adminViewableFields) as (keyof IUser)[];
 };
 
 /**
@@ -46,12 +50,15 @@ const getViewableFields = (
 const getEditableFields = (
   currentUser: SessionUser,
   userId: string,
-): string[] => {
-  const editableFields = difference(allFields, nonEditableFields);
+): (keyof IUser)[] => {
+  const editableFields = difference(
+    allFields,
+    nonEditableFields,
+  ) as (keyof IUser)[];
   if (isAdmin(currentUser)) {
     return editableFields;
   } else if (currentUser._id.toString() === userId) {
-    return difference(editableFields, adminEditableFields);
+    return difference(editableFields, adminEditableFields) as (keyof IUser)[];
   }
 
   return [];

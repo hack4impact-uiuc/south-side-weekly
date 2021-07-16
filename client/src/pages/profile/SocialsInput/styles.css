@@ -1,0 +1,14 @@
+.social-input {
+  padding: 0rem !important;
+  margin: 0rem;
+}
+
+.social-input .col {
+  padding: 5px !important;
+}
+
+.social-input .col .input {
+  border: solid 1px !important;
+  border-radius: 1rem;
+  padding: 5px !important;
+}

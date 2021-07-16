@@ -20,3 +20,83 @@ body {
   font-size: 36px;
   padding: 5vh 0 5vh 0;
 }
+
+.editing {
+  background-color: #d98e8e;
+}
+
+.writing {
+  background-color: #e4b28e;
+}
+
+.visuals {
+  background-color: #98b9d7;
+}
+
+.photography {
+  background-color: #98b9d7;
+}
+
+.illustration {
+  background-color: #e38fad;
+}
+
+.fact-checking {
+  background-color: #93bfc1;
+}
+
+.fun {
+  background-color: #f2f492;
+}
+
+.cannabis {
+  background-color: #b6e8a4;
+}
+
+.health {
+  background-color: #99f7c4;
+}
+
+.music {
+  background-color: #b298dc;
+}
+
+.nature {
+  background-color: #c1f2aa;
+}
+
+.politics {
+  background-color: #ccaa8a;
+}
+
+.housing {
+  background-color: #d3ec8e;
+}
+
+.visual-arts {
+  background-color: #b4edd8;
+}
+
+.immigration {
+  background-color: #efdea3;
+}
+
+.food-and-land {
+  background-color: #ebbfbf;
+}
+
+.transportation {
+  background-color: #e9ffcd;
+}
+
+.stage-and-screen {
+  background-color: #e4baf2;
+}
+
+.lit {
+  background-color: #a0aef8;
+}
+
+.education {
+  background-color: #afe4f0;
+}

@@ -370,7 +370,6 @@ const Directory = (): ReactElement => {
   const openContributorModal = (user: IUser): void => {
     if (user) {
       dispatchModal({ type: ModalAction.OPEN_MODAL, isOpen: true, user: user });
-      console.log(modalState.isOpen);
     }
   };
 
