@@ -26,11 +26,11 @@ import {
   getPendingPitches,
   getPendingContributorPitches,
 } from '../../api';
-import PitchGrid from '../../components/PitchDoc/PitchGrid';
-import SubmitPitchModal from '../../components/PitchDoc/SubmitPitchModal';
+import PitchGrid from '../../components/PitchGrid';
+import SubmitPitchModal from '../../components/Modals/SubmitPitch';
 import Logo from '../../assets/ssw-form-header.png';
 
-import '../../css/pitchDoc/PitchDoc.css';
+import './styles.css';
 
 interface IFilterKeys {
   teams: string[];

@@ -22,20 +22,19 @@ import {
   updatePitch,
   getUser,
   isError,
-} from '../../api';
-import { getUserFirstName } from '../../utils/helpers';
-import Homerun from '../../assets/homerun.svg';
-import Pfp from '../../assets/pfp.svg';
+} from '../../../api';
+import { getUserFirstName } from '../../../utils/helpers';
+import Homerun from '../../../assets/homerun.svg';
+import Pfp from '../../../assets/pfp.svg';
 import {
   currentTeamsButtons,
   teamToTeamsButtons,
   enumToInterestButtons,
   interestsButtons,
-} from '../../utils/constants';
+} from '../../../utils/constants';
+import PitchCard from '../../PitchCard';
 
-import PitchCard from './PitchCard';
-
-import '../../css/pitchDoc/ClaimPitchModal.css';
+import './styles.css';
 
 interface IProps {
   pitch: IPitch;

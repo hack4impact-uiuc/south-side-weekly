@@ -1,5 +1,5 @@
 import Directory from './directory';
-import PitchDoc from './pitchDoc/PitchDoc';
+import PitchDoc from './pitchDoc';
 import NotFound from './invalid';
 import Profile from './profile';
 import WizardWrapper from './wizard/WizardWrapper';

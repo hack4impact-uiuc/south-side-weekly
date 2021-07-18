@@ -2,7 +2,7 @@ import React, { FC, ReactElement } from 'react';
 import { IPitch } from 'ssw-common';
 import { Grid } from 'semantic-ui-react';
 
-import ClaimPitchModal from '../../components/PitchDoc/ClaimPitchModal';
+import ClaimPitchModal from '../Modals/ClaimPitch';
 interface IProps {
   pitches: IPitch[];
   getAllUnclaimedPitches: () => Promise<void>;

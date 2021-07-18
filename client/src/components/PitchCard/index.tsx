@@ -1,6 +1,6 @@
 import React, { FC, ReactElement } from 'react';
 import { Card, Label } from 'semantic-ui-react';
-import '../../css/pitchDoc/PitchCard.css';
+import './styles.css';
 import { IPitch } from 'ssw-common';
 
 import {

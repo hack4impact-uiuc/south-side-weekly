@@ -2,9 +2,9 @@ import React, { ReactElement, FC, Dispatch, useEffect, useState } from 'react';
 import { Modal, Button, Form, Input, Checkbox } from 'semantic-ui-react';
 import { IResource } from 'ssw-common';
 
-import { editResource, isError } from '../../api';
-import { dbTeamToDisplay } from '../../utils/constants';
-import '../../css/EditResourceModal.css';
+import { editResource, isError } from '../../../api';
+import { dbTeamToDisplay } from '../../../utils/constants';
+import './styles.css';
 
 interface IProps {
   isOpen: boolean;

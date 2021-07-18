@@ -1,10 +1,10 @@
 import React, { ReactElement, FC, Dispatch, useState, useEffect } from 'react';
 import { Modal, Button, Form, Input, Checkbox } from 'semantic-ui-react';
 
-import { createResource, isError } from '../../api';
-import { dbTeamToDisplay } from '../../utils/constants';
+import { createResource, isError } from '../../../api';
+import { dbTeamToDisplay } from '../../../utils/constants';
 
-import '../../css/AddResourceModal.css';
+import './styles.css';
 
 interface IProps {
   onAdd: Dispatch<void>;

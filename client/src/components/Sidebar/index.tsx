@@ -2,11 +2,11 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon, Image } from 'semantic-ui-react';
 
-import { pages } from '../utils/enums';
-import { isError, getCurrentUser } from '../api';
-import DefaultProfile from '../assets/default_profile.png';
-import '../css/Sidebar.css';
-import { getUserProfilePic } from '../utils/helpers';
+import { pages } from '../../utils/enums';
+import { isError, getCurrentUser } from '../../api';
+import DefaultProfile from '../../assets/default_profile.png';
+import './styles.css';
+import { getUserProfilePic } from '../../utils/helpers';
 
 interface IProps {
   currentPage: string;

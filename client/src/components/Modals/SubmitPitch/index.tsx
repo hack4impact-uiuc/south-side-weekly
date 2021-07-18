@@ -2,8 +2,8 @@ import React, { ReactElement } from 'react';
 import { Modal, Button, Form, Image } from 'semantic-ui-react';
 
 // import { currentTeamsButtons } from '../../utils/constants';
-import '../../css/pitchDoc/SubmitPitchModal.css';
-import GoogleDriveScreenshot from '../../assets/GoogleDriveScreenshot.png';
+import './styles.css';
+import GoogleDriveScreenshot from '../../../assets/GoogleDriveScreenshot.png';
 // import WizardSelectButton from '../WizardSelectButton/WizardSelectButton';
 
 // const defaultOnClick = (): void => void 0;
