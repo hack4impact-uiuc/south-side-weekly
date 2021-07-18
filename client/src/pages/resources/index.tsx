@@ -3,11 +3,13 @@ import { Button } from 'semantic-ui-react';
 import { IResource } from 'ssw-common';
 
 import { getAllResources, deleteResource, isError } from '../../api';
-import AddResourceModal from '../../components/Modals/CreateResource';
-import EditResourceModal from '../../components/Modals/EditResource';
+import {
+  AddResourceModal,
+  EditResourceModal,
+  Header,
+  Sidebar,
+} from '../../components';
 import ResourcePageSVG from '../../assets/resource-page.svg';
-import Header from '../../components/Header';
-import Sidebar from '../../components/Sidebar';
 import { dbTeamToDisplay } from '../../utils/constants';
 import './styles.css';
 import { pages } from '../../utils/enums';

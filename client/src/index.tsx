@@ -7,15 +7,15 @@ import axios from 'axios';
 import {
   Directory,
   Profile,
-  WizardWrapper,
   NotFound,
   PitchDoc,
   Home,
   ResourcePage,
   Login,
 } from './pages';
+import WizardWrapper from './wizard';
 
-import './index.css';
+import './styles.css';
 
 axios.defaults.withCredentials = true;
 

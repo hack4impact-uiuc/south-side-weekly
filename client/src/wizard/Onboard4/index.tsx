@@ -1,10 +1,10 @@
 import React, { FC, Dispatch, SetStateAction, ReactElement } from 'react';
 import { Form } from 'semantic-ui-react';
 
-import WizardSvg from '../../components/WizardSvg';
-import WizardStar from '../../components/WizardStar';
+import WizardSvg from '../../components/Wizard/Svg';
+import WizardStar from '../../components/Wizard/RequiredStar';
 
-import '../../css/wizard/Onboard4.css';
+import './styles.css';
 
 interface IProps {
   reasonsForInvolvement: string;

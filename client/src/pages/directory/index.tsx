@@ -9,8 +9,7 @@ import React, {
 import { Dropdown, Button, Input } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
-import Sidebar from '../../components/Sidebar';
-import UserModal from '../../components/Modals/User';
+import { Sidebar, UserModal } from '../../components';
 import { getUsers, isError } from '../../api';
 import { pages } from '../../utils/enums';
 import {

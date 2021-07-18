@@ -1,6 +1,6 @@
 import React, { FC, ReactElement } from 'react';
 
-import '../css/wizard/WizardListTitle.css';
+import './styles.css';
 
 interface IProps {
   value: string;

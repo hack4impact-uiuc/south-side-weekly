@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 import { Container, Grid, Image } from 'semantic-ui-react';
 
 import './styles.css';
-import Sidebar from '../../components/Sidebar';
+import { Sidebar } from '../../components';
 import { pages } from '../../utils/enums';
 import Error from '../../assets/404-error.png';
 

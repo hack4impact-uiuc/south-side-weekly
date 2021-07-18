@@ -1,10 +1,9 @@
 import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
 import { Form } from 'semantic-ui-react';
 
-import WizardSvg from '../../components/WizardSvg';
-import WizardStar from '../../components/WizardStar';
+import { WizardStar, WizardSvg } from '../../components';
 
-import '../../css/wizard/Onboard1.css';
+import './styles.css';
 
 interface IProps {
   firstName: string;

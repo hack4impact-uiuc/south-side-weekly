@@ -1,8 +1,8 @@
 import React, { ReactElement } from 'react';
 
-import Required from '../assets/required.svg';
+import Required from '../../../assets/required.svg';
 
-import '../css/wizard/WizardStar.css';
+import './styles.css';
 
 /**
  * A component for the star used for required elements

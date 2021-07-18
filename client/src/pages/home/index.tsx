@@ -3,7 +3,7 @@ import axios from 'axios';
 import { Button } from 'semantic-ui-react';
 import { Redirect } from 'react-router';
 
-import Header from '../../components/Header';
+import { Header } from '../../components';
 import { BASE_URL } from '../../api/urls';
 
 import './styles.css';

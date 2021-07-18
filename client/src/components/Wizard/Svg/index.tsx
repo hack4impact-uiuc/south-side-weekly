@@ -1,13 +1,13 @@
 import React, { FC, ReactElement } from 'react';
 
-import '../css/wizard/WizardSvg.css';
+import './styles.css';
 
-import RolePageSVG from '../assets/role-page.svg';
-import BasicInfoSvg from '../assets/basic-info.svg';
-import PersonalInfoSvg from '../assets/personal-information.svg';
-import InvolvementSVG from '../assets/involvement-page.svg';
-import TasksSVG from '../assets/tasks.svg';
-import ScheduleSVG from '../assets/schedule.svg';
+import RolePageSVG from '../../../assets/role-page.svg';
+import BasicInfoSvg from '../../../assets/basic-info.svg';
+import PersonalInfoSvg from '../../../assets/personal-information.svg';
+import InvolvementSVG from '../../../assets/involvement-page.svg';
+import TasksSVG from '../../../assets/tasks.svg';
+import ScheduleSVG from '../../../assets/schedule.svg';
 
 interface IProps {
   page: string;
@@ -18,7 +18,7 @@ interface IProps {
  *
  * @param {string} page the current page
  */
-const WizardListTitle: FC<IProps> = ({ page }): ReactElement => {
+const WizardSvg: FC<IProps> = ({ page }): ReactElement => {
   const getSvg = (): ReactElement => {
     switch (page) {
       case 'onboard0':
@@ -57,4 +57,4 @@ const WizardListTitle: FC<IProps> = ({ page }): ReactElement => {
   return getSvg();
 };
 
-export default WizardListTitle;
+export default WizardSvg;

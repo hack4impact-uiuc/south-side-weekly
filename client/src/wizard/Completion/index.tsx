@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react';
 import { Button } from 'semantic-ui-react';
 
 import CompletionSVG from '../../assets/completion-page.svg';
-import '../../css/wizard/Completion.css';
+import './styles.css';
 
 /**
  * Builds Completion page of the Onboarding Wizard

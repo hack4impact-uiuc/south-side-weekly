@@ -7,12 +7,12 @@ import React, {
 } from 'react';
 import { Checkbox, Form } from 'semantic-ui-react';
 
-import WizardSvg from '../../components/WizardSvg';
-import WizardListTitle from '../../components/WizardListTitle';
+import WizardSvg from '../../components/Wizard/Svg';
+import WizardListTitle from '../../components/Wizard/ListTitle';
 import { handleSelectGroupArray } from '../../utils/helpers';
 import { racesEnum } from '../../utils/enums';
 
-import '../../css/wizard/Onboard2.css';
+import './styles.css';
 
 interface IProps {
   genders: Array<string>;

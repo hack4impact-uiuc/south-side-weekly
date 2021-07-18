@@ -2,8 +2,8 @@ import React, { FC, ReactElement, MouseEvent } from 'react';
 import { Button } from 'semantic-ui-react';
 
 import Icon from '../../assets/info.svg';
-import WizardSvg from '../../components/WizardSvg';
-import '../../css/wizard/InitialPrompt.css';
+import WizardSvg from '../../components/Wizard/Svg';
+import './styles.css';
 
 interface IProps {
   handleRole(e: MouseEvent<HTMLButtonElement>): void;

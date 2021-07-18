@@ -19,8 +19,7 @@ import {
   getCurrentUser,
   getUserPermissionsByID,
 } from '../../api';
-import Sidebar from '../../components/Sidebar';
-import Header from '../../components/Header';
+import { Sidebar, Header } from '../../components';
 import { pages } from '../../utils/enums';
 import Masthead from '../../assets/masthead.svg';
 import {

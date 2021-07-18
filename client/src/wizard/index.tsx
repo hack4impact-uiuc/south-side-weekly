@@ -7,12 +7,12 @@ import React, {
 } from 'react';
 import { Button } from 'semantic-ui-react';
 
-import '../../css/wizard/WizardWrapper.css';
-import Header from '../../components/Header';
-import ArrowBack from '../../assets/arrow-back.svg';
-import ArrowNext from '../../assets/arrow-next.svg';
-import SubmitSVG from '../../assets/check.svg';
-import WizardPageCounter from '../../components/WizardPageCounter';
+import './styles.css';
+import Header from '../components/Header';
+import ArrowBack from '../assets/arrow-back.svg';
+import ArrowNext from '../assets/arrow-next.svg';
+import SubmitSVG from '../assets/check.svg';
+import WizardPageCounter from '../components/Wizard/PageCounter';
 
 import WizardInitialPrompt from './InitialPrompt';
 import Onboard1 from './Onboard1';
@@ -20,7 +20,7 @@ import Onboard2 from './Onboard2';
 import Onboard3 from './Onboard3';
 import Onboard4 from './Onboard4';
 import Onboard5 from './Onboard5';
-import Compleition from './Completion';
+import Completion from './Completion';
 
 /**
  * Enum to represent which on boarding page the user is on
@@ -266,7 +266,7 @@ const WizardWrapper = (): ReactElement => {
               setModalOpen={setOpenModal}
             />
           )}
-          {page === WizardPage.COMPLETION.toString() && <Compleition />}
+          {page === WizardPage.COMPLETION.toString() && <Completion />}
         </div>
       </div>
       {page !== WizardPage.INITIAL_PAGE.toString() &&

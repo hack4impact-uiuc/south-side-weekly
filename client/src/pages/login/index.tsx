@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Button } from 'semantic-ui-react';
 import Loader from 'react-loader-spinner';
 
-import Header from '../../components/Header';
+import { Header } from '../../components';
 import { buildURI } from '../../api';
 import { BASE_URL, FRONTEND_BASE_URL } from '../../api/urls';
 import { rolesEnum } from '../../utils/enums';

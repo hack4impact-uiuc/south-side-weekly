@@ -26,8 +26,7 @@ import {
   getPendingPitches,
   getPendingContributorPitches,
 } from '../../api';
-import PitchGrid from '../../components/PitchGrid';
-import SubmitPitchModal from '../../components/Modals/SubmitPitch';
+import { PitchGrid, SubmitPitchModal } from '../../components';
 import Logo from '../../assets/ssw-form-header.png';
 
 import './styles.css';
