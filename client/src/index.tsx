@@ -4,16 +4,18 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import 'semantic-ui-css/semantic.min.css';
 import axios from 'axios';
 
-import Home from './pages/Home';
-import PitchDoc from './pages/pitchDoc/PitchDoc';
-import Profile from './pages/profile';
-import Login from './pages/Login';
-import WizardWrapper from './pages/wizard/WizardWrapper';
-import ResourcePage from './pages/ResourcePage';
-import Directory from './pages/Directory';
-import NotFound from './pages/NotFound';
+import {
+  Directory,
+  Profile,
+  WizardWrapper,
+  NotFound,
+  PitchDoc,
+  Home,
+  ResourcePage,
+  Login,
+} from './pages';
 
-import './css/index.css';
+import './index.css';
 
 axios.defaults.withCredentials = true;
 

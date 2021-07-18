@@ -2,15 +2,15 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { Button } from 'semantic-ui-react';
 import { IResource } from 'ssw-common';
 
-import { getAllResources, deleteResource, isError } from '../api';
-import AddResourceModal from '../components/ResourceHub/AddResourceModal';
-import EditResourceModal from '../components/ResourceHub/EditResourceModal';
-import ResourcePageSVG from '../assets/resource-page.svg';
-import Header from '../components/Header';
-import Sidebar from '../components/Sidebar';
-import { dbTeamToDisplay } from '../utils/constants';
-import '../css/Resource.css';
-import { pages } from '../utils/enums';
+import { getAllResources, deleteResource, isError } from '../../api';
+import AddResourceModal from '../../components/ResourceHub/AddResourceModal';
+import EditResourceModal from '../../components/ResourceHub/EditResourceModal';
+import ResourcePageSVG from '../../assets/resource-page.svg';
+import Header from '../../components/Header';
+import Sidebar from '../../components/Sidebar';
+import { dbTeamToDisplay } from '../../utils/constants';
+import './styles.css';
+import { pages } from '../../utils/enums';
 
 function defaultResources(): { [key: string]: Array<IResource> } {
   return {

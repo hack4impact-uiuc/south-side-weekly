@@ -9,10 +9,10 @@ import React, {
 import { Dropdown, Button, Input } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
-import Sidebar from '../components/Sidebar';
-import UserModal from '../components/UserModal/UserModal';
-import { getUsers, isError } from '../api';
-import { pages } from '../utils/enums';
+import Sidebar from '../../components/Sidebar';
+import UserModal from '../../components/UserModal/UserModal';
+import { getUsers, isError } from '../../api';
+import { pages } from '../../utils/enums';
 import {
   parseArrayToSemanticDropdownOptions,
   parseSemanticMultiSelectTypes,
@@ -21,42 +21,21 @@ import {
   filterUsersByRole,
   filterUsersByTeams,
   getUserFirstName,
-} from '../utils/helpers';
-import SSW from '../assets/ssw-form-header.png';
-import DefaultProfile from '../assets/default_profile.png';
-import '../css/Directory.css';
+} from '../../utils/helpers';
+import SSW from '../../assets/ssw-form-header.png';
+import DefaultProfile from '../../assets/default_profile.png';
+import './styles.css';
+import { allInterests, allRoles, allTeams } from '../../utils/constants';
 
-interface IFilterKeys {
-  role: string;
-  date: string;
-  interests: string[];
-  teams: string[];
-}
+import {
+  IFilterKeys,
+  ISearchAction,
+  ISearchState,
+  IModalAction,
+  IModalState,
+} from './types';
 
-interface ISearchState {
-  users: IUser[];
-  query: string;
-  isLoading: boolean;
-}
-
-interface ISearchAction {
-  type: SearchAction;
-  query: string;
-  users: IUser[];
-}
-
-interface IModalState {
-  isOpen: boolean;
-  user?: IUser;
-}
-
-interface IModalAction {
-  type: ModalAction;
-  isOpen: boolean;
-  user?: IUser;
-}
-
-const initialFilterKeys: IFilterKeys = {
+const initialFilterKeys = {
   role: '',
   date: '',
   interests: [],
@@ -71,7 +50,7 @@ enum SearchAction {
   FINISH_SEARCH = 'FINISH_SEARCH',
 }
 
-const initialSearchState: ISearchState = {
+const initialSearchState = {
   users: [],
   query: '',
   isLoading: false,
@@ -86,7 +65,7 @@ const initialSearchState: ISearchState = {
  */
 const searchReducer = (
   state: ISearchState,
-  action: ISearchAction,
+  action: ISearchAction<SearchAction>,
 ): ISearchState => {
   switch (action.type) {
     case 'CLEAN_QUERY':
@@ -109,7 +88,7 @@ enum ModalAction {
   CLOSE_MODAL = 'CLOSE_MODAL',
 }
 
-const initialModalState: IModalState = {
+const initialModalState = {
   isOpen: false,
   user: undefined,
 };
@@ -123,7 +102,7 @@ const initialModalState: IModalState = {
  */
 const modalReducer = (
   state: IModalState,
-  action: IModalAction,
+  action: IModalAction<ModalAction>,
 ): IModalState => {
   switch (action.type) {
     case 'OPEN_MODAL':
@@ -138,25 +117,17 @@ const modalReducer = (
 const Directory = (): ReactElement => {
   const [directory, setDirectory] = useState<IUser[]>([]);
   const [filterKeys, setFilterKeys] = useState<IFilterKeys>(initialFilterKeys);
-
   const [searchState, dispatchSearch] = useReducer(
     searchReducer,
     initialSearchState,
   );
-
   const [modalState, dispatchModal] = useReducer(
     modalReducer,
     initialModalState,
   );
 
   const roleOptions = useMemo(
-    () =>
-      parseArrayToSemanticDropdownOptions([
-        'Contributor',
-        'Staff',
-        'Admin',
-        'Tbd',
-      ]),
+    () => parseArrayToSemanticDropdownOptions(allRoles),
     [],
   );
   const dateOptions = useMemo(
@@ -168,35 +139,11 @@ const Directory = (): ReactElement => {
     [],
   );
   const interestOptions = useMemo(
-    () =>
-      parseArrayToSemanticDropdownOptions([
-        'Cannabis',
-        'Education',
-        'Food & Land',
-        'Fun',
-        'Health',
-        'Housing',
-        'Immigration',
-        'Lit',
-        'Music',
-        'Nature',
-        'Politics',
-        'Stage and Screen',
-        'Transportation',
-        'Visual Arts',
-      ]),
+    () => parseArrayToSemanticDropdownOptions(allInterests),
     [],
   );
   const teamOptions = useMemo(
-    () =>
-      parseArrayToSemanticDropdownOptions([
-        'Editing',
-        'Writing',
-        'Fact-Checking',
-        'Illustration',
-        'Visuals',
-        'Photography',
-      ]),
+    () => parseArrayToSemanticDropdownOptions(allTeams),
     [],
   );
 

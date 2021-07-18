@@ -4,14 +4,14 @@ import axios from 'axios';
 import { Button } from 'semantic-ui-react';
 import Loader from 'react-loader-spinner';
 
-import Header from '../components/Header';
-import { buildURI } from '../api';
-import { BASE_URL, FRONTEND_BASE_URL } from '../api/urls';
-import { rolesEnum } from '../utils/enums';
+import Header from '../../components/Header';
+import { buildURI } from '../../api';
+import { BASE_URL, FRONTEND_BASE_URL } from '../../api/urls';
+import { rolesEnum } from '../../utils/enums';
 
 const LOGIN_FAILURE_QUERY_PARAM = 'failure';
 
-import '../css/Login.css';
+import './styles.css';
 
 // A custom hook that builds on useLocation to parse
 // the query string for you.
