@@ -28,6 +28,16 @@ router.get(
         success: true,
         result: pitches,
       });
+    } else if (req.query.pending === 'true') {
+      // Get all pitches pending approval
+      const pitches = await Pitch.find({
+        pitchStatus: pitchStatusEnum.PENDING,
+      });
+      res.status(200).json({
+        message: `Successfully retrieved pending pitches.`,
+        success: true,
+        result: pitches,
+      });
     } else {
       // Gets all pitches
       const pitches = await Pitch.find({});
@@ -224,6 +234,21 @@ router.delete(
       success: true,
       message: 'Pitch successfully deleted',
       result: deletedPitch,
+    });
+  }),
+);
+
+router.get(
+  '/all/pending',
+  errorWrap(async (req: Request, res: Response) => {
+    const pitches = await Pitch.find({
+      'pendingContributors.0': { $exists: true },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Pending pitches successfully retrived',
+      result: pitches,
     });
   }),
 );

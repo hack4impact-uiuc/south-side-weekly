@@ -7,7 +7,7 @@ import React, {
   useCallback,
 } from 'react';
 import { IPitch } from 'ssw-common';
-import { Dropdown, Input } from 'semantic-ui-react';
+import { Button, Dropdown, Input } from 'semantic-ui-react';
 
 import { pages } from '../../utils/enums';
 import {
@@ -19,7 +19,13 @@ import {
   sortPitchesByDeadlineDate,
 } from '../../utils/helpers';
 import Sidebar from '../../components/Sidebar';
-import { getApprovedPitches, isError } from '../../api';
+import {
+  getApprovedPitches,
+  isError,
+  getCurrentUser,
+  getPendingPitches,
+  getPendingContributorPitches,
+} from '../../api';
 import PitchGrid from '../../components/PitchDoc/PitchGrid';
 import SubmitPitchModal from '../../components/PitchDoc/SubmitPitchModal';
 import Logo from '../../assets/ssw-form-header.png';
@@ -60,6 +66,12 @@ enum SearchAction {
   FINISH_SEARCH = 'FINISH_SEARCH',
 }
 
+const tabs = [
+  'Unclaimed Pitches',
+  'Pitches Pending Approval',
+  'Claims Pending Approval',
+];
+
 const initialSearchState: ISearchState = {
   pitches: [],
   query: '',
@@ -94,13 +106,61 @@ const searchReducer = (
 };
 
 function PitchDoc(): ReactElement {
-  const [approvedPitches, setApprovedPitches] = useState<IPitch[]>([]);
+  const [displayedCards, setDisplayedCards] = useState<IPitch[]>([]);
+  const [unclaimedPitches, setUnclaimedPitches] = useState<IPitch[]>([]);
+  const [pendingPitches, setPendingPitches] = useState<IPitch[]>([]);
+  const [pendingContributors, setPendingContributors] = useState<IPitch[]>([]);
   const [filterKeys, setFilterKeys] = useState<IFilterKeys>(initialFilterKeys);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
+  const [currentTab, setCurrentTab] = useState<string>(tabs[1]);
 
   const [searchState, dispatchSearch] = useReducer(
     searchReducer,
     initialSearchState,
   );
+
+  const getAllUnclaimedPitches = useCallback(async (): Promise<void> => {
+    const unclaimedPitchesResp = await getApprovedPitches();
+    let pendingPitchesResp;
+    let pendingContributorsResp;
+
+    let tempPitches: IPitch[] = [];
+    if (!isError(unclaimedPitchesResp) && unclaimedPitchesResp.data) {
+      tempPitches = unclaimedPitchesResp.data.result;
+      setUnclaimedPitches(unclaimedPitchesResp.data.result);
+    }
+
+    if (isAdmin) {
+      pendingPitchesResp = await getPendingPitches();
+      pendingContributorsResp = await getPendingContributorPitches();
+
+      if (
+        !isError(pendingPitchesResp) &&
+        !isError(pendingContributorsResp) &&
+        pendingPitchesResp.data &&
+        pendingContributorsResp.data
+      ) {
+        setPendingPitches(pendingPitchesResp.data.result);
+        setPendingContributors(pendingContributorsResp.data.result);
+        setDisplayedCards(pendingPitchesResp.data.result);
+      }
+    } else {
+      setDisplayedCards(tempPitches);
+    }
+  }, [isAdmin]);
+
+  useEffect(() => {
+    const getUser = async (): Promise<void> => {
+      const res = await getCurrentUser();
+
+      if (!isError(res) && res.data.result.role === 'ADMIN') {
+        setIsAdmin(true);
+      }
+    };
+
+    getUser();
+    getAllUnclaimedPitches();
+  }, [getAllUnclaimedPitches]);
 
   const teamOptions = useMemo(
     () =>
@@ -153,27 +213,12 @@ function PitchDoc(): ReactElement {
   /**
    * Calls /pitch api through api wrapper to get ALL pitches
    */
-  const getAllUnclaimedPitches = async (): Promise<void> => {
-    const resp = await getApprovedPitches();
-
-    if (!isError(resp) && resp.data) {
-      setApprovedPitches(resp.data.result);
-    }
-  };
-
-  useEffect(() => {
-    getAllUnclaimedPitches();
-  }, []);
-
-  /**
-   * Searches through all of the pitches to find pitches by name
-   */
   const handleSearch = useCallback(
     (searchTerm: string): IPitch[] => {
-      let searchPitches = [...approvedPitches];
+      let searchPitches = [...displayedCards];
       searchTerm = searchTerm.toLowerCase().trim();
 
-      searchPitches = approvedPitches.filter((pitch: IPitch) => {
+      searchPitches = displayedCards.filter((pitch: IPitch) => {
         // Avoid null fields in database
         const pitchName = pitch.name ? pitch.name.toLowerCase() : '';
         return pitchName.includes(searchTerm);
@@ -181,7 +226,7 @@ function PitchDoc(): ReactElement {
 
       return searchPitches;
     },
-    [approvedPitches],
+    [displayedCards],
   );
 
   /**
@@ -192,7 +237,7 @@ function PitchDoc(): ReactElement {
       dispatchSearch({
         type: SearchAction.FINISH_SEARCH,
         query: '',
-        pitches: approvedPitches,
+        pitches: displayedCards,
       });
       return;
     }
@@ -216,7 +261,7 @@ function PitchDoc(): ReactElement {
     }, millisecondDelay);
 
     return () => clearTimeout(delaySearch);
-  }, [searchState.query, approvedPitches, handleSearch]);
+  }, [searchState.query, displayedCards, handleSearch]);
 
   /**
    * Filters a set of pitches passed in
@@ -292,6 +337,25 @@ function PitchDoc(): ReactElement {
     setFilterKeys({ ...keys });
   };
 
+  // Handles the admin changing tabs and changes the cards displayed
+  useEffect(() => {
+    if (isAdmin) {
+      if (currentTab === tabs[0]) {
+        setDisplayedCards(unclaimedPitches);
+      } else if (currentTab === tabs[1]) {
+        setDisplayedCards(pendingPitches);
+      } else if (currentTab === tabs[2]) {
+        setDisplayedCards(pendingContributors);
+      }
+    }
+  }, [
+    currentTab,
+    unclaimedPitches,
+    pendingPitches,
+    pendingContributors,
+    isAdmin,
+  ]);
+
   return (
     <>
       <Sidebar currentPage={pages.PITCHES} />
@@ -301,11 +365,49 @@ function PitchDoc(): ReactElement {
 
       <div className="content-wrapper">
         <div className="top-section">
-          <div className="pitchdoc-title">The Pitch Doc</div>
+          <div className="pitchdoc-title">
+            {isAdmin ? 'Pitch Approval' : 'The Pitch Doc'}
+          </div>
+
+          {isAdmin ? (
+            <div className="buttons-section">
+              <Button
+                className={`admin-pitch-tab ${
+                  currentTab === tabs[0] && 'active'
+                }`}
+                onClick={() => setCurrentTab(tabs[0])}
+              >
+                {tabs[0]}
+              </Button>
+              <Button
+                className={`admin-pitch-tab ${
+                  currentTab === tabs[1] && 'active'
+                }`}
+                onClick={() => setCurrentTab(tabs[1])}
+              >
+                {tabs[1]}: {pendingPitches.length}
+              </Button>
+              <Button
+                className={`admin-pitch-tab ${
+                  currentTab === tabs[2] && 'active'
+                }`}
+                onClick={() => setCurrentTab(tabs[2])}
+              >
+                {tabs[2]}
+              </Button>
+            </div>
+          ) : (
+            <></>
+          )}
+
           <div className="submit-search-section">
-            <span>
-              <SubmitPitchModal />
-            </span>
+            {isAdmin ? (
+              ''
+            ) : (
+              <span>
+                <SubmitPitchModal />
+              </span>
+            )}
             <div className="pitch-search">
               <Input
                 onChange={(e) =>
@@ -382,6 +484,8 @@ function PitchDoc(): ReactElement {
               />
             </div>
           </div>
+
+          {isAdmin ? <h2>{`${currentTab}:`}</h2> : ''}
         </div>
 
         <div className="pitch-grid">
