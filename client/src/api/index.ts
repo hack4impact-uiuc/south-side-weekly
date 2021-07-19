@@ -1,4 +1,4 @@
-export { getCurrentUser } from './auth';
+export { getCurrentUser, logout } from './auth';
 export {
   getUser,
   getUsers,

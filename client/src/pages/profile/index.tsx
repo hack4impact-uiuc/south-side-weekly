@@ -16,7 +16,6 @@ import {
   isError,
   getUser,
   updateUser,
-  getCurrentUser,
   getUserPermissionsByID,
 } from '../../api';
 import { Sidebar, Header } from '../../components';
@@ -42,6 +41,7 @@ import {
   convertToClassName,
   parseCamelCase,
 } from '../../utils/formatters';
+import { useAuth } from '../../contexts';
 
 import SocialsInput from './SocialsInput';
 import StringAttribute from './BasicInfoInput/StringAttribute';
@@ -66,7 +66,6 @@ const arrayAttributes: MultiDropdowns[] = ['genders', 'pronouns', 'races'];
 const Profile = (): ReactElement => {
   const { userId } = useParams<ParamTypes>();
   const [user, setUser] = useState<IUser>(emptyUser);
-  const [currentUser, setCurrentUser] = useState<IUser>(emptyUser);
   const [tempUser, setTempUser] = useState<IUser>(emptyUser);
   const [isEditMode, setIsEditMode] = useState(false);
   const [dropdownOptions, setDropdownOptions] = useState<IDropdownOptions>({
@@ -80,20 +79,14 @@ const Profile = (): ReactElement => {
     edit: [],
   });
 
+  const auth = useAuth();
+
   useEffect(() => {
     const loadUser = async (): Promise<void> => {
       const res = await getUser(userId);
       if (!isError(res)) {
         const user = res.data.result;
         setUser(user);
-      }
-    };
-
-    const loadCurrentUser = async (): Promise<void> => {
-      const res = await getCurrentUser();
-
-      if (!isError(res)) {
-        setCurrentUser(res.data.result);
       }
     };
 
@@ -106,7 +99,6 @@ const Profile = (): ReactElement => {
     };
 
     loadUser();
-    loadCurrentUser();
     loadCurrentUserPermissions();
   }, [userId]);
 
@@ -271,7 +263,7 @@ const Profile = (): ReactElement => {
         <Grid padded stackable>
           <Grid.Row columns={4}>
             <Grid.Column className="profile-pic-col">
-              {(userId === currentUser._id || currentUser.role === 'ADMIN') && (
+              {(userId === auth.user._id || auth.isAdmin) && (
                 <Button
                   size="medium"
                   className="edit-profile-btn"

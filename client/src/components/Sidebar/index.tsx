@@ -1,34 +1,18 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon, Image } from 'semantic-ui-react';
 
 import { pages } from '../../utils/enums';
-import { isError, getCurrentUser } from '../../api';
-import DefaultProfile from '../../assets/default_profile.png';
 import './styles.css';
 import { getUserProfilePic } from '../../utils/helpers';
+import { useAuth } from '../../contexts';
 
 interface IProps {
   currentPage: string;
 }
 
 function Sidebar({ currentPage }: IProps): ReactElement {
-  const [currentUserId, setCurrentUserId] = useState<string>('');
-  const [profilePicture, setProfilePicture] = useState<string>(DefaultProfile);
-
-  useEffect(() => {
-    const getUser = async (): Promise<void> => {
-      const res = await getCurrentUser();
-
-      if (!isError(res)) {
-        const user = res.data.result;
-        setCurrentUserId(user._id);
-        setProfilePicture(getUserProfilePic(user));
-      }
-    };
-
-    getUser();
-  }, []);
+  const { user } = useAuth();
 
   useEffect(() => {
     switch (currentPage) {
@@ -53,7 +37,7 @@ function Sidebar({ currentPage }: IProps): ReactElement {
   return (
     <div className="sidebar">
       <div className="profile-pic">
-        <Image src={profilePicture} alt="IMG-5592" />
+        <Image src={getUserProfilePic(user)} alt="IMG-5592" />
       </div>
       <div className="vertical-nav">
         <Link to="/homepage">
@@ -62,7 +46,7 @@ function Sidebar({ currentPage }: IProps): ReactElement {
             <div className="icon-text">Home</div>
           </div>
         </Link>
-        <Link to={`/profile/${currentUserId}`}>
+        <Link to={`/profile/${user._id}`}>
           <div id="profile" className="nav-link">
             <Icon className="icon" name="user" size="large" />
             <div className="icon-text">Profile</div>

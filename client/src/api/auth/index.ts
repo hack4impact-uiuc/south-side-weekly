@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 
 import { ErrorWrapper } from '../types';
-import { get } from '../builders';
+import { get, post } from '../builders';
 
 import * as Types from './types';
 
@@ -12,4 +12,7 @@ const getCurrentUser = async (): Promise<
   AxiosResponse<Types.GetCurrentUserResponseType> | ErrorWrapper
 > => await get(`${AUTH_ENDPOINT}/currentUser`, 'GET_CURRENT_USER_FAIL');
 
-export { getCurrentUser };
+const logout = async (): Promise<AxiosResponse<void> | ErrorWrapper> =>
+  await post(`${AUTH_ENDPOINT}/logout`, {}, 'LOGOUT_FAILURE');
+
+export { getCurrentUser, logout };

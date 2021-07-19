@@ -1,52 +1,26 @@
-import React, { ReactElement, useState } from 'react';
-import axios from 'axios';
+import React, { ReactElement } from 'react';
 import { Button } from 'semantic-ui-react';
-import { Redirect } from 'react-router';
 
 import { Header } from '../../components';
-import { BASE_URL } from '../../api/urls';
-
 import './styles.css';
+import { useAuth } from '../../contexts';
 
 function Home(): ReactElement {
-  const [loggedOut, setLoggedOut] = useState(false);
-  const logout = (): void => {
-    const requestString = `${BASE_URL}/auth/logout`;
-    axios
-      .post(requestString, {
-        headers: {
-          'Content-Type': 'application/JSON',
-        },
-      })
-      .then((res) => {
-        console.log(res);
-        setLoggedOut(true);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoggedOut(true);
-      });
-  };
+  const { logout } = useAuth();
 
   return (
-    <>
-      {!loggedOut ? (
-        <div className="home-wrapper">
-          <Header />
+    <div className="home-wrapper">
+      <Header />
 
-          <h1>SSW Dashboard</h1>
-          <div className="btn-group">
-            <div className="btn-wrapper">
-              <Button onClick={logout} className="btn">
-                Logout
-              </Button>
-            </div>
-          </div>
+      <h1>SSW Dashboard</h1>
+      <div className="btn-group">
+        <div className="btn-wrapper">
+          <Button onClick={logout} className="btn">
+            Logout
+          </Button>
         </div>
-      ) : (
-        <Redirect to="/login" />
-      )}
-    </>
+      </div>
+    </div>
   );
 }
 

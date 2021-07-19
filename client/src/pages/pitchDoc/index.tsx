@@ -22,14 +22,14 @@ import Sidebar from '../../components/Sidebar';
 import {
   getApprovedPitches,
   isError,
-  getCurrentUser,
   getPendingPitches,
   getPendingContributorPitches,
 } from '../../api';
 import { PitchGrid, SubmitPitchModal } from '../../components';
 import Logo from '../../assets/ssw-form-header.png';
-
 import './styles.css';
+import { allInterests, allTeams } from '../../utils/constants';
+import { useAuth } from '../../contexts';
 
 interface IFilterKeys {
   teams: string[];
@@ -71,7 +71,7 @@ const tabs = [
   'Claims Pending Approval',
 ];
 
-const initialSearchState: ISearchState = {
+const initialSearchState = {
   pitches: [],
   query: '',
   isLoading: false,
@@ -110,13 +110,14 @@ function PitchDoc(): ReactElement {
   const [pendingPitches, setPendingPitches] = useState<IPitch[]>([]);
   const [pendingContributors, setPendingContributors] = useState<IPitch[]>([]);
   const [filterKeys, setFilterKeys] = useState<IFilterKeys>(initialFilterKeys);
-  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   const [currentTab, setCurrentTab] = useState<string>(tabs[1]);
 
   const [searchState, dispatchSearch] = useReducer(
     searchReducer,
     initialSearchState,
   );
+
+  const { isAdmin } = useAuth();
 
   const getAllUnclaimedPitches = useCallback(async (): Promise<void> => {
     const unclaimedPitchesResp = await getApprovedPitches();
@@ -149,28 +150,11 @@ function PitchDoc(): ReactElement {
   }, [isAdmin]);
 
   useEffect(() => {
-    const getUser = async (): Promise<void> => {
-      const res = await getCurrentUser();
-
-      if (!isError(res) && res.data.result.role === 'ADMIN') {
-        setIsAdmin(true);
-      }
-    };
-
-    getUser();
     getAllUnclaimedPitches();
   }, [getAllUnclaimedPitches]);
 
   const teamOptions = useMemo(
-    () =>
-      parseArrayToSemanticDropdownOptions([
-        'Editors',
-        'Writing',
-        'Fact-Checking',
-        'Illustration',
-        'Visuals',
-        'Photography',
-      ]),
+    () => parseArrayToSemanticDropdownOptions(allTeams),
     [],
   );
 
@@ -184,23 +168,7 @@ function PitchDoc(): ReactElement {
   );
 
   const interestOptions = useMemo(
-    () =>
-      parseArrayToSemanticDropdownOptions([
-        'Cannabis',
-        'Education',
-        'Food & Land',
-        'Fun',
-        'Health',
-        'Housing',
-        'Immigration',
-        'Lit',
-        'Music',
-        'Nature',
-        'Politics',
-        'Stage and Screen',
-        'Transportation',
-        'Visual Arts',
-      ]),
+    () => parseArrayToSemanticDropdownOptions(allInterests),
     [],
   );
 

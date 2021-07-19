@@ -14,26 +14,28 @@ import {
   Login,
 } from './pages';
 import WizardWrapper from './wizard';
-
 import './styles.css';
+import { AuthProvider } from './contexts';
+import PrivateRoute from './components/PrivateRoute';
 
 axios.defaults.withCredentials = true;
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route exact path="/join" component={WizardWrapper} />
-        <Route exact path="/pitches" component={PitchDoc} />
-        <Route exact path="/resource" component={ResourcePage} />
-        <Route exact path="/resources" component={ResourcePage} />
-        <Route exact path="/profile/:userId" component={Profile} />
-        <Route exact path="/users" component={Directory} />
-        <Route exact path="/login" component={Login} />
-        <Route exact path="*" component={NotFound} />
-      </Switch>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Switch>
+          <PrivateRoute exact path="/logout" component={Home} />
+          <PrivateRoute exact path="/pitches" component={PitchDoc} />
+          <PrivateRoute exact path="/resources" component={ResourcePage} />
+          <PrivateRoute exact path="/profile/:userId" component={Profile} />
+          <PrivateRoute exact path="/users" component={Directory} />
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/join" component={WizardWrapper} />
+          <Route exact path="*" component={NotFound} />
+        </Switch>
+      </Router>
+    </AuthProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

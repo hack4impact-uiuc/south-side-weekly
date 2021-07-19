@@ -1,17 +1,16 @@
-import React, { useEffect, useState, ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 import { useLocation, Redirect } from 'react-router-dom';
-import axios from 'axios';
 import { Button } from 'semantic-ui-react';
 import Loader from 'react-loader-spinner';
 
-import { Header } from '../../components';
+import Header from '../../components/Header';
 import { buildURI } from '../../api';
-import { BASE_URL, FRONTEND_BASE_URL } from '../../api/urls';
+import { FRONTEND_BASE_URL } from '../../api/urls';
 import { rolesEnum } from '../../utils/enums';
+import './styles.css';
+import { useAuth } from '../../contexts';
 
 const LOGIN_FAILURE_QUERY_PARAM = 'failure';
-
-import './styles.css';
 
 // A custom hook that builds on useLocation to parse
 // the query string for you.
@@ -20,52 +19,27 @@ function useQuery(): URLSearchParams {
 }
 
 function Login(): ReactElement {
-  const [loading, setLoading] = useState(true);
-  const [authed, setAuthed] = useState(false);
-  const [user, setUser] = useState({ role: '' });
-
-  const checkLoggedIn = (): void => {
-    const requestString = `${BASE_URL}/auth/currentuser`;
-    axios
-      .get(requestString, {
-        headers: {
-          'Content-Type': 'application/JSON',
-        },
-      })
-      .then((res) => {
-        setAuthed(res.data.success);
-        if (res.data.success) {
-          console.log(res.data.result);
-          setUser(res.data.result);
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err);
-        setLoading(false);
-      });
-  };
-
-  useEffect(() => {
-    checkLoggedIn();
-  }, [authed]);
+  const { user, isLoading, isAuthenticated } = useAuth();
 
   const loginFailed = useQuery().get(LOGIN_FAILURE_QUERY_PARAM);
 
   const returnRedirect = (): ReactElement => {
-    console.log(user);
+    console.log('why the fuck are you here');
     if (user.role === rolesEnum.TBD) {
       return <Redirect to="/join" />;
     }
     return <Redirect to="/resources" />;
   };
 
+  console.log(isAuthenticated);
+  console.log(isLoading);
+
   return (
     <>
-      {loading || !authed ? (
+      {isLoading || !isAuthenticated ? (
         <div className="login-wrapper">
           <Header />
-          {loading ? (
+          {isLoading ? (
             <div className="loader-wrapper">
               <Loader type="Oval" color="#3D4F91" height={50} width={50} />
             </div>
