@@ -7,8 +7,7 @@ import React, {
 } from 'react';
 import { Checkbox, Form } from 'semantic-ui-react';
 
-import WizardSvg from '../../components/Wizard/Svg';
-import WizardListTitle from '../../components/Wizard/ListTitle';
+import { WizardSvg, WizardListTitle } from '../../components';
 import { handleSelectGroupArray } from '../../utils/helpers';
 import { racesEnum } from '../../utils/enums';
 

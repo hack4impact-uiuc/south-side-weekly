@@ -18,14 +18,13 @@ import {
   filterPitchesByTeams,
   sortPitchesByDeadlineDate,
 } from '../../utils/helpers';
-import Sidebar from '../../components/Sidebar';
 import {
   getApprovedPitches,
   isError,
   getPendingPitches,
   getPendingContributorPitches,
 } from '../../api';
-import { PitchGrid, SubmitPitchModal } from '../../components';
+import { PitchGrid, SubmitPitchModal, Sidebar } from '../../components';
 import Logo from '../../assets/ssw-form-header.png';
 import './styles.css';
 import { allInterests, allTeams } from '../../utils/constants';

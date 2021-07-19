@@ -2,7 +2,7 @@ import React, { FC, ReactElement, MouseEvent } from 'react';
 import { Button } from 'semantic-ui-react';
 
 import Icon from '../../assets/info.svg';
-import WizardSvg from '../../components/Wizard/Svg';
+import { WizardSvg } from '../../components';
 import './styles.css';
 
 interface IProps {

@@ -16,7 +16,7 @@ import {
 import WizardWrapper from './wizard';
 import './styles.css';
 import { AuthProvider } from './contexts';
-import PrivateRoute from './components/PrivateRoute';
+import { PrivateRoute } from './components';
 
 axios.defaults.withCredentials = true;
 

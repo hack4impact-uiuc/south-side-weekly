@@ -7,11 +7,11 @@ import React, {
 } from 'react';
 import { Checkbox, Form } from 'semantic-ui-react';
 
-import WizardSvg from '../../components/Wizard/Svg';
+import { WizardSvg , WizardStar } from '../../components';
 import { handleSelectGroupArray } from '../../utils/helpers';
 import { interestsEnum } from '../../utils/enums';
 import './styles.css';
-import WizardStar from '../../components/Wizard/RequiredStar';
+
 
 interface IProps {
   currentTeams: Array<string>;

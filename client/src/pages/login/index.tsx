@@ -3,7 +3,7 @@ import { useLocation, Redirect } from 'react-router-dom';
 import { Button } from 'semantic-ui-react';
 import Loader from 'react-loader-spinner';
 
-import Header from '../../components/Header';
+import { Header } from '../../components';
 import { buildURI } from '../../api';
 import { FRONTEND_BASE_URL } from '../../api/urls';
 import { rolesEnum } from '../../utils/enums';

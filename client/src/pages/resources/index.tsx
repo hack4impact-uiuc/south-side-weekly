@@ -14,16 +14,16 @@ import { dbTeamToDisplay } from '../../utils/constants';
 import './styles.css';
 import { pages } from '../../utils/enums';
 
-function defaultResources(): { [key: string]: Array<IResource> } {
+function defaultResources(): { [key: string]: IResource[] } {
   return {
-    General: Array<IResource>(),
-    Editing: Array<IResource>(),
-    Factchecking: Array<IResource>(),
-    Illustration: Array<IResource>(),
-    Photography: Array<IResource>(),
-    Onboarding: Array<IResource>(),
-    Visuals: Array<IResource>(),
-    Writing: Array<IResource>(),
+    General: [],
+    Editing: [],
+    Factchecking: [],
+    Illustration: [],
+    Photography: [],
+    Onboarding: [],
+    Visuals: [],
+    Writing: [],
   };
 }
 

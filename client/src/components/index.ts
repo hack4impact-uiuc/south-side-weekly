@@ -11,6 +11,7 @@ import WizardListTitle from './Wizard/ListTitle';
 import WizardPageCounter from './Wizard/PageCounter';
 import WizardStar from './Wizard/RequiredStar';
 import WizardSvg from './Wizard/Svg';
+import PrivateRoute from './PrivateRoute';
 
 export {
   Header,
@@ -26,4 +27,5 @@ export {
   WizardPageCounter,
   WizardStar,
   WizardSvg,
+  PrivateRoute,
 };

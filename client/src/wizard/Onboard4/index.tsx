@@ -1,8 +1,7 @@
 import React, { FC, Dispatch, SetStateAction, ReactElement } from 'react';
 import { Form } from 'semantic-ui-react';
 
-import WizardSvg from '../../components/Wizard/Svg';
-import WizardStar from '../../components/Wizard/RequiredStar';
+import { WizardSvg, WizardStar } from '../../components';
 
 import './styles.css';
 

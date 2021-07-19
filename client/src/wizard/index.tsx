@@ -8,11 +8,11 @@ import React, {
 import { Button } from 'semantic-ui-react';
 
 import './styles.css';
-import Header from '../components/Header';
+import { Header , WizardPageCounter } from '../components';
 import ArrowBack from '../assets/arrow-back.svg';
 import ArrowNext from '../assets/arrow-next.svg';
 import SubmitSVG from '../assets/check.svg';
-import WizardPageCounter from '../components/Wizard/PageCounter';
+
 
 import WizardInitialPrompt from './InitialPrompt';
 import Onboard1 from './Onboard1';

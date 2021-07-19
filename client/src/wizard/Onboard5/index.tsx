@@ -3,8 +3,7 @@ import { Button, Modal, ModalContent } from 'semantic-ui-react';
 import { openPopupWidget } from 'react-calendly';
 
 import './styles.css';
-import WizardSvg from '../../components/Wizard/Svg';
-import WizardStar from '../../components/Wizard/RequiredStar';
+import { WizardSvg, WizardStar } from '../../components';
 
 interface IProps {
   isModalOpen: boolean;
