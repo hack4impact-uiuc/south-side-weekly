@@ -1,186 +1,150 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Button } from 'semantic-ui-react';
+import { Button, Card, Menu, Radio } from 'semantic-ui-react';
 import { IResource } from 'ssw-common';
+import { startCase } from 'lodash';
 
-import { getAllResources, deleteResource, isError } from '../../api';
-import {
-  AddResourceModal,
-  EditResourceModal,
-  Header,
-  Sidebar,
-} from '../../components';
-import ResourcePageSVG from '../../assets/resource-page.svg';
-import { dbTeamToDisplay } from '../../utils/constants';
-import './styles.css';
+import { deleteResource, getAllResources, isError } from '../../api';
+import { ResourceModal, Header, Sidebar } from '../../components';
+import { allTeams } from '../../utils/constants';
 import { pages } from '../../utils/enums';
+import { useAuth } from '../../contexts';
 
-function defaultResources(): { [key: string]: IResource[] } {
-  return {
-    General: [],
-    Editing: [],
-    Factchecking: [],
-    Illustration: [],
-    Photography: [],
-    Onboarding: [],
-    Visuals: [],
-    Writing: [],
-  };
+import './styles.scss';
+
+interface ModalInfo {
+  action: 'create' | 'edit';
+  isOpen: boolean;
+  resource?: IResource;
 }
 
-const ResourcePage = (): ReactElement => {
-  const [currentValue, setCurrentValue] = useState<string>('General');
-  const [edit, setEdit] = useState<boolean>(false);
-  const [resourcesPerRole, setResourcesPerRole] = useState(defaultResources);
-  const [resourceToEdit, setResourceToEdit] = useState<IResource | undefined>(
-    undefined,
-  );
-  const [showEditModal, setShowEditModal] = useState<boolean>(false);
+const Resources = (): ReactElement => {
+  const [role, setRole] = useState('General');
+  const [edit, setEdit] = useState(false);
+  const [resources, setResources] = useState<IResource[]>([]);
+  const [modal, setModal] = useState<ModalInfo>({
+    action: 'edit',
+    isOpen: false,
+    resource: undefined,
+  });
 
-  const filterResources = async (): Promise<void> => {
+  const { isAdmin } = useAuth();
+
+  const teams = (): string[] =>
+    ['General', ...allTeams].map((team) => startCase(team.toLowerCase()));
+
+  const filterResources = (team: string): IResource[] =>
+    resources.filter((resouce) => resouce.teamRoles.includes(team));
+
+  const getResources = async (): Promise<void> => {
     const res = await getAllResources();
+
     if (!isError(res)) {
-      const allResources = res.data.result;
-
-      const newResourcesPerRole = defaultResources();
-      for (const i in allResources) {
-        const resource = allResources[i];
-        for (const j in resource.teamRoles) {
-          const role = resource.teamRoles[j];
-          newResourcesPerRole[role].push(resource);
-        }
-      }
-
-      setResourcesPerRole(newResourcesPerRole);
+      setResources(res.data.result);
     }
   };
 
   useEffect(() => {
-    filterResources();
-  }, [edit]);
+    getResources();
+  }, [modal.isOpen]);
 
-  /**
-   * Opens a link in a new tab
-   *
-   * @param link the link to open in the new tab
-   */
-  const handleResourceClick = (link: string): void => {
-    window.open(link, '_blank');
-  };
+  const removeResource = async (resource: IResource): Promise<void> => {
+    const res = await deleteResource(resource._id);
 
-  /**
-   * Changes the resources display to show the user
-   * @param resources the list of resources
-   * @param value the current role's resources that is being shown
-   */
-  const handleResourceChange = (value: string): void => {
-    setCurrentValue(value);
-  };
-
-  const enableEdit = (): void => {
-    setEdit(true);
-  };
-
-  const cancelEdit = (): void => {
-    setEdit(false);
-  };
-
-  const removeResource = async (resourceId: string): Promise<void> => {
-    const res = await deleteResource(resourceId);
     if (!isError(res)) {
-      filterResources();
+      getResources();
     }
   };
 
-  function closeModal(): void {
-    setShowEditModal(false);
-  }
+  const closeModal = (): void => {
+    modal.isOpen = false;
+    setModal({ ...modal });
+  };
+
+  const openModal = (action: ModalInfo['action']): void => {
+    modal.isOpen = true;
+    modal.action = action;
+    setModal({ ...modal });
+  };
+
+  const handleResourceAction = (selected: IResource): void => {
+    if (edit) {
+      setModal({
+        action: 'edit',
+        isOpen: true,
+        resource: selected,
+      });
+    } else {
+      const newSite = window.open(selected.link, '_target');
+      newSite?.focus();
+    }
+  };
 
   return (
-    <div className="resource-page-wrapper">
-      <Sidebar currentPage={pages.RESOURCES}></Sidebar>
+    <>
       <Header />
-      <img className="page-svg" alt="Resource Page" src={ResourcePageSVG} />
-      <div className="resource-page-content">
-        <div className="resource-title-container">
-          <div className="resource-title-item">Resource Hub</div>
-          <div className="resource-title-item">
-            <div className="resource-edit-btns">
-              <Button className={!edit ? 'active' : ''} onClick={cancelEdit}>
-                View Resources
-              </Button>
-              <Button className={edit ? 'active' : ''} onClick={enableEdit}>
-                Edit Resources
-              </Button>
-            </div>
-            <div className="add-resource-btn">
-              {!edit ? '' : <AddResourceModal onAdd={filterResources} />}
-            </div>
+      <Sidebar currentPage={pages.RESOURCES} />
+      <ResourceModal
+        closeModal={closeModal}
+        resource={modal.resource}
+        action={modal.action}
+        open={modal.isOpen}
+        onOpen={() => openModal(modal.action)}
+        onClose={closeModal}
+      />
+      <div className="resources-page">
+        <div className="controls">
+          <h1>Resource Page</h1>
+          <div>
+            {isAdmin && (
+              <Radio checked={edit} slider onClick={() => setEdit(!edit)} />
+            )}
           </div>
-        </div>
-
-        <div className="resource-toggle-group">
-          {Object.keys(resourcesPerRole).map((role) => (
+          <div className="push" />
+          {edit && (
             <Button
-              key={role}
-              className={`toggle-button ${role === currentValue && 'active'}`}
-              onClick={() => handleResourceChange(role)}
-            >
-              {dbTeamToDisplay[role]}
-            </Button>
-          ))}
-        </div>
-
-        <div className="resource-btn-group">
-          {!edit
-            ? resourcesPerRole[currentValue].map((resource, idx) => (
-                <Button
-                  onClick={() => handleResourceClick(resource.link)}
-                  className="resource-btn"
-                  key={idx}
-                >
-                  {resource.name}
-                </Button>
-              ))
-            : resourcesPerRole[currentValue].map((resource, idx) => (
-                <div key={idx} className="editable-resource">
-                  <Button
-                    className="resource-btn"
-                    key={idx}
-                    onClick={() => {
-                      setShowEditModal(true);
-                      setResourceToEdit(resource);
-                    }}
-                  >
-                    <Button
-                      className="delete-btn"
-                      circular
-                      icon="big minus circle"
-                      onClick={(e) => {
-                        removeResource(resource._id);
-                        e.stopPropagation();
-                      }}
-                    />
-                    {resource.name}
-                  </Button>
-                </div>
-              ))}
-        </div>
-
-        <div>
-          {showEditModal ? (
-            <EditResourceModal
-              isOpen
-              resource={resourceToEdit}
-              closeModal={closeModal}
-              getUpdatedResources={filterResources}
+              onClick={() => openModal('create')}
+              content="Create Resource"
+              className="default-btn"
             />
-          ) : (
-            ''
           )}
         </div>
+
+        <Menu tabular size="large">
+          {teams().map((team, index) => (
+            <Menu.Item
+              key={index}
+              name={team}
+              active={team === role}
+              onClick={(e, { name }) => setRole(name!)}
+            />
+          ))}
+        </Menu>
+
+        <div className="resource-group">
+          {filterResources(role).map((resource, index) => (
+            <Card
+              className="resource"
+              onClick={() => handleResourceAction(resource)}
+              key={index}
+            >
+              <p>{resource.name}</p>
+              {edit && (
+                <Button
+                  className="delete-btn"
+                  circular
+                  icon="big minus circle"
+                  onClick={(e) => {
+                    removeResource(resource);
+                    e.stopPropagation();
+                  }}
+                />
+              )}
+            </Card>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
-export default ResourcePage;
+export default Resources;

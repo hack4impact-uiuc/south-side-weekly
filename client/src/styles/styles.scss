@@ -1,0 +1,116 @@
+@import 'colors.scss';
+
+body {
+  margin: 0 !important;
+  padding: 0 !important;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* SSW Header Logo Styling */
+.logo {
+  width: 40%;
+  margin-top: 2%;
+}
+
+.logo-header {
+  text-align: center;
+}
+
+/* Page Title */
+.page-title {
+  font-weight: 700;
+  font-size: 36px;
+  padding: 5vh 0 5vh 0;
+}
+
+.editing {
+  background-color: $editing;
+}
+
+.writing {
+  background-color: $writing;
+}
+
+.visuals {
+  background-color: $visuals;
+}
+
+.photography {
+  background-color: $photography;
+}
+
+.illustration {
+  background-color: $illustration;
+}
+
+.fact-checking {
+  background-color: $factChecking;
+}
+
+.fun {
+  background-color: $fun;
+}
+
+.cannabis {
+  background-color: $cannabis;
+}
+
+.health {
+  background-color: $health;
+}
+
+.music {
+  background-color: $music;
+}
+
+.nature {
+  background-color: $nature;
+}
+
+.politics {
+  background-color: $politics;
+}
+
+.housing {
+  background-color: $housing;
+}
+
+.visual-arts {
+  background-color: $visualArts;
+}
+
+.immigration {
+  background-color: $immigration;
+}
+
+.food-and-land {
+  background-color: $foodAndLand;
+}
+
+.transportation {
+  background-color: $transportation;
+}
+
+.stage-and-screen {
+  background-color: $stageAndScreen;
+}
+
+.lit {
+  background-color: $lit;
+}
+
+.education {
+  background-color: $education;
+}
+
+.default-btn {
+  background-color: $primary !important;
+  color: white !important;
+
+  &:hover,
+  :focus {
+    background-color: $primary !important;
+    color: white !important;
+    opacity: 0.9;
+  }
+}

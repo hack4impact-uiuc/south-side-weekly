@@ -2,23 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import 'semantic-ui-css/semantic.min.css';
-import axios from 'axios';
 
-import {
-  Directory,
-  Profile,
-  NotFound,
-  PitchDoc,
-  Home,
-  ResourcePage,
-  Login,
-} from './pages';
+import { Directory, Profile, NotFound, PitchDoc, Home, Login } from './pages';
+import Resources from './pages/resources';
 import WizardWrapper from './wizard';
-import './styles.css';
-import { AuthProvider } from './contexts';
 import { PrivateRoute } from './components';
-
-axios.defaults.withCredentials = true;
+import { AuthProvider } from './contexts';
+import './styles/styles.scss';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -27,12 +17,12 @@ ReactDOM.render(
         <Switch>
           <PrivateRoute exact path="/logout" component={Home} />
           <PrivateRoute exact path="/pitches" component={PitchDoc} />
-          <PrivateRoute exact path="/resources" component={ResourcePage} />
+          <PrivateRoute exact path="/resources" component={Resources} />
           <PrivateRoute exact path="/profile/:userId" component={Profile} />
           <PrivateRoute exact path="/users" component={Directory} />
+          <PrivateRoute exact path="*" component={NotFound} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/join" component={WizardWrapper} />
-          <Route exact path="*" component={NotFound} />
         </Switch>
       </Router>
     </AuthProvider>

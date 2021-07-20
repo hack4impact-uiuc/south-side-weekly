@@ -1,7 +1,6 @@
 import Header from './Header';
 import ClaimPitchModal from './Modals/ClaimPitch';
-import EditResourceModal from './Modals/EditResource';
-import AddResourceModal from './Modals/CreateResource';
+import ResourceModal from './Modals/ResourceModal';
 import SubmitPitchModal from './Modals/SubmitPitch';
 import UserModal from './Modals/User';
 import PitchCard from './PitchCard';
@@ -16,8 +15,7 @@ import PrivateRoute from './PrivateRoute';
 export {
   Header,
   ClaimPitchModal,
-  EditResourceModal,
-  AddResourceModal,
+  ResourceModal,
   SubmitPitchModal,
   UserModal,
   PitchCard,
