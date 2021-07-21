@@ -23,7 +23,7 @@ const Login = (): ReactElement => {
     LOGIN_FAILURE_QUERY_PARAM,
   );
 
-  const login = () => window.open(LOGIN_URL, '_self');
+  const login = (): Window => window.open(LOGIN_URL, '_self')!;
 
   if (!isLoading && isAuthenticated) {
     const path = isRegistered ? '/resources' : '/join';
