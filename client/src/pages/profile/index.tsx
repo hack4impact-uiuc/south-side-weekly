@@ -48,7 +48,7 @@ import StringAttribute from './BasicInfoInput/StringAttribute';
 import ArrayAttribute from './BasicInfoInput/ArrayAttribute';
 import SelectAttribute from './BasicInfoInput/SelectAttribute';
 import DateAttribute from './BasicInfoInput/DateAttribute';
-import './styles.css';
+import './styles.scss';
 import {
   IDropdownOptions,
   IPermissions,

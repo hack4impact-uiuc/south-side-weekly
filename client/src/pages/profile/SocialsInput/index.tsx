@@ -1,7 +1,7 @@
 import React, { ReactElement, FC } from 'react';
 import { Grid, Icon, Input, SemanticICONS } from 'semantic-ui-react';
 
-import './styles.css';
+import './styles.scss';
 import { ISocialsInput } from './types';
 
 const SocialsInput: FC<ISocialsInput> = ({
