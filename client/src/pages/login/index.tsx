@@ -7,8 +7,8 @@ import { Header } from '../../components';
 import { buildURI } from '../../api';
 import { FRONTEND_BASE_URL } from '../../api/urls';
 import { rolesEnum } from '../../utils/enums';
-import './styles.css';
 import { useAuth } from '../../contexts';
+import './styles.css';
 
 const LOGIN_FAILURE_QUERY_PARAM = 'failure';
 
@@ -18,21 +18,17 @@ function useQuery(): URLSearchParams {
   return new URLSearchParams(useLocation().search);
 }
 
-function Login(): ReactElement {
+const Login = (): ReactElement => {
   const { user, isLoading, isAuthenticated } = useAuth();
 
   const loginFailed = useQuery().get(LOGIN_FAILURE_QUERY_PARAM);
 
   const returnRedirect = (): ReactElement => {
-    console.log('why the fuck are you here');
     if (user.role === rolesEnum.TBD) {
       return <Redirect to="/join" />;
     }
     return <Redirect to="/resources" />;
   };
-
-  console.log(isAuthenticated);
-  console.log(isLoading);
 
   return (
     <>
@@ -79,6 +75,6 @@ function Login(): ReactElement {
       )}
     </>
   );
-}
+};
 
 export default Login;

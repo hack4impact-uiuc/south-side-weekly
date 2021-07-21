@@ -20,9 +20,9 @@ ReactDOM.render(
           <PrivateRoute exact path="/resources" component={Resources} />
           <PrivateRoute exact path="/profile/:userId" component={Profile} />
           <PrivateRoute exact path="/users" component={Directory} />
-          <PrivateRoute exact path="*" component={NotFound} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/join" component={WizardWrapper} />
+          <Route exact path="*" component={NotFound} />
         </Switch>
       </Router>
     </AuthProvider>
