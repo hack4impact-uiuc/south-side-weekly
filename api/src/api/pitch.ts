@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
 import { errorWrap } from '../middleware';
+import { requireRegistered, requireStaff } from '../middleware/auth';
 
 import Pitch from '../models/pitch';
 import User from '../models/user';
@@ -17,6 +18,7 @@ const isValidMongoId = (id: string): boolean => ObjectId.isValid(id);
 // Gets pitches
 router.get(
   '/',
+  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     if (req.query.approved === 'true') {
       // Gets all unclaimed pitches
@@ -53,6 +55,7 @@ router.get(
 // Gets pitch by pitch id
 router.get(
   '/:pitchId',
+  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     if (!isValidMongoId(req.params.pitchId)) {
       res.status(400).json({
@@ -81,6 +84,7 @@ router.get(
 // Gets open teams by pitch id
 router.get(
   '/:pitchId/openTeams',
+  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     if (!isValidMongoId(req.params.pitchId)) {
       res.status(400).json({
@@ -113,6 +117,7 @@ router.get(
 // Create a new pitch
 router.post(
   '/',
+  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     const newPitch = await Pitch.create(req.body);
     if (newPitch) {
@@ -128,6 +133,7 @@ router.post(
 // Updates a pitch
 router.put(
   '/:pitchId',
+  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     if (!isValidMongoId(req.params.pitchId)) {
       res.status(400).json({
@@ -162,6 +168,7 @@ router.put(
 // Adds a contributor to the assignmentContributors array
 router.put(
   '/:pitchId/contributors',
+  requireStaff,
   errorWrap(async (req: Request, res: Response) => {
     if (!isValidMongoId(req.params.pitchId)) {
       res.status(400).json({
@@ -211,6 +218,7 @@ router.put(
 // Deletes a pitch
 router.delete(
   '/:pitchId',
+  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     if (!isValidMongoId(req.params.pitchId)) {
       res.status(400).json({
@@ -240,6 +248,7 @@ router.delete(
 
 router.get(
   '/all/pending',
+  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     const pitches = await Pitch.find({
       'pendingContributors.0': { $exists: true },

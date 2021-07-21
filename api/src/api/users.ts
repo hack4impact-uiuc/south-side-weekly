@@ -5,6 +5,7 @@ import { errorWrap } from '../middleware';
 import User from '../models/user';
 import Pitch from '../models/pitch';
 import { getEditableFields, getViewableFields } from '../utils/user-utils';
+import { requireAdmin, requireRegistered } from '../middleware/auth';
 
 const router = express.Router();
 
@@ -17,6 +18,7 @@ const isValidMongoId = (id: string): boolean => ObjectId.isValid(id);
 // Gets all users
 router.get(
   '/',
+  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     const users = await User.find({});
     res.status(200).json({
@@ -30,6 +32,7 @@ router.get(
 // Gets user by id
 router.get(
   '/:userId',
+  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     if (!isValidMongoId(req.params.userId)) {
       res.status(400).json({
@@ -58,6 +61,7 @@ router.get(
 // Gets a users permissions
 router.get(
   '/:userId/permissions',
+  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     res.json({
       success: true,
@@ -72,6 +76,7 @@ router.get(
 // Create a new user
 router.post(
   '/',
+  requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
     const newUser = await User.create(req.body);
     if (newUser) {
@@ -87,6 +92,7 @@ router.post(
 // Updates a user
 router.put(
   '/:userId',
+  requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
     if (!isValidMongoId(req.params.userId)) {
       res.status(400).json({
@@ -121,6 +127,7 @@ router.put(
 // Deletes a user
 router.delete(
   '/:userId',
+  requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
     if (!isValidMongoId(req.params.userId)) {
       res.status(400).json({
@@ -151,6 +158,7 @@ router.delete(
 // Add pitch to a user's claimed pitches
 router.put(
   '/:userId/pitches',
+  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     if (!isValidMongoId(req.params.userId)) {
       res.status(400).json({
