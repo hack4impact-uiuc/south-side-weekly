@@ -20,6 +20,7 @@ const AuthProvider: FC = ({ children }): ReactElement => {
     isStaff: false,
     isAdmin: false,
     isLoading: true,
+    isRegistered: false,
     logout: () => void 0,
   });
 
@@ -32,6 +33,7 @@ const AuthProvider: FC = ({ children }): ReactElement => {
       isStaff: false,
       isAdmin: false,
       isLoading: false,
+      isRegistered: false,
       logout: logout,
     });
   }, []);
@@ -49,6 +51,7 @@ const AuthProvider: FC = ({ children }): ReactElement => {
           isStaff: user.role === 'STAFF',
           isAdmin: user.role === 'ADMIN',
           isLoading: false,
+          isRegistered: user.role !== 'TBD',
           logout: logout,
         });
       } else {
@@ -59,6 +62,7 @@ const AuthProvider: FC = ({ children }): ReactElement => {
           isStaff: false,
           isAdmin: false,
           isLoading: false,
+          isRegistered: false,
           logout: logout,
         });
       }

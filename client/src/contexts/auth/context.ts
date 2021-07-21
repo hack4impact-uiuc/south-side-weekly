@@ -11,6 +11,7 @@ const AuthContext = createContext<IAuthContext>({
   isStaff: false,
   isAdmin: false,
   isLoading: false,
+  isRegistered: false,
   logout: () => void 0,
 });
 

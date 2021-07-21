@@ -7,5 +7,6 @@ export interface IAuthContext {
   isStaff: boolean;
   isAdmin: boolean;
   isLoading: boolean;
+  isRegistered: boolean;
   logout(): void;
 }
