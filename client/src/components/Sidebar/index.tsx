@@ -12,7 +12,7 @@ interface IProps {
 }
 
 function Sidebar({ currentPage }: IProps): ReactElement {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
 
   useEffect(() => {
     switch (currentPage) {
@@ -68,6 +68,12 @@ function Sidebar({ currentPage }: IProps): ReactElement {
           <div id="users" className="nav-link">
             <Icon className="icon" name="users" size="large" />
             <div className="icon-text">Users</div>
+          </div>
+        </Link>
+        <Link onClick={logout} to="/login">
+          <div id="logout" className="nav-link">
+            <Icon className="icon" name="log out" size="large" />
+            <div className="icon-text">Logout</div>
           </div>
         </Link>
       </div>
