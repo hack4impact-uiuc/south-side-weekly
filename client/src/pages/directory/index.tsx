@@ -49,16 +49,16 @@ const Directory = (): ReactElement => {
     user: emptyUser,
   });
 
-  const getAllUsers = async (): Promise<void> => {
-    const res = await getUsers();
-
-    if (!isError(res)) {
-      setDirectory(res.data.result);
-      setFilteredDirectory(res.data.result);
-    }
-  };
-
   useEffect(() => {
+    const getAllUsers = async (): Promise<void> => {
+      const res = await getUsers();
+
+      if (!isError(res)) {
+        setDirectory(res.data.result);
+        setFilteredDirectory(res.data.result);
+      }
+    };
+
     getAllUsers();
   }, []);
 
