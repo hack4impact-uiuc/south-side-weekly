@@ -11,7 +11,7 @@ import { Button, Dropdown, Input } from 'semantic-ui-react';
 
 import { pages } from '../../utils/enums';
 import {
-  parseArrayToSemanticDropdownOptions,
+  parseOptions,
   parseSemanticMultiSelectTypes,
   filterPitchesByClaimStatus,
   filterPitchesByInterests,
@@ -152,29 +152,16 @@ function PitchDoc(): ReactElement {
     getAllUnclaimedPitches();
   }, [getAllUnclaimedPitches]);
 
-  const teamOptions = useMemo(
-    () => parseArrayToSemanticDropdownOptions(allTeams),
-    [],
-  );
+  const teamOptions = useMemo(() => parseOptions(allTeams), []);
 
   const dateOptions = useMemo(
-    () =>
-      parseArrayToSemanticDropdownOptions([
-        'Earliest to Latest',
-        'Latest to Earliest',
-      ]),
+    () => parseOptions(['Earliest to Latest', 'Latest to Earliest']),
     [],
   );
 
-  const interestOptions = useMemo(
-    () => parseArrayToSemanticDropdownOptions(allInterests),
-    [],
-  );
+  const interestOptions = useMemo(() => parseOptions(allInterests), []);
 
-  const claimOptios = useMemo(
-    () => parseArrayToSemanticDropdownOptions(['Unclaimed', 'Claimed']),
-    [],
-  );
+  const claimOptios = useMemo(() => parseOptions(['Unclaimed', 'Claimed']), []);
 
   /**
    * Calls /pitch api through api wrapper to get ALL pitches

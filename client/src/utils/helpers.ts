@@ -1,4 +1,5 @@
 import { FormEvent, Dispatch, SetStateAction } from 'react';
+import { DropdownItemProps } from 'semantic-ui-react';
 import { IUser, IPitch } from 'ssw-common';
 
 import DefaultProfile from '../assets/default_profile.png';
@@ -31,30 +32,6 @@ const handleSelectGroupArray = (
   }
 };
 
-interface ISemanticDropdownOptions {
-  key: number;
-  text: string;
-  value: string;
-}
-
-const parseArrayToSemanticDropdownOptions = (
-  arr: string[],
-): ISemanticDropdownOptions[] => {
-  const semanticOptions: ISemanticDropdownOptions[] = [];
-
-  for (let count = 0; count < arr.length; ++count) {
-    const newOption: ISemanticDropdownOptions = {
-      key: count + 1,
-      text: arr[count],
-      value: arr[count],
-    };
-
-    semanticOptions.push(newOption);
-  }
-
-  return semanticOptions;
-};
-
 /**
  * Parses a semantic multi select into the filter key usable types.
  *
@@ -78,105 +55,6 @@ const parseSemanticMultiSelectTypes = (
 
   console.error('Invalid datatype to convert');
   return [];
-};
-
-/**
- * Sorts all of the users in the directory by date.
- *
- * @param isAscending the filter string representation, Earliest to Latest, Latest to Earliest, [empty]
- */
-const sortUsersByDate = (isAscending: boolean, directory: IUser[]): IUser[] => {
-  const sortedDirectory: IUser[] = [...directory];
-
-  sortedDirectory.sort((first: IUser, second: IUser): number => {
-    const firstUserDate: Date = new Date(first.dateJoined);
-    const secondUserDate: Date = new Date(second.dateJoined);
-
-    if (firstUserDate > secondUserDate) {
-      // -1 is a magic number
-      return isAscending ? 1 : 0 - 1;
-    } else if (firstUserDate < secondUserDate) {
-      return isAscending ? 0 - 1 : 1;
-    }
-    return 0;
-  });
-
-  return sortedDirectory;
-};
-
-/**
- * Filters out the users that have the specified role.
- *
- * @param role the role to filter by
- */
-const filterUsersByRole = (role: string, directory: IUser[]): IUser[] => {
-  if (role === '') {
-    return directory;
-  }
-  let filteredDirectory: IUser[] = [...directory];
-
-  filteredDirectory = filteredDirectory.filter(
-    (result: IUser) => result.role === role.toUpperCase(),
-  );
-
-  return filteredDirectory;
-};
-
-/**
- * Filters out the users that have any of the selected interests.
- *
- * @param interests the interests to filter by
- */
-const filterUsersByInterests = (
-  interests: string[],
-  directory: IUser[],
-): IUser[] => {
-  if (typeof interests !== 'object' || interests.length === 0) {
-    return directory;
-  }
-
-  let filteredDirectory: IUser[] = [...directory];
-
-  filteredDirectory = filteredDirectory.filter((user: IUser) => {
-    let hasInterest = true;
-
-    interests.forEach((interest) => {
-      if (!user.interests.includes(interest.toString().toUpperCase())) {
-        hasInterest = false;
-      }
-    });
-
-    return hasInterest;
-  });
-
-  return filteredDirectory;
-};
-
-/**
- * Filters out the users that have any of the selected teams.
- *
- * @param interests the interests to filter by
- */
-const filterUsersByTeams = (teams: string[], directory: IUser[]): IUser[] => {
-  if (typeof teams !== 'object' || teams.length === 0) {
-    return directory;
-  }
-
-  let filteredDirectory: IUser[] = [...directory];
-
-  filteredDirectory = filteredDirectory.filter((user: IUser) => {
-    let hasTeam = true;
-
-    teams.forEach((team) => {
-      if (!user.currentTeams.includes(team.toUpperCase())) {
-        hasTeam = false;
-      }
-    });
-
-    return hasTeam;
-  });
-
-  return filteredDirectory;
 };
 
 /**
@@ -402,14 +280,21 @@ const getUserProfilePic = (user: IUser): string =>
     ? user.profilePic
     : DefaultProfile;
 
+const getUserFullName = (user: IUser): string =>
+  `${user.preferredName ? user.preferredName : user.firstName} ${
+    user.lastName
+  }`;
+
+const parseOptions = (options: string[]): DropdownItemProps[] =>
+  options.map((option, index) => ({
+    key: index,
+    text: option,
+    value: option,
+  }));
+
 export {
   handleSelectGroupArray,
-  parseArrayToSemanticDropdownOptions,
   parseSemanticMultiSelectTypes,
-  sortUsersByDate,
-  filterUsersByRole,
-  filterUsersByTeams,
-  filterUsersByInterests,
   getPitchTeams,
   isPitchClaimed,
   filterPitchesByClaimStatus,
@@ -419,4 +304,6 @@ export {
   getUserFirstName,
   updateUserField,
   getUserProfilePic,
+  getUserFullName,
+  parseOptions,
 };

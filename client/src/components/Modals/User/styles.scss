@@ -1,0 +1,47 @@
+@import '../../../styles/colors.scss';
+
+.user-modal {
+  .header {
+    background-color: $primary !important;
+    color: white !important;
+  }
+
+  .grid {
+    width: 100%;
+
+    .user-information {
+      margin: 20px 0px 20px 0px !important;
+      text-transform: capitalize !important;
+      font-weight: normal;
+
+      &.name,
+      &.role {
+        font-size: xx-large;
+      }
+
+      &.email {
+        text-transform: lowercase !important;
+      }
+    }
+
+    .profile-button {
+      margin-top: 20px !important;
+      background-color: #3b3f4c !important;
+      color: white !important;
+    }
+
+    .list-header {
+      font-weight: normal !important;
+    }
+
+    .modal-label {
+      border-radius: 1rem;
+      color: black;
+      padding: 0px 2px 0px 2px;
+      text-align: center;
+      margin: 10px 0px 10px 0px;
+      font-size: large;
+      text-transform: capitalize;
+    }
+  }
+}

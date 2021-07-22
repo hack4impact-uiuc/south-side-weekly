@@ -32,7 +32,7 @@ import {
 } from '../../utils/constants';
 import {
   getUserProfilePic,
-  parseArrayToSemanticDropdownOptions,
+  parseOptions,
   parseSemanticMultiSelectTypes,
   updateUserField,
 } from '../../utils/helpers';
@@ -231,9 +231,7 @@ const Profile = (): ReactElement => {
   const getMultiDropdownOptions = (
     dropdown: MultiDropdowns,
   ): DropdownItemProps[] =>
-    parseArrayToSemanticDropdownOptions(
-      dropdownOptions[dropdown].concat(user[dropdown]),
-    );
+    parseOptions(dropdownOptions[dropdown].concat(user[dropdown]));
 
   /**
    * Adds an option to a dropdown
@@ -329,9 +327,7 @@ const Profile = (): ReactElement => {
                 <SelectAttribute
                   label={parseCamelCase('role')}
                   value={convertToCapitalized(user.role)}
-                  options={parseArrayToSemanticDropdownOptions(
-                    dropdownOptions['role'],
-                  )}
+                  options={parseOptions(dropdownOptions['role'])}
                   onChange={(e, { value }) => editUser('role', `${value}`)}
                   viewable={isViewable('role')}
                   editable={isEditable('role')}

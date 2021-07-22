@@ -1,0 +1,44 @@
+@import '../../styles/colors.scss';
+
+.directory-page {
+  margin-left: 15rem;
+  width: 80%;
+
+  .filters {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+
+    .wrapper {
+      margin: 0px 30px 0px 30px;
+      width: 200px;
+
+      .filter {
+        background-color: $primary;
+        padding: 10px;
+        border-radius: 1rem 1rem 0px 0px;
+        color: white;
+      }
+    }
+  }
+
+  .directory {
+    margin-top: 20px;
+    .content {
+      display: flex;
+      align-items: center;
+      border-bottom: solid $primary 7px;
+      color: black !important;
+
+      .name {
+        flex-grow: 1;
+        margin-left: 15px;
+      }
+
+      h2 {
+        font-weight: normal;
+        font-size: large;
+      }
+    }
+  }
+}

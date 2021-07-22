@@ -1,43 +1,40 @@
-import React, { FC, ReactElement } from 'react';
-import { Modal, Image, Grid, Button, Icon } from 'semantic-ui-react';
+import React, { ReactElement, FC } from 'react';
+import { toLower } from 'lodash';
+import {
+  Button,
+  Grid,
+  Icon,
+  Image,
+  Modal,
+  ModalProps,
+} from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
-import './styles.css';
-import DefaultProfile from '../../../assets/default_profile.png';
-import { getUserFirstName } from '../../../utils/helpers';
 import { convertToClassName } from '../../../utils/formatters';
-interface IModalProps {
-  open: boolean;
-  handleClose: () => void;
+import { getUserFullName, getUserProfilePic } from '../../../utils/helpers';
+
+import './styles.scss';
+
+interface UserModalProps extends ModalProps {
   user: IUser;
 }
 
-const UserModal: FC<IModalProps> = ({
-  open,
-  handleClose,
-  user,
-}): ReactElement => {
-  /**
-   * Opens up a user's profile page according to their ID
-   */
-  const openUserProfile = (): void => {
-    const profileWindow: Window = window.open(`/profile/${user._id}`)!;
-
-    // Switch to this tab
-    profileWindow.focus();
-  };
+const UserModal: FC<UserModalProps> = ({ user, ...rest }): ReactElement => {
+  const openUserProfile = (): void =>
+    window.open(`/profile/${user._id}`)!.focus();
 
   return (
-    <Modal open={open} onClose={handleClose}>
-      <Modal.Content>
-        <Grid columns="equal" padded>
+    <Modal className="user-modal" {...rest}>
+      <Modal.Header>View User</Modal.Header>
+      <Modal.Content image>
+        <Grid columns="equal" padded stackable>
           <Grid.Column verticalAlign="middle">
             <Grid.Row>
               <Image
                 circular
                 size="small"
-                src={user.profilePic ? user.profilePic : DefaultProfile}
-                alt={`${getUserFirstName(user)} ${user.lastName}`}
+                src={getUserProfilePic(user)}
+                alt={getUserFullName(user)}
               />
             </Grid.Row>
             <Grid.Row>
@@ -50,13 +47,11 @@ const UserModal: FC<IModalProps> = ({
           <Grid.Column verticalAlign="middle" width={5}>
             <Grid.Row>
               <h1 className="user-information name">
-                <b>{`${getUserFirstName(user)} ${user.lastName}`}</b>
+                <b>{getUserFullName(user)}</b>
               </h1>
             </Grid.Row>
             <Grid.Row>
-              <h3 className="user-information role">
-                {user.role.toLowerCase()}
-              </h3>
+              <h3 className="user-information role">{toLower(user.role)}</h3>
             </Grid.Row>
             <Grid.Row>
               <h3 className="user-information email">{user.email}</h3>
@@ -67,7 +62,7 @@ const UserModal: FC<IModalProps> = ({
             {user.interests.map((interest: string, index: number) => (
               <Grid.Row key={index}>
                 <div className={`modal-label ${convertToClassName(interest)}`}>
-                  {interest.toLowerCase()}
+                  {toLower(interest)}
                 </div>
               </Grid.Row>
             ))}
@@ -77,7 +72,7 @@ const UserModal: FC<IModalProps> = ({
             {user.currentTeams.map((team: string, index: number) => (
               <Grid.Row key={index}>
                 <div className={`modal-label ${convertToClassName(team)}`}>
-                  {team.toLowerCase()}
+                  {toLower(team)}
                 </div>
               </Grid.Row>
             ))}
