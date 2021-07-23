@@ -11,6 +11,8 @@ import WizardPageCounter from './Wizard/PageCounter';
 import WizardStar from './Wizard/RequiredStar';
 import WizardSvg from './Wizard/Svg';
 import PrivateRoute from './PrivateRoute';
+import AdminView from './Auth/AdminView';
+import StaffView from './Auth/StaffView';
 
 export {
   Header,
@@ -26,4 +28,6 @@ export {
   WizardStar,
   WizardSvg,
   PrivateRoute,
+  AdminView,
+  StaffView,
 };

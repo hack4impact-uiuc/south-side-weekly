@@ -68,12 +68,15 @@ const Directory = (): ReactElement => {
         return users;
       }
 
-      const queryParts = toLower(query.trim()).split(' ');
+      const searchTerm = toLower(query.trim());
+      const queryParts = searchTerm.split(' ');
 
       return users.filter((user) =>
         queryParts.every((part) =>
-          searchFields.some((field) =>
-            startsWith(toLower(toString(user[field])), part),
+          searchFields.some(
+            (field) =>
+              startsWith(toLower(toString(user[field])), part) ||
+              startsWith(toLower(toString(user[field])), searchTerm),
           ),
         ),
       );

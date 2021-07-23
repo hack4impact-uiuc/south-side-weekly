@@ -4,10 +4,9 @@ import { IResource } from 'ssw-common';
 import { startCase } from 'lodash';
 
 import { deleteResource, getAllResources, isError } from '../../api';
-import { ResourceModal, Header, Sidebar } from '../../components';
+import { ResourceModal, Header, Sidebar, AdminView } from '../../components';
 import { allTeams } from '../../utils/constants';
 import { pages } from '../../utils/enums';
-import { useAuth } from '../../contexts';
 
 import './styles.scss';
 
@@ -26,8 +25,6 @@ const Resources = (): ReactElement => {
     isOpen: false,
     resource: undefined,
   });
-
-  const { isAdmin } = useAuth();
 
   const teams = (): string[] =>
     ['General', ...allTeams].map((team) => startCase(team.toLowerCase()));
@@ -95,9 +92,9 @@ const Resources = (): ReactElement => {
         <div className="controls">
           <h1>Resource Page</h1>
           <div>
-            {isAdmin && (
+            <AdminView>
               <Radio checked={edit} slider onClick={() => setEdit(!edit)} />
-            )}
+            </AdminView>
           </div>
           <div className="push" />
           {edit && (

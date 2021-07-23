@@ -4,7 +4,7 @@ import Directory from './directory';
 import PitchDoc from './pitchDoc';
 import NotFound from './invalid';
 import Profile from './profile';
-import ResourcePage from './resources';
+import Resources from './resources';
 import Login from './login';
 
 export {
@@ -13,6 +13,6 @@ export {
   NotFound,
   Profile,
   WizardWrapper,
-  ResourcePage,
+  Resources,
   Login,
 };

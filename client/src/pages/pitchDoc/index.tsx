@@ -1,455 +1,298 @@
+import { startsWith, toLower, toString } from 'lodash';
 import React, {
+  ReactElement,
+  SyntheticEvent,
   useEffect,
   useState,
-  ReactElement,
-  useMemo,
-  useReducer,
-  useCallback,
 } from 'react';
+import { Dropdown, DropdownProps, Input, Menu, Modal } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
-import { Button, Dropdown, Input } from 'semantic-ui-react';
 
-import { pages } from '../../utils/enums';
-import {
-  parseOptions,
-  parseSemanticMultiSelectTypes,
-  filterPitchesByClaimStatus,
-  filterPitchesByInterests,
-  filterPitchesByTeams,
-  sortPitchesByDeadlineDate,
-} from '../../utils/helpers';
 import {
   getApprovedPitches,
-  isError,
-  getPendingPitches,
   getPendingContributorPitches,
+  getPendingPitches,
+  isError,
 } from '../../api';
-import { PitchGrid, SubmitPitchModal, Sidebar } from '../../components';
-import Logo from '../../assets/ssw-form-header.png';
-import './styles.css';
-import { allInterests, allTeams } from '../../utils/constants';
+import { Header, PitchCard, Sidebar } from '../../components';
+import StaffView from '../../components/Auth/StaffView';
 import { useAuth } from '../../contexts';
+import { allInterests, allTeams } from '../../utils/constants';
+import { pages } from '../../utils/enums';
+import { parseOptions } from '../../utils/helpers';
 
-interface IFilterKeys {
-  teams: string[];
-  date: string;
-  interests: string[];
-  status: string;
+import {
+  filterInterests,
+  filterClaimStatus,
+  filterTeams,
+  sortPitches,
+} from './helpers';
+
+import './styles.scss';
+
+const dateOptions = ['Earliest to Latest', 'Latest to Earliest'];
+
+interface ModalInfo {
+  isOpen: boolean;
+  pitch?: IPitch;
 }
 
-interface ISearchState {
-  pitches: IPitch[];
-  query: string;
-  isLoading: boolean;
-}
-
-interface ISearchAction {
-  type: SearchAction;
-  query: string;
-  pitches: IPitch[];
-}
-
-const initialFilterKeys: IFilterKeys = {
-  date: '',
-  status: '',
-  teams: [],
-  interests: [],
-};
-
-enum SearchAction {
-  CLEAN_QUERY = 'CLEAN_QUERY',
-  INITIALIZE_PITCHES = 'INITIALIZE_USERS',
-  START_SEARCH = 'START_SEARCH',
-  UPDATE_QUERY = 'UPDATE_QUERY',
-  FINISH_SEARCH = 'FINISH_SEARCH',
-}
-
+const searchFields: (keyof IPitch)[] = ['name'];
 const tabs = [
   'Unclaimed Pitches',
   'Pitches Pending Approval',
   'Claims Pending Approval',
 ];
 
-const initialSearchState = {
-  pitches: [],
-  query: '',
-  isLoading: false,
-};
+const PitchDoc = (): ReactElement => {
+  const [unclaimed, setUnclaimed] = useState<IPitch[]>([]);
+  const [pendingApprovals, setPendingApprovals] = useState<IPitch[]>([]);
+  const [pendingClaims, setPendingClaims] = useState<IPitch[]>([]);
+  const [currentTab, setCurrentTab] = useState(tabs[0]);
 
-/**
- * Reducer for the search state.
- *
- * @param state the current state of the search
- * @param action the action to perform on the search state
- * @returns new search state
- */
-const searchReducer = (
-  state: ISearchState,
-  action: ISearchAction,
-): ISearchState => {
-  switch (action.type) {
-    case 'CLEAN_QUERY':
-      return initialSearchState;
-    case 'INITIALIZE_USERS':
-      return { ...state, pitches: action.pitches };
-    case 'START_SEARCH':
-      return { ...state, isLoading: true, query: action.query };
-    case 'UPDATE_QUERY':
-      return { ...state, query: action.query };
-    case 'FINISH_SEARCH':
-      return { ...state, isLoading: false, pitches: action.pitches };
-    default:
-      throw new Error();
-  }
-};
+  const [currentPitches, setCurrentPitches] = useState<IPitch[]>([]);
+  const [filteredPitches, setFilteredPitches] = useState<IPitch[]>([]);
 
-function PitchDoc(): ReactElement {
-  const [displayedCards, setDisplayedCards] = useState<IPitch[]>([]);
-  const [unclaimedPitches, setUnclaimedPitches] = useState<IPitch[]>([]);
-  const [pendingPitches, setPendingPitches] = useState<IPitch[]>([]);
-  const [pendingContributors, setPendingContributors] = useState<IPitch[]>([]);
-  const [filterKeys, setFilterKeys] = useState<IFilterKeys>(initialFilterKeys);
-  const [currentTab, setCurrentTab] = useState<string>(tabs[1]);
-
-  const [searchState, dispatchSearch] = useReducer(
-    searchReducer,
-    initialSearchState,
-  );
+  const [claimStatus, setClaimStatus] = useState<string>('');
+  const [sort, setSort] = useState<'increase' | 'decrease' | 'none'>('none');
+  const [interests, setInterests] = useState<string[]>([]);
+  const [teams, setTeams] = useState<string[]>([]);
+  const [query, setQuery] = useState('');
+  const [modal, setModal] = useState<ModalInfo>({
+    isOpen: false,
+    pitch: undefined,
+  });
 
   const { isAdmin } = useAuth();
 
-  const getAllUnclaimedPitches = useCallback(async (): Promise<void> => {
-    const unclaimedPitchesResp = await getApprovedPitches();
-    let pendingPitchesResp;
-    let pendingContributorsResp;
+  useEffect(() => {
+    const getUnclaimedPitches = async (): Promise<void> => {
+      const res = await getApprovedPitches();
 
-    let tempPitches: IPitch[] = [];
-    if (!isError(unclaimedPitchesResp) && unclaimedPitchesResp.data) {
-      tempPitches = unclaimedPitchesResp.data.result;
-      setUnclaimedPitches(unclaimedPitchesResp.data.result);
-    }
+      if (!isError(res)) {
+        setUnclaimed(res.data.result);
+        setCurrentPitches(res.data.result);
+        setFilteredPitches(res.data.result);
+      }
+    };
+
+    const getPendingApprovals = async (): Promise<void> => {
+      const res = await getPendingPitches();
+
+      if (!isError(res)) {
+        setPendingApprovals(res.data.result);
+      }
+    };
+
+    const getPendingClaims = async (): Promise<void> => {
+      const res = await getPendingContributorPitches();
+
+      if (!isError(res)) {
+        setPendingClaims(res.data.result);
+      }
+    };
+
+    getUnclaimedPitches();
 
     if (isAdmin) {
-      pendingPitchesResp = await getPendingPitches();
-      pendingContributorsResp = await getPendingContributorPitches();
-
-      if (
-        !isError(pendingPitchesResp) &&
-        !isError(pendingContributorsResp) &&
-        pendingPitchesResp.data &&
-        pendingContributorsResp.data
-      ) {
-        setPendingPitches(pendingPitchesResp.data.result);
-        setPendingContributors(pendingContributorsResp.data.result);
-        setDisplayedCards(pendingPitchesResp.data.result);
-      }
-    } else {
-      setDisplayedCards(tempPitches);
+      getPendingApprovals();
+      getPendingClaims();
     }
   }, [isAdmin]);
 
   useEffect(() => {
-    getAllUnclaimedPitches();
-  }, [getAllUnclaimedPitches]);
+    const search = (pitches: IPitch[]): IPitch[] => {
+      if (query.length === 0) {
+        return pitches;
+      }
 
-  const teamOptions = useMemo(() => parseOptions(allTeams), []);
+      const searchTerm = toLower(query.trim());
 
-  const dateOptions = useMemo(
-    () => parseOptions(['Earliest to Latest', 'Latest to Earliest']),
-    [],
-  );
+      return pitches.filter((pitch) =>
+        searchFields.some((field) =>
+          startsWith(toLower(toString(pitch[field])), searchTerm),
+        ),
+      );
+    };
 
-  const interestOptions = useMemo(() => parseOptions(allInterests), []);
+    const filter = (pitches: IPitch[]): IPitch[] => {
+      let filtered = filterInterests(pitches, interests);
+      filtered = filterClaimStatus(filtered, claimStatus);
+      filtered = filterTeams(filtered, teams);
+      filtered = sortPitches(filtered, sort);
 
-  const claimOptios = useMemo(() => parseOptions(['Unclaimed', 'Claimed']), []);
+      return filtered;
+    };
 
-  /**
-   * Calls /pitch api through api wrapper to get ALL pitches
-   */
-  const handleSearch = useCallback(
-    (searchTerm: string): IPitch[] => {
-      let searchPitches = [...displayedCards];
-      searchTerm = searchTerm.toLowerCase().trim();
+    setFilteredPitches(search(filter(currentPitches)));
+  }, [currentPitches, query, interests, teams, claimStatus, sort]);
 
-      searchPitches = displayedCards.filter((pitch: IPitch) => {
-        // Avoid null fields in database
-        const pitchName = pitch.name ? pitch.name.toLowerCase() : '';
-        return pitchName.includes(searchTerm);
-      });
-
-      return searchPitches;
-    },
-    [displayedCards],
-  );
-
-  /**
-   * Delay before searching.
-   */
   useEffect(() => {
-    if (searchState.query === '') {
-      dispatchSearch({
-        type: SearchAction.FINISH_SEARCH,
-        query: '',
-        pitches: displayedCards,
-      });
-      return;
+    if (currentTab === tabs[0]) {
+      setCurrentPitches(unclaimed);
+    } else if (currentTab === tabs[1]) {
+      setCurrentPitches(pendingApprovals);
+    } else if (currentTab === tabs[2]) {
+      setCurrentPitches(pendingClaims);
     }
+  }, [currentTab, unclaimed, pendingApprovals, pendingClaims]);
 
-    dispatchSearch({
-      type: SearchAction.START_SEARCH,
-      query: searchState.query,
-      pitches: [],
-    });
-
-    const millisecondDelay = 500;
-
-    const delaySearch = setTimeout(() => {
-      const pitches = [...handleSearch(searchState.query)];
-
-      dispatchSearch({
-        type: SearchAction.FINISH_SEARCH,
-        query: searchState.query,
-        pitches: pitches,
-      });
-    }, millisecondDelay);
-
-    return () => clearTimeout(delaySearch);
-  }, [searchState.query, displayedCards, handleSearch]);
-
-  /**
-   * Filters a set of pitches passed in
-   *
-   * @param pitches the passed in pitches
-   * @returns the filtered list of pitches
-   */
-  const handlePitchDocFiltering = (pitches: IPitch[]): IPitch[] => {
-    if (isFilterKeysEmpty()) {
-      return pitches;
-    }
-
-    let filteredPitches = [...pitches];
-
-    const isAscending = filterKeys.date === 'Earliest to Latest';
-
-    filteredPitches = sortPitchesByDeadlineDate(isAscending, filteredPitches);
-
-    filteredPitches = filterPitchesByTeams(filterKeys.teams, filteredPitches);
-    filteredPitches = filterPitchesByInterests(
-      filterKeys.interests,
-      filteredPitches,
-    );
-
-    filteredPitches = filterPitchesByClaimStatus(
-      filterKeys.status,
-      filteredPitches,
-      filterKeys.teams,
-    );
-
-    return filteredPitches;
-  };
-
-  /**
-   * Determines if the filter state is empty.
-   *
-   * @returns true if filter keys are empty, else false
-   */
-  const isFilterKeysEmpty = (): boolean =>
-    filterKeys.status === '' &&
-    filterKeys.date === '' &&
-    filterKeys.interests.length === 0 &&
-    filterKeys.teams.length === 0;
-
-  /**
-   * Updates the filter key state.
-   *
-   * @param key the filter key to update
-   * @param newValue the new value to set the filter key's value to
-   */
-  const updateFilterKeys = (
-    key: keyof IFilterKeys,
-    newValue: string | string[],
+  const determineSort = (
+    e: SyntheticEvent<HTMLElement>,
+    data: DropdownProps,
   ): void => {
-    const keys: IFilterKeys = { ...filterKeys };
-
-    switch (key) {
-      case 'date':
-      case 'status':
-        keys[key] = `${newValue}`;
-        break;
-      case 'interests':
-      case 'teams':
-        if (Array.isArray(newValue)) {
-          keys[key] = newValue;
-        }
-        break;
-      default:
-        console.error('Invalid filter key');
-        break;
-    }
-
-    setFilterKeys({ ...keys });
-  };
-
-  // Handles the admin changing tabs and changes the cards displayed
-  useEffect(() => {
-    if (isAdmin) {
-      if (currentTab === tabs[0]) {
-        setDisplayedCards(unclaimedPitches);
-      } else if (currentTab === tabs[1]) {
-        setDisplayedCards(pendingPitches);
-      } else if (currentTab === tabs[2]) {
-        setDisplayedCards(pendingContributors);
+    if (typeof data.value === 'string') {
+      if (data.value === dateOptions[0]) {
+        setSort('increase');
+      } else if (data.value === dateOptions[1]) {
+        setSort('decrease');
+      } else {
+        setSort('none');
       }
     }
-  }, [
-    currentTab,
-    unclaimedPitches,
-    pendingPitches,
-    pendingContributors,
-    isAdmin,
-  ]);
+  };
+
+  const addClaimStatus = (
+    e: SyntheticEvent<HTMLElement>,
+    data: DropdownProps,
+  ): void => {
+    if (typeof data.value === 'string') {
+      setClaimStatus(data.value);
+    }
+  };
+
+  const addInterest = (
+    e: SyntheticEvent<HTMLElement>,
+    data: DropdownProps,
+  ): void => {
+    if (Array.isArray(data.value)) {
+      setInterests(data.value as string[]);
+    }
+  };
+
+  const addTeam = (
+    e: SyntheticEvent<HTMLElement>,
+    data: DropdownProps,
+  ): void => {
+    if (Array.isArray(data.value)) {
+      setTeams(data.value as string[]);
+    }
+  };
+
+  const openModal = (pitch: IPitch): void => {
+    setModal({
+      isOpen: true,
+      pitch: pitch,
+    });
+  };
+
+  const closeModal = (): void => {
+    setModal({
+      isOpen: false,
+      pitch: undefined,
+    });
+  };
 
   return (
     <>
+      <Modal open={modal.isOpen} onClose={closeModal}>
+        <Modal.Content content="I am getting there, hold on" />
+      </Modal>
+      <Header />
       <Sidebar currentPage={pages.PITCHES} />
-      <div className="logo-header">
-        <img className="logo" alt="SSW Logo" src={Logo} />
-      </div>
-
-      <div className="content-wrapper">
-        <div className="top-section">
-          <div className="pitchdoc-title">
-            {isAdmin ? 'Pitch Approval' : 'The Pitch Doc'}
+      <div className="pitch-doc-wrapper">
+        <h1>Pitch doc</h1>
+        <StaffView>
+          <Menu tabular size="large">
+            {tabs.map((tab, index) => (
+              <Menu.Item
+                key={index}
+                name={tab}
+                active={tab === currentTab}
+                onClick={(e, { name }) => setCurrentTab(name!)}
+              />
+            ))}
+          </Menu>
+        </StaffView>
+        <Input
+          value={query}
+          onChange={(e, { value }) => setQuery(value)}
+          fluid
+          placeholder="Search..."
+          icon="search"
+          iconPosition="left"
+        />
+        <div className="filters">
+          <div>
+            <h3>Filters: </h3>
           </div>
-
-          {isAdmin ? (
-            <div className="buttons-section">
-              <Button
-                className={`admin-pitch-tab ${
-                  currentTab === tabs[0] && 'active'
-                }`}
-                onClick={() => setCurrentTab(tabs[0])}
-              >
-                {tabs[0]}
-              </Button>
-              <Button
-                className={`admin-pitch-tab ${
-                  currentTab === tabs[1] && 'active'
-                }`}
-                onClick={() => setCurrentTab(tabs[1])}
-              >
-                {tabs[1]}: {pendingPitches.length}
-              </Button>
-              <Button
-                className={`admin-pitch-tab ${
-                  currentTab === tabs[2] && 'active'
-                }`}
-                onClick={() => setCurrentTab(tabs[2])}
-              >
-                {tabs[2]}
-              </Button>
-            </div>
-          ) : (
-            <></>
-          )}
-
-          <div className="submit-search-section">
-            {isAdmin ? (
-              ''
-            ) : (
-              <span>
-                <SubmitPitchModal />
-              </span>
-            )}
-            <div className="pitch-search">
-              <Input
-                onChange={(e) =>
-                  dispatchSearch({
-                    ...searchState,
-                    type: SearchAction.UPDATE_QUERY,
-                    query: e.currentTarget.value,
-                  })
-                }
-                icon="search"
-                loading={searchState.isLoading}
-              />
-            </div>
+          <div className="wrapper">
+            <Dropdown
+              className="filter"
+              text="Claim Status"
+              scrolling
+              clearable
+              options={parseOptions(['Claimed', 'Unclaimed'])}
+              selectOnBlur={false}
+              selectOnNavigation={false}
+              onChange={addClaimStatus}
+              fluid
+            />
           </div>
-
-          <div className="container">
-            <div className="filters">
-              <h2>Filter by: </h2>
-              <Dropdown
-                className="custom-dropdown"
-                text="Teams"
-                options={teamOptions}
-                scrolling
-                multiple
-                clearable
-                selectOnNavigation={false}
-                selectOnBlur={false}
-                onChange={(e, { value }) =>
-                  updateFilterKeys(
-                    'teams',
-                    parseSemanticMultiSelectTypes(value!),
-                  )
-                }
-              />
-              <Dropdown
-                className="custom-dropdown"
-                text="Date Joined"
-                options={dateOptions}
-                scrolling
-                clearable
-                selectOnNavigation={false}
-                selectOnBlur={false}
-                onChange={(e, { value }) =>
-                  updateFilterKeys('date', `${value}`)
-                }
-              />
-              <Dropdown
-                className="custom-dropdown"
-                text="Topics of Interest"
-                options={interestOptions}
-                scrolling
-                multiple
-                clearable
-                selectOnNavigation={false}
-                selectOnBlur={false}
-                onChange={(e, { value }) =>
-                  updateFilterKeys(
-                    'interests',
-                    parseSemanticMultiSelectTypes(value!),
-                  )
-                }
-              />
-              <Dropdown
-                className="custom-dropdown"
-                text="Claim Status"
-                options={claimOptios}
-                scrolling
-                clearable
-                selectOnNavigation={false}
-                selectOnBlur={false}
-                onChange={(e, { value }) =>
-                  updateFilterKeys('status', `${value}`)
-                }
-              />
-            </div>
+          <div className="wrapper">
+            <Dropdown
+              className="filter"
+              text="Date Joined"
+              scrolling
+              clearable
+              options={parseOptions(dateOptions)}
+              selectOnBlur={false}
+              selectOnNavigation={false}
+              onChange={determineSort}
+              fluid
+            />
           </div>
-
-          {isAdmin ? <h2>{`${currentTab}:`}</h2> : ''}
+          <div className="wrapper">
+            <Dropdown
+              className="filter"
+              text="Topics of Interest"
+              options={parseOptions(allInterests)}
+              scrolling
+              multiple
+              clearable
+              selectOnNavigation={false}
+              selectOnBlur={false}
+              onChange={addInterest}
+              fluid
+            />
+          </div>
+          <div className="wrapper">
+            <Dropdown
+              className="filter"
+              text="Teams"
+              options={parseOptions(allTeams)}
+              scrolling
+              multiple
+              clearable
+              selectOnNavigation={false}
+              selectOnBlur={false}
+              onChange={addTeam}
+              fluid
+            />
+          </div>
         </div>
-
-        <div className="pitch-grid">
-          <PitchGrid
-            pitches={handlePitchDocFiltering(searchState.pitches)}
-            getAllUnclaimedPitches={getAllUnclaimedPitches}
-          />
+        <div className="pitch-doc">
+          {filteredPitches.map((pitch, index) => (
+            <PitchCard
+              key={index}
+              pitch={pitch}
+              onClick={() => openModal(pitch)}
+            />
+          ))}
         </div>
       </div>
     </>
   );
-}
+};
 
 export default PitchDoc;

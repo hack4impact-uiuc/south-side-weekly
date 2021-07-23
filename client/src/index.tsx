@@ -3,11 +3,18 @@ import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import 'semantic-ui-css/semantic.min.css';
 
-import { Directory, Profile, NotFound, PitchDoc, Login } from './pages';
-import Resources from './pages/resources';
+import {
+  Directory,
+  Profile,
+  NotFound,
+  Login,
+  PitchDoc,
+  Resources,
+} from './pages';
 import WizardWrapper from './wizard';
 import { PrivateRoute } from './components';
 import { AuthProvider } from './contexts';
+
 import './styles/styles.scss';
 
 ReactDOM.render(

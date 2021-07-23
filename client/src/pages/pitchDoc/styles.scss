@@ -1,8 +1,8 @@
 @import '../../styles/colors.scss';
 
-.directory-page {
-  margin-left: 15rem;
+.pitch-doc-wrapper {
   width: 80%;
+  margin-left: 15rem;
 
   .filters {
     display: flex;
@@ -22,23 +22,9 @@
     }
   }
 
-  .directory {
-    margin-top: 20px;
-    .content {
-      display: flex;
-      align-items: center;
-      border-bottom: solid #3d917f 7px;
-      color: black !important;
-
-      .name {
-        flex-grow: 1;
-        margin-left: 15px;
-      }
-
-      h2 {
-        font-weight: normal;
-        font-size: large;
-      }
-    }
+  .pitch-doc {
+    margin: 20px 0px 20px 0px;
+    display: flex;
+    flex-wrap: wrap;
   }
 }

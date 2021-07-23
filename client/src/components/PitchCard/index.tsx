@@ -1,91 +1,49 @@
 import React, { FC, ReactElement } from 'react';
-import { Card, Label } from 'semantic-ui-react';
-import './styles.css';
+import { Card, CardProps } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
+import { toString } from 'lodash';
 
-import {
-  currentTeamsButtons,
-  teamToTeamsButtons,
-  enumToInterestButtons,
-  interestsButtons,
-} from '../../utils/constants';
+import { convertToClassName } from '../../utils/formatters';
 
-const defaultOnClick = (): void => void 0;
+import './styles.scss';
 
-interface IProps {
+interface IProps extends CardProps {
   pitch: IPitch;
-  openTeams: { [key: string]: { current: number; target: number } };
 }
 
-const MAX_LABELS = 3;
-const MAX_DESCRIPTION_LENGTH = 100;
+const MAX_LENGTH = 100;
 
-const PitchCard: FC<IProps> = ({ pitch, openTeams, ...rest }): ReactElement => {
-  const formatPitchDescription = (description: string): string => {
-    if (!description) {
-      return '';
-    }
+const PitchCard: FC<IProps> = ({ pitch, ...rest }): ReactElement => {
+  const formatDescription = (description: string): string => {
+    description = toString(description);
 
-    const shortenedDescriptionLength = MAX_DESCRIPTION_LENGTH - 3;
+    const newLength = MAX_LENGTH - 3;
 
-    if (description.length > MAX_DESCRIPTION_LENGTH) {
-      return `${description.substring(0, shortenedDescriptionLength)}...`;
+    if (description.length > MAX_LENGTH) {
+      return `${description.substring(0, newLength)}...`;
     }
 
     return description;
   };
 
   return (
-    <div className="pitch-card-wrapper">
-      <Card className="pitch-card" {...rest}>
-        <Card.Content>
-          <Label.Group style={{ marginBottom: 10 }} circular>
-            {pitch.topics.length < 1 && (
-              <Label style={{ background: 'lightgrey' }}>{`N/A`}</Label>
-            )}
-            {pitch.topics.slice(0, MAX_LABELS).map((topic, idx) => (
-              <Label
-                style={{
-                  backgroundColor:
-                    interestsButtons[enumToInterestButtons[topic]],
-                }}
-                key={idx}
-              >
-                {enumToInterestButtons[topic]}
-              </Label>
-            ))}
-            {pitch.topics.length > MAX_LABELS && (
-              <span>{`+${pitch.topics.length - MAX_LABELS}`}</span>
-            )}
-          </Label.Group>
-          <Card.Header> {pitch.name} </Card.Header>
+    <Card className="pitch-card" {...rest}>
+      <Card.Content>
+        <div>
+          <p>{pitch.name}</p>
           <Card.Description>
-            {formatPitchDescription(pitch.pitchDescription)}
+            <p>{formatDescription(pitch.pitchDescription)}</p>
           </Card.Description>
-          <Label.Group style={{ marginTop: 10 }} circular>
-            {Object.keys(openTeams).length < 1 && (
-              <Label style={{ background: 'lightgrey' }}>{`N/A`}</Label>
-            )}
-            {Object.keys(openTeams)
-              .slice(0, MAX_LABELS)
-              .map((team: string, idx: number) => (
-                <Label
-                  style={{
-                    background: currentTeamsButtons[teamToTeamsButtons[team]],
-                  }}
-                  onClick={defaultOnClick}
-                  key={idx}
-                >
-                  {team}
-                </Label>
-              ))}
-            {Object.keys(openTeams).length > MAX_LABELS && (
-              <span>{`+${Object.keys(openTeams).length - MAX_LABELS}`}</span>
-            )}
-          </Label.Group>
-        </Card.Content>
-      </Card>
-    </div>
+          <div className="topics">
+            {pitch.topics.map((topic, index) => (
+              <div key={index} className={`topic ${convertToClassName(topic)}`}>
+                {topic}
+              </div>
+            ))}
+          </div>
+        </div>
+      </Card.Content>
+    </Card>
   );
 };
 
