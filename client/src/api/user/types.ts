@@ -1,18 +1,14 @@
-import { IUser, IPitch } from 'ssw-common';
+import { IUser } from 'ssw-common';
 
 import { ApiResponseBase } from '../types';
-export interface GetUsersResponseType extends ApiResponseBase {
+export interface UsersResponse extends ApiResponseBase {
   result: IUser[];
 }
 
-export interface GetUserPitchesResponseType extends ApiResponseBase {
-  result: IPitch[];
-}
-
-export interface GetUserResponseType extends ApiResponseBase {
+export interface UserResponse extends ApiResponseBase {
   result: IUser;
 }
-export interface UserPermissionsType extends ApiResponseBase {
+export interface UserPermissions extends ApiResponseBase {
   result: {
     view: (keyof IUser)[];
     edit: (keyof IUser)[];

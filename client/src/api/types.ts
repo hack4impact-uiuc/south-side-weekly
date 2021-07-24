@@ -10,3 +10,5 @@ export type ApiResponse<T> = AxiosResponse<T> | ErrorWrapper;
 export interface ApiResponseBase {
   message: string;
 }
+
+export type Response<T> = AxiosResponse<T> | ErrorWrapper;

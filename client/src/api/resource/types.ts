@@ -2,16 +2,12 @@ import { IResource } from 'ssw-common';
 
 import { ApiResponseBase } from '../types';
 
-export interface CreateResourceResponseType extends ApiResponseBase {
+export interface ResourceResponse extends ApiResponseBase {
   result: IResource;
 }
 
-export interface GetAllResourcesResponseType extends ApiResponseBase {
+export interface ResourcesResponse extends ApiResponseBase {
   result: IResource[];
 }
 
 export type DeleteResourceResponseType = ApiResponseBase;
-
-export interface EditResourceResponseType extends ApiResponseBase {
-  result: IResource;
-}
