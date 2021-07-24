@@ -1,81 +1,175 @@
-import React, { ReactElement } from 'react';
-import { Modal, Button, Form, Image } from 'semantic-ui-react';
+import { isEmpty, startCase, toLower, toString } from 'lodash';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
+import { Button, Form, Modal, ModalProps } from 'semantic-ui-react';
 
-// import { currentTeamsButtons } from '../../utils/constants';
-import './styles.css';
-import GoogleDriveScreenshot from '../../../assets/GoogleDriveScreenshot.png';
-// import WizardSelectButton from '../WizardSelectButton/WizardSelectButton';
+import { createPitch, isError } from '../../../api';
+import { useAuth } from '../../../contexts';
+import { allInterests } from '../../../utils/constants';
 
-// const defaultOnClick = (): void => void 0;
+import './styles.scss';
 
-function SubmitPitchModal(): ReactElement {
-  const [open, setOpen] = React.useState(false);
+const MAX_LENGTH = 300;
+
+interface SubmitPitchModalProps extends ModalProps {
+  closeModal?: () => void;
+}
+
+const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
+  closeModal = () => void 0,
+  ...rest
+}): ReactElement => {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const [link, setLink] = useState('');
+  const [topics, setTopics] = useState(new Set<string>());
+  const [didAgree, setDidAgree] = useState(false);
+  const [didSubmit, setDidSubmit] = useState(false);
+
+  const { user } = useAuth();
+
+  const addTopic = (topic: string): void => {
+    topics.has(topic) ? topics.delete(topic) : topics.add(topic);
+    setTopics(new Set(topics));
+  };
+
+  useEffect(() => {
+    setTitle('');
+    setDescription('');
+    setLink('');
+    setTopics(new Set());
+    setDidAgree(false);
+    setDidSubmit(false);
+  }, []);
+
+  const submitPitch = async (): Promise<void> => {
+    setDidSubmit(true);
+
+    if (!isInvalidForm()) {
+      const body = {
+        name: title,
+        pitchAuthor: user._id,
+        pitchStatus: 'PENDING',
+        pitchDescription: description,
+        topics: Array.from(topics),
+      };
+
+      const res = await createPitch({ ...body });
+
+      if (!isError(res)) {
+        closeModal();
+      }
+    }
+
+    return;
+  };
+
+  const isInvalidForm = (): boolean =>
+    isEmpty(title) ||
+    isEmpty(description) ||
+    isEmpty(link) ||
+    isEmpty(topics) ||
+    !didAgree;
+
+  interface Error {
+    content: string;
+    pointing: 'left' | 'above' | 'below' | 'right';
+  }
+  const isFieldError = (
+    field: string | Set<string> | boolean,
+  ): Error | boolean => {
+    const message: Error = {
+      content: 'You must fill out this field',
+      pointing: 'above',
+    };
+
+    if (typeof field === 'boolean') {
+      return didSubmit && !didAgree;
+    }
+
+    if (didSubmit && isEmpty(field)) {
+      if (field instanceof Set) {
+        return true;
+      }
+
+      return message;
+    }
+
+    return false;
+  };
 
   return (
-    <Modal
-      onClose={() => setOpen(false)}
-      onOpen={() => setOpen(true)}
-      open={open}
-      trigger={
-        <Button className="submit-pitch-button"> Submit a Pitch </Button>
-      }
-      closeIcon
-    >
-      <Modal.Actions>
+    <Modal className="submit-modal" {...rest}>
+      <Modal.Header content="Submit a pitch" />
+      <Modal.Content>
         <Form>
-          <Form.Field>
-            Pitch Title
-            <label>
-              <input />
-            </label>
-          </Form.Field>
-          <Form.Field>
-            Summarize Pitch in 1-2 Sentences (300 character limit)
-            <label>
-              <input />
-            </label>
-          </Form.Field>
+          <Form.Group widths="equal">
+            <Form.Input
+              required
+              error={isFieldError(title)}
+              label="Title"
+              value={title}
+              onChange={(e, { value }) => setTitle(value)}
+              size="small"
+            />
+            <Form.Input
+              required
+              error={isFieldError(link)}
+              label={'Link to Google Doc'}
+              value={link}
+              onChange={(e, { value }) => setLink(value)}
+              size="small"
+            />
+          </Form.Group>
 
-          <div className="suggested-text">Suggested Roles Needed:</div>
+          <Form.TextArea
+            required
+            maxLength={MAX_LENGTH}
+            value={description}
+            onChange={(e, { value }) => setDescription(toString(value))}
+            label="Description"
+            error={isFieldError(description)}
+          />
 
-          <div className="gdrive-teams-container">
-            <Image src={GoogleDriveScreenshot}></Image>
-
-            <div className="teams-section">
-              <Form.Group widths="equal">
-                {/* {Object.keys(currentTeamsButtons).map((team: string) => (
-                  <div key={team}>
-                    <WizardSelectButton
-                      onClick={defaultOnClick}
-                      key={team}
-                      selectedArray={[]}
-                      width="40px"
-                      margin="10px 15px 10px 15px"
-                      value={team}
-                      color={currentTeamsButtons[team]}
-                      disabled
-                    />
-
-                    <Form.Field>
-                      <input />
-                    </Form.Field>
-                  </div>
-                ))} */}
-              </Form.Group>
-            </div>
-
-            <div className="break"></div>
-
-            <div className="modal-submit-button">
-              <Button type="submit" onClick={() => setOpen(false)}>
-                Submit Pitch!
-              </Button>
-            </div>
-          </div>
+          <h3>Topics (Please select at least 1 topic)</h3>
+          <Form.Group inline widths="4" className="checkbox-group">
+            {allInterests.map((topic, index) => (
+              <Form.Checkbox
+                error={isFieldError(topics)}
+                className="checkbox"
+                key={index}
+                label={startCase(toLower(topic))}
+                checked={topics.has(topic)}
+                onClick={(e, { value }) => addTopic(toString(value))}
+                value={topic}
+              />
+            ))}
+          </Form.Group>
+          <h3>Conflict of Interest Discolsure</h3>
+          <p>
+            By clicking "I agree", you agree that you are not involved with the
+            events or people covered in your pitch. i.e. do you have a
+            relationship with them as an employee, family memember, friend, or
+            donor?
+          </p>
+          <Form.Checkbox
+            checked={didAgree}
+            onClick={() => setDidAgree(!didAgree)}
+            error={isFieldError(didAgree)}
+            label="I agree"
+            labelPosition="right"
+          />
         </Form>
-      </Modal.Actions>
+        <Modal.Actions>
+          <Button
+            type="submit"
+            onClick={submitPitch}
+            content="Submit pitch for review"
+            positive
+          />
+        </Modal.Actions>
+      </Modal.Content>
     </Modal>
   );
-}
+};
 
 export default SubmitPitchModal;

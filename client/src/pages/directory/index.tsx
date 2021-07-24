@@ -4,7 +4,7 @@ import React, {
   ReactElement,
   SyntheticEvent,
 } from 'react';
-import { startCase, startsWith, toLower, toString } from 'lodash';
+import { startCase, startsWith, toArray, toLower, toString } from 'lodash';
 import { Card, Dropdown, DropdownProps, Input, Image } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
@@ -109,33 +109,6 @@ const Directory = (): ReactElement => {
     }
   };
 
-  const addRole = (
-    e: SyntheticEvent<HTMLElement>,
-    data: DropdownProps,
-  ): void => {
-    if (typeof data.value === 'string') {
-      setRole(data.value);
-    }
-  };
-
-  const addInterest = (
-    e: SyntheticEvent<HTMLElement>,
-    data: DropdownProps,
-  ): void => {
-    if (Array.isArray(data.value)) {
-      setInterests(data.value as string[]);
-    }
-  };
-
-  const addTeam = (
-    e: SyntheticEvent<HTMLElement>,
-    data: DropdownProps,
-  ): void => {
-    if (Array.isArray(data.value)) {
-      setTeams(data.value as string[]);
-    }
-  };
-
   const openModal = (user: IUser): void => {
     setModal({
       isOpen: true,
@@ -178,7 +151,7 @@ const Directory = (): ReactElement => {
               options={parseOptions(allRoles)}
               selectOnBlur={false}
               selectOnNavigation={false}
-              onChange={addRole}
+              onChange={(e, { value }) => setRole(toString(value))}
               fluid
             />
           </div>
@@ -205,7 +178,7 @@ const Directory = (): ReactElement => {
               clearable
               selectOnNavigation={false}
               selectOnBlur={false}
-              onChange={addInterest}
+              onChange={(e, { value }) => setInterests(toArray(value))}
               fluid
             />
           </div>
@@ -219,7 +192,7 @@ const Directory = (): ReactElement => {
               clearable
               selectOnNavigation={false}
               selectOnBlur={false}
-              onChange={addTeam}
+              onChange={(e, { value }) => setTeams(toArray(value))}
               fluid
             />
           </div>

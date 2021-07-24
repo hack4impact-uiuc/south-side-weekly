@@ -1,7 +1,7 @@
 import { AxiosResponse } from 'axios';
 
 import { ErrorWrapper } from '../types';
-import { get, put } from '../builders';
+import { get, post, put } from '../builders';
 
 import * as Types from './types';
 
@@ -48,6 +48,11 @@ const getPendingContributorPitches = async (): Promise<
     'GET_PENDING_CONTRIBUTOR_PITCH_FAIL',
   );
 
+const createPitch = async (newPitch: {
+  [key: string]: number | string | string[];
+}): Promise<AxiosResponse<Types.PitchResponseType> | ErrorWrapper> =>
+  await post(PITCH_ENDPOINT, newPitch, 'CREATE_PITCH_FAIL');
+
 export {
   getApprovedPitches,
   getOpenTeams,
@@ -55,4 +60,5 @@ export {
   updatePitch,
   getPendingPitches,
   getPendingContributorPitches,
+  createPitch,
 };

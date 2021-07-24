@@ -13,6 +13,7 @@ export {
   updatePitchContributors,
   getPendingPitches,
   getPendingContributorPitches,
+  createPitch,
 } from './pitch';
 export {
   createResource,

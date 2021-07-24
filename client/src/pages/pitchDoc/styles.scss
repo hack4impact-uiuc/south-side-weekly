@@ -4,6 +4,19 @@
   width: 80%;
   margin-left: 15rem;
 
+  .search-add-wrapper {
+    position: relative;
+    display: flex;
+
+    .input {
+      flex-grow: 1 !important;
+    }
+
+    .button {
+      margin-left: 100px !important;
+    }
+  }
+
   .filters {
     display: flex;
     align-items: center;

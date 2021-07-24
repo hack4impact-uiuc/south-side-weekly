@@ -9,3 +9,7 @@ export interface GetPitchesResponseType extends ApiResponseBase {
 export interface GetOpenTeamsResponseType extends ApiResponseBase {
   result: IPitch['teams'];
 }
+
+export interface PitchResponseType extends ApiResponseBase {
+  result: IPitch;
+}

@@ -1,0 +1,41 @@
+@import '../../../styles/colors.scss';
+
+.submit-modal {
+  .header {
+    background-color: $primary !important;
+    color: white !important;
+  }
+
+  .content {
+    label,
+    h3 {
+      font-weight: 500 !important;
+    }
+
+    textarea {
+      font-size: medium;
+      height: 90px !important;
+    }
+
+    .checkbox {
+      padding-left: 0 !important;
+    }
+
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      margin-top: 50px;
+      color: black;
+
+      .checkbox {
+        padding-left: 0 !important;
+        margin: 10px 5px 10px 5px;
+      }
+    }
+  }
+
+  .actions {
+    margin-top: 30px;
+    text-align: right;
+  }
+}

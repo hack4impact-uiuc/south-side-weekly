@@ -1,11 +1,18 @@
-import { startsWith, toLower, toString } from 'lodash';
+import { startsWith, toArray, toLower, toString } from 'lodash';
 import React, {
   ReactElement,
   SyntheticEvent,
   useEffect,
   useState,
 } from 'react';
-import { Dropdown, DropdownProps, Input, Menu, Modal } from 'semantic-ui-react';
+import {
+  Button,
+  Dropdown,
+  DropdownProps,
+  Input,
+  Menu,
+  Modal,
+} from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
 
 import {
@@ -14,8 +21,13 @@ import {
   getPendingPitches,
   isError,
 } from '../../api';
-import { Header, PitchCard, Sidebar } from '../../components';
-import StaffView from '../../components/Auth/StaffView';
+import {
+  Header,
+  PitchCard,
+  Sidebar,
+  SubmitPitchModal,
+  StaffView,
+} from '../../components';
 import { useAuth } from '../../contexts';
 import { allInterests, allTeams } from '../../utils/constants';
 import { pages } from '../../utils/enums';
@@ -62,36 +74,38 @@ const PitchDoc = (): ReactElement => {
     isOpen: false,
     pitch: undefined,
   });
+  const [isSubmitModal, setIsSubmitModal] = useState(false);
 
   const { isAdmin } = useAuth();
 
+  const getUnclaimedPitches = async (): Promise<void> => {
+    const res = await getApprovedPitches();
+
+    if (!isError(res)) {
+      setUnclaimed(res.data.result);
+      setCurrentPitches(res.data.result);
+      setFilteredPitches(res.data.result);
+    }
+  };
+
+  const getPendingApprovals = async (): Promise<void> => {
+    const res = await getPendingPitches();
+
+    if (!isError(res)) {
+      setPendingApprovals(res.data.result);
+    }
+  };
+
+  const getPendingClaims = async (): Promise<void> => {
+    const res = await getPendingContributorPitches();
+
+    if (!isError(res)) {
+      setPendingClaims(res.data.result);
+    }
+  };
+
   useEffect(() => {
-    const getUnclaimedPitches = async (): Promise<void> => {
-      const res = await getApprovedPitches();
-
-      if (!isError(res)) {
-        setUnclaimed(res.data.result);
-        setCurrentPitches(res.data.result);
-        setFilteredPitches(res.data.result);
-      }
-    };
-
-    const getPendingApprovals = async (): Promise<void> => {
-      const res = await getPendingPitches();
-
-      if (!isError(res)) {
-        setPendingApprovals(res.data.result);
-      }
-    };
-
-    const getPendingClaims = async (): Promise<void> => {
-      const res = await getPendingContributorPitches();
-
-      if (!isError(res)) {
-        setPendingClaims(res.data.result);
-      }
-    };
-
+    setCurrentTab(tabs[0]);
     getUnclaimedPitches();
 
     if (isAdmin) {
@@ -152,31 +166,9 @@ const PitchDoc = (): ReactElement => {
     }
   };
 
-  const addClaimStatus = (
-    e: SyntheticEvent<HTMLElement>,
-    data: DropdownProps,
-  ): void => {
-    if (typeof data.value === 'string') {
-      setClaimStatus(data.value);
-    }
-  };
-
-  const addInterest = (
-    e: SyntheticEvent<HTMLElement>,
-    data: DropdownProps,
-  ): void => {
-    if (Array.isArray(data.value)) {
-      setInterests(data.value as string[]);
-    }
-  };
-
-  const addTeam = (
-    e: SyntheticEvent<HTMLElement>,
-    data: DropdownProps,
-  ): void => {
-    if (Array.isArray(data.value)) {
-      setTeams(data.value as string[]);
-    }
+  const closeSubmitModal = (): void => {
+    setIsSubmitModal(false);
+    getPendingApprovals();
   };
 
   const openModal = (pitch: IPitch): void => {
@@ -195,6 +187,11 @@ const PitchDoc = (): ReactElement => {
 
   return (
     <>
+      <SubmitPitchModal
+        closeModal={closeSubmitModal}
+        open={isSubmitModal}
+        onClose={() => setIsSubmitModal(false)}
+      />
       <Modal open={modal.isOpen} onClose={closeModal}>
         <Modal.Content content="I am getting there, hold on" />
       </Modal>
@@ -214,14 +211,23 @@ const PitchDoc = (): ReactElement => {
             ))}
           </Menu>
         </StaffView>
-        <Input
-          value={query}
-          onChange={(e, { value }) => setQuery(value)}
-          fluid
-          placeholder="Search..."
-          icon="search"
-          iconPosition="left"
-        />
+        <div className="search-add-wrapper">
+          <Input
+            value={query}
+            onChange={(e, { value }) => setQuery(value)}
+            fluid
+            placeholder="Search..."
+            icon="search"
+            iconPosition="left"
+            className="search"
+          />
+          <Button
+            onClick={() => setIsSubmitModal(true)}
+            className="default-btn"
+            content="Submit Pitch"
+          />
+        </div>
+
         <div className="filters">
           <div>
             <h3>Filters: </h3>
@@ -235,7 +241,7 @@ const PitchDoc = (): ReactElement => {
               options={parseOptions(['Claimed', 'Unclaimed'])}
               selectOnBlur={false}
               selectOnNavigation={false}
-              onChange={addClaimStatus}
+              onChange={(e, { value }) => setClaimStatus(toString(value))}
               fluid
             />
           </div>
@@ -262,7 +268,7 @@ const PitchDoc = (): ReactElement => {
               clearable
               selectOnNavigation={false}
               selectOnBlur={false}
-              onChange={addInterest}
+              onChange={(e, { value }) => setInterests(toArray(value))}
               fluid
             />
           </div>
@@ -276,7 +282,7 @@ const PitchDoc = (): ReactElement => {
               clearable
               selectOnNavigation={false}
               selectOnBlur={false}
-              onChange={addTeam}
+              onChange={(e, { value }) => setTeams(toArray(value))}
               fluid
             />
           </div>
