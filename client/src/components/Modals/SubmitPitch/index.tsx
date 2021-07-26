@@ -11,13 +11,14 @@ import './styles.scss';
 const MAX_LENGTH = 300;
 
 interface SubmitPitchModalProps extends ModalProps {
-  closeModal?: () => void;
+  callback(): void;
 }
 
 const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
-  closeModal = () => void 0,
+  callback,
   ...rest
 }): ReactElement => {
+  const [isOpen, setIsOpen] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [link, setLink] = useState('');
@@ -48,6 +49,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
       const body = {
         name: title,
         pitchAuthor: user._id,
+        assignmentGoogleDocLink: link,
         pitchStatus: 'PENDING',
         pitchDescription: description,
         topics: Array.from(topics),
@@ -56,7 +58,8 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
       const res = await createPitch({ ...body });
 
       if (!isError(res)) {
-        closeModal();
+        callback();
+        setIsOpen(false);
       }
     }
 
@@ -64,20 +67,15 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
   };
 
   const isInvalidForm = (): boolean =>
-    isEmpty(title) ||
-    isEmpty(description) ||
-    isEmpty(link) ||
-    isEmpty(topics) ||
-    !didAgree;
-
-  interface Error {
+    [title, description, link, topics].every(isEmpty) && !didAgree;
+  interface FieldError {
     content: string;
     pointing: 'left' | 'above' | 'below' | 'right';
   }
   const isFieldError = (
     field: string | Set<string> | boolean,
-  ): Error | boolean => {
-    const message: Error = {
+  ): FieldError | boolean => {
+    const message: FieldError = {
       content: 'You must fill out this field',
       pointing: 'above',
     };
@@ -98,7 +96,14 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
   };
 
   return (
-    <Modal className="submit-modal" {...rest}>
+    <Modal
+      trigger={<Button className="default-btn" content="Submit Pitch" />}
+      open={isOpen}
+      className="submit-modal"
+      onOpen={() => setIsOpen(true)}
+      onClose={() => setIsOpen(false)}
+      {...rest}
+    >
       <Modal.Header content="Submit a pitch" />
       <Modal.Content>
         <Form>
@@ -156,7 +161,6 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
             onClick={() => setDidAgree(!didAgree)}
             error={isFieldError(didAgree)}
             label="I agree"
-            labelPosition="right"
           />
         </Form>
         <Modal.Actions>

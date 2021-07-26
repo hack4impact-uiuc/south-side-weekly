@@ -24,6 +24,7 @@ router.get(
       // Gets all unclaimed pitches
       const pitches = await Pitch.find({
         pitchStatus: pitchStatusEnum.APPROVED,
+        'pendingContributors.0': { $exists: false },
       });
       res.status(200).json({
         message: `Successfully retrieved unclaimed pitches.`,
@@ -195,7 +196,7 @@ router.put(
 
     const updatedPitch = await Pitch.findByIdAndUpdate(
       req.params.pitchId,
-      { $addToSet: { assignmentContributors: req.body.userId } },
+      { $addToSet: { pendingContributors: req.body.userId } },
       { new: true, runValidators: true },
     );
 

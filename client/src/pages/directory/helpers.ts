@@ -7,7 +7,7 @@ const filterInterests = (users: IUser[], interests: string[]): IUser[] => {
   }
 
   return users.filter((user) =>
-    interests.some((interest) => user.interests.includes(toUpper(interest))),
+    interests.every((interest) => user.interests.includes(toUpper(interest))),
   );
 };
 
@@ -25,7 +25,7 @@ const filterTeams = (users: IUser[], teams: string[]): IUser[] => {
   }
 
   return users.filter((user) =>
-    teams.some((team) => user.currentTeams.includes(toUpper(team))),
+    teams.every((team) => user.currentTeams.includes(toUpper(team))),
   );
 };
 

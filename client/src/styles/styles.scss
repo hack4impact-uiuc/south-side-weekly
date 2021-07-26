@@ -24,11 +24,13 @@ body {
   padding: 5vh 0 5vh 0;
 }
 
-.editing {
+.editing,
+.editors {
   background-color: $editing;
 }
 
-.writing {
+.writing,
+.writers {
   background-color: $writing;
 }
 
@@ -44,7 +46,8 @@ body {
   background-color: $illustration;
 }
 
-.fact-checking {
+.fact-checking,
+.factchecking {
   background-color: $factChecking;
 }
 

@@ -4,7 +4,6 @@ import ResourceModal from './Modals/ResourceModal';
 import SubmitPitchModal from './Modals/SubmitPitch';
 import UserModal from './Modals/User';
 import PitchCard from './PitchCard';
-import PitchGrid from './PitchGrid';
 import Sidebar from './Sidebar';
 import WizardListTitle from './Wizard/ListTitle';
 import WizardPageCounter from './Wizard/PageCounter';
@@ -21,7 +20,6 @@ export {
   SubmitPitchModal,
   UserModal,
   PitchCard,
-  PitchGrid,
   Sidebar,
   WizardListTitle,
   WizardPageCounter,

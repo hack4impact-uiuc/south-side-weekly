@@ -1,0 +1,65 @@
+@import '../../../styles/colors.scss';
+
+.claim-modal {
+  .header {
+    background-color: $primary !important;
+    color: white !important;
+  }
+
+  .content {
+    .author-section {
+      display: flex;
+
+      .author {
+        margin-right: 20px;
+        h3 {
+          font-weight: normal;
+        }
+      }
+    }
+
+    .description {
+      margin-top: 20px;
+    }
+
+    .team-select-group {
+      display: flex;
+      justify-content: space-between;
+
+      .checkbox-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .label {
+          padding: 2px 8px 2px 8px;
+          border-radius: 1rem;
+          margin-top: 10px;
+        }
+
+        * {
+          margin: 5px;
+        }
+      }
+    }
+
+    .contributors-section {
+      display: flex;
+
+      .image {
+        margin-right: 10px;
+      }
+    }
+  }
+
+  .actions {
+    border-top: none !important;
+    background-color: white !important;
+    text-align: right;
+    padding: 10px !important;
+
+    .button {
+      margin: 0px 20px 20px 0px !important;
+    }
+  }
+}

@@ -1,3 +1,5 @@
+import { IPitch } from 'ssw-common';
+
 import { Response } from '../types';
 import { get, post, put } from '../builders';
 
@@ -30,7 +32,7 @@ const updatePitchContributors = async (
 
 // Updates the information on a pitch
 const updatePitch = async (
-  pitchData: { [key: string]: number | string },
+  pitchData: { [key: string]: string[] | string | number | IPitch['teams'] },
   pitchId: string,
 ): Promise<Pitches> =>
   await put(`${PITCH_ENDPOINT}/${pitchId}`, pitchData, 'UPDATE_PITCH_FAIL');

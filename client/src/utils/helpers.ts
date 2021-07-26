@@ -143,6 +143,14 @@ const isPitchClaimed = (pitch: IPitch): boolean =>
     (team) => team[1].current === team[1].target,
   );
 
+interface MapConversion<T, K> {
+  key: T;
+  value: K;
+}
+
+const convertMap = <T, K>(map: Map<T, K>): MapConversion<T, K>[] =>
+  Array.from(map, ([key, value]) => ({ key, value }));
+
 export {
   handleSelectGroupArray,
   parseSemanticMultiSelectTypes,
@@ -153,4 +161,5 @@ export {
   getUserFullName,
   parseOptions,
   isPitchClaimed,
+  convertMap,
 };

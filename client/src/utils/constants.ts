@@ -1,4 +1,4 @@
-import { IUser } from 'ssw-common';
+import { IPitch, IUser } from 'ssw-common';
 
 // All of the interests buttons to show
 const interestsButtons: { [key: string]: string } = {
@@ -134,6 +134,48 @@ const emptyUser: IUser = {
   interests: [''],
 };
 
+const emptyPitch: IPitch = {
+  _id: '',
+  name: '',
+  pitchAuthor: '',
+  pitchStatus: '',
+  pitchDescription: '',
+  assignmentStatus: '',
+  assignmentGoogleDocLink: '',
+  assignmentContributors: [''],
+  pendingContributors: [''],
+  topics: [''],
+  teams: {
+    writers: {
+      current: 0,
+      target: 0,
+    },
+    editors: {
+      current: 0,
+      target: 0,
+    },
+    visuals: {
+      current: 0,
+      target: 0,
+    },
+    illustration: {
+      current: 0,
+      target: 0,
+    },
+    photography: {
+      current: 0,
+      target: 0,
+    },
+    factChecking: {
+      current: 0,
+      target: 0,
+    },
+  },
+  approvedBy: '',
+  similarStories: [''],
+  deadline: new Date(),
+};
+
 export {
   interestsButtons,
   currentTeamsButtons,
@@ -147,4 +189,5 @@ export {
   allRoles,
   allRaces,
   emptyUser,
+  emptyPitch,
 };

@@ -4,15 +4,9 @@ import React, {
   SyntheticEvent,
   useEffect,
   useState,
+  ReactNode,
 } from 'react';
-import {
-  Button,
-  Dropdown,
-  DropdownProps,
-  Input,
-  Menu,
-  Modal,
-} from 'semantic-ui-react';
+import { Dropdown, DropdownProps, Input, Menu } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
 
 import {
@@ -27,6 +21,8 @@ import {
   Sidebar,
   SubmitPitchModal,
   StaffView,
+  AdminView,
+  ClaimPitchModal,
 } from '../../components';
 import { useAuth } from '../../contexts';
 import { allInterests, allTeams } from '../../utils/constants';
@@ -44,23 +40,18 @@ import './styles.scss';
 
 const dateOptions = ['Earliest to Latest', 'Latest to Earliest'];
 
-interface ModalInfo {
-  isOpen: boolean;
-  pitch?: IPitch;
-}
-
 const searchFields: (keyof IPitch)[] = ['name'];
-const tabs = [
-  'Unclaimed Pitches',
-  'Pitches Pending Approval',
-  'Claims Pending Approval',
-];
+const TABS = {
+  UNCLAIMED: 'Unclaimed Pitches',
+  PITCH_APPROVAL: 'Pitches Pending Approval',
+  CLAIM_APPROVAL: 'Claims Pending Approval',
+};
 
 const PitchDoc = (): ReactElement => {
   const [unclaimed, setUnclaimed] = useState<IPitch[]>([]);
   const [pendingApprovals, setPendingApprovals] = useState<IPitch[]>([]);
   const [pendingClaims, setPendingClaims] = useState<IPitch[]>([]);
-  const [currentTab, setCurrentTab] = useState(tabs[0]);
+  const [currentTab, setCurrentTab] = useState(TABS.UNCLAIMED);
 
   const [currentPitches, setCurrentPitches] = useState<IPitch[]>([]);
   const [filteredPitches, setFilteredPitches] = useState<IPitch[]>([]);
@@ -70,13 +61,8 @@ const PitchDoc = (): ReactElement => {
   const [interests, setInterests] = useState<string[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
   const [query, setQuery] = useState('');
-  const [modal, setModal] = useState<ModalInfo>({
-    isOpen: false,
-    pitch: undefined,
-  });
-  const [isSubmitModal, setIsSubmitModal] = useState(false);
 
-  const { isAdmin } = useAuth();
+  const { isAdmin, isStaff } = useAuth();
 
   const getUnclaimedPitches = async (): Promise<void> => {
     const res = await getApprovedPitches();
@@ -105,14 +91,17 @@ const PitchDoc = (): ReactElement => {
   };
 
   useEffect(() => {
-    setCurrentTab(tabs[0]);
+    setCurrentTab(TABS.UNCLAIMED);
     getUnclaimedPitches();
 
-    if (isAdmin) {
+    if (isStaff || isAdmin) {
       getPendingApprovals();
+    }
+
+    if (isAdmin) {
       getPendingClaims();
     }
-  }, [isAdmin]);
+  }, [isAdmin, isStaff]);
 
   useEffect(() => {
     const search = (pitches: IPitch[]): IPitch[] => {
@@ -142,11 +131,11 @@ const PitchDoc = (): ReactElement => {
   }, [currentPitches, query, interests, teams, claimStatus, sort]);
 
   useEffect(() => {
-    if (currentTab === tabs[0]) {
+    if (currentTab === TABS.UNCLAIMED) {
       setCurrentPitches(unclaimed);
-    } else if (currentTab === tabs[1]) {
+    } else if (currentTab === TABS.PITCH_APPROVAL) {
       setCurrentPitches(pendingApprovals);
-    } else if (currentTab === tabs[2]) {
+    } else if (currentTab === TABS.CLAIM_APPROVAL) {
       setCurrentPitches(pendingClaims);
     }
   }, [currentTab, unclaimed, pendingApprovals, pendingClaims]);
@@ -166,51 +155,55 @@ const PitchDoc = (): ReactElement => {
     }
   };
 
-  const closeSubmitModal = (): void => {
-    setIsSubmitModal(false);
-    getPendingApprovals();
-  };
-
-  const openModal = (pitch: IPitch): void => {
-    setModal({
-      isOpen: true,
-      pitch: pitch,
-    });
-  };
-
-  const closeModal = (): void => {
-    setModal({
-      isOpen: false,
-      pitch: undefined,
-    });
-  };
+  const renderDropdown = (
+    text: string,
+    options: string[],
+    onChange: (e: SyntheticEvent<HTMLElement>, data: DropdownProps) => void,
+    multiple: boolean,
+  ): ReactNode => (
+    <Dropdown
+      className="filter"
+      text={text}
+      scrolling
+      clearable
+      options={parseOptions(options)}
+      selectOnBlur={false}
+      selectOnNavigation={false}
+      onChange={onChange}
+      fluid
+      multiple={multiple}
+    />
+  );
 
   return (
     <>
-      <SubmitPitchModal
-        closeModal={closeSubmitModal}
-        open={isSubmitModal}
-        onClose={() => setIsSubmitModal(false)}
-      />
-      <Modal open={modal.isOpen} onClose={closeModal}>
-        <Modal.Content content="I am getting there, hold on" />
-      </Modal>
       <Header />
       <Sidebar currentPage={pages.PITCHES} />
       <div className="pitch-doc-wrapper">
         <h1>Pitch doc</h1>
-        <StaffView>
-          <Menu tabular size="large">
-            {tabs.map((tab, index) => (
-              <Menu.Item
-                key={index}
-                name={tab}
-                active={tab === currentTab}
-                onClick={(e, { name }) => setCurrentTab(name!)}
-              />
-            ))}
-          </Menu>
-        </StaffView>
+        <Menu tabular size="large">
+          <Menu.Item
+            name={TABS.UNCLAIMED}
+            active={TABS.UNCLAIMED === currentTab}
+            onClick={(e, { name }) => setCurrentTab(name!)}
+          />
+
+          <StaffView>
+            <Menu.Item
+              name={TABS.PITCH_APPROVAL}
+              active={TABS.PITCH_APPROVAL === currentTab}
+              onClick={(e, { name }) => setCurrentTab(name!)}
+            />
+          </StaffView>
+
+          <AdminView>
+            <Menu.Item
+              name={TABS.CLAIM_APPROVAL}
+              active={TABS.CLAIM_APPROVAL === currentTab}
+              onClick={(e, { name }) => setCurrentTab(name!)}
+            />
+          </AdminView>
+        </Menu>
         <div className="search-add-wrapper">
           <Input
             value={query}
@@ -221,11 +214,7 @@ const PitchDoc = (): ReactElement => {
             iconPosition="left"
             className="search"
           />
-          <Button
-            onClick={() => setIsSubmitModal(true)}
-            className="default-btn"
-            content="Submit Pitch"
-          />
+          <SubmitPitchModal callback={getPendingApprovals} />
         </div>
 
         <div className="filters">
@@ -233,68 +222,50 @@ const PitchDoc = (): ReactElement => {
             <h3>Filters: </h3>
           </div>
           <div className="wrapper">
-            <Dropdown
-              className="filter"
-              text="Claim Status"
-              scrolling
-              clearable
-              options={parseOptions(['Claimed', 'Unclaimed'])}
-              selectOnBlur={false}
-              selectOnNavigation={false}
-              onChange={(e, { value }) => setClaimStatus(toString(value))}
-              fluid
-            />
+            {/*TODO: Turn this into a generalized component rather than a function*/}
+            {renderDropdown(
+              'Claim Status',
+              ['Claimed', 'Unclaimed'],
+              (e, { value }) => setClaimStatus(toString(value)),
+              false,
+            )}
           </div>
           <div className="wrapper">
-            <Dropdown
-              className="filter"
-              text="Date Joined"
-              scrolling
-              clearable
-              options={parseOptions(dateOptions)}
-              selectOnBlur={false}
-              selectOnNavigation={false}
-              onChange={determineSort}
-              fluid
-            />
+            {renderDropdown('Date Joined', dateOptions, determineSort, false)}
           </div>
           <div className="wrapper">
-            <Dropdown
-              className="filter"
-              text="Topics of Interest"
-              options={parseOptions(allInterests)}
-              scrolling
-              multiple
-              clearable
-              selectOnNavigation={false}
-              selectOnBlur={false}
-              onChange={(e, { value }) => setInterests(toArray(value))}
-              fluid
-            />
+            {renderDropdown(
+              'Topics of Interest',
+              allInterests,
+              (e, { value }) => setInterests(toArray(value)),
+              true,
+            )}
           </div>
           <div className="wrapper">
-            <Dropdown
-              className="filter"
-              text="Teams"
-              options={parseOptions(allTeams)}
-              scrolling
-              multiple
-              clearable
-              selectOnNavigation={false}
-              selectOnBlur={false}
-              onChange={(e, { value }) => setTeams(toArray(value))}
-              fluid
-            />
+            {renderDropdown(
+              'Teams',
+              allTeams,
+              (e, { value }) => setTeams(toArray(value)),
+              true,
+            )}
           </div>
         </div>
         <div className="pitch-doc">
-          {filteredPitches.map((pitch, index) => (
-            <PitchCard
-              key={index}
-              pitch={pitch}
-              onClick={() => openModal(pitch)}
-            />
-          ))}
+          {filteredPitches.map((pitch, index) => {
+            if (currentTab === TABS.UNCLAIMED) {
+              return (
+                <ClaimPitchModal
+                  callback={getUnclaimedPitches}
+                  key={index}
+                  pitch={pitch}
+                />
+              );
+            } else if (currentTab === TABS.PITCH_APPROVAL) {
+              return <PitchCard key={index} pitch={pitch} />;
+            } else if (currentTab === TABS.CLAIM_APPROVAL) {
+              return <PitchCard key={index} pitch={pitch} />;
+            }
+          })}
         </div>
       </div>
     </>

@@ -9,7 +9,7 @@ const filterInterests = (pitches: IPitch[], interests: string[]): IPitch[] => {
   }
 
   return pitches.filter((pitch) =>
-    interests.some((interest) => pitch.topics.includes(toUpper(interest))),
+    interests.every((interest) => pitch.topics.includes(toUpper(interest))),
   );
 };
 
@@ -43,7 +43,7 @@ const filterTeams = (pitches: IPitch[], teams: string[]): IPitch[] => {
   }
 
   return pitches.filter((pitch) =>
-    teams.some((team) => getPitchTeams(pitch).includes(toUpper(team))),
+    teams.every((team) => getPitchTeams(pitch).includes(toUpper(team))),
   );
 };
 
