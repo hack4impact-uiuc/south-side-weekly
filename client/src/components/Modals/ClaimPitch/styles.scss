@@ -22,6 +22,17 @@
       margin-top: 20px;
     }
 
+    .topics-section {
+      margin-bottom: 8px;
+    }
+
+    .label {
+      padding: 5px 10px 5px 10px;
+      border-radius: 1rem;
+      margin-top: 10px;
+      font-weight: normal;
+    }
+
     .team-select-group {
       display: flex;
       justify-content: space-between;
@@ -30,12 +41,6 @@
         display: flex;
         flex-direction: column;
         align-items: center;
-
-        .label {
-          padding: 2px 8px 2px 8px;
-          border-radius: 1rem;
-          margin-top: 10px;
-        }
 
         * {
           margin: 5px;

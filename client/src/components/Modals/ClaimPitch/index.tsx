@@ -1,4 +1,4 @@
-import { isEmpty, startCase } from 'lodash';
+import { isEmpty, startCase, toLower } from 'lodash';
 import React, {
   FC,
   ReactElement,
@@ -6,7 +6,15 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { Button, Form, Image, Modal, ModalProps } from 'semantic-ui-react';
+import {
+  Button,
+  Form,
+  Grid,
+  Image,
+  Label,
+  Modal,
+  ModalProps,
+} from 'semantic-ui-react';
 import { IPitch, IUser } from 'ssw-common';
 
 import {
@@ -176,6 +184,17 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
       />
       <Modal.Content>
         <h1>{pitch.name}</h1>
+        <Grid className="topics-section" columns={6}>
+          {pitch.topics.map((topic, index) => (
+            <Grid.Column key={index}>
+              <Label
+                size="large"
+                className={`label ${convertToClassName(topic)}`}
+                content={startCase(toLower(topic))}
+              />
+            </Grid.Column>
+          ))}
+        </Grid>
         <div className="author-section">
           <div className="author">
             <h3>{`Submitted by: ${author}`}</h3>
@@ -213,9 +232,11 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
                   }}
                   error={isCheckboxError}
                 />
-                <div className={`label ${convertToClassName(slot[0])}`}>
-                  {startCase(slot[0])}
-                </div>
+                <Label
+                  size="large"
+                  className={`label ${convertToClassName(slot[0])}`}
+                  content={startCase(slot[0])}
+                />
                 <h4>{slot[1].target - slot[1].current}</h4>
               </div>
             ))}

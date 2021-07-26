@@ -26,85 +26,86 @@ body {
 
 .editing,
 .editors {
-  background-color: $editing;
+  background-color: $editing !important;
 }
 
 .writing,
 .writers {
-  background-color: $writing;
+  background-color: $writing !important;
 }
 
 .visuals {
-  background-color: $visuals;
+  background-color: $visuals !important;
 }
 
 .photography {
-  background-color: $photography;
+  background-color: $photography !important;
 }
 
 .illustration {
-  background-color: $illustration;
+  background-color: $illustration !important;
 }
 
 .fact-checking,
 .factchecking {
-  background-color: $factChecking;
+  background-color: $factChecking !important;
 }
 
 .fun {
-  background-color: $fun;
+  background-color: $fun !important;
 }
 
 .cannabis {
-  background-color: $cannabis;
+  background-color: $cannabis !important;
 }
 
 .health {
-  background-color: $health;
+  background-color: $health !important;
 }
 
 .music {
-  background-color: $music;
+  background-color: $music !important;
 }
 
 .nature {
-  background-color: $nature;
+  background-color: $nature !important;
 }
 
 .politics {
-  background-color: $politics;
+  background-color: $politics !important;
 }
 
 .housing {
-  background-color: $housing;
+  background-color: $housing !important;
 }
 
 .visual-arts {
-  background-color: $visualArts;
+  background-color: $visualArts !important;
 }
 
 .immigration {
-  background-color: $immigration;
+  background-color: $immigration !important;
 }
 
 .food-and-land {
-  background-color: $foodAndLand;
+  background-color: $foodAndLand !important;
 }
 
 .transportation {
-  background-color: $transportation;
+  background-color: $transportation !important;
 }
 
 .stage-and-screen {
-  background-color: $stageAndScreen;
+  background-color: $stageAndScreen !important;
 }
 
-.lit {
-  background-color: $lit;
+.lit,
+.literature {
+  background-color: $lit !important;
 }
 
 .education {
-  background-color: $education;
+  background-color: $education !important;
 }
 
 .default-btn {
