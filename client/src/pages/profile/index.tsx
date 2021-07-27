@@ -34,7 +34,6 @@ import {
 import {
   getUserProfilePic,
   parseOptions,
-  parseSemanticMultiSelectTypes,
   updateUserField,
   titleCase,
 } from '../../utils/helpers';
@@ -183,13 +182,7 @@ const Profile = (): ReactElement => {
    * @param field the field of the user
    */
   const addArrayElement = (arr: string[], field: MultiDropdowns): void =>
-    setUser(
-      updateUserField(
-        user,
-        field,
-        parseSemanticMultiSelectTypes(arr!) as [string],
-      ),
-    );
+    setUser(updateUserField(user, field, arr as [string]));
 
   /**
    * Determines if a field is viewable to current user

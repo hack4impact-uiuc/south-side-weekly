@@ -34,31 +34,6 @@ const handleSelectGroupArray = (
 };
 
 /**
- * Parses a semantic multi select into the filter key usable types.
- *
- * @param value the value from the multiselect
- * @returns a conversion from semantic's type to string | string[]
- */
-const parseSemanticMultiSelectTypes = (
-  value: string | number | boolean | (string | number | boolean)[],
-): string | string[] => {
-  if (typeof value === 'string') {
-    return value;
-  } else if (Array.isArray(value)) {
-    const parsedArray: string[] = [];
-
-    value.forEach((element) => {
-      parsedArray.push(`${element}`);
-    });
-
-    return parsedArray;
-  }
-
-  console.error('Invalid datatype to convert');
-  return [];
-};
-
-/**
  * Gets all of the teams associated with a pitch
  *
  * A pitch has a team when the {TEAM}.target > 0
@@ -142,7 +117,6 @@ const titleCase = (str: string): string => startCase(camelCase(str));
 
 export {
   handleSelectGroupArray,
-  parseSemanticMultiSelectTypes,
   getPitchTeams,
   updateUserField,
   getUserProfilePic,
