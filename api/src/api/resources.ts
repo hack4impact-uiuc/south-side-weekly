@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import { isEmpty } from 'lodash';
 import { ObjectId } from 'mongodb';
 import { errorWrap } from '../middleware';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
@@ -62,21 +61,20 @@ router.post(
   '/',
   requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
-
     const { name, link } = req.body;
 
-    const resourceWithName = await Resource.findOne({name: name});
-    const resourceWithLink = await Resource.findOne({link: link});
+    const resourceWithName = await Resource.findOne({ name: name });
+    const resourceWithLink = await Resource.findOne({ link: link });
 
     if (resourceWithName || resourceWithLink) {
       res.status(409).json({
         message: 'Duplicate resource',
-        success: false, 
+        success: false,
       });
       return;
     }
-    
-    const newResource = await Resource.create(req.body); 
+
+    const newResource = await Resource.create(req.body);
     if (newResource) {
       res.status(200).json({
         message: 'Successfully created new resource',
