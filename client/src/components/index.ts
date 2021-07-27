@@ -13,7 +13,7 @@ import PrivateRoute from './PrivateRoute';
 import AdminView from './Auth/AdminView';
 import StaffView from './Auth/StaffView';
 import FilterDropdown from './FilterDropdown';
-import Tag from './Tag';
+import FieldTag from './FieldTag';
 
 export {
   Header,
@@ -31,5 +31,5 @@ export {
   AdminView,
   StaffView,
   FilterDropdown,
-  Tag,
+  FieldTag,
 };

@@ -19,7 +19,7 @@ import {
   updateUser,
   getUserPermissionsByID,
 } from '../../api';
-import { Sidebar, Header, Tag } from '../../components';
+import { Sidebar, Header, FieldTag } from '../../components';
 import { pages } from '../../utils/enums';
 import Masthead from '../../assets/masthead.svg';
 import {
@@ -358,7 +358,7 @@ const Profile = (): ReactElement => {
                   user.interests
                     .sort()
                     .map((interest, index) => (
-                      <Tag
+                      <FieldTag
                         size="medium"
                         key={index}
                         className="field-label"
@@ -389,7 +389,7 @@ const Profile = (): ReactElement => {
                   user.currentTeams
                     .sort()
                     .map((team, index) => (
-                      <Tag
+                      <FieldTag
                         size="medium"
                         key={index}
                         className="field-label"

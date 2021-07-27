@@ -6,7 +6,7 @@ import { titleCase } from '../../utils/helpers';
 
 import './styles.scss';
 
-const Tag: FC<LabelProps> = ({
+const FieldTag: FC<LabelProps> = ({
   content,
   size = 'large',
   ...rest
@@ -32,4 +32,4 @@ const Tag: FC<LabelProps> = ({
   );
 };
 
-export default Tag;
+export default FieldTag;

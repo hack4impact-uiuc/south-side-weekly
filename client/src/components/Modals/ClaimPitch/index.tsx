@@ -31,7 +31,7 @@ import {
   getUserProfilePic,
 } from '../../../utils/helpers';
 import PitchCard from '../../PitchCard';
-import Tag from '../../Tag';
+import FieldTag from '../../FieldTag';
 
 import './styles.scss';
 
@@ -186,7 +186,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
         <Grid className="topics-section" columns={6}>
           {pitch.topics.map((topic, index) => (
             <Grid.Column key={index}>
-              <Tag content={topic} />
+              <FieldTag content={topic} />
             </Grid.Column>
           ))}
         </Grid>
@@ -227,7 +227,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
                   }}
                   error={isCheckboxError}
                 />
-                <Tag content={slot[0]} />
+                <FieldTag content={slot[0]} />
                 <h4>{slot[1].target - slot[1].current}</h4>
               </div>
             ))}

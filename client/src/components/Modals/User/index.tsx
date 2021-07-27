@@ -10,7 +10,7 @@ import {
 } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
-import Tag from '../../Tag';
+import FieldTag from '../../FieldTag';
 import { getUserFullName, getUserProfilePic } from '../../../utils/helpers';
 
 import './styles.scss';
@@ -61,7 +61,7 @@ const UserModal: FC<UserModalProps> = ({ user, ...rest }): ReactElement => {
             <h1 className="list-header">Topics</h1>
             {user.interests.map((interest: string, index: number) => (
               <Grid.Row key={index}>
-                <Tag className="interest-tag" content={interest} />
+                <FieldTag className="interest-tag" content={interest} />
               </Grid.Row>
             ))}
           </Grid.Column>
@@ -69,7 +69,7 @@ const UserModal: FC<UserModalProps> = ({ user, ...rest }): ReactElement => {
             <h1 className="list-header">Teams</h1>
             {user.currentTeams.map((team: string, index: number) => (
               <Grid.Row key={index}>
-                <Tag className="team-tag" content={team} />
+                <FieldTag className="team-tag" content={team} />
               </Grid.Row>
             ))}
           </Grid.Column>
