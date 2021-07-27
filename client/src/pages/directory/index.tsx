@@ -113,8 +113,6 @@ const Directory = (): ReactElement => {
     }
   };
 
-  console.log(sort);
-
   const openModal = (user: IUser): void => {
     setModal({
       isOpen: true,

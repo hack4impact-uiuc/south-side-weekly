@@ -1,12 +1,13 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Button, Card, Menu, Radio } from 'semantic-ui-react';
 import { IResource } from 'ssw-common';
-import { startCase } from 'lodash';
+import Swal from 'sweetalert2';
 
 import { deleteResource, getAllResources, isError } from '../../api';
 import { ResourceModal, Header, Sidebar, AdminView } from '../../components';
 import { allTeams } from '../../utils/constants';
 import { pages } from '../../utils/enums';
+import { titleCase } from '../../utils/helpers';
 
 import './styles.scss';
 
@@ -26,8 +27,7 @@ const Resources = (): ReactElement => {
     resource: undefined,
   });
 
-  const teams = (): string[] =>
-    ['General', ...allTeams].map((team) => startCase(team.toLowerCase()));
+  const teams = (): string[] => ['General', ...allTeams].map(titleCase);
 
   const filterResources = (team: string): IResource[] =>
     resources.filter((resouce) => resouce.teamRoles.includes(team));
@@ -49,6 +49,10 @@ const Resources = (): ReactElement => {
 
     if (!isError(res)) {
       getResources();
+      Swal.fire({
+        title: 'Successfully deleted resource',
+        icon: 'success',
+      });
     }
   };
 
@@ -129,7 +133,8 @@ const Resources = (): ReactElement => {
                 <Button
                   className="delete-btn"
                   circular
-                  icon="big minus circle"
+                  size="massive"
+                  icon="minus circle"
                   onClick={(e) => {
                     removeResource(resource);
                     e.stopPropagation();

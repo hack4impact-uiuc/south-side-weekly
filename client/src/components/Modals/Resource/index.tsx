@@ -1,11 +1,12 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Form, Modal, ModalProps } from 'semantic-ui-react';
 import { IResource } from 'ssw-common';
-import { startCase } from 'lodash';
+import Swal from 'sweetalert2';
 
-import { createResource, editResource } from '../../../api';
+import { createResource, editResource, isError } from '../../../api';
 import { allTeams } from '../../../utils/constants';
 import './styles.scss';
+import { titleCase } from '../../../utils/helpers';
 
 interface ResourceProps extends ModalProps {
   resource?: IResource;
@@ -25,17 +26,29 @@ interface RequestBody {
   teamRoles: string[];
 }
 
+const defaultData: FormData = {
+  name: '',
+  link: '',
+  tags: new Set(),
+};
+
 const ResourceModal: FC<ResourceProps> = ({
   resource,
   action,
   closeModal = () => void 0,
   ...rest
 }): ReactElement => {
-  const [formData, setFormData] = useState<FormData>({
-    name: '',
-    link: '',
-    tags: new Set(),
-  });
+  const [formData, setFormData] = useState<FormData>(defaultData);
+
+  // Resets the form data on every open
+  useEffect(() => {
+    const data: FormData = {
+      name: '',
+      link: '',
+      tags: new Set(),
+    };
+    setFormData({ ...data });
+  }, [rest.open]);
 
   useEffect(() => {
     if (action === 'edit' && resource) {
@@ -59,8 +72,11 @@ const ResourceModal: FC<ResourceProps> = ({
     await editResource(resource?._id, {
       ...parseFormData(formData),
     });
-
     closeModal();
+    Swal.fire({
+      title: 'Successfully updated resource',
+      icon: 'success',
+    });
   };
 
   const submitResource = async (): Promise<void> => {
@@ -70,8 +86,17 @@ const ResourceModal: FC<ResourceProps> = ({
       teamRoles: Array.from(formData.tags),
     };
 
-    await createResource({ ...body });
-    closeModal();
+    const res = await createResource({ ...body });
+
+    if (isError(res)) {
+      Swal.fire({
+        title: 'Resource already exists!',
+        icon: 'error',
+        text: 'Modify the name and/or link to be a unique resource',
+      });
+    } else {
+      closeModal();
+    }
   };
 
   const getSelectedTeams = (tag: string): Set<string> => {
@@ -82,8 +107,7 @@ const ResourceModal: FC<ResourceProps> = ({
     return tags;
   };
 
-  const teams = (): string[] =>
-    ['General', ...allTeams].map((team) => startCase(team.toLowerCase()));
+  const teams = (): string[] => ['General', ...allTeams].map(titleCase);
 
   const changeField = <T extends keyof FormData>(
     key: T,

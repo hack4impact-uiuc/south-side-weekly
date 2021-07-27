@@ -1,4 +1,4 @@
-import { isEmpty, toString } from 'lodash';
+import { isEmpty, isUndefined, toString } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Button, Form, Modal, ModalProps } from 'semantic-ui-react';
 
@@ -24,7 +24,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
   const [description, setDescription] = useState('');
   const [link, setLink] = useState('');
   const [topics, setTopics] = useState(new Set<string>());
-  const [didAgree, setDidAgree] = useState(false);
+  const [conflictofInterest, setConflictOfInterest] = useState<boolean>();
   const [didSubmit, setDidSubmit] = useState(false);
 
   const { user } = useAuth();
@@ -39,9 +39,9 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
     setDescription('');
     setLink('');
     setTopics(new Set());
-    setDidAgree(false);
+    setConflictOfInterest(undefined);
     setDidSubmit(false);
-  }, []);
+  }, [isOpen]);
 
   const submitPitch = async (): Promise<void> => {
     setDidSubmit(true);
@@ -68,37 +68,36 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
   };
 
   const isInvalidForm = (): boolean =>
-    [title, description, link, topics].some(isEmpty) && !didAgree;
+    [title, description, link, topics].some(isEmpty) ||
+    isUndefined(conflictofInterest);
   interface FieldError {
     content: string;
     pointing: 'left' | 'above' | 'below' | 'right';
   }
   const isFieldError = (
-    field: string | Set<string> | boolean,
+    field: string | Set<string> | boolean | undefined,
   ): FieldError | boolean => {
     const message: FieldError = {
       content: 'You must fill out this field',
       pointing: 'above',
     };
 
-    if (typeof field === 'boolean') {
-      return didSubmit && !didAgree;
+    if (!didSubmit) {
+      return false;
     }
 
-    if (didSubmit && isEmpty(field)) {
-      if (field instanceof Set) {
-        return true;
-      }
-
-      return message;
+    if (isUndefined(field)) {
+      return true;
+    } else if (field instanceof Set && isEmpty(field)) {
+      return true;
     }
 
-    return false;
+    return message;
   };
 
   return (
     <Modal
-      trigger={<Button className="default-btn" content="Submit Pitch" />}
+      trigger={<Button className="default-btn" content="Submit a Pitch" />}
       open={isOpen}
       className="submit-modal"
       onOpen={() => setIsOpen(true)}
@@ -152,17 +151,26 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
           </Form.Group>
           <h3>Conflict of Interest Discolsure</h3>
           <p>
-            By clicking "I agree", you agree that you are not involved with the
-            events or people covered in your pitch. i.e. do you have a
-            relationship with them as an employee, family memember, friend, or
-            donor?
+            Are you involved with the events or people covered in your pitch?
+            i.e. do you have a relationship with them as an employee, family
+            member, friend, or donor?
           </p>
-          <Form.Checkbox
-            checked={didAgree}
-            onClick={() => setDidAgree(!didAgree)}
-            error={isFieldError(didAgree)}
-            label="I agree"
-          />
+          <Form.Group inline>
+            <Form.Radio
+              name="interest-conflict"
+              label="Yes"
+              onClick={() => setConflictOfInterest(true)}
+              checked={conflictofInterest}
+              error={isFieldError(conflictofInterest)}
+            />
+            <Form.Radio
+              name="interest-conflict"
+              label="No"
+              onClick={() => setConflictOfInterest(false)}
+              checked={!isUndefined(conflictofInterest) && !conflictofInterest}
+              error={isFieldError(conflictofInterest)}
+            />
+          </Form.Group>
         </Form>
         <Modal.Actions>
           <Button
