@@ -10,7 +10,7 @@ import {
 } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
-import { convertToClassName } from '../../../utils/formatters';
+import Tag from '../../Tag';
 import { getUserFullName, getUserProfilePic } from '../../../utils/helpers';
 
 import './styles.scss';
@@ -61,9 +61,7 @@ const UserModal: FC<UserModalProps> = ({ user, ...rest }): ReactElement => {
             <h1 className="list-header">Topics</h1>
             {user.interests.map((interest: string, index: number) => (
               <Grid.Row key={index}>
-                <div className={`modal-label ${convertToClassName(interest)}`}>
-                  {toLower(interest)}
-                </div>
+                <Tag className="interest-tag" content={interest} />
               </Grid.Row>
             ))}
           </Grid.Column>
@@ -71,9 +69,7 @@ const UserModal: FC<UserModalProps> = ({ user, ...rest }): ReactElement => {
             <h1 className="list-header">Teams</h1>
             {user.currentTeams.map((team: string, index: number) => (
               <Grid.Row key={index}>
-                <div className={`modal-label ${convertToClassName(team)}`}>
-                  {toLower(team)}
-                </div>
+                <Tag className="team-tag" content={team} />
               </Grid.Row>
             ))}
           </Grid.Column>

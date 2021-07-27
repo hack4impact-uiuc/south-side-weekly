@@ -9,6 +9,13 @@
   .grid {
     width: 100%;
 
+    .interest-tag,
+    .team-tag {
+      margin-top: 10px;
+      width: 100%;
+      text-align: center;
+    }
+
     .user-information {
       margin: 20px 0px 20px 0px !important;
       text-transform: capitalize !important;

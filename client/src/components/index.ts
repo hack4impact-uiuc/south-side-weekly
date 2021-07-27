@@ -1,6 +1,6 @@
 import Header from './Header';
 import ClaimPitchModal from './Modals/ClaimPitch';
-import ResourceModal from './Modals/ResourceModal';
+import ResourceModal from './Modals/Resource';
 import SubmitPitchModal from './Modals/SubmitPitch';
 import UserModal from './Modals/User';
 import PitchCard from './PitchCard';
@@ -12,6 +12,8 @@ import WizardSvg from './Wizard/Svg';
 import PrivateRoute from './PrivateRoute';
 import AdminView from './Auth/AdminView';
 import StaffView from './Auth/StaffView';
+import FilterDropdown from './FilterDropdown';
+import Tag from './Tag';
 
 export {
   Header,
@@ -28,4 +30,6 @@ export {
   PrivateRoute,
   AdminView,
   StaffView,
+  FilterDropdown,
+  Tag,
 };

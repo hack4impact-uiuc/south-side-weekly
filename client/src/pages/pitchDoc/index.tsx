@@ -4,9 +4,8 @@ import React, {
   SyntheticEvent,
   useEffect,
   useState,
-  ReactNode,
 } from 'react';
-import { Dropdown, DropdownProps, Input, Menu } from 'semantic-ui-react';
+import { DropdownProps, Input, Menu } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
 
 import {
@@ -23,6 +22,7 @@ import {
   StaffView,
   AdminView,
   ClaimPitchModal,
+  FilterDropdown,
 } from '../../components';
 import { useAuth } from '../../contexts';
 import { allInterests, allTeams } from '../../utils/constants';
@@ -127,7 +127,7 @@ const PitchDoc = (): ReactElement => {
       return filtered;
     };
 
-    setFilteredPitches(search(filter(currentPitches)));
+    setFilteredPitches([...search(filter(currentPitches))]);
   }, [currentPitches, query, interests, teams, claimStatus, sort]);
 
   useEffect(() => {
@@ -154,26 +154,6 @@ const PitchDoc = (): ReactElement => {
       }
     }
   };
-
-  const renderDropdown = (
-    text: string,
-    options: string[],
-    onChange: (e: SyntheticEvent<HTMLElement>, data: DropdownProps) => void,
-    multiple: boolean,
-  ): ReactNode => (
-    <Dropdown
-      className="filter"
-      text={text}
-      scrolling
-      clearable
-      options={parseOptions(options)}
-      selectOnBlur={false}
-      selectOnNavigation={false}
-      onChange={onChange}
-      fluid
-      multiple={multiple}
-    />
-  );
 
   return (
     <>
@@ -222,32 +202,34 @@ const PitchDoc = (): ReactElement => {
             <h3>Filters: </h3>
           </div>
           <div className="wrapper">
-            {/*TODO: Turn this into a generalized component rather than a function*/}
-            {renderDropdown(
-              'Claim Status',
-              ['Claimed', 'Unclaimed'],
-              (e, { value }) => setClaimStatus(toString(value)),
-              false,
-            )}
+            <FilterDropdown
+              text="Claim Status"
+              options={parseOptions(['Claimed', 'Unclaimed'])}
+              onChange={(e, { value }) => setClaimStatus(toString(value))}
+            />
           </div>
           <div className="wrapper">
-            {renderDropdown('Date Joined', dateOptions, determineSort, false)}
+            <FilterDropdown
+              text="Date Joined"
+              options={parseOptions(dateOptions)}
+              onChange={determineSort}
+            />
           </div>
           <div className="wrapper">
-            {renderDropdown(
-              'Topics of Interest',
-              allInterests,
-              (e, { value }) => setInterests(toArray(value)),
-              true,
-            )}
+            <FilterDropdown
+              text="Topics of Interest"
+              options={parseOptions(allInterests)}
+              onChange={(e, { value }) => setInterests(toArray(value))}
+              multiple
+            />
           </div>
           <div className="wrapper">
-            {renderDropdown(
-              'Teams',
-              allTeams,
-              (e, { value }) => setTeams(toArray(value)),
-              true,
-            )}
+            <FilterDropdown
+              text="Teams"
+              options={parseOptions(allTeams)}
+              onChange={(e, { value }) => setTeams(toArray(value))}
+              multiple
+            />
           </div>
         </div>
         <div className="pitch-doc">

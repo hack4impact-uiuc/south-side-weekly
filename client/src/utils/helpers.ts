@@ -1,3 +1,4 @@
+import { camelCase, startCase } from 'lodash';
 import { FormEvent, Dispatch, SetStateAction } from 'react';
 import { DropdownItemProps } from 'semantic-ui-react';
 import { IUser, IPitch } from 'ssw-common';
@@ -83,20 +84,6 @@ const getPitchTeams = (pitch: IPitch): string[] => {
 };
 
 /**
- * Determines a user's first name by prioritizing preferred name
- *
- * @param user the user to get the first name of
- * @returns the user's first name
- */
-const getUserFirstName = (user: IUser): string => {
-  if (user.preferredName === null || user.preferredName === '') {
-    return user.firstName;
-  }
-
-  return user.preferredName;
-};
-
-/**
  * Updates a user's field generically
  *
  * @param user the user to update
@@ -151,15 +138,17 @@ interface MapConversion<T, K> {
 const convertMap = <T, K>(map: Map<T, K>): MapConversion<T, K>[] =>
   Array.from(map, ([key, value]) => ({ key, value }));
 
+const titleCase = (str: string): string => startCase(camelCase(str));
+
 export {
   handleSelectGroupArray,
   parseSemanticMultiSelectTypes,
   getPitchTeams,
-  getUserFirstName,
   updateUserField,
   getUserProfilePic,
   getUserFullName,
   parseOptions,
   isPitchClaimed,
   convertMap,
+  titleCase,
 };

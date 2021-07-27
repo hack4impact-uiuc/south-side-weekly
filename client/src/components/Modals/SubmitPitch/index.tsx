@@ -1,10 +1,11 @@
-import { isEmpty, startCase, toLower, toString } from 'lodash';
+import { isEmpty, toString } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Button, Form, Modal, ModalProps } from 'semantic-ui-react';
 
 import { createPitch, isError } from '../../../api';
 import { useAuth } from '../../../contexts';
 import { allInterests } from '../../../utils/constants';
+import { titleCase } from '../../../utils/helpers';
 
 import './styles.scss';
 
@@ -142,7 +143,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
                 error={isFieldError(topics)}
                 className="checkbox"
                 key={index}
-                label={startCase(toLower(topic))}
+                label={titleCase(topic)}
                 checked={topics.has(topic)}
                 onClick={(e, { value }) => addTopic(toString(value))}
                 value={topic}

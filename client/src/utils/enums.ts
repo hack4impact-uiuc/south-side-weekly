@@ -1,17 +1,3 @@
-export const rolesEnum = {
-  CONTRIBUTOR: 'CONTRIBUTOR',
-  STAFF: 'STAFF',
-  ADMIN: 'ADMIN',
-  TBD: 'TBD',
-};
-
-export const onboardingStatusEnum = {
-  ONBOARDING_SCHEDULED: 'ONBOARDING_SCHEDULED',
-  STALLED: 'STALLED',
-  ONBOARDED: 'ONBOARDED',
-  NONE: 'NONE',
-};
-
 export const interestsEnum = {
   POLITICS: 'POLITICS',
   EDUCATION: 'EDUCATION',
@@ -57,27 +43,4 @@ export const pages = {
   PITCHES: 'PITCHES',
   RESOURCES: 'RESOURCES',
   USERS: 'USERS',
-};
-
-export const interestsColorEnum = {
-  EDITING: '#D98E8E',
-  WRITING: '#E4B28E',
-  VISUALS: '#98B9D7',
-  FUN: '#F2F492',
-  CANNABIS: '#B6E8A4',
-  HEALTH: '#99F7C4',
-  MUSIC: '#B298DC',
-  NATURE: '#C1F2AA',
-  POLITICS: '#CCAA8A',
-  HOUSING: '#D3EC8E',
-  PHOTOGRAPHY: '#8F9DE3',
-  ILLUSTRATION: '#E38FAD',
-  'FACT-CHECKING': '#93BFC1',
-  'VISUAL ARTS': '#B4EDD8',
-  IMMIGRATION: '#EFDEA3',
-  TRANSPORTATION: '#EBBFBF',
-  'FOOD AND LAND': '#E9FFCD',
-  'STAGE AND SCREEN': '#E4BAF2',
-  LIT: '#A0AEF8',
-  EDUCATION: '#AFE4F0',
 };

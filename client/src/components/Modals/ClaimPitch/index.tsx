@@ -1,4 +1,4 @@
-import { isEmpty, startCase, toLower } from 'lodash';
+import { isEmpty } from 'lodash';
 import React, {
   FC,
   ReactElement,
@@ -11,7 +11,6 @@ import {
   Form,
   Grid,
   Image,
-  Label,
   Modal,
   ModalProps,
 } from 'semantic-ui-react';
@@ -26,13 +25,13 @@ import {
 } from '../../../api';
 import { useAuth } from '../../../contexts';
 import { emptyPitch } from '../../../utils/constants';
-import { convertToClassName } from '../../../utils/formatters';
 import {
   convertMap,
   getUserFullName,
   getUserProfilePic,
 } from '../../../utils/helpers';
 import PitchCard from '../../PitchCard';
+import Tag from '../../Tag';
 
 import './styles.scss';
 
@@ -187,11 +186,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
         <Grid className="topics-section" columns={6}>
           {pitch.topics.map((topic, index) => (
             <Grid.Column key={index}>
-              <Label
-                size="large"
-                className={`label ${convertToClassName(topic)}`}
-                content={startCase(toLower(topic))}
-              />
+              <Tag content={topic} />
             </Grid.Column>
           ))}
         </Grid>
@@ -232,11 +227,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
                   }}
                   error={isCheckboxError}
                 />
-                <Label
-                  size="large"
-                  className={`label ${convertToClassName(slot[0])}`}
-                  content={startCase(slot[0])}
-                />
+                <Tag content={slot[0]} />
                 <h4>{slot[1].target - slot[1].current}</h4>
               </div>
             ))}
@@ -260,7 +251,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
         <Button
           type="submit"
           onClick={claimPitch}
-          content="Submit pitch for review"
+          content="Submit my Claim for Review"
           positive
           disabled={didUserClaim()}
         />

@@ -4,13 +4,17 @@ import React, {
   ReactElement,
   SyntheticEvent,
 } from 'react';
-import { startCase, startsWith, toArray, toLower, toString } from 'lodash';
-import { Card, Dropdown, DropdownProps, Input, Image } from 'semantic-ui-react';
+import { startsWith, toArray, toLower, toString } from 'lodash';
+import { Card, DropdownProps, Input, Image } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { getUsers, isError } from '../../api';
-import { Header, Sidebar, UserModal } from '../../components';
-import { getUserProfilePic, parseOptions } from '../../utils/helpers';
+import { Header, Sidebar, UserModal, FilterDropdown } from '../../components';
+import {
+  getUserProfilePic,
+  parseOptions,
+  titleCase,
+} from '../../utils/helpers';
 import {
   allInterests,
   allRoles,
@@ -91,7 +95,7 @@ const Directory = (): ReactElement => {
       return filtered;
     };
 
-    setFilteredDirectory(search(filter(directory)));
+    setFilteredDirectory([...search(filter(directory))]);
   }, [directory, query, interests, teams, role, sort]);
 
   const determineSort = (
@@ -108,6 +112,8 @@ const Directory = (): ReactElement => {
       }
     }
   };
+
+  console.log(sort);
 
   const openModal = (user: IUser): void => {
     setModal({
@@ -143,57 +149,37 @@ const Directory = (): ReactElement => {
             <h3>Filters: </h3>
           </div>
           <div className="wrapper">
-            <Dropdown
+            <FilterDropdown
               className="filter"
-              text="Roles"
-              scrolling
-              clearable
+              text="Role"
               options={parseOptions(allRoles)}
-              selectOnBlur={false}
-              selectOnNavigation={false}
               onChange={(e, { value }) => setRole(toString(value))}
-              fluid
             />
           </div>
           <div className="wrapper">
-            <Dropdown
+            <FilterDropdown
               className="filter"
               text="Date Joined"
-              scrolling
-              clearable
               options={parseOptions(dateOptions)}
-              selectOnBlur={false}
-              selectOnNavigation={false}
               onChange={determineSort}
-              fluid
             />
           </div>
           <div className="wrapper">
-            <Dropdown
+            <FilterDropdown
               className="filter"
               text="Topics of Interest"
               options={parseOptions(allInterests)}
-              scrolling
-              multiple
-              clearable
-              selectOnNavigation={false}
-              selectOnBlur={false}
               onChange={(e, { value }) => setInterests(toArray(value))}
-              fluid
+              multiple
             />
           </div>
           <div className="wrapper">
-            <Dropdown
+            <FilterDropdown
               className="filter"
               text="Teams"
               options={parseOptions(allTeams)}
-              scrolling
-              multiple
-              clearable
-              selectOnNavigation={false}
-              selectOnBlur={false}
               onChange={(e, { value }) => setTeams(toArray(value))}
-              fluid
+              multiple
             />
           </div>
         </div>
@@ -211,7 +197,7 @@ const Directory = (): ReactElement => {
                   <h2>{`${user.firstName} ${user.lastName}`}</h2>
                 </div>
                 <div>
-                  <h2>{startCase(toLower(user.role))}</h2>
+                  <h2>{titleCase(user.role)}</h2>
                 </div>
               </Card.Content>
             </Card>

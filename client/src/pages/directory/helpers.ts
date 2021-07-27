@@ -41,10 +41,20 @@ const sortUsers = (
     const first = new Date(a.dateJoined);
     const second = new Date(b.dateJoined);
     if (sort === 'increase') {
-      return first.getTime() - second.getTime();
+      if (first > second) {
+        return 1;
+      } else if (first < second) {
+        return Number.MIN_SAFE_INTEGER;
+      }
+    } else if (sort === 'decrease') {
+      if (first > second) {
+        return Number.MIN_SAFE_INTEGER;
+      } else if (first < second) {
+        return 1;
+      }
     }
 
-    return second.getTime() - first.getTime();
+    return 0;
   });
 
   return users;

@@ -11,6 +11,7 @@ import {
   Image,
   DropdownItemProps,
 } from 'semantic-ui-react';
+import { startCase } from 'lodash';
 
 import {
   isError,
@@ -18,7 +19,7 @@ import {
   updateUser,
   getUserPermissionsByID,
 } from '../../api';
-import { Sidebar, Header } from '../../components';
+import { Sidebar, Header, Tag } from '../../components';
 import { pages } from '../../utils/enums';
 import Masthead from '../../assets/masthead.svg';
 import {
@@ -35,12 +36,8 @@ import {
   parseOptions,
   parseSemanticMultiSelectTypes,
   updateUserField,
+  titleCase,
 } from '../../utils/helpers';
-import {
-  convertToCapitalized,
-  convertToClassName,
-  parseCamelCase,
-} from '../../utils/formatters';
 import { useAuth } from '../../contexts';
 
 import SocialsInput from './SocialsInput';
@@ -299,7 +296,7 @@ const Profile = (): ReactElement => {
                 {stringAttributes.map((attribute, index) => (
                   <StringAttribute
                     key={index}
-                    label={parseCamelCase(attribute)}
+                    label={titleCase(attribute)}
                     value={user[attribute] as string}
                     onChange={(e, { value }) => editUser(attribute, value)}
                     disabled={!isEditable(attribute)}
@@ -310,7 +307,7 @@ const Profile = (): ReactElement => {
                 {arrayAttributes.map((attribute, index) => (
                   <ArrayAttribute
                     key={index}
-                    label={parseCamelCase(attribute)}
+                    label={titleCase(attribute)}
                     value={user[attribute]}
                     options={getMultiDropdownOptions(attribute)}
                     onAddItem={(e, { value }) =>
@@ -325,16 +322,16 @@ const Profile = (): ReactElement => {
                 ))}
 
                 <SelectAttribute
-                  label={parseCamelCase('role')}
-                  value={convertToCapitalized(user.role)}
-                  options={parseOptions(dropdownOptions['role'])}
+                  label={titleCase('role')}
+                  value={titleCase(user.role)}
+                  options={parseOptions(allRoles)}
                   onChange={(e, { value }) => editUser('role', `${value}`)}
                   viewable={isViewable('role')}
                   editable={isEditable('role')}
                 />
 
                 <DateAttribute
-                  label={parseCamelCase('dateJoined')}
+                  label={startCase('dateJoined')}
                   value={user.dateJoined}
                   onChange={(e, { value }) =>
                     editUser('dateJoined', new Date(value))
@@ -355,7 +352,7 @@ const Profile = (): ReactElement => {
                         <Checkbox
                           className="checkbox"
                           value={interest}
-                          label={convertToCapitalized(interest)}
+                          label={titleCase(interest)}
                           checked={user.interests.includes(interest)}
                           onChange={(e, { value }) => {
                             addInterest(`${value}`);
@@ -365,14 +362,16 @@ const Profile = (): ReactElement => {
                     ))}
                   </Container>
                 ) : (
-                  user.interests.sort().map((interest, index) => (
-                    <div
-                      className={`field-label ${convertToClassName(interest)}`}
-                      key={index}
-                    >
-                      {convertToCapitalized(interest)}
-                    </div>
-                  ))
+                  user.interests
+                    .sort()
+                    .map((interest, index) => (
+                      <Tag
+                        size="medium"
+                        key={index}
+                        className="field-label"
+                        content={interest}
+                      />
+                    ))
                 )}
               </Grid.Column>
             )}
@@ -387,21 +386,23 @@ const Profile = (): ReactElement => {
                         key={index}
                         className="checkbox"
                         value={team}
-                        label={convertToCapitalized(team)}
+                        label={titleCase(team)}
                         checked={user.currentTeams.includes(team)}
                         onChange={(e, data) => addTeam(`${data.value!}`)}
                       />
                     ))}
                   </div>
                 ) : (
-                  user.currentTeams.sort().map((team, index) => (
-                    <div
-                      className={`field-label ${convertToClassName(team)}`}
-                      key={index}
-                    >
-                      {convertToCapitalized(team)}
-                    </div>
-                  ))
+                  user.currentTeams
+                    .sort()
+                    .map((team, index) => (
+                      <Tag
+                        size="medium"
+                        key={index}
+                        className="field-label"
+                        content={team}
+                      />
+                    ))
                 )}
               </Grid.Column>
             )}

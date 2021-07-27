@@ -3,7 +3,7 @@ import { Card, CardProps } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
 import { toString } from 'lodash';
 
-import { convertToClassName } from '../../utils/formatters';
+import Tag from '../Tag';
 
 import './styles.scss';
 
@@ -36,9 +36,7 @@ const PitchCard: FC<IProps> = ({ pitch, ...rest }): ReactElement => {
           </Card.Description>
           <div className="topics">
             {pitch.topics.map((topic, index) => (
-              <div key={index} className={`topic ${convertToClassName(topic)}`}>
-                {topic}
-              </div>
+              <Tag size="tiny" key={index} className="topic" content={topic} />
             ))}
           </div>
         </div>
