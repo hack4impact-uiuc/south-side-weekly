@@ -1,4 +1,4 @@
-import { startsWith, toArray, toLower, toString } from 'lodash';
+import { isEqual, startsWith, toArray, toLower, toString } from 'lodash';
 import React, {
   ReactElement,
   SyntheticEvent,
@@ -12,7 +12,8 @@ import Swal from 'sweetalert2';
 import {
   getApprovedPitches,
   getPendingContributorPitches,
-  getPendingPitches,
+  getPitchesPendingApproval,
+  getUnclaimedPitches,
   isError,
 } from '../../api';
 import {
@@ -46,9 +47,11 @@ const TABS = {
   UNCLAIMED: 'Unclaimed Pitches',
   PITCH_APPROVAL: 'Pitches Pending Approval',
   CLAIM_APPROVAL: 'Claims Pending Approval',
+  APPROVED: 'Approved Pitches',
 };
 
 const PitchDoc = (): ReactElement => {
+  const [approved, setApproved] = useState<IPitch[]>([]);
   const [unclaimed, setUnclaimed] = useState<IPitch[]>([]);
   const [pendingApprovals, setPendingApprovals] = useState<IPitch[]>([]);
   const [pendingClaims, setPendingClaims] = useState<IPitch[]>([]);
@@ -65,8 +68,16 @@ const PitchDoc = (): ReactElement => {
 
   const { isAdmin, isStaff } = useAuth();
 
-  const getUnclaimedPitches = async (): Promise<void> => {
+  const getApproved = async (): Promise<void> => {
     const res = await getApprovedPitches();
+
+    if (!isError(res)) {
+      setApproved(res.data.result);
+    }
+  };
+
+  const getUnclaimed = async (): Promise<void> => {
+    const res = await getUnclaimedPitches();
 
     if (!isError(res)) {
       setUnclaimed(res.data.result);
@@ -76,7 +87,7 @@ const PitchDoc = (): ReactElement => {
   };
 
   const getPendingApprovals = async (): Promise<void> => {
-    const res = await getPendingPitches();
+    const res = await getPitchesPendingApproval();
 
     if (!isError(res)) {
       setPendingApprovals(res.data.result);
@@ -93,7 +104,8 @@ const PitchDoc = (): ReactElement => {
 
   useEffect(() => {
     setCurrentTab(TABS.UNCLAIMED);
-    getUnclaimedPitches();
+    getUnclaimed();
+    getApproved();
 
     if (isStaff || isAdmin) {
       getPendingApprovals();
@@ -138,8 +150,10 @@ const PitchDoc = (): ReactElement => {
       setCurrentPitches(pendingApprovals);
     } else if (currentTab === TABS.CLAIM_APPROVAL) {
       setCurrentPitches(pendingClaims);
+    } else if (currentTab === TABS.APPROVED) {
+      setCurrentPitches(approved);
     }
-  }, [currentTab, unclaimed, pendingApprovals, pendingClaims]);
+  }, [currentTab, unclaimed, pendingApprovals, pendingClaims, approved]);
 
   const determineSort = (
     e: SyntheticEvent<HTMLElement>,
@@ -166,9 +180,10 @@ const PitchDoc = (): ReactElement => {
   };
 
   const populatePitches = (): void => {
-    getUnclaimedPitches();
+    getUnclaimed();
     getPendingApprovals();
     getPendingClaims();
+    getApproved();
   };
 
   return (
@@ -199,6 +214,11 @@ const PitchDoc = (): ReactElement => {
               onClick={(e, { name }) => setCurrentTab(name!)}
             />
           </AdminView>
+          <Menu.Item
+            name={TABS.APPROVED}
+            active={TABS.APPROVED === currentTab}
+            onClick={(e, { name }) => setCurrentTab(name!)}
+          />
         </Menu>
         <div className="search-add-wrapper">
           <Input
@@ -218,13 +238,6 @@ const PitchDoc = (): ReactElement => {
         <div className="filters">
           <div>
             <h3>Filters: </h3>
-          </div>
-          <div className="wrapper">
-            <FilterDropdown
-              text="Claim Status"
-              options={parseOptions(['Claimed', 'Unclaimed'])}
-              onChange={(e, { value }) => setClaimStatus(toString(value))}
-            />
           </div>
           <div className="wrapper">
             <FilterDropdown
@@ -249,6 +262,15 @@ const PitchDoc = (): ReactElement => {
               multiple
             />
           </div>
+          {isEqual(currentTab, TABS.APPROVED) && (
+            <div className="wrapper">
+              <FilterDropdown
+                text="Claim Status"
+                options={parseOptions(['Claimed', 'Unclaimed'])}
+                onChange={(e, { value }) => setClaimStatus(toString(value))}
+              />
+            </div>
+          )}
         </div>
         <div className="pitch-doc">
           {filteredPitches.map((pitch, index) => {
@@ -267,6 +289,8 @@ const PitchDoc = (): ReactElement => {
             } else if (currentTab === TABS.PITCH_APPROVAL) {
               return <PitchCard key={index} pitch={pitch} />;
             } else if (currentTab === TABS.CLAIM_APPROVAL) {
+              return <PitchCard key={index} pitch={pitch} />;
+            } else if (currentTab === TABS.APPROVED) {
               return <PitchCard key={index} pitch={pitch} />;
             }
           })}

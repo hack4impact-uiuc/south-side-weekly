@@ -11,7 +11,8 @@ export {
   getOpenTeams,
   updatePitch,
   updatePitchContributors,
-  getPendingPitches,
+  getPitchesPendingApproval,
+  getUnclaimedPitches,
   getPendingContributorPitches,
   createPitch,
 } from './pitch';

@@ -162,8 +162,20 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     convertMap(checkboxes).some((checkbox) => checkbox.value);
 
   const didUserClaim = (): boolean =>
-    pitch.assignmentContributors.includes(user._id) ||
+    pitch.assignmentContributors.includes(user._id);
+
+  const didUserSubmitClaimReq = (): boolean =>
     pitch.pendingContributors.includes(user._id);
+
+  const getHeader = (): string => {
+    if (didUserClaim()) {
+      return 'You have already claimed this pitch!';
+    } else if (didUserSubmitClaimReq()) {
+      return 'You have already submitted your claim for this pitch';
+    }
+
+    return 'Claim Pitch';
+  };
 
   return (
     <Modal
@@ -174,13 +186,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
       className="claim-modal"
       {...rest}
     >
-      <Modal.Header
-        content={`${
-          didUserClaim()
-            ? 'You have already claimed this pitch!'
-            : 'Claim Pitch'
-        }`}
-      />
+      <Modal.Header content={getHeader()} />
       <Modal.Content>
         <h1>{pitch.name}</h1>
         <Grid className="topics-section" columns={6}>

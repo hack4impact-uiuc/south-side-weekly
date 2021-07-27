@@ -11,7 +11,7 @@ type Pitches = Response<PitchesResponse>;
 
 // Returns all of the approved pitches
 const getApprovedPitches = async (): Promise<Pitches> =>
-  await get(`${PITCH_ENDPOINT}?approved=true`, 'GET_PITCH_FAIL');
+  await get(`${PITCH_ENDPOINT}/all/approved`, 'GET_PITCHES_FAIL');
 
 // Returns the teams that can still claim a specified pitch
 const getOpenTeams = async (
@@ -37,11 +37,20 @@ const updatePitch = async (
 ): Promise<Pitches> =>
   await put(`${PITCH_ENDPOINT}/${pitchId}`, pitchData, 'UPDATE_PITCH_FAIL');
 
-const getPendingPitches = async (): Promise<Pitches> =>
-  await get(`${PITCH_ENDPOINT}?pending=true`, 'GET_PENDING_PITCHES_FAIL');
+const getPitchesPendingApproval = async (): Promise<Pitches> =>
+  await get(`${PITCH_ENDPOINT}/all/pending`, 'GET_PENDING_PITCHES_FAIL');
+
+const getUnclaimedPitches = async (): Promise<Pitches> =>
+  await get(
+    `${PITCH_ENDPOINT}/all/approved?status=unclaimed`,
+    'GET_UNCLAIMED_FAIL',
+  );
 
 const getPendingContributorPitches = async (): Promise<Pitches> =>
-  await get(`${PITCH_ENDPOINT}/all/pending`, 'GET_PENDING_CONTRIBUTOR_FAIL');
+  await get(
+    `${PITCH_ENDPOINT}/all/pendingClaims`,
+    'GET_PENDING_CONTRIBUTOR_FAIL',
+  );
 
 const createPitch = async (newPitch: {
   [key: string]: number | string | string[];
@@ -53,7 +62,8 @@ export {
   getOpenTeams,
   updatePitchContributors,
   updatePitch,
-  getPendingPitches,
+  getPitchesPendingApproval,
   getPendingContributorPitches,
   createPitch,
+  getUnclaimedPitches,
 };

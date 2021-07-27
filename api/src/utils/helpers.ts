@@ -46,3 +46,8 @@ export const sessionizeUser = (user: SessionUser): SessionUser => ({
   races: user.races,
   interests: user.interests,
 });
+
+export const isPitchClaimed = (pitch: IPitch): boolean =>
+  Object.entries(pitch.teams).every(
+    (team) => team[1].current === team[1].target,
+  );

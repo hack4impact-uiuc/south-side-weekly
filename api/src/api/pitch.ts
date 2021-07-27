@@ -1,55 +1,91 @@
 import express, { Request, Response } from 'express';
-import { ObjectId } from 'mongodb';
 import { errorWrap } from '../middleware';
 import { requireRegistered, requireStaff } from '../middleware/auth';
 
 import Pitch from '../models/pitch';
 import User from '../models/user';
 import { pitchStatusEnum } from '../utils/enums';
+import { isPitchClaimed } from '../utils/helpers';
 
 const router = express.Router();
 
-/**
- * Validates an ID to whether or not it is a valid MongoDB ID or not
- * @param id Potential Pitch ID to validate
- */
-const isValidMongoId = (id: string): boolean => ObjectId.isValid(id);
-
-// Gets pitches
 router.get(
-  '/',
+  '/all',
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
-    if (req.query.approved === 'true') {
-      // Gets all unclaimed pitches
-      const pitches = await Pitch.find({
-        pitchStatus: pitchStatusEnum.APPROVED,
-        'pendingContributors.0': { $exists: false },
-      });
+    const pitches = await Pitch.find({});
+    res.status(200).json({
+      message: 'Successfully retrieved all pitches',
+      success: true,
+      result: pitches,
+    });
+  }),
+);
+
+// All pitches pending approval
+router.get(
+  '/all/pending',
+  requireRegistered,
+  errorWrap(async (req: Request, res: Response) => {
+    const pitches = await Pitch.find({
+      pitchStatus: pitchStatusEnum.PENDING,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Pending pitches successfully retrived',
+      result: pitches,
+    });
+  }),
+);
+
+// All approved pitches
+// query param: status (claimed or unclaimed) that
+//              gets the claimed/unclaimed pitches
+router.get(
+  '/all/approved',
+  requireRegistered,
+  errorWrap(async (req: Request, res: Response) => {
+    const pitches = await Pitch.find({
+      pitchStatus: pitchStatusEnum.APPROVED,
+    });
+    const status = req.query.status;
+
+    if (status === 'unclaimed') {
       res.status(200).json({
-        message: `Successfully retrieved unclaimed pitches.`,
+        message: 'Successfully retrieved unclaimed pitches',
         success: true,
-        result: pitches,
+        result: pitches.filter((pitch) => !isPitchClaimed(pitch)),
       });
-    } else if (req.query.pending === 'true') {
-      // Get all pitches pending approval
-      const pitches = await Pitch.find({
-        pitchStatus: pitchStatusEnum.PENDING,
-      });
+    } else if (status === 'claimed') {
       res.status(200).json({
-        message: `Successfully retrieved pending pitches.`,
+        message: 'Successfully retrieved unclaimed pitches',
         success: true,
-        result: pitches,
+        result: pitches.filter(isPitchClaimed),
       });
     } else {
-      // Gets all pitches
-      const pitches = await Pitch.find({});
       res.status(200).json({
-        message: `Successfully retrieved all pitches.`,
+        message: `Successfully retrieved approved pitches.`,
         success: true,
         result: pitches,
       });
     }
+  }),
+);
+
+router.get(
+  '/all/pendingClaims',
+  requireRegistered,
+  errorWrap(async (req: Request, res: Response) => {
+    const pitches = await Pitch.find({
+      'pendingContributors.0': { $exists: true },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Pending pitches successfully retrived',
+      result: pitches,
+    });
   }),
 );
 
@@ -58,27 +94,19 @@ router.get(
   '/:pitchId',
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
-    if (!isValidMongoId(req.params.pitchId)) {
-      res.status(400).json({
-        success: false,
-        message: 'Bad ID format',
-      });
-      return;
-    }
-
     const pitch = await Pitch.findById(req.params.pitchId);
     if (!pitch) {
       res.status(404).json({
         success: false,
         message: 'Pitch not found with id',
       });
-    } else {
-      res.status(200).json({
-        success: true,
-        result: pitch,
-        message: `Successfully retrieved pitch`,
-      });
+      return;
     }
+    res.status(200).json({
+      success: true,
+      result: pitch,
+      message: `Successfully retrieved pitch`,
+    });
   }),
 );
 
@@ -87,31 +115,24 @@ router.get(
   '/:pitchId/openTeams',
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
-    if (!isValidMongoId(req.params.pitchId)) {
-      res.status(400).json({
-        success: false,
-        message: 'Bad ID format',
-      });
-      return;
-    }
-
     const pitch = await Pitch.findById(req.params.pitchId);
-    const openTeams = Object.fromEntries(
-      Object.entries(pitch.teams).filter(([, spots]) => spots.target > 0),
-    );
 
     if (!pitch) {
       res.status(404).json({
         success: false,
         message: 'Pitch not found with id',
       });
-    } else {
-      res.status(200).json({
-        success: true,
-        result: openTeams,
-        message: `Successfully retrieved open pitches`,
-      });
+      return;
     }
+    const openTeams = Object.fromEntries(
+      Object.entries(pitch.teams).filter(([, spots]) => spots.target > 0),
+    );
+
+    res.status(200).json({
+      success: true,
+      result: openTeams,
+      message: `Successfully retrieved open pitches`,
+    });
   }),
 );
 
@@ -136,14 +157,6 @@ router.put(
   '/:pitchId',
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
-    if (!isValidMongoId(req.params.pitchId)) {
-      res.status(400).json({
-        success: false,
-        message: 'Bad ID format',
-      });
-      return;
-    }
-
     const updatedPitch = await Pitch.findByIdAndUpdate(
       req.params.pitchId,
       req.body,
@@ -171,20 +184,6 @@ router.put(
   '/:pitchId/contributors',
   requireStaff,
   errorWrap(async (req: Request, res: Response) => {
-    if (!isValidMongoId(req.params.pitchId)) {
-      res.status(400).json({
-        success: false,
-        message: 'Bad pitch ID format',
-      });
-      return;
-    } else if (!isValidMongoId(req.body.userId)) {
-      res.status(400).json({
-        success: false,
-        message: 'Bad user ID format',
-      });
-      return;
-    }
-
     const user = await User.findById(req.body.userId);
     if (!user) {
       res.status(404).json({
@@ -221,14 +220,6 @@ router.delete(
   '/:pitchId',
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
-    if (!isValidMongoId(req.params.pitchId)) {
-      res.status(400).json({
-        success: false,
-        message: 'Bad ID format',
-      });
-      return;
-    }
-
     const deletedPitch = await Pitch.findByIdAndDelete(req.params.pitchId);
 
     if (!deletedPitch) {
@@ -243,22 +234,6 @@ router.delete(
       success: true,
       message: 'Pitch successfully deleted',
       result: deletedPitch,
-    });
-  }),
-);
-
-router.get(
-  '/all/pending',
-  requireRegistered,
-  errorWrap(async (req: Request, res: Response) => {
-    const pitches = await Pitch.find({
-      'pendingContributors.0': { $exists: true },
-    });
-
-    res.status(200).json({
-      success: true,
-      message: 'Pending pitches successfully retrived',
-      result: pitches,
     });
   }),
 );
