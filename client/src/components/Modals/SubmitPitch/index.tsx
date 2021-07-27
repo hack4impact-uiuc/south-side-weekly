@@ -68,7 +68,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
   };
 
   const isInvalidForm = (): boolean =>
-    [title, description, link, topics].every(isEmpty) && !didAgree;
+    [title, description, link, topics].some(isEmpty) && !didAgree;
   interface FieldError {
     content: string;
     pointing: 'left' | 'above' | 'below' | 'right';

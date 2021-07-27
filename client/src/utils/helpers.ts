@@ -14,8 +14,8 @@ import DefaultProfile from '../assets/default_profile.png';
  */
 const handleSelectGroupArray = (
   e: FormEvent<HTMLInputElement>,
-  selectedArray: Array<string>,
-  setArray: Dispatch<SetStateAction<Array<string>>>,
+  selectedArray: string[],
+  setArray: Dispatch<SetStateAction<string[]>>,
 ): void => {
   const notFoundIdx = -1;
   const elementIdx = selectedArray.indexOf(e.currentTarget.value);

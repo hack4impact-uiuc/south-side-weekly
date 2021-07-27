@@ -7,6 +7,7 @@ import React, {
 } from 'react';
 import { DropdownProps, Input, Menu } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
+import Swal from 'sweetalert2';
 
 import {
   getApprovedPitches,
@@ -155,6 +156,21 @@ const PitchDoc = (): ReactElement => {
     }
   };
 
+  const callback = (message = ''): void => {
+    populatePitches();
+    Swal.fire({
+      icon: 'success',
+      title: 'Success',
+      text: message,
+    });
+  };
+
+  const populatePitches = (): void => {
+    getUnclaimedPitches();
+    getPendingApprovals();
+    getPendingClaims();
+  };
+
   return (
     <>
       <Header />
@@ -194,7 +210,9 @@ const PitchDoc = (): ReactElement => {
             iconPosition="left"
             className="search"
           />
-          <SubmitPitchModal callback={getPendingApprovals} />
+          <SubmitPitchModal
+            callback={() => callback('Successfully Submitted Pitch')}
+          />
         </div>
 
         <div className="filters">
@@ -237,7 +255,11 @@ const PitchDoc = (): ReactElement => {
             if (currentTab === TABS.UNCLAIMED) {
               return (
                 <ClaimPitchModal
-                  callback={getUnclaimedPitches}
+                  callback={() =>
+                    callback(
+                      'Successfully submitted your claim for this pitch!',
+                    )
+                  }
                   key={index}
                   pitch={pitch}
                 />
