@@ -3,10 +3,10 @@ import { isEmpty } from 'lodash';
 import { CalendlyEventListener, InlineWidget } from 'react-calendly';
 import { Form } from 'semantic-ui-react';
 import Swal from 'sweetalert2';
-import { AsYouType } from 'libphonenumber-js';
 
 import { isError, updateUser } from '../../api';
 import { useAuth, useForm } from '../../contexts';
+import { formatNumber } from '../../utils/helpers';
 
 import './styles.scss';
 
@@ -14,13 +14,6 @@ const Onboard5 = (): ReactElement => {
   const { updateOnboardingData, formData } = useForm();
   const [scheduled, setScheduled] = useState(!isEmpty(formData.onboarding));
   const { user } = useAuth();
-
-  const formatNumber = (value: string): string => {
-    if (value.includes('(') && !value.includes(')')) {
-      return value.replace('(', '');
-    }
-    return new AsYouType('US').input(value);
-  };
 
   const onEventScheduled = (): void => {
     setScheduled(true);

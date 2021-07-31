@@ -77,7 +77,8 @@ const Wizard = (): ReactElement => {
       {currentPage === 1 && <Onboard1 />}
       {currentPage === 2 && <Onboard2 />}
       {currentPage === 3 && <Onboard3 />}
-      {currentPage === 4 && <Onboard4 />}
+      {currentPage === 4 &&
+        (formData.role === 'STAFF' ? <Completion /> : <Onboard4 />)}
       {currentPage === 5 && <Onboard5 />}
       {currentPage === 6 && <Completion />}
       {currentPage > 0 && currentPage < pages.length && (

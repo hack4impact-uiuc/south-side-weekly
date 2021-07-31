@@ -1,3 +1,4 @@
+import { AsYouType } from 'libphonenumber-js';
 import { camelCase, isEmpty, startCase, toUpper } from 'lodash';
 import { FormEvent, Dispatch, SetStateAction } from 'react';
 import { DropdownItemProps } from 'semantic-ui-react';
@@ -115,6 +116,13 @@ const titleCase = (str: string): string => startCase(camelCase(str));
 
 const defaultFunc = (): void => void 0;
 
+const formatNumber = (value: string): string => {
+  if (value.includes('(') && !value.includes(')')) {
+    return value.replace('(', '');
+  }
+  return new AsYouType('US').input(value);
+};
+
 export {
   handleSelectGroupArray,
   getPitchTeams,
@@ -126,4 +134,5 @@ export {
   convertMap,
   titleCase,
   defaultFunc,
+  formatNumber,
 };

@@ -1,10 +1,12 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useState, useEffect } from 'react';
 import { Form, Grid } from 'semantic-ui-react';
-import { toArray } from 'lodash';
+import { isEmpty, toArray } from 'lodash';
+import Swal from 'sweetalert2';
 
-import { useForm } from '../../contexts';
+import { useAuth, useForm } from '../../contexts';
 import { allInterests, allTeams } from '../../utils/constants';
-import { titleCase } from '../../utils/helpers';
+import { formatNumber, titleCase } from '../../utils/helpers';
+import { isError, updateUser } from '../../api';
 
 import './styles.scss';
 
@@ -13,8 +15,17 @@ const Onboard3 = (): ReactElement => {
 
   const [interests, setInterests] = useState(new Set<string>());
   const [teams, setTeams] = useState(new Set<string>());
+  const { user } = useAuth();
 
   const onSubmit = (): void => {
+    if (formData.role === 'STAFF') {
+      staffSubmit();
+    } else if (formData.role === 'CONTRIBUTOR') {
+      contributorSubmit();
+    }
+  };
+
+  const contributorSubmit = (): void => {
     const data = {
       interests: toArray(interests) as [string],
       currentTeams: toArray(teams) as [string],
@@ -23,7 +34,57 @@ const Onboard3 = (): ReactElement => {
     updateOnboardingData(data, true);
   };
 
+  const staffSubmit = (): void => {
+    const data = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      preferredName: formData.preferredName,
+      phone: formatNumber(formData.phone),
+      genders: formData.genders,
+      pronouns: formData.pronouns,
+      dateJoined: new Date(Date.now()),
+      currentTeams: toArray(teams) as [string],
+      role: formData.role,
+      races: formData.races,
+      interests: toArray(interests) as [string],
+    };
+
+    const onboardUser = async (): Promise<void> => {
+      const res = await updateUser(data, user._id);
+
+      if (!isError(res)) {
+        updateOnboardingData(data, true);
+      } else {
+        Swal.fire({
+          title: 'Failed to create account.',
+          icon: 'error',
+          text: 'Please contact an SSW Admin.',
+        });
+      }
+    };
+
+    onboardUser();
+  };
+
+  useEffect(() => {
+    const initialTeams = formData.currentTeams.filter((team) => !isEmpty(team));
+    const initialInterets = formData.interests.filter(
+      (interest) => !isEmpty(interest),
+    );
+
+    setTeams(new Set(initialTeams));
+    setInterests(new Set(initialInterets));
+  }, [formData.currentTeams, formData.interests]);
+
   const handleInterests = (interest: string): void => {
+    if (!interests.has(interest) && interests.size === 5) {
+      Swal.fire({
+        title: 'Please select a maximum of 5 teams!',
+        icon: 'error',
+      });
+      return;
+    }
+
     interests.has(interest)
       ? interests.delete(interest)
       : interests.add(interest);
@@ -31,6 +92,15 @@ const Onboard3 = (): ReactElement => {
   };
 
   const handleTeams = (team: string): void => {
+    console.log('here');
+    if (!teams.has(team) && teams.size === 2) {
+      Swal.fire({
+        title: 'Please select a maximum of 2 teams!',
+        icon: 'error',
+      });
+      return;
+    }
+
     teams.has(team) ? teams.delete(team) : teams.add(team);
     setTeams(new Set(teams));
   };
@@ -49,7 +119,7 @@ const Onboard3 = (): ReactElement => {
               <Grid.Column key={index}>
                 <Form.Checkbox
                   value={team}
-                  defaultChecked={formData.currentTeams.includes(team)}
+                  checked={teams.has(team)}
                   label={titleCase(team)}
                   onClick={() => handleTeams(team)}
                 />
@@ -67,7 +137,7 @@ const Onboard3 = (): ReactElement => {
               <Grid.Column key={index}>
                 <Form.Checkbox
                   value={interest}
-                  defaultChecked={formData.interests.includes(interest)}
+                  checked={interests.has(interest)}
                   label={titleCase(interest)}
                   onClick={() => handleInterests(interest)}
                 />
