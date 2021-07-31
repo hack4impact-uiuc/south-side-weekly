@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useState, useEffect } from 'react';
+import React, { ReactElement, useState, useEffect } from 'react';
 import { Button } from 'semantic-ui-react';
 
 import { Header, PageCounter } from '../components';
@@ -28,7 +28,7 @@ const contributorPages = [
   wizardPages.ONBOARD_5,
 ];
 
-const Wizard: FC = (): ReactElement => {
+const Wizard = (): ReactElement => {
   const { currentPage, prevPage, formData } = useForm();
   const [pages, setPages] = useState<string[]>([]);
 

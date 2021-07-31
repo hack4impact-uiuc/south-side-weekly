@@ -13,6 +13,8 @@ const app = express();
 app.use(helmet());
 if (process.env.NODE_ENV !== 'production') {
   app.use(cors({ origin: /localhost:\d{4}/, credentials: true }));
+} else {
+  app.use(cors({ credentials: true }));
 }
 
 app.use(logger('dev'));
@@ -25,10 +27,10 @@ const sessionConfig = {
   secure: false,
   keys: [process.env.SESS_SECRET],
 };
-if (process.env.NODE_ENV === 'production') {
-  app.set('trust proxy', 1);
-  sessionConfig.secure = true;
-}
+// if (process.env.NODE_ENV === 'production') {
+//   app.set('trust proxy', 1);
+//   sessionConfig.secure = true;
+// }
 app.use(cookieSession(sessionConfig));
 
 // Mongo setup
