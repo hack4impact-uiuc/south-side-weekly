@@ -6,7 +6,7 @@ import { useAuth } from '../../contexts';
 
 import './styles.scss';
 
-const Completition = (): ReactElement => {
+const Completion = (): ReactElement => {
   const { register } = useAuth();
 
   useEffect(() => {
@@ -32,4 +32,4 @@ const Completition = (): ReactElement => {
   );
 };
 
-export default Completition;
+export default Completion;

@@ -5,7 +5,7 @@ import { Header, PageCounter } from '../components';
 import { useForm } from '../contexts';
 import { wizardPages } from '../utils/enums';
 
-import Completition from './Completion';
+import Completion from './Completion';
 import InitialPrompt from './InitialPrompt';
 import Onboard1 from './Onboard1';
 import Onboard2 from './Onboard2';
@@ -79,7 +79,7 @@ const Wizard: FC = (): ReactElement => {
       {currentPage === 3 && <Onboard3 />}
       {currentPage === 4 && <Onboard4 />}
       {currentPage === 5 && <Onboard5 />}
-      {currentPage === 6 && <Completition />}
+      {currentPage === 6 && <Completion />}
       {currentPage > 0 && currentPage < pages.length && (
         <PageCounter pages={pages} />
       )}
