@@ -7,6 +7,7 @@ import cookieSession from 'cookie-session';
 import passport from 'passport';
 import apiRoutes from './api';
 import { errorHandler } from './middleware';
+import path from 'path';
 
 const app = express();
 
@@ -21,6 +22,8 @@ app.use(logger('dev'));
 
 app.use(express.json({ limit: '2.1mb' }));
 app.use(express.urlencoded({ limit: '2.1mb', extended: false }));
+
+app.use(express.static(path.join(__dirname, 'build')))
 
 // Session support
 const sessionConfig = {
@@ -43,7 +46,10 @@ app.use(passport.session());
 
 // Routes
 app.use('/api', apiRoutes);
-app.get('/', (req: Request, res: Response) => res.json('API working!'));
+// app.get('/', (req: Request, res: Response) => res.json('API working!'));
+app.get('/api', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'))
+})
 app.get('/favicon.ico', (req: Request, res: Response) => res.status(204));
 
 app.use(function (req: Request, res: Response, next) {
