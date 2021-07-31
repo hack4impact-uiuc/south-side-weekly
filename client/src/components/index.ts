@@ -6,8 +6,7 @@ import UserModal from './Modals/User';
 import PitchCard from './PitchCard';
 import Sidebar from './Sidebar';
 import WizardListTitle from './Wizard/ListTitle';
-import WizardPageCounter from './Wizard/PageCounter';
-import WizardStar from './Wizard/RequiredStar';
+import PageCounter from './Wizard/PageCounter';
 import WizardSvg from './Wizard/Svg';
 import PrivateRoute from './PrivateRoute';
 import AdminView from './Auth/AdminView';
@@ -24,8 +23,7 @@ export {
   PitchCard,
   Sidebar,
   WizardListTitle,
-  WizardPageCounter,
-  WizardStar,
+  PageCounter,
   WizardSvg,
   PrivateRoute,
   AdminView,

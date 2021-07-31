@@ -114,6 +114,15 @@ const PitchDoc = (): ReactElement => {
     if (isAdmin) {
       getPendingClaims();
     }
+
+    return () => {
+      setUnclaimed([]);
+      setApproved([]);
+      setPendingApprovals([]);
+      setPendingClaims([]);
+      setFilteredPitches([]);
+      setCurrentPitches([]);
+    };
   }, [isAdmin, isStaff]);
 
   useEffect(() => {
@@ -191,8 +200,8 @@ const PitchDoc = (): ReactElement => {
       <Header />
       <Sidebar currentPage={pages.PITCHES} />
       <div className="pitch-doc-wrapper">
-        <h1>Pitch doc</h1>
-        <Menu tabular size="large">
+        <h1>Pitch Doc</h1>
+        <Menu className="tab-menu" tabular size="large">
           <Menu.Item
             name={TABS.UNCLAIMED}
             active={TABS.UNCLAIMED === currentTab}
@@ -207,6 +216,11 @@ const PitchDoc = (): ReactElement => {
             />
           </StaffView>
 
+          <Menu.Item
+            name={TABS.APPROVED}
+            active={TABS.APPROVED === currentTab}
+            onClick={(e, { name }) => setCurrentTab(name!)}
+          />
           <AdminView>
             <Menu.Item
               name={TABS.CLAIM_APPROVAL}
@@ -214,11 +228,6 @@ const PitchDoc = (): ReactElement => {
               onClick={(e, { name }) => setCurrentTab(name!)}
             />
           </AdminView>
-          <Menu.Item
-            name={TABS.APPROVED}
-            active={TABS.APPROVED === currentTab}
-            onClick={(e, { name }) => setCurrentTab(name!)}
-          />
         </Menu>
         <div className="search-add-wrapper">
           <Input

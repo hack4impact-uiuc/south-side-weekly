@@ -17,6 +17,13 @@
     }
   }
 
+  .tab-menu {
+    .active {
+      background-color: $primary !important;
+      color: white !important;
+    }
+  }
+
   .filters {
     display: flex;
     align-items: center;

@@ -39,13 +39,7 @@ const SocialsInput: FC<ISocialsInput> = ({
           </Grid.Column>
           <Grid.Column className="col">
             {disabled ? (
-              <Input
-                className="input"
-                fluid
-                transparent
-                onChange={onChange}
-                value={value}
-              >
+              <Input className="input" fluid transparent>
                 {linkify(icon, value)}
               </Input>
             ) : (

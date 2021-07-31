@@ -1,5 +1,7 @@
 @import '../../styles/colors.scss';
 
+$cardColor: $primary;
+
 .pitch-card {
   position: relative;
   color: black !important;
@@ -7,10 +9,10 @@
   height: 150px !important;
   margin: 10px !important;
 
-  border-bottom: solid #87ceeb 8px !important;
+  border-bottom: solid $cardColor 8px !important;
 
   &:hover {
-    border-bottom: solid #87ceeb 8px !important;
+    border-bottom: solid $cardColor 8px !important;
   }
 
   .topics {

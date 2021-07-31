@@ -1,13 +1,9 @@
-.list-title-wrapper {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
+@import '../../../styles/colors.scss';
 
 .list-title {
   font-weight: 600;
-  color: #3d4f91;
-  border-bottom: 2px solid #3d4f91;
+  color: $primary;
+  border-bottom: 2px solid $primary;
   font-size: 1.2em;
   padding: 0px 2px 2px 2px;
   margin-bottom: 15px;

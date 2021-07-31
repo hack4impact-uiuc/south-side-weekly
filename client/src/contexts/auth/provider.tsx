@@ -8,6 +8,7 @@ import React, {
 
 import { getCurrentUser, isError, logout as clearSession } from '../../api';
 import { emptyUser } from '../../utils/constants';
+import { defaultFunc } from '../../utils/helpers';
 
 import { AuthContext, useAuth } from './context';
 import { IAuthContext } from './types';
@@ -22,6 +23,7 @@ const AuthProvider: FC = ({ children }): ReactElement => {
     isLoading: true,
     isRegistered: false,
     logout: () => void 0,
+    register: () => void 0,
   });
 
   const logout = useCallback((): void => {
@@ -35,6 +37,7 @@ const AuthProvider: FC = ({ children }): ReactElement => {
       isLoading: false,
       isRegistered: false,
       logout: logout,
+      register: defaultFunc,
     });
   }, []);
 
@@ -53,6 +56,7 @@ const AuthProvider: FC = ({ children }): ReactElement => {
           isLoading: false,
           isRegistered: user.role !== 'TBD',
           logout: logout,
+          register: loadCurrentUser,
         });
       } else {
         setAuth({
@@ -63,7 +67,8 @@ const AuthProvider: FC = ({ children }): ReactElement => {
           isAdmin: false,
           isLoading: false,
           isRegistered: false,
-          logout: logout,
+          logout: defaultFunc,
+          register: defaultFunc,
         });
       }
     };

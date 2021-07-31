@@ -1,43 +1,39 @@
-import React, { FC, Dispatch, SetStateAction, ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { Form } from 'semantic-ui-react';
+import { toString } from 'lodash';
 
-import { WizardSvg, WizardStar } from '../../components';
+import { useForm } from '../../contexts';
 
-import './styles.css';
+import './styles.scss';
 
-interface IProps {
-  reasonsForInvolvement: string;
-  setReasonsForInvolvement: Dispatch<SetStateAction<string>>;
-}
+const Onboard4 = (): ReactElement => {
+  const [response, setResponse] = useState('');
 
-/**
- * Builds and controls the form management for Onboard4 of the Onboarding Wizard
- *
- * @param {string} reasonsForInvolvement the user response to the reason they want to be involved
- */
-const Onboard4: FC<IProps> = ({
-  reasonsForInvolvement,
-  setReasonsForInvolvement,
-}): ReactElement => (
-  <div className="involvement-wrapper">
-    <WizardSvg page="onboard4" />
-    <div className="involvement-content">
-      <div className="page-text">
-        <WizardStar />
+  const { updateOnboardingData, formData } = useForm();
+
+  const onSubmit = (): void => {
+    const data = {
+      involvementResponse: response,
+    };
+
+    updateOnboardingData(data, true);
+  };
+
+  return (
+    <div className="onboard4-wrapper">
+      <div className="prompt">
         Tell us how you want to get involved and why. If you have relevant
         experience, please briefly share too.
       </div>
-      <Form>
+      <Form id="onboard-4" onSubmit={onSubmit}>
         <Form.TextArea
           required
-          value={reasonsForInvolvement}
-          onChange={(e) => setReasonsForInvolvement(e.currentTarget.value)}
-          className="response-text-area"
-          error={reasonsForInvolvement === ''}
+          defaultValue={formData.involvementResponse}
+          onChange={(e, { value }) => setResponse(toString(value))}
         />
       </Form>
     </div>
-  </div>
-);
+  );
+};
 
 export default Onboard4;

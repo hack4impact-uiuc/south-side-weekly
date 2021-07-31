@@ -37,27 +37,19 @@ const sortUsers = (
     return users;
   }
 
-  users.sort((a, b) => {
+  const copy = [...users];
+
+  copy.sort((a, b) => {
     const first = new Date(a.dateJoined);
     const second = new Date(b.dateJoined);
     if (sort === 'increase') {
-      if (first > second) {
-        return 1;
-      } else if (first < second) {
-        return Number.MIN_SAFE_INTEGER;
-      }
-    } else if (sort === 'decrease') {
-      if (first > second) {
-        return Number.MIN_SAFE_INTEGER;
-      } else if (first < second) {
-        return 1;
-      }
+      return first.getTime() - second.getTime();
     }
 
-    return 0;
+    return second.getTime() - first.getTime();
   });
 
-  return users;
+  return copy;
 };
 
 export { filterInterests, filterRole, filterTeams, sortUsers };

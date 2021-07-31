@@ -9,4 +9,5 @@ export interface IAuthContext {
   isLoading: boolean;
   isRegistered: boolean;
   logout(): void;
+  register(): void;
 }

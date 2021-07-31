@@ -64,6 +64,11 @@ const Directory = (): ReactElement => {
     };
 
     getAllUsers();
+
+    return () => {
+      setDirectory([]);
+      setFilteredDirectory([]);
+    };
   }, []);
 
   useEffect(() => {

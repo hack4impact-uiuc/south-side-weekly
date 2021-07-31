@@ -1,0 +1,42 @@
+@import '../styles/colors.scss';
+
+.pages-wrapper {
+  height: 100vh !important;
+  margin-top: 0 !important;
+
+  .go-back {
+    position: absolute;
+    top: 4.5vh;
+    left: 5vh;
+    background-color: transparent;
+    color: black;
+
+    &:hover,
+    &:focus {
+      background-color: transparent;
+    }
+  }
+
+  button[type='submit'] {
+    $color: rgba(140, 176, 118, 0.9);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 2vh;
+    margin-top: auto;
+    margin-bottom: auto;
+    height: fit-content;
+    background-color: $color;
+    color: black;
+    z-index: 1;
+
+    &:hover {
+      opacity: 0.8;
+      background-color: $color;
+    }
+
+    &:focus {
+      background-color: $color;
+    }
+  }
+}

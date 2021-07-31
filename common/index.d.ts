@@ -18,6 +18,7 @@ export interface IUser {
   portfolio: string;
   linkedIn: string;
   twitter: string;
+  involvementResponse: string;
   claimedPitches: [string];
   submittedPitches: [string];
   currentTeams: [string];

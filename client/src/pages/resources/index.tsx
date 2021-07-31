@@ -42,6 +42,8 @@ const Resources = (): ReactElement => {
 
   useEffect(() => {
     getResources();
+
+    return () => setResources([]);
   }, [modal.isOpen]);
 
   const removeResource = async (resource: IResource): Promise<void> => {

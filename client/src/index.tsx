@@ -1,6 +1,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from 'react-router-dom';
 import 'semantic-ui-css/semantic.min.css';
 
 import {
@@ -11,26 +16,31 @@ import {
   PitchDoc,
   Resources,
 } from './pages';
-import WizardWrapper from './wizard';
+import Wizard from './wizard';
 import { PrivateRoute } from './components';
-import { AuthProvider } from './contexts';
+import { AuthProvider, WizardProvider } from './contexts';
 
 import './styles/styles.scss';
 
 ReactDOM.render(
   <React.StrictMode>
     <AuthProvider>
-      <Router>
-        <Switch>
-          <PrivateRoute exact path="/pitches" component={PitchDoc} />
-          <PrivateRoute exact path="/resources" component={Resources} />
-          <PrivateRoute exact path="/profile/:userId" component={Profile} />
-          <PrivateRoute exact path="/users" component={Directory} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/join" component={WizardWrapper} />
-          <PrivateRoute exact path="*" component={NotFound} />
-        </Switch>
-      </Router>
+      <WizardProvider>
+        <Router>
+          <Switch>
+            <Route exact path="/">
+              <Redirect to="homepage" />
+            </Route>
+            <PrivateRoute exact path="/pitches" component={PitchDoc} />
+            <PrivateRoute exact path="/resources" component={Resources} />
+            <PrivateRoute exact path="/profile/:userId" component={Profile} />
+            <PrivateRoute exact path="/users" component={Directory} />
+            <Route exact path="/login" component={Login} />
+            <PrivateRoute exact path="/join" component={Wizard} />
+            <PrivateRoute exact path="*" component={NotFound} />
+          </Switch>
+        </Router>
+      </WizardProvider>
     </AuthProvider>
   </React.StrictMode>,
   document.getElementById('root'),

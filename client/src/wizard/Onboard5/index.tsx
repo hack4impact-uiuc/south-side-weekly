@@ -1,63 +1,90 @@
-import React, { ReactElement, Dispatch, SetStateAction, FC } from 'react';
-import { Button, Modal, ModalContent } from 'semantic-ui-react';
-import { openPopupWidget } from 'react-calendly';
+import React, { ReactElement, useState } from 'react';
+import { isEmpty } from 'lodash';
+import { CalendlyEventListener, InlineWidget } from 'react-calendly';
+import { Form } from 'semantic-ui-react';
+import Swal from 'sweetalert2';
+import { AsYouType } from 'libphonenumber-js';
 
-import './styles.css';
-import { WizardSvg, WizardStar } from '../../components';
+import { isError, updateUser } from '../../api';
+import { useAuth, useForm } from '../../contexts';
 
-interface IProps {
-  isModalOpen: boolean;
-  setModalOpen: Dispatch<SetStateAction<boolean>>;
-  setScheduleConfirmed: Dispatch<SetStateAction<boolean>>;
-}
+import './styles.scss';
 
-/**
- * Builds and controls the form management for scheduling of the Onboarding Wizard
- */
-const Onboard5: FC<IProps> = ({
-  isModalOpen,
-  setModalOpen,
-  setScheduleConfirmed,
-}): ReactElement => (
-  <div className="scheduling-wrapper">
-    <Modal
-      onClose={() => setModalOpen(false)}
-      className="confirmation-modal"
-      open={isModalOpen}
-      closeIcon
-    >
-      <ModalContent className="confirmation-modal-content">
-        <div>
-          Please make sure you have scheduled a meeting with a South Side Weekly
-          Staff Member. If you couldn’t find a day that works for you, please
-          reach out to a Staff Member at amitplaystrumpet@ssw.com.
-        </div>
-        <div className="button-wrapper">
-          <Button
-            onClick={() => setScheduleConfirmed(true)}
-            className="modal-button"
-          >
-            Complete Sign-Up
-          </Button>
-        </div>
-      </ModalContent>
-    </Modal>
-    <WizardSvg page="onboard5" />
-    <div className="scheduling-content">
-      <div className="page-text">
-        <WizardStar />
-        Please schedule an Onboarding Session with a Staff Member.
+const Onboard5 = (): ReactElement => {
+  const { updateOnboardingData, formData } = useForm();
+  const [scheduled, setScheduled] = useState(!isEmpty(formData.onboarding));
+  const { user } = useAuth();
+
+  const formatNumber = (value: string): string => {
+    if (value.includes('(') && !value.includes(')')) {
+      return value.replace('(', '');
+    }
+    return new AsYouType('US').input(value);
+  };
+
+  const onEventScheduled = (): void => {
+    setScheduled(true);
+    updateOnboardingData({ onboarding: 'ONBOARDING_SCHEDULED' }, false);
+  };
+
+  const onSubmit = (): void => {
+    if (!scheduled) {
+      Swal.fire({
+        title: 'Please schedule an onboarding time!',
+        icon: 'error',
+      });
+      return;
+    }
+
+    const data = {
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      preferredName: formData.preferredName,
+      phone: formatNumber(formData.phone),
+      genders: formData.genders,
+      pronouns: formData.pronouns,
+      dateJoined: new Date(Date.now()),
+      onboarding: 'ONBOARDING_SCHEDULED',
+      involvementResponse: formData.involvementResponse,
+      currentTeams: formData.currentTeams,
+      role: formData.role,
+      races: formData.races,
+      interests: formData.interests,
+    };
+
+    const onboardUser = async (): Promise<void> => {
+      const res = await updateUser(data, user._id);
+
+      if (!isError(res)) {
+        updateOnboardingData(data, true);
+      } else {
+        Swal.fire({
+          title: 'Failed to create account.',
+          icon: 'error',
+          text: 'Please contact an SSW Admin.',
+        });
+      }
+    };
+
+    onboardUser();
+  };
+
+  return (
+    <div className="onboard5-wrapper">
+      <div className="prompt">
+        Please schedule an Onboarding Session with a Staff Member. If no times
+        work for you, please contact a Staff Member at amitplaystrumpet@ssw.com
+        after submitting.
       </div>
-      <Button
-        className="calendly-btn"
-        onClick={() =>
-          openPopupWidget({ url: 'https://calendly.com/sawhney4/60min' })
-        }
-      >
-        Schedule meeting
-      </Button>
+      <Form id="onboard-5" onSubmit={onSubmit}>
+        <InlineWidget
+          styles={{ height: '77vh' }}
+          url="https://calendly.com/sawhney4/60min"
+        />
+        <CalendlyEventListener onEventScheduled={onEventScheduled} />
+      </Form>
     </div>
-  </div>
-);
+  );
+};
 
 export default Onboard5;

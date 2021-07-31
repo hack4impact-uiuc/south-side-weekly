@@ -1,111 +1,76 @@
-import React, { FC, ReactElement, Dispatch, SetStateAction } from 'react';
-import { Form } from 'semantic-ui-react';
+import React, { ReactElement, useState } from 'react';
+import { Form, Grid } from 'semantic-ui-react';
 
-import { WizardStar, WizardSvg } from '../../components';
+import { WizardSvg } from '../../components';
+import { useForm } from '../../contexts';
+import { wizardPages } from '../../utils/enums';
 
-import './styles.css';
+import './styles.scss';
 
-interface IProps {
-  firstName: string;
-  lastName: string;
-  preferredName: string;
-  phoneNumber: string;
-  setFirstName: Dispatch<SetStateAction<string>>;
-  setLastName: Dispatch<SetStateAction<string>>;
-  setPreferredName: Dispatch<SetStateAction<string>>;
-  setPhoneNumber: Dispatch<SetStateAction<string>>;
-}
+const Onboard1 = (): ReactElement => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [preferredName, setPreferredName] = useState('');
+  const [phone, setPhone] = useState('');
 
-/**
- * Builds and controls the form management for Onboard1 of the Onboarding Wizard
- *
- * @param {string} firstName the first name of the user being onboarded
- * @param {string} lastName the last name of the user being onboarded
- * @param {string} preferredName the preferred name of the user being onboarded
- * @param {string} phoneNumber the phone number of the user being onboarded
- * @param {Dispatch<SetStateAction<string>>} setFirstName React setter function to update first name
- * @param {Dispatch<SetStateAction<string>>} setLastName React setter function to update last name
- * @param {Dispatch<SetStateAction<string>>} setPreferredName React setter function to update preferred name
- * @param {Dispatch<SetStateAction<string>>} setPhoneNumber React setter function to update user phone number
- */
-const OnBoard1: FC<IProps> = ({
-  firstName,
-  lastName,
-  preferredName,
-  phoneNumber,
-  setFirstName,
-  setLastName,
-  setPreferredName,
-  setPhoneNumber,
-}): ReactElement => (
-  <div className="basic-info-wrapper">
-    <WizardSvg page="onboard1" />
-    <Form className="basic-info-form" size="huge">
-      <div className="btn-wrapper">
-        <div className="input-wrapper">
-          <div className="label">First Name</div>
-          <WizardStar />
-          <div className="input">
-            <Form.Input
-              required
-              defaultValue={firstName}
-              onChange={(e) => setFirstName(e.currentTarget.value)}
-              id="first-name"
-              focus
-              transparent
-              className="input-field"
-              error={firstName === ''}
-            />
+  const { formData, updateOnboardingData } = useForm();
+
+  const onSubmit = (): void => {
+    const data = {
+      firstName: firstName,
+      lastName: lastName,
+      preferredName: preferredName,
+      phone: phone,
+    };
+
+    updateOnboardingData(data, true);
+  };
+
+  return (
+    <Grid className="onboard1-wrapper" columns={2} padded doubling centered>
+      <Grid.Column textAlign="center">
+        <WizardSvg size="tiny" page={wizardPages.ONBOARD_1} />
+      </Grid.Column>
+      <Grid.Column stretched>
+        <Form id="onboard-1" onSubmit={onSubmit} size="small">
+          <div className="form-group">
+            <div className="input-group">
+              <Form.Input
+                onChange={(e, { value }) => setFirstName(value)}
+                label="First Name"
+                name="firstName"
+                required
+                placeholder="First Name..."
+                defaultValue={formData.firstName}
+              />
+              <Form.Input
+                onChange={(e, { value }) => setLastName(value)}
+                label="Last Name"
+                name="lastName"
+                required
+                placeholder="Last Name..."
+                defaultValue={formData.lastName}
+              />
+              <Form.Input
+                onChange={(e, { value }) => setPreferredName(value)}
+                label="Preferred Name"
+                placeholder="Preferred Name..."
+                defaultValue={formData.preferredName}
+              />
+              <Form.Input
+                onChange={(e, { value }) => setPhone(value)}
+                label="Phone"
+                name="phone"
+                required
+                placeholder="(123) 838-5466"
+                defaultValue={formData.phone}
+              />
+            </div>
           </div>
-        </div>
-        <div className="input-wrapper">
-          <div className="label">Last Name</div>
-          <WizardStar />
-          <div className="input">
-            <Form.Input
-              required
-              defaultValue={lastName}
-              onChange={(e) => setLastName(e.currentTarget.value)}
-              id="last-name"
-              focus
-              transparent
-              className="input-field"
-              error={lastName === ''}
-            />
-          </div>
-        </div>
-        <div className="input-wrapper">
-          <div className="label">Preferred Name</div>
-          <div className="input">
-            <Form.Input
-              defaultValue={preferredName}
-              onChange={(e) => setPreferredName(e.currentTarget.value)}
-              id="preferred-name"
-              focus
-              transparent
-              className="input-field"
-            />
-          </div>
-        </div>
-        <div className="input-wrapper">
-          <div className="label">Phone Number</div>
-          <WizardStar />
-          <div className="input">
-            <Form.Input
-              required
-              defaultValue={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.currentTarget.value)}
-              id="phone-number"
-              focus
-              transparent
-              className="input-field"
-              error={phoneNumber === ''}
-            />
-          </div>
-        </div>
-      </div>
-    </Form>
-  </div>
-);
+        </Form>
+      </Grid.Column>
+    </Grid>
+  );
+};
 
-export default OnBoard1;
+export default Onboard1;

@@ -1,4 +1,4 @@
-import { camelCase, startCase } from 'lodash';
+import { camelCase, isEmpty, startCase, toUpper } from 'lodash';
 import { FormEvent, Dispatch, SetStateAction } from 'react';
 import { DropdownItemProps } from 'semantic-ui-react';
 import { IUser, IPitch } from 'ssw-common';
@@ -47,11 +47,11 @@ const getPitchTeams = (pitch: IPitch): string[] => {
   const pitchTeams = Object.entries(pitch.teams);
 
   pitchTeams.forEach((team) => {
-    const teamName: string = team[0];
+    const teamName = team[0];
     const assignments = team[1];
 
     if (assignments.target > 0) {
-      teams.push(teamName.toUpperCase());
+      teams.push(toUpper(teamName));
     }
   });
 
@@ -84,9 +84,7 @@ const updateUserField = <T extends keyof IUser>(
  * @returns the profile picture
  */
 const getUserProfilePic = (user: IUser): string =>
-  user.profilePic !== null && user.profilePic !== undefined
-    ? user.profilePic
-    : DefaultProfile;
+  !isEmpty(user.profilePic) ? user.profilePic : DefaultProfile;
 
 const getUserFullName = (user: IUser): string =>
   `${user.preferredName ? user.preferredName : user.firstName} ${
@@ -102,7 +100,7 @@ const parseOptions = (options: string[]): DropdownItemProps[] =>
 
 const isPitchClaimed = (pitch: IPitch): boolean =>
   Object.entries(pitch.teams).every(
-    (team) => team[1].current === team[1].target,
+    ([, spots]) => spots.current === spots.target,
   );
 
 interface MapConversion<T, K> {
@@ -115,6 +113,8 @@ const convertMap = <T, K>(map: Map<T, K>): MapConversion<T, K>[] =>
 
 const titleCase = (str: string): string => startCase(camelCase(str));
 
+const defaultFunc = (): void => void 0;
+
 export {
   handleSelectGroupArray,
   getPitchTeams,
@@ -125,4 +125,5 @@ export {
   isPitchClaimed,
   convertMap,
   titleCase,
+  defaultFunc,
 };

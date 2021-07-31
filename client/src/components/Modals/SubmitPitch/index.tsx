@@ -90,9 +90,11 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
       return true;
     } else if (field instanceof Set && isEmpty(field)) {
       return true;
+    } else if (isEmpty(field)) {
+      return message;
     }
 
-    return message;
+    return false;
   };
 
   return (

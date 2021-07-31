@@ -35,6 +35,7 @@ const User = new mongoose.Schema({
   claimedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
   submittedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
   currentTeams: [{ type: String, default: null }],
+  involvementResponse: { type: String, default: null },
 
   role: {
     type: String,

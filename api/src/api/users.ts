@@ -92,7 +92,7 @@ router.post(
 // Updates a user
 router.put(
   '/:userId',
-  requireAdmin,
+  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     if (!isValidMongoId(req.params.userId)) {
       res.status(400).json({

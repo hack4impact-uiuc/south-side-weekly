@@ -13,6 +13,7 @@ const AuthContext = createContext<IAuthContext>({
   isLoading: false,
   isRegistered: false,
   logout: () => void 0,
+  register: () => void 0,
 });
 
 const useAuth = (): Readonly<IAuthContext> => useContext(AuthContext);

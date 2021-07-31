@@ -44,3 +44,19 @@ export const pages = {
   RESOURCES: 'RESOURCES',
   USERS: 'USERS',
 };
+
+export const rolesEnum = {
+  STAFF: 'STAFF',
+  CONTRIBUTOR: 'CONTRIBUTOR',
+  ADMIN: 'ADMIN',
+};
+
+export const wizardPages = {
+  INITIAL_PAGE: 'INITIAL PAGE',
+  ONBOARD_1: 'ONBOARD_1',
+  ONBOARD_2: 'ONBOARD_2',
+  ONBOARD_3: 'ONBOARD_3',
+  ONBOARD_4: 'ONBOARD_4',
+  ONBOARD_5: 'ONBOARD_5',
+  COMPLETION: 'COMPLETION',
+};

@@ -1,82 +1,35 @@
-import React, { ReactElement } from 'react';
-import { Button } from 'semantic-ui-react';
+import React, { ReactElement, useEffect } from 'react';
+import Swal from 'sweetalert2';
 
-import CompletionSVG from '../../assets/completion-page.svg';
-import './styles.css';
+import { Sidebar } from '../../components';
+import { useAuth } from '../../contexts';
 
-/**
- * Builds Completion page of the Onboarding Wizard
- */
-const Completion = (): ReactElement => {
-  // All of the resource buttons to show
-  const resourceBtns = [
-    {
-      buttonText: 'SSW Writer’s Guide',
-      link: 'https://southsideweekly.com/',
-      key: 0,
-    },
-    {
-      buttonText: 'Other Resource',
-      link: 'https://southsideweekly.com/',
-      key: 1,
-    },
-    {
-      buttonText: 'Other Resource',
-      link: 'https://southsideweekly.com/',
-      key: 2,
-    },
-    {
-      buttonText: 'Other Resource',
-      link: 'https://southsideweekly.com/',
-      key: 3,
-    },
-    {
-      buttonText: 'Other Resource',
-      link: 'https://southsideweekly.com/',
-      key: 4,
-    },
-    {
-      buttonText: 'Other Resource',
-      link: 'https://southsideweekly.com/',
-      key: 5,
-    },
-  ];
+import './styles.scss';
 
-  /**
-   * Opens a link in a new tab
-   *
-   * @param link the link to open in the new tab
-   */
-  const handleResourceClick = (link: string): void => {
-    window.open(link, '_blank');
-  };
+const Completition = (): ReactElement => {
+  const { register } = useAuth();
+
+  useEffect(() => {
+    Swal.fire({
+      title: 'Account created!',
+      icon: 'success',
+    });
+
+    register();
+  }, [register]);
 
   return (
-    <div className="completion-wrapper">
-      <img className="page-svg" alt="Completion Page" src={CompletionSVG} />
-      <div className="completion-content">
-        <div className="page-text">
-          Thank you for singing up and showing your interest in wanting to
-          become a Contributor for South Side Weekly. While you wait to be
-          Onboarded, please feel free to explore these resources.
-          <br />
-          <br />
-          We look forward to working with you!
-        </div>
-        <div className="resource-btn-group">
-          {resourceBtns.map((resourceBtn) => (
-            <Button
-              onClick={() => handleResourceClick(resourceBtn.link)}
-              className="resource-btn"
-              key={resourceBtn.key}
-            >
-              {resourceBtn.buttonText}
-            </Button>
-          ))}
-        </div>
+    <>
+      <Sidebar currentPage="" />
+      <div className="completition-wrapper">
+        Thank you for signing up and showing your interest in wanting to become
+        a Contributor for South Side Weekly. We look forward to working with
+        you!
+        <br />
+        Redirecting you shortly...
       </div>
-    </div>
+    </>
   );
 };
 
-export default Completion;
+export default Completition;

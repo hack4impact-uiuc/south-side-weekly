@@ -96,6 +96,14 @@ const Profile = (): ReactElement => {
 
     loadUser();
     loadCurrentUserPermissions();
+
+    return () => {
+      setUser(emptyUser);
+      setPermissions({
+        view: [],
+        edit: [],
+      });
+    };
   }, [userId]);
 
   /**

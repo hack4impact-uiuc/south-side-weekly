@@ -101,9 +101,7 @@ const ResourceModal: FC<ResourceProps> = ({
 
   const getSelectedTeams = (tag: string): Set<string> => {
     const tags = formData.tags;
-
     tags.has(tag) ? tags.delete(tag) : tags.add(tag);
-
     return tags;
   };
 

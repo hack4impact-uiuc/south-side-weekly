@@ -1,0 +1,29 @@
+@import '../../../styles/colors.scss';
+
+.page-counter {
+  position: absolute;
+  bottom: 2vh;
+  left: 0;
+  right: 0;
+  margin-right: auto;
+  margin-left: auto;
+  width: fit-content;
+
+  .button {
+    background-color: $primary;
+    color: $primary;
+    opacity: 0.8;
+
+    &:hover,
+    &:focus {
+      background-color: $primary !important;
+      color: $primary !important;
+    }
+  }
+
+  .active {
+    background-color: $primary !important;
+    color: $primary !important;
+    opacity: 1;
+  }
+}

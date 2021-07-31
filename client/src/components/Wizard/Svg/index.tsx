@@ -1,6 +1,5 @@
 import React, { FC, ReactElement } from 'react';
-
-import './styles.css';
+import { ImageProps } from 'semantic-ui-react';
 
 import RolePageSVG from '../../../assets/role-page.svg';
 import BasicInfoSvg from '../../../assets/basic-info.svg';
@@ -8,53 +7,35 @@ import PersonalInfoSvg from '../../../assets/personal-information.svg';
 import InvolvementSVG from '../../../assets/involvement-page.svg';
 import TasksSVG from '../../../assets/tasks.svg';
 import ScheduleSVG from '../../../assets/schedule.svg';
+import { wizardPages } from '../../../utils/enums';
 
-interface IProps {
+import './styles.scss';
+
+interface SvgProps extends ImageProps {
   page: string;
 }
 
-/**
- * Returns the corresponding svg for the page
- *
- * @param {string} page the current page
- */
-const WizardSvg: FC<IProps> = ({ page }): ReactElement => {
-  const getSvg = (): ReactElement => {
+const WizardSvg: FC<SvgProps> = ({ page, ...rest }): ReactElement => {
+  const attributes = (): ImageProps => {
     switch (page) {
-      case 'onboard0':
-        return <img className="page-image" src={RolePageSVG} alt="role page" />;
-      case 'onboard1':
-        return (
-          <img
-            className="basic-info-image page-svg"
-            alt="info-graphic"
-            src={BasicInfoSvg}
-          />
-        );
-      case 'onboard2':
-        return (
-          <img
-            className="svg page-svg"
-            src={PersonalInfoSvg}
-            alt="personal information"
-          />
-        );
-      case 'onboard3':
-        return <img className="page-svg" alt="tasks svg" src={TasksSVG} />;
-      case 'onboard4':
-        return (
-          <img alt="Involvement" className="page-svg" src={InvolvementSVG} />
-        );
-      case 'onboard5':
-        return (
-          <img className="page-svg" alt="schedule svg" src={ScheduleSVG} />
-        );
+      case wizardPages.INITIAL_PAGE:
+        return { src: RolePageSVG, alt: 'role page' };
+      case wizardPages.ONBOARD_1:
+        return { src: BasicInfoSvg, alt: 'info-graphic' };
+      case wizardPages.ONBOARD_2:
+        return { src: PersonalInfoSvg, alt: 'personal info' };
+      case wizardPages.ONBOARD_3:
+        return { src: TasksSVG, alt: 'role page' };
+      case wizardPages.ONBOARD_4:
+        return { src: InvolvementSVG, alt: 'role page' };
+      case wizardPages.ONBOARD_5:
+        return { src: ScheduleSVG, alt: 'role page' };
       default:
-        return <></>;
+        return {};
     }
   };
 
-  return getSvg();
+  return <img alt="temp" {...attributes()} {...rest} />;
 };
 
 export default WizardSvg;

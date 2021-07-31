@@ -57,6 +57,7 @@ const emptyUser: IUser = {
   portfolio: '',
   linkedIn: '',
   twitter: '',
+  involvementResponse: '',
   claimedPitches: [''],
   submittedPitches: [''],
   currentTeams: [''],
