@@ -7,15 +7,12 @@ import cookieSession from 'cookie-session';
 import passport from 'passport';
 import apiRoutes from './api';
 import { errorHandler } from './middleware';
-import path from 'path';
 
 const app = express();
 
 app.use(helmet());
 if (process.env.NODE_ENV !== 'production') {
   app.use(cors({ origin: /localhost:\d{4}/, credentials: true }));
-} else {
-  app.use(cors({ credentials: true }));
 }
 
 app.use(logger('dev'));
@@ -23,17 +20,15 @@ app.use(logger('dev'));
 app.use(express.json({ limit: '2.1mb' }));
 app.use(express.urlencoded({ limit: '2.1mb', extended: false }));
 
-app.use(express.static(path.join(__dirname, 'build')))
-
 // Session support
 const sessionConfig = {
   secure: false,
   keys: [process.env.SESS_SECRET],
 };
-// if (process.env.NODE_ENV === 'production') {
-//   app.set('trust proxy', 1);
-//   sessionConfig.secure = true;
-// }
+if (process.env.NODE_ENV === 'production') {
+  app.set('trust proxy', 1);
+  sessionConfig.secure = true;
+}
 app.use(cookieSession(sessionConfig));
 
 // Mongo setup
@@ -46,10 +41,7 @@ app.use(passport.session());
 
 // Routes
 app.use('/api', apiRoutes);
-// app.get('/', (req: Request, res: Response) => res.json('API working!'));
-app.get('/api', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'))
-})
+app.get('/', (req: Request, res: Response) => res.json('API working!'));
 app.get('/favicon.ico', (req: Request, res: Response) => res.status(204));
 
 app.use(function (req: Request, res: Response, next) {
