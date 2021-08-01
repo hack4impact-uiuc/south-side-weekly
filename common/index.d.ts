@@ -31,11 +31,11 @@ export interface IUser {
  * Interface for a Pitch Schema.
  */
 export interface IPitch {
-  name: string;
   _id: string;
-  pitchAuthor: string;
-  pitchDescription: string;
-  pitchStatus: string;
+  title: string;
+  author: string;
+  description: string;
+  status: string;
   assignmentStatus: string;
   assignmentGoogleDocLink: string;
   assignmentContributors: [string];

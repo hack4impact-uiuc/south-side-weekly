@@ -48,11 +48,11 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
 
     if (!isInvalidForm()) {
       const body = {
-        name: title,
-        pitchAuthor: user._id,
+        title: title,
+        author: user._id,
         assignmentGoogleDocLink: link,
-        pitchStatus: 'PENDING',
-        pitchDescription: description,
+        status: 'PENDING',
+        description: description,
         topics: Array.from(topics),
       };
 

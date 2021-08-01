@@ -11,14 +11,14 @@ import {
  * Mongoose Schema to represent a Pitch at South Side Weekly
  */
 const Pitch = new mongoose.Schema({
-  name: { type: String, default: null, required: true },
-  pitchAuthor: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  pitchStatus: {
+  title: { type: String, default: null, required: true },
+  author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  status: {
     type: String,
     enum: Object.values(pitchStatusEnum),
     default: pitchStatusEnum.NONE,
   },
-  pitchDescription: { type: String, default: null, required: true },
+  description: { type: String, default: null, required: true },
   assignmentStatus: {
     type: String,
     enum: Object.values(assignmentStatusEnum),

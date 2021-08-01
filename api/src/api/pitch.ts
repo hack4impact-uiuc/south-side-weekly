@@ -28,7 +28,7 @@ router.get(
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     const pitches = await Pitch.find({
-      pitchStatus: pitchStatusEnum.PENDING,
+      status: pitchStatusEnum.PENDING,
     });
 
     res.status(200).json({
@@ -47,7 +47,7 @@ router.get(
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     const pitches = await Pitch.find({
-      pitchStatus: pitchStatusEnum.APPROVED,
+      status: pitchStatusEnum.APPROVED,
     });
     const status = req.query.status;
 

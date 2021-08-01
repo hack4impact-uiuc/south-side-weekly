@@ -30,9 +30,9 @@ const PitchCard: FC<IProps> = ({ pitch, ...rest }): ReactElement => {
     <Card className="pitch-card" {...rest}>
       <Card.Content>
         <div>
-          <p>{pitch.name}</p>
+          <p>{pitch.title}</p>
           <Card.Description>
-            <p>{formatDescription(pitch.pitchDescription)}</p>
+            <p>{formatDescription(pitch.description)}</p>
           </Card.Description>
           <div className="topics">
             {pitch.topics.map((topic, index) => (

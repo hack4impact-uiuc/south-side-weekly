@@ -68,10 +68,10 @@ const emptyUser: IUser = {
 
 const emptyPitch: IPitch = {
   _id: '',
-  name: '',
-  pitchAuthor: '',
-  pitchStatus: '',
-  pitchDescription: '',
+  title: '',
+  author: '',
+  status: '',
+  description: '',
   assignmentStatus: '',
   assignmentGoogleDocLink: '',
   assignmentContributors: [''],

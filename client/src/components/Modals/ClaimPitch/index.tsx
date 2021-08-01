@@ -57,16 +57,16 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
   const { user } = useAuth();
 
   const getAuthor = useCallback(async (): Promise<void> => {
-    if (isEmpty(pitch.pitchAuthor)) {
+    if (isEmpty(pitch.author)) {
       return;
     }
 
-    const res = await getUser(pitch.pitchAuthor);
+    const res = await getUser(pitch.author);
 
     if (!isError(res)) {
       setAuthor(getUserFullName(res.data.result));
     }
-  }, [pitch.pitchAuthor]);
+  }, [pitch.author]);
 
   const getApprover = useCallback(async (): Promise<void> => {
     if (isEmpty(pitch.approvedBy)) {
@@ -188,7 +188,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     >
       <Modal.Header content={getHeader()} />
       <Modal.Content>
-        <h1>{pitch.name}</h1>
+        <h1>{pitch.title}</h1>
         <Grid className="topics-section" columns={6}>
           {pitch.topics.map((topic, index) => (
             <Grid.Column key={index}>
@@ -204,7 +204,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
             <h3>{`Reviewed by: ${approver}`}</h3>
           </div>
         </div>
-        <p className="description">{pitch.pitchDescription}</p>
+        <p className="description">{pitch.description}</p>
         <p>
           Link to Pitch:{' '}
           <a href={pitch.assignmentGoogleDocLink}>
