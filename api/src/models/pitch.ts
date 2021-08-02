@@ -1,11 +1,13 @@
-import mongoose, { Schema } from 'mongoose';
-import { IPitch } from '../types';
+import mongoose, { Document, Schema } from 'mongoose';
+import { IPitch } from 'ssw-common';
 
 import {
   interestsEnum,
   pitchStatusEnum,
   assignmentStatusEnum,
 } from '../utils/enums';
+
+export type PitchSchema = IPitch & Document<any>;
 
 /**
  * Mongoose Schema to represent a Pitch at South Side Weekly
@@ -66,4 +68,4 @@ const Pitch = new mongoose.Schema({
   deadline: { type: Date, default: null },
 });
 
-export default mongoose.model<IPitch>('Pitch', Pitch);
+export default mongoose.model<PitchSchema>('Pitch', Pitch);

@@ -1,4 +1,5 @@
-import mongoose, { Schema } from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
+import { IUser } from 'ssw-common';
 
 import {
   interestsEnum,
@@ -6,7 +7,8 @@ import {
   rolesEnum,
   racesEnum,
 } from '../utils/enums';
-import { IUser } from '../types';
+
+type UserSchema = IUser & Document<any>;
 
 /**
  * Mongoose Schema to represent a User at South Side Weekly.
@@ -60,4 +62,4 @@ const User = new mongoose.Schema({
   ],
 });
 
-export default mongoose.model<IUser>('User', User);
+export default mongoose.model<UserSchema>('User', User);

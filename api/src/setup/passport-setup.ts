@@ -2,10 +2,11 @@ import {
   Strategy as GoogleStrategy,
   VerifyCallback,
 } from 'passport-google-oauth20';
+import { IUser } from 'ssw-common';
 import passport from 'passport';
+
 import User from '../models/user';
-import { IUser } from '../types';
-import { rolesEnum } from './enums';
+import { rolesEnum } from '../utils/enums';
 
 passport.serializeUser((user: IUser, done) => {
   done(null, user._id);

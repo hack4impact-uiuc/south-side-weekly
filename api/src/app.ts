@@ -32,10 +32,10 @@ if (process.env.NODE_ENV === 'production') {
 app.use(cookieSession(sessionConfig));
 
 // Mongo setup
-require('./utils/mongo-setup');
+require('./setup/mongo-setup');
 
 // Passport setup
-require('./utils/passport-setup');
+require('./setup/passport-setup');
 app.use(passport.initialize());
 app.use(passport.session());
 
