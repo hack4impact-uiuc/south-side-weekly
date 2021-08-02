@@ -70,6 +70,7 @@ export interface IPitch {
   approvedBy: string;
   similarStories: [string];
   deadline: Date;
+  conflictOfInterest: boolean;
 }
 
 /**

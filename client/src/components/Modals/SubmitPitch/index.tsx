@@ -56,6 +56,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
         status: 'PENDING',
         description: description,
         topics: Array.from(topics),
+        conflictOfInterest: conflictofInterest!,
       };
 
       const res = await createPitch({ ...body });

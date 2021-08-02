@@ -13,6 +13,7 @@ import {
 const Pitch = new mongoose.Schema({
   title: { type: String, default: null, required: true },
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  conflictOfInterest: { type: Boolean, required: true },
   status: {
     type: String,
     enum: Object.values(pitchStatusEnum),

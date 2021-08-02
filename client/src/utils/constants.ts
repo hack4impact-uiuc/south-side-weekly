@@ -70,6 +70,7 @@ const emptyPitch: IPitch = {
   _id: '',
   title: '',
   author: '',
+  conflictOfInterest: false,
   status: '',
   description: '',
   assignmentStatus: '',

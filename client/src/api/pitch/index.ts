@@ -53,7 +53,7 @@ const getPendingContributorPitches = async (): Promise<Pitches> =>
   );
 
 const createPitch = async (newPitch: {
-  [key: string]: number | string | string[];
+  [key: string]: number | string | string[] | boolean;
 }): Promise<Response<PitchResponse>> =>
   await post(PITCH_ENDPOINT, newPitch, 'CREATE_PITCH_FAIL');
 
