@@ -72,7 +72,6 @@ const PitchDoc = (): ReactElement => {
     const res = await getApprovedPitches();
 
     if (!isError(res)) {
-      console.log(res.data.result);
       setApproved(res.data.result);
     }
   };
@@ -81,7 +80,6 @@ const PitchDoc = (): ReactElement => {
     const res = await getUnclaimedPitches();
 
     if (!isError(res)) {
-      console.log(res.data.result);
       setUnclaimed(res.data.result);
       setCurrentPitches(res.data.result);
       setFilteredPitches(res.data.result);
@@ -92,7 +90,6 @@ const PitchDoc = (): ReactElement => {
     const res = await getPitchesPendingApproval();
 
     if (!isError(res)) {
-      console.log(res.data.result);
       setPendingApprovals(res.data.result);
     }
   };
@@ -101,7 +98,6 @@ const PitchDoc = (): ReactElement => {
     const res = await getPendingContributorPitches();
 
     if (!isError(res)) {
-      console.log(res.data.result);
       setPendingClaims(res.data.result);
     }
   };

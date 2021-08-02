@@ -92,7 +92,6 @@ const Onboard3 = (): ReactElement => {
   };
 
   const handleTeams = (team: string): void => {
-    console.log('here');
     if (!teams.has(team) && teams.size === 2) {
       Swal.fire({
         title: 'Please select a maximum of 2 teams!',

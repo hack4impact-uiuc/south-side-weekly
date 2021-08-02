@@ -24,7 +24,9 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
   const [description, setDescription] = useState('');
   const [link, setLink] = useState('');
   const [topics, setTopics] = useState(new Set<string>());
-  const [conflictofInterest, setConflictOfInterest] = useState<boolean>();
+  const [conflictofInterest, setConflictOfInterest] = useState<
+    boolean | undefined
+  >(undefined);
   const [didSubmit, setDidSubmit] = useState(false);
 
   const { user } = useAuth();
@@ -70,18 +72,10 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
   const isInvalidForm = (): boolean =>
     [title, description, link, topics].some(isEmpty) ||
     isUndefined(conflictofInterest);
-  interface FieldError {
-    content: string;
-    pointing: 'left' | 'above' | 'below' | 'right';
-  }
+
   const isFieldError = (
     field: string | Set<string> | boolean | undefined,
-  ): FieldError | boolean => {
-    const message: FieldError = {
-      content: 'You must fill out this field',
-      pointing: 'above',
-    };
-
+  ): boolean => {
     if (!didSubmit) {
       return false;
     }
@@ -90,8 +84,6 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
       return true;
     } else if (field instanceof Set && isEmpty(field)) {
       return true;
-    } else if (isEmpty(field)) {
-      return message;
     }
 
     return false;
@@ -108,7 +100,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
     >
       <Modal.Header content="Submit a pitch" />
       <Modal.Content>
-        <Form>
+        <Form id="submit-pitch" onSubmit={submitPitch}>
           <Form.Group widths="equal">
             <Form.Input
               required
@@ -177,9 +169,9 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
         <Modal.Actions>
           <Button
             type="submit"
-            onClick={submitPitch}
             content="Submit pitch for review"
             positive
+            form="submit-pitch"
           />
         </Modal.Actions>
       </Modal.Content>
