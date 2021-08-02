@@ -70,6 +70,31 @@ router.get('/login', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get(
+  '/redirectURI',
+  (req: Request<unknown, unknown, unknown, IQuery>, res: Response) => {
+    try {
+      const { state } = req.query;
+      const { callbackUrl } = JSON.parse(
+        Buffer.from(state, 'base64').toString(),
+      );
+
+      if (typeof callbackUrl === 'string') {
+        // Reconstruct the URL and redirect
+        const callbackURL = `${callbackUrl}?${req._parsedUrl.query}`;
+        res.redirect(callbackURL);
+      }
+      // There was no base
+      res.redirect(CALLBACK_ROUTE);
+    } catch (e) {
+      res.status(400).json({
+        message: 'Something went wrong with redirection',
+        success: false,
+      });
+    }
+  },
+);
+
+router.get(
   '/google/callback',
   (
     req: Request<unknown, unknown, unknown, IQuery>,

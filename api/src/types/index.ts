@@ -7,5 +7,8 @@ import { IUser } from 'ssw-common';
 declare module 'express-serve-static-core' {
   interface Request {
     user?: IUser;
+    _parsedUrl: {
+      query: any;
+    };
   }
 }
