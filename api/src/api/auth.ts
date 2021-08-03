@@ -82,9 +82,11 @@ router.get(
         // Reconstruct the URL and redirect
         const callbackURL = `${callbackUrl}?${req._parsedUrl.query}`;
         res.redirect(callbackURL);
+        return;
       }
       // There was no base
       res.redirect(CALLBACK_ROUTE);
+      return;
     } catch (e) {
       res.status(400).json({
         message: 'Something went wrong with redirection',
