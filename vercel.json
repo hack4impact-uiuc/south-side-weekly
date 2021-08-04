@@ -28,7 +28,7 @@
       "headers": { "cache-control": "s-maxage=31536000, immutable" },
       "dest": "client/static/$1"
     },
-    { "src": "/favicon.ico", "dest": "client/favicon.ico" },
+    { "src": "/ssw-favicon.ico", "dest": "client/ssw-favicon.ico" },
     {
       "src": "/asset-manifest.json",
       "dest": "client/asset-manifest.json"

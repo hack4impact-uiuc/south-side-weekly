@@ -42,7 +42,7 @@ app.use(passport.session());
 // Routes
 app.use('/api', apiRoutes);
 app.get('/', (req: Request, res: Response) => res.json('API working!'));
-app.get('/favicon.ico', (req: Request, res: Response) => res.status(204));
+app.get('/ssw-favicon.ico', (req: Request, res: Response) => res.status(204));
 
 app.use(function (req: Request, res: Response, next) {
   next(createError(404));

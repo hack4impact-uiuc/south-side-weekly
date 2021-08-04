@@ -22,11 +22,10 @@ const Completion = (): ReactElement => {
     <>
       <Sidebar currentPage="" />
       <div className="completition-wrapper">
-        Thank you for signing up and showing your interest in wanting to become
-        a Contributor for South Side Weekly. We look forward to working with
-        you!
-        <br />
-        Redirecting you shortly...
+        Thank you for signing up and showing your interest in wanting to to
+        contribute to South Side Weekly. We look forward to working with you! If
+        you are a staff member, your request will be approved shortly by an
+        admin. Until then, you will have contributor priviledges!
       </div>
     </>
   );
