@@ -1,9 +1,6 @@
 @import '../../styles/colors.scss';
 
 .pitch-doc-wrapper {
-  width: 80%;
-  margin-left: 15rem;
-
   .search-add-wrapper {
     position: relative;
     display: flex;
@@ -39,5 +36,6 @@
     margin: 20px 0px 20px 0px;
     display: flex;
     flex-wrap: wrap;
+    justify-content: space-evenly;
   }
 }

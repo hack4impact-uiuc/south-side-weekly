@@ -4,9 +4,8 @@ import { IResource } from 'ssw-common';
 import Swal from 'sweetalert2';
 
 import { deleteResource, getAllResources, isError } from '../../api';
-import { ResourceModal, Header, Sidebar, AdminView } from '../../components';
+import { ResourceModal, AdminView } from '../../components';
 import { allTeams } from '../../utils/constants';
-import { pages } from '../../utils/enums';
 import { titleCase } from '../../utils/helpers';
 
 import './styles.scss';
@@ -84,8 +83,6 @@ const Resources = (): ReactElement => {
 
   return (
     <>
-      <Header />
-      <Sidebar currentPage={pages.RESOURCES} />
       <ResourceModal
         closeModal={closeModal}
         resource={modal.resource}

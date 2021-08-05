@@ -28,6 +28,7 @@
 
       &.email {
         text-transform: lowercase !important;
+        word-wrap: break-word;
       }
     }
 
@@ -39,6 +40,7 @@
 
     .list-header {
       font-weight: normal !important;
+      text-align: center;
     }
 
     .modal-label {

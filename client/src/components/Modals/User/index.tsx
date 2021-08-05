@@ -1,17 +1,12 @@
-import React, { ReactElement, FC } from 'react';
+import React, { ReactElement, FC, useState } from 'react';
 import { toLower } from 'lodash';
-import {
-  Button,
-  Grid,
-  Icon,
-  Image,
-  Modal,
-  ModalProps,
-} from 'semantic-ui-react';
+import { Button, Grid, Icon, Modal, ModalProps } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import FieldTag from '../../FieldTag';
-import { getUserFullName, getUserProfilePic } from '../../../utils/helpers';
+import { getUserFullName } from '../../../utils/helpers';
+import UserCard from '../../UserCard';
+import UserPicture from '../../UserPicture';
 
 import './styles.scss';
 
@@ -20,22 +15,26 @@ interface UserModalProps extends ModalProps {
 }
 
 const UserModal: FC<UserModalProps> = ({ user, ...rest }): ReactElement => {
+  const [isOpen, setIsOpen] = useState(false);
+
   const openUserProfile = (): void =>
     window.open(`/profile/${user._id}`)!.focus();
 
   return (
-    <Modal className="user-modal" {...rest}>
+    <Modal
+      open={isOpen}
+      onOpen={() => setIsOpen(true)}
+      onClose={() => setIsOpen(false)}
+      trigger={<UserCard user={user} />}
+      className="user-modal"
+      {...rest}
+    >
       <Modal.Header>View User</Modal.Header>
       <Modal.Content image>
         <Grid columns="equal" padded stackable>
           <Grid.Column verticalAlign="middle">
             <Grid.Row>
-              <Image
-                circular
-                size="small"
-                src={getUserProfilePic(user)}
-                alt={getUserFullName(user)}
-              />
+              <UserPicture size="small" user={user} />
             </Grid.Row>
             <Grid.Row>
               <Button icon className="profile-button" onClick={openUserProfile}>

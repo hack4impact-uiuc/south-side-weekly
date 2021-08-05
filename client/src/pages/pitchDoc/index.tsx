@@ -17,9 +17,7 @@ import {
   isError,
 } from '../../api';
 import {
-  Header,
   PitchCard,
-  Sidebar,
   SubmitPitchModal,
   StaffView,
   AdminView,
@@ -28,7 +26,6 @@ import {
 } from '../../components';
 import { useAuth } from '../../contexts';
 import { allInterests, allTeams } from '../../utils/constants';
-import { pages } from '../../utils/enums';
 import { parseOptions } from '../../utils/helpers';
 
 import {
@@ -196,116 +193,110 @@ const PitchDoc = (): ReactElement => {
   };
 
   return (
-    <>
-      <Header />
-      <Sidebar currentPage={pages.PITCHES} />
-      <div className="pitch-doc-wrapper">
-        <h1>Pitch Doc</h1>
-        <Menu className="tab-menu" tabular size="large">
+    <div className="pitch-doc-wrapper">
+      <h1>Pitch Doc</h1>
+      <Menu className="tab-menu" tabular size="large">
+        <Menu.Item
+          name={TABS.UNCLAIMED}
+          active={TABS.UNCLAIMED === currentTab}
+          onClick={(e, { name }) => setCurrentTab(name!)}
+        />
+
+        <StaffView>
           <Menu.Item
-            name={TABS.UNCLAIMED}
-            active={TABS.UNCLAIMED === currentTab}
+            name={TABS.PITCH_APPROVAL}
+            active={TABS.PITCH_APPROVAL === currentTab}
             onClick={(e, { name }) => setCurrentTab(name!)}
           />
+        </StaffView>
 
-          <StaffView>
-            <Menu.Item
-              name={TABS.PITCH_APPROVAL}
-              active={TABS.PITCH_APPROVAL === currentTab}
-              onClick={(e, { name }) => setCurrentTab(name!)}
-            />
-          </StaffView>
-
+        <Menu.Item
+          name={TABS.APPROVED}
+          active={TABS.APPROVED === currentTab}
+          onClick={(e, { name }) => setCurrentTab(name!)}
+        />
+        <AdminView>
           <Menu.Item
-            name={TABS.APPROVED}
-            active={TABS.APPROVED === currentTab}
+            name={TABS.CLAIM_APPROVAL}
+            active={TABS.CLAIM_APPROVAL === currentTab}
             onClick={(e, { name }) => setCurrentTab(name!)}
           />
-          <AdminView>
-            <Menu.Item
-              name={TABS.CLAIM_APPROVAL}
-              active={TABS.CLAIM_APPROVAL === currentTab}
-              onClick={(e, { name }) => setCurrentTab(name!)}
-            />
-          </AdminView>
-        </Menu>
-        <div className="search-add-wrapper">
-          <Input
-            value={query}
-            onChange={(e, { value }) => setQuery(value)}
-            fluid
-            placeholder="Search..."
-            icon="search"
-            iconPosition="left"
-            className="search"
-          />
-          <SubmitPitchModal
-            callback={() => callback('Successfully Submitted Pitch')}
-          />
-        </div>
-
-        <div className="filters">
-          <div>
-            <h3>Filters: </h3>
-          </div>
-          <div className="wrapper">
-            <FilterDropdown
-              text="Date Joined"
-              options={parseOptions(dateOptions)}
-              onChange={determineSort}
-            />
-          </div>
-          <div className="wrapper">
-            <FilterDropdown
-              text="Topics of Interest"
-              options={parseOptions(allInterests)}
-              onChange={(e, { value }) => setInterests(toArray(value))}
-              multiple
-            />
-          </div>
-          <div className="wrapper">
-            <FilterDropdown
-              text="Teams"
-              options={parseOptions(allTeams)}
-              onChange={(e, { value }) => setTeams(toArray(value))}
-              multiple
-            />
-          </div>
-          {isEqual(currentTab, TABS.APPROVED) && (
-            <div className="wrapper">
-              <FilterDropdown
-                text="Claim Status"
-                options={parseOptions(['Claimed', 'Unclaimed'])}
-                onChange={(e, { value }) => setClaimStatus(toString(value))}
-              />
-            </div>
-          )}
-        </div>
-        <div className="pitch-doc">
-          {filteredPitches.map((pitch, index) => {
-            if (currentTab === TABS.UNCLAIMED) {
-              return (
-                <ClaimPitchModal
-                  callback={() =>
-                    callback(
-                      'Successfully submitted your claim for this pitch!',
-                    )
-                  }
-                  key={index}
-                  pitch={pitch}
-                />
-              );
-            } else if (currentTab === TABS.PITCH_APPROVAL) {
-              return <PitchCard key={index} pitch={pitch} />;
-            } else if (currentTab === TABS.CLAIM_APPROVAL) {
-              return <PitchCard key={index} pitch={pitch} />;
-            } else if (currentTab === TABS.APPROVED) {
-              return <PitchCard key={index} pitch={pitch} />;
-            }
-          })}
-        </div>
+        </AdminView>
+      </Menu>
+      <div className="search-add-wrapper">
+        <Input
+          value={query}
+          onChange={(e, { value }) => setQuery(value)}
+          fluid
+          placeholder="Search..."
+          icon="search"
+          iconPosition="left"
+          className="search"
+        />
+        <SubmitPitchModal
+          callback={() => callback('Successfully Submitted Pitch')}
+        />
       </div>
-    </>
+
+      <div className="filters">
+        <div>
+          <h3>Filters: </h3>
+        </div>
+        <div className="wrapper">
+          <FilterDropdown
+            text="Date Joined"
+            options={parseOptions(dateOptions)}
+            onChange={determineSort}
+          />
+        </div>
+        <div className="wrapper">
+          <FilterDropdown
+            text="Topics of Interest"
+            options={parseOptions(allInterests)}
+            onChange={(e, { value }) => setInterests(toArray(value))}
+            multiple
+          />
+        </div>
+        <div className="wrapper">
+          <FilterDropdown
+            text="Teams"
+            options={parseOptions(allTeams)}
+            onChange={(e, { value }) => setTeams(toArray(value))}
+            multiple
+          />
+        </div>
+        {isEqual(currentTab, TABS.APPROVED) && (
+          <div className="wrapper">
+            <FilterDropdown
+              text="Claim Status"
+              options={parseOptions(['Claimed', 'Unclaimed'])}
+              onChange={(e, { value }) => setClaimStatus(toString(value))}
+            />
+          </div>
+        )}
+      </div>
+      <div className="pitch-doc">
+        {filteredPitches.map((pitch, index) => {
+          if (currentTab === TABS.UNCLAIMED) {
+            return (
+              <ClaimPitchModal
+                callback={() =>
+                  callback('Successfully submitted your claim for this pitch!')
+                }
+                key={index}
+                pitch={pitch}
+              />
+            );
+          } else if (currentTab === TABS.PITCH_APPROVAL) {
+            return <PitchCard key={index} pitch={pitch} />;
+          } else if (currentTab === TABS.CLAIM_APPROVAL) {
+            return <PitchCard key={index} pitch={pitch} />;
+          } else if (currentTab === TABS.APPROVED) {
+            return <PitchCard key={index} pitch={pitch} />;
+          }
+        })}
+      </div>
+    </div>
   );
 };
 

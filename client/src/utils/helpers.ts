@@ -1,38 +1,7 @@
 import { AsYouType } from 'libphonenumber-js';
-import { camelCase, isEmpty, startCase, toUpper } from 'lodash';
-import { FormEvent, Dispatch, SetStateAction } from 'react';
+import { camelCase, isUndefined, reject, startCase, toUpper } from 'lodash';
 import { DropdownItemProps } from 'semantic-ui-react';
 import { IUser, IPitch } from 'ssw-common';
-
-import DefaultProfile from '../assets/default_profile.png';
-
-/**
- * Adds selected element to the specific form array if it isn't already there, otherwise removes it
- *
- * @param e the MouseEvent of clicking the select button
- * @param selectedArray the selected array to check from
- * @param setArray React setter for the selected array
- */
-const handleSelectGroupArray = (
-  e: FormEvent<HTMLInputElement>,
-  selectedArray: string[],
-  setArray: Dispatch<SetStateAction<string[]>>,
-): void => {
-  const notFoundIdx = -1;
-  const elementIdx = selectedArray.indexOf(e.currentTarget.value);
-
-  if (elementIdx === notFoundIdx) {
-    const addedElements = selectedArray.concat(e.currentTarget.value);
-
-    setArray(addedElements);
-  } else {
-    const removedElements = selectedArray.filter(
-      (element) => element !== e.currentTarget.value,
-    );
-
-    setArray(removedElements);
-  }
-};
 
 /**
  * Gets all of the teams associated with a pitch
@@ -77,16 +46,6 @@ const updateUserField = <T extends keyof IUser>(
   return userCopy;
 };
 
-/**
- * Determines a user's profile picture and returns the Default Profile
- * picture if user has none
- *
- * @param user the user to get the profile picture of
- * @returns the profile picture
- */
-const getUserProfilePic = (user: IUser): string =>
-  !isEmpty(user.profilePic) ? user.profilePic : DefaultProfile;
-
 const getUserFullName = (user: IUser): string =>
   `${user.preferredName ? user.preferredName : user.firstName} ${
     user.lastName
@@ -123,11 +82,17 @@ const formatNumber = (value: string): string => {
   return new AsYouType('US').input(value);
 };
 
+const classNames = (classNames: (string | undefined)[]): string => {
+  const parsed = reject(classNames, isUndefined);
+  return parsed.join(' ');
+};
+
+const openProfile = (user: IUser): void =>
+  window.open(`/profile/${user._id}`)!.focus();
+
 export {
-  handleSelectGroupArray,
   getPitchTeams,
   updateUserField,
-  getUserProfilePic,
   getUserFullName,
   parseOptions,
   isPitchClaimed,
@@ -135,4 +100,6 @@ export {
   titleCase,
   defaultFunc,
   formatNumber,
+  classNames,
+  openProfile,
 };

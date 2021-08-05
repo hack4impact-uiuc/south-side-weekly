@@ -1,5 +1,7 @@
 import { IPitch, IUser } from 'ssw-common';
 
+import { wizardPages } from './enums';
+
 const allInterests = [
   'POLITICS',
   'EDUCATION',
@@ -38,6 +40,19 @@ const allRaces = [
   'WHITE',
   'ASIAN',
   'OTHER',
+];
+
+const staffPages = [
+  wizardPages.ONBOARD_1,
+  wizardPages.ONBOARD_2,
+  wizardPages.ONBOARD_3,
+];
+const contributorPages = [
+  wizardPages.ONBOARD_1,
+  wizardPages.ONBOARD_2,
+  wizardPages.ONBOARD_3,
+  wizardPages.ONBOARD_4,
+  wizardPages.ONBOARD_5,
 ];
 
 const emptyUser: IUser = {
@@ -118,4 +133,6 @@ export {
   allRaces,
   emptyUser,
   emptyPitch,
+  staffPages,
+  contributorPages,
 };

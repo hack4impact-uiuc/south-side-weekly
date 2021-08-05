@@ -4,7 +4,10 @@ body {
   margin: 0 !important;
   padding: 0 !important;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f6f7fb;
+  background-color: $mainBackground;
+
+  // Forces the sroll bar at ALL times to prevent div jumping
+  overflow-y: scroll;
 }
 
 /* SSW Header Logo Styling */

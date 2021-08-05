@@ -37,14 +37,6 @@ export const teamEnum = {
   WRITING: 'WRITING',
 };
 
-export const pages = {
-  HOME: 'HOME',
-  PROFILE: 'PROFILE',
-  PITCHES: 'PITCHES',
-  RESOURCES: 'RESOURCES',
-  USERS: 'USERS',
-};
-
 export const rolesEnum = {
   STAFF: 'STAFF',
   CONTRIBUTOR: 'CONTRIBUTOR',

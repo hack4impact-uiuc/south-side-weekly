@@ -1,8 +1,9 @@
-import React, { FC, useEffect } from 'react';
+import React, { FC, useEffect, createElement } from 'react';
 import { Route, RouteProps, useHistory, useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 import { useAuth, useForm } from '../../contexts';
+import Page from '../Page';
 
 const PrivateRoute: FC<RouteProps> = ({ ...routeProps }) => {
   const { isAuthenticated, isLoading, isRegistered } = useAuth();
@@ -25,6 +26,7 @@ const PrivateRoute: FC<RouteProps> = ({ ...routeProps }) => {
         title: 'You have already created an account!',
         icon: 'info',
       });
+
       history.push('/resources');
     }
   }, [
@@ -40,7 +42,10 @@ const PrivateRoute: FC<RouteProps> = ({ ...routeProps }) => {
     <Route
       exact={routeProps.exact}
       path={routeProps.path}
-      render={(props) => React.createElement(routeProps.component!, props)}
+      render={(props) => {
+        const page = createElement(routeProps.component!, props);
+        return <Page>{page}</Page>;
+      }}
     />
   );
 };

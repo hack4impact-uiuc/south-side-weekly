@@ -29,7 +29,7 @@ ReactDOM.render(
         <Router>
           <Switch>
             <Route exact path="/">
-              <Redirect to="homepage" />
+              <Redirect to="/login" />
             </Route>
             <PrivateRoute exact path="/pitches" component={PitchDoc} />
             <PrivateRoute exact path="/resources" component={Resources} />

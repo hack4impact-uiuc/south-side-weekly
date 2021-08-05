@@ -3,7 +3,7 @@ import { Button } from 'semantic-ui-react';
 
 import { Header, PageCounter } from '../components';
 import { useForm } from '../contexts';
-import { wizardPages } from '../utils/enums';
+import { contributorPages, staffPages } from '../utils/constants';
 
 import Completion from './Completion';
 import InitialPrompt from './InitialPrompt';
@@ -14,19 +14,6 @@ import Onboard4 from './Onboard4';
 import Onboard5 from './Onboard5';
 
 import './styles.scss';
-
-const staffPages = [
-  wizardPages.ONBOARD_1,
-  wizardPages.ONBOARD_2,
-  wizardPages.ONBOARD_3,
-];
-const contributorPages = [
-  wizardPages.ONBOARD_1,
-  wizardPages.ONBOARD_2,
-  wizardPages.ONBOARD_3,
-  wizardPages.ONBOARD_4,
-  wizardPages.ONBOARD_5,
-];
 
 const Wizard = (): ReactElement => {
   const { currentPage, prevPage, formData } = useForm();

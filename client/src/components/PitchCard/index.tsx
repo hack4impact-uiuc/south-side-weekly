@@ -27,7 +27,7 @@ const PitchCard: FC<IProps> = ({ pitch, ...rest }): ReactElement => {
   };
 
   return (
-    <Card className="pitch-card" {...rest}>
+    <Card className={`pitch-card ${rest.className || ''}`} {...rest}>
       <Card.Content>
         <div>
           <p>{pitch.title}</p>

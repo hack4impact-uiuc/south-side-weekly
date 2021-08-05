@@ -5,23 +5,13 @@ import React, {
   SyntheticEvent,
 } from 'react';
 import { startsWith, toArray, toLower, toString } from 'lodash';
-import { Card, DropdownProps, Input, Image } from 'semantic-ui-react';
+import { DropdownProps, Input } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { getUsers, isError } from '../../api';
-import { Header, Sidebar, UserModal, FilterDropdown } from '../../components';
-import {
-  getUserProfilePic,
-  parseOptions,
-  titleCase,
-} from '../../utils/helpers';
-import {
-  allInterests,
-  allRoles,
-  allTeams,
-  emptyUser,
-} from '../../utils/constants';
-import { pages } from '../../utils/enums';
+import { UserModal, FilterDropdown } from '../../components';
+import { parseOptions } from '../../utils/helpers';
+import { allInterests, allRoles, allTeams } from '../../utils/constants';
 
 import { filterInterests, filterRole, filterTeams, sortUsers } from './helpers';
 import './styles.scss';
@@ -35,11 +25,6 @@ const searchFields: (keyof IUser)[] = [
   'email',
 ];
 
-interface ModalInfo {
-  isOpen: boolean;
-  user: IUser;
-}
-
 const Directory = (): ReactElement => {
   const [directory, setDirectory] = useState<IUser[]>([]);
   const [filteredDirectory, setFilteredDirectory] = useState<IUser[]>([]);
@@ -48,10 +33,6 @@ const Directory = (): ReactElement => {
   const [interests, setInterests] = useState<string[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
   const [query, setQuery] = useState<string>('');
-  const [modal, setModal] = useState<ModalInfo>({
-    isOpen: false,
-    user: emptyUser,
-  });
 
   useEffect(() => {
     const getAllUsers = async (): Promise<void> => {
@@ -118,96 +99,62 @@ const Directory = (): ReactElement => {
     }
   };
 
-  const openModal = (user: IUser): void => {
-    setModal({
-      isOpen: true,
-      user: user,
-    });
-  };
-
-  const closeModal = (): void => {
-    setModal({
-      isOpen: false,
-      user: emptyUser,
-    });
-  };
-
   return (
-    <>
-      <UserModal onClose={closeModal} open={modal.isOpen} user={modal.user} />
-      <Sidebar currentPage={pages.USERS} />
-      <Header />
-      <div className="directory-page">
-        <h2>Directory</h2>
-        <Input
-          value={query}
-          onChange={(e, { value }) => setQuery(value)}
-          fluid
-          placeholder="Search..."
-          icon="search"
-          iconPosition="left"
-        />
-        <div className="filters">
-          <div>
-            <h3>Filters: </h3>
-          </div>
-          <div className="wrapper">
-            <FilterDropdown
-              className="filter"
-              text="Role"
-              options={parseOptions(allRoles)}
-              onChange={(e, { value }) => setRole(toString(value))}
-            />
-          </div>
-          <div className="wrapper">
-            <FilterDropdown
-              className="filter"
-              text="Date Joined"
-              options={parseOptions(dateOptions)}
-              onChange={determineSort}
-            />
-          </div>
-          <div className="wrapper">
-            <FilterDropdown
-              className="filter"
-              text="Topics of Interest"
-              options={parseOptions(allInterests)}
-              onChange={(e, { value }) => setInterests(toArray(value))}
-              multiple
-            />
-          </div>
-          <div className="wrapper">
-            <FilterDropdown
-              className="filter"
-              text="Teams"
-              options={parseOptions(allTeams)}
-              onChange={(e, { value }) => setTeams(toArray(value))}
-              multiple
-            />
-          </div>
+    <div className="directory-page">
+      <h2>Directory</h2>
+      <Input
+        value={query}
+        onChange={(e, { value }) => setQuery(value)}
+        fluid
+        placeholder="Search..."
+        icon="search"
+        iconPosition="left"
+      />
+      <div className="filters">
+        <div>
+          <h3>Filters: </h3>
         </div>
-        <div className="directory">
-          {filteredDirectory.map((user, index) => (
-            <Card onClick={() => openModal(user)} fluid key={index}>
-              <Card.Content>
-                <Image
-                  circular
-                  size="mini"
-                  src={getUserProfilePic(user)}
-                  alt={user.firstName}
-                />
-                <div className="name">
-                  <h2>{`${user.firstName} ${user.lastName}`}</h2>
-                </div>
-                <div>
-                  <h2>{titleCase(user.role)}</h2>
-                </div>
-              </Card.Content>
-            </Card>
-          ))}
+        <div className="wrapper">
+          <FilterDropdown
+            className="filter"
+            text="Role"
+            options={parseOptions(allRoles)}
+            onChange={(e, { value }) => setRole(toString(value))}
+          />
+        </div>
+        <div className="wrapper">
+          <FilterDropdown
+            className="filter"
+            text="Date Joined"
+            options={parseOptions(dateOptions)}
+            onChange={determineSort}
+          />
+        </div>
+        <div className="wrapper">
+          <FilterDropdown
+            className="filter"
+            text="Topics of Interest"
+            options={parseOptions(allInterests)}
+            onChange={(e, { value }) => setInterests(toArray(value))}
+            multiple
+          />
+        </div>
+        <div className="wrapper">
+          <FilterDropdown
+            className="filter"
+            text="Teams"
+            options={parseOptions(allTeams)}
+            onChange={(e, { value }) => setTeams(toArray(value))}
+            multiple
+          />
         </div>
       </div>
-    </>
+      <div className="directory">
+        {filteredDirectory.map((user, index) => (
+          <UserModal user={user} key={index} />
+        ))}
+      </div>
+    </div>
   );
 };
 

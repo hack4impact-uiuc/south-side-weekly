@@ -6,14 +6,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import {
-  Button,
-  Form,
-  Grid,
-  Image,
-  Modal,
-  ModalProps,
-} from 'semantic-ui-react';
+import { Button, Form, Grid, Modal, ModalProps } from 'semantic-ui-react';
 import { IPitch, IUser } from 'ssw-common';
 
 import {
@@ -25,13 +18,10 @@ import {
 } from '../../../api';
 import { useAuth } from '../../../contexts';
 import { emptyPitch } from '../../../utils/constants';
-import {
-  convertMap,
-  getUserFullName,
-  getUserProfilePic,
-} from '../../../utils/helpers';
+import { convertMap, getUserFullName } from '../../../utils/helpers';
 import PitchCard from '../../PitchCard';
 import FieldTag from '../../FieldTag';
+import UserPicture from '../../UserPicture';
 
 import './styles.scss';
 
@@ -242,14 +232,20 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
         <h2>Pitch Claimed By</h2>
         <div className="contributors-section">
           {contributors.map((contributor, index) => (
-            <Image
-              circular
+            <UserPicture
+              user={contributor}
               title={getUserFullName(contributor)}
-              size="tiny"
               key={index}
-              src={getUserProfilePic(contributor)}
-              alt={getUserFullName(contributor)}
+              size="tiny"
             />
+            // <Image
+            //   circular
+            //   title={getUserFullName(contributor)}
+            //   size="tiny"
+            //   key={index}
+            //   src={getUserProfilePic(contributor)}
+            //   alt={getUserFullName(contributor)}
+            // />
           ))}
         </div>
       </Modal.Content>
