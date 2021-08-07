@@ -86,7 +86,6 @@ router.get(
       }
       // There was no base
       res.redirect(CALLBACK_ROUTE);
-      return;
     } catch (e) {
       res.status(400).json({
         message: 'Something went wrong with redirection',
