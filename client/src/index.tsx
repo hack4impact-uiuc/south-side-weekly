@@ -18,29 +18,27 @@ import {
 } from './pages';
 import Wizard from './wizard';
 import { PrivateRoute } from './components';
-import { AuthProvider, WizardProvider } from './contexts';
+import { AuthProvider } from './contexts';
 
 import './styles/styles.scss';
 
 ReactDOM.render(
   <React.StrictMode>
     <AuthProvider>
-      <WizardProvider>
-        <Router>
-          <Switch>
-            <Route exact path="/">
-              <Redirect to="/login" />
-            </Route>
-            <PrivateRoute exact path="/pitches" component={PitchDoc} />
-            <PrivateRoute exact path="/resources" component={Resources} />
-            <PrivateRoute exact path="/profile/:userId" component={Profile} />
-            <PrivateRoute exact path="/users" component={Directory} />
-            <Route exact path="/login" component={Login} />
-            <PrivateRoute exact path="/join" component={Wizard} />
-            <PrivateRoute exact path="*" component={NotFound} />
-          </Switch>
-        </Router>
-      </WizardProvider>
+      <Router>
+        <Switch>
+          <Route exact path="/">
+            <Redirect to="/login" />
+          </Route>
+          <PrivateRoute exact path="/pitches" component={PitchDoc} />
+          <PrivateRoute exact path="/resources" component={Resources} />
+          <PrivateRoute exact path="/profile/:userId" component={Profile} />
+          <PrivateRoute exact path="/users" component={Directory} />
+          <PrivateRoute exact path="/login" component={Login} />
+          <PrivateRoute exact path="/join" component={Wizard} />
+          <PrivateRoute exact path="*" component={NotFound} />
+        </Switch>
+      </Router>
     </AuthProvider>
   </React.StrictMode>,
   document.getElementById('root'),

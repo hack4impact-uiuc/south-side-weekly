@@ -1,5 +1,5 @@
 import AuthProvider, { useAuth } from './auth/provider';
-import WizardProvider, { useForm } from './wizard/provider';
+import WizardProvider, { useWizard } from './wizard/provider';
 
 export { AuthProvider, useAuth };
-export { WizardProvider, useForm };
+export { WizardProvider, useWizard };

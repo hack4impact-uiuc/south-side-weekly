@@ -1,51 +1,28 @@
 import React, { ReactElement, FC, useState } from 'react';
-import { IUser } from 'ssw-common';
 
-import { emptyUser } from '../../utils/constants';
-import { defaultFunc } from '../../utils/helpers';
-
-import { WizardContext, useForm } from './context';
-import { IWizardContext } from './types';
+import { WizardContext, useWizard, initialValues } from './context';
+import { UserElements } from './types';
 
 const WizardProvider: FC = ({ children }): ReactElement => {
-  const [onboardingData, setOnboardingData] = useState<IWizardContext>({
-    currentPage: 0,
-    formData: emptyUser,
-    prevPage: defaultFunc,
-    updateOnboardingData: defaultFunc,
-    jumpTo: defaultFunc,
-    hasSubmitted: () => false,
-    firstLogin: false,
-  });
-
+  const [newUser, setNewUser] = useState(initialValues);
   const [pages, setPages] = useState(new Set<number>());
 
-  const updateOnboardingData = (
-    formData: {
-      [key: string]: IUser[keyof IUser];
-    },
-    goNext: boolean,
-  ): void => {
-    const updated = { ...onboardingData };
-    updated.formData = { ...updated.formData, ...formData };
-    updated.firstLogin = true;
+  const store = (data: UserElements): void => {
+    console.log(data);
+    const updated = { ...newUser };
 
-    if (goNext) {
-      updated.currentPage++;
-    }
+    updated.data = { ...updated.data, ...data };
+    updated.currentPage++;
 
-    setOnboardingData(updated);
+    console.log(updated);
+
+    setNewUser(updated);
     pages.add(updated.currentPage - 1);
     setPages(new Set(pages));
   };
 
-  const prevPage = (): void => {
-    const page = onboardingData.currentPage - 1;
-    setOnboardingData({ ...onboardingData, currentPage: page });
-  };
-
   const jumpTo = (page: number): void => {
-    setOnboardingData({ ...onboardingData, currentPage: page });
+    setNewUser({ ...newUser, currentPage: page });
   };
 
   const hasSubmitted = (page: number): boolean => pages.has(page);
@@ -53,9 +30,8 @@ const WizardProvider: FC = ({ children }): ReactElement => {
   return (
     <WizardContext.Provider
       value={{
-        ...onboardingData,
-        updateOnboardingData,
-        prevPage,
+        ...newUser,
+        store,
         jumpTo,
         hasSubmitted,
       }}
@@ -65,5 +41,5 @@ const WizardProvider: FC = ({ children }): ReactElement => {
   );
 };
 
-export { useForm };
+export { useWizard };
 export default WizardProvider;

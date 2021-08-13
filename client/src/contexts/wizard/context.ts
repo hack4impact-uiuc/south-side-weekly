@@ -5,16 +5,16 @@ import { defaultFunc } from '../../utils/helpers';
 
 import { IWizardContext } from './types';
 
-const WizardContext = createContext<IWizardContext>({
+const initialValues = {
   currentPage: 0,
-  formData: emptyUser,
-  prevPage: defaultFunc,
-  updateOnboardingData: defaultFunc,
+  data: emptyUser,
   jumpTo: defaultFunc,
-  hasSubmitted: () => true,
-  firstLogin: false,
-});
+  store: defaultFunc,
+  hasSubmitted: (): boolean => true,
+};
 
-const useForm = (): IWizardContext => useContext(WizardContext);
+const WizardContext = createContext<IWizardContext>(initialValues);
 
-export { WizardContext, useForm };
+const useWizard = (): Readonly<IWizardContext> => useContext(WizardContext);
+
+export { WizardContext, useWizard, initialValues };

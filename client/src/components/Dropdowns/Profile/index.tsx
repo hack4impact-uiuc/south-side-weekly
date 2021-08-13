@@ -29,17 +29,15 @@ const ProfileDropdown: FC<DropdownProps> = ({ ...rest }): ReactElement => {
       history.push(`/profile/${user._id}`);
     } else if (value === 'logout') {
       logout();
-    } else {
-      console.log('here');
     }
   };
 
   return (
     <Dropdown
+      simple
       className={classNames(['profile-dropdown', rest.className])}
       closeOnChange
       item
-      simple
       trigger={<Trigger user={user} />}
       {...rest}
     >

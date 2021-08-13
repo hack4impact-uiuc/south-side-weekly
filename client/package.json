@@ -8,6 +8,7 @@
     "@types/node-sass": "^4.11.2",
     "@types/react-router-dom": "^5.1.7",
     "axios": "^0.21.1",
+    "formik": "^2.2.9",
     "libphonenumber-js": "^1.9.22",
     "lodash": "^4.17.21",
     "node-sass": "4.14.1",
@@ -19,7 +20,8 @@
     "react-scripts": "4.0.1",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.3",
-    "sweetalert2": "^11.0.20"
+    "sweetalert2": "^11.0.20",
+    "sweetalert2-react-content": "^4.1.1"
   },
   "devDependencies": {
     "@babel/cli": "^7.6.2",

@@ -8,12 +8,13 @@ import './styles.scss';
 const Page: FC = ({ children }): ReactElement => {
   const location = useLocation();
 
-  const isViewingWizard = (): boolean => location.pathname === '/join';
+  const canShowNavbar = (): boolean =>
+    location.pathname !== '/join' && location.pathname !== '/login';
 
   return (
     <div className="page-wrapper">
-      {!isViewingWizard() && <Navbar />}
-      <div className={`page-content ${!isViewingWizard() && 'space'}`}>
+      {canShowNavbar() && <Navbar />}
+      <div className={`page-content ${canShowNavbar() && 'space'}`}>
         {children}
       </div>
     </div>

@@ -1,9 +1,9 @@
 import React, { ReactElement, useState, useEffect } from 'react';
 import { Form, Grid } from 'semantic-ui-react';
-import { isEmpty, toArray } from 'lodash';
+import { isEmpty, reject, toArray } from 'lodash';
 import Swal from 'sweetalert2';
 
-import { useAuth, useForm } from '../../contexts';
+import { useAuth, useWizard } from '../../contexts';
 import { allInterests, allTeams } from '../../utils/constants';
 import { formatNumber, titleCase } from '../../utils/helpers';
 import { isError, updateUser } from '../../api';
@@ -11,16 +11,16 @@ import { isError, updateUser } from '../../api';
 import './styles.scss';
 
 const Onboard3 = (): ReactElement => {
-  const { updateOnboardingData, formData } = useForm();
-
-  const [interests, setInterests] = useState(new Set<string>());
-  const [teams, setTeams] = useState(new Set<string>());
+  const { store, data } = useWizard();
   const { user } = useAuth();
 
+  const [interests, setInterests] = useState(new Set<string>(data.interests));
+  const [teams, setTeams] = useState(new Set<string>(data.currentTeams));
+
   const onSubmit = (): void => {
-    if (formData.role === 'STAFF') {
+    if (data.role === 'STAFF') {
       staffSubmit();
-    } else if (formData.role === 'CONTRIBUTOR') {
+    } else if (data.role === 'CONTRIBUTOR') {
       contributorSubmit();
     }
   };
@@ -31,29 +31,29 @@ const Onboard3 = (): ReactElement => {
       currentTeams: toArray(teams) as [string],
     };
 
-    updateOnboardingData(data, true);
+    store(data);
   };
 
   const staffSubmit = (): void => {
-    const data = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      preferredName: formData.preferredName,
-      phone: formatNumber(formData.phone),
-      genders: formData.genders,
-      pronouns: formData.pronouns,
+    const newUser = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      preferredName: data.preferredName,
+      phone: formatNumber(data.phone),
+      genders: reject(data.genders, isEmpty) as [string],
+      pronouns: reject(data.pronouns, isEmpty) as [string],
       dateJoined: new Date(Date.now()),
       currentTeams: toArray(teams) as [string],
-      role: formData.role,
-      races: formData.races,
+      role: data.role,
+      races: reject(data.races, isEmpty) as [string],
       interests: toArray(interests) as [string],
     };
 
     const onboardUser = async (): Promise<void> => {
-      const res = await updateUser(data, user._id);
+      const res = await updateUser(newUser, user._id);
 
       if (!isError(res)) {
-        updateOnboardingData(data, true);
+        store(newUser);
       } else {
         Swal.fire({
           title: 'Failed to create account.',
@@ -67,14 +67,14 @@ const Onboard3 = (): ReactElement => {
   };
 
   useEffect(() => {
-    const initialTeams = formData.currentTeams.filter((team) => !isEmpty(team));
-    const initialInterets = formData.interests.filter(
+    const initialTeams = data.currentTeams.filter((team) => !isEmpty(team));
+    const initialInterets = data.interests.filter(
       (interest) => !isEmpty(interest),
     );
 
     setTeams(new Set(initialTeams));
     setInterests(new Set(initialInterets));
-  }, [formData.currentTeams, formData.interests]);
+  }, [data.currentTeams, data.interests]);
 
   const handleInterests = (interest: string): void => {
     if (!interests.has(interest) && interests.size === 5) {

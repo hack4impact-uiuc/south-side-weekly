@@ -1,0 +1,24 @@
+@import '../../../styles/colors.scss';
+
+.wizard-submit {
+  $color: rgba(140, 176, 118, 0.9);
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 2vh;
+  margin-top: auto !important;
+  margin-bottom: auto !important;
+  height: fit-content;
+  background-color: $color !important;
+  color: black !important;
+  z-index: 1 !important;
+
+  &:hover {
+    opacity: 0.8;
+    background-color: $color;
+  }
+
+  &:focus {
+    background-color: $color;
+  }
+}

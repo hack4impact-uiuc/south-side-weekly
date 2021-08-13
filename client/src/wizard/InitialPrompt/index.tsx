@@ -1,20 +1,27 @@
 import React, { ReactElement } from 'react';
+import { Redirect } from 'react-router-dom';
 import { Button, Header, Icon, Popup } from 'semantic-ui-react';
 
 import { WizardSvg } from '../../components';
-import { useForm } from '../../contexts';
+import { useAuth, useWizard } from '../../contexts';
 import { rolesEnum, wizardPages } from '../../utils/enums';
 
 import './styles.scss';
 
 const InitialPrompt = (): ReactElement => {
-  const { updateOnboardingData } = useForm();
+  const { store } = useWizard();
+  const { isRegistered } = useAuth();
 
   const chooseRole = (role: string): void => {
-    updateOnboardingData({ role }, true);
+    store({ role });
   };
 
-  return (
+  const shouldRedirect = (): boolean =>
+    isRegistered && location.pathname === '/join';
+
+  return shouldRedirect() ? (
+    <Redirect to="resources" />
+  ) : (
     <>
       <div className="initial-wrapper">
         <Header className="title" size="huge" content="Are you joining as..." />

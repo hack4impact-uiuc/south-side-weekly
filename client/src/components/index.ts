@@ -15,6 +15,8 @@ import FieldTag from './FieldTag';
 import UserPicture from './UserPicture';
 import UserCard from './UserCard';
 import Navbar from './Navbar';
+import SubmitButton from './Wizard/SubmitButton';
+import PrevButton from './Wizard/PrevButton';
 
 export {
   Header,
@@ -34,4 +36,6 @@ export {
   UserPicture,
   UserCard,
   Navbar,
+  SubmitButton,
+  PrevButton,
 };

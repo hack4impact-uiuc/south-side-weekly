@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation, Redirect } from 'react-router-dom';
 import { Button, Card } from 'semantic-ui-react';
 
 import { buildURI } from '../../api';
@@ -16,7 +16,6 @@ const LOGIN_URL = buildURI(
 
 const Login = (): ReactElement => {
   const { isLoading, isAuthenticated, isRegistered } = useAuth();
-  const history = useHistory();
 
   // Builds on useLocation to parse the query string for you.
   const loginFailed = new URLSearchParams(useLocation().search).get(
@@ -27,7 +26,8 @@ const Login = (): ReactElement => {
 
   if (!isLoading && isAuthenticated) {
     const path = isRegistered ? '/resources' : '/join';
-    history.push(path);
+
+    return <Redirect to={path} />;
   }
 
   return (

@@ -16,27 +16,4 @@
       background-color: transparent;
     }
   }
-
-  button[type='submit'] {
-    $color: rgba(140, 176, 118, 0.9);
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    right: 2vh;
-    margin-top: auto;
-    margin-bottom: auto;
-    height: fit-content;
-    background-color: $color;
-    color: black;
-    z-index: 1;
-
-    &:hover {
-      opacity: 0.8;
-      background-color: $color;
-    }
-
-    &:focus {
-      background-color: $color;
-    }
-  }
 }

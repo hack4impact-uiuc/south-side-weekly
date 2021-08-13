@@ -1,52 +1,39 @@
-import React, { FC, useEffect, createElement } from 'react';
-import { Route, RouteProps, useHistory, useLocation } from 'react-router-dom';
-import Swal from 'sweetalert2';
+import React, { FC, createElement } from 'react';
+import { Redirect, Route, RouteProps, useLocation } from 'react-router-dom';
 
-import { useAuth, useForm } from '../../contexts';
+import { useAuth } from '../../contexts';
 import Page from '../Page';
+import Loading from '../Loading';
 
 const PrivateRoute: FC<RouteProps> = ({ ...routeProps }) => {
   const { isAuthenticated, isLoading, isRegistered } = useAuth();
-  const history = useHistory();
   const location = useLocation();
-  const { firstLogin } = useForm();
 
-  useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      history.push('/login');
-    } else if (!isLoading && !isRegistered) {
-      history.push('/join');
-    } else if (
-      !isLoading &&
-      isRegistered &&
-      !firstLogin &&
-      location.pathname === '/join'
-    ) {
-      Swal.fire({
-        title: 'You have already created an account!',
-        icon: 'info',
-      });
-
-      history.push('/resources');
-    }
-  }, [
-    location.pathname,
-    isLoading,
-    history,
-    isRegistered,
-    isAuthenticated,
-    firstLogin,
-  ]);
+  const canShowPage = (): boolean =>
+    !isLoading && (isAuthenticated || location.pathname === '/login');
 
   return (
-    <Route
-      exact={routeProps.exact}
-      path={routeProps.path}
-      render={(props) => {
-        const page = createElement(routeProps.component!, props);
-        return <Page>{page}</Page>;
-      }}
-    />
+    <>
+      <Loading open={isLoading} />
+      {!isLoading && (
+        <>
+          {!isAuthenticated && <Redirect to="/login" />}
+          {isAuthenticated && !isRegistered && (
+            <Redirect to="/join" from={location.pathname} />
+          )}
+        </>
+      )}
+      {canShowPage() && (
+        <Route
+          exact={routeProps.exact}
+          path={routeProps.path}
+          render={(props) => {
+            const page = createElement(routeProps.component!, props);
+            return <Page>{page}</Page>;
+          }}
+        />
+      )}
+    </>
   );
 };
 

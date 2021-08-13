@@ -2,18 +2,18 @@ import React, { ReactElement, useState } from 'react';
 import { Form, Grid } from 'semantic-ui-react';
 
 import { WizardSvg } from '../../components';
-import { useForm } from '../../contexts';
+import { useWizard } from '../../contexts';
 import { wizardPages } from '../../utils/enums';
 
 import './styles.scss';
 
 const Onboard1 = (): ReactElement => {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [preferredName, setPreferredName] = useState('');
-  const [phone, setPhone] = useState('');
+  const { data, store } = useWizard();
 
-  const { formData, updateOnboardingData } = useForm();
+  const [firstName, setFirstName] = useState(data.firstName);
+  const [lastName, setLastName] = useState(data.lastName);
+  const [preferredName, setPreferredName] = useState(data.preferredName);
+  const [phone, setPhone] = useState(data.phone);
 
   const onSubmit = (): void => {
     const data = {
@@ -23,7 +23,7 @@ const Onboard1 = (): ReactElement => {
       phone: phone,
     };
 
-    updateOnboardingData(data, true);
+    store(data);
   };
 
   return (
@@ -41,7 +41,7 @@ const Onboard1 = (): ReactElement => {
                 name="firstName"
                 required
                 placeholder="First Name..."
-                defaultValue={formData.firstName}
+                defaultValue={data.firstName}
               />
               <Form.Input
                 onChange={(e, { value }) => setLastName(value)}
@@ -49,13 +49,13 @@ const Onboard1 = (): ReactElement => {
                 name="lastName"
                 required
                 placeholder="Last Name..."
-                defaultValue={formData.lastName}
+                defaultValue={data.lastName}
               />
               <Form.Input
                 onChange={(e, { value }) => setPreferredName(value)}
                 label="Preferred Name"
                 placeholder="Preferred Name..."
-                defaultValue={formData.preferredName}
+                defaultValue={data.preferredName}
               />
               <Form.Input
                 onChange={(e, { value }) => setPhone(value)}
@@ -63,7 +63,7 @@ const Onboard1 = (): ReactElement => {
                 name="phone"
                 required
                 placeholder="(123) 838-5466"
-                defaultValue={formData.phone}
+                defaultValue={data.phone}
               />
             </div>
           </div>

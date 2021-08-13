@@ -1,9 +1,7 @@
 import React, { ReactElement, useState, useEffect } from 'react';
-import { Button } from 'semantic-ui-react';
 
-import { Header, PageCounter } from '../components';
-import { useForm } from '../contexts';
-import { contributorPages, staffPages } from '../utils/constants';
+import { Header, PageCounter, PrevButton, SubmitButton } from '../components';
+import { useWizard, WizardProvider } from '../contexts';
 
 import Completion from './Completion';
 import InitialPrompt from './InitialPrompt';
@@ -15,64 +13,51 @@ import Onboard5 from './Onboard5';
 
 import './styles.scss';
 
+const IGNORE_COUNT = 2;
+
+const contributor = [
+  InitialPrompt,
+  Onboard1,
+  Onboard2,
+  Onboard3,
+  Onboard4,
+  Onboard5,
+  Completion,
+];
+const staff = [InitialPrompt, Onboard1, Onboard2, Onboard3, Completion];
+
+const ProviderWrapper = (): ReactElement => (
+  <WizardProvider>
+    <Wizard />
+  </WizardProvider>
+);
+
 const Wizard = (): ReactElement => {
-  const { currentPage, prevPage, formData } = useForm();
-  const [pages, setPages] = useState<string[]>([]);
+  const { currentPage, data } = useWizard();
+
+  const [pages, setPages] = useState(staff);
 
   useEffect(() => {
-    if (formData.role === 'STAFF') {
-      setPages(staffPages);
-    } else if (formData.role === 'CONTRIBUTOR') {
-      setPages(contributorPages);
-    }
-  }, [formData.role]);
+    setPages(data.role === 'STAFF' ? staff : contributor);
+  }, [data.role]);
+
+  const formLength = pages.length - IGNORE_COUNT;
+  const isFormPage = currentPage > 0 && currentPage < formLength;
+  const isLastPage = currentPage === formLength;
+  const canGoBack = currentPage > 0 && currentPage <= formLength;
 
   return (
     <div className="pages-wrapper">
       <Header />
-      {currentPage > 0 && currentPage <= pages.length && (
-        <Button
-          className="go-back"
-          icon="arrow left"
-          circular
-          size="massive"
-          onClick={prevPage}
-        />
-      )}
-      {currentPage > 0 && currentPage < pages.length && (
-        <Button
-          className="submit"
-          icon="arrow right"
-          circular
-          size="massive"
-          type="submit"
-          form={`onboard-${currentPage}`}
-        />
-      )}
-      {pages.length > 0 && currentPage === pages.length && (
-        <Button
-          className="submit"
-          icon="check"
-          circular
-          size="massive"
-          type="submit"
-          form={`onboard-${currentPage}`}
-        />
-      )}
+      {canGoBack && <PrevButton />}
+      {isFormPage && <SubmitButton action="next" />}
+      {isLastPage && <SubmitButton action="complete" />}
 
-      {currentPage === 0 && <InitialPrompt />}
-      {currentPage === 1 && <Onboard1 />}
-      {currentPage === 2 && <Onboard2 />}
-      {currentPage === 3 && <Onboard3 />}
-      {currentPage === 4 &&
-        (formData.role === 'STAFF' ? <Completion /> : <Onboard4 />)}
-      {currentPage === 5 && <Onboard5 />}
-      {currentPage === 6 && <Completion />}
-      {currentPage > 0 && currentPage < pages.length && (
-        <PageCounter pages={pages} />
-      )}
+      {React.createElement(pages[currentPage])}
+
+      {canGoBack && <PageCounter numberOfPages={formLength} />}
     </div>
   );
 };
 
-export default Wizard;
+export default ProviderWrapper;

@@ -115,7 +115,7 @@ router.get(
   },
 );
 
-router.post(
+router.get(
   '/logout',
   errorWrap(async (req: Request, res: Response) => {
     if (req.session) {

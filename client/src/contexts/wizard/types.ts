@@ -1,14 +1,11 @@
 import { IUser } from 'ssw-common';
 
+export type UserElements = { [key: string]: IUser[keyof IUser] };
+
 export interface IWizardContext {
   currentPage: number;
-  formData: IUser;
-  updateOnboardingData: (
-    data: { [key: string]: IUser[keyof IUser] },
-    goNext: boolean,
-  ) => void;
-  prevPage: () => void;
+  data: IUser;
+  store: (data: UserElements) => void;
   jumpTo: (page: number) => void;
   hasSubmitted: (page: number) => boolean;
-  firstLogin: boolean;
 }

@@ -1,23 +1,23 @@
 import React, { ReactElement, useState } from 'react';
-import { isEmpty } from 'lodash';
+import { isEmpty, reject } from 'lodash';
 import { CalendlyEventListener, InlineWidget } from 'react-calendly';
 import { Form } from 'semantic-ui-react';
 import Swal from 'sweetalert2';
 
 import { isError, updateUser } from '../../api';
-import { useAuth, useForm } from '../../contexts';
+import { useAuth, useWizard } from '../../contexts';
 import { formatNumber } from '../../utils/helpers';
 
 import './styles.scss';
 
 const Onboard5 = (): ReactElement => {
-  const { updateOnboardingData, formData } = useForm();
-  const [scheduled, setScheduled] = useState(!isEmpty(formData.onboarding));
+  const { store, data } = useWizard();
   const { user } = useAuth();
+
+  const [scheduled, setScheduled] = useState(!isEmpty(data.onboarding));
 
   const onEventScheduled = (): void => {
     setScheduled(true);
-    updateOnboardingData({ onboarding: 'ONBOARDING_SCHEDULED' }, false);
   };
 
   const onSubmit = (): void => {
@@ -29,27 +29,27 @@ const Onboard5 = (): ReactElement => {
       return;
     }
 
-    const data = {
-      firstName: formData.firstName,
-      lastName: formData.lastName,
-      preferredName: formData.preferredName,
-      phone: formatNumber(formData.phone),
-      genders: formData.genders,
-      pronouns: formData.pronouns,
+    const newUser = {
+      firstName: data.firstName,
+      lastName: data.lastName,
+      preferredName: data.preferredName,
+      phone: formatNumber(data.phone),
+      genders: reject(data.genders, isEmpty) as [string],
+      pronouns: reject(data.pronouns, isEmpty) as [string],
       dateJoined: new Date(Date.now()),
       onboarding: 'ONBOARDING_SCHEDULED',
-      involvementResponse: formData.involvementResponse,
-      currentTeams: formData.currentTeams,
-      role: formData.role,
-      races: formData.races,
-      interests: formData.interests,
+      involvementResponse: data.involvementResponse,
+      currentTeams: data.currentTeams,
+      role: data.role,
+      races: reject(data.races, isEmpty) as [string],
+      interests: reject(data.interests, isEmpty) as [string],
     };
 
     const onboardUser = async (): Promise<void> => {
-      const res = await updateUser(data, user._id);
+      const res = await updateUser(newUser, user._id);
 
       if (!isError(res)) {
-        updateOnboardingData(data, true);
+        store(newUser);
       } else {
         Swal.fire({
           title: 'Failed to create account.',

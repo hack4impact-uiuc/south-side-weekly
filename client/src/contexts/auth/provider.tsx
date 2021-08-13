@@ -7,38 +7,17 @@ import React, {
 } from 'react';
 
 import { getCurrentUser, isError, logout as clearSession } from '../../api';
-import { emptyUser } from '../../utils/constants';
-import { defaultFunc } from '../../utils/helpers';
+import { rolesEnum } from '../../utils/enums';
 
-import { AuthContext, useAuth } from './context';
+import { AuthContext, initialValues, useAuth } from './context';
 import { IAuthContext } from './types';
 
 const AuthProvider: FC = ({ children }): ReactElement => {
-  const [auth, setAuth] = useState<IAuthContext>({
-    isAuthenticated: false,
-    user: emptyUser,
-    isContributor: false,
-    isStaff: false,
-    isAdmin: false,
-    isLoading: true,
-    isRegistered: false,
-    logout: () => void 0,
-    register: () => void 0,
-  });
+  const [auth, setAuth] = useState<IAuthContext>(initialValues);
 
   const logout = useCallback((): void => {
     clearSession();
-    setAuth({
-      user: emptyUser,
-      isAuthenticated: false,
-      isContributor: false,
-      isStaff: false,
-      isAdmin: false,
-      isLoading: false,
-      isRegistered: false,
-      logout: logout,
-      register: defaultFunc,
-    });
+    setAuth({ ...initialValues, isLoading: false });
   }, []);
 
   useEffect(() => {
@@ -47,29 +26,22 @@ const AuthProvider: FC = ({ children }): ReactElement => {
 
       if (!isError(res)) {
         const user = res.data.result;
-        setAuth({
+
+        const sessionizedUser = {
           user: user,
           isAuthenticated: true,
-          isContributor: user.role === 'CONTRIBUTOR',
-          isStaff: user.role === 'STAFF',
-          isAdmin: user.role === 'ADMIN',
+          isContributor: user.role === rolesEnum.CONTRIBUTOR,
+          isStaff: user.role === rolesEnum.STAFF,
+          isAdmin: user.role === rolesEnum.ADMIN,
           isLoading: false,
           isRegistered: user.role !== 'TBD',
           logout: logout,
           register: loadCurrentUser,
-        });
+        };
+
+        setAuth(sessionizedUser);
       } else {
-        setAuth({
-          user: emptyUser,
-          isAuthenticated: false,
-          isContributor: false,
-          isStaff: false,
-          isAdmin: false,
-          isLoading: false,
-          isRegistered: false,
-          logout: defaultFunc,
-          register: defaultFunc,
-        });
+        setAuth({ ...initialValues, isLoading: false });
       }
     };
 

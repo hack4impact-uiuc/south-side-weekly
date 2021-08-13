@@ -2,21 +2,21 @@ import React, { ReactElement, useState } from 'react';
 import { Form } from 'semantic-ui-react';
 import { toString } from 'lodash';
 
-import { useForm } from '../../contexts';
+import { useWizard } from '../../contexts';
 
 import './styles.scss';
 
 const Onboard4 = (): ReactElement => {
-  const [response, setResponse] = useState('');
+  const { store, data } = useWizard();
 
-  const { updateOnboardingData, formData } = useForm();
+  const [response, setResponse] = useState(data.involvementResponse);
 
   const onSubmit = (): void => {
     const data = {
       involvementResponse: response,
     };
 
-    updateOnboardingData(data, true);
+    store(data);
   };
 
   return (
@@ -28,7 +28,7 @@ const Onboard4 = (): ReactElement => {
       <Form id="onboard-4" onSubmit={onSubmit}>
         <Form.TextArea
           required
-          defaultValue={formData.involvementResponse}
+          defaultValue={data.involvementResponse}
           onChange={(e, { value }) => setResponse(toString(value))}
         />
       </Form>
