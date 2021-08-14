@@ -1,6 +1,6 @@
 import React, { ReactElement, useState, useEffect } from 'react';
 import { Form, Grid } from 'semantic-ui-react';
-import { isEmpty, reject, toArray } from 'lodash';
+import { isEmpty, reject } from 'lodash';
 import Swal from 'sweetalert2';
 
 import { useAuth, useWizard } from '../../contexts';
@@ -14,8 +14,8 @@ const Onboard3 = (): ReactElement => {
   const { store, data } = useWizard();
   const { user } = useAuth();
 
-  const [interests, setInterests] = useState(new Set<string>(data.interests));
-  const [teams, setTeams] = useState(new Set<string>(data.currentTeams));
+  const [interests, setInterests] = useState(new Set(data.interests));
+  const [teams, setTeams] = useState(new Set(data.currentTeams));
 
   const onSubmit = (): void => {
     if (data.role === 'STAFF') {
@@ -27,8 +27,8 @@ const Onboard3 = (): ReactElement => {
 
   const contributorSubmit = (): void => {
     const data = {
-      interests: toArray(interests) as [string],
-      currentTeams: toArray(teams) as [string],
+      interests: Array.from(interests),
+      currentTeams: Array.from(teams),
     };
 
     store(data);
@@ -40,13 +40,13 @@ const Onboard3 = (): ReactElement => {
       lastName: data.lastName,
       preferredName: data.preferredName,
       phone: formatNumber(data.phone),
-      genders: reject(data.genders, isEmpty) as [string],
-      pronouns: reject(data.pronouns, isEmpty) as [string],
+      genders: reject(data.genders, isEmpty),
+      pronouns: reject(data.pronouns, isEmpty),
       dateJoined: new Date(Date.now()),
-      currentTeams: toArray(teams) as [string],
+      currentTeams: Array.from(teams),
       role: data.role,
-      races: reject(data.races, isEmpty) as [string],
-      interests: toArray(interests) as [string],
+      races: reject(data.races, isEmpty),
+      interests: Array.from(interests),
     };
 
     const onboardUser = async (): Promise<void> => {

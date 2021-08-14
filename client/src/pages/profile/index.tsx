@@ -149,7 +149,7 @@ const Profile = (): ReactElement => {
    * @param interest the interest to add
    */
   const addInterest = (interest: string): void => {
-    const interests = [...user.interests] as [string];
+    const interests = [...user.interests];
     const currentIndex = interests.indexOf(interest);
     if (currentIndex >= 0) {
       interests.splice(currentIndex, 1);
@@ -165,7 +165,7 @@ const Profile = (): ReactElement => {
    * @param team the team to add
    */
   const addTeam = (team: string): void => {
-    const teams = [...user.currentTeams] as [string];
+    const teams = [...user.currentTeams];
     const currentIndex = teams.indexOf(team);
     if (currentIndex >= 0) {
       teams.splice(currentIndex, 1);
@@ -184,7 +184,7 @@ const Profile = (): ReactElement => {
    * @param field the field of the user
    */
   const addArrayElement = (arr: string[], field: MultiDropdowns): void =>
-    setUser(updateUserField(user, field, arr as [string]));
+    setUser(updateUserField(user, field, arr));
 
   /**
    * Determines if a field is viewable to current user

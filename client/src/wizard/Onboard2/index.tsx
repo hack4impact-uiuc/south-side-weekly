@@ -1,6 +1,5 @@
 import React, { ReactElement, useState } from 'react';
 import { Form, Grid } from 'semantic-ui-react';
-import { toArray } from 'lodash';
 
 import { WizardListTitle, WizardSvg } from '../../components';
 import { useWizard } from '../../contexts';
@@ -13,15 +12,15 @@ import './styles.scss';
 const Onboard2 = (): ReactElement => {
   const { store, data } = useWizard();
 
-  const [genders, setGenders] = useState(new Set<string>(data.genders));
-  const [pronouns, setPronouns] = useState(new Set<string>(data.pronouns));
-  const [races, setRaces] = useState(new Set<string>(data.races));
+  const [genders, setGenders] = useState(new Set(data.genders));
+  const [pronouns, setPronouns] = useState(new Set(data.pronouns));
+  const [races, setRaces] = useState(new Set(data.races));
 
   const onSubmit = (): void => {
     const data = {
-      genders: toArray(genders) as [string],
-      pronouns: toArray(pronouns) as [string],
-      races: toArray(races) as [string],
+      genders: Array.from(genders),
+      pronouns: Array.from(pronouns),
+      races: Array.from(races),
     };
 
     store(data);

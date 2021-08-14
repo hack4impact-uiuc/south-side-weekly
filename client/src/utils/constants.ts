@@ -63,8 +63,8 @@ const emptyUser: IUser = {
   email: '',
   phone: '',
   oauthID: '',
-  genders: [''],
-  pronouns: [''],
+  genders: [],
+  pronouns: [],
   dateJoined: new Date(Date.now()),
   masthead: false,
   onboarding: '',
@@ -73,12 +73,12 @@ const emptyUser: IUser = {
   linkedIn: '',
   twitter: '',
   involvementResponse: '',
-  claimedPitches: [''],
-  submittedPitches: [''],
-  currentTeams: [''],
+  claimedPitches: [],
+  submittedPitches: [],
+  currentTeams: [],
   role: '',
-  races: [''],
-  interests: [''],
+  races: [],
+  interests: [],
 };
 
 const emptyPitch: IPitch = {
@@ -90,9 +90,9 @@ const emptyPitch: IPitch = {
   description: '',
   assignmentStatus: '',
   assignmentGoogleDocLink: '',
-  assignmentContributors: [''],
-  pendingContributors: [''],
-  topics: [''],
+  assignmentContributors: [],
+  pendingContributors: [],
+  topics: [],
   teams: {
     writers: {
       current: 0,
@@ -120,7 +120,7 @@ const emptyPitch: IPitch = {
     },
   },
   approvedBy: '',
-  similarStories: [''],
+  similarStories: [],
   deadline: new Date(),
 };
 

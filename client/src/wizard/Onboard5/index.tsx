@@ -34,15 +34,15 @@ const Onboard5 = (): ReactElement => {
       lastName: data.lastName,
       preferredName: data.preferredName,
       phone: formatNumber(data.phone),
-      genders: reject(data.genders, isEmpty) as [string],
-      pronouns: reject(data.pronouns, isEmpty) as [string],
+      genders: reject(data.genders, isEmpty),
+      pronouns: reject(data.pronouns, isEmpty),
       dateJoined: new Date(Date.now()),
       onboarding: 'ONBOARDING_SCHEDULED',
       involvementResponse: data.involvementResponse,
       currentTeams: data.currentTeams,
       role: data.role,
-      races: reject(data.races, isEmpty) as [string],
-      interests: reject(data.interests, isEmpty) as [string],
+      races: reject(data.races, isEmpty),
+      interests: reject(data.interests, isEmpty),
     };
 
     const onboardUser = async (): Promise<void> => {

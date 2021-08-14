@@ -9,8 +9,8 @@ export interface IUser {
   email: string;
   phone: string;
   oauthID: string;
-  genders: [string];
-  pronouns: [string];
+  genders: string[];
+  pronouns: string[];
   dateJoined: Date;
   masthead: boolean;
   onboarding: string;
@@ -19,12 +19,12 @@ export interface IUser {
   linkedIn: string;
   twitter: string;
   involvementResponse: string;
-  claimedPitches: [string];
-  submittedPitches: [string];
-  currentTeams: [string];
+  claimedPitches: string[];
+  submittedPitches: string[];
+  currentTeams: string[];
   role: string;
-  races: [string];
-  interests: [string];
+  races: string[];
+  interests: string[];
 }
 
 /**
@@ -38,9 +38,9 @@ export interface IPitch {
   status: string;
   assignmentStatus: string;
   assignmentGoogleDocLink: string;
-  assignmentContributors: [string];
-  pendingContributors: [string],
-  topics: [string];
+  assignmentContributors: string[];
+  pendingContributors: string[],
+  topics: string[];
   teams: {
     writers: {
       current: number;
@@ -68,7 +68,7 @@ export interface IPitch {
     };
   };
   approvedBy: string;
-  similarStories: [string];
+  similarStories: string[];
   deadline: Date;
   conflictOfInterest: boolean;
 }
@@ -79,6 +79,6 @@ export interface IPitch {
 export interface IResource {
   name: string;
   link: string;
-  teamRoles: [string];
+  teamRoles: string[];
   _id: string;
 }
