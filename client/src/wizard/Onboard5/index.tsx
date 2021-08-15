@@ -37,7 +37,7 @@ const Onboard5 = (): ReactElement => {
       genders: reject(data.genders, isEmpty),
       pronouns: reject(data.pronouns, isEmpty),
       dateJoined: new Date(Date.now()),
-      onboarding: 'ONBOARDING_SCHEDULED',
+      onboardingStatus: 'ONBOARDING_SCHEDULED',
       involvementResponse: data.involvementResponse,
       currentTeams: data.currentTeams,
       role: data.role,

@@ -67,7 +67,7 @@ const emptyUser: IUser = {
   pronouns: [],
   dateJoined: new Date(Date.now()),
   masthead: false,
-  onboarding: '',
+  onboardingStatus: '',
   profilePic: '',
   portfolio: '',
   linkedIn: '',
