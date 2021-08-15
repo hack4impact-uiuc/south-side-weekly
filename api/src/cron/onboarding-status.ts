@@ -3,7 +3,7 @@ import cron from 'node-cron';
 import User from '../models/user';
 import { onboardingStatusEnum } from '../utils/enums';
 
-// One day short of two weeks to account for onboarding statuses 
+// One day short of two weeks to account for onboarding statuses
 // that will switch to stalled that day.
 const TWO_WEEKS_AGO = 13;
 
