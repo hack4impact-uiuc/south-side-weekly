@@ -21,6 +21,7 @@
     "@types/lodash": "^4.14.171",
     "@types/mongodb": "^3.6.8",
     "@types/morgan": "^1.9.2",
+    "@types/node-cron": "^2.0.4",
     "@types/passport": "^1.0.6",
     "@types/passport-google-oauth20": "^2.0.6",
     "cookie-session": "^1.4.0",
@@ -35,6 +36,7 @@
     "mongodb": "^3.3.2",
     "mongoose": "^5.11.13",
     "morgan": "~1.10.0",
+    "node-cron": "^3.0.0",
     "passport": "^0.4.1",
     "passport-google-oauth20": "^2.0.0"
   },

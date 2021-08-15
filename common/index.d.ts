@@ -13,7 +13,7 @@ export interface IUser {
   pronouns: string[];
   dateJoined: Date;
   masthead: boolean;
-  onboarding: string;
+  onboardingStatus: string;
   profilePic: string;
   portfolio: string;
   linkedIn: string;
