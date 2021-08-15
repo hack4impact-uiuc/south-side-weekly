@@ -14,7 +14,7 @@ const Onboard5 = (): ReactElement => {
   const { store, data } = useWizard();
   const { user } = useAuth();
 
-  const [scheduled, setScheduled] = useState(!isEmpty(data.onboarding));
+  const [scheduled, setScheduled] = useState(!isEmpty(data.onboardingStatus));
 
   const onEventScheduled = (): void => {
     setScheduled(true);
