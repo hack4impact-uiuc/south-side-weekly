@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import { ObjectId } from 'mongodb';
 import { errorWrap } from '../middleware';
 
 import User from '../models/user';
@@ -8,12 +7,6 @@ import { getEditableFields, getViewableFields } from '../utils/user-utils';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
 
 const router = express.Router();
-
-/**
- * Validates an ID to whether or not it is a valid MongoDB ID or not
- * @param id Potential User ID to validate
- */
-const isValidMongoId = (id: string): boolean => ObjectId.isValid(id);
 
 // Gets all users
 router.get(
@@ -34,14 +27,6 @@ router.get(
   '/:userId',
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
-    if (!isValidMongoId(req.params.userId)) {
-      res.status(400).json({
-        success: false,
-        message: 'Bad ID format',
-      });
-      return;
-    }
-
     const user = await User.findById(req.params.userId);
     if (!user) {
       res.status(404).json({
@@ -94,14 +79,6 @@ router.put(
   '/:userId',
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
-    if (!isValidMongoId(req.params.userId)) {
-      res.status(400).json({
-        success: false,
-        message: 'Bad ID format',
-      });
-      return;
-    }
-
     const updatedUser = await User.findByIdAndUpdate(
       req.params.userId,
       req.body,
@@ -129,14 +106,6 @@ router.delete(
   '/:userId',
   requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
-    if (!isValidMongoId(req.params.userId)) {
-      res.status(400).json({
-        success: false,
-        message: 'Bad ID format',
-      });
-      return;
-    }
-
     const deletedUser = await User.findByIdAndDelete(req.params.userId);
 
     if (!deletedUser) {
@@ -160,20 +129,6 @@ router.put(
   '/:userId/pitches',
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
-    if (!isValidMongoId(req.params.userId)) {
-      res.status(400).json({
-        success: false,
-        message: 'Bad user ID format',
-      });
-      return;
-    } else if (!isValidMongoId(req.body.pitchId)) {
-      res.status(400).json({
-        success: false,
-        message: 'Bad pitch ID format',
-      });
-      return;
-    }
-
     const pitch = await Pitch.findById(req.body.pitchId);
     if (!pitch) {
       res.status(404).json({

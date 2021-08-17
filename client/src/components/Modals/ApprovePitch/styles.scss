@@ -1,0 +1,69 @@
+@import '../../../styles/colors.scss';
+
+.approve-pitch-modal {
+  .header {
+    background-color: $primary !important;
+    color: white !important;
+  }
+
+  .content {
+    .author-section {
+      display: flex;
+
+      .author {
+        margin-right: 20px;
+        h3 {
+          font-weight: normal;
+        }
+      }
+    }
+
+    .description {
+      margin-top: 20px;
+    }
+
+    .topics-section {
+      margin-bottom: 8px;
+    }
+
+    .team-select-group {
+      display: flex;
+      justify-content: space-between;
+
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        .field {
+          padding: 0 !important;
+
+          // https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp
+          input::-webkit-outer-spin-button,
+          input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+          }
+
+          input {
+            margin-top: 10px;
+            width: 50px !important;
+            height: 50px !important;
+            text-align: center;
+          }
+        }
+      }
+    }
+  }
+
+  .actions {
+    border-top: none !important;
+    background-color: white !important;
+    text-align: right;
+    padding: 10px !important;
+
+    .button {
+      margin: 0px 20px 20px 0px !important;
+    }
+  }
+}

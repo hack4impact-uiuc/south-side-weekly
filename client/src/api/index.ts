@@ -10,11 +10,13 @@ export {
   getApprovedPitches,
   getOpenTeams,
   updatePitch,
-  updatePitchContributors,
+  submitPitchClaim,
   getPitchesPendingApproval,
   getUnclaimedPitches,
   getPendingContributorPitches,
   createPitch,
+  approvePitch,
+  declinePitch,
 } from './pitch';
 export {
   createResource,

@@ -1,6 +1,10 @@
 import express, { Request, Response } from 'express';
 import { errorWrap } from '../middleware';
-import { requireRegistered, requireStaff } from '../middleware/auth';
+import {
+  requireAdmin,
+  requireRegistered,
+  requireStaff,
+} from '../middleware/auth';
 
 import Pitch from '../models/pitch';
 import User from '../models/user';
@@ -179,9 +183,69 @@ router.put(
   }),
 );
 
-// Adds a contributor to the assignmentContributors array
+// Approve a pitch
 router.put(
-  '/:pitchId/contributors',
+  '/:pitchId/approve',
+  requireAdmin,
+  errorWrap(async (req: Request, res: Response) => {
+    const { teams } = req.body;
+    console.log(req.params.pitchId);
+
+    const pitch = await Pitch.findByIdAndUpdate(req.params.pitchId, {
+      $set: {
+        status: pitchStatusEnum.APPROVED,
+        approvedBy: req.user._id,
+        teams: teams,
+      },
+    });
+
+    if (!pitch) {
+      res.status(404).json({
+        success: false,
+        message: 'Pitch not found with id',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully updated pitch',
+      result: pitch,
+    });
+  }),
+);
+
+// Decline a pitch
+router.put(
+  '/:pitchId/decline',
+  requireAdmin,
+  errorWrap(async (req: Request, res: Response) => {
+    const pitch = await Pitch.findByIdAndUpdate(req.params.pitchId, {
+      $set: {
+        status: pitchStatusEnum.REJECTED,
+      },
+    });
+
+    if (!pitch) {
+      res.status(404).json({
+        success: false,
+        message: 'Pitch not found with id',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully updated pitch',
+      result: pitch,
+    });
+  }),
+);
+
+// Adds a contributor to the assignmentContributors array
+// TODO: modify the pitch schema to also tell which team the user is claiming for
+router.put(
+  '/:pitchId/submitClaim',
   requireStaff,
   errorWrap(async (req: Request, res: Response) => {
     const user = await User.findById(req.body.userId);
@@ -211,6 +275,60 @@ router.put(
       success: true,
       message: 'Successfully updated assignmentContributors',
       result: updatedPitch,
+    });
+  }),
+);
+
+// Approves a claim on a pitch
+router.put(
+  '/:pitchId/approveClaim',
+  requireStaff,
+  errorWrap(async (req: Request, res: Response) => {
+    const { userId } = req.body;
+
+    // Remove the user from the pending contributors and add it to the the assignment contributors
+    const pitch = await Pitch.findByIdAndUpdate(
+      req.params.pitchId,
+      {
+        $pull: {
+          pendingContributors: userId,
+        },
+        $addToSet: {
+          assignmentContributors: userId,
+        },
+      },
+      { returnOriginal: false, runValidators: true },
+    );
+
+    // Add the pitch to the user's claimed Pitches
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {
+        $addToSet: {
+          claimedPitches: req.params.pitchId,
+        },
+      },
+      { returnOriginal: false },
+    );
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found with id',
+      });
+      return;
+    } else if (!pitch) {
+      res.status(404).json({
+        success: false,
+        message: 'Pitch not found with id',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully approved claim',
+      result: pitch,
     });
   }),
 );

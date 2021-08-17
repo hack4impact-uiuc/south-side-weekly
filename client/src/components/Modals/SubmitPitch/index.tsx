@@ -1,6 +1,7 @@
 import { isEmpty, isUndefined, toString } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Button, Form, Modal, ModalProps } from 'semantic-ui-react';
+import Swal from 'sweetalert2';
 
 import { createPitch, isError } from '../../../api';
 import { useAuth } from '../../../contexts';
@@ -63,6 +64,10 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
 
       if (!isError(res)) {
         callback();
+        Swal.fire({
+          title: 'Successfully submitted pitch!',
+          icon: 'success',
+        });
         setIsOpen(false);
       }
     }

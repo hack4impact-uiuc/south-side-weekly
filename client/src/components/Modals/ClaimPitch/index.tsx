@@ -8,14 +8,9 @@ import React, {
 } from 'react';
 import { Button, Form, Grid, Modal, ModalProps } from 'semantic-ui-react';
 import { IPitch, IUser } from 'ssw-common';
+import Swal from 'sweetalert2';
 
-import {
-  getUser,
-  isError,
-  updatePitch,
-  updatePitchContributors,
-  updateUserClaimedPitches,
-} from '../../../api';
+import { getUser, isError, updatePitch, submitPitchClaim } from '../../../api';
 import { useAuth } from '../../../contexts';
 import { emptyPitch } from '../../../utils/constants';
 import { convertMap, getUserFullName } from '../../../utils/helpers';
@@ -132,11 +127,14 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
       pendingContributors: [...pitch.pendingContributors, user._id],
     };
 
-    const pitchRes = await updatePitchContributors(pitch._id, user._id);
-    const claimedRes = await updateUserClaimedPitches(user._id, pitch._id);
+    const pitchRes = await submitPitchClaim(pitch._id, user._id);
     const updateRes = await updatePitch({ ...body }, pitch._id);
-    if (!isError(pitchRes) && !isError(claimedRes) && !isError(updateRes)) {
+    if (!isError(pitchRes) && !isError(updateRes)) {
       callback();
+      Swal.fire({
+        title: 'Successfully submitted claim for pitch!',
+        icon: 'success',
+      });
       setIsOpen(false);
     }
   };
@@ -238,14 +236,6 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
               key={index}
               size="tiny"
             />
-            // <Image
-            //   circular
-            //   title={getUserFullName(contributor)}
-            //   size="tiny"
-            //   key={index}
-            //   src={getUserProfilePic(contributor)}
-            //   alt={getUserFullName(contributor)}
-            // />
           ))}
         </div>
       </Modal.Content>
@@ -255,7 +245,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
           onClick={claimPitch}
           content="Submit my Claim for Review"
           positive
-          disabled={didUserClaim()}
+          disabled={didUserClaim() || didUserSubmitClaimReq()}
         />
       </Modal.Actions>
     </Modal>

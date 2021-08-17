@@ -7,7 +7,6 @@ import React, {
 } from 'react';
 import { DropdownProps, Input, Menu } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
-import Swal from 'sweetalert2';
 
 import {
   getApprovedPitches,
@@ -23,6 +22,7 @@ import {
   AdminView,
   ClaimPitchModal,
   FilterDropdown,
+  ApprovePitchModal,
 } from '../../components';
 import { useAuth } from '../../contexts';
 import { allInterests, allTeams } from '../../utils/constants';
@@ -150,6 +150,10 @@ const PitchDoc = (): ReactElement => {
   }, [currentPitches, query, interests, teams, claimStatus, sort]);
 
   useEffect(() => {
+    if (currentTab !== TABS.APPROVED) {
+      setClaimStatus('');
+    }
+
     if (currentTab === TABS.UNCLAIMED) {
       setCurrentPitches(unclaimed);
     } else if (currentTab === TABS.PITCH_APPROVAL) {
@@ -174,15 +178,6 @@ const PitchDoc = (): ReactElement => {
         setSort('none');
       }
     }
-  };
-
-  const callback = (message = ''): void => {
-    populatePitches();
-    Swal.fire({
-      icon: 'success',
-      title: 'Success',
-      text: message,
-    });
   };
 
   const populatePitches = (): void => {
@@ -233,9 +228,7 @@ const PitchDoc = (): ReactElement => {
           iconPosition="left"
           className="search"
         />
-        <SubmitPitchModal
-          callback={() => callback('Successfully Submitted Pitch')}
-        />
+        <SubmitPitchModal callback={populatePitches} />
       </div>
 
       <div className="filters">
@@ -280,15 +273,19 @@ const PitchDoc = (): ReactElement => {
           if (currentTab === TABS.UNCLAIMED) {
             return (
               <ClaimPitchModal
-                callback={() =>
-                  callback('Successfully submitted your claim for this pitch!')
-                }
+                callback={populatePitches}
                 key={index}
                 pitch={pitch}
               />
             );
           } else if (currentTab === TABS.PITCH_APPROVAL) {
-            return <PitchCard key={index} pitch={pitch} />;
+            return (
+              <ApprovePitchModal
+                callback={populatePitches}
+                key={index}
+                pitch={pitch}
+              />
+            );
           } else if (currentTab === TABS.CLAIM_APPROVAL) {
             return <PitchCard key={index} pitch={pitch} />;
           } else if (currentTab === TABS.APPROVED) {

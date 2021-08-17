@@ -69,14 +69,16 @@ const ResourceModal: FC<ResourceProps> = ({
   });
 
   const updateResource = async (): Promise<void> => {
-    await editResource(resource?._id, {
-      ...parseFormData(formData),
-    });
-    closeModal();
-    Swal.fire({
-      title: 'Successfully updated resource',
-      icon: 'success',
-    });
+    if (resource) {
+      await editResource(resource._id, {
+        ...parseFormData(formData),
+      });
+      closeModal();
+      Swal.fire({
+        title: 'Successfully updated resource',
+        icon: 'success',
+      });
+    }
   };
 
   const submitResource = async (): Promise<void> => {
@@ -96,6 +98,10 @@ const ResourceModal: FC<ResourceProps> = ({
       });
     } else {
       closeModal();
+      Swal.fire({
+        title: 'Successfully created resource',
+        icon: 'success',
+      });
     }
   };
 

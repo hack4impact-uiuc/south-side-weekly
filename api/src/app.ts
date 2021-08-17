@@ -42,8 +42,6 @@ app.use(passport.session());
 // Cron jobs
 require('./cron/onboarding-status');
 
-console.log('this is a test');
-
 // Routes
 app.use('/api', apiRoutes);
 app.get('/', (req: Request, res: Response) => res.json('API working!'));

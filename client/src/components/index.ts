@@ -17,6 +17,7 @@ import UserCard from './UserCard';
 import Navbar from './Navbar';
 import SubmitButton from './Wizard/SubmitButton';
 import PrevButton from './Wizard/PrevButton';
+import ApprovePitchModal from './Modals/ApprovePitch';
 
 export {
   Header,
@@ -38,4 +39,5 @@ export {
   Navbar,
   SubmitButton,
   PrevButton,
+  ApprovePitchModal,
 };
