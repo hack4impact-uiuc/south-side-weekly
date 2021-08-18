@@ -46,11 +46,23 @@ const updateUserField = <T extends keyof IUser>(
   return userCopy;
 };
 
+/**
+ * Gets a user's first and last name, preferring their preferred name over first name
+ *
+ * @param user the user to get the fullname of
+ * @returns the fullname of the user
+ */
 const getUserFullName = (user: IUser): string =>
   `${user.preferredName ? user.preferredName : user.firstName} ${
     user.lastName
   }`;
 
+/**
+ * Parses an array of options into Semantic UI style Dropdown Items objects
+ *
+ * @param options the dropdown options to create
+ * @returns the Semantic-UI Dropdown options
+ */
 const parseOptions = (options: string[]): DropdownItemProps[] =>
   options.map((option, index) => ({
     key: index,
@@ -58,6 +70,12 @@ const parseOptions = (options: string[]): DropdownItemProps[] =>
     value: option,
   }));
 
+/**
+ * Determines if a pitch is claimed or not
+ *
+ * @param pitch the pitch check the claims status
+ * @returns true if pitch is claimed, else false
+ */
 const isPitchClaimed = (pitch: IPitch): boolean =>
   Object.entries(pitch.teams).every(
     ([, spots]) => spots.current === spots.target,
@@ -68,13 +86,36 @@ interface MapConversion<T, K> {
   value: K;
 }
 
+/**
+ * Converts an object to an array of objects [{k1, v1}, {k2, v2}, ...]
+ *
+ * @param map the Map to convert
+ * @returns an array version of the map
+ */
 const convertMap = <T, K>(map: Map<T, K>): MapConversion<T, K>[] =>
   Array.from(map, ([key, value]) => ({ key, value }));
 
+/**
+ * Converts a string to title case format
+ *
+ * this is a test -> This Is A Test
+ *
+ * @param str the string to convert
+ * @returns the title cased string
+ */
 const titleCase = (str: string): string => startCase(camelCase(str));
 
+/**
+ * A default void function to use as an initial function for contexts
+ */
 const defaultFunc = (): void => void 0;
 
+/**
+ * Formats a number using libphonenumber-js into a US phone number
+ *
+ * @param value the unformatted phone number
+ * @returns the US formatted number
+ */
 const formatNumber = (value: string): string => {
   if (value.includes('(') && !value.includes(')')) {
     return value.replace('(', '');
@@ -82,11 +123,24 @@ const formatNumber = (value: string): string => {
   return new AsYouType('US').input(value);
 };
 
+/**
+ * Converts an array of arguments into a single className
+ *
+ * ("first", "second", undefined, "third") -> "first second third"
+ *
+ * @param classNames the classnames to combine
+ * @returns a single classname string
+ */
 const classNames = (...classNames: (string | undefined)[]): string => {
   const parsed = reject(classNames, isUndefined);
   return parsed.join(' ');
 };
 
+/**
+ * Opens a user's profile in a new tab and focuses that tab
+ *
+ * @param user the user whose profile should be opened
+ */
 const openProfile = (user: IUser): void =>
   window.open(`/profile/${user._id}`)!.focus();
 
