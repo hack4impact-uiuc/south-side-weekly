@@ -18,7 +18,7 @@ const SubmitButton: FC<SubmitButtonProps> = ({
 
   return (
     <Button
-      className={classNames(['wizard-submit', rest.className])}
+      className={classNames('wizard-submit', rest.className)}
       icon={action === 'next' ? 'arrow right' : 'check'}
       circular
       size="massive"

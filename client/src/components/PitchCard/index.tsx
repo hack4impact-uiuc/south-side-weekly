@@ -4,6 +4,7 @@ import { IPitch } from 'ssw-common';
 import { toString } from 'lodash';
 
 import FieldTag from '../FieldTag';
+import { classNames } from '../../utils/helpers';
 
 import './styles.scss';
 
@@ -27,7 +28,7 @@ const PitchCard: FC<IProps> = ({ pitch, ...rest }): ReactElement => {
   };
 
   return (
-    <Card className={`pitch-card ${rest.className || ''}`} {...rest}>
+    <Card className={classNames('pitch-card', rest.className)} {...rest}>
       <Card.Content>
         <div>
           <p>{pitch.title}</p>

@@ -16,7 +16,7 @@ const UserCard: FC<UserCardProps> = ({
   className,
   ...rest
 }): ReactElement => (
-  <Card fluid className={classNames(['user-card', className])} {...rest}>
+  <Card fluid className={classNames('user-card', className)} {...rest}>
     <Card.Content>
       <UserPicture user={user} />
       <div className="name">

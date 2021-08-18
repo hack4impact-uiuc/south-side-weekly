@@ -25,7 +25,7 @@ const UserPicture: FC<UserPictureProps> = ({
       size={size}
       src={getPicture(user)}
       alt={getUserFullName(user)}
-      className={classNames(['user-picture', className])}
+      className={classNames('user-picture', className)}
       {...rest}
     />
   );

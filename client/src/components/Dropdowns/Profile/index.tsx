@@ -35,7 +35,7 @@ const ProfileDropdown: FC<DropdownProps> = ({ ...rest }): ReactElement => {
   return (
     <Dropdown
       simple
-      className={classNames(['profile-dropdown', rest.className])}
+      className={classNames('profile-dropdown', rest.className)}
       closeOnChange
       item
       trigger={<Trigger user={user} />}

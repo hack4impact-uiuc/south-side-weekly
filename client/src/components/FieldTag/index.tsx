@@ -19,11 +19,11 @@ const FieldTag: FC<LabelProps> = ({
       {...rest}
       content={titleCase(toString(content))}
       size={size}
-      className={classNames([
+      className={classNames(
         'interest-team-label',
         toClassName(toString(content)),
         rest.className,
-      ])}
+      )}
     />
   );
 };

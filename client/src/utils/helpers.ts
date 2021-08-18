@@ -82,7 +82,7 @@ const formatNumber = (value: string): string => {
   return new AsYouType('US').input(value);
 };
 
-const classNames = (classNames: (string | undefined)[]): string => {
+const classNames = (...classNames: (string | undefined)[]): string => {
   const parsed = reject(classNames, isUndefined);
   return parsed.join(' ');
 };
