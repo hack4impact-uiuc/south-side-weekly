@@ -8,13 +8,10 @@ const WizardProvider: FC = ({ children }): ReactElement => {
   const [pages, setPages] = useState(new Set<number>());
 
   const store = (data: UserElements): void => {
-    console.log(data);
     const updated = { ...newUser };
 
     updated.data = { ...updated.data, ...data };
     updated.currentPage++;
-
-    console.log(updated);
 
     setNewUser(updated);
     pages.add(updated.currentPage - 1);

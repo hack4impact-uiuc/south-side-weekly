@@ -98,9 +98,6 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   });
 
   const handleApprove = async (): Promise<void> => {
-    console.log(parseToTeams(teamMap));
-    console.log(teamMap);
-
     let validForm = false;
 
     teamMap.forEach((value) => {

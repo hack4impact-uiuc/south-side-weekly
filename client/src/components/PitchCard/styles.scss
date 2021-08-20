@@ -15,6 +15,10 @@ $cardColor: $primary;
     border-bottom: solid $cardColor 8px !important;
   }
 
+  .description {
+    word-break: break-all;
+  }
+
   .topics {
     display: flex;
     flex-wrap: wrap;

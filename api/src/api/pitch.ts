@@ -189,7 +189,6 @@ router.put(
   requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
     const { teams } = req.body;
-    console.log(req.params.pitchId);
 
     const pitch = await Pitch.findByIdAndUpdate(req.params.pitchId, {
       $set: {
@@ -246,7 +245,7 @@ router.put(
 // TODO: modify the pitch schema to also tell which team the user is claiming for
 router.put(
   '/:pitchId/submitClaim',
-  requireStaff,
+  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     const user = await User.findById(req.body.userId);
     if (!user) {

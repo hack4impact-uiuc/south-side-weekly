@@ -155,13 +155,13 @@ const PitchDoc = (): ReactElement => {
     }
 
     if (currentTab === TABS.UNCLAIMED) {
-      setCurrentPitches(unclaimed);
+      setCurrentPitches([...unclaimed]);
     } else if (currentTab === TABS.PITCH_APPROVAL) {
-      setCurrentPitches(pendingApprovals);
+      setCurrentPitches([...pendingApprovals]);
     } else if (currentTab === TABS.CLAIM_APPROVAL) {
-      setCurrentPitches(pendingClaims);
+      setCurrentPitches([...pendingClaims]);
     } else if (currentTab === TABS.APPROVED) {
-      setCurrentPitches(approved);
+      setCurrentPitches([...approved]);
     }
   }, [currentTab, unclaimed, pendingApprovals, pendingClaims, approved]);
 
