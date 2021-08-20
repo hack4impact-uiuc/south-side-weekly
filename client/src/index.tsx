@@ -1,37 +1,45 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from 'react-router-dom';
 import 'semantic-ui-css/semantic.min.css';
-import axios from 'axios';
 
-import Home from './pages/Home';
-import PitchDoc from './pages/pitchDoc/PitchDoc';
-import Profile from './pages/profile';
-import Login from './pages/Login';
-import WizardWrapper from './pages/wizard/WizardWrapper';
-import ResourcePage from './pages/ResourcePage';
-import Directory from './pages/Directory';
-import NotFound from './pages/NotFound';
+import {
+  Directory,
+  Profile,
+  NotFound,
+  Login,
+  PitchDoc,
+  Resources,
+} from './pages';
+import Wizard from './wizard';
+import { PrivateRoute } from './components';
+import { AuthProvider } from './contexts';
 
-import './css/index.css';
-
-axios.defaults.withCredentials = true;
+import './styles/styles.scss';
 
 ReactDOM.render(
   <React.StrictMode>
-    <Router>
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route exact path="/join" component={WizardWrapper} />
-        <Route exact path="/pitches" component={PitchDoc} />
-        <Route exact path="/resource" component={ResourcePage} />
-        <Route exact path="/resources" component={ResourcePage} />
-        <Route exact path="/profile/:userId" component={Profile} />
-        <Route exact path="/users" component={Directory} />
-        <Route exact path="/login" component={Login} />
-        <Route exact path="*" component={NotFound} />
-      </Switch>
-    </Router>
+    <AuthProvider>
+      <Router>
+        <Switch>
+          <Route exact path="/">
+            <Redirect to="/login" />
+          </Route>
+          <PrivateRoute exact path="/pitches" component={PitchDoc} />
+          <PrivateRoute exact path="/resources" component={Resources} />
+          <PrivateRoute exact path="/profile/:userId" component={Profile} />
+          <PrivateRoute exact path="/users" component={Directory} />
+          <PrivateRoute exact path="/login" component={Login} />
+          <PrivateRoute exact path="/join" component={Wizard} />
+          <PrivateRoute exact path="*" component={NotFound} />
+        </Switch>
+      </Router>
+    </AuthProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

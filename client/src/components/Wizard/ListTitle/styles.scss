@@ -1,0 +1,12 @@
+@import '../../../styles/colors.scss';
+
+.list-title {
+  font-weight: 600;
+  color: $primary;
+  border-bottom: 2px solid $primary;
+  font-size: 1.2em;
+  padding: 0px 2px 2px 2px;
+  margin-bottom: 15px;
+  width: fit-content;
+  height: fit-content;
+}

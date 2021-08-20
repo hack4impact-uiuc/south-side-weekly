@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import { ObjectId } from 'mongodb';
 import { errorWrap } from '../middleware';
+import { requireAdmin, requireRegistered } from '../middleware/auth';
 
 import Resource from '../models/resource';
 
@@ -15,6 +16,7 @@ const isValidMongoId = (id: string): boolean => ObjectId.isValid(id);
 // Gets all resources
 router.get(
   '/',
+  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     const resources = await Resource.find({});
     res.status(200).json({
@@ -28,6 +30,7 @@ router.get(
 // Gets a resource by id
 router.get(
   '/:resourceId',
+  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     if (!isValidMongoId(req.params.resourceId)) {
       res.status(400).json({
@@ -56,7 +59,21 @@ router.get(
 // Creates a new resource
 router.post(
   '/',
+  requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
+    const { name, link } = req.body;
+
+    const resourceWithName = await Resource.findOne({ name: name });
+    const resourceWithLink = await Resource.findOne({ link: link });
+
+    if (resourceWithName || resourceWithLink) {
+      res.status(409).json({
+        message: 'Duplicate resource',
+        success: false,
+      });
+      return;
+    }
+
     const newResource = await Resource.create(req.body);
     if (newResource) {
       res.status(200).json({
@@ -71,6 +88,7 @@ router.post(
 // Updates a resource
 router.put(
   '/:resourceId',
+  requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
     if (!isValidMongoId(req.params.resourceId)) {
       res.status(400).json({
@@ -105,6 +123,7 @@ router.put(
 // Deletes a resource
 router.delete(
   '/:resourceId',
+  requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
     if (!isValidMongoId(req.params.resourceId)) {
       res.status(400).json({

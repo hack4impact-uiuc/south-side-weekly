@@ -2,10 +2,14 @@ import { IPitch } from 'ssw-common';
 
 import { ApiResponseBase } from '../types';
 
-export interface GetPitchesResponseType extends ApiResponseBase {
+export interface PitchesResponse extends ApiResponseBase {
   result: IPitch[];
 }
 
-export interface GetOpenTeamsResponseType extends ApiResponseBase {
+export interface GetOpenTeamsResponse extends ApiResponseBase {
   result: IPitch['teams'];
+}
+
+export interface PitchResponse extends ApiResponseBase {
+  result: IPitch;
 }

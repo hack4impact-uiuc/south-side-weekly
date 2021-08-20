@@ -1,4 +1,4 @@
-export { getCurrentUser } from './auth';
+export { getCurrentUser, logout } from './auth';
 export {
   getUser,
   getUsers,
@@ -10,9 +10,13 @@ export {
   getApprovedPitches,
   getOpenTeams,
   updatePitch,
-  updatePitchContributors,
-  getPendingPitches,
+  submitPitchClaim,
+  getPitchesPendingApproval,
+  getUnclaimedPitches,
   getPendingContributorPitches,
+  createPitch,
+  approvePitch,
+  declinePitch,
 } from './pitch';
 export {
   createResource,

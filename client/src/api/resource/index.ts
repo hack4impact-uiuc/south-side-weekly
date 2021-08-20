@@ -1,40 +1,48 @@
-import { AxiosResponse } from 'axios';
+import { ApiResponseBase, Response } from '../types';
+import { buildEndpoint, del, get, post, put } from '../builders';
 
-import { ErrorWrapper } from '../types';
-import { del, get, post, put } from '../builders';
-
-import * as Types from './types';
+import { ResourceResponse, ResourcesResponse } from './types';
 
 const RESOURCE_ENDPOINT = '/resources';
 
 // Returns all of the resources
-const getAllResources = async (): Promise<
-  AxiosResponse<Types.GetAllResourcesResponseType> | ErrorWrapper
-> => await get(RESOURCE_ENDPOINT, 'GET_ALL_RESOURCES_FAIL');
+const getAllResources = async (): Promise<Response<ResourcesResponse>> => {
+  const url = buildEndpoint(RESOURCE_ENDPOINT);
+  const failureMessage = 'GET_ALL_RESOURCES_FAIL';
+
+  return await get(url, failureMessage);
+};
 
 // Creates a resource
 const createResource = async (newResource: {
   [key: string]: string | string[] | null;
-}): Promise<AxiosResponse<Types.CreateResourceResponseType> | ErrorWrapper> =>
-  await post(RESOURCE_ENDPOINT, newResource, 'CREATE_RESOURCE_FAIL');
+}): Promise<Response<ResourceResponse>> => {
+  const url = buildEndpoint(RESOURCE_ENDPOINT);
+  const failureMessage = 'CREATE_RESOURCE_FAIL';
+
+  return await post(url, newResource, failureMessage);
+};
 
 // Deletes a resource
 const deleteResource = async (
   resourceId: string,
-): Promise<AxiosResponse<Types.DeleteResourceResponseType> | ErrorWrapper> =>
-  await del(`${RESOURCE_ENDPOINT}/${resourceId}`, 'DELETE_RESOURCE_FAIL');
+): Promise<Response<ApiResponseBase>> => {
+  const url = buildEndpoint(RESOURCE_ENDPOINT, resourceId);
+  const failureMessage = 'DELETE_RESOURCE_FAIL';
+
+  return await del(url, failureMessage);
+};
 
 // Edits a resource
 const editResource = async (
-  resourceId: string | undefined,
+  resourceId: string,
   editedResource: {
     [key: string]: string | string[] | null;
   },
-): Promise<AxiosResponse<Types.EditResourceResponseType> | ErrorWrapper> =>
-  await put(
-    `${RESOURCE_ENDPOINT}/${resourceId}`,
-    editedResource,
-    'EDIT_RESOURCE_FAIL',
-  );
+): Promise<Response<ResourceResponse>> => {
+  const url = buildEndpoint(RESOURCE_ENDPOINT, resourceId!);
+  const failureMessage = 'EDIT_RESOURCE_FAIL';
 
+  return await put(url, editedResource, failureMessage);
+};
 export { getAllResources, createResource, deleteResource, editResource };

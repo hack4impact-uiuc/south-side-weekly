@@ -1,0 +1,10 @@
+@import '../../styles/variables.scss';
+
+.not-found-page {
+  // height = total screen height -
+  // (the height of the navbar and the bottom margin between the navbar and content)
+  height: calc(100vh - (#{$navbarHeight} + #{$navbarContentSpace}));
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}

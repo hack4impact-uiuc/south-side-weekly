@@ -1,0 +1,43 @@
+@import '../../styles/colors.scss';
+
+.onboard2-wrapper {
+  .header {
+    font-size: large;
+    text-align: center;
+    margin-top: 50px;
+  }
+
+  .form {
+    display: flex;
+    justify-content: center;
+    margin-top: 15vh;
+
+    .grid {
+      width: 80%;
+
+      .column {
+        display: flex;
+        flex-direction: column;
+        width: fit-content;
+
+        img {
+          width: 400px;
+          margin-right: 20px !important;
+          padding: 50px;
+        }
+
+        .checkbox-wrapper {
+          display: flex;
+          justify-content: left;
+          width: 100%;
+          margin-top: 15px;
+
+          .checkbox {
+            padding: 0 !important;
+            margin-right: 10px;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,5 +1,5 @@
-import mongoose, { Schema } from 'mongoose';
-import { IPitch } from '../types';
+import mongoose, { Document, Schema } from 'mongoose';
+import { IPitch } from 'ssw-common';
 
 import {
   interestsEnum,
@@ -7,18 +7,21 @@ import {
   assignmentStatusEnum,
 } from '../utils/enums';
 
+export type PitchSchema = IPitch & Document<any>;
+
 /**
  * Mongoose Schema to represent a Pitch at South Side Weekly
  */
 const Pitch = new mongoose.Schema({
-  name: { type: String, default: null, required: true },
-  pitchAuthor: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  pitchStatus: {
+  title: { type: String, default: null, required: true },
+  author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  conflictOfInterest: { type: Boolean, required: true },
+  status: {
     type: String,
     enum: Object.values(pitchStatusEnum),
     default: pitchStatusEnum.NONE,
   },
-  pitchDescription: { type: String, default: null, required: true },
+  description: { type: String, default: null, required: true },
   assignmentStatus: {
     type: String,
     enum: Object.values(assignmentStatusEnum),
@@ -65,4 +68,4 @@ const Pitch = new mongoose.Schema({
   deadline: { type: Date, default: null },
 });
 
-export default mongoose.model<IPitch>('Pitch', Pitch);
+export default mongoose.model<PitchSchema>('Pitch', Pitch);

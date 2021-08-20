@@ -1,13 +1,7 @@
 import mongoose, { Document } from 'mongoose';
+import { IResource } from 'ssw-common';
 
-/**
- * Interface for a Resource Schema.
- */
-interface IResource extends Document<any> {
-  name: string;
-  link: string;
-  teamRoles: [string];
-}
+type ResourceSchema = IResource & Document<any>;
 
 /**
  * Mongoose Schema to represent a Resource at South Side Weekly.
@@ -17,4 +11,4 @@ const Resource = new mongoose.Schema({
   link: { type: String, default: null, required: true },
   teamRoles: [{ type: String, default: null, required: true }],
 });
-export default mongoose.model<IResource>('Resource', Resource);
+export default mongoose.model<ResourceSchema>('Resource', Resource);

@@ -1,0 +1,13 @@
+@import '../../styles/colors.scss';
+
+.completition-wrapper {
+  width: 40%;
+  margin: auto;
+  margin-top: 20vh;
+
+  .segment {
+    text-align: center;
+    font-size: 18px;
+    line-height: 35px;
+  }
+}

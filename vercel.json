@@ -4,7 +4,7 @@
     "PROD_MONGO_URL": "@ssw_db_url",
     "GOOGLE_CLIENT_ID": "@ssw_google_client_id",
     "GOOGLE_CLIENT_SECRET": "@ssw_google_client_secret",
-    "GOOGLE_CALLBACK_URL": "@ssw_google_callback_url",
+    "GOOGLE_CALLBACK_URL": "https://south-side-weekly.vercel.app/api/auth/redirectURI",
     "SESS_SECRET": "@ssw_session_secret"
   },
   "builds": [
@@ -28,7 +28,7 @@
       "headers": { "cache-control": "s-maxage=31536000, immutable" },
       "dest": "client/static/$1"
     },
-    { "src": "/favicon.ico", "dest": "client/favicon.ico" },
+    { "src": "/ssw-favicon.ico", "dest": "client/ssw-favicon.ico" },
     {
       "src": "/asset-manifest.json",
       "dest": "client/asset-manifest.json"

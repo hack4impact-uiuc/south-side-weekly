@@ -1,21 +1,28 @@
+import { IUser } from 'ssw-common';
 import { difference } from 'lodash';
+
 import { isAdmin } from './auth-utils';
 import User from '../models/user';
-import { SessionUser } from './helpers';
-import { IUser } from '../types';
+
+type UserKeys = (keyof IUser)[];
 
 // All fields in user
 const allFields = Object.keys(User.schema.paths);
 
-const nonViewableFields = ['oauthID', '__v'];
+const nonViewableFields: UserKeys = ['oauthID'];
 
-const nonEditableFields = ['_id', 'oauthID', '__v'];
+const nonEditableFields: UserKeys = ['_id', 'oauthID'];
 
 // Only Admin can view these fields
-const adminViewableFields = ['phone'];
+const adminViewableFields: UserKeys = ['phone'];
 
 // Only Admin can edit these fields
-const adminEditableFields = ['currentTeams', 'role', 'email', 'races'];
+const adminEditableFields: UserKeys = [
+  'currentTeams',
+  'role',
+  'email',
+  'races',
+];
 
 /**
  * Gets the fields of another user the current user can view
@@ -24,20 +31,14 @@ const adminEditableFields = ['currentTeams', 'role', 'email', 'races'];
  * @param userId the user to be viewed
  * @returns the viewable fields for the current user
  */
-const getViewableFields = (
-  currentUser: SessionUser,
-  userId: string,
-): (keyof IUser)[] => {
-  const viewableFields = difference(
-    allFields,
-    nonViewableFields,
-  ) as (keyof IUser)[];
+const getViewableFields = (currentUser: IUser, userId: string): UserKeys => {
+  const viewableFields = difference(allFields, nonViewableFields) as UserKeys;
 
   if (isAdmin(currentUser) || currentUser._id.toString() === userId) {
     return viewableFields;
   }
 
-  return difference(viewableFields, adminViewableFields) as (keyof IUser)[];
+  return difference(viewableFields, adminViewableFields);
 };
 
 /**
@@ -47,18 +48,12 @@ const getViewableFields = (
  * @param userId the user to be edited
  * @returns the editable fields for the current user
  */
-const getEditableFields = (
-  currentUser: SessionUser,
-  userId: string,
-): (keyof IUser)[] => {
-  const editableFields = difference(
-    allFields,
-    nonEditableFields,
-  ) as (keyof IUser)[];
+const getEditableFields = (currentUser: IUser, userId: string): UserKeys => {
+  const editableFields = difference(allFields, nonEditableFields) as UserKeys;
   if (isAdmin(currentUser)) {
     return editableFields;
   } else if (currentUser._id.toString() === userId) {
-    return difference(editableFields, adminEditableFields) as (keyof IUser)[];
+    return difference(editableFields, adminEditableFields);
   }
 
   return [];

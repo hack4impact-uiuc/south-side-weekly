@@ -11,17 +11,15 @@ import {
   Image,
   DropdownItemProps,
 } from 'semantic-ui-react';
+import { startCase } from 'lodash';
 
 import {
   isError,
   getUser,
   updateUser,
-  getCurrentUser,
   getUserPermissionsByID,
 } from '../../api';
-import Sidebar from '../../components/Sidebar';
-import Header from '../../components/Header';
-import { pages } from '../../utils/enums';
+import { FieldTag, UserPicture } from '../../components';
 import Masthead from '../../assets/masthead.svg';
 import {
   allInterests,
@@ -32,24 +30,15 @@ import {
   allRaces,
   emptyUser,
 } from '../../utils/constants';
-import {
-  getUserProfilePic,
-  parseArrayToSemanticDropdownOptions,
-  parseSemanticMultiSelectTypes,
-  updateUserField,
-} from '../../utils/helpers';
-import {
-  convertToCapitalized,
-  convertToClassName,
-  parseCamelCase,
-} from '../../utils/formatters';
+import { parseOptions, updateUserField, titleCase } from '../../utils/helpers';
+import { useAuth } from '../../contexts';
 
 import SocialsInput from './SocialsInput';
 import StringAttribute from './BasicInfoInput/StringAttribute';
 import ArrayAttribute from './BasicInfoInput/ArrayAttribute';
 import SelectAttribute from './BasicInfoInput/SelectAttribute';
 import DateAttribute from './BasicInfoInput/DateAttribute';
-import './styles.css';
+import './styles.scss';
 import {
   IDropdownOptions,
   IPermissions,
@@ -67,7 +56,6 @@ const arrayAttributes: MultiDropdowns[] = ['genders', 'pronouns', 'races'];
 const Profile = (): ReactElement => {
   const { userId } = useParams<ParamTypes>();
   const [user, setUser] = useState<IUser>(emptyUser);
-  const [currentUser, setCurrentUser] = useState<IUser>(emptyUser);
   const [tempUser, setTempUser] = useState<IUser>(emptyUser);
   const [isEditMode, setIsEditMode] = useState(false);
   const [dropdownOptions, setDropdownOptions] = useState<IDropdownOptions>({
@@ -81,20 +69,14 @@ const Profile = (): ReactElement => {
     edit: [],
   });
 
+  const auth = useAuth();
+
   useEffect(() => {
     const loadUser = async (): Promise<void> => {
       const res = await getUser(userId);
       if (!isError(res)) {
         const user = res.data.result;
         setUser(user);
-      }
-    };
-
-    const loadCurrentUser = async (): Promise<void> => {
-      const res = await getCurrentUser();
-
-      if (!isError(res)) {
-        setCurrentUser(res.data.result);
       }
     };
 
@@ -107,8 +89,15 @@ const Profile = (): ReactElement => {
     };
 
     loadUser();
-    loadCurrentUser();
     loadCurrentUserPermissions();
+
+    return () => {
+      setUser(emptyUser);
+      setPermissions({
+        view: [],
+        edit: [],
+      });
+    };
   }, [userId]);
 
   /**
@@ -160,7 +149,7 @@ const Profile = (): ReactElement => {
    * @param interest the interest to add
    */
   const addInterest = (interest: string): void => {
-    const interests = [...user.interests] as [string];
+    const interests = [...user.interests];
     const currentIndex = interests.indexOf(interest);
     if (currentIndex >= 0) {
       interests.splice(currentIndex, 1);
@@ -176,7 +165,7 @@ const Profile = (): ReactElement => {
    * @param team the team to add
    */
   const addTeam = (team: string): void => {
-    const teams = [...user.currentTeams] as [string];
+    const teams = [...user.currentTeams];
     const currentIndex = teams.indexOf(team);
     if (currentIndex >= 0) {
       teams.splice(currentIndex, 1);
@@ -195,13 +184,7 @@ const Profile = (): ReactElement => {
    * @param field the field of the user
    */
   const addArrayElement = (arr: string[], field: MultiDropdowns): void =>
-    setUser(
-      updateUserField(
-        user,
-        field,
-        parseSemanticMultiSelectTypes(arr!) as [string],
-      ),
-    );
+    setUser(updateUserField(user, field, arr));
 
   /**
    * Determines if a field is viewable to current user
@@ -240,9 +223,7 @@ const Profile = (): ReactElement => {
   const getMultiDropdownOptions = (
     dropdown: MultiDropdowns,
   ): DropdownItemProps[] =>
-    parseArrayToSemanticDropdownOptions(
-      dropdownOptions[dropdown].concat(user[dropdown]),
-    );
+    parseOptions(dropdownOptions[dropdown].concat(user[dropdown]));
 
   /**
    * Adds an option to a dropdown
@@ -265,208 +246,206 @@ const Profile = (): ReactElement => {
   };
 
   return (
-    <>
-      <Sidebar currentPage={pages.PROFILE} />
-      <Header />
-      <div style={{ marginLeft: '15%', marginTop: '3%' }}>
-        <Grid padded stackable>
-          <Grid.Row columns={4}>
-            <Grid.Column className="profile-pic-col">
-              {(userId === currentUser._id || currentUser.role === 'ADMIN') && (
+    <div>
+      <Grid padded stackable>
+        <Grid.Row columns={4}>
+          <Grid.Column className="profile-pic-col">
+            {(userId === auth.user._id || auth.isAdmin) && (
+              <Button
+                size="medium"
+                className="edit-profile-btn"
+                onClick={startEditMode}
+                content="Edit Profile"
+              />
+            )}
+
+            <UserPicture size="small" user={user} />
+
+            {user.masthead && (
+              <Image className="masthead" size="small" src={Masthead} />
+            )}
+
+            {isEditMode && (
+              <div style={{ display: 'inline-block', textAlign: 'center' }}>
                 <Button
+                  className="edit-mode-btn save"
+                  content="Save Changes"
+                  onClick={saveUser}
                   size="medium"
-                  className="edit-profile-btn"
-                  onClick={startEditMode}
-                  content="Edit Profile"
                 />
-              )}
-
-              <Image size="small" circular src={getUserProfilePic(user)} />
-
-              {user.masthead && (
-                <Image className="masthead" size="small" src={Masthead} />
-              )}
-
-              {isEditMode && (
-                <div style={{ display: 'inline-block', textAlign: 'center' }}>
-                  <Button
-                    className="edit-mode-btn save"
-                    content="Save Changes"
-                    onClick={saveUser}
-                    size="medium"
-                  />
-                  <Button
-                    className="edit-mode-btn cancel"
-                    content="Cancel Changes"
-                    onClick={cancelEditMode}
-                    size="medium"
-                  />
-                </div>
-              )}
-            </Grid.Column>
-            <Grid.Column width={5}>
-              <HeaderTag as="h2">Basic Information</HeaderTag>
-              <Container>
-                {stringAttributes.map((attribute, index) => (
-                  <StringAttribute
-                    key={index}
-                    label={parseCamelCase(attribute)}
-                    value={user[attribute] as string}
-                    onChange={(e, { value }) => editUser(attribute, value)}
-                    disabled={!isEditable(attribute)}
-                    viewable={isViewable(attribute)}
-                  />
-                ))}
-
-                {arrayAttributes.map((attribute, index) => (
-                  <ArrayAttribute
-                    key={index}
-                    label={parseCamelCase(attribute)}
-                    value={user[attribute]}
-                    options={getMultiDropdownOptions(attribute)}
-                    onAddItem={(e, { value }) =>
-                      addDropdownOption(attribute, `${value}`)
-                    }
-                    onChange={(e, { value }) =>
-                      addArrayElement(value as string[], attribute)
-                    }
-                    viewable={isViewable(attribute)}
-                    editable={isEditable(attribute)}
-                  />
-                ))}
-
-                <SelectAttribute
-                  label={parseCamelCase('role')}
-                  value={convertToCapitalized(user.role)}
-                  options={parseArrayToSemanticDropdownOptions(
-                    dropdownOptions['role'],
-                  )}
-                  onChange={(e, { value }) => editUser('role', `${value}`)}
-                  viewable={isViewable('role')}
-                  editable={isEditable('role')}
+                <Button
+                  className="edit-mode-btn cancel"
+                  content="Cancel Changes"
+                  onClick={cancelEditMode}
+                  size="medium"
                 />
+              </div>
+            )}
+          </Grid.Column>
+          <Grid.Column width={5}>
+            <HeaderTag as="h2">Basic Information</HeaderTag>
+            <Container>
+              {stringAttributes.map((attribute, index) => (
+                <StringAttribute
+                  key={index}
+                  label={titleCase(attribute)}
+                  value={user[attribute] as string}
+                  onChange={(e, { value }) => editUser(attribute, value)}
+                  disabled={!isEditable(attribute)}
+                  viewable={isViewable(attribute)}
+                />
+              ))}
 
-                <DateAttribute
-                  label={parseCamelCase('dateJoined')}
-                  value={user.dateJoined}
-                  onChange={(e, { value }) =>
-                    editUser('dateJoined', new Date(value))
+              {arrayAttributes.map((attribute, index) => (
+                <ArrayAttribute
+                  key={index}
+                  label={titleCase(attribute)}
+                  value={user[attribute]}
+                  options={getMultiDropdownOptions(attribute)}
+                  onAddItem={(e, { value }) =>
+                    addDropdownOption(attribute, `${value}`)
                   }
-                  viewable={isViewable('dateJoined')}
-                  editable={isEditable('dateJoined')}
+                  onChange={(e, { value }) =>
+                    addArrayElement(value as string[], attribute)
+                  }
+                  viewable={isViewable(attribute)}
+                  editable={isEditable(attribute)}
                 />
-              </Container>
-            </Grid.Column>
+              ))}
 
-            {isViewable('interests') && (
-              <Grid.Column textAlign="center" width={3}>
-                <HeaderTag as="h2">My Interests</HeaderTag>
-                {isEditable('interests') ? (
-                  <Container>
-                    {allInterests.map((interest, index) => (
-                      <div key={index} className="checkbox-group">
-                        <Checkbox
-                          className="checkbox"
-                          value={interest}
-                          label={convertToCapitalized(interest)}
-                          checked={user.interests.includes(interest)}
-                          onChange={(e, { value }) => {
-                            addInterest(`${value}`);
-                          }}
-                        />
-                      </div>
-                    ))}
-                  </Container>
-                ) : (
-                  user.interests.sort().map((interest, index) => (
-                    <div
-                      className={`field-label ${convertToClassName(interest)}`}
-                      key={index}
-                    >
-                      {convertToCapitalized(interest)}
-                    </div>
-                  ))
-                )}
-              </Grid.Column>
-            )}
+              <SelectAttribute
+                label={titleCase('role')}
+                value={titleCase(user.role)}
+                options={parseOptions(allRoles)}
+                onChange={(e, { value }) => editUser('role', `${value}`)}
+                viewable={isViewable('role')}
+                editable={isEditable('role')}
+              />
 
-            {isViewable('currentTeams') && (
-              <Grid.Column textAlign="center" width={3}>
-                <HeaderTag as="h2">My Teams</HeaderTag>
-                {isEditable('currentTeams') ? (
-                  <div className="checkbox-group">
-                    {allTeams.map((team, index) => (
+              <DateAttribute
+                label={startCase('dateJoined')}
+                value={user.dateJoined}
+                onChange={(e, { value }) =>
+                  editUser('dateJoined', new Date(value))
+                }
+                viewable={isViewable('dateJoined')}
+                editable={isEditable('dateJoined')}
+              />
+            </Container>
+          </Grid.Column>
+
+          {isViewable('interests') && (
+            <Grid.Column textAlign="center" width={3}>
+              <HeaderTag as="h2">My Interests</HeaderTag>
+              {isEditable('interests') ? (
+                <Container>
+                  {allInterests.map((interest, index) => (
+                    <div key={index} className="checkbox-group">
                       <Checkbox
-                        key={index}
                         className="checkbox"
-                        value={team}
-                        label={convertToCapitalized(team)}
-                        checked={user.currentTeams.includes(team)}
-                        onChange={(e, data) => addTeam(`${data.value!}`)}
+                        value={interest}
+                        label={titleCase(interest)}
+                        checked={user.interests.includes(interest)}
+                        onChange={(e, { value }) => {
+                          addInterest(`${value}`);
+                        }}
                       />
-                    ))}
-                  </div>
-                ) : (
-                  user.currentTeams.sort().map((team, index) => (
-                    <div
-                      className={`field-label ${convertToClassName(team)}`}
-                      key={index}
-                    >
-                      {convertToCapitalized(team)}
                     </div>
+                  ))}
+                </Container>
+              ) : (
+                user.interests
+                  .sort()
+                  .map((interest, index) => (
+                    <FieldTag
+                      size="medium"
+                      key={index}
+                      className="field-label"
+                      content={interest}
+                    />
                   ))
-                )}
-              </Grid.Column>
-            )}
-          </Grid.Row>
-          <Divider />
-          <Grid.Row centered columns={3}>
-            <Grid.Column textAlign="left" width={6}>
-              <HeaderTag as="h2">Socials/Contact</HeaderTag>
-              <SocialsInput
-                disabled={!isEditable('email')}
-                onChange={(e, { value }) => editUser('email', value)}
-                icon="mail"
-                value={user.email}
-                viewable={isViewable('email')}
-              />
+              )}
+            </Grid.Column>
+          )}
 
-              <SocialsInput
-                disabled={!isEditable('phone')}
-                onChange={(e, { value }) => editUser('phone', value)}
-                icon="phone"
-                value={user.phone}
-                viewable={isViewable('phone')}
-              />
+          {isViewable('currentTeams') && (
+            <Grid.Column textAlign="center" width={3}>
+              <HeaderTag as="h2">My Teams</HeaderTag>
+              {isEditable('currentTeams') ? (
+                <div className="checkbox-group">
+                  {allTeams.map((team, index) => (
+                    <Checkbox
+                      key={index}
+                      className="checkbox"
+                      value={team}
+                      label={titleCase(team)}
+                      checked={user.currentTeams.includes(team)}
+                      onChange={(e, data) => addTeam(`${data.value!}`)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                user.currentTeams
+                  .sort()
+                  .map((team, index) => (
+                    <FieldTag
+                      size="medium"
+                      key={index}
+                      className="field-label"
+                      content={team}
+                    />
+                  ))
+              )}
             </Grid.Column>
-            <Grid.Column width={2} />
-            <Grid.Column textAlign="left" width={6}>
-              <SocialsInput
-                icon="linkedin"
-                value={user.linkedIn}
-                disabled={!isEditable('linkedIn')}
-                onChange={(e, { value }) => editUser('linkedIn', value)}
-                viewable={isViewable('linkedIn')}
-              />
-              <SocialsInput
-                icon="globe"
-                value={user.portfolio}
-                disabled={!isEditable('portfolio')}
-                onChange={(e, { value }) => editUser('portfolio', value)}
-                viewable={isViewable('portfolio')}
-              />
-              <SocialsInput
-                icon="twitter"
-                value={user.twitter}
-                disabled={!isEditable('twitter')}
-                onChange={(e, { value }) => editUser('twitter', value)}
-                viewable={isViewable('twitter')}
-              />
-            </Grid.Column>
-          </Grid.Row>
-        </Grid>
-      </div>
-    </>
+          )}
+        </Grid.Row>
+        <Divider />
+        <Grid.Row centered columns={3}>
+          <Grid.Column textAlign="left" width={6}>
+            <HeaderTag as="h2">Socials/Contact</HeaderTag>
+            <SocialsInput
+              disabled={!isEditable('email')}
+              onChange={(e, { value }) => editUser('email', value)}
+              icon="mail"
+              value={user.email}
+              viewable={isViewable('email')}
+            />
+
+            <SocialsInput
+              disabled={!isEditable('phone')}
+              onChange={(e, { value }) => editUser('phone', value)}
+              icon="phone"
+              value={user.phone}
+              viewable={isViewable('phone')}
+            />
+          </Grid.Column>
+          <Grid.Column width={2} />
+          <Grid.Column textAlign="left" width={6}>
+            <SocialsInput
+              icon="linkedin"
+              value={user.linkedIn}
+              disabled={!isEditable('linkedIn')}
+              onChange={(e, { value }) => editUser('linkedIn', value)}
+              viewable={isViewable('linkedIn')}
+            />
+            <SocialsInput
+              icon="globe"
+              value={user.portfolio}
+              disabled={!isEditable('portfolio')}
+              onChange={(e, { value }) => editUser('portfolio', value)}
+              viewable={isViewable('portfolio')}
+            />
+            <SocialsInput
+              icon="twitter"
+              value={user.twitter}
+              disabled={!isEditable('twitter')}
+              onChange={(e, { value }) => editUser('twitter', value)}
+              viewable={isViewable('twitter')}
+            />
+          </Grid.Column>
+        </Grid.Row>
+      </Grid>
+    </div>
   );
 };
 

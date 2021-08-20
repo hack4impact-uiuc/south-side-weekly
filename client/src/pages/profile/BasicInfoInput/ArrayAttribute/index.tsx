@@ -1,6 +1,8 @@
 import React, { ReactElement, FC } from 'react';
 import { Dropdown, Input } from 'semantic-ui-react';
 
+import { titleCase } from '../../../../utils/helpers';
+
 import { IArrayAttribute } from './types';
 
 const ArrayAttribute: FC<IArrayAttribute> = ({
@@ -30,14 +32,7 @@ const ArrayAttribute: FC<IArrayAttribute> = ({
             onChange={onChange}
           />
         ) : (
-          <Input
-            value={value
-              .map(
-                (el) => el.charAt(0).toUpperCase() + el.slice(1).toLowerCase(),
-              )
-              .join(', ')}
-            transparent
-          />
+          <Input value={value.map(titleCase).join(', ')} transparent />
         )}
       </div>
     )}

@@ -1,0 +1,41 @@
+@import '../../styles/colors.scss';
+
+.svg {
+  position: absolute;
+  width: 30%;
+  left: 0;
+  bottom: 0;
+}
+
+.initial-wrapper {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20vh;
+  height: fit-content;
+
+  .title {
+    margin-bottom: 6vh;
+    font-size: 36px !important;
+  }
+
+  .group {
+    display: flex;
+    align-items: center;
+
+    .button {
+      background-color: $primary;
+      margin: 20px !important;
+      color: white;
+      width: 250px;
+      border-radius: 1rem;
+
+      &:hover {
+        background-color: $primary;
+        opacity: 0.9;
+        color: white;
+      }
+    }
+  }
+}

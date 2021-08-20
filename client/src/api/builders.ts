@@ -114,4 +114,13 @@ const buildURI = (
   return uri.href;
 };
 
-export { buildURI, get, post, put, del, isError };
+/**
+ * Builds the paths to a URL
+ * (pitch, arg1, arg2, arg3) --> /pitch/arg1/arg2/arg3/arg4
+ *
+ * @param paths the paths to append on to the base url
+ * @returns the complete endpoint
+ */
+const buildEndpoint = (...paths: string[]): string => paths.join('/');
+
+export { buildURI, get, post, put, del, isError, buildEndpoint };

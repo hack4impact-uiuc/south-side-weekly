@@ -1,0 +1,42 @@
+@import '../../../styles/colors.scss';
+
+.resource-modal {
+  background-color: white !important;
+
+  .header {
+    background-color: $primary !important;
+    color: white !important;
+  }
+
+  h3 {
+    color: black;
+  }
+
+  .checkbox-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 50px;
+    color: black;
+
+    .checkbox {
+      padding-left: 0 !important;
+    }
+  }
+
+  .content {
+    background-color: white !important;
+  }
+
+  .submit-btn .button {
+    background-color: $primary !important;
+    color: white !important;
+    float: right;
+    margin: 20px;
+
+    &:hover {
+      background-color: $primary;
+      color: white;
+      opacity: 0.9;
+    }
+  }
+}

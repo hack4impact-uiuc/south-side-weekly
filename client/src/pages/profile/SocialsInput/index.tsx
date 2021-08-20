@@ -1,7 +1,7 @@
 import React, { ReactElement, FC } from 'react';
 import { Grid, Icon, Input, SemanticICONS } from 'semantic-ui-react';
 
-import './styles.css';
+import './styles.scss';
 import { ISocialsInput } from './types';
 
 const SocialsInput: FC<ISocialsInput> = ({
@@ -39,13 +39,7 @@ const SocialsInput: FC<ISocialsInput> = ({
           </Grid.Column>
           <Grid.Column className="col">
             {disabled ? (
-              <Input
-                className="input"
-                fluid
-                transparent
-                onChange={onChange}
-                value={value}
-              >
+              <Input className="input" fluid transparent>
                 {linkify(icon, value)}
               </Input>
             ) : (

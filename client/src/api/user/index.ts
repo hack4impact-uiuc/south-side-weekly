@@ -1,33 +1,37 @@
-import { AxiosResponse } from 'axios';
+import { Response } from '../types';
+import { buildEndpoint, get, put } from '../builders';
+import { PitchesResponse } from '../pitch/types';
 
-import { ErrorWrapper } from '../types';
-import { get, put } from '../builders';
-
-import * as Types from './types';
+import { UsersResponse, UserResponse, UserPermissions } from './types';
 
 const USER_ENDPOINT = '/users';
 
 // Returns all of the users in the database
-const getUsers = async (): Promise<
-  AxiosResponse<Types.GetUsersResponseType> | ErrorWrapper
-> => await get(USER_ENDPOINT, 'GET_USERS_FAIL');
+const getUsers = async (): Promise<Response<UsersResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT);
+  const failureMessage = 'GET_USERS_FAIL';
+
+  return await get(url, failureMessage);
+};
 
 // Returns a single user from the user's id
-const getUser = async (
-  userId: string,
-): Promise<AxiosResponse<Types.GetUserResponseType> | ErrorWrapper> =>
-  await get(`${USER_ENDPOINT}/${userId}`, 'GET_USER_FAIL');
+const getUser = async (userId: string): Promise<Response<UserResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, userId);
+  const failureMessage = 'GET_USER_FAIL';
+
+  return await get(url, failureMessage);
+};
 
 // Adds a pitch to a user's claimed pitches
 const updateUserClaimedPitches = async (
   userId: string,
   pitchId: string,
-): Promise<AxiosResponse<Types.GetUserPitchesResponseType> | ErrorWrapper> =>
-  await put(
-    `${USER_ENDPOINT}/${userId}/pitches`,
-    { pitchId },
-    'UPDATE_USER_PITCHES_FAIL',
-  );
+): Promise<Response<PitchesResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, userId, 'pitches');
+  const failureMessage = 'UPDATE_USER_PITCHES_FAIL';
+
+  return await put(url, { pitchId }, failureMessage);
+};
 
 // Update a user's data
 const updateUser = async (
@@ -35,8 +39,12 @@ const updateUser = async (
     [key: string]: string | boolean | string[] | Date | null;
   },
   userId: string,
-): Promise<AxiosResponse<Types.GetUserResponseType> | ErrorWrapper> =>
-  await put(`${USER_ENDPOINT}/${userId}`, profileData, 'UPDATE_USER_FAIL');
+): Promise<Response<UserResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, userId);
+  const failureMessage = 'UPDATE_USER_FAIL';
+
+  return await put(url, profileData, failureMessage);
+};
 
 /**
  * Gets a user's permissions
@@ -44,10 +52,11 @@ const updateUser = async (
  */
 export const getUserPermissionsByID = async (
   userId: string,
-): Promise<AxiosResponse<Types.UserPermissionsType> | ErrorWrapper> =>
-  await get(
-    `${USER_ENDPOINT}/${userId}/permissions`,
-    'GET_USER_PERMISSIONS_FAIL',
-  );
+): Promise<Response<UserPermissions>> => {
+  const url = buildEndpoint(USER_ENDPOINT, userId, 'permissions');
+  const failureMessage = 'GET_USER_PERMISSIONS_FAIL';
+
+  return await get(url, failureMessage);
+};
 
 export { getUsers, getUser, updateUserClaimedPitches, updateUser };

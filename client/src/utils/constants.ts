@@ -1,73 +1,6 @@
-import { IUser } from 'ssw-common';
+import { IPitch, IUser } from 'ssw-common';
 
-// All of the interests buttons to show
-const interestsButtons: { [key: string]: string } = {
-  Cannabis: '#CFE7C4',
-  Education: '#A9D3E5',
-  'Food and Land': '#BFEBE0',
-  Fun: '#F9B893',
-  Health: '#F9B893',
-  Housing: '#EF8B8B',
-  Immigration: '#D8ACE8',
-  Literature: '#A5C4F2',
-  Music: '#BFEBE0',
-  Nature: '#CFE7C4',
-  Politics: '#A5C4F2',
-  'Stage and Screen': '#D8ACE8',
-  Transportation: '#F1D8B0',
-  'Visual Arts': '#BAB9E9',
-};
-
-// All of the buttons to show for the current teams
-const currentTeamsButtons: { [key: string]: string } = {
-  // Data: '#EF8B8B',
-  Editing: '#A5C4F2',
-  'Fact-checking': '#CFE7C4',
-  Illustration: '#BAB9E9',
-  // Layout: '#F9B893',
-  Photography: '#D8ACE8',
-  // Radio: '#F1D8B0',
-  Visuals: '#BFEBE0',
-  Writing: '#A9D3E5',
-};
-
-const teamToTeamsButtons: { [key: string]: string } = {
-  writers: 'Writing',
-  editors: 'Editing',
-  visuals: 'Visuals',
-  illustration: 'Illustration',
-  photography: 'Photography',
-  factChecking: 'Fact-checking',
-};
-
-// Team name in database format to display format
-const dbTeamToDisplay: { [key: string]: string } = {
-  General: 'General',
-  Editing: 'Editing',
-  Factchecking: 'Fact-checking',
-  Illustration: 'Illustration',
-  Photography: 'Photography',
-  Onboarding: 'Onboarding',
-  Visuals: 'Visuals',
-  Writing: 'Writing',
-};
-
-const enumToInterestButtons: { [key: string]: string } = {
-  CANNABIS: 'Cannabis',
-  EDUCATION: 'Education',
-  'FOOD AND LAND': 'Food and Land',
-  FUN: 'Fun',
-  HEALTH: 'Health',
-  HOUSING: 'Housing',
-  IMMIGRATION: 'Immigration',
-  LITERATURE: 'Literature',
-  MUSIC: 'Music',
-  NATURE: 'Nature',
-  POLITICS: 'Politics',
-  'STAGE AND SCREEN': 'Stage and Screen',
-  TRANSPORTATION: 'Transportation',
-  'VISUAL ARTS': 'Visual Arts',
-};
+import { wizardPages } from './enums';
 
 const allInterests = [
   'POLITICS',
@@ -109,6 +42,19 @@ const allRaces = [
   'OTHER',
 ];
 
+const staffPages = [
+  wizardPages.ONBOARD_1,
+  wizardPages.ONBOARD_2,
+  wizardPages.ONBOARD_3,
+];
+const contributorPages = [
+  wizardPages.ONBOARD_1,
+  wizardPages.ONBOARD_2,
+  wizardPages.ONBOARD_3,
+  wizardPages.ONBOARD_4,
+  wizardPages.ONBOARD_5,
+];
+
 const emptyUser: IUser = {
   _id: '',
   firstName: '',
@@ -117,29 +63,68 @@ const emptyUser: IUser = {
   email: '',
   phone: '',
   oauthID: '',
-  genders: [''],
-  pronouns: [''],
+  genders: [],
+  pronouns: [],
   dateJoined: new Date(Date.now()),
   masthead: false,
-  onboarding: '',
+  onboardingStatus: '',
   profilePic: '',
   portfolio: '',
   linkedIn: '',
   twitter: '',
-  claimedPitches: [''],
-  submittedPitches: [''],
-  currentTeams: [''],
+  involvementResponse: '',
+  claimedPitches: [],
+  submittedPitches: [],
+  currentTeams: [],
   role: '',
-  races: [''],
-  interests: [''],
+  races: [],
+  interests: [],
+};
+
+const emptyPitch: IPitch = {
+  _id: '',
+  title: '',
+  author: '',
+  conflictOfInterest: false,
+  status: '',
+  description: '',
+  assignmentStatus: '',
+  assignmentGoogleDocLink: '',
+  assignmentContributors: [],
+  pendingContributors: [],
+  topics: [],
+  teams: {
+    writers: {
+      current: 0,
+      target: 0,
+    },
+    editors: {
+      current: 0,
+      target: 0,
+    },
+    visuals: {
+      current: 0,
+      target: 0,
+    },
+    illustration: {
+      current: 0,
+      target: 0,
+    },
+    photography: {
+      current: 0,
+      target: 0,
+    },
+    factChecking: {
+      current: 0,
+      target: 0,
+    },
+  },
+  approvedBy: '',
+  similarStories: [],
+  deadline: new Date(),
 };
 
 export {
-  interestsButtons,
-  currentTeamsButtons,
-  dbTeamToDisplay,
-  enumToInterestButtons,
-  teamToTeamsButtons,
   allInterests,
   allTeams,
   allGenders,
@@ -147,4 +132,7 @@ export {
   allRoles,
   allRaces,
   emptyUser,
+  emptyPitch,
+  staffPages,
+  contributorPages,
 };
