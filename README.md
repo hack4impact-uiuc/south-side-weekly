@@ -51,6 +51,7 @@ This application is built with React + Semantic UI, Typescript, Express, MongoDB
     <td align="center"><a href="https://www.linkedin.com/in/danielle-yang-254308154/"><img src="./photos/danielle-yang.jpg" width="75px;" height="75px;" alt="Danielle Yang"/><br /><b>Danielle Yang</b></a><br /><sub>Software Developer</sub></td>
     <td align="center"><a href="https://www.linkedin.com/in/eugenia-chen-3aa251131/"><img src="./photos/eugenia-chen.jpg" width="75px;" height="75px;" style="object-fit:cover;" alt="Eugenia Chen"/><br /><b>Eugenia Chen</b></a><br /><sub>Software Developer</sub></td>
     <td align="center"><a href="https://neeraj.lol"><img src="./photos/aditya-jain.jpg" width="75px;" alt="Aditya Jain"/><br /><b>Aditya Jain</b></a><br /><sub>Software Developer</sub></td>
+    <td align="center"><a href="https://www.linkedin.com/in/andrew-s-lester/"><img src="./photos/andrew-lester.jpg" width="75px;" alt="Andrew Lester"/><br /><b>Andrew Lester</b></a><br /><sub>Software Developer</sub></td>
 
   </tr>
 </table>
