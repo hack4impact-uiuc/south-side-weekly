@@ -55,6 +55,9 @@ This application is built with React + Semantic UI, Typescript, Express, MongoDB
     <td align="center"><a href="https://www.linkedin.com/in/andrew-s-lester/"><img src="./photos/andrew-lester.jpg" width="75px;" alt="Andrew Lester"/><br /><b>Andrew Lester</b></a><br /><sub>Software Developer</sub></td>
 
   </tr>
+  <tr>
+      <td align="center"><a href="https://www.linkedin.com/in/zorazhang28/"><img src="./photos/zora-zhang.jpg" width="75px;" alt="Zora Zhang"/><br /><b>Zora Zhang</b></a><br /><sub>Software Developer</sub></td>
+  </tr>
 </table>
 
 ## License
