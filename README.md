@@ -53,11 +53,12 @@ This application is built with React + Semantic UI, Typescript, Express, MongoDB
     <td align="center"><a href="https://www.linkedin.com/in/eugenia-chen-3aa251131/"><img src="./photos/eugenia-chen.jpg" width="75px;" height="75px;" style="object-fit:cover;" alt="Eugenia Chen"/><br /><b>Eugenia Chen</b></a><br /><sub>Software Developer</sub></td>
     <td align="center"><a href="https://neeraj.lol"><img src="./photos/aditya-jain.jpg" width="75px;" alt="Aditya Jain"/><br /><b>Aditya Jain</b></a><br /><sub>Software Developer</sub></td>
     <td align="center"><a href="https://www.linkedin.com/in/andrew-s-lester/"><img src="./photos/andrew-lester.jpg" width="75px;" alt="Andrew Lester"/><br /><b>Andrew Lester</b></a><br /><sub>Software Developer</sub></td>
-
-  </tr>
-  <tr>
-      <td align="center"><a href="https://www.linkedin.com/in/zorazhang28/"><img src="./photos/zora-zhang.jpg" width="75px;" alt="Zora Zhang"/><br /><b>Zora Zhang</b></a><br /><sub>Software Developer</sub></td>
-  </tr>
+    <td align="center"><a href="https://www.linkedin.com/in/neha-konjeti-574135199/"><img src="./photos/neha-konjeti.jpg" width="75px;" alt="Neha Konjeti"/><br /><b>Neha Konjeti</b></a><br /><sub>Software Developer</sub></td>
+    </tr>
+    <tr>
+    <td align="center"><a href="https://www.linkedin.com/in/feiyuwong/"><img src="./photos/andy-wong.jpg" width="75px;" alt="Andy Wong"/><br /><b>Andy Wong</b></a><br /><sub>Software Developer</sub></td>
+    <td align="center"><a href="https://www.linkedin.com/in/zorazhang28/"><img src="./photos/zora-zhang.jpg" width="75px;" alt="Zora Zhang"/><br /><b>Zora Zhang</b></a><br /><sub>Software Developer</sub></td>
+    </tr>
 </table>
 
 ## License
