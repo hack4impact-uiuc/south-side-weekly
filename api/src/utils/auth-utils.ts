@@ -11,7 +11,7 @@ import { rolesEnum } from '../utils/enums';
  * @returns true if the list of roles contains the user role, else false
  */
 const hasRole = (user: IUser, roles: string[]): boolean =>
-  user && roles.includes(user.role);
+  user && roles.includes(user.role) && user.hasRoleApproved;
 
 /**
  * Determines if a user has contributor level access
