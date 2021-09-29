@@ -29,17 +29,20 @@ const sessionConfig = {
 app.use(cookieSession(sessionConfig));
 
 // Mongo setup
-require('./utils/mongo-setup');
+require('./setup/mongo-setup');
 
 // Passport setup
-require('./utils/passport-setup');
+require('./setup/passport-setup');
 app.use(passport.initialize());
 app.use(passport.session());
+
+// Cron jobs
+require('./cron/onboarding-status');
 
 // Routes
 app.use('/api', apiRoutes);
 app.get('/', (req: Request, res: Response) => res.json('API working!'));
-app.get('/favicon.ico', (req: Request, res: Response) => res.status(204));
+app.get('/ssw-favicon.ico', (req: Request, res: Response) => res.status(204));
 
 app.use(function (req: Request, res: Response, next) {
   next(createError(404));

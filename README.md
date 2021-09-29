@@ -43,16 +43,23 @@ This application is built with React + Semantic UI, Typescript, Express, MongoDB
 <table align="center">
   <tr>
     <td align="center"><a href="https://www.linkedin.com/in/sahithimuthyala/"><img src="./photos/sahi-muth.jpg" width="75px;" alt="Sahi Muthyala"/><br /><b>Sahithi Muthyala</b></a><br /><sub>Product Manager</sub></td>
-    <td align="center"><a href="https://www.linkedin.com/in/alicesf2/"><img src="./photos/alice-fang.jpeg" width="75px;" alt="Alice Fang"/><br /><b>Alice Fang</b></a><br /><sub>Technical Lead</sub></td>
-    <td align="center"><a href="https://www.linkedin.com/in/mustafasyedali/"><img src="./photos/mustafa-ali.jpg" width="75px;" alt="Mustafa Ali"/><br /><b>Mustafa Ali</b></a><br /><sub>Product Designer</sub></td>
-    <td align="center"><a href="https://www.linkedin.com/in/danielle-yang-254308154/"><img src="./photos/danielle-yang.jpg" width="75px;" height="75px;" alt="Danielle Yang"/><br /><b>Danielle Yang</b></a><br /><sub>Software Developer</sub></td>
+    <td align="center"><a href="https://www.linkedin.com/in/amit-m-sawhney/"><img src="./photos/amit-sawhney.jpg" width="75px;" alt="Amit Sawhney"/><br /><b>Amit Sawhney</b></a><br /><sub>Technical Lead</sub></td>
+    <td align="center"><a href="https://linkedin.com/in/bryange"><img src="./photos/bryan-ge.jpg" width="75px;" alt="Bryan Ge"/><br /><b>Bryan Ge</b></a><br /><sub>Product Designer</sub></td>
+    <td align="center"><a href="https://www.linkedin.com/in/alicesf2/"><img src="./photos/alice-fang.jpeg" width="75px;" alt="Alice Fang"/><br /><b>Alice Fang</b></a><br /><sub>Former Technical Lead</sub></td>
+    <td align="center"><a href="https://www.linkedin.com/in/mustafasyedali/"><img src="./photos/mustafa-ali.jpg" width="75px;" alt="Mustafa Ali"/><br /><b>Mustafa Ali</b></a><br /><sub>Former Product Designer</sub></td>
     </tr>
     <tr>
+    <td align="center"><a href="https://www.linkedin.com/in/danielle-yang-254308154/"><img src="./photos/danielle-yang.jpg" width="75px;" height="75px;" alt="Danielle Yang"/><br /><b>Danielle Yang</b></a><br /><sub>Software Developer</sub></td>
     <td align="center"><a href="https://www.linkedin.com/in/eugenia-chen-3aa251131/"><img src="./photos/eugenia-chen.jpg" width="75px;" height="75px;" style="object-fit:cover;" alt="Eugenia Chen"/><br /><b>Eugenia Chen</b></a><br /><sub>Software Developer</sub></td>
     <td align="center"><a href="https://neeraj.lol"><img src="./photos/aditya-jain.jpg" width="75px;" alt="Aditya Jain"/><br /><b>Aditya Jain</b></a><br /><sub>Software Developer</sub></td>
-    <td align="center"><a href="https://www.linkedin.com/in/amit-m-sawhney/"><img src="./photos/amit-sawhney.jpg" width="75px;" alt="Amit Sawhney"/><br /><b>Amit Sawhney</b></a><br /><sub>Software Developer</sub></td>
-
-  </tr>
+    <td align="center"><a href="https://www.linkedin.com/in/andrew-s-lester/"><img src="./photos/andrew-lester.jpg" width="75px;" alt="Andrew Lester"/><br /><b>Andrew Lester</b></a><br /><sub>Software Developer</sub></td>
+    <td align="center"><a href="https://www.linkedin.com/in/neha-konjeti-574135199/"><img src="./photos/neha-konjeti.jpg" width="75px;" alt="Neha Konjeti"/><br /><b>Neha Konjeti</b></a><br /><sub>Software Developer</sub></td>
+    </tr>
+    <tr>
+    <td align="center"><a href="https://www.linkedin.com/in/feiyuwong/"><img src="./photos/andy-wong.jpg" width="75px;" alt="Andy Wong"/><br /><b>Andy Wong</b></a><br /><sub>Software Developer</sub></td>
+    <td align="center"><a href="https://www.linkedin.com/in/zorazhang28/"><img src="./photos/zora-zhang.jpg" width="75px;" alt="Zora Zhang"/><br /><b>Zora Zhang</b></a><br /><sub>Software Developer</sub></td>
+    <td align="center"><a href="https://www.linkedin.com/in/ayan-mallik/"><img src="./photos/ayan-mallik.jpg" width="75px;" alt="Ayan Mallik"/><br /><b>Ayan Mallik</b></a><br /><sub>Software Developer</sub></td>
+    </tr>
 </table>
 
 ## License

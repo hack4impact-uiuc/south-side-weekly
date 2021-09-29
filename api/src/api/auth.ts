@@ -2,7 +2,6 @@ import express, { Request, Response, NextFunction } from 'express';
 const router = express.Router();
 import passport from 'passport';
 import { ParsedQs } from 'qs';
-import { sessionizeUser } from '../utils/helpers';
 import { errorWrap } from '../middleware';
 
 const CALLBACK_ROUTE = '/api/auth/google/callback';
@@ -24,7 +23,7 @@ router.get(
       res.status(200).json({
         message: `Logged in.`,
         success: true,
-        result: sessionizeUser(req.user),
+        result: req.user,
       });
     } else {
       res.status(401).json({
@@ -71,6 +70,32 @@ router.get('/login', (req: Request, res: Response, next: NextFunction) => {
 });
 
 router.get(
+  '/redirectURI',
+  (req: Request<unknown, unknown, unknown, IQuery>, res: Response) => {
+    try {
+      const { state } = req.query;
+      const { callbackUrl } = JSON.parse(
+        Buffer.from(state, 'base64').toString(),
+      );
+
+      if (typeof callbackUrl === 'string') {
+        // Reconstruct the URL and redirect
+        const callbackURL = `${callbackUrl}?${req._parsedUrl.query}`;
+        res.redirect(callbackURL);
+        return;
+      }
+      // There was no base
+      res.redirect(CALLBACK_ROUTE);
+    } catch (e) {
+      res.status(400).json({
+        message: 'Something went wrong with redirection',
+        success: false,
+      });
+    }
+  },
+);
+
+router.get(
   '/google/callback',
   (
     req: Request<unknown, unknown, unknown, IQuery>,
@@ -90,7 +115,7 @@ router.get(
   },
 );
 
-router.post(
+router.get(
   '/logout',
   errorWrap(async (req: Request, res: Response) => {
     if (req.session) {

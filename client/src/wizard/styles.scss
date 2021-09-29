@@ -1,0 +1,19 @@
+@import '../styles/colors.scss';
+
+.pages-wrapper {
+  height: 100vh !important;
+  margin-top: 0 !important;
+
+  .go-back {
+    position: absolute;
+    top: 4.5vh;
+    left: 5vh;
+    background-color: transparent;
+    color: black;
+
+    &:hover,
+    &:focus {
+      background-color: transparent;
+    }
+  }
+}

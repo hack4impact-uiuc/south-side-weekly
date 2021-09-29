@@ -1,0 +1,24 @@
+@import '../../styles/colors.scss';
+
+.user-card {
+  .content {
+    display: flex;
+    align-items: center;
+    border-bottom: solid $primary 7px;
+    color: black !important;
+
+    .name {
+      flex-grow: 1;
+      margin-left: 15px;
+    }
+
+    h2 {
+      font-weight: normal;
+      font-size: large;
+    }
+  }
+
+  &:hover {
+    z-index: 0 !important;
+  }
+}
