@@ -28,8 +28,18 @@ const Pitch = new mongoose.Schema({
     default: assignmentStatusEnum.NONE,
   },
   assignmentGoogleDocLink: { type: String, default: null },
-  assignmentContributors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  pendingContributors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  assignmentContributors: [
+    {
+      userId: { type: Schema.Types.ObjectId, ref: 'User' },
+      team: { type: String },
+    },
+  ],
+  pendingContributors: [
+    {
+      userId: { type: Schema.Types.ObjectId, ref: 'User' },
+      team: { type: String },
+    },
+  ],
   topics: [
     {
       type: String,

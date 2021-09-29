@@ -5,6 +5,7 @@ import {
   requireRegistered,
   requireStaff,
 } from '../middleware/auth';
+import pitch from '../models/pitch';
 
 import Pitch from '../models/pitch';
 import User from '../models/user';
@@ -241,7 +242,7 @@ router.put(
   }),
 );
 
-// Adds a contributor to the assignmentContributors array
+// Adds a contributor to the pendingContributors array
 // TODO: modify the pitch schema to also tell which team the user is claiming for
 router.put(
   '/:pitchId/submitClaim',
@@ -258,7 +259,11 @@ router.put(
 
     const updatedPitch = await Pitch.findByIdAndUpdate(
       req.params.pitchId,
-      { $addToSet: { pendingContributors: req.body.userId } },
+      {
+        $addToSet: {
+          pendingContributors: { userId: req.body.userId, team: req.body.team },
+        },
+      },
       { new: true, runValidators: true },
     );
 
@@ -272,7 +277,7 @@ router.put(
 
     res.status(200).json({
       success: true,
-      message: 'Successfully updated assignmentContributors',
+      message: 'Successfully updated pendingContributors',
       result: updatedPitch,
     });
   }),
@@ -283,17 +288,17 @@ router.put(
   '/:pitchId/approveClaim',
   requireStaff,
   errorWrap(async (req: Request, res: Response) => {
-    const { userId } = req.body;
+    const { userId, team } = req.body;
 
     // Remove the user from the pending contributors and add it to the the assignment contributors
     const pitch = await Pitch.findByIdAndUpdate(
       req.params.pitchId,
       {
         $pull: {
-          pendingContributors: userId,
+          pendingContributors: {userId: userId, team: team}, 
         },
         $addToSet: {
-          assignmentContributors: userId,
+          assignmentContributors: {userId: userId, team: team},
         },
       },
       { returnOriginal: false, runValidators: true },
