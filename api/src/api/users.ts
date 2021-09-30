@@ -165,7 +165,10 @@ router.get(
   '/contributors/pending',
   requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
-    const users = await User.find({ role: rolesEnum.CONTRIBUTOR, hasRoleApproved: false });
+    const users = await User.find({
+      role: rolesEnum.CONTRIBUTOR,
+      hasRoleApproved: false,
+    });
     res.status(200).json({
       message: `Successfully retrieved all pending contributors.`,
       success: true,
@@ -179,7 +182,10 @@ router.get(
   '/staff/pending',
   requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
-    const users = await User.find({ role: rolesEnum.STAFF, hasRoleApproved: false });
+    const users = await User.find({
+      role: rolesEnum.STAFF,
+      hasRoleApproved: false,
+    });
     res.status(200).json({
       message: `Successfully retrieved all pending staff.`,
       success: true,
@@ -196,7 +202,7 @@ router.put(
     const updatedUser = await User.findOneAndUpdate(
       { _id: req.params.userId, hasRoleApproved: false },
       { hasRoleApproved: true },
-      { new: true, runValidators: true, },
+      { new: true, runValidators: true },
     );
 
     if (!updatedUser) {
@@ -212,7 +218,7 @@ router.put(
       message: 'Successfully updated user',
       result: updatedUser,
     });
-  })
+  }),
 );
 
 // Rejects a user's role request
@@ -222,7 +228,7 @@ router.put(
   errorWrap(async (req: Request, res: Response) => {
     const deletedUser = await User.findOneAndDelete(
       { _id: req.params.userId, hasRoleApproved: false },
-      { runValidators: true, },
+      { runValidators: true },
     );
 
     if (!deletedUser) {
@@ -238,7 +244,7 @@ router.put(
       message: 'Successfully rejected user',
       result: deletedUser,
     });
-  })
+  }),
 );
 
 export default router;
