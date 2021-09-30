@@ -191,6 +191,7 @@ router.get(
 // Approves a user's role request
 router.put(
   '/:userId/approve',
+  requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
     const updatedUser = await User.findOneAndUpdate(
       { _id: req.params.userId, hasRoleApproved: false },
@@ -217,6 +218,7 @@ router.put(
 // Rejects a user's role request
 router.put(
   '/:userId/reject',
+  requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
     const deletedUser = await User.findOneAndDelete(
       { _id: req.params.userId, hasRoleApproved: false },
