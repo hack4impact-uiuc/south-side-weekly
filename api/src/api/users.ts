@@ -5,6 +5,7 @@ import User from '../models/user';
 import Pitch from '../models/pitch';
 import { getEditableFields, getViewableFields } from '../utils/user-utils';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
+import { rolesEnum } from '../utils/enums';
 
 const router = express.Router();
 
@@ -157,6 +158,85 @@ router.put(
       result: updatedUser,
     });
   }),
+);
+
+// Gets all pending contributors
+router.get(
+  '/contributors/pending',
+  requireAdmin,
+  errorWrap(async (req: Request, res: Response) => {
+    const users = await User.find({ role: rolesEnum.CONTRIBUTOR, hasRoleApproved: false });
+    res.status(200).json({
+      message: `Successfully retrieved all pending contributors.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
+// Gets all pending staff
+router.get(
+  '/staff/pending',
+  requireAdmin,
+  errorWrap(async (req: Request, res: Response) => {
+    const users = await User.find({ role: rolesEnum.STAFF, hasRoleApproved: false });
+    res.status(200).json({
+      message: `Successfully retrieved all pending staff.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
+// Approves a user's role request
+router.put(
+  '/:userId/approve',
+  errorWrap(async (req: Request, res: Response) => {
+    const updatedUser = await User.findOneAndUpdate(
+      { _id: req.params.userId, hasRoleApproved: false },
+      { hasRoleApproved: true },
+      { new: true, runValidators: true, },
+    );
+
+    if (!updatedUser) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found with id or already has their role approved',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully updated user',
+      result: updatedUser,
+    });
+  })
+);
+
+// Rejects a user's role request
+router.put(
+  '/:userId/reject',
+  errorWrap(async (req: Request, res: Response) => {
+    const deletedUser = await User.findOneAndDelete(
+      { _id: req.params.userId, hasRoleApproved: false },
+      { runValidators: true, },
+    );
+
+    if (!deletedUser) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found with id or already has their role approved',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully rejected user',
+      result: deletedUser,
+    });
+  })
 );
 
 export default router;
