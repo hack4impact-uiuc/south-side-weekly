@@ -295,10 +295,10 @@ router.put(
       req.params.pitchId,
       {
         $pull: {
-          pendingContributors: {userId: userId, team: team}, 
+          pendingContributors: { userId: userId, team: team },
         },
         $addToSet: {
-          assignmentContributors: {userId: userId, team: team},
+          assignmentContributors: { userId: userId, team: team },
         },
       },
       { returnOriginal: false, runValidators: true },

@@ -38,8 +38,8 @@ export interface IPitch {
   status: string;
   assignmentStatus: string;
   assignmentGoogleDocLink: string;
-  assignmentContributors: [{userId: string, team: string}],
-  pendingContributors: [{userId: string, team: string}],
+  assignmentContributors: {userId: string, team: string}[],
+  pendingContributors: {userId: string, team: string}[],
   topics: string[];
   teams: {
     writers: {

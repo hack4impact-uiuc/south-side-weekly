@@ -32,7 +32,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
 }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
   const [teamSlots, setTeamSlots] = useState<IPitch['teams']>(emptyPitch.teams);
-  const [checkboxes, setCheckboxes] = useState(new Map<string, boolean>());
+  const [selectedTeam, setSelectedTeam] = useState('');
   const [author, setAuthor] = useState('');
   const [approver, setApprover] = useState('');
   const [contributors, setContributors] = useState<IUser[]>([]);
@@ -70,7 +70,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
 
     await Promise.all(
       pitch.assignmentContributors.map(async (id) => {
-        const res = await getUser(id);
+        const res = await getUser(id?.userId);
 
         if (!isError(res)) {
           tempContributors.push(res.data.result);
@@ -90,29 +90,10 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     getAuthor();
 
     setTeamSlots(pitch.teams);
-
-    const map = new Map<string, boolean>();
-
-    Object.keys(pitch.teams).map((team) => {
-      map.set(team, false);
-    });
-
-    setCheckboxes(map);
   }, [isOpen, pitch.teams, getApprover, getAuthor, getContributors]);
 
-  const updateCheckboxes = (checkbox: keyof IPitch['teams']): void => {
-    const isChecked = checkboxes.get(checkbox);
-
-    if (isChecked) {
-      teamSlots[checkbox].current--;
-    } else {
-      teamSlots[checkbox].current++;
-    }
-
-    checkboxes.set(checkbox, !isChecked);
-
-    setTeamSlots({ ...teamSlots });
-    setCheckboxes(new Map(checkboxes));
+  const updateSelectedTeam = (teamName: string): void => {
+    setSelectedTeam(teamName);
   };
 
   const claimPitch = async (): Promise<void> => {
@@ -122,12 +103,17 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
       return;
     }
 
-    const body = {
-      teams: teamSlots,
-      pendingContributors: [...pitch.pendingContributors, user._id],
+    const userInfo = {
+      userId: user._id,
+      team: selectedTeam,
     };
 
-    const pitchRes = await submitPitchClaim(pitch._id, user._id);
+    const body = {
+      teams: teamSlots,
+      pendingContributors: [...pitch.pendingContributors, userInfo],
+    };
+
+    const pitchRes = await submitPitchClaim(pitch._id, user._id, '');
     const updateRes = await updatePitch({ ...body }, pitch._id);
     if (!isError(pitchRes) && !isError(updateRes)) {
       callback();
@@ -140,20 +126,25 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
   };
 
   useEffect(() => {
-    const somethingIsChecked = convertMap(checkboxes).every(
-      (checkbox) => !checkbox.value,
-    );
-    setIsCheckboxError(didSubmit && somethingIsChecked);
-  }, [checkboxes, didSubmit]);
+    const somethingIsChecked = selectedTeam !== '';
 
-  const isValidForm = (): boolean =>
-    convertMap(checkboxes).some((checkbox) => checkbox.value);
+    setIsCheckboxError(didSubmit && somethingIsChecked);
+  }, [selectedTeam, didSubmit]);
+
+  const isValidForm = (): boolean => selectedTeam !== '';
 
   const didUserClaim = (): boolean =>
-    pitch.assignmentContributors.includes(user._id);
+    pitch.assignmentContributors
+      .map(
+        (assignmentContributer) =>
+          assignmentContributer?.userId || assignmentContributer,
+      )
+      .includes(user._id);
 
   const didUserSubmitClaimReq = (): boolean =>
-    pitch.pendingContributors.includes(user._id);
+    pitch.pendingContributors
+      .map((pendingContributer) => pendingContributer?.userId)
+      .includes(user._id);
 
   const getHeader = (): string => {
     if (didUserClaim()) {
@@ -208,15 +199,13 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
           <Form.Group inline widths={5} className="team-select-group">
             {Object.entries(teamSlots).map((slot, index) => (
               <div className="checkbox-wrapper" key={index}>
-                <Form.Checkbox
+                <Form.Radio
                   disabled={
-                    (slot[1].target - slot[1].current <= 0 &&
-                      !checkboxes.get(slot[0])) ||
-                    didUserClaim()
+                    slot[1].target - slot[1].current <= 0 || didUserClaim()
                   }
-                  checked={checkboxes.get(slot[0])}
+                  checked={selectedTeam === slot[0]}
                   onClick={() => {
-                    updateCheckboxes(slot[0] as keyof IPitch['teams']);
+                    updateSelectedTeam(slot[0] as keyof IPitch['teams']);
                     setDidSubmit(false);
                   }}
                   error={isCheckboxError}
