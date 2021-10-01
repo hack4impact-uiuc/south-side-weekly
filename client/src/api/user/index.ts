@@ -1,7 +1,8 @@
+import { IUser } from 'ssw-common';
 import { Response } from '../types';
 import { buildEndpoint, get, put } from '../builders';
 import { PitchesResponse } from '../pitch/types';
-
+import { onboardingStatusEnum } from '../../utils/enums';
 import { UsersResponse, UserResponse, UserPermissions } from './types';
 
 const USER_ENDPOINT = '/users';
@@ -36,13 +37,24 @@ const updateUserClaimedPitches = async (
 // Update a user's data
 const updateUser = async (
   profileData: {
-    [key: string]: string | boolean | string[] | Date | null;
+    [K in keyof IUser]?: IUser[K];
   },
   userId: string,
 ): Promise<Response<UserResponse>> => {
   const url = buildEndpoint(USER_ENDPOINT, userId);
   const failureMessage = 'UPDATE_USER_FAIL';
 
+  return await put(url, profileData, failureMessage);
+};
+
+// Update user's onboarding status
+const updateOnboardingStatus = async (
+  userId: string,
+  status: keyof typeof onboardingStatusEnum,
+): Promise<Response<UserResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, userId);
+  const failureMessage = 'UPDATE_USER_FAIL';
+  const profileData = { onboardingStatus: status };
   return await put(url, profileData, failureMessage);
 };
 
@@ -59,4 +71,10 @@ export const getUserPermissionsByID = async (
   return await get(url, failureMessage);
 };
 
-export { getUsers, getUser, updateUserClaimedPitches, updateUser };
+export {
+  getUsers,
+  getUser,
+  updateUserClaimedPitches,
+  updateUser,
+  updateOnboardingStatus,
+};
