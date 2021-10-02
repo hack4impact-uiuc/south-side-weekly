@@ -5,8 +5,6 @@ import { PitchesResponse } from '../pitch/types';
 import { UsersResponse, UserResponse, UserPermissions } from './types';
 
 const USER_ENDPOINT = '/users';
-const PENDING_CONTRIBUTORS_ENDPOINT = '/contributors/pending';
-const PENDING_STAFF_ENDPOINT = '/staff/pending';
 
 // Returns all of the users in the database
 const getUsers = async (): Promise<Response<UsersResponse>> => {
@@ -17,14 +15,14 @@ const getUsers = async (): Promise<Response<UsersResponse>> => {
 };
 
 const getPendingContributors = async (): Promise<Response<UsersResponse>> => {
-  const url = buildEndpoint(USER_ENDPOINT, PENDING_CONTRIBUTORS_ENDPOINT);
+  const url = buildEndpoint(USER_ENDPOINT, 'contributors', 'pending');
   const failureMessage = 'GET_PENDING_CONTRIBUTORS_FAIL';
 
   return await get(url, failureMessage);
 };
 
 const getPendingStaff = async (): Promise<Response<UsersResponse>> => {
-  const url = buildEndpoint(USER_ENDPOINT, PENDING_STAFF_ENDPOINT);
+  const url = buildEndpoint(USER_ENDPOINT, 'staff', 'pending');
   const failureMessage = 'GET_PENDING_STAFF_FAIL';
 
   return await get(url, failureMessage);
@@ -75,4 +73,11 @@ export const getUserPermissionsByID = async (
   return await get(url, failureMessage);
 };
 
-export { getUsers, getUser, updateUserClaimedPitches, updateUser };
+export {
+  getUsers,
+  getPendingContributors,
+  getPendingStaff,
+  getUser,
+  updateUserClaimedPitches,
+  updateUser,
+};
