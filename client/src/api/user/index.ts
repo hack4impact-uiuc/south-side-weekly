@@ -1,8 +1,10 @@
 import { IUser } from 'ssw-common';
+
 import { Response } from '../types';
 import { buildEndpoint, get, put } from '../builders';
 import { PitchesResponse } from '../pitch/types';
 import { onboardingStatusEnum } from '../../utils/enums';
+
 import { UsersResponse, UserResponse, UserPermissions } from './types';
 
 const USER_ENDPOINT = '/users';
@@ -55,6 +57,7 @@ const updateOnboardingStatus = async (
   const url = buildEndpoint(USER_ENDPOINT, userId);
   const failureMessage = 'UPDATE_USER_FAIL';
   const profileData = { onboardingStatus: status };
+
   return await put(url, profileData, failureMessage);
 };
 
@@ -76,5 +79,5 @@ export {
   getUser,
   updateUserClaimedPitches,
   updateUser,
-  updateOnboardingStatus,
+  updateOnboardingStatus
 };
