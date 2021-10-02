@@ -8,8 +8,6 @@ import { onboardingStatusEnum } from '../../utils/enums';
 import { UsersResponse, UserResponse, UserPermissions } from './types';
 
 const USER_ENDPOINT = '/users';
-const PENDING_CONTRIBUTORS_ENDPOINT = '/contributors/pending';
-const PENDING_STAFF_ENDPOINT = '/staff/pending';
 
 // Returns all of the users in the database
 const getUsers = async (): Promise<Response<UsersResponse>> => {
