@@ -5,7 +5,7 @@ export {
   updateUserClaimedPitches,
   updateUser,
   getUserPermissionsByID,
-  updateOnboardingStatus
+  updateOnboardingStatus,
 } from './user';
 export {
   getApprovedPitches,

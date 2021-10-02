@@ -79,5 +79,5 @@ export {
   getUser,
   updateUserClaimedPitches,
   updateUser,
-  updateOnboardingStatus
+  updateOnboardingStatus,
 };
