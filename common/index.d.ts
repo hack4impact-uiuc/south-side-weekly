@@ -23,6 +23,7 @@ export interface IUser {
   submittedPitches: string[];
   currentTeams: string[];
   role: string;
+  hasRoleApproved: boolean;
   races: string[];
   interests: string[];
 }
