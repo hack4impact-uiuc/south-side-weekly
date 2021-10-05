@@ -13,7 +13,7 @@ import Swal from 'sweetalert2';
 import { getUser, isError, updatePitch, submitPitchClaim } from '../../../api';
 import { useAuth } from '../../../contexts';
 import { emptyPitch } from '../../../utils/constants';
-import { convertMap, getUserFullName } from '../../../utils/helpers';
+import { getUserFullName } from '../../../utils/helpers';
 import PitchCard from '../../PitchCard';
 import FieldTag from '../../FieldTag';
 import UserPicture from '../../UserPicture';
