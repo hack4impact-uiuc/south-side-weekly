@@ -38,30 +38,8 @@ const Pitch = new mongoose.Schema({
     },
   ],
   teams: {
-    writers: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-    editors: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-    visuals: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-    illustration: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-    photography: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-    factChecking: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
+    type: Schema.Types.Map,
+    of: Number,
   },
   approvedBy: { type: Schema.Types.ObjectId, ref: 'User' },
   similarStories: [{ type: String, default: null }],

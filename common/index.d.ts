@@ -40,33 +40,10 @@ export interface IPitch {
   assignmentStatus: string;
   assignmentGoogleDocLink: string;
   assignmentContributors: string[];
-  pendingContributors: string[],
+  pendingContributors: string[];
   topics: string[];
   teams: {
-    writers: {
-      current: number;
-      target: number;
-    };
-    editors: {
-      current: number;
-      target: number;
-    };
-    factChecking: {
-      current: number;
-      target: number;
-    };
-    visuals: {
-      current: number;
-      target: number;
-    };
-    photography: {
-      current: number;
-      target: number;
-    };
-    illustration: {
-      current: number;
-      target: number;
-    };
+    [name: string]: number;
   };
   approvedBy: string;
   similarStories: string[];
@@ -82,4 +59,14 @@ export interface IResource {
   link: string;
   teamRoles: string[];
   _id: string;
+}
+
+/**
+ * Interface for a Team Schema.
+ */
+export interface ITeam {
+  _id: string;
+  name: string;
+  active: boolean;
+  color: string;
 }
