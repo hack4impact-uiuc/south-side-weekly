@@ -5,7 +5,6 @@ import {
   requireRegistered,
   requireStaff,
 } from '../middleware/auth';
-import pitch from '../models/pitch';
 
 import Pitch from '../models/pitch';
 import User from '../models/user';
