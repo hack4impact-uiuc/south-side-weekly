@@ -10,6 +10,7 @@ import Pitch from '../models/pitch';
 import User from '../models/user';
 import { pitchStatusEnum } from '../utils/enums';
 import { isPitchClaimed } from '../utils/helpers';
+import { sendMail } from '../utils/mailer';
 
 const router = express.Router();
 
@@ -205,7 +206,8 @@ router.put(
       });
       return;
     }
-
+    const author = await User.findById(pitch.author);
+    sendMail(author.email, "pitch status update", "your pitch is approved");
     res.status(200).json({
       success: true,
       message: 'Successfully updated pitch',
