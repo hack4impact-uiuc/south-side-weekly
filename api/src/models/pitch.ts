@@ -31,13 +31,13 @@ const Pitch = new mongoose.Schema({
   assignmentContributors: [
     {
       userId: { type: Schema.Types.ObjectId, ref: 'User' },
-      team: { type: String },
+      teams: [{ type: String }],
     },
   ],
   pendingContributors: [
     {
       userId: { type: Schema.Types.ObjectId, ref: 'User' },
-      team: { type: String },
+      team: [{ type: String }],
     },
   ],
   topics: [

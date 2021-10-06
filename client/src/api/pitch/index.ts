@@ -31,12 +31,12 @@ const getOpenTeams = async (
 const submitPitchClaim = async (
   pitchId: string,
   userId: string,
-  team: string,
+  teams: string[],
 ): Promise<Pitches> => {
   const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'submitClaim');
   const failureMessage = 'SUBMIT_PITCH_CLAIM_FAIL';
 
-  return await put(url, { userId, team }, failureMessage);
+  return await put(url, { userId, teams }, failureMessage);
 };
 
 const approvePitch = async (

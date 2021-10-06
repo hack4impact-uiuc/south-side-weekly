@@ -260,7 +260,7 @@ router.put(
       req.params.pitchId,
       {
         $addToSet: {
-          pendingContributors: { userId: req.body.userId, team: req.body.team },
+          pendingContributors: { userId: req.body.userId, teams: req.body.teams },
         },
       },
       { new: true, runValidators: true },
@@ -287,17 +287,17 @@ router.put(
   '/:pitchId/approveClaim',
   requireStaff,
   errorWrap(async (req: Request, res: Response) => {
-    const { userId, team } = req.body;
+    const { userId, teams } = req.body;
 
     // Remove the user from the pending contributors and add it to the the assignment contributors
     const pitch = await Pitch.findByIdAndUpdate(
       req.params.pitchId,
       {
         $pull: {
-          pendingContributors: { userId: userId, team: team },
+          pendingContributors: { userId: userId, teams: teams },
         },
         $addToSet: {
-          assignmentContributors: { userId: userId, team: team },
+          assignmentContributors: { userId: userId, teams: teams },
         },
       },
       { returnOriginal: false, runValidators: true },
