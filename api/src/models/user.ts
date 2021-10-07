@@ -45,6 +45,8 @@ const User = new mongoose.Schema({
     default: rolesEnum.TBD,
   },
 
+  hasRoleApproved: { type: Boolean, default: false },
+
   races: [
     {
       type: String,

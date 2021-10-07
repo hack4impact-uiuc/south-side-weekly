@@ -22,7 +22,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: client/node_modules
-          key: ${{ runner.os }}-cache
+          key: ${{ runner.os }}-${{ hashFiles('common') }}-cache
 
       - name: Install dependencies
         run: yarn
@@ -45,7 +45,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: client/node_modules
-          key: ${{ runner.os }}-cache
+          key: ${{ runner.os }}-${{ hashFiles('common') }}-cache
 
       - name: Install dependencies
         run: yarn
@@ -68,7 +68,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: client/node_modules
-          key: ${{ runner.os }}-cache
+          key: ${{ runner.os }}-${{ hashFiles('common') }}-cache
 
       - name: Install dependencies
         run: yarn
@@ -91,7 +91,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: client/node_modules
-          key: ${{ runner.os }}-cache
+          key: ${{ runner.os }}-${{ hashFiles('common') }}-cache
 
       - name: Install dependencies
         run: yarn

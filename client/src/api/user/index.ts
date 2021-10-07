@@ -17,6 +17,20 @@ const getUsers = async (): Promise<Response<UsersResponse>> => {
   return await get(url, failureMessage);
 };
 
+const getPendingContributors = async (): Promise<Response<UsersResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, 'contributors', 'pending');
+  const failureMessage = 'GET_PENDING_CONTRIBUTORS_FAIL';
+
+  return await get(url, failureMessage);
+};
+
+const getPendingStaff = async (): Promise<Response<UsersResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, 'staff', 'pending');
+  const failureMessage = 'GET_PENDING_STAFF_FAIL';
+
+  return await get(url, failureMessage);
+};
+
 // Returns a single user from the user's id
 const getUser = async (userId: string): Promise<Response<UserResponse>> => {
   const url = buildEndpoint(USER_ENDPOINT, userId);
@@ -76,6 +90,8 @@ export const getUserPermissionsByID = async (
 
 export {
   getUsers,
+  getPendingContributors,
+  getPendingStaff,
   getUser,
   updateUserClaimedPitches,
   updateUser,
