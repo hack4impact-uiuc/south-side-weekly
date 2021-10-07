@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb';
 import { errorWrap } from '../middleware';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
 
+import { visibilityEnum } from '../utils/enums';
 import Resource from '../models/resource';
 
 const router = express.Router();
@@ -18,6 +19,19 @@ router.get(
   '/',
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
+    // If user does not have an approved role, only show public resources
+    if (!req.user.hasRoleApproved) {
+      const resources = await Resource.find({
+        visibility: visibilityEnum.PUBLIC,
+      });
+      res.status(200).json({
+        message: `Successfully retrieved all resources.`,
+        success: true,
+        result: resources,
+      });
+    }
+
+    // If user is admin, return all resources
     const resources = await Resource.find({});
     res.status(200).json({
       message: `Successfully retrieved all resources.`,
