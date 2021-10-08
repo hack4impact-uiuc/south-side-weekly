@@ -17,16 +17,6 @@ const getApprovedPitches = async (): Promise<Pitches> => {
   return await get(url, failureMessage);
 };
 
-// Returns the teams that can still claim a specified pitch
-const getOpenTeams = async (
-  pitchId: string,
-): Promise<Response<GetOpenTeamsResponse>> => {
-  const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'openTeams');
-  const failureMessage = 'GET_OPEN_TEAMS_FAIL';
-
-  return await get(url, failureMessage);
-};
-
 // Updates a pitch's contributors
 const submitPitchClaim = async (
   pitchId: string,
@@ -45,7 +35,7 @@ const approvePitch = async (
   const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'approve');
   const failureMessage = 'APPROVE_CLAIM_FAIL';
 
-  return await put(url, { teams }, failureMessage);
+  return await put(url, Object.fromEntries(teams), failureMessage);
 };
 
 const declinePitch = async (
@@ -102,7 +92,6 @@ const createPitch = async (newPitch: {
 
 export {
   getApprovedPitches,
-  getOpenTeams,
   submitPitchClaim,
   updatePitch,
   getPitchesPendingApproval,

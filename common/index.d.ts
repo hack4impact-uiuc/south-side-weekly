@@ -42,9 +42,7 @@ export interface IPitch {
   assignmentContributors: string[];
   pendingContributors: string[];
   topics: string[];
-  teams: {
-    [name: string]: number;
-  };
+  teams: Map<string, number>;
   approvedBy: string;
   similarStories: string[];
   deadline: Date;

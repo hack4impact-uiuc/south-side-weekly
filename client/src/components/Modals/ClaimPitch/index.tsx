@@ -100,14 +100,14 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     setCheckboxes(map);
   }, [isOpen, pitch.teams, getApprover, getAuthor, getContributors]);
 
-  const updateCheckboxes = (checkbox: keyof IPitch['teams']): void => {
+  const updateCheckboxes = (checkbox: string): void => {
     const isChecked = checkboxes.get(checkbox);
 
-    if (isChecked) {
-      teamSlots[checkbox].current--;
-    } else {
-      teamSlots[checkbox].current++;
-    }
+    // if (isChecked) {
+    //   teamSlots[checkbox].current--;
+    // } else {
+    //   teamSlots[checkbox].current++;
+    // }
 
     checkboxes.set(checkbox, !isChecked);
 
@@ -216,7 +216,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
                   }
                   checked={checkboxes.get(slot[0])}
                   onClick={() => {
-                    updateCheckboxes(slot[0] as keyof IPitch['teams']);
+                    updateCheckboxes(slot[0]);
                     setDidSubmit(false);
                   }}
                   error={isCheckboxError}

@@ -70,33 +70,6 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
     setTeamMap(new Map(teamMap));
   };
 
-  const parseToTeams = (map: Map<string, number>): IPitch['teams'] => ({
-    writers: {
-      current: 0,
-      target: map.get('WRITING')!,
-    },
-    editors: {
-      current: 0,
-      target: map.get('EDITING')!,
-    },
-    factChecking: {
-      current: 0,
-      target: map.get('FACT-CHECKING')!,
-    },
-    photography: {
-      current: 0,
-      target: map.get('PHOTOGRAPHY')!,
-    },
-    visuals: {
-      current: 0,
-      target: map.get('VISUALS')!,
-    },
-    illustration: {
-      current: 0,
-      target: map.get('ILLUSTRATION')!,
-    },
-  });
-
   const handleApprove = async (): Promise<void> => {
     let validForm = false;
 
@@ -113,7 +86,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       });
     }
 
-    const res = await approvePitch(pitch._id, parseToTeams(teamMap));
+    const res = await approvePitch(pitch._id, teamMap);
 
     if (!isError(res)) {
       callback();

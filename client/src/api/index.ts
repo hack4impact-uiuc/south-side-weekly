@@ -9,7 +9,6 @@ export {
 } from './user';
 export {
   getApprovedPitches,
-  getOpenTeams,
   updatePitch,
   submitPitchClaim,
   getPitchesPendingApproval,
