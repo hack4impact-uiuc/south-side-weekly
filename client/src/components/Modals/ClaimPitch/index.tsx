@@ -70,7 +70,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
 
     await Promise.all(
       pitch.assignmentContributors.map(async (id) => {
-        const res = await getUser(id);
+        const res = await getUser(id?.userId);
 
         if (!isError(res)) {
           tempContributors.push(res.data.result);
@@ -103,12 +103,6 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
   const updateCheckboxes = (checkbox: keyof IPitch['teams']): void => {
     const isChecked = checkboxes.get(checkbox);
 
-    if (isChecked) {
-      teamSlots[checkbox].current--;
-    } else {
-      teamSlots[checkbox].current++;
-    }
-
     checkboxes.set(checkbox, !isChecked);
 
     setTeamSlots({ ...teamSlots });
@@ -121,12 +115,13 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     if (!isValidForm()) {
       return;
     }
-    const teams: string[] = []
+    const teams: string[] = [];
     checkboxes.forEach(function (selected, team) {
       if (selected) {
         teams.push(team);
       }
-    })
+    });
+
     const userInfo = {
       userId: user._id,
       teams: teams,
@@ -134,10 +129,10 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
 
     const body = {
       teams: teamSlots,
-      pendingContributors: [...pitch.pendingContributors, user._id],
+      pendingContributors: [...pitch.pendingContributors, userInfo],
     };
 
-    const pitchRes = await submitPitchClaim(pitch._id, user._id);
+    const pitchRes = await submitPitchClaim(pitch._id, user._id, teams);
     const updateRes = await updatePitch({ ...body }, pitch._id);
     if (!isError(pitchRes) && !isError(updateRes)) {
       callback();
@@ -160,10 +155,17 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     convertMap(checkboxes).some((checkbox) => checkbox.value);
 
   const didUserClaim = (): boolean =>
-    pitch.assignmentContributors.includes(user._id);
+    pitch.assignmentContributors
+      .map(
+        (assignmentContributer) =>
+          assignmentContributer?.userId || assignmentContributer,
+      )
+      .includes(user._id);
 
   const didUserSubmitClaimReq = (): boolean =>
-    pitch.pendingContributors.includes(user._id);
+    pitch.pendingContributors
+      .map((pendingContributer) => pendingContributer?.userId)
+      .includes(user._id);
 
   const getHeader = (): string => {
     if (didUserClaim()) {

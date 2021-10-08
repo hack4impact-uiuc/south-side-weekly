@@ -37,7 +37,7 @@ const Pitch = new mongoose.Schema({
   pendingContributors: [
     {
       userId: { type: Schema.Types.ObjectId, ref: 'User' },
-      team: [{ type: String }],
+      teams: [{ type: String }],
     },
   ],
   topics: [
