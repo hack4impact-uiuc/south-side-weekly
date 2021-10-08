@@ -9,10 +9,13 @@ import {
 
 export type PitchSchema = IPitch & Document<any>;
 
-const pendingContributor = new mongoose.Schema({
-  userId: { type: Schema.Types.ObjectId, ref: 'User' },
-  teams: [{ type: String }],
-}, { _id : false });
+const pendingContributor = new mongoose.Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User' },
+    teams: [{ type: String }],
+  },
+  { _id: false },
+);
 
 /**
  * Mongoose Schema to represent a Pitch at South Side Weekly
