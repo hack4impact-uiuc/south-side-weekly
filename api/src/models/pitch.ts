@@ -17,6 +17,15 @@ const pendingContributor = new mongoose.Schema(
   { _id: false },
 );
 
+const assignmentContributor = new mongoose.Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User' },
+    teams: [{ type: String }],
+    reviewerId: { type: Schema.Types.ObjectId, ref: 'User' },
+  },
+  { _id: false },
+);
+
 /**
  * Mongoose Schema to represent a Pitch at South Side Weekly
  */
@@ -36,7 +45,7 @@ const Pitch = new mongoose.Schema({
     default: assignmentStatusEnum.NONE,
   },
   assignmentGoogleDocLink: { type: String, default: null },
-  assignmentContributors: [pendingContributor],
+  assignmentContributors: [assignmentContributor],
   pendingContributors: [pendingContributor],
   topics: [
     {
@@ -71,7 +80,7 @@ const Pitch = new mongoose.Schema({
       target: { type: Number, default: 0 },
     },
   },
-  approvedBy: { type: Schema.Types.ObjectId, ref: 'User' },
+  reviewedBy: { type: Schema.Types.ObjectId, ref: 'User' },
   similarStories: [{ type: String, default: null }],
   deadline: { type: Date, default: null },
 });

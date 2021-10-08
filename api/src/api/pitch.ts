@@ -193,7 +193,7 @@ router.put(
     const pitch = await Pitch.findByIdAndUpdate(req.params.pitchId, {
       $set: {
         status: pitchStatusEnum.APPROVED,
-        approvedBy: req.user._id,
+        reviewedBy: req.user._id,
         teams: teams,
       },
     });
@@ -222,6 +222,7 @@ router.put(
     const pitch = await Pitch.findByIdAndUpdate(req.params.pitchId, {
       $set: {
         status: pitchStatusEnum.REJECTED,
+        reviewedBy: req.user._id,
       },
     });
 
@@ -300,7 +301,7 @@ router.put(
           pendingContributors: { userId: userId, teams: teams },
         },
         $addToSet: {
-          assignmentContributors: { userId: userId, teams: teams },
+          assignmentContributors: { userId: userId, teams: teams, reviewerId: req.user._id},
         },
       },
       { returnOriginal: false, runValidators: true },

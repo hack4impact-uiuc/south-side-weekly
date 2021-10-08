@@ -39,7 +39,7 @@ export interface IPitch {
   status: string;
   assignmentStatus: string;
   assignmentGoogleDocLink: string;
-  assignmentContributors: {userId: string, teams: string[]}[],
+  assignmentContributors: {userId: string, teams: string[], reviewerId: string}[],
   pendingContributors: {userId: string, teams: string[]}[],
   topics: string[];
   teams: {
@@ -68,7 +68,7 @@ export interface IPitch {
       target: number;
     };
   };
-  approvedBy: string;
+  reviewedBy: string;
   similarStories: string[];
   deadline: Date;
   conflictOfInterest: boolean;

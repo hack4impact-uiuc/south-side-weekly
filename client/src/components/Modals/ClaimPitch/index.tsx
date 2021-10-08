@@ -54,16 +54,16 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
   }, [pitch.author]);
 
   const getApprover = useCallback(async (): Promise<void> => {
-    if (isEmpty(pitch.approvedBy)) {
+    if (isEmpty(pitch.reviewedBy)) {
       return;
     }
 
-    const res = await getUser(pitch.approvedBy);
+    const res = await getUser(pitch.reviewedBy);
 
     if (!isError(res)) {
       setApprover(getUserFullName(res.data.result));
     }
-  }, [pitch.approvedBy]);
+  }, [pitch.reviewedBy]);
 
   const getContributors = useCallback(async (): Promise<void> => {
     const tempContributors: IUser[] = [];
