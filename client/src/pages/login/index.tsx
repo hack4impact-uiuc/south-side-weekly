@@ -16,7 +16,6 @@ const LOGIN_URL = buildURI(
 
 const Login = (): ReactElement => {
   const { isLoading, isAuthenticated, isRegistered } = useAuth();
-
   // Builds on useLocation to parse the query string for you.
   const loginFailed = new URLSearchParams(useLocation().search).get(
     LOGIN_FAILURE_QUERY_PARAM,
