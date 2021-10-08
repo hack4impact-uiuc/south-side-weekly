@@ -14,7 +14,7 @@ export const approvedMessage = (
     from: process.env.EMAIL_USERNAME,
     subject: `Pitch "${pitch.title}" ${pitchStatusEnum.APPROVED}`,
     html: `<div>
-                <dt>Hi ${author.firstName},</dt>
+                <dt>Hi ${author.preferredName || author.firstName},</dt>
                 <br>
                 <dt>Congratulations, your pitch <a href='"${
                   pitch.assignmentGoogleDocLink
@@ -36,7 +36,7 @@ export const approvedMessage = (
                 <br>
                 <dt>Thank you,
                     <br>
-                ${approver.firstName} ${approver.lastName}
+                ${approver.preferredName || approver.firstName}
                 </dt>
                 </div>`,
   };
