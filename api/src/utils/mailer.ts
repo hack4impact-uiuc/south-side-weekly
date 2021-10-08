@@ -1,4 +1,3 @@
-import { Schema } from 'mongoose';
 import nodemailer from 'nodemailer';
 import { IUser, IPitch } from 'ssw-common';
 import { pitchStatusEnum } from './enums';
