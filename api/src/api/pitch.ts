@@ -260,7 +260,10 @@ router.put(
       req.params.pitchId,
       {
         $addToSet: {
-          pendingContributors: { userId: req.body.userId, teams: req.body.teams },
+          pendingContributors: {
+            userId: req.body.userId,
+            teams: req.body.teams,
+          },
         },
       },
       { new: true, runValidators: true },
