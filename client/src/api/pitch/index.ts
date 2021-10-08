@@ -60,7 +60,7 @@ const declinePitch = async (
 
 // Updates the information on a pitch
 const updatePitch = async (
-  pitchData: { [K in keyof IPitch]?: IPitch[K] },
+  pitchData: Partial<IPitch>,
   pitchId: string,
 ): Promise<Pitches> => {
   const url = buildEndpoint(PITCH_ENDPOINT, pitchId);
