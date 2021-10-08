@@ -5,11 +5,12 @@ export const isPitchClaimed = (pitch: IPitch): boolean =>
 
 export const getOpenTeamsForPitch = (pitch: IPitch): string[] => {
   const openTeams: string[] = [];
-  if (pitch.teams)
+  if (pitch.teams) {
     [...pitch.teams.entries()].forEach(([team, spots]) => {
       if (spots > 0) {
         openTeams.push(team);
       }
     });
+  }
   return openTeams;
 };
