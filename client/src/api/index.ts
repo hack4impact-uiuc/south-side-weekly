@@ -5,10 +5,10 @@ export {
   updateUserClaimedPitches,
   updateUser,
   getUserPermissionsByID,
+  updateOnboardingStatus,
 } from './user';
 export {
   getApprovedPitches,
-  getOpenTeams,
   updatePitch,
   submitPitchClaim,
   getPitchesPendingApproval,

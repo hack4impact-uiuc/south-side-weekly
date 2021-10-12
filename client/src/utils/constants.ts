@@ -94,32 +94,7 @@ const emptyPitch: IPitch = {
   assignmentContributors: [],
   pendingContributors: [],
   topics: [],
-  teams: {
-    writers: {
-      current: 0,
-      target: 0,
-    },
-    editors: {
-      current: 0,
-      target: 0,
-    },
-    visuals: {
-      current: 0,
-      target: 0,
-    },
-    illustration: {
-      current: 0,
-      target: 0,
-    },
-    photography: {
-      current: 0,
-      target: 0,
-    },
-    factChecking: {
-      current: 0,
-      target: 0,
-    },
-  },
+  teams: new Map<string, number>(),
   approvedBy: '',
   similarStories: [],
   deadline: new Date(),

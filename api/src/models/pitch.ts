@@ -37,10 +37,12 @@ const Pitch = new mongoose.Schema({
       default: interestsEnum.NONE,
     },
   ],
-  teams: {
-    type: Schema.Types.Map,
-    of: Number,
-  },
+  teams: [
+    {
+      teamId: { type: Schema.Types.ObjectId, ref: 'Team' },
+      target: Number,
+    },
+  ],
   approvedBy: { type: Schema.Types.ObjectId, ref: 'User' },
   similarStories: [{ type: String, default: null }],
   deadline: { type: Date, default: null },
