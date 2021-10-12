@@ -9,7 +9,7 @@ import {
 
 export type PitchSchema = IPitch & Document<any>;
 
-const pendingContributor = new mongoose.Schema(
+const contributor = new mongoose.Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: 'User' },
     teams: [{ type: String }],
@@ -36,8 +36,8 @@ const Pitch = new mongoose.Schema({
     default: assignmentStatusEnum.NONE,
   },
   assignmentGoogleDocLink: { type: String, default: null },
-  assignmentContributors: [pendingContributor],
-  pendingContributors: [pendingContributor],
+  assignmentContributors: [contributor],
+  pendingContributors: [contributor],
   topics: [
     {
       type: String,
