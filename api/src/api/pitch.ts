@@ -301,7 +301,7 @@ router.put(
           pendingContributors: { userId: userId, teams: teams },
         },
         $addToSet: {
-          assignmentContributors: { userId: userId, teams: teams, reviewerId: req.user._id},
+          assignmentContributors: { userId: userId, teams: teams },
         },
       },
       { returnOriginal: false, runValidators: true },

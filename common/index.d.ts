@@ -39,7 +39,7 @@ export interface IPitch {
   status: string;
   assignmentStatus: string;
   assignmentGoogleDocLink: string;
-  assignmentContributors: {userId: string, teams: string[], reviewerId: string}[],
+  assignmentContributors: {userId: string, teams: string[]}[],
   pendingContributors: {userId: string, teams: string[]}[],
   topics: string[];
   teams: {
