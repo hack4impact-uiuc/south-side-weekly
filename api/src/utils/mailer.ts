@@ -78,6 +78,42 @@ export const approvedMessage = (
   return m;
 };
 
+export const approveClaim = (
+    author: IUser,
+    pitch: IPitch,
+    admin: IUser,
+    teamNamesToUsers: Map<String, IUser[]>,
+    teams: String[]
+  ): message => {
+    const m = {
+      to: author.email,
+      from: process.env.EMAIL_USERNAME,
+      subject: `Claim Request for "${pitch.title}" ${pitchStatusEnum.APPROVED}`,
+      html: `<html>
+      Hi ${author.preferredName || author.firstName},
+      <br>
+      Congratulations, your request to join the ${pitch.title} as a ${teams.join(' and ')} has been approved!
+      <br>
+      Here are the other current contributors for this story:
+      <br>
+      <ul>
+      ${Object.entries(teamNamesToUsers).map((key) => 
+        key[0]
+        +`<br>`
+        + Object.entries(teamNamesToUsers.get(key[0]).map((member) => 
+        '<li>'+(member.preferredName || member.firstName)+' - '+(member.email)) + '</li>'
+        ))}$
+      </ul>
+      If you have any questions or need any additional support, please contact ${admin.email}. We can’t wait to see what you all come up with!
+      <br>
+      Thank you,
+      <br>
+      ${admin.preferredName || admin.firstName}
+      </html>`,
+    };
+    return m;
+  };
+
 export const sendMail = async (message: message): Promise<void> => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
