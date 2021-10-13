@@ -180,7 +180,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
   const isUserOnTeam = (team: string): boolean => {
     console.log(user.currentTeams, team);
     return user.currentTeams.includes(team.toUpperCase());
-  }
+  };
 
   return (
     <Modal
