@@ -328,7 +328,9 @@ router.put(
       });
       return;
     }
-
+    const author = await User.findById(pitch.author);
+    const message = approvedMessage(author, pitch, req.user);
+    sendMail(message);
     res.status(200).json({
       success: true,
       message: 'Successfully approved claim',
