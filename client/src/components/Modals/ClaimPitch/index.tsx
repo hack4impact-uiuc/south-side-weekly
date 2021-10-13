@@ -177,6 +177,9 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     return 'Claim Pitch';
   };
 
+  const isUserOnTeam = (team: string): boolean =>
+    user.currentTeams.includes(team);
+
   return (
     <Modal
       open={isOpen}
@@ -224,7 +227,8 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
                   disabled={
                     (slot[1].target - slot[1].current <= 0 &&
                       !checkboxes.get(slot[0])) ||
-                    didUserClaim()
+                    didUserClaim() ||
+                    !isUserOnTeam(slot[0])
                   }
                   checked={checkboxes.get(slot[0])}
                   onClick={() => {
