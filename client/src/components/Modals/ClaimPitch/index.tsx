@@ -177,8 +177,10 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     return 'Claim Pitch';
   };
 
-  const isUserOnTeam = (team: string): boolean =>
-    user.currentTeams.includes(team);
+  const isUserOnTeam = (team: string): boolean => {
+    console.log(user.currentTeams, team);
+    return user.currentTeams.includes(team.toLowerCase());
+  }
 
   return (
     <Modal
