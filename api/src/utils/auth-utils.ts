@@ -8,10 +8,17 @@ import { rolesEnum } from '../utils/enums';
  *
  * @param user the user to check
  * @param roles the list of roles a user must have one of in order to have a role
+ * @param requireApproved whether or not their role is required to be approved, default true
  * @returns true if the list of roles contains the user role, else false
  */
-const hasRole = (user: IUser, roles: string[]): boolean =>
-  user && roles.includes(user.role);
+const hasRole = (
+  user: IUser,
+  roles: string[],
+  requireApproved = true,
+): boolean =>
+  user &&
+  roles.includes(user.role) &&
+  (user.hasRoleApproved || !requireApproved);
 
 /**
  * Determines if a user has contributor level access
