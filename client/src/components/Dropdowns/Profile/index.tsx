@@ -5,6 +5,7 @@ import { IUser } from 'ssw-common';
 
 import { useAuth } from '../../../contexts';
 import { classNames } from '../../../utils/helpers';
+import ApprovedView from '../../Auth/ApprovedView';
 import UserPicture from '../../UserPicture';
 
 interface TriggerProps {
@@ -42,12 +43,14 @@ const ProfileDropdown: FC<DropdownProps> = ({ ...rest }): ReactElement => {
       {...rest}
     >
       <Dropdown.Menu>
-        <Dropdown.Item
-          value="profile"
-          text="View Profile"
-          icon="address card"
-          onClick={(e, { value }) => handleClick(value as string)}
-        />
+        <ApprovedView>
+          <Dropdown.Item
+            value="profile"
+            text="View Profile"
+            icon="address card"
+            onClick={(e, { value }) => handleClick(value as string)}
+          />
+        </ApprovedView>
         <Dropdown.Item
           value="logout"
           text="Logout"

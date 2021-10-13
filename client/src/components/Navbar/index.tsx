@@ -3,6 +3,7 @@ import { Link, NavLink } from 'react-router-dom';
 import { Menu } from 'semantic-ui-react';
 
 import ProfileDropdown from '../Dropdowns/Profile';
+import ApprovedView from '../Auth/ApprovedView';
 
 import './styles.scss';
 
@@ -12,8 +13,10 @@ const Navbar = (): ReactElement => (
       <h2>South Side Weekly</h2>
     </Menu.Item>
     <Menu.Menu position="right">
-      <Menu.Item as={NavLink} to="/pitches" name="Pitch Doc" />
-      <Menu.Item as={NavLink} to="/users" name="Directory" />
+      <ApprovedView>
+        <Menu.Item as={NavLink} to="/pitches" name="Pitch Doc" />
+        <Menu.Item as={NavLink} to="/users" name="Directory" />
+      </ApprovedView>
       <Menu.Item as={NavLink} to="/resources" name="Resources" />
       <Menu.Item className="profile">
         <ProfileDropdown />
