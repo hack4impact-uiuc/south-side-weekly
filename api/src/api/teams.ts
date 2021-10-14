@@ -29,6 +29,20 @@ router.get(
   }),
 );
 
+//Gets all teams
+router.get(
+  '/',
+  requireRegistered,
+  errorWrap(async (req: Request, res: Response) => {
+    const teams = await Team.find({});
+    res.status(200).json({
+      message: `Successfully retrieved all teams.`,
+      success: true,
+      result: teams,
+    });
+  }),
+);
+
 // // Gets a users permissions
 // router.get(
 //   '/:userId/permissions',
