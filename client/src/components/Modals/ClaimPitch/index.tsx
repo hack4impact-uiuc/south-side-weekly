@@ -210,7 +210,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
               <div className="checkbox-wrapper" key={index}>
                 <Form.Checkbox
                   disabled={
-                    (slot[1].target - slot[1].current <= 0 &&
+                    (slot[1].target <= 0 &&
                       !checkboxes.get(slot[0])) ||
                     didUserClaim()
                   }
@@ -222,7 +222,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
                   error={isCheckboxError}
                 />
                 <FieldTag content={slot[0]} />
-                <h4>{slot[1].target - slot[1].current}</h4>
+                <h4>{slot[1].target}</h4>
               </div>
             ))}
           </Form.Group>

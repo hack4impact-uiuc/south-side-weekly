@@ -94,7 +94,7 @@ const emptyPitch: IPitch = {
   assignmentContributors: [],
   pendingContributors: [],
   topics: [],
-  teams: new Map<string, number>(),
+  teams: [],
   approvedBy: '',
   similarStories: [],
   deadline: new Date(),

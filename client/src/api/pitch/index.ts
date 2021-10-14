@@ -35,7 +35,7 @@ const approvePitch = async (
   const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'approve');
   const failureMessage = 'APPROVE_CLAIM_FAIL';
 
-  return await put(url, Object.fromEntries(teams), failureMessage);
+  return await put(url, teams, failureMessage);
 };
 
 const declinePitch = async (

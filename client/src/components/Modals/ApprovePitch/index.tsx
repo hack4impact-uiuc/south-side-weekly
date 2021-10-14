@@ -11,7 +11,7 @@ import { IPitch } from 'ssw-common';
 import Swal from 'sweetalert2';
 
 import { approvePitch, declinePitch, getUser, isError } from '../../../api';
-import { allTeams } from '../../../utils/constants';
+import { useTeams } from '../../../contexts';
 import { classNames, getUserFullName } from '../../../utils/helpers';
 import FieldTag from '../../FieldTag';
 import PitchCard from '../../PitchCard';
@@ -30,7 +30,8 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
 }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
   const [author, setAuthor] = useState('');
-  const [teamMap, setTeamMap] = useState(new Map<string, number>());
+  const [teamMap, setTeamMap] = useState<IPitch['teams']>([]);
+  const { teams } = useTeams();
 
   const getAuthor = useCallback(async (): Promise<void> => {
     if (isEmpty(pitch.author)) {
@@ -49,35 +50,33 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       return;
     }
 
-    const map = new Map<string, number>();
+    const roster : IPitch['teams']= [];
 
-    allTeams.map((team) => {
-      map.set(team, 0);
+    teams.map((team) => {
+      roster.push({teamId: team._id, target: 0});
     });
 
-    setTeamMap(new Map(map));
+    setTeamMap(roster);
 
     getAuthor();
 
     return () => {
       setAuthor('');
-      setTeamMap(new Map());
+      setTeamMap([]);
     };
-  }, [getAuthor, isOpen]);
+  }, [getAuthor, isOpen, teams]);
 
-  const changeTeam = (team: string, value: number): void => {
-    teamMap.set(team, value);
-    setTeamMap(new Map(teamMap));
+  const changeTeam = (teamId: string, value: number): void => {
+    const indexOfTeamId = teamMap.findIndex(team => team.teamId === teamId)!;
+    teamMap[indexOfTeamId].target = value;
+    console.log(teamMap);
+    const teamMapCopy = [...teamMap];
+    setTeamMap(teamMapCopy);
   };
 
   const handleApprove = async (): Promise<void> => {
-    let validForm = false;
 
-    teamMap.forEach((value) => {
-      if (value > 0) {
-        validForm = true;
-      }
-    });
+    const validForm = teamMap.some(team => team.target > 0);
 
     if (!validForm) {
       Swal.fire({
@@ -163,12 +162,12 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
         </p>
         <Form>
           <Form.Group inline widths={5} className="team-select-group">
-            {allTeams.map((team, index) => (
+            {teams.map((team, index) => (
               <div key={index} className="input-group">
-                <FieldTag content={team} />
+                <FieldTag content={team.name} />
                 <Form.Input
-                  onChange={(e, { value }) => changeTeam(team, parseInt(value))}
-                  value={toString(teamMap.get(team))}
+                  onChange={(e, { value }) => changeTeam(team._id, parseInt(value))}
+                  value={teamMap.find(teamMapElement => teamMapElement.teamId === team._id)?.target}
                   type="number"
                   min={0}
                 />

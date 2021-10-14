@@ -24,8 +24,8 @@ import {
   FilterDropdown,
   ApprovePitchModal,
 } from '../../components';
-import { useAuth } from '../../contexts';
-import { allInterests, allTeams } from '../../utils/constants';
+import { useAuth, useTeams } from '../../contexts';
+import { allInterests } from '../../utils/constants';
 import { parseOptions } from '../../utils/helpers';
 
 import {
@@ -60,10 +60,13 @@ const PitchDoc = (): ReactElement => {
   const [claimStatus, setClaimStatus] = useState<string>('');
   const [sort, setSort] = useState<'increase' | 'decrease' | 'none'>('none');
   const [interests, setInterests] = useState<string[]>([]);
-  const [teams, setTeams] = useState<string[]>([]);
+  const [filteredTeams, setFilteredTeams] = useState<string[]>([]);
   const [query, setQuery] = useState('');
 
   const { isAdmin, isStaff } = useAuth();
+  const { teams } = useTeams();
+
+  const allTeams = teams.map((team) => team.name);
 
   const getApproved = async (): Promise<void> => {
     const res = await getApprovedPitches();
@@ -108,6 +111,8 @@ const PitchDoc = (): ReactElement => {
       getPendingApprovals();
     }
 
+    console.log("FJDLFJLDKF", allTeams);
+
     if (isAdmin) {
       getPendingClaims();
     }
@@ -140,14 +145,14 @@ const PitchDoc = (): ReactElement => {
     const filter = (pitches: IPitch[]): IPitch[] => {
       let filtered = filterInterests(pitches, interests);
       filtered = filterClaimStatus(filtered, claimStatus);
-      filtered = filterTeams(filtered, teams);
+      filtered = filterTeams(filtered, filteredTeams);
       filtered = sortPitches(filtered, sort);
 
       return filtered;
     };
 
     setFilteredPitches([...search(filter(currentPitches))]);
-  }, [currentPitches, query, interests, teams, claimStatus, sort]);
+  }, [currentPitches, query, interests, filteredTeams, claimStatus, sort]);
 
   useEffect(() => {
     if (currentTab !== TABS.APPROVED) {
@@ -254,7 +259,7 @@ const PitchDoc = (): ReactElement => {
           <FilterDropdown
             text="Teams"
             options={parseOptions(allTeams)}
-            onChange={(e, { value }) => setTeams(toArray(value))}
+            onChange={(e, { value }) => setFilteredTeams(toArray(value))}
             multiple
           />
         </div>
