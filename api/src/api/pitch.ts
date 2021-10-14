@@ -308,7 +308,7 @@ router.put(
           assignmentContributors: { userId: userId, teams: teams },
         },
       },
-      { returnOriginal: false, runValidators: true },
+      { new: true, runValidators: true },
     );
 
     // Add the pitch to the user's claimed Pitches
@@ -341,6 +341,47 @@ router.put(
     res.status(200).json({
       success: true,
       message: 'Successfully approved claim',
+      result: pitch,
+    });
+  }),
+);
+
+router.put(
+  '/:pitchId/declineClaim',
+  requireStaff,
+  errorWrap(async (req: Request, res: Response) => {
+    const { userId } = req.body;
+
+    if (!userId) {
+      res.status(400).json({
+        success: false,
+        message: 'No user ID provided',
+      });
+
+      return;
+    }
+
+    const pitch = await Pitch.findByIdAndUpdate(
+      req.params.pitchId,
+      {
+        $pull: {
+          pendingContributors: { userId: userId },
+        },
+      },
+      { new: true, runValidators: true },
+    );
+
+    if (!pitch) {
+      res.status(404).json({
+        success: false,
+        message: 'Pitch not found with id',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully declined claim',
       result: pitch,
     });
   }),
