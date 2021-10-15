@@ -226,8 +226,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
               <div className="checkbox-wrapper" key={index}>
                 <Form.Checkbox
                   disabled={
-                    (slot[1].target - slot[1].current <= 0 &&
-                      !checkboxes.get(slot[0])) ||
+                    slot[1].target - slot[1].current <= 0 ||
                     disableCheckbox(slot[0])
                   }
                   checked={checkboxes.get(slot[0])}
