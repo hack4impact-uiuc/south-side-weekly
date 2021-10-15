@@ -19,6 +19,7 @@ import FieldTag from '../../FieldTag';
 import UserPicture from '../../UserPicture';
 
 import './styles.scss';
+import { getAggregatedPitch } from '../../../api/pitch';
 
 interface ClaimPitchProps extends ModalProps {
   pitch: IPitch;
@@ -33,61 +34,26 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [teamSlots, setTeamSlots] = useState<IPitch['teams']>(emptyPitch.teams);
   const [checkboxes, setCheckboxes] = useState(new Map<string, boolean>());
-  const [author, setAuthor] = useState('');
-  const [approver, setApprover] = useState('');
-  const [contributors, setContributors] = useState<IUser[]>([]);
   const [didSubmit, setDidSubmit] = useState(false);
   const [isCheckboxError, setIsCheckboxError] = useState(false);
+  const [aggregatedPitch, setAggregatedPitch] = useState(emptyPitch);
 
   const { user } = useAuth();
 
-  const getAuthor = useCallback(async (): Promise<void> => {
-    if (isEmpty(pitch.author)) {
-      return;
-    }
-
-    const res = await getUser(pitch.author);
-
+  const fetchAggregatedPitch = useCallback(async (id: string): Promise<void> => {
+    const res = await getAggregatedPitch(id);
+    
     if (!isError(res)) {
-      setAuthor(getUserFullName(res.data.result));
+      setAggregatedPitch(res.data.result);
     }
-  }, [pitch.author]);
-
-  const getApprover = useCallback(async (): Promise<void> => {
-    if (isEmpty(pitch.approvedBy)) {
-      return;
-    }
-
-    const res = await getUser(pitch.approvedBy);
-
-    if (!isError(res)) {
-      setApprover(getUserFullName(res.data.result));
-    }
-  }, [pitch.approvedBy]);
-
-  const getContributors = useCallback(async (): Promise<void> => {
-    const tempContributors: IUser[] = [];
-
-    await Promise.all(
-      pitch.assignmentContributors.map(async (id) => {
-        const res = await getUser(id?.userId);
-
-        if (!isError(res)) {
-          tempContributors.push(res.data.result);
-        }
-      }),
-    );
-    setContributors([...tempContributors]);
-  }, [pitch.assignmentContributors]);
+  }, [pitch._id]);
 
   useEffect(() => {
     if (!isOpen) {
       return;
     }
 
-    getContributors();
-    getApprover();
-    getAuthor();
+    fetchAggregatedPitch(pitch._id);
 
     setTeamSlots(pitch.teams);
 
@@ -98,7 +64,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     });
 
     setCheckboxes(map);
-  }, [isOpen, pitch.teams, getApprover, getAuthor, getContributors]);
+  }, [isOpen, pitch.teams, getAggregatedPitch]);
 
   const updateCheckboxes = (checkbox: string): void => {
     const isChecked = checkboxes.get(checkbox);
