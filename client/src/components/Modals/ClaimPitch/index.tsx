@@ -143,7 +143,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     return 'Claim Pitch';
   };
 
-  const { author, approvedBy, assignmentContributors } = aggregatedPitch;
+  const { author, reviewedBy, assignmentContributors } = aggregatedPitch.aggregated;
 
   return (
     <Modal
@@ -169,7 +169,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
             <h3>{`Submitted by: ${author}`}</h3>
           </div>
           <div className="author">
-            <h3>{`Reviewed by: ${approvedBy}`}</h3>
+            <h3>{`Reviewed by: ${reviewedBy}`}</h3>
           </div>
         </div>
         <p className="description">{pitch.description}</p>
@@ -208,7 +208,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
         </Form>
         <h2>Pitch Claimed By</h2>
         <div className="contributors-section">
-          {assignmentContributors.map((contributor, index) => (
+          {assignmentContributors.map(({ user: contributor }, index) => (
             <UserPicture
               user={contributor}
               title={getUserFullName(contributor)}
