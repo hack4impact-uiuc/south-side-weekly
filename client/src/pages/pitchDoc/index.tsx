@@ -111,7 +111,7 @@ const PitchDoc = (): ReactElement => {
       getPendingApprovals();
     }
 
-    console.log("FJDLFJLDKF", allTeams);
+    console.log('FJDLFJLDKF', allTeams);
 
     if (isAdmin) {
       getPendingClaims();

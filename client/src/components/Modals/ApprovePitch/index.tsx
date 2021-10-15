@@ -50,10 +50,10 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       return;
     }
 
-    const roster : IPitch['teams']= [];
+    const roster: IPitch['teams'] = [];
 
     teams.map((team) => {
-      roster.push({teamId: team._id, target: 0});
+      roster.push({ teamId: team._id, target: 0 });
     });
 
     setTeamMap(roster);
@@ -67,7 +67,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   }, [getAuthor, isOpen, teams]);
 
   const changeTeam = (teamId: string, value: number): void => {
-    const indexOfTeamId = teamMap.findIndex(team => team.teamId === teamId)!;
+    const indexOfTeamId = teamMap.findIndex((team) => team.teamId === teamId)!;
     teamMap[indexOfTeamId].target = value;
     console.log(teamMap);
     const teamMapCopy = [...teamMap];
@@ -75,8 +75,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   };
 
   const handleApprove = async (): Promise<void> => {
-
-    const validForm = teamMap.some(team => team.target > 0);
+    const validForm = teamMap.some((team) => team.target > 0);
 
     if (!validForm) {
       Swal.fire({
@@ -166,8 +165,14 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
               <div key={index} className="input-group">
                 <FieldTag content={team.name} />
                 <Form.Input
-                  onChange={(e, { value }) => changeTeam(team._id, parseInt(value))}
-                  value={teamMap.find(teamMapElement => teamMapElement.teamId === team._id)?.target}
+                  onChange={(e, { value }) =>
+                    changeTeam(team._id, parseInt(value))
+                  }
+                  value={
+                    teamMap.find(
+                      (teamMapElement) => teamMapElement.teamId === team._id,
+                    )?.target
+                  }
                   type="number"
                   min={0}
                 />

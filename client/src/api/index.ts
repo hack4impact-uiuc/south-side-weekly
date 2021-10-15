@@ -24,7 +24,5 @@ export {
   deleteResource,
   editResource,
 } from './resource';
-export {
-  getTeams
-} from './teams'
+export { getTeams } from './teams';
 export { isError, buildURI } from './builders';

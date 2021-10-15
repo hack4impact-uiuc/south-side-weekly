@@ -77,9 +77,7 @@ const parseOptions = (options: string[]): DropdownItemProps[] =>
  * @returns true if pitch is claimed, else false
  */
 const isPitchClaimed = (pitch: IPitch): boolean =>
-  pitch.teams.every(
-    team => team.target <= 0
-  );
+  pitch.teams.every((team) => team.target <= 0);
 
 interface MapConversion<T, K> {
   key: T;
