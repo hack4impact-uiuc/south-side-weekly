@@ -10,7 +10,12 @@ import Pitch from '../models/pitch';
 import User from '../models/user';
 import { pitchStatusEnum } from '../utils/enums';
 import { isPitchClaimed } from '../utils/helpers';
-import { sendMail, approvedMessage, declinedMessage } from '../utils/mailer';
+import {
+  sendMail,
+  approvedMessage,
+  declinedMessage,
+  approveClaim,
+} from '../utils/mailer';
 
 const router = express.Router();
 
@@ -293,7 +298,6 @@ router.put(
 // Approves a claim on a pitch
 router.put(
   '/:pitchId/approveClaim',
-  requireStaff,
   errorWrap(async (req: Request, res: Response) => {
     const { userId, teams } = req.body;
 
@@ -336,7 +340,8 @@ router.put(
       return;
     }
     const author = await User.findById(pitch.author);
-    const message = approvedMessage(author, pitch, req.user);
+    //{'Editors': [user1, user2, user3], 'Photography': [user1, user4], ''}
+    const message = approveClaim(author, pitch, req.user, teams);
     sendMail(message);
     res.status(200).json({
       success: true,

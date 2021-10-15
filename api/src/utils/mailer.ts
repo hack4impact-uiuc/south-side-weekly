@@ -1,8 +1,13 @@
 import nodemailer from 'nodemailer';
+import User from '../models/user';
 import { IUser, IPitch } from 'ssw-common';
 import { pitchStatusEnum } from './enums';
 
 type message = { to: string; from: string; subject: string; html: string };
+type userInfo = { name: string; email: string}
+type teamsUsers = {
+  [teamname: string]: userInfo[];
+};
 
 export const declinedMessage = (
   author: IUser,
@@ -79,40 +84,56 @@ export const approvedMessage = (
 };
 
 export const approveClaim = (
-    author: IUser,
-    pitch: IPitch,
-    admin: IUser,
-    teamNamesToUsers: Map<String, IUser[]>,
-    teams: String[]
-  ): message => {
-    const m = {
-      to: author.email,
-      from: process.env.EMAIL_USERNAME,
-      subject: `Claim Request for "${pitch.title}" ${pitchStatusEnum.APPROVED}`,
-      html: `<html>
+  author: IUser,
+  pitch: IPitch,
+  admin: IUser,
+  teams: [string],
+): message => {
+  const teamNamesToUsers: teamsUsers = {writers: [{name: 'John D', email: 'johnd@gmail.com'}, {name: 'Jane D', email: 'jane@gmail.com'}], editors: [{name: 'John D', email: 'johnd@gmail.com'}, {name: 'Jane D', email: 'jane@gmail.com'}]}
+  // for (const user of pitch.assignmentContributors) {
+  //   for (const teamName of user.teams) {
+  //     const userModel = await User.findById(user.userId);
+  //     const info: userInfo = { name: `${userModel.firstName} ${userModel.lastName}`, email: userModel.email}
+  //     if (!(teamName in teamNamesToUsers)) {
+  //       teamNamesToUsers[teamName] = [info]
+  //     } else {
+  //       teamNamesToUsers[teamName].push(info);
+  //     }
+  //   }
+  // }
+  const m = {
+    to: author.email,
+    from: process.env.EMAIL_USERNAME,
+    subject: `Claim Request for "${pitch.title}" ${pitchStatusEnum.APPROVED}`,
+    html: `<html>
       Hi ${author.preferredName || author.firstName},
       <br>
-      Congratulations, your request to join the ${pitch.title} as a ${teams.join(' and ')} has been approved!
+      Congratulations, your request to join the ${
+        pitch.title
+      } as a ${teams.join(' and ')} has been approved!
       <br>
       Here are the other current contributors for this story:
       <br>
       <ul>
-      ${Object.entries(teamNamesToUsers).map((key) => 
-        key[0]
-        +`<br>`
-        + Object.entries(teamNamesToUsers.get(key[0]).map((member) => 
-        '<li>'+(member.preferredName || member.firstName)+' - '+(member.email)) + '</li>'
-        ))}$
+      ${Object.keys(teamNamesToUsers).map(
+        (key) => {
+          `${key}<br>${
+          teamNamesToUsers[key].forEach(member => {
+           (member.name !== (`${author.firstName} ${author.lastName}`) ? `<li> ${member.name} - ${member.email} </li>` : '')
+          })}`
+      })}
       </ul>
-      If you have any questions or need any additional support, please contact ${admin.email}. We can’t wait to see what you all come up with!
+      If you have any questions or need any additional support, please contact ${
+        admin.email
+      }. We can’t wait to see what you all come up with!
       <br>
       Thank you,
       <br>
       ${admin.preferredName || admin.firstName}
       </html>`,
-    };
-    return m;
-  };
+    }
+  return m;
+};
 
 export const sendMail = async (message: message): Promise<void> => {
   const transporter = nodemailer.createTransport({
