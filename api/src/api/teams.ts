@@ -61,7 +61,7 @@ router.get(
 // Create a new team
 router.post(
   '/',
-  // requireAdmin,
+  requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
     const newTeam = await Team.create(req.body);
     if (newTeam) {
@@ -77,7 +77,7 @@ router.post(
 // Updates a team
 router.put(
   '/:teamId',
-  // requireAdmin,
+  requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
     const updatedTeam = await Team.findByIdAndUpdate(
       req.params.teamId,
