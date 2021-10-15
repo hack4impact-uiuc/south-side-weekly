@@ -1,4 +1,4 @@
-import { IPitch, IUser } from 'ssw-common';
+import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
 
 import { wizardPages } from './enums';
 
@@ -100,6 +100,30 @@ const emptyPitch: IPitch = {
   deadline: new Date(),
 };
 
+const emptyAggregatePitch: IPitchAggregate = {
+  aggregated: {
+    author: emptyUser,
+    assignmentContributors: [],
+    pendingContributors: [],
+    reviewedBy: emptyUser,
+  },
+  _id: '',
+  title: '',
+  author: '',
+  description: '',
+  status: '',
+  assignmentStatus: '',
+  assignmentGoogleDocLink: '',
+  assignmentContributors: [],
+  pendingContributors: [],
+  topics: [],
+  teams: [],
+  approvedBy: '',
+  similarStories: [],
+  deadline: new Date(),
+  conflictOfInterest: false,
+};
+
 export {
   allInterests,
   allTeams,
@@ -109,6 +133,7 @@ export {
   allRaces,
   emptyUser,
   emptyPitch,
+  emptyAggregatePitch,
   staffPages,
   contributorPages,
 };

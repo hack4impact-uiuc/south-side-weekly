@@ -12,7 +12,7 @@ import Swal from 'sweetalert2';
 
 import { getUser, isError, updatePitch, submitPitchClaim } from '../../../api';
 import { useAuth } from '../../../contexts';
-import { emptyPitch } from '../../../utils/constants';
+import { emptyAggregatePitch, emptyPitch } from '../../../utils/constants';
 import { convertMap, getUserFullName } from '../../../utils/helpers';
 import PitchCard from '../../PitchCard';
 import FieldTag from '../../FieldTag';
@@ -36,7 +36,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
   const [checkboxes, setCheckboxes] = useState(new Map<string, boolean>());
   const [didSubmit, setDidSubmit] = useState(false);
   const [isCheckboxError, setIsCheckboxError] = useState(false);
-  const [aggregatedPitch, setAggregatedPitch] = useState(emptyPitch);
+  const [aggregatedPitch, setAggregatedPitch] = useState(emptyAggregatePitch);
 
   const { user } = useAuth();
 
@@ -143,6 +143,8 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     return 'Claim Pitch';
   };
 
+  const { author, approvedBy, assignmentContributors } = aggregatedPitch;
+
   return (
     <Modal
       open={isOpen}
@@ -167,7 +169,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
             <h3>{`Submitted by: ${author}`}</h3>
           </div>
           <div className="author">
-            <h3>{`Reviewed by: ${approver}`}</h3>
+            <h3>{`Reviewed by: ${approvedBy}`}</h3>
           </div>
         </div>
         <p className="description">{pitch.description}</p>
@@ -206,7 +208,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
         </Form>
         <h2>Pitch Claimed By</h2>
         <div className="contributors-section">
-          {contributors.map((contributor, index) => (
+          {assignmentContributors.map((contributor, index) => (
             <UserPicture
               user={contributor}
               title={getUserFullName(contributor)}

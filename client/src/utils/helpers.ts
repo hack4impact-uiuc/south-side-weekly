@@ -52,7 +52,7 @@ const updateUserField = <T extends keyof IUser>(
  * @param user the user to get the fullname of
  * @returns the fullname of the user
  */
-const getUserFullName = (user: IUser): string =>
+const getUserFullName = (user: Partial<IUser>): string =>
   `${user.preferredName ? user.preferredName : user.firstName} ${
     user.lastName
   }`;
