@@ -21,11 +21,12 @@ const getApprovedPitches = async (): Promise<Pitches> => {
 const submitPitchClaim = async (
   pitchId: string,
   userId: string,
+  teams: string[],
 ): Promise<Pitches> => {
   const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'submitClaim');
   const failureMessage = 'SUBMIT_PITCH_CLAIM_FAIL';
 
-  return await put(url, { userId }, failureMessage);
+  return await put(url, { userId, teams }, failureMessage);
 };
 
 const approvePitch = async (
@@ -49,7 +50,7 @@ const declinePitch = async (
 
 // Updates the information on a pitch
 const updatePitch = async (
-  pitchData: { [key: string]: string[] | string | number | IPitch['teams'] },
+  pitchData: Partial<IPitch>,
   pitchId: string,
 ): Promise<Pitches> => {
   const url = buildEndpoint(PITCH_ENDPOINT, pitchId);

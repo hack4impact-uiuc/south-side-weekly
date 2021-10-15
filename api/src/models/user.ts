@@ -8,7 +8,7 @@ import {
   racesEnum,
 } from '../utils/enums';
 
-type UserSchema = IUser & Document<any>;
+export type UserSchema = IUser & Document<any>;
 
 /**
  * Mongoose Schema to represent a User at South Side Weekly.

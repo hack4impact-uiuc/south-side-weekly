@@ -28,6 +28,13 @@ export interface IUser {
   interests: string[];
 }
 
+interface IUserAggregate extends IUser {
+  aggregated: {
+    claimedPitches: Partial<IPitch>[];
+    submittedPitches: Partial<IPitch>[];
+  };
+}
+
 /**
  * Interface for a Pitch Schema.
  */
@@ -39,8 +46,8 @@ export interface IPitch {
   status: string;
   assignmentStatus: string;
   assignmentGoogleDocLink: string;
-  assignmentContributors: string[];
-  pendingContributors: string[];
+  assignmentContributors: { userId: string; teams: string[] }[];
+  pendingContributors: { userId: string; teams: string[] }[];
   topics: string[];
   teams: {
     teamId: string;
@@ -50,6 +57,21 @@ export interface IPitch {
   similarStories: string[];
   deadline: Date;
   conflictOfInterest: boolean;
+}
+
+interface IPitchAggregate extends IPitch {
+  aggregated: {
+    author: Partial<IUser>;
+    assignmentContributors: {
+      user: Partial<IUser>;
+      teams: string[];
+    }[];
+    pendingContributors: {
+      user: Partial<IUser>;
+      teams: string[];
+    }[];
+    reviewedBy: Partial<IUser>;
+  };
 }
 
 /**

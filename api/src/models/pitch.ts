@@ -9,6 +9,14 @@ import {
 
 export type PitchSchema = IPitch & Document<any>;
 
+const contributor = new mongoose.Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User' },
+    teams: [{ type: String }],
+  },
+  { _id: false },
+);
+
 /**
  * Mongoose Schema to represent a Pitch at South Side Weekly
  */
@@ -28,8 +36,8 @@ const Pitch = new mongoose.Schema({
     default: assignmentStatusEnum.NONE,
   },
   assignmentGoogleDocLink: { type: String, default: null },
-  assignmentContributors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  pendingContributors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  assignmentContributors: [contributor],
+  pendingContributors: [contributor],
   topics: [
     {
       type: String,
