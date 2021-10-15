@@ -6,7 +6,7 @@ import Page from '../Page';
 import Loading from '../Loading';
 
 const PrivateRoute: FC<RouteProps> = ({ ...routeProps }) => {
-  const { isAuthenticated, isLoading, isRegistered, user} = useAuth();
+  const { isAuthenticated, isLoading, isRegistered, user } = useAuth();
   const location = useLocation();
 
   const canShowPage = (): boolean =>
