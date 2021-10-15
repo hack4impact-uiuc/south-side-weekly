@@ -1,5 +1,4 @@
 import nodemailer from 'nodemailer';
-import User from '../models/user';
 import { IUser, IPitch, IPitchAggregate } from 'ssw-common';
 import { pitchStatusEnum } from './enums';
 
