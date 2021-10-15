@@ -9,6 +9,7 @@ import {
 
 import Pitch from '../models/pitch';
 import User from '../models/user';
+import { aggregatePitch } from '../utils/aggregate-utils';
 import { pitchStatusEnum } from '../utils/enums';
 import { isPitchClaimed } from '../utils/helpers';
 import {
@@ -121,6 +122,28 @@ router.get(
   }),
 );
 
+router.get(
+  '/:pitchId/aggregate',
+  errorWrap(async (req: Request, res: Response) => {
+    const pitch = await Pitch.findById(req.params.pitchId);
+    if (!pitch) {
+      res.status(404).json({
+        success: false,
+        message: 'Pitch not found with id',
+      });
+      return;
+    }
+
+    const aggregatedPitch = await aggregatePitch(pitch);
+
+    res.status(200).json({
+      success: true,
+      result: aggregatedPitch,
+      message: 'Successfully aggregated pitch',
+    });
+  }),
+);
+
 // Gets open teams by pitch id
 router.get(
   '/:pitchId/openTeams',
@@ -153,6 +176,13 @@ router.post(
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     const newPitch = await Pitch.create(req.body);
+
+    await User.findByIdAndUpdate(newPitch.author, {
+      $addToSet: {
+        submittedPitches: newPitch._id,
+      },
+    });
+
     if (newPitch) {
       res.status(200).json({
         message: 'Successfully created new pitch',
@@ -200,7 +230,7 @@ router.put(
     const pitch = await Pitch.findByIdAndUpdate(req.params.pitchId, {
       $set: {
         status: pitchStatusEnum.APPROVED,
-        approvedBy: req.user._id,
+        reviewedBy: req.user._id,
         teams: teams,
       },
     });
@@ -231,6 +261,7 @@ router.put(
     const pitch = await Pitch.findByIdAndUpdate(req.params.pitchId, {
       $set: {
         status: pitchStatusEnum.REJECTED,
+        reviewedBy: req.user._id,
       },
     });
 
