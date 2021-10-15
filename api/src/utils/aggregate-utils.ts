@@ -17,7 +17,7 @@ const aggregatePitch = async (
   rawPitch: PitchSchema,
 ): Promise<IPitchAggregate> => {
   const author = simplifyUser(await User.findById(rawPitch.author));
-  const reviewer = simplifyUser(await User.findById(rawPitch.approvedBy));
+  const reviewer = simplifyUser(await User.findById(rawPitch.reviewedBy));
 
   const assignmentContributors = await Promise.all(
     rawPitch.assignmentContributors.map(async (contributor) => ({

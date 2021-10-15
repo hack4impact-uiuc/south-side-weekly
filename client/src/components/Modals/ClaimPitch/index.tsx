@@ -54,16 +54,16 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
   }, [pitch.author]);
 
   const getApprover = useCallback(async (): Promise<void> => {
-    if (isEmpty(pitch.approvedBy)) {
+    if (isEmpty(pitch.reviewedBy)) {
       return;
     }
 
-    const res = await getUser(pitch.approvedBy);
+    const res = await getUser(pitch.reviewedBy);
 
     if (!isError(res)) {
       setApprover(getUserFullName(res.data.result));
     }
-  }, [pitch.approvedBy]);
+  }, [pitch.reviewedBy]);
 
   const getContributors = useCallback(async (): Promise<void> => {
     const tempContributors: IUser[] = [];
@@ -177,6 +177,10 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     return 'Claim Pitch';
   };
 
+  const isUserOnTeam = (team: string): boolean =>
+    user.currentTeams.includes(team.toUpperCase());
+  const disableCheckbox = (team: string): boolean =>
+    didUserClaim() || !isUserOnTeam(team);
   return (
     <Modal
       open={isOpen}
@@ -222,9 +226,8 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
               <div className="checkbox-wrapper" key={index}>
                 <Form.Checkbox
                   disabled={
-                    (slot[1].target - slot[1].current <= 0 &&
-                      !checkboxes.get(slot[0])) ||
-                    didUserClaim()
+                    slot[1].target - slot[1].current <= 0 ||
+                    disableCheckbox(slot[0])
                   }
                   checked={checkboxes.get(slot[0])}
                   onClick={() => {

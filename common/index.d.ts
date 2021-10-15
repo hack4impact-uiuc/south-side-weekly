@@ -75,7 +75,7 @@ export interface IPitch {
       target: number;
     };
   };
-  approvedBy: string;
+  reviewedBy: string;
   similarStories: string[];
   deadline: Date;
   conflictOfInterest: boolean;

@@ -13,6 +13,7 @@ $cardColor: $primary;
 
   &:hover {
     border-bottom: solid $cardColor 8px !important;
+    z-index: 0 !important;
   }
 
   .description {

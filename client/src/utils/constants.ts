@@ -120,7 +120,7 @@ const emptyPitch: IPitch = {
       target: 0,
     },
   },
-  approvedBy: '',
+  reviewedBy: '',
   similarStories: [],
   deadline: new Date(),
 };
