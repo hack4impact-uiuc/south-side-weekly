@@ -1,6 +1,6 @@
 import nodemailer from 'nodemailer';
 import User from '../models/user';
-import { IUser, IPitch } from 'ssw-common';
+import { IUser, IPitch, IPitchAggregate } from 'ssw-common';
 import { pitchStatusEnum } from './enums';
 
 type message = { to: string; from: string; subject: string; html: string };
@@ -94,7 +94,7 @@ export const approvedMessage = (
 
 export const approveClaim = (
   author: IUser,
-  pitch: IPitch,
+  pitch: IPitchAggregate,
   admin: Partial<IUser>,
   teams: [string],
 ): message => {

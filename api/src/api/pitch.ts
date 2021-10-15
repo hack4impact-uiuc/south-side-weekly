@@ -372,9 +372,10 @@ router.put(
       return;
     }
     const claimUser = await User.findById(userId);
+    const aggregatedPitch = await aggregatePitch(pitch);
     //{'Editors': [user1, user2, user3], 'Photography': [user1, user4], ''}
     const admin: Partial<IUser> = {firstName: 'Andy', lastName: 'Wong', email: 'chenfeiyu132@gmail.com'}
-    const message = approveClaim(claimUser, pitch, admin, teams);
+    const message = approveClaim(claimUser, aggregatedPitch, admin, teams);
     sendMail(message);
     res.status(200).json({
       success: true,
@@ -416,7 +417,11 @@ router.put(
       });
       return;
     }
-
+    const claimUser = await User.findById(userId);
+    //{'Editors': [user1, user2, user3], 'Photography': [user1, user4], ''}
+    //const admin: Partial<IUser> = {firstName: 'Andy', lastName: 'Wong', email: 'chenfeiyu132@gmail.com'}
+    const message = declinedMessage(claimUser, pitch, req.user);
+    sendMail(message);
     res.status(200).json({
       success: true,
       message: 'Successfully declined claim',
