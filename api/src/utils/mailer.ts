@@ -5,9 +5,18 @@ import { pitchStatusEnum } from './enums';
 
 type message = { to: string; from: string; subject: string; html: string };
 type userInfo = { name: string; email: string}
-type teamsUsers = {
-  [teamname: string]: userInfo[];
-};
+type teamsUsers = Record<string, userInfo[]>;
+
+const getAllTeams = (teamNamesToUsers : teamsUsers) : string => {
+  const message: string[] = []
+  for(const key in teamNamesToUsers) {
+    message.push(`${key} <br>`)
+    for(const member of teamNamesToUsers[key]) {
+      message.push(`<li> ${member.name} - ${member.email} </li>`)
+    }
+  }
+  return message.join('')
+}
 
 export const declinedMessage = (
   author: IUser,
@@ -86,10 +95,13 @@ export const approvedMessage = (
 export const approveClaim = (
   author: IUser,
   pitch: IPitch,
-  admin: IUser,
+  admin: Partial<IUser>,
   teams: [string],
 ): message => {
-  const teamNamesToUsers: teamsUsers = {writers: [{name: 'John D', email: 'johnd@gmail.com'}, {name: 'Jane D', email: 'jane@gmail.com'}], editors: [{name: 'John D', email: 'johnd@gmail.com'}, {name: 'Jane D', email: 'jane@gmail.com'}]}
+  const teamNamesToUsers: teamsUsers = {
+    writers: [{name: 'John D', email: 'johnd@gmail.com'}, {name: 'Jane D', email: 'jane@gmail.com'}], 
+    editors: [{name: 'John D', email: 'johnd@gmail.com'}, {name: 'Jane D', email: 'jane@gmail.com'}]
+  }
   // for (const user of pitch.assignmentContributors) {
   //   for (const teamName of user.teams) {
   //     const userModel = await User.findById(user.userId);
@@ -101,6 +113,7 @@ export const approveClaim = (
   //     }
   //   }
   // }
+  
   const m = {
     to: author.email,
     from: process.env.EMAIL_USERNAME,
@@ -115,13 +128,7 @@ export const approveClaim = (
       Here are the other current contributors for this story:
       <br>
       <ul>
-      ${Object.keys(teamNamesToUsers).map(
-        (key) => {
-          `${key}<br>${
-          teamNamesToUsers[key].forEach(member => {
-           (member.name !== (`${author.firstName} ${author.lastName}`) ? `<li> ${member.name} - ${member.email} </li>` : '')
-          })}`
-      })}
+      ${getAllTeams(teamNamesToUsers)}
       </ul>
       If you have any questions or need any additional support, please contact ${
         admin.email

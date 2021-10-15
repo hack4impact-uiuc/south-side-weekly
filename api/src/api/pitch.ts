@@ -1,4 +1,5 @@
 import express, { Request, Response } from 'express';
+import { IUser } from 'ssw-common';
 import { errorWrap } from '../middleware';
 import {
   requireAdmin,
@@ -312,7 +313,7 @@ router.put(
           assignmentContributors: { userId: userId, teams: teams },
         },
       },
-      { returnOriginal: false, runValidators: true },
+      { new: true, runValidators: true },
     );
 
     // Add the pitch to the user's claimed Pitches
@@ -339,13 +340,55 @@ router.put(
       });
       return;
     }
-    const author = await User.findById(pitch.author);
+    const claimUser = await User.findById(userId);
     //{'Editors': [user1, user2, user3], 'Photography': [user1, user4], ''}
-    const message = approveClaim(author, pitch, req.user, teams);
+    const admin: Partial<IUser> = {firstName: 'Andy', lastName: 'Wong', email: 'chenfeiyu132@gmail.com'}
+    const message = approveClaim(claimUser, pitch, admin, teams);
     sendMail(message);
     res.status(200).json({
       success: true,
       message: 'Successfully approved claim',
+      result: pitch,
+    });
+  }),
+);
+
+router.put(
+  '/:pitchId/declineClaim',
+  requireStaff,
+  errorWrap(async (req: Request, res: Response) => {
+    const { userId } = req.body;
+
+    if (!userId) {
+      res.status(400).json({
+        success: false,
+        message: 'No user ID provided',
+      });
+
+      return;
+    }
+
+    const pitch = await Pitch.findByIdAndUpdate(
+      req.params.pitchId,
+      {
+        $pull: {
+          pendingContributors: { userId: userId },
+        },
+      },
+      { new: true, runValidators: true },
+    );
+
+    if (!pitch) {
+      res.status(404).json({
+        success: false,
+        message: 'Pitch not found with id',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully declined claim',
       result: pitch,
     });
   }),
