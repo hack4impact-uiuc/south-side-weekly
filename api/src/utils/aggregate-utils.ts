@@ -2,6 +2,7 @@ import { IPitch, IUser, IUserAggregate, IPitchAggregate } from 'ssw-common';
 
 import Pitch, { PitchSchema } from '../models/pitch';
 import User, { UserSchema } from '../models/user';
+import Team from '../models/team';
 
 import { santitizePitch, santitizeUser } from './helpers';
 
@@ -33,6 +34,10 @@ const aggregatePitch = async (
     })),
   );
 
+  const teams = await Promise.all(
+    rawPitch.teams.map(({ teamId }) => Team.findById(teamId)),
+  );
+
   const aggregatedPitch = {
     ...santitizePitch(rawPitch),
     aggregated: {
@@ -40,6 +45,7 @@ const aggregatePitch = async (
       reviewedBy: reviewer,
       assignmentContributors: assignmentContributors,
       pendingContributors: pendingContributors,
+      teams: teams,
     },
   };
 

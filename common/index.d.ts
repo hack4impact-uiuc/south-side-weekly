@@ -28,7 +28,7 @@ export interface IUser {
   interests: string[];
 }
 
-interface IUserAggregate extends IUser {
+export interface IUserAggregate extends IUser {
   aggregated: {
     claimedPitches: Partial<IPitch>[];
     submittedPitches: Partial<IPitch>[];
@@ -59,7 +59,7 @@ export interface IPitch {
   conflictOfInterest: boolean;
 }
 
-interface IPitchAggregate extends IPitch {
+export interface IPitchAggregate extends IPitch {
   aggregated: {
     author: Partial<IUser>;
     assignmentContributors: {
@@ -71,6 +71,7 @@ interface IPitchAggregate extends IPitch {
       teams: string[];
     }[];
     reviewedBy: Partial<IUser>;
+    teams: Partial<ITeam>[];
   };
 }
 
