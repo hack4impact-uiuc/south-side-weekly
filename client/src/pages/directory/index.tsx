@@ -1,16 +1,10 @@
-import React, {
-  useEffect,
-  useState,
-  ReactElement,
-  SyntheticEvent,
-} from 'react';
-import { startsWith, toArray, toLower, toString } from 'lodash';
-import { DropdownProps, Input } from 'semantic-ui-react';
+import React, { useEffect, useState, ReactElement } from 'react';
+import { startsWith, toLower, toString } from 'lodash';
+import { Input } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { getUsers, isError } from '../../api';
-import { UserModal, FilterDropdown } from '../../components';
-import { parseOptions } from '../../utils/helpers';
+import { UserModal, MultiSelect, Select } from '../../components';
 import { allInterests, allRoles, allTeams } from '../../utils/constants';
 
 import { filterInterests, filterRole, filterTeams, sortUsers } from './helpers';
@@ -84,19 +78,14 @@ const Directory = (): ReactElement => {
     setFilteredDirectory([...search(filter(directory))]);
   }, [directory, query, interests, teams, role, sort]);
 
-  const determineSort = (
-    e: SyntheticEvent<HTMLElement>,
-    data: DropdownProps,
-  ): void => {
-    if (typeof data.value === 'string') {
-      if (data.value === dateOptions[0]) {
-        setSort('increase');
-      } else if (data.value === dateOptions[1]) {
-        setSort('decrease');
-      } else {
-        setSort('none');
-      }
+  const getSortValue = (): string => {
+    if (sort === 'increase') {
+      return dateOptions[0];
+    } else if (sort === 'decrease') {
+      return dateOptions[1];
     }
+
+    return '';
   };
 
   return (
@@ -115,37 +104,49 @@ const Directory = (): ReactElement => {
           <h3>Filters: </h3>
         </div>
         <div className="wrapper">
-          <FilterDropdown
-            className="filter"
-            text="Role"
-            options={parseOptions(allRoles)}
-            onChange={(e, { value }) => setRole(toString(value))}
+          <Select
+            value={role}
+            options={allRoles}
+            onChange={(e) => setRole(e ? e.value : '')}
+            placeholder="Role"
           />
         </div>
         <div className="wrapper">
-          <FilterDropdown
-            className="filter"
-            text="Date Joined"
-            options={parseOptions(dateOptions)}
-            onChange={determineSort}
+          <Select
+            value={getSortValue()}
+            options={dateOptions}
+            onChange={(e) => {
+              if (e) {
+                if (e.value === dateOptions[0]) {
+                  setSort('increase');
+                } else {
+                  setSort('decrease');
+                }
+              } else {
+                setSort('none');
+              }
+            }}
+            placeholder="Date Joined"
           />
         </div>
         <div className="wrapper">
-          <FilterDropdown
-            className="filter"
-            text="Topics of Interest"
-            options={parseOptions(allInterests)}
-            onChange={(e, { value }) => setInterests(toArray(value))}
-            multiple
+          <MultiSelect
+            value={interests}
+            onChange={(values) =>
+              setInterests(values ? values.map((item) => item.value) : [])
+            }
+            options={allInterests}
+            placeholder="Interests"
           />
         </div>
         <div className="wrapper">
-          <FilterDropdown
-            className="filter"
-            text="Teams"
-            options={parseOptions(allTeams)}
-            onChange={(e, { value }) => setTeams(toArray(value))}
-            multiple
+          <MultiSelect
+            value={teams}
+            onChange={(values) =>
+              setTeams(values ? values.map((item) => item.value) : [])
+            }
+            options={allTeams}
+            placeholder="Teams"
           />
         </div>
       </div>
