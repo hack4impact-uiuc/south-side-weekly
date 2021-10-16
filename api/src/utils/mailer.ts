@@ -28,7 +28,7 @@ export const declinedMessage = (
   const m = {
     to: author.email,
     from: process.env.EMAIL_USERNAME,
-    subject: `Pitch "${pitch.title}" ${pitchStatusEnum.APPROVED}`,
+    subject: `Pitch "${pitch.title}" ${pitchStatusEnum.REJECTED}`,
     html: `<div>
                 <dt>Hi ${author.preferredName || author.firstName},</dt>
                 <br>
@@ -114,7 +114,7 @@ export const approveClaim = (
   // }
   
   const m = {
-    to: author.email,
+    to: author.email,  
     from: process.env.EMAIL_USERNAME,
     subject: `Claim Request for "${pitch.title}" ${pitchStatusEnum.APPROVED}`,
     html: `<html>
@@ -140,6 +140,36 @@ export const approveClaim = (
     }
   return m;
 };
+
+export const declineClaim = (
+  author: IUser, 
+  pitch: IPitchAggregate,
+  admin: Partial<IUser>,
+): message => {
+  const link1 = 'www.google.com';
+  //TODO: find out what those links should point to
+  const m = {
+    to: author.email, 
+    from: process.env.EMAIL_USERNAME,
+    subject: `Story Claim Request for ${pitch.title}" ${pitchStatusEnum.REJECTED}`
+    ,
+    html: `Hi Contributor Name,
+    <br>
+    Thank you for submitting your pitch claim request to join the ${pitch.title} pitch. 
+    Unfortunately, your request was declined for the following reason.
+    <br>
+    Reasoning message
+    <br>
+    If you have any questions or need any additional support, please contact ${admin.email}. 
+    In the meantime, feel free to check the <a href='${link1}'>pitch doc</a>for potential new stories to claim!
+    <br>
+    Thank you,
+    <br>
+    ${admin.preferredName || admin.firstName}`,
+  };
+  return m;
+};
+
 
 export const sendMail = async (message: message): Promise<void> => {
   const transporter = nodemailer.createTransport({
