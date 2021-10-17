@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Button, Card, Menu, Radio } from 'semantic-ui-react';
+import { Button, Card, Menu, Checkbox } from 'semantic-ui-react';
 import { IResource } from 'ssw-common';
 import Swal from 'sweetalert2';
 
@@ -94,16 +94,16 @@ const Resources = (): ReactElement => {
       <div className="resources-page">
         <div className="controls">
           <h1>Resource Page</h1>
-          <div>
+          <div className="edit-toggle">
             <AdminView>
-              <Radio checked={edit} slider onClick={() => setEdit(!edit)} />
+              <Checkbox toggle checked={edit} label='Edit Mode' slider onClick={() => setEdit(!edit)} />
             </AdminView>
           </div>
           <div className="push" />
           {edit && (
             <Button
               onClick={() => openModal('create')}
-              content="Create Resource"
+              content="+ Add Resource"
               className="default-btn"
             />
           )}

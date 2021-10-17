@@ -14,6 +14,11 @@
       border: solid $primary;
     }
 
+    .edit-toggle {
+      position: absolute;
+      right: 20%;
+    }
+
     .active {
       border: solid $primary;
       background-color: $primary;
