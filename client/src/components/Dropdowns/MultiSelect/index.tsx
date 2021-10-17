@@ -1,5 +1,8 @@
 import React, { FC, ReactElement } from 'react';
-import Select, { MultiValue, ActionMeta } from 'react-select';
+import Select, {
+  MultiValue,
+  ActionMeta,
+} from 'react-select';
 
 interface MultiSelectOption {
   value: string;
@@ -37,6 +40,8 @@ const MultiSelect: FC<MultiSelectProps> = ({
       value={formmatedOptions.filter((item) => value.includes(item.value))}
       options={formmatedOptions}
       onChange={onChange}
+      closeMenuOnSelect={false}
+      hideSelectedOptions={false}
     />
   );
 };
