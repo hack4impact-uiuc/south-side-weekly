@@ -4,11 +4,7 @@ import { Input } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { getUsers, isError } from '../../api';
-import {
-  UserModal,
-  MultiSelect,
-  Select,
-} from '../../components';
+import { UserModal, MultiSelect, Select } from '../../components';
 import { allInterests, allRoles, allTeams } from '../../utils/constants';
 
 import { filterInterests, filterRole, filterTeams, sortUsers } from './helpers';

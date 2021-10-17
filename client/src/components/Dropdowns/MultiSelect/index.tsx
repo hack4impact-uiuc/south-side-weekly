@@ -1,8 +1,5 @@
 import React, { FC, ReactElement } from 'react';
-import Select, {
-  MultiValue,
-  ActionMeta,
-} from 'react-select';
+import Select, { MultiValue, ActionMeta } from 'react-select';
 
 interface MultiSelectOption {
   value: string;
