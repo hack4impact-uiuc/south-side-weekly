@@ -8,6 +8,7 @@
     "@types/node-sass": "^4.11.2",
     "@types/react-router-dom": "^5.1.7",
     "@types/react-select": "^5.0.1",
+    "ag-grid-react": "^26.1.0",
     "axios": "^0.21.1",
     "formik": "^2.2.9",
     "libphonenumber-js": "^1.9.22",
