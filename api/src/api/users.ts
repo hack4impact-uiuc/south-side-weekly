@@ -6,6 +6,7 @@ import Pitch from '../models/pitch';
 import { getEditableFields, getViewableFields } from '../utils/user-utils';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
 import { rolesEnum } from '../utils/enums';
+import { aggregateUser } from '../utils/aggregate-utils';
 
 const router = express.Router();
 
@@ -41,6 +42,27 @@ router.get(
         message: `Successfully retrieved user`,
       });
     }
+  }),
+);
+
+router.get(
+  '/:userId/aggregate',
+  errorWrap(async (req: Request, res: Response) => {
+    const user = await User.findById(req.params.userId);
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found with id',
+      });
+    }
+
+    const aggregatedUser = await aggregateUser(user);
+
+    res.status(200).json({
+      success: true,
+      result: aggregatedUser,
+      message: 'Successfully retrieved aggregated user',
+    });
   }),
 );
 
