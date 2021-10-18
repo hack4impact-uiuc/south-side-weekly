@@ -4,7 +4,7 @@ import { Input } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { getUsers, isError } from '../../api';
-import { UserModal, MultiSelect, Select } from '../../components';
+import { MultiSelect, Select, DirectoryTable } from '../../components';
 import { allInterests, allRoles, allTeams } from '../../utils/constants';
 
 import { filterInterests, filterRole, filterTeams, sortUsers } from './helpers';
@@ -152,9 +152,10 @@ const Directory = (): ReactElement => {
         </div>
       </div>
       <div className="directory">
-        {filteredDirectory.map((user, index) => (
+        <DirectoryTable users={filteredDirectory} />
+        {/* {filteredDirectory.map((user, index) => (
           <UserModal user={user} key={index} />
-        ))}
+        ))} */}
       </div>
     </div>
   );

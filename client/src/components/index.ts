@@ -20,6 +20,7 @@ import PrevButton from './Wizard/PrevButton';
 import ApprovePitchModal from './Modals/ApprovePitch';
 import MultiSelect from './Dropdowns/MultiSelect';
 import Select from './Dropdowns/Select';
+import DirectoryTable from './Tables/Directory';
 
 export {
   Header,
@@ -44,4 +45,5 @@ export {
   ApprovePitchModal,
   MultiSelect,
   Select,
+  DirectoryTable,
 };
