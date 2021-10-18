@@ -2,7 +2,7 @@ import React, { FC, ReactElement } from 'react';
 import { Button, Icon, Table } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
-import { FieldTag, UserModal, UserPicture } from '../..';
+import { AdminView, FieldTag, UserModal, UserPicture } from '../..';
 import { getUserFullName, titleCase } from '../../../utils/helpers';
 
 import './styles.scss';
@@ -52,20 +52,27 @@ const DirectoryTable: FC<DirectoryTableProps> = ({ users }): ReactElement => {
 
   return (
     <div className="directory-table">
-      <Table size="small" compact celled fixed singleLine>
+      <Table size="small" compact celled fixed singleLine={users.length > 0}>
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Name</Table.HeaderCell>
             <Table.HeaderCell>Role</Table.HeaderCell>
             <Table.HeaderCell>Teams</Table.HeaderCell>
             <Table.HeaderCell>Interests</Table.HeaderCell>
-            <Table.HeaderCell>Onboarding</Table.HeaderCell>
-            <Table.HeaderCell>Activity</Table.HeaderCell>
-            <Table.HeaderCell>Joined</Table.HeaderCell>
-            <Table.HeaderCell width={1}></Table.HeaderCell>
+            <AdminView>
+              <Table.HeaderCell>Onboarding</Table.HeaderCell>
+              <Table.HeaderCell>Activity</Table.HeaderCell>
+              <Table.HeaderCell>Joined</Table.HeaderCell>
+              <Table.HeaderCell width={1}></Table.HeaderCell>
+            </AdminView>
           </Table.Row>
         </Table.Header>
         <Table.Body>
+          {users.length === 0 && (
+            <Table.HeaderCell textAlign="center" width={1}>
+              <div style={{ padding: 50 }}>No results found!</div>
+            </Table.HeaderCell>
+          )}
           {users.map((user, index) => (
             <Table.Row key={index}>
               <Table.Cell>
@@ -89,29 +96,33 @@ const DirectoryTable: FC<DirectoryTableProps> = ({ users }): ReactElement => {
                   <FieldTag size="small" key={index} content={interest} />
                 ))}
               </Table.Cell>
-              <Table.Cell>
-                <Tag label={titleCase(user.onboardingStatus)} />
-              </Table.Cell>
-              <Table.Cell>
-                <Tag label="Active" />
-              </Table.Cell>
-              <Table.Cell>{new Date(user.dateJoined).getFullYear()}</Table.Cell>
+              <AdminView>
+                <Table.Cell>
+                  <Tag label={titleCase(user.onboardingStatus)} />
+                </Table.Cell>
+                <Table.Cell>
+                  <Tag label="Active" />
+                </Table.Cell>
+                <Table.Cell>
+                  {new Date(user.dateJoined).getFullYear()}
+                </Table.Cell>
 
-              <Table.Cell width={1}>
-                <UserModal
-                  trigger={
-                    <Button
-                      style={{ background: 'none' }}
-                      size="tiny"
-                      circular
-                      icon
-                    >
-                      <Icon name="pencil" />
-                    </Button>
-                  }
-                  user={user}
-                />
-              </Table.Cell>
+                <Table.Cell width={1}>
+                  <UserModal
+                    trigger={
+                      <Button
+                        style={{ background: 'none' }}
+                        size="tiny"
+                        circular
+                        icon
+                      >
+                        <Icon name="pencil" />
+                      </Button>
+                    }
+                    user={user}
+                  />
+                </Table.Cell>
+              </AdminView>
             </Table.Row>
           ))}
         </Table.Body>
