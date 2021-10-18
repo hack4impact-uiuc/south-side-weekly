@@ -1,9 +1,9 @@
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Button, Icon, Table } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { AdminView, FieldTag, UserModal, UserPicture } from '../..';
-import { getUserFullName, titleCase } from '../../../utils/helpers';
+import { getUserFullName } from '../../../utils/helpers';
 
 import './styles.scss';
 
@@ -11,124 +11,213 @@ interface DirectoryTableProps {
   users: IUser[];
 }
 
-const TAG_COLORS: { [key: string]: string } = {
-  ADMIN: '#FFE9E7',
-  STAFF: '#FFECE4',
-  CONTRIBUTOR: '#E9F4E7',
-  ONBOARDED: '#E9F4E7',
-  ONBOARDING_SCHEDULED: '#F6EEFC',
-  RECENTLY_ACTIVE: '#E9F4E7',
-  ACTIVE: '#E7F2FC',
-  INACTIVE: '#FEF5E7',
+interface DirctoryRowProps {
+  user: IUser;
+}
+
+const ROLE_WIDTH = 2;
+const ONBOARDING_WIDTH = 2;
+const ACTIVITY_WIDTH = 1;
+const JOINED_WIDTH = 1;
+const EDITED_WIDTH = 1;
+
+const fullNameSort = (a: IUser, b: IUser): number => {
+  const aFullName = getUserFullName(a);
+  const bFullName = getUserFullName(b);
+
+  return aFullName.localeCompare(bFullName);
+};
+
+const roleSort = (a: IUser, b: IUser): number => a.role.localeCompare(b.role);
+
+const onboardingSort = (a: IUser, b: IUser): number =>
+  a.onboardingStatus.localeCompare(b.onboardingStatus);
+
+// @todo - implement acitivty
+const activitySort = (a: IUser, b: IUser): number => roleSort(a, b);
+
+const joinedSort = (a: IUser, b: IUser): number => {
+  const first = new Date(a.dateJoined);
+  const second = new Date(b.dateJoined);
+
+  return first.getTime() - second.getTime();
+};
+
+interface ColumnEnumValue {
+  title: string;
+  sort: (a: IUser, b: IUser) => number;
+}
+
+const columnsEnum: { [key: string]: ColumnEnumValue } = {
+  NAME: {
+    title: 'NAME',
+    sort: fullNameSort,
+  },
+  ROLE: {
+    title: 'ROLE',
+    sort: roleSort,
+  },
+  ONBOARDING: {
+    title: 'ONBOARDING',
+    sort: onboardingSort,
+  },
+  ACTIVITY: {
+    title: 'ACTIVITY',
+    sort: activitySort,
+  },
+  JOINED: {
+    title: 'JOINED',
+    sort: joinedSort,
+  },
 };
 
 const DirectoryTable: FC<DirectoryTableProps> = ({ users }): ReactElement => {
-  interface TagProps {
-    label: string;
-  }
+  const [data, setData] = useState<IUser[]>([]);
+  const [column, setColumn] = useState<ColumnEnumValue>();
+  const [direction, setDirection] = useState<'ascending' | 'descending'>();
 
-  const Tag: FC<TagProps> = ({ label }): ReactElement => {
-    let color;
-
-    if (TAG_COLORS[label.toUpperCase()] === undefined) {
-      color = '#F4F4F4';
+  const handleSort = (newColumn: ColumnEnumValue): void => {
+    if (column?.title === newColumn.title) {
+      if (direction === 'ascending') {
+        setDirection('descending');
+        setData(data.slice().reverse());
+      } else if (direction === 'descending') {
+        setData(users);
+        setDirection(undefined);
+        setColumn(undefined);
+      } else {
+        setDirection('ascending');
+        setData(data.slice().reverse());
+      }
     } else {
-      color = TAG_COLORS[label.toUpperCase()];
-    }
+      setColumn(newColumn);
+      setDirection('ascending');
 
-    return (
-      <div
-        style={{
-          padding: 5,
-          borderRadius: 1,
-          backgroundColor: color,
-          width: 'fit-content',
-        }}
-      >
-        {label}
-      </div>
-    );
+      const copy = [...data];
+      copy.sort(newColumn.sort);
+      setData(copy);
+    }
   };
+
+  useEffect(() => {
+    setData(users);
+  }, [users]);
 
   return (
     <div className="directory-table">
-      <Table size="small" compact celled fixed singleLine={users.length > 0}>
+      <Table
+        size="small"
+        sortable
+        compact
+        celled
+        fixed
+        singleLine={users.length > 0}
+      >
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>Name</Table.HeaderCell>
-            <Table.HeaderCell width={2}>Role</Table.HeaderCell>
+            <Table.HeaderCell width={1} />
+            <Table.HeaderCell
+              onClick={() => handleSort(columnsEnum.NAME)}
+              sorted={column === columnsEnum.NAME ? direction : undefined}
+            >
+              Name
+            </Table.HeaderCell>
+            <Table.HeaderCell
+              onClick={() => handleSort(columnsEnum.ROLE)}
+              sorted={column === columnsEnum.ROLE ? direction : undefined}
+              width={ROLE_WIDTH}
+            >
+              Role
+            </Table.HeaderCell>
             <Table.HeaderCell>Teams</Table.HeaderCell>
             <Table.HeaderCell>Interests</Table.HeaderCell>
             <AdminView>
-              <Table.HeaderCell width={2}>Onboarding</Table.HeaderCell>
-              <Table.HeaderCell width={1}>Activity</Table.HeaderCell>
-              <Table.HeaderCell width={1}>Joined</Table.HeaderCell>
-              <Table.HeaderCell width={1}></Table.HeaderCell>
+              <Table.HeaderCell
+                onClick={() => handleSort(columnsEnum.ONBOARDING)}
+                sorted={
+                  column === columnsEnum.ONBOARDING ? direction : undefined
+                }
+                width={ONBOARDING_WIDTH}
+              >
+                Onboarding
+              </Table.HeaderCell>
+              <Table.HeaderCell
+                onClick={() => handleSort(columnsEnum.ACTIVITY)}
+                sorted={column === columnsEnum.ACTIVITY ? direction : undefined}
+                width={ACTIVITY_WIDTH}
+              >
+                Activity
+              </Table.HeaderCell>
+              <Table.HeaderCell
+                onClick={() => handleSort(columnsEnum.JOINED)}
+                sorted={column === columnsEnum.JOINED ? direction : undefined}
+                width={JOINED_WIDTH}
+              >
+                Joined
+              </Table.HeaderCell>
+              <Table.HeaderCell width={EDITED_WIDTH} />
             </AdminView>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {users.length === 0 && (
-            <Table.HeaderCell textAlign="center" width={1}>
-              <div style={{ padding: 50 }}>No results found!</div>
-            </Table.HeaderCell>
-          )}
-          {users.map((user, index) => (
-            <Table.Row key={index}>
-              <Table.Cell>
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <UserPicture style={{ width: 25 }} user={user} />
-                  <span style={{ marginLeft: '8px' }}>
-                    {getUserFullName(user)}
-                  </span>
-                </div>
+          {data.length === 0 && (
+            <Table.Row>
+              <Table.Cell textAlign="center" width={1}>
+                <div className="no-results-found">No results found!</div>
               </Table.Cell>
-              <Table.Cell width={2}>
-                <Tag label={titleCase(user.role)} />
-              </Table.Cell>
-              <Table.Cell>
-                {user.currentTeams.map((team, index) => (
-                  <FieldTag size="small" key={index} content={team} />
-                ))}
-              </Table.Cell>
-              <Table.Cell>
-                {user.interests.map((interest, index) => (
-                  <FieldTag size="small" key={index} content={interest} />
-                ))}
-              </Table.Cell>
-              <AdminView>
-                <Table.Cell width={2}>
-                  <Tag label={titleCase(user.onboardingStatus)} />
-                </Table.Cell>
-                <Table.Cell width={1}>
-                  <Tag label="Active" />
-                </Table.Cell>
-                <Table.Cell width={1}>
-                  {new Date(user.dateJoined).getFullYear()}
-                </Table.Cell>
-
-                <Table.Cell width={1}>
-                  <UserModal
-                    trigger={
-                      <Button
-                        style={{ background: 'none' }}
-                        size="tiny"
-                        circular
-                        icon
-                      >
-                        <Icon name="pencil" />
-                      </Button>
-                    }
-                    user={user}
-                  />
-                </Table.Cell>
-              </AdminView>
             </Table.Row>
+          )}
+          {data.map((user, index) => (
+            <DirectoryRow user={user} key={index} />
           ))}
         </Table.Body>
       </Table>
     </div>
   );
 };
+
+const DirectoryRow: FC<DirctoryRowProps> = ({ user }): ReactElement => (
+  <Table.Row>
+    <Table.Cell className="picture-col" width={1}>
+      <UserPicture id="user-picture" user={user} />
+    </Table.Cell>
+    <Table.Cell>{getUserFullName(user)}</Table.Cell>
+    <Table.Cell width={ROLE_WIDTH}>
+      <FieldTag size="small" content={user.role} />
+    </Table.Cell>
+    <Table.Cell>
+      {user.currentTeams.map((team, index) => (
+        <FieldTag size="small" key={index} content={team} />
+      ))}
+    </Table.Cell>
+    <Table.Cell>
+      {user.interests.map((interest, index) => (
+        <FieldTag size="small" key={index} content={interest} />
+      ))}
+    </Table.Cell>
+    <AdminView>
+      <Table.Cell width={ONBOARDING_WIDTH}>
+        <FieldTag size="small" content={user.onboardingStatus} />
+      </Table.Cell>
+      <Table.Cell width={ACTIVITY_WIDTH}>
+        <FieldTag size="small" content="Active" />
+      </Table.Cell>
+      <Table.Cell width={JOINED_WIDTH}>
+        {new Date(user.dateJoined).getFullYear()}
+      </Table.Cell>
+
+      <Table.Cell width={1}>
+        <UserModal
+          trigger={
+            <Button className="open-user-button" size="tiny" circular icon>
+              <Icon name="pencil" />
+            </Button>
+          }
+          user={user}
+        />
+      </Table.Cell>
+    </AdminView>
+  </Table.Row>
+);
 
 export default DirectoryTable;

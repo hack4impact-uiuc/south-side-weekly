@@ -5,11 +5,44 @@
     display: none;
   }
 
+  td,
+  th {
+    border-left: none !important;
+  }
+
   tbody {
     display: block;
     height: max-content;
     max-height: 60vh;
     overflow: auto;
+
+    .picture-col {
+      #user-picture {
+        width: 25px;
+        margin: auto;
+      }
+    }
+
+    .name-col {
+      display: flex;
+      align-items: center;
+
+      #name-text {
+        margin-left: 8px;
+      }
+    }
+
+    .no-results-found {
+      padding: 50px;
+    }
+
+    .open-user-button {
+      background: none;
+
+      &:hover {
+        background: none;
+      }
+    }
   }
 
   thead,
