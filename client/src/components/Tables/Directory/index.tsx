@@ -56,13 +56,13 @@ const DirectoryTable: FC<DirectoryTableProps> = ({ users }): ReactElement => {
         <Table.Header>
           <Table.Row>
             <Table.HeaderCell>Name</Table.HeaderCell>
-            <Table.HeaderCell>Role</Table.HeaderCell>
+            <Table.HeaderCell width={2}>Role</Table.HeaderCell>
             <Table.HeaderCell>Teams</Table.HeaderCell>
             <Table.HeaderCell>Interests</Table.HeaderCell>
             <AdminView>
-              <Table.HeaderCell>Onboarding</Table.HeaderCell>
-              <Table.HeaderCell>Activity</Table.HeaderCell>
-              <Table.HeaderCell>Joined</Table.HeaderCell>
+              <Table.HeaderCell width={2}>Onboarding</Table.HeaderCell>
+              <Table.HeaderCell width={1}>Activity</Table.HeaderCell>
+              <Table.HeaderCell width={1}>Joined</Table.HeaderCell>
               <Table.HeaderCell width={1}></Table.HeaderCell>
             </AdminView>
           </Table.Row>
@@ -83,7 +83,7 @@ const DirectoryTable: FC<DirectoryTableProps> = ({ users }): ReactElement => {
                   </span>
                 </div>
               </Table.Cell>
-              <Table.Cell>
+              <Table.Cell width={2}>
                 <Tag label={titleCase(user.role)} />
               </Table.Cell>
               <Table.Cell>
@@ -97,13 +97,13 @@ const DirectoryTable: FC<DirectoryTableProps> = ({ users }): ReactElement => {
                 ))}
               </Table.Cell>
               <AdminView>
-                <Table.Cell>
+                <Table.Cell width={2}>
                   <Tag label={titleCase(user.onboardingStatus)} />
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell width={1}>
                   <Tag label="Active" />
                 </Table.Cell>
-                <Table.Cell>
+                <Table.Cell width={1}>
                   {new Date(user.dateJoined).getFullYear()}
                 </Table.Cell>
 
