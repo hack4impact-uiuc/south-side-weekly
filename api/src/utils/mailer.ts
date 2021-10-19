@@ -7,7 +7,7 @@ interface EmailMessage {
   to: string;
   from: string;
   subject: string;
-  html: string
+  html: string;
 }
 type userInfo = { name: string; email: string };
 type teamsUsers = Record<string, userInfo[]>;
