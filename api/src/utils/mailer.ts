@@ -1,21 +1,22 @@
 import nodemailer from 'nodemailer';
 import { IUser, IPitch, IPitchAggregate } from 'ssw-common';
 import { pitchStatusEnum } from './enums';
+import User from '../models/user';
 
 type message = { to: string; from: string; subject: string; html: string };
-type userInfo = { name: string; email: string}
+type userInfo = { name: string; email: string };
 type teamsUsers = Record<string, userInfo[]>;
 
-const getAllTeams = (teamNamesToUsers : teamsUsers) : string => {
-  const message: string[] = []
-  for(const key in teamNamesToUsers) {
-    message.push(`${key} <br>`)
-    for(const member of teamNamesToUsers[key]) {
-      message.push(`<li> ${member.name} - ${member.email} </li>`)
+const getAllTeams = (teamNamesToUsers: teamsUsers): string => {
+  const message: string[] = [];
+  for (const key in teamNamesToUsers) {
+    message.push(`<b>${key}</b> <br>`);
+    for (const member of teamNamesToUsers[key]) {
+      message.push(`<li> ${member.name} - ${member.email} </li>`);
     }
   }
-  return message.join('')
-}
+  return message.join('');
+};
 
 export const declinedMessage = (
   author: IUser,
@@ -69,6 +70,7 @@ export const approvedMessage = (
                 }"'>"${
       pitch.title
     }"</a> has been approved! Here are the details you provided regarding the pitch:</dt>
+                <br>
                 <b>Description:</b> ${pitch.description}
                 <br>
                 <b>Link:</b> ${pitch.assignmentGoogleDocLink}
@@ -91,30 +93,39 @@ export const approvedMessage = (
   return m;
 };
 
-export const approveClaim = (
+export const approveClaim = async (
   author: IUser,
   pitch: IPitchAggregate,
   admin: Partial<IUser>,
   teams: [string],
-): message => {
-  const teamNamesToUsers: teamsUsers = {
-    writers: [{name: 'John D', email: 'johnd@gmail.com'}, {name: 'Jane D', email: 'jane@gmail.com'}], 
-    editors: [{name: 'John D', email: 'johnd@gmail.com'}, {name: 'Jane D', email: 'jane@gmail.com'}]
-  }
-  // for (const user of pitch.assignmentContributors) {
-  //   for (const teamName of user.teams) {
-  //     const userModel = await User.findById(user.userId);
-  //     const info: userInfo = { name: `${userModel.firstName} ${userModel.lastName}`, email: userModel.email}
-  //     if (!(teamName in teamNamesToUsers)) {
-  //       teamNamesToUsers[teamName] = [info]
-  //     } else {
-  //       teamNamesToUsers[teamName].push(info);
-  //     }
-  //   }
+): Promise<message> => {
+  // const teamNamesToUsers: teamsUsers = {
+  //   writers: [{name: 'John D', email: 'johnd@gmail.com'}, {name: 'Jane D', email: 'jane@gmail.com'}],
+  //   editors: [{name: 'John D', email: 'johnd@gmail.com'}, {name: 'Jane D', email: 'jane@gmail.com'}]
   // }
-  
+  const teamNamesToUsers: teamsUsers = {};
+  for (const user of pitch.assignmentContributors) {
+    //TODO: for some reason the userId and _id are not exactly strings
+    if (String(user.userId) === String(author._id)) {
+      //This skips the current user(author) when constructing the teamNamesToUsers
+      continue;
+    }
+    for (const teamName of user.teams) {
+      const userModel = await User.findById(user.userId);
+      const info: userInfo = {
+        name: `${userModel.firstName} ${userModel.lastName}`,
+        email: userModel.email,
+      };
+      if (!(teamName in teamNamesToUsers)) {
+        teamNamesToUsers[teamName] = [info];
+      } else {
+        teamNamesToUsers[teamName].push(info);
+      }
+    }
+  }
+
   const m = {
-    to: author.email,  
+    to: author.email,
     from: process.env.EMAIL_USERNAME,
     subject: `Claim Request for "${pitch.title}" ${pitchStatusEnum.APPROVED}`,
     html: `<html>
@@ -137,31 +148,34 @@ export const approveClaim = (
       <br>
       ${admin.preferredName || admin.firstName}
       </html>`,
-    }
+  };
   return m;
 };
 
 export const declineClaim = (
-  author: IUser, 
+  author: IUser,
   pitch: IPitchAggregate,
   admin: Partial<IUser>,
 ): message => {
-  const link1 = 'www.google.com';
+  const pitchDocLink = 'www.google.com';
   //TODO: find out what those links should point to
   const m = {
-    to: author.email, 
+    to: author.email,
     from: process.env.EMAIL_USERNAME,
-    subject: `Story Claim Request for ${pitch.title}" ${pitchStatusEnum.REJECTED}`
-    ,
-    html: `Hi Contributor Name,
+    subject: `Story Claim Request for ${pitch.title}" ${pitchStatusEnum.REJECTED}`,
+    html: `Hi ${author.preferredName || author.firstName},
     <br>
-    Thank you for submitting your pitch claim request to join the ${pitch.title} pitch. 
+    Thank you for submitting your pitch claim request to join the ${
+      pitch.title
+    } pitch. 
     Unfortunately, your request was declined for the following reason.
     <br>
-    Reasoning message
+    Reasoning message #TODO: Where do we get this from?
     <br>
-    If you have any questions or need any additional support, please contact ${admin.email}. 
-    In the meantime, feel free to check the <a href='${link1}'>pitch doc</a>for potential new stories to claim!
+    If you have any questions or need any additional support, please contact ${
+      admin.email
+    }. 
+    In the meantime, feel free to check the <a href='${pitchDocLink}'>pitch doc</a>for potential new stories to claim!
     <br>
     Thank you,
     <br>
@@ -169,7 +183,6 @@ export const declineClaim = (
   };
   return m;
 };
-
 
 export const sendMail = async (message: message): Promise<void> => {
   const transporter = nodemailer.createTransport({

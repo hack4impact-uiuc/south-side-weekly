@@ -17,7 +17,7 @@ import {
   approvedMessage,
   declinedMessage,
   approveClaim,
-  declineClaim
+  declineClaim,
 } from '../utils/mailer';
 
 const router = express.Router();
@@ -375,8 +375,17 @@ router.put(
     const claimUser = await User.findById(userId);
     const aggregatedPitch = await aggregatePitch(pitch);
     //{'Editors': [user1, user2, user3], 'Photography': [user1, user4], ''}
-    const admin: Partial<IUser> = {firstName: 'Andy', lastName: 'Wong', email: 'chenfeiyu132@gmail.com'}
-    const message = approveClaim(claimUser, aggregatedPitch, admin, teams);
+    const admin: Partial<IUser> = {
+      firstName: 'Andy',
+      lastName: 'Wong',
+      email: 'chenfeiyu132@gmail.com',
+    };
+    const message = await approveClaim(
+      claimUser,
+      aggregatedPitch,
+      admin,
+      teams,
+    );
     sendMail(message);
     res.status(200).json({
       success: true,
@@ -421,7 +430,8 @@ router.put(
     const claimUser = await User.findById(userId);
     //{'Editors': [user1, user2, user3], 'Photography': [user1, user4], ''}
     //const admin: Partial<IUser> = {firstName: 'Andy', lastName: 'Wong', email: 'chenfeiyu132@gmail.com'}
-    const message = declineClaim(claimUser, pitch, req.user);
+    const aggregatedPitch = await aggregatePitch(pitch);
+    const message = declineClaim(claimUser, aggregatedPitch, req.user);
     sendMail(message);
     res.status(200).json({
       success: true,
