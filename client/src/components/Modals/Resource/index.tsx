@@ -47,13 +47,7 @@ const ResourceModal: FC<ResourceProps> = ({
 
   // Resets the form data on every open
   useEffect(() => {
-    const data: FormData = {
-      name: '',
-      link: '',
-      tags: new Set(),
-      visibility: '',
-    };
-    setFormData({ ...data });
+    setFormData({ ...defaultData });
   }, [rest.open]);
 
   useEffect(() => {
