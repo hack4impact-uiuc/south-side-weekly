@@ -3,7 +3,12 @@ import { IUser, IPitch, IPitchAggregate } from 'ssw-common';
 import { pitchStatusEnum } from './enums';
 import User from '../models/user';
 
-type message = { to: string; from: string; subject: string; html: string };
+interface EmailMessage {
+  to: string;
+  from: string;
+  subject: string;
+  html: string
+}
 type userInfo = { name: string; email: string };
 type teamsUsers = Record<string, userInfo[]>;
 
@@ -22,54 +27,48 @@ export const declinedMessage = (
   author: IUser,
   pitch: IPitch,
   admin: IUser,
-): message => {
-  const link1 = 'www.google.com';
-  const link2 = 'www.google.com';
+): EmailMessage => ({
   //TODO: find out what those links should point to
-  const m = {
-    to: author.email,
-    from: process.env.EMAIL_USERNAME,
-    subject: `Pitch "${pitch.title}" ${pitchStatusEnum.REJECTED}`,
-    html: `<div>
+  to: author.email,
+  from: process.env.EMAIL_USERNAME,
+  subject: `Pitch "${pitch.title}" ${pitchStatusEnum.REJECTED}`,
+  html: `<div>
                 <dt>Hi ${author.preferredName || author.firstName},</dt>
                 <br>
                 <dt>Thank you for submitting your pitch <a href='"${
                   pitch.assignmentGoogleDocLink
                 }"'>"${
-      pitch.title
-    }"</a> Unfortunately, your pitch was declined. </dt>
+    pitch.title
+  }"</a> Unfortunately, your pitch was declined. </dt>
                 If you have any questions or need any additional support, please contact ${
                   admin.email
                 }. 
-                Check out more <a href='${link1}'>pitch-writing resources</a>. In the meantime, feel free to check the 
-                  <a href='${link2}'>pitch doc</a> for potential new stories to claim!</dt>
+                Check out more <a href='www.google.com'>pitch-writing resources</a>. In the meantime, feel free to check the 
+                  <a href='http://south-side-weekly.vercel.app/pitches'>pitch doc</a> for potential new stories to claim!</dt>
                 <br>
                 <dt>Thank you,
                     <br>
                 ${admin.preferredName || admin.firstName}
                 </dt>
                 </div>`,
-  };
-  return m;
-};
+});
 
 export const approvedMessage = (
   author: IUser,
   pitch: IPitch,
   admin: IUser,
-): message => {
-  const m = {
-    to: author.email,
-    from: process.env.EMAIL_USERNAME,
-    subject: `Pitch "${pitch.title}" ${pitchStatusEnum.APPROVED}`,
-    html: `<div>
+): EmailMessage => ({
+  to: author.email,
+  from: process.env.EMAIL_USERNAME,
+  subject: `Pitch "${pitch.title}" ${pitchStatusEnum.APPROVED}`,
+  html: `<div>
                 <dt>Hi ${author.preferredName || author.firstName},</dt>
                 <br>
                 <dt>Congratulations, your pitch <a href='"${
                   pitch.assignmentGoogleDocLink
                 }"'>"${
-      pitch.title
-    }"</a> has been approved! Here are the details you provided regarding the pitch:</dt>
+    pitch.title
+  }"</a> has been approved! Here are the details you provided regarding the pitch:</dt>
                 <br>
                 <b>Description:</b> ${pitch.description}
                 <br>
@@ -89,20 +88,14 @@ export const approvedMessage = (
                 ${admin.preferredName || admin.firstName}
                 </dt>
                 </div>`,
-  };
-  return m;
-};
+});
 
 export const approveClaim = async (
   author: IUser,
   pitch: IPitchAggregate,
   admin: Partial<IUser>,
   teams: [string],
-): Promise<message> => {
-  // const teamNamesToUsers: teamsUsers = {
-  //   writers: [{name: 'John D', email: 'johnd@gmail.com'}, {name: 'Jane D', email: 'jane@gmail.com'}],
-  //   editors: [{name: 'John D', email: 'johnd@gmail.com'}, {name: 'Jane D', email: 'jane@gmail.com'}]
-  // }
+): Promise<EmailMessage> => {
   const teamNamesToUsers: teamsUsers = {};
   for (const user of pitch.assignmentContributors) {
     //TODO: for some reason the userId and _id are not exactly strings
@@ -156,14 +149,11 @@ export const declineClaim = (
   author: IUser,
   pitch: IPitchAggregate,
   admin: Partial<IUser>,
-): message => {
-  const pitchDocLink = 'www.google.com';
-  //TODO: find out what those links should point to
-  const m = {
-    to: author.email,
-    from: process.env.EMAIL_USERNAME,
-    subject: `Story Claim Request for ${pitch.title}" ${pitchStatusEnum.REJECTED}`,
-    html: `Hi ${author.preferredName || author.firstName},
+): EmailMessage => ({
+  to: author.email,
+  from: process.env.EMAIL_USERNAME,
+  subject: `Story Claim Request for ${pitch.title}" ${pitchStatusEnum.REJECTED}`,
+  html: `Hi ${author.preferredName || author.firstName},
     <br>
     Thank you for submitting your pitch claim request to join the ${
       pitch.title
@@ -175,16 +165,14 @@ export const declineClaim = (
     If you have any questions or need any additional support, please contact ${
       admin.email
     }. 
-    In the meantime, feel free to check the <a href='${pitchDocLink}'>pitch doc</a>for potential new stories to claim!
+    In the meantime, feel free to check the <a href='http://south-side-weekly.vercel.app/pitches}'>pitch doc</a>for potential new stories to claim!
     <br>
     Thank you,
     <br>
     ${admin.preferredName || admin.firstName}`,
-  };
-  return m;
-};
+});
 
-export const sendMail = async (message: message): Promise<void> => {
+export const sendMail = async (message: EmailMessage): Promise<void> => {
   const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
