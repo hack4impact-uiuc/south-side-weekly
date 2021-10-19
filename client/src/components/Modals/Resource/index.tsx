@@ -168,7 +168,7 @@ const ResourceModal: FC<ResourceProps> = ({
             <h4>Resource Visibility</h4>
             <div className="resource-visibility">
               <Form.Radio
-                style={{marginRight: 20, paddingLeft: 0}}
+                style={{ marginRight: 20, paddingLeft: 0 }}
                 label="Public"
                 name="publicOrPrivate"
                 value={visibilityEnum.PUBLIC}
