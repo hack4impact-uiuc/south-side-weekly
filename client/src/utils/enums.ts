@@ -58,3 +58,8 @@ export const wizardPages = {
   ONBOARD_5: 'ONBOARD_5',
   COMPLETION: 'COMPLETION',
 };
+
+export const visibilityEnum = {
+  PUBLIC: 'PUBLIC',
+  PRIVATE: 'PRIVATE',
+};

@@ -23,6 +23,18 @@
     }
   }
 
+  .resource-visibility {
+    display: flex;
+
+    .checkbox {
+      padding-left: 0 !important;
+    }
+    
+    .hidden {
+      display: none !important;
+    }
+  }
+
   .content {
     background-color: white !important;
   }

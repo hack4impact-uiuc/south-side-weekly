@@ -5,8 +5,10 @@ import Swal from 'sweetalert2';
 
 import { createResource, editResource, isError } from '../../../api';
 import { allTeams } from '../../../utils/constants';
-import './styles.scss';
 import { titleCase } from '../../../utils/helpers';
+import { visibilityEnum } from '../../../utils/enums';
+
+import './styles.scss';
 
 interface ResourceProps extends ModalProps {
   resource?: IResource;
@@ -18,18 +20,21 @@ interface FormData {
   name: string;
   link: string;
   tags: Set<string>;
+  visibility: string;
 }
 
 interface RequestBody {
   name: string;
   link: string;
   teamRoles: string[];
+  visibility: string;
 }
 
 const defaultData: FormData = {
   name: '',
   link: '',
   tags: new Set(),
+  visibility: '',
 };
 
 const ResourceModal: FC<ResourceProps> = ({
@@ -46,6 +51,7 @@ const ResourceModal: FC<ResourceProps> = ({
       name: '',
       link: '',
       tags: new Set(),
+      visibility: '',
     };
     setFormData({ ...data });
   }, [rest.open]);
@@ -56,6 +62,7 @@ const ResourceModal: FC<ResourceProps> = ({
         name: resource.name,
         link: resource.link,
         tags: new Set(resource.teamRoles),
+        visibility: resource.visibility,
       };
 
       setFormData({ ...body });
@@ -66,6 +73,7 @@ const ResourceModal: FC<ResourceProps> = ({
     name: data.name,
     link: data.link,
     teamRoles: Array.from(data.tags),
+    visibility: data.visibility,
   });
 
   const updateResource = async (): Promise<void> => {
@@ -86,6 +94,7 @@ const ResourceModal: FC<ResourceProps> = ({
       name: formData.name,
       link: formData.link,
       teamRoles: Array.from(formData.tags),
+      visibility: formData.visibility,
     };
 
     const res = await createResource({ ...body });
@@ -142,7 +151,7 @@ const ResourceModal: FC<ResourceProps> = ({
               value={formData.link}
               onChange={(e, { value }) => changeField('link', value)}
             />
-            <h3>Teams</h3>
+            <h4>Teams</h4>
             <Form.Group className="checkbox-group">
               {teams().map((team, index) => (
                 <Form.Checkbox
@@ -156,12 +165,34 @@ const ResourceModal: FC<ResourceProps> = ({
                 />
               ))}
             </Form.Group>
+            <h4>Resource Visibility</h4>
+            <div className="resource-visibility">
+              <Form.Radio
+                style={{marginRight: 20, paddingLeft: 0}}
+                label="Public"
+                name="publicOrPrivate"
+                value={visibilityEnum.PUBLIC}
+                checked={formData.visibility === visibilityEnum.PUBLIC}
+                onChange={() =>
+                  changeField('visibility', visibilityEnum.PUBLIC)
+                }
+              />
+              <Form.Radio
+                label="Private"
+                name="publicOrPrivate"
+                value="PRIVATE"
+                checked={formData.visibility === visibilityEnum.PRIVATE}
+                onChange={() =>
+                  changeField('visibility', visibilityEnum.PRIVATE)
+                }
+              />
+            </div>
           </Form>
         </Modal.Description>
         <Modal.Actions>
           <Form.Button
             className="submit-btn"
-            content={action === 'edit' ? 'Save Resource' : 'Create Resource'}
+            content={action === 'edit' ? 'Save' : 'Create Resource'}
             type="submit"
             onClick={() =>
               action === 'create' ? submitResource() : updateResource()

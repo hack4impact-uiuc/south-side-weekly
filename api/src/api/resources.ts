@@ -24,11 +24,14 @@ router.get(
       const resources = await Resource.find({
         visibility: visibilityEnum.PUBLIC,
       });
+
       res.status(200).json({
         message: `Successfully retrieved all resources.`,
         success: true,
         result: resources,
       });
+
+      return;
     }
 
     // If user is admin, return all resources
