@@ -1,6 +1,14 @@
 import { isEmpty, isUndefined, toString } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Button, Form, Modal, ModalProps } from 'semantic-ui-react';
+import {
+  Button,
+  Form,
+  Icon,
+  Modal,
+  ModalProps,
+  Popup,
+  Header,
+} from 'semantic-ui-react';
 import Swal from 'sweetalert2';
 
 import { createPitch, isError } from '../../../api';
@@ -15,6 +23,41 @@ const MAX_LENGTH = 300;
 interface SubmitPitchModalProps extends ModalProps {
   callback(): void;
 }
+
+const HelperMessage = () => (
+  <>
+    <Header as="h2">Here are guidelines for submitting a pitch:</Header>
+    <p>
+      A good pitch should set up an issue or other story idea, explain why it’s
+      compelling to cover, provide basic information about the background of the
+      issue, and suggest some reporting avenues of inquiry and research. It
+      shouldn’t be overly complicated or long, and should leave the writer and
+      editor who are eventually assigned to the story room to be creative in how
+      they go about tackling the pitch. Some background research or knowledge
+      will likely be required to write the pitch, but it shouldn’t be so
+      involved that you feel you can write the story with the information you’ve
+      obtained for it—there should still be a lot to report out that we learn in
+      the process
+    </p>
+    <Header as="h2">For Example:</Header>
+    <p>
+      A handful of prominent Black politicians and activists are pushing for
+      local reparations conversations and ordinances. Chicago has a rich history
+      here—there’s the Burge reparations project and Chicago City Council was
+      one of the first legislative bodies to pass an ordinance around this, in
+      2000—and it seems like momentum is picking up. 6th Ward Alderman Roderick
+      Sawyer, head of the City Council’s Committee on Health and Human
+      Relations, is holding a hearing in coming weeks about reparations and has
+      a bill to create a commission to study the issue, and former mayoral and
+      current Senate candidate Willie Wilson has been pushing that bill as well.
+      West Side state rep and former mayoral candidate La Shawn Ford has also
+      recently been pushing the legislature on this. Profile all of these
+      efforts (and others not discussed in this pitch), attend public hearings
+      on the topic, interview those involved, and tell us exactly where these
+      efforts are going.
+    </p>
+  </>
+);
 
 const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
   callback,
@@ -104,7 +147,16 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
       onClose={() => setIsOpen(false)}
       {...rest}
     >
-      <Modal.Header content="Submit a pitch" />
+      <Modal.Header>
+        <span style={{ paddingRight: '10px' }}>Submit a pitch</span>
+        <Popup
+          content={HelperMessage()}
+          trigger={<Icon size="small" name="info circle" />}
+          position="bottom left"
+          wide="very"
+          hoverable
+        />
+      </Modal.Header>
       <Modal.Content>
         <Form id="submit-pitch" onSubmit={submitPitch}>
           <Form.Group widths="equal">
