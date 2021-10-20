@@ -24,7 +24,7 @@ interface SubmitPitchModalProps extends ModalProps {
   callback(): void;
 }
 
-const HelperMessage = () => (
+const HelperMessage = (): ReactElement => (
   <>
     <Header as="h2">Here are guidelines for submitting a pitch:</Header>
     <p>
