@@ -106,6 +106,7 @@ const emptyAggregatePitch: IPitchAggregate = {
     assignmentContributors: [],
     pendingContributors: [],
     reviewedBy: emptyUser,
+    teams: [],
   },
   _id: '',
   title: '',
