@@ -1,5 +1,4 @@
 import express, { Request, Response } from 'express';
-import { IUser } from 'ssw-common';
 import { errorWrap } from '../middleware';
 import {
   requireAdmin,
