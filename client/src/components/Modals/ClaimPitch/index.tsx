@@ -81,16 +81,16 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     if (!isValidForm()) {
       return;
     }
-    const teams: string[] = [];
+    const selectedTeams: string[] = [];
     checkboxes.forEach(function (selected, team) {
       if (selected) {
-        teams.push(team);
+        selectedTeams.push(team);
       }
     });
 
     const userInfo = {
       userId: user._id,
-      teams: teams,
+      teams: selectedTeams,
     };
 
     const body = {
@@ -98,7 +98,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
       pendingContributors: [...pitch.pendingContributors, userInfo],
     };
 
-    const pitchRes = await submitPitchClaim(pitch._id, user._id, teams);
+    const pitchRes = await submitPitchClaim(pitch._id, user._id, selectedTeams);
     const updateRes = await updatePitch({ ...body }, pitch._id);
     if (!isError(pitchRes) && !isError(updateRes)) {
       callback();
@@ -143,7 +143,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     return 'Claim Pitch';
   };
 
-  const { author, reviewedBy, assignmentContributors } = aggregatedPitch.aggregated;
+  const { author, reviewedBy, assignmentContributors, teams } = aggregatedPitch.aggregated;
 
   return (
     <Modal
@@ -166,10 +166,10 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
         </Grid>
         <div className="author-section">
           <div className="author">
-            <h3>{`Submitted by: ${author}`}</h3>
+            <h3>{`Submitted by: ${getUserFullName(author)}`}</h3>
           </div>
           <div className="author">
-            <h3>{`Reviewed by: ${reviewedBy}`}</h3>
+            <h3>{`Reviewed by: ${getUserFullName(reviewedBy)}`}</h3>
           </div>
         </div>
         <p className="description">{pitch.description}</p>
@@ -200,7 +200,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
                   }}
                   error={isCheckboxError}
                 />
-                <FieldTag content={slot[0]} />
+                <FieldTag content={teams.find(({ _id }) => _id === slot[1].teamId)?.name} />
                 <h4>{slot[1].target}</h4>
               </div>
             ))}

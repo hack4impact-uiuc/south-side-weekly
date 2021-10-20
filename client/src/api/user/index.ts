@@ -52,9 +52,7 @@ const updateUserClaimedPitches = async (
 
 // Update a user's data
 const updateUser = async (
-  profileData: {
-    [K in keyof IUser]?: IUser[K];
-  },
+  profileData: Partial<IUser>,
   userId: string,
 ): Promise<Response<UserResponse>> => {
   const url = buildEndpoint(USER_ENDPOINT, userId);
