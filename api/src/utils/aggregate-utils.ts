@@ -6,13 +6,19 @@ import Team from '../models/team';
 
 import { santitizePitch, santitizeUser } from './helpers';
 
-const simplifyUser = (user: IUser): Partial<IUser> => ({
-  firstName: user.firstName,
-  preferredName: user.preferredName,
-  lastName: user.lastName,
-  profilePic: user.profilePic,
-  _id: user._id,
-});
+const simplifyUser = (user: IUser | null): Partial<IUser> => {
+  if (user === null) {
+    return null;
+  }
+
+  return {
+    firstName: user.firstName,
+    preferredName: user.preferredName,
+    lastName: user.lastName,
+    profilePic: user.profilePic,
+    _id: user._id,
+  };
+};
 
 const aggregatePitch = async (
   rawPitch: PitchSchema,
