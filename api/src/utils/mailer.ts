@@ -97,11 +97,6 @@ export const approveClaim = async (
 ): Promise<EmailMessage> => {
   const teamNamesToUsers: teamsUsers = {};
   for (const user of pitch.assignmentContributors) {
-    //TODO: for some reason the userId and _id are not exactly strings
-    if (String(user.userId) === String(author._id)) {
-      //This skips the current user(author) when constructing the teamNamesToUsers
-      continue;
-    }
     for (const teamName of user.teams) {
       const userModel = await User.findById(user.userId);
       const info: userInfo = {
@@ -127,7 +122,7 @@ export const approveClaim = async (
         pitch.title
       } as a ${teams.join(' and ')} has been approved!
       <br>
-      Here are the other current contributors for this story:
+      Here are the current contributors for this story:
       <br>
       <ul>
       ${getAllTeams(teamNamesToUsers)}
