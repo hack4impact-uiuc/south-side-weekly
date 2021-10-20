@@ -70,7 +70,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
   const [topics, setTopics] = useState(new Set<string>());
   const [conflictofInterest, setConflictOfInterest] = useState<
     boolean | undefined
-  >(undefined);
+  >();
   const [didSubmit, setDidSubmit] = useState(false);
 
   const { user } = useAuth();
