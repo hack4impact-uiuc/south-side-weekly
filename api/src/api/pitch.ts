@@ -375,16 +375,10 @@ router.put(
     }
     const claimUser = await User.findById(userId);
     const aggregatedPitch = await aggregatePitch(pitch);
-    //{'Editors': [user1, user2, user3], 'Photography': [user1, user4], ''}
-    const admin: Partial<IUser> = {
-      firstName: 'Andy',
-      lastName: 'Wong',
-      email: 'chenfeiyu132@gmail.com',
-    };
     const message = await approveClaim(
       claimUser,
       aggregatedPitch,
-      admin,
+      req.user,
       teams,
     );
     sendMail(message);
@@ -429,8 +423,6 @@ router.put(
       return;
     }
     const claimUser = await User.findById(userId);
-    //{'Editors': [user1, user2, user3], 'Photography': [user1, user4], ''}
-    //const admin: Partial<IUser> = {firstName: 'Andy', lastName: 'Wong', email: 'chenfeiyu132@gmail.com'}
     const aggregatedPitch = await aggregatePitch(pitch);
     const message = declineClaim(claimUser, aggregatedPitch, req.user);
     sendMail(message);
