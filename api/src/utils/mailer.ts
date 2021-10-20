@@ -1,6 +1,5 @@
 import nodemailer from 'nodemailer';
 import { IUser, IPitch, IPitchAggregate } from 'ssw-common';
-import { pitchStatusEnum } from './enums';
 import User from '../models/user';
 
 interface EmailMessage {
@@ -156,13 +155,17 @@ export const declineClaim = (
   html: `Hi ${author.preferredName || author.firstName},
     <br>
     <br>
-    Thank you for submitting your pitch claim request to join the ${pitch.title} pitch. 
+    Thank you for submitting your pitch claim request to join the ${
+      pitch.title
+    } pitch. 
     Unfortunately, your request was declined for the following reason.
     <br>
     Reasoning message
     <br>
     <br>
-    If you have any questions or need any additional support, please contact ${admin.email}. 
+    If you have any questions or need any additional support, please contact ${
+      admin.email
+    }. 
     In the meantime, feel free to check the <a href='http://south-side-weekly.vercel.app/pitches}'>pitch doc</a> for potential new stories to claim!
     <br>
     <br>
