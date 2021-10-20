@@ -77,6 +77,7 @@ const emptyUser: IUser = {
   submittedPitches: [],
   currentTeams: [],
   role: '',
+  hasRoleApproved: false,
   races: [],
   interests: [],
 };
@@ -119,7 +120,7 @@ const emptyPitch: IPitch = {
       target: 0,
     },
   },
-  approvedBy: '',
+  reviewedBy: '',
   similarStories: [],
   deadline: new Date(),
 };

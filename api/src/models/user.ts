@@ -8,7 +8,7 @@ import {
   racesEnum,
 } from '../utils/enums';
 
-type UserSchema = IUser & Document<any>;
+export type UserSchema = IUser & Document<any>;
 
 /**
  * Mongoose Schema to represent a User at South Side Weekly.
@@ -44,6 +44,8 @@ const User = new mongoose.Schema({
     enum: Object.values(rolesEnum),
     default: rolesEnum.TBD,
   },
+
+  hasRoleApproved: { type: Boolean, default: false },
 
   races: [
     {

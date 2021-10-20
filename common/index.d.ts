@@ -23,8 +23,16 @@ export interface IUser {
   submittedPitches: string[];
   currentTeams: string[];
   role: string;
+  hasRoleApproved: boolean;
   races: string[];
   interests: string[];
+}
+
+interface IUserAggregate extends IUser {
+  aggregated: {
+      claimedPitches: Partial<IPitch>[],
+      submittedPitches: Partial<IPitch>[],
+  }
 }
 
 /**
@@ -38,8 +46,8 @@ export interface IPitch {
   status: string;
   assignmentStatus: string;
   assignmentGoogleDocLink: string;
-  assignmentContributors: string[];
-  pendingContributors: string[],
+  assignmentContributors: {userId: string, teams: string[]}[],
+  pendingContributors: {userId: string, teams: string[]}[],
   topics: string[];
   teams: {
     writers: {
@@ -67,10 +75,25 @@ export interface IPitch {
       target: number;
     };
   };
-  approvedBy: string;
+  reviewedBy: string;
   similarStories: string[];
   deadline: Date;
   conflictOfInterest: boolean;
+}
+
+interface IPitchAggregate extends IPitch {
+  aggregated: {
+      author: Partial<IUser>,
+      assignmentContributors: {
+          user: Partial<IUser>,
+          teams: string[]
+      }[],
+      pendingContributors: {
+          user: Partial<IUser>,
+          teams: string[]
+      }[],
+      reviewedBy: Partial<IUser>
+  }
 }
 
 /**
