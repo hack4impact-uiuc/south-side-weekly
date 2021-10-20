@@ -1,0 +1,52 @@
+
+.team-tags {
+  display: flex;
+  align-items: center;
+}
+.team-tag-name {
+  margin-left: 5px;
+  font-size: 1em;
+  color: #fac1d2;
+  margin-top: 2px;
+}
+
+.tag-container {
+  display: flex;
+  align-items: center;
+}
+.tag-outline {
+  border-radius: .5em;
+  border-color: #FFE9E7;
+  background-color: #FFE9E7;
+  width: 10%;
+  padding: 5px;
+}
+.tag-text {
+  text-align: center;
+  color: #000000;
+  font-size: 1em;
+  font-family: "Lato";
+}
+
+
+.teams-section {
+  display: flex;
+
+  .team{
+    margin-right: 20px;
+    h3 {
+      font-weight: normal;
+    }
+  }
+}
+
+.editors-section {
+  display: flex;
+
+  .editor{
+    margin-right: 20px;
+    h3 {
+      font-weight: normal;
+    }
+  }
+}

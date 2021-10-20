@@ -24,6 +24,7 @@ import {
   FilterDropdown,
   ApprovePitchModal,
 } from '../../components';
+import ViewPitchModal from '../../components/Modals/ViewPitch';
 import { useAuth } from '../../contexts';
 import { allInterests, allTeams } from '../../utils/constants';
 import { parseOptions } from '../../utils/helpers';
@@ -190,6 +191,7 @@ const PitchDoc = (): ReactElement => {
   return (
     <div className="pitch-doc-wrapper">
       <h1>Pitch Doc</h1>
+      <div><ViewPitchModal firstEditor='neha' secondEditor='neha' thirdEditor='neha' issueFormat = 'print'></ViewPitchModal></div>
       <Menu className="tab-menu" tabular size="large">
         <Menu.Item
           name={TABS.UNCLAIMED}
