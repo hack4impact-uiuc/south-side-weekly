@@ -31,7 +31,7 @@ export const declinedMessage = (
   //TODO: find out what those links should point to
   to: author.email,
   from: process.env.EMAIL_USERNAME,
-  subject: `Pitch "${pitch.title}" ${pitchStatusEnum.REJECTED}`,
+  subject: `Pitch "${pitch.title}" Declined`,
   html: `<div>
                 <dt>Hi ${author.preferredName || author.firstName},</dt>
                 <br>
@@ -60,7 +60,7 @@ export const approvedMessage = (
 ): EmailMessage => ({
   to: author.email,
   from: process.env.EMAIL_USERNAME,
-  subject: `Pitch "${pitch.title}" ${pitchStatusEnum.APPROVED}`,
+  subject: `Pitch "${pitch.title}" Approved`,
   html: `<div>
                 <dt>Hi ${author.preferredName || author.firstName},</dt>
                 <br>
@@ -120,7 +120,7 @@ export const approveClaim = async (
   const m = {
     to: author.email,
     from: process.env.EMAIL_USERNAME,
-    subject: `Claim Request for "${pitch.title}" ${pitchStatusEnum.APPROVED}`,
+    subject: `Claim Request for "${pitch.title}" Approved`,
     html: `<html>
       Hi ${author.preferredName || author.firstName},
       <br>
@@ -152,20 +152,19 @@ export const declineClaim = (
 ): EmailMessage => ({
   to: author.email,
   from: process.env.EMAIL_USERNAME,
-  subject: `Story Claim Request for ${pitch.title}" ${pitchStatusEnum.REJECTED}`,
+  subject: `Story Claim Request for ${pitch.title}" Declined`,
   html: `Hi ${author.preferredName || author.firstName},
     <br>
-    Thank you for submitting your pitch claim request to join the ${
-      pitch.title
-    } pitch. 
+    <br>
+    Thank you for submitting your pitch claim request to join the ${pitch.title} pitch. 
     Unfortunately, your request was declined for the following reason.
     <br>
-    Reasoning message #TODO: Where do we get this from?
+    Reasoning message
     <br>
-    If you have any questions or need any additional support, please contact ${
-      admin.email
-    }. 
-    In the meantime, feel free to check the <a href='http://south-side-weekly.vercel.app/pitches}'>pitch doc</a>for potential new stories to claim!
+    <br>
+    If you have any questions or need any additional support, please contact ${admin.email}. 
+    In the meantime, feel free to check the <a href='http://south-side-weekly.vercel.app/pitches}'>pitch doc</a> for potential new stories to claim!
+    <br>
     <br>
     Thank you,
     <br>

@@ -331,6 +331,7 @@ router.put(
 // Approves a claim on a pitch
 router.put(
   '/:pitchId/approveClaim',
+  requireStaff,
   errorWrap(async (req: Request, res: Response) => {
     const { userId, teams } = req.body;
 
