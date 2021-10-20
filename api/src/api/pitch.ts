@@ -11,13 +11,13 @@ import User from '../models/user';
 import { aggregatePitch } from '../utils/aggregate-utils';
 import { pitchStatusEnum } from '../utils/enums';
 import { isPitchClaimed } from '../utils/helpers';
+import { sendMail } from '../utils/mailer';
 import {
-  sendMail,
   approvedMessage,
   declinedMessage,
   approveClaim,
   declineClaim,
-} from '../utils/mailer';
+} from '../utils/mailer-templates';
 
 const router = express.Router();
 
