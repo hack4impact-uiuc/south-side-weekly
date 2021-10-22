@@ -1,11 +1,6 @@
-import { isEqual, startsWith, toArray, toLower, toString } from 'lodash';
-import React, {
-  ReactElement,
-  SyntheticEvent,
-  useEffect,
-  useState,
-} from 'react';
-import { DropdownProps, Input, Menu } from 'semantic-ui-react';
+import { isEqual, startsWith, toLower, toString } from 'lodash';
+import React, { ReactElement, useEffect, useState } from 'react';
+import { Input, Menu } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
 
 import {
@@ -21,25 +16,18 @@ import {
   StaffView,
   AdminView,
   ClaimPitchModal,
-  FilterDropdown,
   ApprovePitchModal,
+  MultiSelect,
+  Select,
   Walkthrough,
 } from '../../components';
 import { useAuth } from '../../contexts';
 import { allInterests, allTeams } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
-import { parseOptions } from '../../utils/helpers';
 
-import {
-  filterInterests,
-  filterClaimStatus,
-  filterTeams,
-  sortPitches,
-} from './helpers';
+import { filterInterests, filterClaimStatus, filterTeams } from './helpers';
 
 import './styles.scss';
-
-const dateOptions = ['Earliest to Latest', 'Latest to Earliest'];
 
 const searchFields: (keyof IPitch)[] = ['title'];
 const TABS = {
@@ -60,7 +48,6 @@ const PitchDoc = (): ReactElement => {
   const [filteredPitches, setFilteredPitches] = useState<IPitch[]>([]);
 
   const [claimStatus, setClaimStatus] = useState<string>('');
-  const [sort, setSort] = useState<'increase' | 'decrease' | 'none'>('none');
   const [interests, setInterests] = useState<string[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
   const [query, setQuery] = useState('');
@@ -143,13 +130,12 @@ const PitchDoc = (): ReactElement => {
       let filtered = filterInterests(pitches, interests);
       filtered = filterClaimStatus(filtered, claimStatus);
       filtered = filterTeams(filtered, teams);
-      filtered = sortPitches(filtered, sort);
 
       return filtered;
     };
 
     setFilteredPitches([...search(filter(currentPitches))]);
-  }, [currentPitches, query, interests, teams, claimStatus, sort]);
+  }, [currentPitches, query, interests, teams, claimStatus]);
 
   useEffect(() => {
     if (currentTab !== TABS.APPROVED) {
@@ -166,21 +152,6 @@ const PitchDoc = (): ReactElement => {
       setCurrentPitches([...approved]);
     }
   }, [currentTab, unclaimed, pendingApprovals, pendingClaims, approved]);
-
-  const determineSort = (
-    e: SyntheticEvent<HTMLElement>,
-    data: DropdownProps,
-  ): void => {
-    if (typeof data.value === 'string') {
-      if (data.value === dateOptions[0]) {
-        setSort('increase');
-      } else if (data.value === dateOptions[1]) {
-        setSort('decrease');
-      } else {
-        setSort('none');
-      }
-    }
-  };
 
   const populatePitches = (): void => {
     getUnclaimed();
@@ -242,34 +213,32 @@ const PitchDoc = (): ReactElement => {
           <h3>Filters: </h3>
         </div>
         <div className="wrapper">
-          <FilterDropdown
-            text="Date Joined"
-            options={parseOptions(dateOptions)}
-            onChange={determineSort}
+          <MultiSelect
+            value={interests}
+            onChange={(values) =>
+              setInterests(values ? values.map((item) => item.value) : [])
+            }
+            options={allInterests}
+            placeholder="Interests"
           />
         </div>
         <div className="wrapper">
-          <FilterDropdown
-            text="Topics of Interest"
-            options={parseOptions(allInterests)}
-            onChange={(e, { value }) => setInterests(toArray(value))}
-            multiple
-          />
-        </div>
-        <div className="wrapper">
-          <FilterDropdown
-            text="Teams"
-            options={parseOptions(allTeams)}
-            onChange={(e, { value }) => setTeams(toArray(value))}
-            multiple
+          <MultiSelect
+            value={teams}
+            onChange={(values) =>
+              setTeams(values ? values.map((item) => item.value) : [])
+            }
+            options={allTeams}
+            placeholder="Teams"
           />
         </div>
         {isEqual(currentTab, TABS.APPROVED) && (
           <div className="wrapper">
-            <FilterDropdown
-              text="Claim Status"
-              options={parseOptions(['Claimed', 'Unclaimed'])}
-              onChange={(e, { value }) => setClaimStatus(toString(value))}
+            <Select
+              value={claimStatus}
+              options={['Claimed', 'Unclaimed']}
+              onChange={(e) => setClaimStatus(e ? e.value : '')}
+              placeholder="Claim status"
             />
           </div>
         )}
