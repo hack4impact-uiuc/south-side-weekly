@@ -16,7 +16,6 @@ const router = express.Router();
 
 router.get(
   '/all',
-  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     const pitches = await Pitch.find({});
     res.status(200).json({
