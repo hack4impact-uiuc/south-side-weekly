@@ -58,7 +58,7 @@ const assignmentStatusEnum = {
 const issueFormatEnum = {
   PRINT: 'PRINT',
   ONLINE: 'ONLINE',
-}
+};
 
 export {
   interestsEnum,

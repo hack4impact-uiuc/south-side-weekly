@@ -5,7 +5,7 @@ import {
   interestsEnum,
   pitchStatusEnum,
   assignmentStatusEnum,
-  issueFormatEnum
+  issueFormatEnum,
 } from '../utils/enums';
 
 export type PitchSchema = IPitch & Document<any>;
@@ -18,16 +18,30 @@ const contributor = new mongoose.Schema(
   { _id: false },
 );
 
+const issue = new mongoose.Schema(
+  {
+    format: {
+      type: String,
+      enum: Object.values(issueFormatEnum),
+      default: null,
+      required: true,
+    },
+    publicationDate: { type: Date, default: null },
+  },
+  { _id: false },
+);
+
 /**
  * Mongoose Schema to represent a Pitch at South Side Weekly
  */
 const Pitch = new mongoose.Schema({
   title: { type: String, default: null, required: true },
-  issueFormat: { type: String, enum: Object.values(issueFormatEnum), default: issueFormatEnum.ONLINE },
+  issueFormat: [issue],
+  issueDate: { type: Date, default: null },
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  primaryEditor: { type: Schema.Types.ObjectId, ref: 'User' },
-  secondaryEditor: { type: Schema.Types.ObjectId, ref: 'User' },
-  thirdEditor: { type: Schema.Types.ObjectId, ref: 'User'},
+  primaryEditor: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  secondEditors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  thirdEditors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   conflictOfInterest: { type: Boolean, required: true },
   status: {
     type: String,
