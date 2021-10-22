@@ -13,6 +13,19 @@ export const getOpenTeamsForPitch = (pitch: IPitch): IPitch['teams'] => {
   return openTeams;
 };
 
+export const updatePitchTeamTargets = (
+  pitch: IPitch,
+  teams: string[],
+): void => {
+  for (const teamId of teams) {
+    const team = pitch.teams.find(
+      ({ teamId: pitchTeamId }) => pitchTeamId == teamId,
+    );
+
+    team.target--;
+  }
+};
+
 export const santitizePitch = (pitch: PitchSchema): IPitch => ({
   _id: pitch._id,
   title: pitch.title,

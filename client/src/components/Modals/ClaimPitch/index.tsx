@@ -1,25 +1,22 @@
-import { isEmpty } from 'lodash';
 import React, {
   FC,
   ReactElement,
   useCallback,
   useEffect,
-  useState,
+  useState
 } from 'react';
 import { Button, Form, Grid, Modal, ModalProps } from 'semantic-ui-react';
-import { IPitch, IUser } from 'ssw-common';
+import { IPitch } from 'ssw-common';
 import Swal from 'sweetalert2';
-
-import { getUser, isError, updatePitch, submitPitchClaim } from '../../../api';
+import { isError, submitPitchClaim } from '../../../api';
+import { getAggregatedPitch } from '../../../api/pitch';
 import { useAuth } from '../../../contexts';
 import { emptyAggregatePitch, emptyPitch } from '../../../utils/constants';
 import { convertMap, getUserFullName } from '../../../utils/helpers';
-import PitchCard from '../../PitchCard';
 import FieldTag from '../../FieldTag';
+import PitchCard from '../../PitchCard';
 import UserPicture from '../../UserPicture';
-
 import './styles.scss';
-import { getAggregatedPitch } from '../../../api/pitch';
 
 interface ClaimPitchProps extends ModalProps {
   pitch: IPitch;
@@ -59,8 +56,8 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
 
     const map = new Map<string, boolean>();
 
-    Object.keys(pitch.teams).map((team) => {
-      map.set(team, false);
+    pitch.teams.map(({ teamId }) => {
+      map.set(teamId, false);
     });
 
     setCheckboxes(map);
@@ -71,7 +68,6 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
 
     checkboxes.set(checkbox, !isChecked);
 
-    setTeamSlots({ ...teamSlots });
     setCheckboxes(new Map(checkboxes));
   };
 
@@ -82,25 +78,14 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
       return;
     }
     const selectedTeams: string[] = [];
-    checkboxes.forEach(function (selected, team) {
+    checkboxes.forEach((selected, team) => {
       if (selected) {
         selectedTeams.push(team);
       }
     });
 
-    const userInfo = {
-      userId: user._id,
-      teams: selectedTeams,
-    };
-
-    const body = {
-      teams: teamSlots,
-      pendingContributors: [...pitch.pendingContributors, userInfo],
-    };
-
     const pitchRes = await submitPitchClaim(pitch._id, user._id, selectedTeams);
-    const updateRes = await updatePitch({ ...body }, pitch._id);
-    if (!isError(pitchRes) && !isError(updateRes)) {
+    if (!isError(pitchRes)) {
       callback();
       Swal.fire({
         title: 'Successfully submitted claim for pitch!',
@@ -186,22 +171,22 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
         </p>
         <Form>
           <Form.Group inline widths={5} className="team-select-group">
-            {Object.entries(teamSlots).map((slot, index) => (
+            {teamSlots.map((team, index) => (
               <div className="checkbox-wrapper" key={index}>
                 <Form.Checkbox
                   disabled={
-                    (slot[1].target <= 0 && !checkboxes.get(slot[0])) ||
-                    didUserClaim()
+                    (team.target <= 0 && !checkboxes.get(team.teamId)) ||
+                    didUserClaim() || didUserSubmitClaimReq()
                   }
-                  checked={checkboxes.get(slot[0])}
+                  checked={checkboxes.get(team.teamId)}
                   onClick={() => {
-                    updateCheckboxes(slot[0]);
+                    updateCheckboxes(team.teamId);
                     setDidSubmit(false);
                   }}
                   error={isCheckboxError}
                 />
-                <FieldTag content={teams.find(({ _id }) => _id === slot[1].teamId)?.name} />
-                <h4>{slot[1].target}</h4>
+                <FieldTag content={teams.find(({ _id }) => _id === team.teamId)?.name} />
+                <h4>{team.target}</h4>
               </div>
             ))}
           </Form.Group>
