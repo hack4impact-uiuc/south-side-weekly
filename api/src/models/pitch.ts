@@ -46,6 +46,11 @@ const Pitch = new mongoose.Schema({
   },
   secondEditors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   thirdEditors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  writer: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    default: null,
+  },
   conflictOfInterest: { type: Boolean, required: true },
   status: {
     type: String,
