@@ -28,7 +28,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
       value: option,
     }));
 
-  const formmatedOptions = parseOptions(options);
+  const formattedOptions = parseOptions(options);
 
   return (
     <Select<MultiSelectOption, true>
