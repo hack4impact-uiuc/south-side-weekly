@@ -15,7 +15,6 @@ import {
   getUnclaimedPitches,
   isError,
 } from '../../api';
-import { addVisitedPage } from '../../api/user';
 import {
   PitchCard,
   SubmitPitchModal,
@@ -28,6 +27,7 @@ import {
 } from '../../components';
 import { useAuth } from '../../contexts';
 import { allInterests, allTeams } from '../../utils/constants';
+import { pagesEnum } from '../../utils/enums';
 import { parseOptions } from '../../utils/helpers';
 
 import {
@@ -64,9 +64,8 @@ const PitchDoc = (): ReactElement => {
   const [interests, setInterests] = useState<string[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
   const [query, setQuery] = useState('');
-  const [showWalthrough, setShowWalkthrough] = useState(false);
 
-  const { user, isAdmin, isStaff } = useAuth();
+  const { isAdmin, isStaff } = useAuth();
 
   const getApproved = async (): Promise<void> => {
     const res = await getApprovedPitches();
@@ -103,12 +102,6 @@ const PitchDoc = (): ReactElement => {
   };
 
   useEffect(() => {
-    const isPageVisited = (page: string): boolean => {
-      const visitedPages = user.visitedPages;
-
-      return visitedPages.includes(page);
-    };
-
     setCurrentTab(TABS.UNCLAIMED);
     getUnclaimed();
     getApproved();
@@ -121,11 +114,6 @@ const PitchDoc = (): ReactElement => {
       getPendingClaims();
     }
 
-    if (!isPageVisited('PITCHDOC')) {
-      setShowWalkthrough(true);
-      addVisitedPage('PITCHDOC');
-    }
-
     return () => {
       setUnclaimed([]);
       setApproved([]);
@@ -134,7 +122,7 @@ const PitchDoc = (): ReactElement => {
       setFilteredPitches([]);
       setCurrentPitches([]);
     };
-  }, [isAdmin, isStaff, user.visitedPages]);
+  }, [isAdmin, isStaff]);
 
   useEffect(() => {
     const search = (pitches: IPitch[]): IPitch[] => {
@@ -203,7 +191,10 @@ const PitchDoc = (): ReactElement => {
 
   return (
     <div className="pitch-doc-wrapper">
-      {showWalthrough && <Walkthrough />}
+      <Walkthrough
+        page={pagesEnum.PITCHDOC}
+        content="The Pitch Doc is where you can claim, submit, and view pitches! Use the filters to find pitches you are interested in."
+      />
       <h1>Pitch Doc</h1>
       <Menu className="tab-menu" tabular size="large">
         <Menu.Item

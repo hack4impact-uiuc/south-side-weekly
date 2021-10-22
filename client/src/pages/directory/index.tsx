@@ -9,9 +9,10 @@ import { DropdownProps, Input } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { getUsers, isError } from '../../api';
-import { UserModal, FilterDropdown } from '../../components';
+import { UserModal, FilterDropdown, Walkthrough } from '../../components';
 import { parseOptions } from '../../utils/helpers';
 import { allInterests, allRoles, allTeams } from '../../utils/constants';
+import { pagesEnum } from '../../utils/enums';
 
 import { filterInterests, filterRole, filterTeams, sortUsers } from './helpers';
 import './styles.scss';
@@ -101,6 +102,10 @@ const Directory = (): ReactElement => {
 
   return (
     <div className="directory-page">
+      <Walkthrough
+        page={pagesEnum.DIRECTORY}
+        content="Check out the members on the SSW team and click their profiles to view more details!"
+      />
       <h2>Directory</h2>
       <Input
         value={query}
