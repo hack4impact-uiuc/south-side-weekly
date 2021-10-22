@@ -34,8 +34,8 @@ const MultiSelect: FC<MultiSelectProps> = ({
     <Select<MultiSelectOption, true>
       isMulti
       placeholder={placeholder}
-      value={formmatedOptions.filter((item) => value.includes(item.value))}
-      options={formmatedOptions}
+      value={formattedOptions.filter((item) => value.includes(item.value))}
+      options={formattedOptions}
       onChange={onChange}
       closeMenuOnSelect={false}
       hideSelectedOptions={false}
