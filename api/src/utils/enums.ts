@@ -55,8 +55,14 @@ const assignmentStatusEnum = {
   NONE: 'NONE',
 };
 
+const issueFormatEnum = {
+  PRINT: 'PRINT',
+  ONLINE: 'ONLINE',
+}
+
 export {
   interestsEnum,
+  issueFormatEnum,
   rolesEnum,
   racesEnum,
   onboardingStatusEnum,

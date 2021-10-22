@@ -5,6 +5,7 @@ import {
   interestsEnum,
   pitchStatusEnum,
   assignmentStatusEnum,
+  issueFormatEnum
 } from '../utils/enums';
 
 export type PitchSchema = IPitch & Document<any>;
@@ -22,7 +23,11 @@ const contributor = new mongoose.Schema(
  */
 const Pitch = new mongoose.Schema({
   title: { type: String, default: null, required: true },
+  issueFormat: { type: String, enum: Object.values(issueFormatEnum), default: issueFormatEnum.ONLINE },
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  primaryEditor: { type: Schema.Types.ObjectId, ref: 'User' },
+  secondaryEditor: { type: Schema.Types.ObjectId, ref: 'User' },
+  thirdEditor: { type: Schema.Types.ObjectId, ref: 'User'},
   conflictOfInterest: { type: Boolean, required: true },
   status: {
     type: String,
