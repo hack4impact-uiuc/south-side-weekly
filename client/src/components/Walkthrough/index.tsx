@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react';
+import React, { useState, useEffect, FC } from 'react';
 import { Message } from 'semantic-ui-react';
 
 import { addVisitedPage } from '../../api/user';
@@ -6,12 +6,12 @@ import { useAuth } from '../../contexts';
 
 import './styles.scss';
 
-const Walkthrough = (props: {
+interface Props {
   page: string;
   content: string;
-}): ReactElement => {
-  const { page, content } = props;
+}
 
+const Walkthrough: FC<Props> = ({ page, content }) => {
   const { user, register } = useAuth();
   const [visible, setVisible] = useState(false);
 
