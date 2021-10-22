@@ -216,4 +216,30 @@ router.get(
   }),
 );
 
+// Updates the user's list of visited pages
+router.post(
+  '/visitedPages',
+  requireRegistered,
+  errorWrap(async (req: Request, res: Response) => {
+    const user = await User.findByIdAndUpdate(req.user._id, {
+      $addToSet: {
+        visitedPages: req.body.page,
+      },
+    });
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found with id',
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        result: user,
+        message: `Successfully added page to user's visited pages`,
+      });
+    }
+  }),
+);
+
 export default router;

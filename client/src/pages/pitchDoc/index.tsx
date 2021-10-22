@@ -15,6 +15,7 @@ import {
   getUnclaimedPitches,
   isError,
 } from '../../api';
+import { addVisitedPage } from '../../api/user';
 import {
   PitchCard,
   SubmitPitchModal,
@@ -23,6 +24,7 @@ import {
   ClaimPitchModal,
   FilterDropdown,
   ApprovePitchModal,
+  Walkthrough,
 } from '../../components';
 import { useAuth } from '../../contexts';
 import { allInterests, allTeams } from '../../utils/constants';
@@ -62,8 +64,9 @@ const PitchDoc = (): ReactElement => {
   const [interests, setInterests] = useState<string[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
   const [query, setQuery] = useState('');
+  const [showWalthrough, setShowWalkthrough] = useState(false);
 
-  const { isAdmin, isStaff } = useAuth();
+  const { user, isAdmin, isStaff } = useAuth();
 
   const getApproved = async (): Promise<void> => {
     const res = await getApprovedPitches();
@@ -100,6 +103,12 @@ const PitchDoc = (): ReactElement => {
   };
 
   useEffect(() => {
+    const isPageVisited = (page: string): boolean => {
+      const visitedPages = user.visitedPages;
+
+      return visitedPages.includes(page);
+    };
+
     setCurrentTab(TABS.UNCLAIMED);
     getUnclaimed();
     getApproved();
@@ -112,6 +121,11 @@ const PitchDoc = (): ReactElement => {
       getPendingClaims();
     }
 
+    if (!isPageVisited('PITCHDOC')) {
+      setShowWalkthrough(true);
+      addVisitedPage('PITCHDOC');
+    }
+
     return () => {
       setUnclaimed([]);
       setApproved([]);
@@ -120,7 +134,7 @@ const PitchDoc = (): ReactElement => {
       setFilteredPitches([]);
       setCurrentPitches([]);
     };
-  }, [isAdmin, isStaff]);
+  }, [isAdmin, isStaff, user.visitedPages]);
 
   useEffect(() => {
     const search = (pitches: IPitch[]): IPitch[] => {
@@ -189,6 +203,7 @@ const PitchDoc = (): ReactElement => {
 
   return (
     <div className="pitch-doc-wrapper">
+      {showWalthrough && <Walkthrough />}
       <h1>Pitch Doc</h1>
       <Menu className="tab-menu" tabular size="large">
         <Menu.Item
