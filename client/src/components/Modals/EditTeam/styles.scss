@@ -1,0 +1,50 @@
+@import '../../../styles/colors.scss';
+$width: 25px;
+$height: 25px;
+
+.team-modal {
+    .header {
+        background-color: $primary !important;
+        color: white !important;
+      }
+      .actions {
+        margin-top: 30px;
+        text-align: right;
+        background-color: white !important;
+        border-top:none !important;
+
+        .save-button{
+            background-color: #5A72E1;
+            color:white;
+        }
+
+      }
+
+      .content{
+        .lines{
+          display:flex;
+          margin-bottom:10px;
+          align-items: center;
+        }
+        .color-pick {
+            width:$width;
+            height:$height;
+            overflow: hidden;
+            border-radius:100%;
+            display: inline-block;
+            text-align:center;
+            margin-right:10px;
+            border:1px solid rgba(34,36,38,.15);
+        }
+        input[type='color'] {
+            width:$width + 10;
+            height:$height + 10;
+            background: #FFFFFF 0% 0% no-repeat padding-box;
+            box-shadow: 0px 3px 6px #0000001A;
+            transform:scale(2);
+        }
+        input[type='text']{
+          display:inline-block;
+        }
+      }
+}
