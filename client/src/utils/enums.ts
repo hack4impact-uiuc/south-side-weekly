@@ -38,7 +38,7 @@ export const pagesEnum = {
   PITCHDOC: 'PITCHDOC',
   DIRECTORY: 'DIRECTORY',
   RESOURCES: 'RESOURCES',
-}
+};
 
 export const teamEnum = {
   EDITING: 'EDITING',

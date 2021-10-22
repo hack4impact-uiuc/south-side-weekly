@@ -106,5 +106,5 @@ export {
   updateUserClaimedPitches,
   updateUser,
   updateOnboardingStatus,
-  addVisitedPage
+  addVisitedPage,
 };

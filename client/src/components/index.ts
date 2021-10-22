@@ -47,5 +47,5 @@ export {
   MultiSelect,
   Select,
   DirectoryTable,
-  Walkthrough
+  Walkthrough,
 };

@@ -34,7 +34,11 @@ const Walkthrough = (props: {
   };
 
   return (
-    <>{visible && <Message onDismiss={closeWalkthrough} content={content} color="blue" />}</>
+    <>
+      {visible && (
+        <Message onDismiss={closeWalkthrough} content={content} color="blue" />
+      )}
+    </>
   );
 };
 

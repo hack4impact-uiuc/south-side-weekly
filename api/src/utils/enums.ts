@@ -45,7 +45,7 @@ const pagesEnum = {
   PITCHDOC: 'PITCHDOC',
   DIRECTORY: 'DIRECTORY',
   RESOURCES: 'RESOURCES',
-}
+};
 
 const pitchStatusEnum = {
   APPROVED: 'APPROVED',
