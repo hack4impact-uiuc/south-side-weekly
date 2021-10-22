@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 import { deleteResource, getAllResources, isError } from '../../api';
 import { ResourceModal, AdminView } from '../../components';
-import { allTeams } from '../../utils/constants';
+import { useTeams } from '../../contexts';
 import { titleCase } from '../../utils/helpers';
 
 import './styles.scss';
@@ -26,7 +26,9 @@ const Resources = (): ReactElement => {
     resource: undefined,
   });
 
-  const teams = (): string[] => ['General', ...allTeams].map(titleCase);
+  const { teams: allTeams } = useTeams();
+
+  const teams = ['General', ...allTeams.map((team) => team.name)].map(titleCase);
 
   const filterResources = (team: string): IResource[] =>
     resources.filter((resouce) => resouce.teamRoles.includes(team));
@@ -110,7 +112,7 @@ const Resources = (): ReactElement => {
         </div>
 
         <Menu tabular size="large">
-          {teams().map((team, index) => (
+          {teams.map((team, index) => (
             <Menu.Item
               key={index}
               name={team}
