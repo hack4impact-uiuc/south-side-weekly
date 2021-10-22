@@ -216,7 +216,7 @@ router.get(
   }),
 );
 
-// Updates the user's list of visited pages
+// Adds new page to user's list of visited pages
 router.post(
   '/visitedPages',
   requireRegistered,
