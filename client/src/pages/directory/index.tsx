@@ -7,11 +7,9 @@ import { getUsers, isError } from '../../api';
 import { MultiSelect, Select, DirectoryTable } from '../../components';
 import { allInterests, allRoles, allTeams } from '../../utils/constants';
 
-import { filterInterests, filterRole, filterTeams, sortUsers } from './helpers';
+import { filterInterests, filterRole, filterTeams } from './helpers';
 
 import './styles.scss';
-
-const dateOptions = ['Earliest to Latest', 'Latest to Earliest'];
 
 const searchFields: (keyof IUser)[] = [
   'firstName',
@@ -24,7 +22,6 @@ const Directory = (): ReactElement => {
   const [directory, setDirectory] = useState<IUser[]>([]);
   const [filteredDirectory, setFilteredDirectory] = useState<IUser[]>([]);
   const [role, setRole] = useState<string>('');
-  const [sort, setSort] = useState<'increase' | 'decrease' | 'none'>('none');
   const [interests, setInterests] = useState<string[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
   const [query, setQuery] = useState<string>('');
@@ -71,23 +68,12 @@ const Directory = (): ReactElement => {
       let filtered = filterInterests(users, interests);
       filtered = filterRole(filtered, role);
       filtered = filterTeams(filtered, teams);
-      filtered = sortUsers(filtered, sort);
 
       return filtered;
     };
 
     setFilteredDirectory([...search(filter(directory))]);
-  }, [directory, query, interests, teams, role, sort]);
-
-  const getSortValue = (): string => {
-    if (sort === 'increase') {
-      return dateOptions[0];
-    } else if (sort === 'decrease') {
-      return dateOptions[1];
-    }
-
-    return '';
-  };
+  }, [directory, query, interests, teams, role]);
 
   return (
     <div className="directory-page">
@@ -113,24 +99,6 @@ const Directory = (): ReactElement => {
           />
         </div>
         <div className="wrapper">
-          <Select
-            value={getSortValue()}
-            options={dateOptions}
-            onChange={(e) => {
-              if (e) {
-                if (e.value === dateOptions[0]) {
-                  setSort('increase');
-                } else {
-                  setSort('decrease');
-                }
-              } else {
-                setSort('none');
-              }
-            }}
-            placeholder="Date Joined"
-          />
-        </div>
-        <div className="wrapper">
           <MultiSelect
             value={interests}
             onChange={(values) =>
@@ -153,9 +121,6 @@ const Directory = (): ReactElement => {
       </div>
       <div className="directory">
         <DirectoryTable users={filteredDirectory} />
-        {/* {filteredDirectory.map((user, index) => (
-          <UserModal user={user} key={index} />
-        ))} */}
       </div>
     </div>
   );
