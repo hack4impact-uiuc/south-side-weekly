@@ -28,7 +28,7 @@ const Resources = (): ReactElement => {
 
   const { teams: allTeams } = useTeams();
 
-  const teams = ['General', ...allTeams.map((team) => team.name)].map(titleCase);
+  const tabs = ['General', ...allTeams.map((team) => team.name)].map(titleCase);
 
   const filterResources = (team: string): IResource[] =>
     resources.filter((resouce) => resouce.teamRoles.includes(team));
@@ -112,11 +112,11 @@ const Resources = (): ReactElement => {
         </div>
 
         <Menu tabular size="large">
-          {teams.map((team, index) => (
+          {tabs.map((tabs, index) => (
             <Menu.Item
               key={index}
-              name={team}
-              active={team === role}
+              name={tabs}
+              active={tabs === role}
               onClick={(e, { name }) => setRole(name!)}
             />
           ))}
