@@ -25,7 +25,7 @@ const UserModal: FC<UserModalProps> = ({ user, ...rest }): ReactElement => {
       open={isOpen}
       onOpen={() => setIsOpen(true)}
       onClose={() => setIsOpen(false)}
-      trigger={<UserCard user={user} />}
+      trigger={rest.trigger ? rest.trigger : <UserCard user={user} />}
       className="user-modal"
       {...rest}
     >

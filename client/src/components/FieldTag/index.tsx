@@ -11,8 +11,17 @@ const FieldTag: FC<LabelProps> = ({
   size = 'large',
   ...rest
 }): ReactElement => {
-  const toClassName = (str: string): string =>
-    toLower(str).split(' ').join('-');
+  const toClassName = (str: string): string => {
+    str = toLower(str);
+
+    let split = str.split(' ');
+
+    if (split.length === 1) {
+      split = str.split('_');
+    }
+
+    return `${split.join('-')}-tag-color`;
+  };
 
   return (
     <Label
