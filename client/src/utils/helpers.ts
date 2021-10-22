@@ -1,5 +1,12 @@
 import { AsYouType } from 'libphonenumber-js';
-import { camelCase, isUndefined, reject, startCase, toUpper } from 'lodash';
+import {
+  camelCase,
+  isArray,
+  isUndefined,
+  reject,
+  startCase,
+  toUpper,
+} from 'lodash';
 import { DropdownItemProps } from 'semantic-ui-react';
 import { IUser, IPitch } from 'ssw-common';
 
@@ -76,10 +83,19 @@ const parseOptions = (options: string[]): DropdownItemProps[] =>
  * @param pitch the pitch check the claims status
  * @returns true if pitch is claimed, else false
  */
-const isPitchClaimed = (pitch: IPitch): boolean =>
-  Object.entries(pitch.teams).every(
+const isPitchClaimed = (pitch: IPitch): boolean => {
+  if (
+    isArray(pitch.teams) ||
+    pitch.teams === null ||
+    pitch.teams === undefined
+  ) {
+    return false;
+  }
+
+  return Object.entries(pitch.teams).every(
     ([, spots]) => spots.current === spots.target,
   );
+};
 
 interface MapConversion<T, K> {
   key: T;
