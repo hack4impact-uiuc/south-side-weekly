@@ -9,21 +9,12 @@ import { IUser, IPitch } from 'ssw-common';
  * A pitch has a team when the {TEAM}.target > 0
  *
  * @param pitch the pitch to pull the teams from
- * @returns an array of all of teams belonging to the pitch
+ * @returns an array of all of team IDs belonging to the pitch
  */
 const getPitchTeams = (pitch: IPitch): string[] => {
-  const teams: string[] = [];
-
-  const pitchTeams = Object.entries(pitch.teams);
-
-  pitchTeams.forEach((team) => {
-    const teamName = team[0];
-    const assignments = team[1];
-
-    if (assignments.target > 0) {
-      teams.push(toUpper(teamName));
-    }
-  });
+  const teams = pitch.teams
+    .filter((team) => team.target > 0)
+    .map((team) => team.teamId);
 
   return teams;
 };

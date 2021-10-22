@@ -66,8 +66,6 @@ const PitchDoc = (): ReactElement => {
   const { isAdmin, isStaff } = useAuth();
   const { teams } = useTeams();
 
-  const allTeams = teams.map((team) => team.name);
-
   const getApproved = async (): Promise<void> => {
     const res = await getApprovedPitches();
 
@@ -110,8 +108,6 @@ const PitchDoc = (): ReactElement => {
     if (isStaff || isAdmin) {
       getPendingApprovals();
     }
-
-    console.log('FJDLFJLDKF', allTeams);
 
     if (isAdmin) {
       getPendingClaims();
@@ -258,7 +254,11 @@ const PitchDoc = (): ReactElement => {
         <div className="wrapper">
           <FilterDropdown
             text="Teams"
-            options={parseOptions(allTeams)}
+            options={teams.map((team, index) => ({
+              key: index,
+              text: team.name,
+              value: team._id,
+            }))}
             onChange={(e, { value }) => setFilteredTeams(toArray(value))}
             multiple
           />
