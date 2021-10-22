@@ -41,7 +41,10 @@ const aggregatePitch = async (
   );
 
   const teams = await Promise.all(
-    rawPitch.teams.map(({ teamId }) => Team.findById(teamId)),
+    rawPitch.teams.map(({ teamId, target }) => ({
+      target,
+      ...Team.findById(teamId),
+    })),
   );
 
   const aggregatedPitch = {
