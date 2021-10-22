@@ -6,11 +6,11 @@ import User, { UserSchema } from '../models/user';
 import { santitizePitch, santitizeUser } from './helpers';
 
 const simplifyUser = (user: IUser): Partial<IUser> => ({
-  firstName: user.firstName,
-  preferredName: user.preferredName,
-  lastName: user.lastName,
-  profilePic: user.profilePic,
-  _id: user._id,
+  firstName: user ? user.firstName : '',
+  preferredName: user ? user.preferredName : '',
+  lastName: user ? user.lastName : '',
+  profilePic: user ? user.profilePic: '',
+  _id: user ? user._id: '',
 });
 
 const aggregatePitch = async (

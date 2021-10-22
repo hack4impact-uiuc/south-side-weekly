@@ -2,29 +2,50 @@ import React, {
   FC,
   ReactElement,
   useState,
+  useEffect,
 } from 'react';
-import { Button, Form, Modal, ModalProps, Label } from 'semantic-ui-react';
+import {
+  Button,
+  Form,
+  Modal,
+  ModalProps,
+  Grid,
+  GridColumn,
+  Image,
+} from 'semantic-ui-react';
+import { IPitchAggregate, IPitch } from 'ssw-common';
 
 import { FieldTag } from '../..';
+import { aggregatePitch, isError } from '../../../api';
+
 
 import './styles.scss';
 
 interface ViewPitchProps extends ModalProps {
-  firstEditor: string;
-  secondEditor: string;
-  thirdEditor: string;
-  issueFormat: 'print' | 'other';
-  
+  pitchId: string;
 }
 
 const ViewPitchModal: FC<ViewPitchProps> = ({
-  firstEditor,
-  secondEditor,
-  thirdEditor,
-  issueFormat,
+  pitchId,
   ...rest
 }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
+  const [aggregate, setAggregate] = useState<IPitchAggregate>();
+
+ 
+  // should this be a callback (and added to the dependency array)
+  
+
+  useEffect(() => {
+    const getAggregate = async (): Promise<void> => {
+      const res = await aggregatePitch(pitchId);
+      if (!isError(res)) {
+        setAggregate(res.data.result);
+        console.log(res.data.result);
+      }
+    };
+    getAggregate();
+  }, [pitchId]);
 
 
   return (
@@ -36,36 +57,62 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
       className="claim-modal"
       {...rest}
     >
-      <Modal.Header content='View Pitch' />
+      <Modal.Header content="View Pitch" />
       <Modal.Content>
-        <h3> Pitch Title </h3>
+        <h3> Pitch Title: {aggregate?.title} </h3>
         <div className="teams-section">
-        <FieldTag content='Visual Arts'></FieldTag>
+          <FieldTag content="Visual Arts"></FieldTag>
           <div className="team">
-          <FieldTag content='Visual Arts'></FieldTag>
+            <FieldTag content="Visual Arts"></FieldTag>
           </div>
         </div>
-        <p className="description">pitch description pitch description pitch description</p>
-  
-        <h4>Pitch Creator: </h4>
-        <h4>Primary Editor: </h4>
+        <p className="description">
+          pitch description pitch description pitch description
+        </p>
+        <Grid columns="2">
+          <GridColumn>
+            <div className="avatar-name">
+              <h4>Pitch Creator </h4>
+              <div className="avatar-pic">
+                <Image
+                  src="https://react.semantic-ui.com/images/wireframe/square-image.png"
+                  avatar
+                />
+              </div>
+            </div>
+
+            <div className="avatar-name">
+              <h4>Pitch Creator: </h4>
+              <div className="avatar-pic">
+                <Image
+                  src="https://react.semantic-ui.com/images/wireframe/square-image.png"
+                  avatar
+                />
+              </div>
+            </div>
+          </GridColumn>
+          <GridColumn>
+            <h4>Primary Editor: </h4>
+            <h4>Second Editor: </h4>
+            <h4>Third Editor: </h4>
+          </GridColumn>
+        </Grid>
+        <span></span>
+        <h4> Contributors Currently On Pitch </h4>
+        <Grid>
+          <GridColumn>
+            <p>First, Last Name </p>
+          </GridColumn>
+        </Grid>
         <Form>
-          <Form.Group inline widths={5} className="team-select-group">
-            
-          </Form.Group>
+          <Form.Group
+            inline
+            widths={5}
+            className="team-select-group"
+          ></Form.Group>
         </Form>
-        <h2>Pitch Claimed By</h2>
-        <div className="contributors-section">
-        
-        </div>
+        <div className="contributors-section"></div>
       </Modal.Content>
-      <Modal.Actions>
-        <Button
-          type="submit"
-          content="Submit my Claim for Review"
-          positive
-        />
-      </Modal.Actions>
     </Modal>
   );
 };

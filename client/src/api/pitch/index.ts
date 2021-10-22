@@ -1,9 +1,9 @@
-import { IPitch } from 'ssw-common';
+import { IPitch, IPitchAggregate } from 'ssw-common';
 
 import { Response } from '../types';
 import { get, post, put, buildEndpoint } from '../builders';
 
-import { GetOpenTeamsResponse, PitchesResponse, PitchResponse } from './types';
+import { GetOpenTeamsResponse, PitchesResponse, PitchResponse, AggregatePitchResponse } from './types';
 
 const PITCH_ENDPOINT = '/pitch';
 
@@ -56,6 +56,15 @@ const declinePitch = async (
   const failureMessage = 'DECLINE_CLAIM_FAIL';
 
   return await put(url, {}, failureMessage);
+};
+
+const aggregatePitch = async (
+  pitchId: string,
+): Promise<Response<AggregatePitchResponse>> => {
+  const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'aggregate');
+  const failureMessage = 'GET_AGGREGATE_FAIL';
+
+  return await get(url, failureMessage);
 };
 
 // Updates the information on a pitch
@@ -112,4 +121,5 @@ export {
   getUnclaimedPitches,
   approvePitch,
   declinePitch,
+  aggregatePitch
 };
