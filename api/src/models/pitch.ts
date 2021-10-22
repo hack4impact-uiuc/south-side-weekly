@@ -38,7 +38,12 @@ const Pitch = new mongoose.Schema({
   title: { type: String, default: null, required: true },
   issues: [issue],
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  primaryEditor: { type: Schema.Types.ObjectId, ref: 'User', default: null, required: true },
+  primaryEditor: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    default: null,
+    required: true,
+  },
   secondEditors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   thirdEditors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   conflictOfInterest: { type: Boolean, required: true },
