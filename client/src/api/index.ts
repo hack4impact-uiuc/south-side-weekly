@@ -14,6 +14,7 @@ export {
   getPitchesPendingApproval,
   getUnclaimedPitches,
   getPendingContributorPitches,
+  getAggregatedPitch,
   createPitch,
   approvePitch,
   declinePitch,

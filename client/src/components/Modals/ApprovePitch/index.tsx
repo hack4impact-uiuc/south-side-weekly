@@ -1,4 +1,5 @@
-import { isEmpty, toString } from 'lodash';
+import { template } from '@babel/core';
+import _, { isEmpty, toString } from 'lodash';
 import React, {
   FC,
   ReactElement,
@@ -10,7 +11,13 @@ import { Button, Form, Grid, Modal, ModalProps } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
 import Swal from 'sweetalert2';
 
-import { approvePitch, declinePitch, getUser, isError } from '../../../api';
+import {
+  approvePitch,
+  declinePitch,
+  getUser,
+  isError,
+  getAggregatedPitch,
+} from '../../../api';
 import { useTeams } from '../../../contexts';
 import { classNames, getUserFullName } from '../../../utils/helpers';
 import FieldTag from '../../FieldTag';
@@ -33,55 +40,61 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   const [teamMap, setTeamMap] = useState<IPitch['teams']>([]);
   const { teams } = useTeams();
 
-  const getAuthor = useCallback(async (): Promise<void> => {
-    if (isEmpty(pitch.author)) {
-      return;
-    }
-
-    const res = await getUser(pitch.author);
+  const fetchAggregatedPitch = useCallback(async (): Promise<void> => {
+    const res = await getAggregatedPitch(pitch._id);
 
     if (!isError(res)) {
-      setAuthor(getUserFullName(res.data.result));
+      console.log(res);
+      setAuthor(getUserFullName(res.data.result.aggregated.author));
     }
-  }, [pitch.author]);
+  }, [pitch._id]);
 
   useEffect(() => {
     if (!isOpen) {
       return;
     }
 
-    const roster: IPitch['teams'] = [];
-
-    teams.map((team) => {
-      roster.push({ teamId: team._id, target: 0 });
-    });
-
-    setTeamMap(roster);
-
-    getAuthor();
+    fetchAggregatedPitch();
 
     return () => {
       setAuthor('');
       setTeamMap([]);
     };
-  }, [getAuthor, isOpen, teams]);
+  }, [fetchAggregatedPitch, isOpen]);
+
+  const findTeamTarget = (teamId: string): number => {
+    const team = teamMap.find(
+      (teamMapElement) => teamMapElement.teamId === teamId,
+    );
+    return team === undefined ? 0 : team.target;
+  };
 
   const changeTeam = (teamId: string, value: number): void => {
     const indexOfTeamId = teamMap.findIndex((team) => team.teamId === teamId)!;
-    teamMap[indexOfTeamId].target = value;
+    const notFoundIndex = -1;
+    if (indexOfTeamId === notFoundIndex) {
+      teamMap.push({ teamId: teamId, target: value });
+    } else {
+      if (value === 0 || isNaN(value)) {
+        teamMap.splice(indexOfTeamId, 1);
+      } else {
+        teamMap[indexOfTeamId].target = value;
+      }
+    }
     console.log(teamMap);
     const teamMapCopy = [...teamMap];
     setTeamMap(teamMapCopy);
   };
 
   const handleApprove = async (): Promise<void> => {
-    const validForm = teamMap.some((team) => team.target > 0);
+    const validForm = teamMap.length > 0;
 
     if (!validForm) {
       Swal.fire({
         title: 'Please set at least 1 team position',
         icon: 'error',
       });
+      return;
     }
 
     const res = await approvePitch(pitch._id, teamMap);
@@ -168,11 +181,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
                   onChange={(e, { value }) =>
                     changeTeam(team._id, parseInt(value))
                   }
-                  value={
-                    teamMap.find(
-                      (teamMapElement) => teamMapElement.teamId === team._id,
-                    )?.target
-                  }
+                  value={findTeamTarget(team._id)}
                   type="number"
                   min={0}
                 />

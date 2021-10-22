@@ -9,6 +9,6 @@ type ResourceSchema = IResource & Document<any>;
 const Resource = new mongoose.Schema({
   name: { type: String, default: null, required: true },
   link: { type: String, default: null, required: true },
-  teamRoles: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  teamRoles: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
 });
 export default mongoose.model<ResourceSchema>('Resource', Resource);
