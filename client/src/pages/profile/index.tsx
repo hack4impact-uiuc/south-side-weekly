@@ -23,7 +23,6 @@ import { FieldTag, UserPicture } from '../../components';
 import Masthead from '../../assets/masthead.svg';
 import {
   allInterests,
-  allTeams,
   allGenders,
   allPronouns,
   allRoles,
@@ -31,7 +30,7 @@ import {
   emptyUser,
 } from '../../utils/constants';
 import { parseOptions, updateUserField, titleCase } from '../../utils/helpers';
-import { useAuth } from '../../contexts';
+import { useAuth, useTeams } from '../../contexts';
 
 import SocialsInput from './SocialsInput';
 import StringAttribute from './BasicInfoInput/StringAttribute';
@@ -70,6 +69,7 @@ const Profile = (): ReactElement => {
   });
 
   const auth = useAuth();
+  const { teams } = useTeams();
 
   useEffect(() => {
     const loadUser = async (): Promise<void> => {
@@ -165,7 +165,7 @@ const Profile = (): ReactElement => {
    * @param team the team to add
    */
   const addTeam = (team: string): void => {
-    const teams = [...user.currentTeams];
+    const teams = user.currentTeams;
     const currentIndex = teams.indexOf(team);
     if (currentIndex >= 0) {
       teams.splice(currentIndex, 1);
@@ -373,26 +373,26 @@ const Profile = (): ReactElement => {
               <HeaderTag as="h2">My Teams</HeaderTag>
               {isEditable('currentTeams') ? (
                 <div className="checkbox-group">
-                  {allTeams.map((team, index) => (
+                  {teams.map((team, index) => (
                     <Checkbox
                       key={index}
                       className="checkbox"
-                      value={team}
-                      label={titleCase(team)}
-                      checked={user.currentTeams.includes(team)}
-                      onChange={(e, data) => addTeam(`${data.value!}`)}
+                      value={team.name}
+                      label={titleCase(team.name)}
+                      checked={user.currentTeams.includes(team._id)}
+                      onChange={(_, __) => addTeam(team._id)}
                     />
                   ))}
                 </div>
               ) : (
                 user.currentTeams
                   .sort()
-                  .map((team, index) => (
+                  .map((teamId, index) => (
                     <FieldTag
                       size="medium"
                       key={index}
                       className="field-label"
-                      content={team}
+                      content={teams.find(team => team._id === teamId)?.name}
                     />
                   ))
               )}

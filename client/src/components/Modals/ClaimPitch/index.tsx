@@ -1,25 +1,22 @@
-import { isEmpty } from 'lodash';
 import React, {
   FC,
   ReactElement,
   useCallback,
   useEffect,
-  useState,
+  useState
 } from 'react';
 import { Button, Form, Grid, Modal, ModalProps } from 'semantic-ui-react';
-import { IPitch, IUser } from 'ssw-common';
+import { IPitch } from 'ssw-common';
 import Swal from 'sweetalert2';
-
-import { getUser, isError, updatePitch, submitPitchClaim } from '../../../api';
+import { isError, submitPitchClaim } from '../../../api';
+import { getAggregatedPitch } from '../../../api/pitch';
 import { useAuth } from '../../../contexts';
 import { emptyAggregatePitch, emptyPitch } from '../../../utils/constants';
 import { convertMap, getUserFullName } from '../../../utils/helpers';
-import PitchCard from '../../PitchCard';
 import FieldTag from '../../FieldTag';
+import PitchCard from '../../PitchCard';
 import UserPicture from '../../UserPicture';
-
 import './styles.scss';
-import { getAggregatedPitch } from '../../../api/pitch';
 
 interface ClaimPitchProps extends ModalProps {
   pitch: IPitch;
@@ -59,8 +56,8 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
 
     const map = new Map<string, boolean>();
 
-    Object.keys(pitch.teams).map((team) => {
-      map.set(team, false);
+    pitch.teams.map(({ teamId }) => {
+      map.set(teamId, false);
     });
 
     setCheckboxes(map);
@@ -71,7 +68,6 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
 
     checkboxes.set(checkbox, !isChecked);
 
-    setTeamSlots({ ...teamSlots });
     setCheckboxes(new Map(checkboxes));
   };
 
@@ -81,26 +77,15 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     if (!isValidForm()) {
       return;
     }
-    const teams: string[] = [];
-    checkboxes.forEach(function (selected, team) {
+    const selectedTeams: string[] = [];
+    checkboxes.forEach((selected, team) => {
       if (selected) {
-        teams.push(team);
+        selectedTeams.push(team);
       }
     });
 
-    const userInfo = {
-      userId: user._id,
-      teams: teams,
-    };
-
-    const body = {
-      teams: teamSlots,
-      pendingContributors: [...pitch.pendingContributors, userInfo],
-    };
-
-    const pitchRes = await submitPitchClaim(pitch._id, user._id, teams);
-    const updateRes = await updatePitch({ ...body }, pitch._id);
-    if (!isError(pitchRes) && !isError(updateRes)) {
+    const pitchRes = await submitPitchClaim(pitch._id, user._id, selectedTeams);
+    if (!isError(pitchRes)) {
       callback();
       Swal.fire({
         title: 'Successfully submitted claim for pitch!',
@@ -143,7 +128,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     return 'Claim Pitch';
   };
 
-  const { author, reviewedBy, assignmentContributors } = aggregatedPitch.aggregated;
+  const { author, reviewedBy, assignmentContributors, teams } = aggregatedPitch.aggregated;
 
   return (
     <Modal
@@ -166,10 +151,10 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
         </Grid>
         <div className="author-section">
           <div className="author">
-            <h3>{`Submitted by: ${author}`}</h3>
+            <h3>{`Submitted by: ${getUserFullName(author)}`}</h3>
           </div>
           <div className="author">
-            <h3>{`Reviewed by: ${reviewedBy}`}</h3>
+            <h3>{`Reviewed by: ${getUserFullName(reviewedBy)}`}</h3>
           </div>
         </div>
         <p className="description">{pitch.description}</p>
@@ -186,22 +171,22 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
         </p>
         <Form>
           <Form.Group inline widths={5} className="team-select-group">
-            {Object.entries(teamSlots).map((slot, index) => (
+            {teamSlots.map((team, index) => (
               <div className="checkbox-wrapper" key={index}>
                 <Form.Checkbox
                   disabled={
-                    (slot[1].target <= 0 && !checkboxes.get(slot[0])) ||
-                    didUserClaim()
+                    (team.target <= 0 && !checkboxes.get(team.teamId)) ||
+                    didUserClaim() || didUserSubmitClaimReq()
                   }
-                  checked={checkboxes.get(slot[0])}
+                  checked={checkboxes.get(team.teamId)}
                   onClick={() => {
-                    updateCheckboxes(slot[0]);
+                    updateCheckboxes(team.teamId);
                     setDidSubmit(false);
                   }}
                   error={isCheckboxError}
                 />
-                <FieldTag content={slot[0]} />
-                <h4>{slot[1].target}</h4>
+                <FieldTag content={teams.find(({ _id }) => _id === team.teamId)?.name} />
+                <h4>{team.target}</h4>
               </div>
             ))}
           </Form.Group>

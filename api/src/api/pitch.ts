@@ -10,7 +10,7 @@ import Pitch from '../models/pitch';
 import User from '../models/user';
 import { aggregatePitch } from '../utils/aggregate-utils';
 import { pitchStatusEnum } from '../utils/enums';
-import { isPitchClaimed } from '../utils/helpers';
+import { isPitchClaimed, updatePitchTeamTargets } from '../utils/helpers';
 
 const router = express.Router();
 
@@ -306,6 +306,8 @@ router.put(
       });
       return;
     }
+
+    updatePitchTeamTargets(updatedPitch, req.body.teams);
 
     res.status(200).json({
       success: true,

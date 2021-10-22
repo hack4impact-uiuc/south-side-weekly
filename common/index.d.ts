@@ -71,7 +71,7 @@ export interface IPitchAggregate extends IPitch {
       teams: string[];
     }[];
     reviewedBy: Partial<IUser>;
-    teams: Partial<ITeam>[];
+    teams: Array<ITeam & { target: number }>;
   };
 }
 
