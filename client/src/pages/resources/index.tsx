@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Button, Card, Menu, Radio } from 'semantic-ui-react';
-import { IResource } from 'ssw-common';
+import { IResource, ITeam } from 'ssw-common';
 import Swal from 'sweetalert2';
 
 import { deleteResource, getAllResources, isError } from '../../api';
@@ -16,8 +16,15 @@ interface ModalInfo {
   resource?: IResource;
 }
 
+const generalTeam: ITeam = {
+  _id: 'General',
+  name: 'General',
+  color: '',
+  active: false,
+};
+
 const Resources = (): ReactElement => {
-  const [role, setRole] = useState('General');
+  const [selectedTab, setSelectedTab] = useState('General');
   const [edit, setEdit] = useState(false);
   const [resources, setResources] = useState<IResource[]>([]);
   const [modal, setModal] = useState<ModalInfo>({
@@ -26,12 +33,15 @@ const Resources = (): ReactElement => {
     resource: undefined,
   });
 
-  const { teams: allTeams } = useTeams();
+  const { teams } = useTeams();
+  const tabs = [generalTeam, ...teams];
 
-  const tabs = ['General', ...allTeams.map((team) => team.name)].map(titleCase);
-
-  const filterResources = (team: string): IResource[] =>
-    resources.filter((resouce) => resouce.teamRoles.includes(team));
+  const filterResources = (team: string): IResource[] => {
+    if (team === 'General') {
+      return resources.filter((resource) => resource.isGeneral);
+    }
+    return resources.filter((resource) => resource.teamRoles.includes(team));
+  };
 
   const getResources = async (): Promise<void> => {
     const res = await getAllResources();
@@ -112,18 +122,19 @@ const Resources = (): ReactElement => {
         </div>
 
         <Menu tabular size="large">
-          {tabs.map((tabs, index) => (
+          {tabs.map((tab, index) => (
             <Menu.Item
               key={index}
-              name={tabs}
-              active={tabs === role}
-              onClick={(e, { name }) => setRole(name!)}
+              name={tab.name}
+              value={tab._id}
+              active={tab._id === selectedTab}
+              onClick={(e, { value }) => setSelectedTab(value)}
             />
           ))}
         </Menu>
 
         <div className="resource-group">
-          {filterResources(role).map((resource, index) => (
+          {filterResources(selectedTab).map((resource, index) => (
             <Card
               className="resource"
               onClick={() => handleResourceAction(resource)}
