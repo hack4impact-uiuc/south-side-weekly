@@ -15,7 +15,7 @@ const getAllResources = async (): Promise<Response<ResourcesResponse>> => {
 
 // Creates a resource
 const createResource = async (newResource: {
-  [key: string]: string | string[] | null;
+  [key: string]: string | string[] | boolean | null;
 }): Promise<Response<ResourceResponse>> => {
   const url = buildEndpoint(RESOURCE_ENDPOINT);
   const failureMessage = 'CREATE_RESOURCE_FAIL';
@@ -37,7 +37,7 @@ const deleteResource = async (
 const editResource = async (
   resourceId: string,
   editedResource: {
-    [key: string]: string | string[] | null;
+    [key: string]: string | string[] | null | boolean;
   },
 ): Promise<Response<ResourceResponse>> => {
   const url = buildEndpoint(RESOURCE_ENDPOINT, resourceId!);
