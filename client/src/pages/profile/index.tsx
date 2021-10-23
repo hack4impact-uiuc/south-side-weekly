@@ -392,7 +392,7 @@ const Profile = (): ReactElement => {
                       size="medium"
                       key={index}
                       className="field-label"
-                      content={teams.find(team => team._id === teamId)?.name}
+                      content={teams.find((team) => team._id === teamId)?.name}
                     />
                   ))
               )}

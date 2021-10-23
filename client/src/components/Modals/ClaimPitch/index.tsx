@@ -3,7 +3,7 @@ import React, {
   ReactElement,
   useCallback,
   useEffect,
-  useState
+  useState,
 } from 'react';
 import { Button, Form, Grid, Modal, ModalProps } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
@@ -37,13 +37,16 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
 
   const { user } = useAuth();
 
-  const fetchAggregatedPitch = useCallback(async (id: string): Promise<void> => {
-    const res = await getAggregatedPitch(id);
-    
-    if (!isError(res)) {
-      setAggregatedPitch(res.data.result);
-    }
-  }, [pitch._id]);
+  const fetchAggregatedPitch = useCallback(
+    async (id: string): Promise<void> => {
+      const res = await getAggregatedPitch(id);
+
+      if (!isError(res)) {
+        setAggregatedPitch(res.data.result);
+      }
+    },
+    [pitch._id],
+  );
 
   useEffect(() => {
     if (!isOpen) {
@@ -128,7 +131,8 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     return 'Claim Pitch';
   };
 
-  const { author, reviewedBy, assignmentContributors, teams } = aggregatedPitch.aggregated;
+  const { author, reviewedBy, assignmentContributors, teams } =
+    aggregatedPitch.aggregated;
 
   return (
     <Modal
@@ -176,7 +180,8 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
                 <Form.Checkbox
                   disabled={
                     (team.target <= 0 && !checkboxes.get(team.teamId)) ||
-                    didUserClaim() || didUserSubmitClaimReq()
+                    didUserClaim() ||
+                    didUserSubmitClaimReq()
                   }
                   checked={checkboxes.get(team.teamId)}
                   onClick={() => {
@@ -185,7 +190,9 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
                   }}
                   error={isCheckboxError}
                 />
-                <FieldTag content={teams.find(({ _id }) => _id === team.teamId)?.name} />
+                <FieldTag
+                  content={teams.find(({ _id }) => _id === team.teamId)?.name}
+                />
                 <h4>{team.target}</h4>
               </div>
             ))}

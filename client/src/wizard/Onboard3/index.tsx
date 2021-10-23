@@ -99,7 +99,9 @@ const Onboard3 = (): ReactElement => {
       return;
     }
 
-    selectedTeams.has(team) ? selectedTeams.delete(team) : selectedTeams.add(team);
+    selectedTeams.has(team)
+      ? selectedTeams.delete(team)
+      : selectedTeams.add(team);
     setSelectedTeams(new Set(selectedTeams));
   };
 
