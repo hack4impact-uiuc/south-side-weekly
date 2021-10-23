@@ -23,15 +23,15 @@ const aggregatePitch = async (
     await User.findById(rawPitch.primaryEditor),
   );
   const secondEditors = await Promise.all(
-    rawPitch.secondEditors.map(async (editorId) => {
-      simplifyUser(await User.findById(editorId));
-    }),
+    rawPitch.secondEditors.map(async (editorId) =>
+      simplifyUser(await User.findById(editorId)),
+    ),
   );
 
   const thirdEditors = await Promise.all(
-    rawPitch.thirdEditors.map(async (editorId) => {
-      simplifyUser(await User.findById(editorId));
-    }),
+    rawPitch.thirdEditors.map(async (editorId) =>
+      simplifyUser(await User.findById(editorId)),
+    ),
   );
   const assignmentContributors = await Promise.all(
     rawPitch.assignmentContributors.map(async (contributor) => ({
