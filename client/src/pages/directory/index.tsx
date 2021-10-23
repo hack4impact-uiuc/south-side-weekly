@@ -1,22 +1,15 @@
-import React, {
-  useEffect,
-  useState,
-  ReactElement,
-  SyntheticEvent,
-} from 'react';
-import { startsWith, toArray, toLower, toString } from 'lodash';
-import { DropdownProps, Input } from 'semantic-ui-react';
+import React, { useEffect, useState, ReactElement } from 'react';
+import { startsWith, toLower, toString } from 'lodash';
+import { Input } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { getUsers, isError } from '../../api';
-import { UserModal, FilterDropdown } from '../../components';
-import { parseOptions } from '../../utils/helpers';
+import { MultiSelect, Select, DirectoryTable } from '../../components';
 import { allInterests, allRoles, allTeams } from '../../utils/constants';
 
-import { filterInterests, filterRole, filterTeams, sortUsers } from './helpers';
-import './styles.scss';
+import { filterInterests, filterRole, filterTeams } from './helpers';
 
-const dateOptions = ['Earliest to Latest', 'Latest to Earliest'];
+import './styles.scss';
 
 const searchFields: (keyof IUser)[] = [
   'firstName',
@@ -29,7 +22,6 @@ const Directory = (): ReactElement => {
   const [directory, setDirectory] = useState<IUser[]>([]);
   const [filteredDirectory, setFilteredDirectory] = useState<IUser[]>([]);
   const [role, setRole] = useState<string>('');
-  const [sort, setSort] = useState<'increase' | 'decrease' | 'none'>('none');
   const [interests, setInterests] = useState<string[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
   const [query, setQuery] = useState<string>('');
@@ -76,28 +68,12 @@ const Directory = (): ReactElement => {
       let filtered = filterInterests(users, interests);
       filtered = filterRole(filtered, role);
       filtered = filterTeams(filtered, teams);
-      filtered = sortUsers(filtered, sort);
 
       return filtered;
     };
 
     setFilteredDirectory([...search(filter(directory))]);
-  }, [directory, query, interests, teams, role, sort]);
-
-  const determineSort = (
-    e: SyntheticEvent<HTMLElement>,
-    data: DropdownProps,
-  ): void => {
-    if (typeof data.value === 'string') {
-      if (data.value === dateOptions[0]) {
-        setSort('increase');
-      } else if (data.value === dateOptions[1]) {
-        setSort('decrease');
-      } else {
-        setSort('none');
-      }
-    }
-  };
+  }, [directory, query, interests, teams, role]);
 
   return (
     <div className="directory-page">
@@ -115,44 +91,36 @@ const Directory = (): ReactElement => {
           <h3>Filters: </h3>
         </div>
         <div className="wrapper">
-          <FilterDropdown
-            className="filter"
-            text="Role"
-            options={parseOptions(allRoles)}
-            onChange={(e, { value }) => setRole(toString(value))}
+          <Select
+            value={role}
+            options={allRoles}
+            onChange={(e) => setRole(e ? e.value : '')}
+            placeholder="Role"
           />
         </div>
         <div className="wrapper">
-          <FilterDropdown
-            className="filter"
-            text="Date Joined"
-            options={parseOptions(dateOptions)}
-            onChange={determineSort}
+          <MultiSelect
+            value={interests}
+            onChange={(values) =>
+              setInterests(values ? values.map((item) => item.value) : [])
+            }
+            options={allInterests}
+            placeholder="Interests"
           />
         </div>
         <div className="wrapper">
-          <FilterDropdown
-            className="filter"
-            text="Topics of Interest"
-            options={parseOptions(allInterests)}
-            onChange={(e, { value }) => setInterests(toArray(value))}
-            multiple
-          />
-        </div>
-        <div className="wrapper">
-          <FilterDropdown
-            className="filter"
-            text="Teams"
-            options={parseOptions(allTeams)}
-            onChange={(e, { value }) => setTeams(toArray(value))}
-            multiple
+          <MultiSelect
+            value={teams}
+            onChange={(values) =>
+              setTeams(values ? values.map((item) => item.value) : [])
+            }
+            options={allTeams}
+            placeholder="Teams"
           />
         </div>
       </div>
       <div className="directory">
-        {filteredDirectory.map((user, index) => (
-          <UserModal user={user} key={index} />
-        ))}
+        <DirectoryTable users={filteredDirectory} />
       </div>
     </div>
   );
