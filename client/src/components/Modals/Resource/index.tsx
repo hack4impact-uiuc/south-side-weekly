@@ -1,12 +1,13 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Form, Modal, ModalProps } from 'semantic-ui-react';
-import { IResource } from 'ssw-common';
+import { IPitch, IResource, ITeam } from 'ssw-common';
 import Swal from 'sweetalert2';
 
 import { createResource, editResource, isError } from '../../../api';
 import { allTeams } from '../../../utils/constants';
 import './styles.scss';
 import { titleCase } from '../../../utils/helpers';
+import { useTeams } from '../../../contexts';
 
 interface ResourceProps extends ModalProps {
   resource?: IResource;
@@ -18,18 +19,20 @@ interface FormData {
   name: string;
   link: string;
   tags: Set<string>;
+  isGeneral: boolean;
 }
-
-interface RequestBody {
-  name: string;
-  link: string;
-  teamRoles: string[];
-}
-
 const defaultData: FormData = {
   name: '',
   link: '',
   tags: new Set(),
+  isGeneral: false,
+};
+
+const generalTeam: ITeam = {
+  _id: 'General',
+  name: 'General',
+  color: '',
+  active: false,
 };
 
 const ResourceModal: FC<ResourceProps> = ({
@@ -40,12 +43,16 @@ const ResourceModal: FC<ResourceProps> = ({
 }): ReactElement => {
   const [formData, setFormData] = useState<FormData>(defaultData);
 
+  let { teams } = useTeams();
+  teams = [generalTeam, ...teams];
+
   // Resets the form data on every open
   useEffect(() => {
     const data: FormData = {
       name: '',
       link: '',
       tags: new Set(),
+      isGeneral: false,
     };
     setFormData({ ...data });
   }, [rest.open]);
@@ -56,16 +63,18 @@ const ResourceModal: FC<ResourceProps> = ({
         name: resource.name,
         link: resource.link,
         tags: new Set(resource.teamRoles),
+        isGeneral: resource.isGeneral,
       };
 
       setFormData({ ...body });
     }
   }, [resource, action]);
 
-  const parseFormData = (data: FormData): RequestBody => ({
+  const parseFormData = (data: FormData): Partial<IResource> => ({
     name: data.name,
     link: data.link,
     teamRoles: Array.from(data.tags),
+    isGeneral: data.isGeneral,
   });
 
   const updateResource = async (): Promise<void> => {
@@ -82,13 +91,8 @@ const ResourceModal: FC<ResourceProps> = ({
   };
 
   const submitResource = async (): Promise<void> => {
-    const body = {
-      name: formData.name,
-      link: formData.link,
-      teamRoles: Array.from(formData.tags),
-    };
-
-    const res = await createResource({ ...body });
+    console.log({ ...parseFormData(formData) });
+    const res = await createResource({ ...parseFormData(formData) });
 
     if (isError(res)) {
       Swal.fire({
@@ -111,7 +115,7 @@ const ResourceModal: FC<ResourceProps> = ({
     return tags;
   };
 
-  const teams = (): string[] => ['General', ...allTeams].map(titleCase);
+  //const teams = (): string[] => ['General', ...allTeams].map(titleCase);
 
   const changeField = <T extends keyof FormData>(
     key: T,
@@ -120,6 +124,13 @@ const ResourceModal: FC<ResourceProps> = ({
     const data = { ...formData };
     data[key] = value;
     setFormData(data);
+  };
+
+  const isChecked = (teamId: string): boolean => {
+    if (teamId === 'General') {
+      return formData.isGeneral;
+    }
+    return formData.tags.has(teamId);
   };
 
   return (
@@ -144,14 +155,16 @@ const ResourceModal: FC<ResourceProps> = ({
             />
             <h3>Teams</h3>
             <Form.Group className="checkbox-group">
-              {teams().map((team, index) => (
+              {teams.map((team, index) => (
                 <Form.Checkbox
                   key={index}
-                  label={team}
-                  value={team}
-                  checked={formData.tags.has(team)}
+                  label={team.name}
+                  value={team._id}
+                  checked={isChecked(team._id)}
                   onChange={(e, { value }) =>
-                    changeField('tags', getSelectedTeams(`${value}`))
+                    team._id === 'General'
+                      ? changeField('isGeneral', !formData.isGeneral)
+                      : changeField('tags', getSelectedTeams(`${value}`))
                   }
                 />
               ))}
