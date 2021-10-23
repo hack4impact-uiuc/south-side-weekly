@@ -19,7 +19,7 @@ export const updatePitchTeamTargets = (
 ): void => {
   for (const teamId of teams) {
     const team = pitch.teams.find(
-      ({ teamId: pitchTeamId }) => pitchTeamId == teamId,
+      ({ teamId: pitchTeamId }) => pitchTeamId === teamId,
     );
 
     team.target--;

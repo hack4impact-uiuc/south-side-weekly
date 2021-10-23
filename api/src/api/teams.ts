@@ -2,9 +2,7 @@ import express, { Request, Response } from 'express';
 import { errorWrap } from '../middleware';
 
 import Team from '../models/team';
-import { getEditableFields, getViewableFields } from '../utils/user-utils';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
-import { rolesEnum } from '../utils/enums';
 
 const router = express.Router();
 
