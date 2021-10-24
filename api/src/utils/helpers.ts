@@ -38,6 +38,7 @@ export const santitizeUser = (user: UserSchema): IUser => ({
   dateJoined: user.dateJoined,
   masthead: user.masthead,
   onboardingStatus: user.onboardingStatus,
+  visitedPages: user.visitedPages,
   profilePic: user.profilePic,
   portfolio: user.portfolio,
   linkedIn: user.linkedIn,
