@@ -249,7 +249,7 @@ router.put(
     console.log(process.env.EMAIL_USERNAME)
     console.log(process.env.EMAIL_PASS)
     console.log(author.email)
-    sendMail(message);
+    await sendMail(message);
     res.status(200).json({
       success: true,
       message: 'Successfully updated pitch',
