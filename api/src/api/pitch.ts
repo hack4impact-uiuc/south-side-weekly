@@ -242,13 +242,8 @@ router.put(
       });
       return;
     }
-    console.log('here in the endpoint')
     const author = await User.findById(pitch.author);
     const message = approvedMessage(author, pitch, req.user);
-    console.log(message)
-    console.log(process.env.EMAIL_USERNAME)
-    console.log(process.env.EMAIL_PASS)
-    console.log(author.email)
     await sendMail(message);
     res.status(200).json({
       success: true,
@@ -279,7 +274,7 @@ router.put(
     }
     const author = await User.findById(pitch.author);
     const message = declinedMessage(author, pitch, req.user);
-    sendMail(message);
+    await sendMail(message);
     res.status(200).json({
       success: true,
       message: 'Successfully updated pitch',
@@ -385,7 +380,7 @@ router.put(
       req.user,
       teams,
     );
-    sendMail(message);
+    await sendMail(message);
     res.status(200).json({
       success: true,
       message: 'Successfully approved claim',
@@ -429,7 +424,7 @@ router.put(
     const claimUser = await User.findById(userId);
     const aggregatedPitch = await aggregatePitch(pitch);
     const message = declineClaim(claimUser, aggregatedPitch, req.user);
-    sendMail(message);
+    await sendMail(message);
     res.status(200).json({
       success: true,
       message: 'Successfully declined claim',

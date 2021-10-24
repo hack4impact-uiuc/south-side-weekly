@@ -15,16 +15,11 @@ export const sendMail = async (message: EmailMessage): Promise<void> => {
   // send mail with defined transport object
   await new Promise((resolve, reject) => {
     transporter.sendMail(message, (err, info) => {
-      console.log('yoyoyo dis andy')
       if (err) {
-        console.log(err);
-        reject(err)
+        reject(err);
       } else {
-        console.log(`Email sent: ${info.response}`);
-        resolve(info)
+        resolve(info);
       }
-    })
+    });
   });
-  
-  
 };
