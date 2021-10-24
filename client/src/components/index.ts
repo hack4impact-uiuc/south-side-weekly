@@ -21,6 +21,7 @@ import ApprovePitchModal from './Modals/ApprovePitch';
 import MultiSelect from './Dropdowns/MultiSelect';
 import Select from './Dropdowns/Select';
 import DirectoryTable from './Tables/Directory';
+import Walkthrough from './Walkthrough';
 
 export {
   Header,
@@ -46,4 +47,5 @@ export {
   MultiSelect,
   Select,
   DirectoryTable,
+  Walkthrough,
 };
