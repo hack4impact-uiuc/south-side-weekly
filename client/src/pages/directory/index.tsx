@@ -4,9 +4,15 @@ import { Input } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { getUsers, isError } from '../../api';
-import { MultiSelect, Select, DirectoryTable } from '../../components';
 import { allInterests, allRoles } from '../../utils/constants';
 import { useTeams } from '../../contexts';
+import {
+  MultiSelect,
+  Select,
+  DirectoryTable,
+  Walkthrough,
+} from '../../components';
+import { pagesEnum } from '../../utils/enums';
 
 import { filterInterests, filterRole, filterTeams } from './helpers';
 
@@ -80,6 +86,10 @@ const Directory = (): ReactElement => {
 
   return (
     <div className="directory-page">
+      <Walkthrough
+        page={pagesEnum.DIRECTORY}
+        content="Check out the members on the SSW team and click their profiles to view more details!"
+      />
       <h2>Directory</h2>
       <Input
         value={query}

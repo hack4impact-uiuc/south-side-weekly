@@ -4,6 +4,7 @@ import { IUser } from 'ssw-common';
 import {
   interestsEnum,
   onboardingStatusEnum,
+  pagesEnum,
   rolesEnum,
   racesEnum,
 } from '../utils/enums';
@@ -29,7 +30,7 @@ const User = new mongoose.Schema({
     enum: Object.values(onboardingStatusEnum),
     default: onboardingStatusEnum.ONBOARDING_SCHEDULED,
   },
-
+  visitedPages: [{ type: String, enum: Object.values(pagesEnum) }],
   profilePic: { type: String, default: null },
   portfolio: { type: String, default: null },
   linkedIn: { type: String, default: null },

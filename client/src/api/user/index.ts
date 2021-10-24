@@ -1,7 +1,7 @@
 import { IUser } from 'ssw-common';
 
 import { Response } from '../types';
-import { buildEndpoint, get, put } from '../builders';
+import { buildEndpoint, get, post, put } from '../builders';
 import { PitchesResponse } from '../pitch/types';
 import { onboardingStatusEnum } from '../../utils/enums';
 
@@ -86,6 +86,16 @@ export const getUserPermissionsByID = async (
   return await get(url, failureMessage);
 };
 
+// Adds new page to user's list of visited pages
+const addVisitedPage = async (
+  page: string,
+): Promise<Response<UserResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, 'visitPage');
+  const failureMessage = 'UPDATE_VISITED_PAGES_FAIL';
+
+  return await post(url, { page }, failureMessage);
+};
+
 export {
   getUsers,
   getPendingContributors,
@@ -94,4 +104,5 @@ export {
   updateUserClaimedPitches,
   updateUser,
   updateOnboardingStatus,
+  addVisitedPage,
 };

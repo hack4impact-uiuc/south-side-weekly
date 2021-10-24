@@ -4,9 +4,9 @@ import { IResource, ITeam } from 'ssw-common';
 import Swal from 'sweetalert2';
 
 import { deleteResource, getAllResources, isError } from '../../api';
-import { ResourceModal, AdminView } from '../../components';
 import { useTeams } from '../../contexts';
-import { titleCase } from '../../utils/helpers';
+import { ResourceModal, AdminView, Walkthrough } from '../../components';
+import { pagesEnum } from '../../utils/enums';
 
 import './styles.scss';
 
@@ -104,6 +104,10 @@ const Resources = (): ReactElement => {
         onClose={closeModal}
       />
       <div className="resources-page">
+        <Walkthrough
+          page={pagesEnum.RESOURCES}
+          content="Check out the members on the SSW team and click their profiles to view more details!"
+        />
         <div className="controls">
           <h1>Resource Page</h1>
           <div>

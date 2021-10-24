@@ -15,6 +15,7 @@ const simplifyUser = (user: IUser | null): Partial<IUser> => {
     firstName: user.firstName,
     preferredName: user.preferredName,
     lastName: user.lastName,
+    email: user.email,
     profilePic: user.profilePic,
     _id: user._id,
   };
