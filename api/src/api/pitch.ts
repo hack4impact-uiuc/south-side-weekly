@@ -246,7 +246,9 @@ router.put(
     const author = await User.findById(pitch.author);
     const message = approvedMessage(author, pitch, req.user);
     console.log(message.html)
-    sendMail(message);
+    console.log(process.env.EMAIL_USERNAME)
+    console.log(process.env.EMAIL_PASS)
+    await sendMail(message);
     res.status(200).json({
       success: true,
       message: 'Successfully updated pitch',
