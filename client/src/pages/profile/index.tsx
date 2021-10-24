@@ -392,7 +392,8 @@ const Profile = (): ReactElement => {
                       size="medium"
                       key={index}
                       className="field-label"
-                      content={teams.find((team) => team._id === teamId)?.name}
+                      name={teams.find((team) => team._id === teamId)?.name}
+                      hexcode={teams.find((team) => team._id === teamId)?.color}
                     />
                   ))
               )}
