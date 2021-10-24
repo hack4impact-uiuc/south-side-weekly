@@ -5,7 +5,8 @@ import { IUser } from 'ssw-common';
 
 import { getUsers, isError } from '../../api';
 import { MultiSelect, Select, DirectoryTable } from '../../components';
-import { allInterests, allRoles, allTeams } from '../../utils/constants';
+import { allInterests, allRoles } from '../../utils/constants';
+import { useTeams } from '../../contexts';
 
 import { filterInterests, filterRole, filterTeams } from './helpers';
 
@@ -25,6 +26,8 @@ const Directory = (): ReactElement => {
   const [interests, setInterests] = useState<string[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
   const [query, setQuery] = useState<string>('');
+
+  const { teams: allTeams } = useTeams();
 
   useEffect(() => {
     const getAllUsers = async (): Promise<void> => {
@@ -118,8 +121,8 @@ const Directory = (): ReactElement => {
               setTeams(values ? values.map((item) => item.value) : [])
             }
             options={allTeams.map((team) => ({
-              label: team,
-              value: team,
+              label: team.name,
+              value: team._id,
             }))}
             placeholder="Teams"
           />
