@@ -68,6 +68,7 @@ const emptyUser: IUser = {
   dateJoined: new Date(Date.now()),
   masthead: false,
   onboardingStatus: '',
+  visitedPages: [],
   profilePic: '',
   portfolio: '',
   linkedIn: '',
