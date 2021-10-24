@@ -19,9 +19,11 @@ import {
   ApprovePitchModal,
   MultiSelect,
   Select,
+  Walkthrough,
 } from '../../components';
 import { useAuth } from '../../contexts';
 import { allInterests, allTeams } from '../../utils/constants';
+import { pagesEnum } from '../../utils/enums';
 
 import { filterInterests, filterClaimStatus, filterTeams } from './helpers';
 
@@ -160,6 +162,10 @@ const PitchDoc = (): ReactElement => {
 
   return (
     <div className="pitch-doc-wrapper">
+      <Walkthrough
+        page={pagesEnum.PITCHDOC}
+        content="The Pitch Doc is where you can claim, submit, and view pitches! Use the filters to find pitches you are interested in."
+      />
       <h1>Pitch Doc</h1>
       <Menu className="tab-menu" tabular size="large">
         <Menu.Item

@@ -41,6 +41,12 @@ const onboardingStatusEnum = {
   ONBOARDED: 'ONBOARDED',
 };
 
+const pagesEnum = {
+  PITCHDOC: 'PITCHDOC',
+  DIRECTORY: 'DIRECTORY',
+  RESOURCES: 'RESOURCES',
+};
+
 const pitchStatusEnum = {
   APPROVED: 'APPROVED',
   PENDING: 'PENDING',
@@ -65,6 +71,7 @@ export {
   rolesEnum,
   racesEnum,
   onboardingStatusEnum,
+  pagesEnum,
   pitchStatusEnum,
   assignmentStatusEnum,
   visibilityEnum,
