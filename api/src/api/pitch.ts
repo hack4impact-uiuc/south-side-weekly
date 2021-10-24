@@ -319,8 +319,6 @@ router.put(
       return;
     }
 
-    updatePitchTeamTargets(updatedPitch, req.body.teams);
-
     res.status(200).json({
       success: true,
       message: 'Successfully updated pendingContributors',
