@@ -1,9 +1,4 @@
-import React, {
-  FC,
-  ReactElement,
-  useState,
-  useEffect,
-} from 'react';
+import React, { FC, ReactElement, useState, useEffect } from 'react';
 import {
   Button,
   Form,
@@ -13,11 +8,11 @@ import {
   GridColumn,
   Image,
 } from 'semantic-ui-react';
-import { IPitchAggregate, IPitch } from 'ssw-common';
+import { IPitchAggregate, IUser } from 'ssw-common';
 
 import { FieldTag } from '../..';
 import { aggregatePitch, isError } from '../../../api';
-
+import { getUserFullName } from '../../../utils/helpers';
 
 import './styles.scss';
 
@@ -25,32 +20,55 @@ interface ViewPitchProps extends ModalProps {
   pitchId: string;
 }
 
+interface GroupedContributors {
+  team: string;
+  users: Partial<IUser>[];
+}
+
+
 const ViewPitchModal: FC<ViewPitchProps> = ({
   pitchId,
   ...rest
 }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
-  const [aggregate, setAggregate] = useState<IPitchAggregate>();
-
- 
-  // should this be a callback (and added to the dependency array)
-  
-
+  const [aggregate, setAggregate] = useState<IPitchAggregate>(); // update to empty Aggregate
+  const [teamsToContributors, setTeamsToContributors] = useState<GroupedContributors[]>();
   useEffect(() => {
     const getAggregate = async (): Promise<void> => {
       const res = await aggregatePitch(pitchId);
       if (!isError(res)) {
-        setAggregate(res.data.result);
-        console.log(res.data.result);
+        const aggregatedPitch = res.data.result;
+        console.log(aggregatedPitch);
+        const groupedContributors = groupContributorsByTeam(aggregatedPitch.aggregated.assignmentContributors);
+        setTeamsToContributors(groupedContributors);
+        setAggregate(aggregatedPitch);
       }
     };
     getAggregate();
   }, [pitchId]);
 
+  function groupContributorsByTeam(assignmentContributors : IPitchAggregate['aggregated']['assignmentContributors']): GroupedContributors[] {
+    const teamsToContributors = new Map<string, Partial<IUser>[]>();
+    assignmentContributors.forEach((contributor) => {
+          contributor.teams.forEach((teamName) => {
+            if (teamsToContributors.has(teamName)) {
+              const users = teamsToContributors.get(teamName);
+              users?.push(contributor.user);
+            } else {
+              teamsToContributors.set(teamName, [contributor.user]);
+            }
+          });
+        });
+    const groupedContributors = Array.from(teamsToContributors, ([team, users]) => ({ team, users }))
+    return groupedContributors.sort((a, b) => a.team.localeCompare(b.team));
+  }
+
 
   return (
     <Modal
-      trigger={<Button className="default-btn" content="Submit a Pitch" />}
+      trigger={
+        <Button className="default-btn" content="View an Example Pitch" />
+      }
       open={isOpen}
       onClose={() => setIsOpen(false)}
       onOpen={() => setIsOpen(true)}
@@ -67,7 +85,7 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
           </div>
         </div>
         <p className="description">
-          pitch description pitch description pitch description
+          {aggregate?.description}
         </p>
         <Grid columns="2">
           <GridColumn>
@@ -79,10 +97,13 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
                   avatar
                 />
               </div>
+              <div>
+                <p> {getUserFullName(aggregate?.aggregated.author)} </p>
+              </div>
             </div>
 
             <div className="avatar-name">
-              <h4>Pitch Creator: </h4>
+              <h4>Writer: </h4>
               <div className="avatar-pic">
                 <Image
                   src="https://react.semantic-ui.com/images/wireframe/square-image.png"
@@ -100,9 +121,9 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
         <span></span>
         <h4> Contributors Currently On Pitch </h4>
         <Grid>
-          <GridColumn>
-            <p>First, Last Name </p>
-          </GridColumn>
+          {/* {teamsToContributors?.map(team => (
+            
+          ))} */}
         </Grid>
         <Form>
           <Form.Group

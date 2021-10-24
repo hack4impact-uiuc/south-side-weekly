@@ -23,8 +23,8 @@ import {
   ClaimPitchModal,
   FilterDropdown,
   ApprovePitchModal,
+  ViewPitchModal,
 } from '../../components';
-import ViewPitchModal from '../../components/Modals/ViewPitch';
 import { useAuth } from '../../contexts';
 import { allInterests, allTeams } from '../../utils/constants';
 import { parseOptions } from '../../utils/helpers';

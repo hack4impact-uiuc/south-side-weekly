@@ -18,6 +18,7 @@ import Navbar from './Navbar';
 import SubmitButton from './Wizard/SubmitButton';
 import PrevButton from './Wizard/PrevButton';
 import ApprovePitchModal from './Modals/ApprovePitch';
+import ViewPitchModal from './Modals/ViewPitch';
 
 export {
   Header,
@@ -40,4 +41,5 @@ export {
   SubmitButton,
   PrevButton,
   ApprovePitchModal,
+  ViewPitchModal
 };
