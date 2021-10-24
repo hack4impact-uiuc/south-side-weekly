@@ -242,8 +242,10 @@ router.put(
       });
       return;
     }
+    console.log('here in the endpoint')
     const author = await User.findById(pitch.author);
     const message = approvedMessage(author, pitch, req.user);
+    console.log(message.html)
     sendMail(message);
     res.status(200).json({
       success: true,
