@@ -1,13 +1,8 @@
-import React, {
-  FC,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Button, Form, Grid, Modal, ModalProps } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
 import Swal from 'sweetalert2';
+
 import { isError, submitPitchClaim } from '../../../api';
 import { getAggregatedPitch } from '../../../api/pitch';
 import { useAuth } from '../../../contexts';

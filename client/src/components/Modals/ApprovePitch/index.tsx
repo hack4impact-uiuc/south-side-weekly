@@ -1,5 +1,3 @@
-import { template } from '@babel/core';
-import _, { isEmpty, toString } from 'lodash';
 import React, {
   FC,
   ReactElement,
@@ -14,7 +12,6 @@ import Swal from 'sweetalert2';
 import {
   approvePitch,
   declinePitch,
-  getUser,
   isError,
   getAggregatedPitch,
 } from '../../../api';

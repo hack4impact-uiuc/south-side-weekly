@@ -1,13 +1,9 @@
-import { ITeam } from 'ssw-common';
-
 import { Response } from '../types';
-import { get, post, put, buildEndpoint } from '../builders';
+import { get, buildEndpoint } from '../builders';
 
-import { TeamsResponse, TeamResponse } from './types';
+import { TeamsResponse } from './types';
 
 const TEAMS_ENDPOINT = '/teams';
-
-type Teams = Response<TeamsResponse>;
 
 // Returns all of the teams
 const getTeams = async (): Promise<Response<TeamsResponse>> => {

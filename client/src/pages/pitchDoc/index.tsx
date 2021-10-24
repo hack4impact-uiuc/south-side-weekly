@@ -22,7 +22,7 @@ import {
   Walkthrough,
 } from '../../components';
 import { useAuth, useTeams } from '../../contexts';
-import { allInterests, allTeams } from '../../utils/constants';
+import { allInterests } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
 
 import { filterInterests, filterClaimStatus, filterTeams } from './helpers';

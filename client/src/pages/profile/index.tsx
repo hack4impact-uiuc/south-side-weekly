@@ -380,7 +380,7 @@ const Profile = (): ReactElement => {
                       value={team.name}
                       label={titleCase(team.name)}
                       checked={user.currentTeams.includes(team._id)}
-                      onChange={(_, __) => addTeam(team._id)}
+                      onChange={() => addTeam(team._id)}
                     />
                   ))}
                 </div>

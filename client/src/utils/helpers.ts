@@ -1,12 +1,5 @@
 import { AsYouType } from 'libphonenumber-js';
-import {
-  camelCase,
-  isArray,
-  isUndefined,
-  reject,
-  startCase,
-  toUpper,
-} from 'lodash';
+import { camelCase, isUndefined, reject, startCase } from 'lodash';
 import { DropdownItemProps } from 'semantic-ui-react';
 import { IUser, IPitch } from 'ssw-common';
 

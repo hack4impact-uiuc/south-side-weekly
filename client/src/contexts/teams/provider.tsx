@@ -1,13 +1,6 @@
-import React, {
-  ReactElement,
-  FC,
-  useState,
-  useEffect,
-  useCallback,
-} from 'react';
+import React, { ReactElement, FC, useState, useEffect } from 'react';
 
 import { getTeams, isError } from '../../api';
-import { rolesEnum } from '../../utils/enums';
 
 import { TeamsContext, initialValues, useTeams } from './context';
 import { ITeamsContext } from './types';

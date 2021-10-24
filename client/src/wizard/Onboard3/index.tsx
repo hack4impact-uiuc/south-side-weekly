@@ -4,7 +4,7 @@ import { isEmpty, reject } from 'lodash';
 import Swal from 'sweetalert2';
 
 import { useAuth, useTeams, useWizard } from '../../contexts';
-import { allInterests, allTeams } from '../../utils/constants';
+import { allInterests } from '../../utils/constants';
 import { formatNumber, titleCase } from '../../utils/helpers';
 import { isError, updateUser } from '../../api';
 
