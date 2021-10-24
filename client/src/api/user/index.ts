@@ -92,7 +92,7 @@ export const getUserPermissionsByID = async (
 const addVisitedPage = async (
   page: string,
 ): Promise<Response<UserResponse>> => {
-  const url = buildEndpoint(USER_ENDPOINT, 'visitedPages');
+  const url = buildEndpoint(USER_ENDPOINT, 'visitPage');
   const failureMessage = 'UPDATE_VISITED_PAGES_FAIL';
 
   return await post(url, { page }, failureMessage);

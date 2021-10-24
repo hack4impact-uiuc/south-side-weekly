@@ -218,7 +218,7 @@ router.get(
 
 // Adds new page to user's list of visited pages
 router.post(
-  '/visitedPages',
+  '/visitPage',
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     const user = await User.findByIdAndUpdate(req.user._id, {

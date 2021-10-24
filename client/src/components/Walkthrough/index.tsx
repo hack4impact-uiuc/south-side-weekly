@@ -4,8 +4,6 @@ import { Message } from 'semantic-ui-react';
 import { addVisitedPage } from '../../api/user';
 import { useAuth } from '../../contexts';
 
-import './styles.scss';
-
 interface Props {
   page: string;
   content: string;
