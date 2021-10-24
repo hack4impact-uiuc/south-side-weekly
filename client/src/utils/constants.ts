@@ -95,7 +95,7 @@ const emptyPitch: IPitch = {
   pendingContributors: [],
   topics: [],
   teams: [],
-  approvedBy: '',
+  reviewedBy: '',
   similarStories: [],
   deadline: new Date(),
 };
@@ -119,7 +119,7 @@ const emptyAggregatePitch: IPitchAggregate = {
   pendingContributors: [],
   topics: [],
   teams: [],
-  approvedBy: '',
+  reviewedBy: '',
   similarStories: [],
   deadline: new Date(),
   conflictOfInterest: false,

@@ -18,6 +18,9 @@ import Navbar from './Navbar';
 import SubmitButton from './Wizard/SubmitButton';
 import PrevButton from './Wizard/PrevButton';
 import ApprovePitchModal from './Modals/ApprovePitch';
+import MultiSelect from './Dropdowns/MultiSelect';
+import Select from './Dropdowns/Select';
+import DirectoryTable from './Tables/Directory';
 
 export {
   Header,
@@ -40,4 +43,7 @@ export {
   SubmitButton,
   PrevButton,
   ApprovePitchModal,
+  MultiSelect,
+  Select,
+  DirectoryTable,
 };

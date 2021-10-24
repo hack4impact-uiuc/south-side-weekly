@@ -51,7 +51,7 @@ const Pitch = new mongoose.Schema({
       target: Number,
     },
   ],
-  approvedBy: { type: Schema.Types.ObjectId, ref: 'User' },
+  reviewedBy: { type: Schema.Types.ObjectId, ref: 'User' },
   similarStories: [{ type: String, default: null }],
   deadline: { type: Date, default: null },
 });

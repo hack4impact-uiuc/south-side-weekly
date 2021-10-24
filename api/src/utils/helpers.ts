@@ -38,7 +38,7 @@ export const santitizePitch = (pitch: PitchSchema): IPitch => ({
   pendingContributors: pitch.pendingContributors,
   topics: pitch.topics,
   teams: pitch.teams,
-  approvedBy: pitch.approvedBy,
+  reviewedBy: pitch.reviewedBy,
   similarStories: pitch.similarStories,
   deadline: pitch.deadline,
   conflictOfInterest: pitch.conflictOfInterest,

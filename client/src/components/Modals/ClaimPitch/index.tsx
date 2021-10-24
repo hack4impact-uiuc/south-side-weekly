@@ -37,21 +37,17 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
 
   const { user } = useAuth();
 
-  const fetchAggregatedPitch = useCallback(
-    async (id: string): Promise<void> => {
+  useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+    const fetchAggregatedPitch = async (id: string): Promise<void> => {
       const res = await getAggregatedPitch(id);
 
       if (!isError(res)) {
         setAggregatedPitch(res.data.result);
       }
-    },
-    [pitch._id],
-  );
-
-  useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
+    };
 
     fetchAggregatedPitch(pitch._id);
 
@@ -64,7 +60,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     });
 
     setCheckboxes(map);
-  }, [isOpen, pitch.teams, getAggregatedPitch]);
+  }, [isOpen, pitch.teams, pitch._id]);
 
   const updateCheckboxes = (checkbox: string): void => {
     const isChecked = checkboxes.get(checkbox);
@@ -134,6 +130,10 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
   const { author, reviewedBy, assignmentContributors, teams } =
     aggregatedPitch.aggregated;
 
+  const isUserOnTeam = (team: string): boolean =>
+    user.currentTeams.includes(team);
+  const disableCheckbox = (team: string): boolean => !isUserOnTeam(team);
+
   return (
     <Modal
       open={isOpen}
@@ -178,11 +178,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
             {teamSlots.map((team, index) => (
               <div className="checkbox-wrapper" key={index}>
                 <Form.Checkbox
-                  disabled={
-                    (team.target <= 0 && !checkboxes.get(team.teamId)) ||
-                    didUserClaim() ||
-                    didUserSubmitClaimReq()
-                  }
+                  disabled={team.target <= 0 || disableCheckbox(team.teamId)}
                   checked={checkboxes.get(team.teamId)}
                   onClick={() => {
                     updateCheckboxes(team.teamId);
@@ -191,7 +187,8 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
                   error={isCheckboxError}
                 />
                 <FieldTag
-                  content={teams.find(({ _id }) => _id === team.teamId)?.name}
+                  name={teams.find(({ _id }) => _id === team.teamId)?.name}
+                  hexcode={teams.find(({ _id }) => _id === team.teamId)?.color}
                 />
                 <h4>{team.target}</h4>
               </div>
