@@ -104,7 +104,10 @@ const Directory = (): ReactElement => {
             onChange={(values) =>
               setInterests(values ? values.map((item) => item.value) : [])
             }
-            options={allInterests}
+            options={allInterests.map((interest) => ({
+              label: interest,
+              value: interest,
+            }))}
             placeholder="Interests"
           />
         </div>
@@ -114,7 +117,10 @@ const Directory = (): ReactElement => {
             onChange={(values) =>
               setTeams(values ? values.map((item) => item.value) : [])
             }
-            options={allTeams}
+            options={allTeams.map((team) => ({
+              label: team,
+              value: team,
+            }))}
             placeholder="Teams"
           />
         </div>

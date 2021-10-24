@@ -176,7 +176,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
           <Form.Group inline widths={5} className="team-select-group">
             {teams.map((team, index) => (
               <div key={index} className="input-group">
-                <FieldTag content={team.name} />
+                <FieldTag name={team.name} hexcode={team.color} />
                 <Form.Input
                   onChange={(e, { value }) =>
                     changeTeam(team._id, parseInt(value))

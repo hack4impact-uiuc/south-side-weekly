@@ -1,12 +1,10 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Form, Modal, ModalProps } from 'semantic-ui-react';
-import { IPitch, IResource, ITeam } from 'ssw-common';
+import { IResource, ITeam } from 'ssw-common';
 import Swal from 'sweetalert2';
 
 import { createResource, editResource, isError } from '../../../api';
-import { allTeams } from '../../../utils/constants';
 import './styles.scss';
-import { titleCase } from '../../../utils/helpers';
 import { useTeams } from '../../../contexts';
 
 interface ResourceProps extends ModalProps {
