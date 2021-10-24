@@ -12,12 +12,14 @@ export const sendMail = async (message: EmailMessage): Promise<void> => {
       rejectUnauthorized: false,
     },
   });
-  console.log('yoyoyo dis andy')
   // send mail with defined transport object
   transporter.sendMail(message, (err, info) => {
+    console.log('yoyoyo dis andy')
     if (err) {
+      console.log('error')
       console.log(err);
     } else {
+      console.log('sent?')
       console.log(`Email sent: ${info.response}`);
     }
   });
