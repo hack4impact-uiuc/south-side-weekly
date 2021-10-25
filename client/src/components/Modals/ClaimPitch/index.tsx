@@ -1,12 +1,12 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Button, Form, Grid, Modal, ModalProps } from 'semantic-ui-react';
+import { Button, Form, Modal, ModalProps } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
 import Swal from 'sweetalert2';
 
 import { isError, submitPitchClaim } from '../../../api';
 import { getAggregatedPitch } from '../../../api/pitch';
 import { useAuth } from '../../../contexts';
-import { emptyAggregatePitch, emptyPitch } from '../../../utils/constants';
+import { emptyAggregatePitch } from '../../../utils/constants';
 import { convertMap, getUserFullName } from '../../../utils/helpers';
 import FieldTag from '../../FieldTag';
 import PitchCard from '../../PitchCard';
@@ -24,7 +24,6 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
   ...rest
 }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
-  const [teamSlots, setTeamSlots] = useState<IPitch['teams']>(emptyPitch.teams);
   const [checkboxes, setCheckboxes] = useState(new Map<string, boolean>());
   const [didSubmit, setDidSubmit] = useState(false);
   const [isCheckboxError, setIsCheckboxError] = useState(false);
@@ -45,8 +44,6 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     };
 
     fetchAggregatedPitch(pitch._id);
-
-    setTeamSlots(pitch.teams);
 
     const map = new Map<string, boolean>();
 
@@ -100,17 +97,10 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     convertMap(checkboxes).some((checkbox) => checkbox.value);
 
   const didUserClaim = (): boolean =>
-    pitch.assignmentContributors
-      .map(
-        (assignmentContributer) =>
-          assignmentContributer?.userId || assignmentContributer,
-      )
-      .includes(user._id);
+    pitch.assignmentContributors.some(({ userId }) => user._id === userId);
 
   const didUserSubmitClaimReq = (): boolean =>
-    pitch.pendingContributors
-      .map((pendingContributer) => pendingContributer?.userId)
-      .includes(user._id);
+    pitch.pendingContributors.some(({ userId }) => user._id === userId);
 
   const getHeader = (): string => {
     if (didUserClaim()) {
@@ -141,13 +131,11 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
       <Modal.Header content={getHeader()} />
       <Modal.Content>
         <h1>{pitch.title}</h1>
-        <Grid className="topics-section" columns={6}>
+        <div className="topics-section">
           {pitch.topics.map((topic, index) => (
-            <Grid.Column key={index}>
-              <FieldTag content={topic} />
-            </Grid.Column>
+            <FieldTag key={index} content={topic} />
           ))}
-        </Grid>
+        </div>
         <div className="author-section">
           <div className="author">
             <h3>{`Submitted by: ${getUserFullName(author)}`}</h3>
@@ -170,21 +158,21 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
         </p>
         <Form>
           <Form.Group inline widths={5} className="team-select-group">
-            {teamSlots.map((team, index) => (
+            {teams.map((team, index) => (
               <div className="checkbox-wrapper" key={index}>
                 <Form.Checkbox
-                  disabled={team.target <= 0 || disableCheckbox(team.teamId)}
-                  checked={checkboxes.get(team.teamId)}
+                  disabled={
+                    team.target <= 0 ||
+                    disableCheckbox(pitch.teams[index].teamId)
+                  }
+                  checked={checkboxes.get(pitch.teams[index].teamId)}
                   onClick={() => {
-                    updateCheckboxes(team.teamId);
+                    updateCheckboxes(pitch.teams[index].teamId);
                     setDidSubmit(false);
                   }}
                   error={isCheckboxError}
                 />
-                <FieldTag
-                  name={teams.find(({ _id }) => _id === team.teamId)?.name}
-                  hexcode={teams.find(({ _id }) => _id === team.teamId)?.color}
-                />
+                <FieldTag name={team.name} hexcode={team.color} />
                 <h4>{team.target}</h4>
               </div>
             ))}
