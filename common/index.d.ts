@@ -105,4 +105,5 @@ export interface IResource {
   link: string;
   teamRoles: string[];
   _id: string;
+  visibility: string;
 }
