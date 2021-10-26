@@ -41,8 +41,8 @@ const ResourceModal: FC<ResourceProps> = ({
 }): ReactElement => {
   const [formData, setFormData] = useState<FormData>(defaultData);
 
-  let { teams } = useTeams();
-  teams = [generalTeam, ...teams];
+  let { teams: allTeams } = useTeams();
+  allTeams = [generalTeam, ...allTeams];
 
   // Resets the form data on every open
   useEffect(() => {
@@ -60,7 +60,7 @@ const ResourceModal: FC<ResourceProps> = ({
       const body = {
         name: resource.name,
         link: resource.link,
-        tags: new Set(resource.teamRoles),
+        tags: new Set(resource.teams),
         isGeneral: resource.isGeneral,
       };
 
@@ -71,7 +71,7 @@ const ResourceModal: FC<ResourceProps> = ({
   const parseFormData = (data: FormData): Partial<IResource> => ({
     name: data.name,
     link: data.link,
-    teamRoles: Array.from(data.tags),
+    teams: Array.from(data.tags),
     isGeneral: data.isGeneral,
   });
 
@@ -153,7 +153,7 @@ const ResourceModal: FC<ResourceProps> = ({
             />
             <h3>Teams</h3>
             <Form.Group className="checkbox-group">
-              {teams.map((team, index) => (
+              {allTeams.map((team, index) => (
                 <Form.Checkbox
                   key={index}
                   label={team.name}

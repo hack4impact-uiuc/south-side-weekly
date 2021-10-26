@@ -82,7 +82,7 @@ export interface IPitchAggregate extends IPitch {
 export interface IResource {
   name: string;
   link: string;
-  teamRoles: string[];
+  teams: string[];
   _id: string;
   isGeneral: boolean;
 }

@@ -40,7 +40,7 @@ const Resources = (): ReactElement => {
     if (team === 'General') {
       return resources.filter((resource) => resource.isGeneral);
     }
-    return resources.filter((resource) => resource.teamRoles.includes(team));
+    return resources.filter((resource) => resource.teams.includes(team));
   };
 
   const getResources = async (): Promise<void> => {
