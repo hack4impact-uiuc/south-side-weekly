@@ -22,15 +22,15 @@ const MultiSelect: FC<MultiSelectProps> = ({
   onChange,
   placeholder = '',
 }): ReactElement => (
-    <Select<MultiSelectOption, true>
-      isMulti
-      placeholder={placeholder}
-      value={options.filter((item) => value.includes(item.value))}
-      options={options}
-      onChange={onChange}
-      closeMenuOnSelect={false}
-      hideSelectedOptions={false}
-    />
-  );
+  <Select<MultiSelectOption, true>
+    isMulti
+    placeholder={placeholder}
+    value={options.filter((item) => value.includes(item.value))}
+    options={options}
+    onChange={onChange}
+    closeMenuOnSelect={false}
+    hideSelectedOptions={false}
+  />
+);
 
 export default MultiSelect;

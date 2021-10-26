@@ -33,6 +33,7 @@ interface IUserAggregate extends IUser {
   aggregated: {
       claimedPitches: Partial<IPitch>[],
       submittedPitches: Partial<IPitch>[],
+      interests: IInterest[],
   }
 }
 
@@ -93,7 +94,8 @@ interface IPitchAggregate extends IPitch {
           user: Partial<IUser>,
           teams: string[]
       }[],
-      reviewedBy: Partial<IUser>
+      reviewedBy: Partial<IUser>,
+      interests: IInterest[],
   }
 }
 

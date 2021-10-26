@@ -49,5 +49,5 @@ export {
   Select,
   DirectoryTable,
   Walkthrough,
-  InterestsSelect
+  InterestsSelect,
 };

@@ -14,7 +14,6 @@ import Swal from 'sweetalert2';
 import { createPitch, isError } from '../../../api';
 import { useAuth } from '../../../contexts';
 import { useInterests } from '../../../contexts/interests/context';
-import { allInterests } from '../../../utils/constants';
 import { titleCase } from '../../../utils/helpers';
 
 import './styles.scss';

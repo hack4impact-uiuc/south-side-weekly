@@ -1,11 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { IPitch } from 'ssw-common';
 
-import {
-  interestsEnum,
-  pitchStatusEnum,
-  assignmentStatusEnum,
-} from '../utils/enums';
+import { pitchStatusEnum, assignmentStatusEnum } from '../utils/enums';
 
 export type PitchSchema = IPitch & Document<any>;
 

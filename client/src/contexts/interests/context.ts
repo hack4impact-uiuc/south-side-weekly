@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { emptyUser } from '../../utils/constants';
+
 import { defaultFunc } from '../../utils/helpers';
 
 import { IInterestsContext } from './types';

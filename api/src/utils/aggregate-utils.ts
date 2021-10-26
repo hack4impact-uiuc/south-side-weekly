@@ -2,16 +2,17 @@ import { IPitch, IUser, IUserAggregate, IPitchAggregate } from 'ssw-common';
 
 import Pitch, { PitchSchema } from '../models/pitch';
 import User, { UserSchema } from '../models/user';
+import Interest from '../models/interest';
 
 import { santitizePitch, santitizeUser } from './helpers';
 
 const simplifyUser = (user: IUser): Partial<IUser> => ({
-  firstName: user.firstName,
-  preferredName: user.preferredName,
-  lastName: user.lastName,
-  email: user.email,
-  profilePic: user.profilePic,
-  _id: user._id,
+  firstName: user ? user.firstName : '',
+  preferredName: user ? user.preferredName : '',
+  lastName: user ? user.lastName : '',
+  email: user ? user.email : '',
+  profilePic: user ? user.profilePic : '',
+  _id: user ? user._id : '',
 });
 
 const aggregatePitch = async (
@@ -34,6 +35,19 @@ const aggregatePitch = async (
     })),
   );
 
+  const interests = await Promise.all(
+    rawPitch.topics.map(async (topic) => {
+      const interest = await Interest.findById(topic);
+
+      return {
+        _id: interest._id,
+        name: interest.name,
+        color: interest.color,
+        active: interest.active,
+      };
+    }),
+  );
+
   const aggregatedPitch = {
     ...santitizePitch(rawPitch),
     aggregated: {
@@ -41,6 +55,7 @@ const aggregatePitch = async (
       reviewedBy: reviewer,
       assignmentContributors: assignmentContributors,
       pendingContributors: pendingContributors,
+      interests: interests,
     },
   };
 
@@ -66,11 +81,25 @@ const aggregateUser = async (rawUser: UserSchema): Promise<IUserAggregate> => {
     ),
   );
 
+  const interests = await Promise.all(
+    rawUser.interests.map(async (topic) => {
+      const interest = await Interest.findById(topic);
+
+      return {
+        _id: interest._id,
+        name: interest.name,
+        color: interest.color,
+        active: interest.active,
+      };
+    }),
+  );
+
   const aggregatedPitch = {
     ...santitizeUser(rawUser),
     aggregated: {
       claimedPitches: claimedPitches,
       submittedPitches: submittedPitches,
+      interests: interests,
     },
   };
 

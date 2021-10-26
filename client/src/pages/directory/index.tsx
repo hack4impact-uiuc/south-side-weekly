@@ -11,7 +11,7 @@ import {
   Walkthrough,
   InterestsSelect,
 } from '../../components';
-import { allInterests, allRoles, allTeams } from '../../utils/constants';
+import { allRoles, allTeams } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
 
 import { filterInterests, filterRole, filterTeams } from './helpers';

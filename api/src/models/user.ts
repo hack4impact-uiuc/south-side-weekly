@@ -2,7 +2,6 @@ import mongoose, { Document, Schema } from 'mongoose';
 import { IUser } from 'ssw-common';
 
 import {
-  interestsEnum,
   onboardingStatusEnum,
   pagesEnum,
   rolesEnum,

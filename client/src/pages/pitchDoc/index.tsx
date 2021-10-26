@@ -23,7 +23,7 @@ import {
   InterestsSelect,
 } from '../../components';
 import { useAuth } from '../../contexts';
-import { allInterests, allTeams } from '../../utils/constants';
+import { allTeams } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
 
 import { filterInterests, filterClaimStatus, filterTeams } from './helpers';
