@@ -41,21 +41,6 @@ router.get(
   }),
 );
 
-// // Gets a users permissions
-// router.get(
-//   '/:userId/permissions',
-//   requireRegistered,
-//   errorWrap(async (req: Request, res: Response) => {
-//     res.json({
-//       success: true,
-//       result: {
-//         view: getViewableFields(req.user, req.params.userId),
-//         edit: getEditableFields(req.user, req.params.userId),
-//       },
-//     });
-//   }),
-// );
-
 // Create a new team
 router.post(
   '/',
