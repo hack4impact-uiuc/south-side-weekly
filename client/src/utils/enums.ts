@@ -34,6 +34,12 @@ export const racesEnum = {
   NONE: 'NONE',
 };
 
+export const pagesEnum = {
+  PITCHDOC: 'PITCHDOC',
+  DIRECTORY: 'DIRECTORY',
+  RESOURCES: 'RESOURCES',
+};
+
 export const teamEnum = {
   EDITING: 'EDITING',
   FACT_CHECKING: 'FACT-CHECKING',
@@ -57,4 +63,9 @@ export const wizardPages = {
   ONBOARD_4: 'ONBOARD_4',
   ONBOARD_5: 'ONBOARD_5',
   COMPLETION: 'COMPLETION',
+};
+
+export const visibilityEnum = {
+  PUBLIC: 'PUBLIC',
+  PRIVATE: 'PRIVATE',
 };

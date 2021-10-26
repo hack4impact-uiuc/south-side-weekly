@@ -19,6 +19,10 @@ import SubmitButton from './Wizard/SubmitButton';
 import PrevButton from './Wizard/PrevButton';
 import ApprovePitchModal from './Modals/ApprovePitch';
 import ViewPitchModal from './Modals/ViewPitch';
+import MultiSelect from './Dropdowns/MultiSelect';
+import Select from './Dropdowns/Select';
+import DirectoryTable from './Tables/Directory';
+import Walkthrough from './Walkthrough';
 
 export {
   Header,
@@ -41,5 +45,9 @@ export {
   SubmitButton,
   PrevButton,
   ApprovePitchModal,
-  ViewPitchModal
+  ViewPitchModal,
+  MultiSelect,
+  Select,
+  DirectoryTable,
+  Walkthrough,
 };

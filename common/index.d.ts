@@ -14,6 +14,7 @@ export interface IUser {
   dateJoined: Date;
   masthead: boolean;
   onboardingStatus: string;
+  visitedPages: string[];
   profilePic: string;
   portfolio: string;
   linkedIn: string;
@@ -104,4 +105,5 @@ export interface IResource {
   link: string;
   teamRoles: string[];
   _id: string;
+  visibility: string;
 }
