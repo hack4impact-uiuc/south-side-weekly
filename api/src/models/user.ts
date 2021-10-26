@@ -56,13 +56,7 @@ const User = new mongoose.Schema({
     },
   ],
 
-  interests: [
-    {
-      type: String,
-      enum: Object.values(interestsEnum),
-      default: interestsEnum.NONE,
-    },
-  ],
+  interests: [{ type: Schema.Types.ObjectId, ref: 'Interest'}],
 });
 
 export default mongoose.model<UserSchema>('User', User);
