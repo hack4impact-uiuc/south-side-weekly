@@ -56,7 +56,7 @@ const User = new mongoose.Schema({
     },
   ],
 
-  interests: [{ type: Schema.Types.ObjectId, ref: 'Interest'}],
+  interests: [{ type: Schema.Types.ObjectId, ref: 'Interest' }],
 });
 
 export default mongoose.model<UserSchema>('User', User);

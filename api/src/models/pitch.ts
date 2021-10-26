@@ -38,7 +38,7 @@ const Pitch = new mongoose.Schema({
   assignmentGoogleDocLink: { type: String, default: null },
   assignmentContributors: [contributor],
   pendingContributors: [contributor],
-  topics: [ { type: Schema.Types.ObjectId, ref: 'Interest' } ],
+  topics: [{ type: Schema.Types.ObjectId, ref: 'Interest' }],
   teams: {
     writers: {
       current: { type: Number, default: 0 },
