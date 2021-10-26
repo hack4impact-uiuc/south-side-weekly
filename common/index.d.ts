@@ -107,3 +107,10 @@ export interface IResource {
   _id: string;
   visibility: string;
 }
+
+export interface IInterest {
+  _id: string;
+  name: string;
+  color: string;
+  active: boolean;
+}
