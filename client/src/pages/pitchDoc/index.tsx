@@ -191,7 +191,7 @@ const PitchDoc = (): ReactElement => {
   return (
     <div className="pitch-doc-wrapper">
       <h1>Pitch Doc</h1>
-      <div><ViewPitchModal pitchId="61723415fd181c2024a4f450
+      <div><ViewPitchModal pitchId="6177acc8d688764d3848b07b
 "></ViewPitchModal></div>
       <Menu className="tab-menu" tabular size="large">
         <Menu.Item
