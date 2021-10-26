@@ -25,4 +25,10 @@ export {
   deleteResource,
   editResource,
 } from './resource';
+export {
+  getInterests,
+  getInterest,
+  createInterest,
+  updateInterest,
+} from './interest';
 export { isError, buildURI } from './builders';

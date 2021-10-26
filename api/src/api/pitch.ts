@@ -26,6 +26,7 @@ router.get(
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     const pitches = await Pitch.find({});
+  
     res.status(200).json({
       message: 'Successfully retrieved all pitches',
       success: true,
