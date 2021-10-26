@@ -6,12 +6,13 @@ import React, {
   useCallback,
 } from 'react';
 import { IInterest } from 'ssw-common';
+
 import { getInterests, isError } from '../../api';
 
-import { InterestsContext, initialValues } from './context';
+import { InterestsContext, initialValues, useInterests } from './context';
 
 // Interest provider
-export const InterestsProvider: FC = ({ children }): ReactElement => {
+const InterestsProvider: FC = ({ children }): ReactElement => {
   const [interests, setInterests] = useState<IInterest[]>(
     initialValues.interests,
   );
@@ -39,3 +40,5 @@ export const InterestsProvider: FC = ({ children }): ReactElement => {
     </InterestsContext.Provider>
   );
 };
+
+export { InterestsProvider, useInterests };

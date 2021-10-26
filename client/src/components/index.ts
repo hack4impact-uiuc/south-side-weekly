@@ -22,6 +22,7 @@ import MultiSelect from './Dropdowns/MultiSelect';
 import Select from './Dropdowns/Select';
 import DirectoryTable from './Tables/Directory';
 import Walkthrough from './Walkthrough';
+import InterestsSelect from './Dropdowns/InterestsSelect';
 
 export {
   Header,
@@ -48,4 +49,5 @@ export {
   Select,
   DirectoryTable,
   Walkthrough,
+  InterestsSelect
 };

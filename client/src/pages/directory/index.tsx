@@ -9,6 +9,7 @@ import {
   Select,
   DirectoryTable,
   Walkthrough,
+  InterestsSelect,
 } from '../../components';
 import { allInterests, allRoles, allTeams } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
@@ -109,13 +110,11 @@ const Directory = (): ReactElement => {
           />
         </div>
         <div className="wrapper">
-          <MultiSelect
-            value={interests}
+          <InterestsSelect
+            values={interests}
             onChange={(values) =>
               setInterests(values ? values.map((item) => item.value) : [])
             }
-            options={allInterests}
-            placeholder="Interests"
           />
         </div>
         <div className="wrapper">
@@ -124,7 +123,10 @@ const Directory = (): ReactElement => {
             onChange={(values) =>
               setTeams(values ? values.map((item) => item.value) : [])
             }
-            options={allTeams}
+            options={allTeams.map((team) => ({
+              label: team,
+              value: team,
+            }))}
             placeholder="Teams"
           />
         </div>

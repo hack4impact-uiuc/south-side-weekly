@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
 
 import { createPitch, isError } from '../../../api';
 import { useAuth } from '../../../contexts';
+import { useInterests } from '../../../contexts/interests/context';
 import { allInterests } from '../../../utils/constants';
 import { titleCase } from '../../../utils/helpers';
 
@@ -74,6 +75,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
   const [didSubmit, setDidSubmit] = useState(false);
 
   const { user } = useAuth();
+  const { interests } = useInterests();
 
   const addTopic = (topic: string): void => {
     topics.has(topic) ? topics.delete(topic) : topics.add(topic);
@@ -189,15 +191,15 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
 
           <h3>Topics (Please select at least 1 topic)</h3>
           <Form.Group inline widths="4" className="checkbox-group">
-            {allInterests.map((topic, index) => (
+            {interests.map((topic, index) => (
               <Form.Checkbox
                 error={isFieldError(topics)}
                 className="checkbox"
                 key={index}
-                label={titleCase(topic)}
-                checked={topics.has(topic)}
-                onClick={(e, { value }) => addTopic(toString(value))}
-                value={topic}
+                label={titleCase(topic.name)}
+                checked={topics.has(topic._id)}
+                onClick={() => addTopic(topic._id)}
+                value={topic._id}
               />
             ))}
           </Form.Group>

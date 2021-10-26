@@ -7,7 +7,7 @@ interface MultiSelectOption {
 }
 
 interface MultiSelectProps {
-  options: string[];
+  options: MultiSelectOption[];
   value: string[];
   onChange: (
     newValue: MultiValue<MultiSelectOption>,
@@ -21,26 +21,16 @@ const MultiSelect: FC<MultiSelectProps> = ({
   value,
   onChange,
   placeholder = '',
-}): ReactElement => {
-  const parseOptions = (options: string[]): MultiSelectOption[] =>
-    options.map((option) => ({
-      label: option,
-      value: option,
-    }));
-
-  const formattedOptions = parseOptions(options);
-
-  return (
+}): ReactElement => (
     <Select<MultiSelectOption, true>
       isMulti
       placeholder={placeholder}
-      value={formattedOptions.filter((item) => value.includes(item.value))}
-      options={formattedOptions}
+      value={options.filter((item) => value.includes(item.value))}
+      options={options}
       onChange={onChange}
       closeMenuOnSelect={false}
       hideSelectedOptions={false}
     />
   );
-};
 
 export default MultiSelect;

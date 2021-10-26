@@ -20,6 +20,7 @@ import {
   MultiSelect,
   Select,
   Walkthrough,
+  InterestsSelect,
 } from '../../components';
 import { useAuth } from '../../contexts';
 import { allInterests, allTeams } from '../../utils/constants';
@@ -213,13 +214,11 @@ const PitchDoc = (): ReactElement => {
           <h3>Filters: </h3>
         </div>
         <div className="wrapper">
-          <MultiSelect
-            value={interests}
+          <InterestsSelect
+            values={interests}
             onChange={(values) =>
               setInterests(values ? values.map((item) => item.value) : [])
             }
-            options={allInterests}
-            placeholder="Interests"
           />
         </div>
         <div className="wrapper">
@@ -228,7 +227,10 @@ const PitchDoc = (): ReactElement => {
             onChange={(values) =>
               setTeams(values ? values.map((item) => item.value) : [])
             }
-            options={allTeams}
+            options={allTeams.map((team) => ({
+              label: team,
+              value: team,
+            }))}
             placeholder="Teams"
           />
         </div>
