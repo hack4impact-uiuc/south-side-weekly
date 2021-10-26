@@ -9,7 +9,7 @@ const router = express.Router();
 // Gets team by id
 router.get(
   '/:teamId',
-  //   requireRegistered,
+  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     const team = await Team.findById(req.params.teamId);
     if (!team) {
