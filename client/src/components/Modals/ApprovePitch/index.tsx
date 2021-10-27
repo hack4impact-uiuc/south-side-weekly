@@ -1,10 +1,4 @@
-import React, {
-  FC,
-  ReactElement,
-  useCallback,
-  useEffect,
-  useState,
-} from 'react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Button, Form, Grid, Modal, ModalProps } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
 import Swal from 'sweetalert2';
