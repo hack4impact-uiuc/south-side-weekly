@@ -49,7 +49,7 @@ const PitchDoc = (): ReactElement => {
 
   const [claimStatus, setClaimStatus] = useState<string>('');
   const [interests, setInterests] = useState<string[]>([]);
-  const [filteredTeams, setFilteredTeams] = useState<string[]>([]);
+  const [teamFilters, setTeamFilters] = useState<string[]>([]);
   const [query, setQuery] = useState('');
 
   const { isAdmin, isStaff } = useAuth();
@@ -130,13 +130,13 @@ const PitchDoc = (): ReactElement => {
     const filter = (pitches: IPitch[]): IPitch[] => {
       let filtered = filterInterests(pitches, interests);
       filtered = filterClaimStatus(filtered, claimStatus);
-      filtered = filterTeams(filtered, filteredTeams);
+      filtered = filterTeams(filtered, teamFilters);
 
       return filtered;
     };
 
     setFilteredPitches([...search(filter(currentPitches))]);
-  }, [currentPitches, query, interests, filteredTeams, claimStatus]);
+  }, [currentPitches, query, interests, teamFilters, claimStatus]);
 
   useEffect(() => {
     if (currentTab !== TABS.APPROVED) {
@@ -228,9 +228,9 @@ const PitchDoc = (): ReactElement => {
         </div>
         <div className="wrapper">
           <MultiSelect
-            value={filteredTeams}
+            value={teamFilters}
             onChange={(values) =>
-              setFilteredTeams(values ? values.map((item) => item.value) : [])
+              setTeamFilters(values ? values.map((item) => item.value) : [])
             }
             options={teams.map((team) => ({
               label: team.name,
