@@ -231,11 +231,11 @@ const DirectoryTable: FC<DirectoryTableProps> = ({ users }): ReactElement => {
 
   return (
     <TableTool
-      singleLine={users.length > 0}
       tableHeader={
         <DirectoryHeader users={users} data={data} setData={setData} />
       }
       tableBody={<DirectoryBody data={data} />}
+      singleLine={users.length > 0}
     />
   );
 };

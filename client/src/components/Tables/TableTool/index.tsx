@@ -10,9 +10,9 @@ interface TableProps {
 }
 
 const TableTool: FC<TableProps> = ({
-  singleLine,
   tableHeader,
   tableBody,
+  singleLine,
 }): ReactElement => (
   <div className="directory-table">
     <Table size="small" sortable compact celled fixed singleLine={singleLine}>
