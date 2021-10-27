@@ -41,7 +41,6 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
     const res = await getAggregatedPitch(pitch._id);
 
     if (!isError(res)) {
-      console.log(res);
       setAuthor(getUserFullName(res.data.result.aggregated.author));
     }
   }, [pitch._id]);
@@ -78,7 +77,6 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
         teamMap[indexOfTeamId].target = value;
       }
     }
-    console.log(teamMap);
     const teamMapCopy = [...teamMap];
     setTeamMap(teamMapCopy);
   };
