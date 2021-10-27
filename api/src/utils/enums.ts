@@ -69,7 +69,7 @@ const issueFormatEnum = {
 const visibilityEnum = {
   PUBLIC: 'PUBLIC',
   PRIVATE: 'PRIVATE',
-};
+}
 
 export {
   interestsEnum,
