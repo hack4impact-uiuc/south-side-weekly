@@ -37,18 +37,18 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   const [teamMap, setTeamMap] = useState<IPitch['teams']>([]);
   const { teams } = useTeams();
 
-  const fetchAggregatedPitch = useCallback(async (): Promise<void> => {
-    const res = await getAggregatedPitch(pitch._id);
-
-    if (!isError(res)) {
-      setAuthor(getUserFullName(res.data.result.aggregated.author));
-    }
-  }, [pitch._id]);
-
   useEffect(() => {
     if (!isOpen) {
       return;
     }
+
+    const fetchAggregatedPitch = async (): Promise<void> => {
+      const res = await getAggregatedPitch(pitch._id);
+
+      if (!isError(res)) {
+        setAuthor(getUserFullName(res.data.result.aggregated.author));
+      }
+    };
 
     fetchAggregatedPitch();
 
@@ -56,7 +56,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       setAuthor('');
       setTeamMap([]);
     };
-  }, [fetchAggregatedPitch, isOpen]);
+  }, [isOpen, pitch._id]);
 
   const findTeamTarget = (teamId: string): number => {
     const team = teamMap.find(
