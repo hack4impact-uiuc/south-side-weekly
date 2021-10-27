@@ -109,21 +109,7 @@ const emptyAggregatePitch: IPitchAggregate = {
     reviewedBy: emptyUser,
     teams: [],
   },
-  _id: '',
-  title: '',
-  author: '',
-  description: '',
-  status: '',
-  assignmentStatus: '',
-  assignmentGoogleDocLink: '',
-  assignmentContributors: [],
-  pendingContributors: [],
-  topics: [],
-  teams: [],
-  reviewedBy: '',
-  similarStories: [],
-  deadline: new Date(),
-  conflictOfInterest: false,
+  ...emptyPitch,
 };
 
 export {
