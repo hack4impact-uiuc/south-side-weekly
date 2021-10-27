@@ -4,11 +4,22 @@ import { IUser } from 'ssw-common';
 
 import { AdminView, FieldTag, UserModal, UserPicture } from '../..';
 import { getUserFullName } from '../../../utils/helpers';
+import TableTool from '../TableTool';
 
 import './styles.scss';
 
 interface DirectoryTableProps {
   users: IUser[];
+}
+
+interface DirectoryHeaderProps {
+  users: IUser[];
+  data: IUser[];
+  setData: (data: IUser[]) => void;
+}
+
+interface DirectoryBodyProps {
+  data: IUser[];
 }
 
 interface DirctoryRowProps {
@@ -71,8 +82,11 @@ const columnsEnum: { [key: string]: ColumnEnumValue } = {
   },
 };
 
-const DirectoryTable: FC<DirectoryTableProps> = ({ users }): ReactElement => {
-  const [data, setData] = useState<IUser[]>([]);
+const DirectoryHeader: FC<DirectoryHeaderProps> = ({
+  users,
+  data,
+  setData,
+}): ReactElement => {
   const [column, setColumn] = useState<ColumnEnumValue>();
   const [direction, setDirection] = useState<'ascending' | 'descending'>();
 
@@ -101,80 +115,68 @@ const DirectoryTable: FC<DirectoryTableProps> = ({ users }): ReactElement => {
 
   useEffect(() => {
     setData(users);
-  }, [users]);
+  }, [users, setData]);
 
   return (
-    <div className="directory-table">
-      <Table
-        size="small"
-        sortable
-        compact
-        celled
-        fixed
-        singleLine={users.length > 0}
+    <Table.Row>
+      <Table.HeaderCell width={1} />
+      <Table.HeaderCell
+        onClick={() => handleSort(columnsEnum.NAME)}
+        sorted={column === columnsEnum.NAME ? direction : undefined}
       >
-        <Table.Header>
-          <Table.Row>
-            <Table.HeaderCell width={1} />
-            <Table.HeaderCell
-              onClick={() => handleSort(columnsEnum.NAME)}
-              sorted={column === columnsEnum.NAME ? direction : undefined}
-            >
-              Name
-            </Table.HeaderCell>
-            <Table.HeaderCell
-              onClick={() => handleSort(columnsEnum.ROLE)}
-              sorted={column === columnsEnum.ROLE ? direction : undefined}
-              width={ROLE_WIDTH}
-            >
-              Role
-            </Table.HeaderCell>
-            <Table.HeaderCell>Teams</Table.HeaderCell>
-            <Table.HeaderCell>Interests</Table.HeaderCell>
-            <AdminView>
-              <Table.HeaderCell
-                onClick={() => handleSort(columnsEnum.ONBOARDING)}
-                sorted={
-                  column === columnsEnum.ONBOARDING ? direction : undefined
-                }
-                width={ONBOARDING_WIDTH}
-              >
-                Onboarding
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                onClick={() => handleSort(columnsEnum.ACTIVITY)}
-                sorted={column === columnsEnum.ACTIVITY ? direction : undefined}
-                width={ACTIVITY_WIDTH}
-              >
-                Activity
-              </Table.HeaderCell>
-              <Table.HeaderCell
-                onClick={() => handleSort(columnsEnum.JOINED)}
-                sorted={column === columnsEnum.JOINED ? direction : undefined}
-                width={JOINED_WIDTH}
-              >
-                Joined
-              </Table.HeaderCell>
-              <Table.HeaderCell width={EDITED_WIDTH} />
-            </AdminView>
-          </Table.Row>
-        </Table.Header>
-        <Table.Body>
-          {data.length === 0 && (
-            <Table.Row>
-              <Table.Cell textAlign="center" width={1}>
-                <div className="no-results-found">No results found!</div>
-              </Table.Cell>
-            </Table.Row>
-          )}
-          {data.map((user, index) => (
-            <DirectoryRow user={user} key={index} />
-          ))}
-        </Table.Body>
-      </Table>
-    </div>
+        Name
+      </Table.HeaderCell>
+      <Table.HeaderCell
+        onClick={() => handleSort(columnsEnum.ROLE)}
+        sorted={column === columnsEnum.ROLE ? direction : undefined}
+        width={ROLE_WIDTH}
+      >
+        Role
+      </Table.HeaderCell>
+      <Table.HeaderCell>Teams</Table.HeaderCell>
+      <Table.HeaderCell>Interests</Table.HeaderCell>
+      <AdminView>
+        <Table.HeaderCell
+          onClick={() => handleSort(columnsEnum.ONBOARDING)}
+          sorted={column === columnsEnum.ONBOARDING ? direction : undefined}
+          width={ONBOARDING_WIDTH}
+        >
+          Onboarding
+        </Table.HeaderCell>
+        <Table.HeaderCell
+          onClick={() => handleSort(columnsEnum.ACTIVITY)}
+          sorted={column === columnsEnum.ACTIVITY ? direction : undefined}
+          width={ACTIVITY_WIDTH}
+        >
+          Activity
+        </Table.HeaderCell>
+        <Table.HeaderCell
+          onClick={() => handleSort(columnsEnum.JOINED)}
+          sorted={column === columnsEnum.JOINED ? direction : undefined}
+          width={JOINED_WIDTH}
+        >
+          Joined
+        </Table.HeaderCell>
+        <Table.HeaderCell width={EDITED_WIDTH} />
+      </AdminView>
+    </Table.Row>
   );
 };
+
+const DirectoryBody: FC<DirectoryBodyProps> = ({ data }): ReactElement => (
+  <>
+    {data.length === 0 && (
+      <Table.Row>
+        <Table.Cell textAlign="center" width={1}>
+          <div className="no-results-found">No results found!</div>
+        </Table.Cell>
+      </Table.Row>
+    )}
+    {data.map((user, index) => (
+      <DirectoryRow user={user} key={index} />
+    ))}
+  </>
+);
 
 const DirectoryRow: FC<DirctoryRowProps> = ({ user }): ReactElement => (
   <Table.Row>
@@ -219,5 +221,23 @@ const DirectoryRow: FC<DirctoryRowProps> = ({ user }): ReactElement => (
     </AdminView>
   </Table.Row>
 );
+
+const DirectoryTable: FC<DirectoryTableProps> = ({ users }): ReactElement => {
+  const [data, setData] = useState<IUser[]>([]);
+
+  useEffect(() => {
+    setData(users);
+  }, [users]);
+
+  return (
+    <TableTool
+      singleLine={users.length > 0}
+      tableHeader={
+        <DirectoryHeader users={users} data={data} setData={setData} />
+      }
+      tableBody={<DirectoryBody data={data} />}
+    />
+  );
+};
 
 export default DirectoryTable;
