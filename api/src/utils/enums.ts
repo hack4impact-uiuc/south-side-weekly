@@ -64,12 +64,12 @@ const assignmentStatusEnum = {
 const issueFormatEnum = {
   PRINT: 'PRINT',
   ONLINE: 'ONLINE',
-}
+};
 
 const visibilityEnum = {
   PUBLIC: 'PUBLIC',
   PRIVATE: 'PRIVATE',
-}
+};
 
 export {
   interestsEnum,
