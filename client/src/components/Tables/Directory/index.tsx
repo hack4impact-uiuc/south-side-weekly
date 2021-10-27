@@ -178,7 +178,7 @@ const DirectoryTable: FC<DirectoryTableProps> = ({ users }): ReactElement => {
 };
 
 const DirectoryRow: FC<DirctoryRowProps> = ({ user }): ReactElement => {
-  const { teams } = useTeams();
+  const { getTeamFromId } = useTeams();
   return (
     <Table.Row>
       <Table.Cell className="picture-col" width={1}>
@@ -193,8 +193,8 @@ const DirectoryRow: FC<DirctoryRowProps> = ({ user }): ReactElement => {
           <FieldTag
             size="small"
             key={index}
-            name={teams.find(({ _id }) => _id === team)?.name}
-            hexcode={teams.find(({ _id }) => _id === team)?.color}
+            name={getTeamFromId(team)?.name}
+            hexcode={getTeamFromId(team)?.color}
           />
         ))}
       </Table.Cell>
