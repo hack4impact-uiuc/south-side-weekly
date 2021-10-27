@@ -6,6 +6,7 @@ import { classNames, titleCase } from '../../utils/helpers';
 
 import './styles.scss';
 
+//TODO: Remove this once flexible interests is added
 interface FieldTagProps extends LabelProps {
   name?: string;
   hexcode?: string;
