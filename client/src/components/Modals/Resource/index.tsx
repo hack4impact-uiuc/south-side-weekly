@@ -1,4 +1,4 @@
-import React, { FC, FormEvent, ReactElement, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { CheckboxProps, Form, Modal, ModalProps } from 'semantic-ui-react';
 import { IResource, ITeam } from 'ssw-common';
 import Swal from 'sweetalert2';
