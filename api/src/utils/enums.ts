@@ -61,6 +61,11 @@ const assignmentStatusEnum = {
   NONE: 'NONE',
 };
 
+const visibilityEnum = {
+  PUBLIC: 'PUBLIC',
+  PRIVATE: 'PRIVATE',
+};
+
 export {
   interestsEnum,
   rolesEnum,
@@ -69,4 +74,5 @@ export {
   pagesEnum,
   pitchStatusEnum,
   assignmentStatusEnum,
+  visibilityEnum,
 };

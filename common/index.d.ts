@@ -80,11 +80,12 @@ export interface IPitchAggregate extends IPitch {
  * Interface for a Resource Schema.
  */
 export interface IResource {
+  _id: string;
   name: string;
   link: string;
   teams: string[];
-  _id: string;
   isGeneral: boolean;
+  visibility: string;
 }
 
 /**
