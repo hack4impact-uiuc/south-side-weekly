@@ -17,13 +17,13 @@ export const updatePitchTeamTargets = (
   pitch: IPitch,
   teams: string[],
 ): void => {
-  for (const teamId of teams) {
+  teams.forEach((teamId) => {
     const team = pitch.teams.find(
       ({ teamId: pitchTeamId }) => pitchTeamId === teamId,
     );
 
     team.target--;
-  }
+  });
 };
 
 export const santitizePitch = (pitch: PitchSchema): IPitch => ({
