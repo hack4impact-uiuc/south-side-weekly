@@ -11,6 +11,13 @@ import User from '../models/user';
 import { aggregatePitch } from '../utils/aggregate-utils';
 import { pitchStatusEnum } from '../utils/enums';
 import { isPitchClaimed } from '../utils/helpers';
+import { sendMail } from '../utils/mailer';
+import {
+  approvedMessage,
+  declinedMessage,
+  approveClaim,
+  declineClaim,
+} from '../utils/mailer-templates';
 
 const router = express.Router();
 
@@ -234,7 +241,9 @@ router.put(
       });
       return;
     }
-
+    const author = await User.findById(pitch.author);
+    const message = approvedMessage(author, pitch, req.user);
+    await sendMail(message);
     res.status(200).json({
       success: true,
       message: 'Successfully updated pitch',
@@ -262,7 +271,9 @@ router.put(
       });
       return;
     }
-
+    const author = await User.findById(pitch.author);
+    const message = declinedMessage(author, pitch, req.user);
+    await sendMail(message);
     res.status(200).json({
       success: true,
       message: 'Successfully updated pitch',
@@ -333,7 +344,7 @@ router.put(
           assignmentContributors: { userId: userId, teams: teams },
         },
       },
-      { returnOriginal: false, runValidators: true },
+      { new: true, runValidators: true },
     );
 
     // Add the pitch to the user's claimed Pitches
@@ -360,10 +371,62 @@ router.put(
       });
       return;
     }
-
+    const claimUser = await User.findById(userId);
+    const aggregatedPitch = await aggregatePitch(pitch);
+    const message = await approveClaim(
+      claimUser,
+      aggregatedPitch,
+      req.user,
+      teams,
+    );
+    await sendMail(message);
     res.status(200).json({
       success: true,
       message: 'Successfully approved claim',
+      result: pitch,
+    });
+  }),
+);
+
+router.put(
+  '/:pitchId/declineClaim',
+  requireStaff,
+  errorWrap(async (req: Request, res: Response) => {
+    const { userId } = req.body;
+
+    if (!userId) {
+      res.status(400).json({
+        success: false,
+        message: 'No user ID provided',
+      });
+
+      return;
+    }
+
+    const pitch = await Pitch.findByIdAndUpdate(
+      req.params.pitchId,
+      {
+        $pull: {
+          pendingContributors: { userId: userId },
+        },
+      },
+      { new: true, runValidators: true },
+    );
+
+    if (!pitch) {
+      res.status(404).json({
+        success: false,
+        message: 'Pitch not found with id',
+      });
+      return;
+    }
+    const claimUser = await User.findById(userId);
+    const aggregatedPitch = await aggregatePitch(pitch);
+    const message = declineClaim(claimUser, aggregatedPitch, req.user);
+    await sendMail(message);
+    res.status(200).json({
+      success: true,
+      message: 'Successfully declined claim',
       result: pitch,
     });
   }),

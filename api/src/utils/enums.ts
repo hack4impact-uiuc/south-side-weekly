@@ -64,6 +64,11 @@ const assignmentStatusEnum = {
 const issueFormatEnum = {
   PRINT: 'PRINT',
   ONLINE: 'ONLINE',
+}
+
+const visibilityEnum = {
+  PUBLIC: 'PUBLIC',
+  PRIVATE: 'PRIVATE',
 };
 
 export {
@@ -75,4 +80,5 @@ export {
   pagesEnum,
   pitchStatusEnum,
   assignmentStatusEnum,
+  visibilityEnum,
 };
