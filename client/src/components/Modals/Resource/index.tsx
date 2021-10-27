@@ -1,5 +1,5 @@
-import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Form, Modal, ModalProps } from 'semantic-ui-react';
+import React, { FC, FormEvent, ReactElement, useEffect, useState } from 'react';
+import { CheckboxProps, Form, Modal, ModalProps } from 'semantic-ui-react';
 import { IResource, ITeam } from 'ssw-common';
 import Swal from 'sweetalert2';
 
@@ -89,7 +89,6 @@ const ResourceModal: FC<ResourceProps> = ({
   };
 
   const submitResource = async (): Promise<void> => {
-    console.log({ ...parseFormData(formData) });
     const res = await createResource({ ...parseFormData(formData) });
 
     if (isError(res)) {
@@ -113,8 +112,6 @@ const ResourceModal: FC<ResourceProps> = ({
     return tags;
   };
 
-  //const teams = (): string[] => ['General', ...allTeams].map(titleCase);
-
   const changeField = <T extends keyof FormData>(
     key: T,
     value: FormData[T],
@@ -130,6 +127,11 @@ const ResourceModal: FC<ResourceProps> = ({
     }
     return formData.tags.has(teamId);
   };
+
+  const onChecked = (team: ITeam, { value }: CheckboxProps): void =>
+    team._id === 'General'
+      ? changeField('isGeneral', !formData.isGeneral)
+      : changeField('tags', getSelectedTeams(`${value}`));
 
   return (
     <Modal className="resource-modal" {...rest}>
@@ -159,11 +161,7 @@ const ResourceModal: FC<ResourceProps> = ({
                   label={team.name}
                   value={team._id}
                   checked={isChecked(team._id)}
-                  onChange={(e, { value }) =>
-                    team._id === 'General'
-                      ? changeField('isGeneral', !formData.isGeneral)
-                      : changeField('tags', getSelectedTeams(`${value}`))
-                  }
+                  onChange={(_, value) => onChecked(team, value)}
                 />
               ))}
             </Form.Group>
