@@ -65,7 +65,7 @@ export const santitizeUser = (user: UserSchema): IUser => ({
   involvementResponse: user.involvementResponse,
   claimedPitches: user.claimedPitches,
   submittedPitches: user.submittedPitches,
-  currentTeams: user.currentTeams,
+  teams: user.teams,
   role: user.role,
   hasRoleApproved: user.hasRoleApproved,
   races: user.races,

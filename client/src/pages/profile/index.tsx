@@ -160,12 +160,12 @@ const Profile = (): ReactElement => {
   };
 
   /**
-   * Adds a team to a user's currentTeams
+   * Adds a team to a user's teams
    *
    * @param team the team to add
    */
   const addTeam = (team: string): void => {
-    const teams = user.currentTeams;
+    const teams = user.teams;
     const currentIndex = teams.indexOf(team);
     if (currentIndex >= 0) {
       teams.splice(currentIndex, 1);
@@ -174,7 +174,7 @@ const Profile = (): ReactElement => {
     } else {
       teams.push(team);
     }
-    setUser(updateUserField(user, 'currentTeams', teams));
+    setUser(updateUserField(user, 'teams', teams));
   };
 
   /**
@@ -368,10 +368,10 @@ const Profile = (): ReactElement => {
             </Grid.Column>
           )}
 
-          {isViewable('currentTeams') && (
+          {isViewable('teams') && (
             <Grid.Column textAlign="center" width={3}>
               <HeaderTag as="h2">My Teams</HeaderTag>
-              {isEditable('currentTeams') ? (
+              {isEditable('teams') ? (
                 <div className="checkbox-group">
                   {teams.map((team, index) => (
                     <Checkbox
@@ -379,13 +379,13 @@ const Profile = (): ReactElement => {
                       className="checkbox"
                       value={team.name}
                       label={titleCase(team.name)}
-                      checked={user.currentTeams.includes(team._id)}
+                      checked={user.teams.includes(team._id)}
                       onChange={() => addTeam(team._id)}
                     />
                   ))}
                 </div>
               ) : (
-                user.currentTeams
+                user.teams
                   .sort()
                   .map((teamId, index) => (
                     <FieldTag

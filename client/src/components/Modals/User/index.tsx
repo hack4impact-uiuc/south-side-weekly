@@ -66,7 +66,7 @@ const UserModal: FC<UserModalProps> = ({ user, ...rest }): ReactElement => {
           </Grid.Column>
           <Grid.Column>
             <h1 className="list-header">Teams</h1>
-            {user.currentTeams.map((team: string, index: number) => (
+            {user.teams.map((team: string, index: number) => (
               <Grid.Row key={index}>
                 <FieldTag className="team-tag" content={team} />
               </Grid.Row>

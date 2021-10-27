@@ -29,7 +29,7 @@ const Onboard3 = (): ReactElement => {
   const contributorSubmit = (): void => {
     const data = {
       interests: Array.from(interests),
-      currentTeams: Array.from(selectedTeams),
+      teams: Array.from(selectedTeams),
     };
 
     store(data);
@@ -44,7 +44,7 @@ const Onboard3 = (): ReactElement => {
       genders: reject(data.genders, isEmpty),
       pronouns: reject(data.pronouns, isEmpty),
       dateJoined: new Date(Date.now()),
-      currentTeams: Array.from(selectedTeams),
+      teams: Array.from(selectedTeams),
       role: data.role,
       races: reject(data.races, isEmpty),
       interests: Array.from(interests),
@@ -73,7 +73,7 @@ const Onboard3 = (): ReactElement => {
     );
 
     setInterests(new Set(initialInterets));
-  }, [data.currentTeams, data.interests]);
+  }, [data.teams, data.interests]);
 
   const handleInterests = (interest: string): void => {
     if (!interests.has(interest) && interests.size === 5) {

@@ -189,7 +189,7 @@ const DirectoryRow: FC<DirctoryRowProps> = ({ user }): ReactElement => {
         <FieldTag size="small" content={user.role} />
       </Table.Cell>
       <Table.Cell>
-        {user.currentTeams.map((team, index) => (
+        {user.teams.map((team, index) => (
           <FieldTag
             size="small"
             key={index}

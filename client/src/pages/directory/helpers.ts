@@ -25,7 +25,7 @@ const filterTeams = (users: IUser[], teams: string[]): IUser[] => {
   }
 
   return users.filter((user) =>
-    teams.every((team) => user.currentTeams.includes(team)),
+    teams.every((team) => user.teams.includes(team)),
   );
 };
 

@@ -22,7 +22,7 @@ export interface IUser {
   involvementResponse: string;
   claimedPitches: string[];
   submittedPitches: string[];
-  currentTeams: string[];
+  teams: string[];
   role: string;
   hasRoleApproved: boolean;
   races: string[];

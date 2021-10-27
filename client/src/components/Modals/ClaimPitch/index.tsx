@@ -115,8 +115,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
   const { author, reviewedBy, assignmentContributors, teams } =
     aggregatedPitch.aggregated;
 
-  const isUserOnTeam = (team: string): boolean =>
-    user.currentTeams.includes(team);
+  const isUserOnTeam = (team: string): boolean => user.teams.includes(team);
   const disableCheckbox = (team: string): boolean => !isUserOnTeam(team);
 
   return (

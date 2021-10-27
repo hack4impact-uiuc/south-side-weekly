@@ -17,12 +17,7 @@ const nonEditableFields: UserKeys = ['_id', 'oauthID'];
 const adminViewableFields: UserKeys = ['phone'];
 
 // Only Admin can edit these fields
-const adminEditableFields: UserKeys = [
-  'currentTeams',
-  'role',
-  'email',
-  'races',
-];
+const adminEditableFields: UserKeys = ['teams', 'role', 'email', 'races'];
 
 /**
  * Gets the fields of another user the current user can view

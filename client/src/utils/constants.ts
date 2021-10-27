@@ -76,7 +76,7 @@ const emptyUser: IUser = {
   involvementResponse: '',
   claimedPitches: [],
   submittedPitches: [],
-  currentTeams: [],
+  teams: [],
   role: '',
   hasRoleApproved: false,
   races: [],
