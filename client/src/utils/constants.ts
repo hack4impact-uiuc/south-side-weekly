@@ -109,6 +109,10 @@ const emptyPitch: IPitch = {
 const emptyAggregatePitch: IPitchAggregate = {
   aggregated: {
     author: emptyUser,
+    writer: emptyUser,
+    primaryEditor: emptyUser,
+    secondaryEditors: [emptyUser],
+    thirdEditors: [emptyUser],
     assignmentContributors: [],
     pendingContributors: [],
     reviewedBy: emptyUser,
