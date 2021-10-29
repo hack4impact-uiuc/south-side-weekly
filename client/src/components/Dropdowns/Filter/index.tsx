@@ -12,7 +12,14 @@ const FilterDropdown: FC<DropdownProps> = ({ ...rest }): ReactElement => (
     selectOnNavigation={false}
     fluid
     className={`default-filter-dropdown ${rest.className}`}
-  />
+  >
+    <Dropdown.Menu>
+      <Dropdown.Header icon="tags" content={rest.placeholder} />
+      {rest.options?.map((option, index) => (
+        <Dropdown.Item key={index}>{option.value}</Dropdown.Item>
+      ))}
+    </Dropdown.Menu>
+  </Dropdown>
 );
 
 export default FilterDropdown;
