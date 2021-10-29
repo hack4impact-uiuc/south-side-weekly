@@ -19,7 +19,21 @@ const aggregatePitch = async (
 ): Promise<IPitchAggregate> => {
   const author = simplifyUser(await User.findById(rawPitch.author));
   const reviewer = simplifyUser(await User.findById(rawPitch.reviewedBy));
+  const writer = simplifyUser(await User.findById(rawPitch.writer));
+  const primaryEditor = simplifyUser(
+    await User.findById(rawPitch.primaryEditor),
+  );
+  const secondEditors = await Promise.all(
+    rawPitch.secondEditors.map(async (editorId) =>
+      simplifyUser(await User.findById(editorId)),
+    ),
+  );
 
+  const thirdEditors = await Promise.all(
+    rawPitch.thirdEditors.map(async (editorId) =>
+      simplifyUser(await User.findById(editorId)),
+    ),
+  );
   const assignmentContributors = await Promise.all(
     rawPitch.assignmentContributors.map(async (contributor) => ({
       user: simplifyUser(await User.findById(contributor.userId)),
@@ -38,9 +52,13 @@ const aggregatePitch = async (
     ...santitizePitch(rawPitch),
     aggregated: {
       author: author,
+      writer: writer,
       reviewedBy: reviewer,
       assignmentContributors: assignmentContributors,
       pendingContributors: pendingContributors,
+      primaryEditor: primaryEditor,
+      secondaryEditors: secondEditors,
+      thirdEditors: thirdEditors,
     },
   };
 
