@@ -17,6 +17,14 @@ const contributor = new mongoose.Schema(
   { _id: false },
 );
 
+const team = new mongoose.Schema(
+  {
+    teamId: { type: Schema.Types.ObjectId, ref: 'Team' },
+    target: Number,
+  },
+  { _id: false },
+);
+
 /**
  * Mongoose Schema to represent a Pitch at South Side Weekly
  */
@@ -45,12 +53,7 @@ const Pitch = new mongoose.Schema({
       default: interestsEnum.NONE,
     },
   ],
-  teams: [
-    {
-      teamId: { type: Schema.Types.ObjectId, ref: 'Team' },
-      target: Number,
-    },
-  ],
+  teams: [team],
   reviewedBy: { type: Schema.Types.ObjectId, ref: 'User' },
   similarStories: [{ type: String, default: null }],
   deadline: { type: Date, default: null },
