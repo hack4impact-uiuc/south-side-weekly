@@ -101,9 +101,9 @@ export const approvedMessage = (
 });
 
 export const approveClaim = async (
-  author: IUser,
+  claimUser: IUser,
   pitch: IPitchAggregate,
-  admin: Partial<IUser>,
+  admin: IUser,
   teams: [string],
 ): Promise<EmailMessage> => {
   // if person
@@ -124,11 +124,11 @@ export const approveClaim = async (
   }
 
   const m = {
-    to: author.email,
+    to: claimUser.email,
     from: process.env.EMAIL_USERNAME,
     subject: `Claim Request for "${pitch.title}" Approved`,
     html: `<html>
-      Hi ${author.preferredName || author.firstName},
+      Hi ${claimUser.preferredName || claimUser.firstName},
       <br>
       Congratulations, your request to join the ${
         pitch.title
@@ -152,14 +152,14 @@ export const approveClaim = async (
 };
 
 export const declineClaim = (
-  author: IUser,
+  claimUser: IUser,
   pitch: IPitchAggregate,
-  admin: Partial<IUser>,
+  admin: IUser,
 ): EmailMessage => ({
-  to: author.email,
+  to: claimUser.email,
   from: process.env.EMAIL_USERNAME,
   subject: `Story Claim Request for ${pitch.title}" Declined`,
-  html: `Hi ${author.preferredName || author.firstName},
+  html: `Hi ${claimUser.preferredName || claimUser.firstName},
     <br>
     <br>
     Thank you for submitting your pitch claim request to join the ${
