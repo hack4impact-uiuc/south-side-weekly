@@ -4,11 +4,12 @@ import { IUser } from 'ssw-common';
 import {
   interestsEnum,
   onboardingStatusEnum,
+  pagesEnum,
   rolesEnum,
   racesEnum,
 } from '../utils/enums';
 
-type UserSchema = IUser & Document<any>;
+export type UserSchema = IUser & Document<any>;
 
 /**
  * Mongoose Schema to represent a User at South Side Weekly.
@@ -29,14 +30,14 @@ const User = new mongoose.Schema({
     enum: Object.values(onboardingStatusEnum),
     default: onboardingStatusEnum.ONBOARDING_SCHEDULED,
   },
-
+  visitedPages: [{ type: String, enum: Object.values(pagesEnum) }],
   profilePic: { type: String, default: null },
   portfolio: { type: String, default: null },
   linkedIn: { type: String, default: null },
   twitter: { type: String, default: null },
   claimedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
   submittedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
-  currentTeams: [{ type: String, default: null }],
+  teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
   involvementResponse: { type: String, default: null },
 
   role: {
@@ -44,6 +45,8 @@ const User = new mongoose.Schema({
     enum: Object.values(rolesEnum),
     default: rolesEnum.TBD,
   },
+
+  hasRoleApproved: { type: Boolean, default: false },
 
   races: [
     {

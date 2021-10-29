@@ -5,6 +5,8 @@ import User from '../models/user';
 import Pitch from '../models/pitch';
 import { getEditableFields, getViewableFields } from '../utils/user-utils';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
+import { rolesEnum } from '../utils/enums';
+import { aggregateUser } from '../utils/aggregate-utils';
 
 const router = express.Router();
 
@@ -40,6 +42,27 @@ router.get(
         message: `Successfully retrieved user`,
       });
     }
+  }),
+);
+
+router.get(
+  '/:userId/aggregate',
+  errorWrap(async (req: Request, res: Response) => {
+    const user = await User.findById(req.params.userId).lean();
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found with id',
+      });
+    }
+
+    const aggregatedUser = await aggregateUser(user);
+
+    res.status(200).json({
+      success: true,
+      result: aggregatedUser,
+      message: 'Successfully retrieved aggregated user',
+    });
   }),
 );
 
@@ -156,6 +179,66 @@ router.put(
       message: 'Successfully added pitch to user',
       result: updatedUser,
     });
+  }),
+);
+
+// Gets all pending contributors
+router.get(
+  '/contributors/pending',
+  requireAdmin,
+  errorWrap(async (req: Request, res: Response) => {
+    const users = await User.find({
+      role: rolesEnum.CONTRIBUTOR,
+      hasRoleApproved: false,
+    });
+    res.status(200).json({
+      message: `Successfully retrieved all pending contributors.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
+// Gets all pending staff
+router.get(
+  '/staff/pending',
+  requireAdmin,
+  errorWrap(async (req: Request, res: Response) => {
+    const users = await User.find({
+      role: rolesEnum.STAFF,
+      hasRoleApproved: false,
+    });
+    res.status(200).json({
+      message: `Successfully retrieved all pending staff.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
+// Adds new page to user's list of visited pages
+router.post(
+  '/visitPage',
+  requireRegistered,
+  errorWrap(async (req: Request, res: Response) => {
+    const user = await User.findByIdAndUpdate(req.user._id, {
+      $addToSet: {
+        visitedPages: req.body.page,
+      },
+    });
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found with id',
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        result: user,
+        message: `Successfully added page to user's visited pages`,
+      });
+    }
   }),
 );
 

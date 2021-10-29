@@ -1,5 +1,5 @@
 import { AsYouType } from 'libphonenumber-js';
-import { camelCase, isUndefined, reject, startCase, toUpper } from 'lodash';
+import { camelCase, isUndefined, reject, startCase } from 'lodash';
 import { DropdownItemProps } from 'semantic-ui-react';
 import { IUser, IPitch } from 'ssw-common';
 
@@ -9,21 +9,12 @@ import { IUser, IPitch } from 'ssw-common';
  * A pitch has a team when the {TEAM}.target > 0
  *
  * @param pitch the pitch to pull the teams from
- * @returns an array of all of teams belonging to the pitch
+ * @returns an array of all of team IDs belonging to the pitch
  */
 const getPitchTeams = (pitch: IPitch): string[] => {
-  const teams: string[] = [];
-
-  const pitchTeams = Object.entries(pitch.teams);
-
-  pitchTeams.forEach((team) => {
-    const teamName = team[0];
-    const assignments = team[1];
-
-    if (assignments.target > 0) {
-      teams.push(toUpper(teamName));
-    }
-  });
+  const teams = pitch.teams
+    .filter((team) => team.target > 0)
+    .map((team) => team.teamId);
 
   return teams;
 };
@@ -52,7 +43,7 @@ const updateUserField = <T extends keyof IUser>(
  * @param user the user to get the fullname of
  * @returns the fullname of the user
  */
-const getUserFullName = (user: IUser): string =>
+const getUserFullName = (user: Partial<IUser>): string =>
   `${user.preferredName ? user.preferredName : user.firstName} ${
     user.lastName
   }`;
@@ -77,9 +68,7 @@ const parseOptions = (options: string[]): DropdownItemProps[] =>
  * @returns true if pitch is claimed, else false
  */
 const isPitchClaimed = (pitch: IPitch): boolean =>
-  Object.entries(pitch.teams).every(
-    ([, spots]) => spots.current === spots.target,
-  );
+  pitch.teams.every((team) => team.target <= 0);
 
 interface MapConversion<T, K> {
   key: T;

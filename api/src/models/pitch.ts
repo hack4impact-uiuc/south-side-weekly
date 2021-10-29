@@ -5,16 +5,59 @@ import {
   interestsEnum,
   pitchStatusEnum,
   assignmentStatusEnum,
+  issueFormatEnum,
 } from '../utils/enums';
 
 export type PitchSchema = IPitch & Document<any>;
+
+const contributor = new mongoose.Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User' },
+    teams: [{ type: String }],
+  },
+  { _id: false },
+);
+
+const team = new mongoose.Schema(
+  {
+    teamId: { type: Schema.Types.ObjectId, ref: 'Team' },
+    target: Number,
+  },
+  { _id: false },
+);
+
+const issue = new mongoose.Schema(
+  {
+    format: {
+      type: String,
+      enum: Object.values(issueFormatEnum),
+      default: null,
+      required: true,
+    },
+    publicationDate: { type: Date, default: null },
+  },
+  { _id: false },
+);
 
 /**
  * Mongoose Schema to represent a Pitch at South Side Weekly
  */
 const Pitch = new mongoose.Schema({
   title: { type: String, default: null, required: true },
+  issues: [issue],
   author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+  primaryEditor: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    default: null,
+  },
+  secondEditors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  thirdEditors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  writer: {
+    type: Schema.Types.ObjectId,
+    ref: 'User',
+    default: null,
+  },
   conflictOfInterest: { type: Boolean, required: true },
   status: {
     type: String,
@@ -28,8 +71,8 @@ const Pitch = new mongoose.Schema({
     default: assignmentStatusEnum.NONE,
   },
   assignmentGoogleDocLink: { type: String, default: null },
-  assignmentContributors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  pendingContributors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+  assignmentContributors: [contributor],
+  pendingContributors: [contributor],
   topics: [
     {
       type: String,
@@ -37,33 +80,8 @@ const Pitch = new mongoose.Schema({
       default: interestsEnum.NONE,
     },
   ],
-  teams: {
-    writers: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-    editors: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-    visuals: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-    illustration: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-    photography: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-    factChecking: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-  },
-  approvedBy: { type: Schema.Types.ObjectId, ref: 'User' },
+  teams: [team],
+  reviewedBy: { type: Schema.Types.ObjectId, ref: 'User' },
   similarStories: [{ type: String, default: null }],
   deadline: { type: Date, default: null },
 });

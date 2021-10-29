@@ -27,88 +27,101 @@ body {
   padding: 5vh 0 5vh 0;
 }
 
-.editing,
-.editors {
-  background-color: $editing !important;
-}
-
-.writing,
-.writers {
-  background-color: $writing !important;
-}
-
-.visuals {
-  background-color: $visuals !important;
-}
-
-.photography {
-  background-color: $photography !important;
-}
-
-.illustration {
-  background-color: $illustration !important;
-}
-
-.fact-checking,
-.factchecking {
-  background-color: $factChecking !important;
-}
-
-.fun {
+.fun-tag-color {
   background-color: $fun !important;
 }
 
-.cannabis {
+.cannabis-tag-color {
   background-color: $cannabis !important;
 }
 
-.health {
+.health-tag-color {
   background-color: $health !important;
 }
 
-.music {
+.music-tag-color {
   background-color: $music !important;
 }
 
-.nature {
+.nature-tag-color {
   background-color: $nature !important;
 }
 
-.politics {
+.politics-tag-color {
   background-color: $politics !important;
 }
 
-.housing {
+.housing-tag-color {
   background-color: $housing !important;
 }
 
-.visual-arts {
+.visual-arts-tag-color {
   background-color: $visualArts !important;
 }
 
-.immigration {
+.immigration-tag-color {
   background-color: $immigration !important;
 }
 
-.food-and-land {
+.food-and-land-tag-color {
   background-color: $foodAndLand !important;
 }
 
-.transportation {
+.transportation-tag-color {
   background-color: $transportation !important;
 }
 
-.stage-and-screen {
+.stage-and-screen-tag-color {
   background-color: $stageAndScreen !important;
 }
 
-.lit,
-.literature {
+.lit-tag-color,
+.literature-tag-color {
   background-color: $lit !important;
 }
 
-.education {
+.education-tag-color {
   background-color: $education !important;
+}
+
+.admin-tag-color {
+  background-color: $admin !important;
+}
+
+.staff-tag-color {
+  background-color: $staff !important;
+}
+
+.contributor-tag-color {
+  background-color: $contributor !important;
+}
+
+.onboarded-tag-color {
+  background-color: $onboarded !important;
+}
+
+.onboarding-scheduled-tag-color {
+  background-color: $onboardingScheduled !important;
+}
+
+.no-show-tag-color {
+  background-color: $noShow !important;
+}
+
+.denied-tag-color {
+  background-color: $denied !important;
+}
+
+.recently-active-tag-color {
+  background-color: $recentlyActive !important;
+}
+
+.active-tag-color {
+  background-color: $active !important;
+}
+
+.inactive-tag-color {
+  background-color: $inactive !important;
 }
 
 .default-btn {

@@ -1,12 +1,12 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Button, Card, Menu, Radio } from 'semantic-ui-react';
-import { IResource } from 'ssw-common';
+import { IResource, ITeam } from 'ssw-common';
 import Swal from 'sweetalert2';
 
 import { deleteResource, getAllResources, isError } from '../../api';
-import { ResourceModal, AdminView } from '../../components';
-import { allTeams } from '../../utils/constants';
-import { titleCase } from '../../utils/helpers';
+import { useTeams } from '../../contexts';
+import { ResourceModal, AdminView, Walkthrough } from '../../components';
+import { pagesEnum } from '../../utils/enums';
 
 import './styles.scss';
 
@@ -16,8 +16,15 @@ interface ModalInfo {
   resource?: IResource;
 }
 
+const generalTeam: ITeam = {
+  _id: 'General',
+  name: 'General',
+  color: '',
+  active: false,
+};
+
 const Resources = (): ReactElement => {
-  const [role, setRole] = useState('General');
+  const [selectedTab, setSelectedTab] = useState('General');
   const [edit, setEdit] = useState(false);
   const [resources, setResources] = useState<IResource[]>([]);
   const [modal, setModal] = useState<ModalInfo>({
@@ -26,10 +33,15 @@ const Resources = (): ReactElement => {
     resource: undefined,
   });
 
-  const teams = (): string[] => ['General', ...allTeams].map(titleCase);
+  const { teams } = useTeams();
+  const tabs = [generalTeam, ...teams];
 
-  const filterResources = (team: string): IResource[] =>
-    resources.filter((resouce) => resouce.teamRoles.includes(team));
+  const filterResources = (team: string): IResource[] => {
+    if (team === 'General') {
+      return resources.filter((resource) => resource.isGeneral);
+    }
+    return resources.filter((resource) => resource.teams.includes(team));
+  };
 
   const getResources = async (): Promise<void> => {
     const res = await getAllResources();
@@ -92,6 +104,10 @@ const Resources = (): ReactElement => {
         onClose={closeModal}
       />
       <div className="resources-page">
+        <Walkthrough
+          page={pagesEnum.RESOURCES}
+          content="Check out the members on the SSW team and click their profiles to view more details!"
+        />
         <div className="controls">
           <h1>Resource Page</h1>
           <div>
@@ -110,18 +126,19 @@ const Resources = (): ReactElement => {
         </div>
 
         <Menu tabular size="large">
-          {teams().map((team, index) => (
+          {tabs.map((tab, index) => (
             <Menu.Item
               key={index}
-              name={team}
-              active={team === role}
-              onClick={(e, { name }) => setRole(name!)}
+              name={tab.name}
+              value={tab._id}
+              active={tab._id === selectedTab}
+              onClick={(e, { value }) => setSelectedTab(value)}
             />
           ))}
         </Menu>
 
         <div className="resource-group">
-          {filterResources(role).map((resource, index) => (
+          {filterResources(selectedTab).map((resource, index) => (
             <Card
               className="resource"
               onClick={() => handleResourceAction(resource)}

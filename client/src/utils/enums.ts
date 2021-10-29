@@ -16,6 +16,12 @@ export const interestsEnum = {
   NONE: 'NONE',
 };
 
+export const onboardingStatusEnum = {
+  ONBOARDING_SCHEDULED: 'ONBOARDING_SCHEDULED',
+  STALLED: 'STALLED',
+  ONBOARDED: 'ONBOARDED',
+};
+
 export const racesEnum = {
   AMERICAN_INDIAN_OR_ALASKAN_NATIVE: 'AMERICAN INDIAN OR ALASKAN NATIVE',
   BLACK_OR_AFRICAN_AMERICAN: 'BLACK OR AFRICAN AMERICAN',
@@ -28,13 +34,10 @@ export const racesEnum = {
   NONE: 'NONE',
 };
 
-export const teamEnum = {
-  EDITING: 'EDITING',
-  FACT_CHECKING: 'FACT-CHECKING',
-  ILLUSTRATION: 'ILLUSTRATION',
-  PHOTOGRAPHY: 'PHOTOGRAPHY',
-  VISUALS: 'VISUALS',
-  WRITING: 'WRITING',
+export const pagesEnum = {
+  PITCHDOC: 'PITCHDOC',
+  DIRECTORY: 'DIRECTORY',
+  RESOURCES: 'RESOURCES',
 };
 
 export const rolesEnum = {
@@ -51,4 +54,9 @@ export const wizardPages = {
   ONBOARD_4: 'ONBOARD_4',
   ONBOARD_5: 'ONBOARD_5',
   COMPLETION: 'COMPLETION',
+};
+
+export const visibilityEnum = {
+  PUBLIC: 'PUBLIC',
+  PRIVATE: 'PRIVATE',
 };

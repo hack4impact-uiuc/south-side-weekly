@@ -14,6 +14,7 @@ export interface IUser {
   dateJoined: Date;
   masthead: boolean;
   onboardingStatus: string;
+  visitedPages: string[];
   profilePic: string;
   portfolio: string;
   linkedIn: string;
@@ -21,10 +22,18 @@ export interface IUser {
   involvementResponse: string;
   claimedPitches: string[];
   submittedPitches: string[];
-  currentTeams: string[];
+  teams: string[];
   role: string;
+  hasRoleApproved: boolean;
   races: string[];
   interests: string[];
+}
+
+export interface IUserAggregate extends IUser {
+  aggregated: {
+    claimedPitches: Partial<IPitch>[];
+    submittedPitches: Partial<IPitch>[];
+  };
 }
 
 /**
@@ -33,52 +42,67 @@ export interface IUser {
 export interface IPitch {
   _id: string;
   title: string;
+  issues: { issueFormat: string; issueDate: Date }[];
   author: string;
+  writer: string;
+  primaryEditor: string;
+  secondEditors: string[];
+  thirdEditors: string[];
   description: string;
   status: string;
   assignmentStatus: string;
   assignmentGoogleDocLink: string;
-  assignmentContributors: string[];
-  pendingContributors: string[],
+  assignmentContributors: { userId: string; teams: string[] }[];
+  pendingContributors: { userId: string; teams: string[] }[];
   topics: string[];
   teams: {
-    writers: {
-      current: number;
-      target: number;
-    };
-    editors: {
-      current: number;
-      target: number;
-    };
-    factChecking: {
-      current: number;
-      target: number;
-    };
-    visuals: {
-      current: number;
-      target: number;
-    };
-    photography: {
-      current: number;
-      target: number;
-    };
-    illustration: {
-      current: number;
-      target: number;
-    };
-  };
-  approvedBy: string;
+    teamId: string;
+    target: number;
+  }[];
+  reviewedBy: string;
   similarStories: string[];
   deadline: Date;
   conflictOfInterest: boolean;
+}
+
+export interface IPitchAggregate extends IPitch {
+  aggregated: {
+    author: Partial<IUser>;
+    writer: Partial<IUser>;
+    primaryEditor: Partial<IUser>;
+    secondaryEditors: Partial<IUser>[];
+    thirdEditors: Partial<IUser>[];
+    assignmentContributors: {
+      user: Partial<IUser>;
+      teams: string[];
+    }[];
+    pendingContributors: {
+      user: Partial<IUser>;
+      teams: string[];
+    }[];
+    reviewedBy: Partial<IUser>;
+    teams: Array<ITeam & { target: number }>;
+  };
 }
 
 /**
  * Interface for a Resource Schema.
  */
 export interface IResource {
+  _id: string;
   name: string;
   link: string;
-  teamRoles: string[];
+  teams: string[];
+  isGeneral: boolean;
+  visibility: string;
+}
+
+/**
+ * Interface for a Team Schema.
+ */
+export interface ITeam {
   _id: string;
+  name: string;
+  active: boolean;
+  color: string;
 }

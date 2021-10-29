@@ -1,4 +1,4 @@
-import { IPitch, IUser } from 'ssw-common';
+import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
 
 import { wizardPages } from './enums';
 
@@ -68,6 +68,7 @@ const emptyUser: IUser = {
   dateJoined: new Date(Date.now()),
   masthead: false,
   onboardingStatus: '',
+  visitedPages: [],
   profilePic: '',
   portfolio: '',
   linkedIn: '',
@@ -75,8 +76,9 @@ const emptyUser: IUser = {
   involvementResponse: '',
   claimedPitches: [],
   submittedPitches: [],
-  currentTeams: [],
+  teams: [],
   role: '',
+  hasRoleApproved: false,
   races: [],
   interests: [],
 };
@@ -85,6 +87,11 @@ const emptyPitch: IPitch = {
   _id: '',
   title: '',
   author: '',
+  writer: '',
+  primaryEditor: '',
+  secondEditors: [],
+  thirdEditors: [],
+  issues: [],
   conflictOfInterest: false,
   status: '',
   description: '',
@@ -93,35 +100,25 @@ const emptyPitch: IPitch = {
   assignmentContributors: [],
   pendingContributors: [],
   topics: [],
-  teams: {
-    writers: {
-      current: 0,
-      target: 0,
-    },
-    editors: {
-      current: 0,
-      target: 0,
-    },
-    visuals: {
-      current: 0,
-      target: 0,
-    },
-    illustration: {
-      current: 0,
-      target: 0,
-    },
-    photography: {
-      current: 0,
-      target: 0,
-    },
-    factChecking: {
-      current: 0,
-      target: 0,
-    },
-  },
-  approvedBy: '',
+  teams: [],
+  reviewedBy: '',
   similarStories: [],
   deadline: new Date(),
+};
+
+const emptyAggregatePitch: IPitchAggregate = {
+  aggregated: {
+    author: emptyUser,
+    writer: emptyUser,
+    primaryEditor: emptyUser,
+    secondaryEditors: [emptyUser],
+    thirdEditors: [emptyUser],
+    assignmentContributors: [],
+    pendingContributors: [],
+    reviewedBy: emptyUser,
+    teams: [],
+  },
+  ...emptyPitch,
 };
 
 export {
@@ -133,6 +130,7 @@ export {
   allRaces,
   emptyUser,
   emptyPitch,
+  emptyAggregatePitch,
   staffPages,
   contributorPages,
 };
