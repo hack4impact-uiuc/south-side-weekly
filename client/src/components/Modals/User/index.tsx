@@ -1,7 +1,7 @@
 import React, { ReactElement, FC, useState } from 'react';
 import { toLower } from 'lodash';
 import { Button, Grid, Icon, Modal, ModalProps } from 'semantic-ui-react';
-import { IUser } from 'ssw-common';
+import { ITeam, IUser } from 'ssw-common';
 
 import FieldTag from '../../FieldTag';
 import { getUserFullName } from '../../../utils/helpers';
@@ -9,6 +9,7 @@ import UserCard from '../../UserCard';
 import UserPicture from '../../UserPicture';
 
 import './styles.scss';
+import { useTeams } from '../../../contexts';
 
 interface UserModalProps extends ModalProps {
   user: IUser;
@@ -16,6 +17,7 @@ interface UserModalProps extends ModalProps {
 
 const UserModal: FC<UserModalProps> = ({ user, ...rest }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
+  const { getTeamFromId } = useTeams();
 
   const openUserProfile = (): void =>
     window.open(`/profile/${user._id}`)!.focus();
@@ -66,9 +68,9 @@ const UserModal: FC<UserModalProps> = ({ user, ...rest }): ReactElement => {
           </Grid.Column>
           <Grid.Column>
             <h1 className="list-header">Teams</h1>
-            {user.teams.map((team: string, index: number) => (
+            {user.teams.map(getTeamFromId).map((team: ITeam | undefined, index: number) => (
               <Grid.Row key={index}>
-                <FieldTag className="team-tag" content={team} />
+                <FieldTag className="team-tag" name={team?.name} hexcode={team?.color} />
               </Grid.Row>
             ))}
           </Grid.Column>
