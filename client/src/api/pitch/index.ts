@@ -3,7 +3,12 @@ import { IPitch, IPitchAggregate } from 'ssw-common';
 import { Response } from '../types';
 import { get, post, put, buildEndpoint } from '../builders';
 
-import { GetOpenTeamsResponse, PitchesResponse, PitchResponse, AggregatePitchResponse } from './types';
+import {
+  GetOpenTeamsResponse,
+  PitchesResponse,
+  PitchResponse,
+  AggregatePitchResponse,
+} from './types';
 
 const PITCH_ENDPOINT = '/pitch';
 
@@ -121,5 +126,5 @@ export {
   getUnclaimedPitches,
   approvePitch,
   declinePitch,
-  aggregatePitch
+  aggregatePitch,
 };

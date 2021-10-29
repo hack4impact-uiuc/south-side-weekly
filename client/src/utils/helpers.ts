@@ -59,8 +59,9 @@ const updateUserField = <T extends keyof IUser>(
  * @param user the user to get the fullname of
  * @returns the fullname of the user
  */
-const getUserFullName = (user: IUser | Partial<IUser> | null | undefined): string => {
-
+const getUserFullName = (
+  user: IUser | Partial<IUser> | null | undefined,
+): string => {
   if (user === null || user === undefined) {
     return '';
   }
@@ -68,8 +69,7 @@ const getUserFullName = (user: IUser | Partial<IUser> | null | undefined): strin
   return `${user.preferredName ? user.preferredName : user.firstName} ${
     user.lastName
   }`;
-}
-  
+};
 
 /**
  * Parses an array of options into Semantic UI style Dropdown Items objects

@@ -9,8 +9,8 @@ const simplifyUser = (user: IUser): Partial<IUser> => ({
   firstName: user ? user.firstName : '',
   preferredName: user ? user.preferredName : '',
   lastName: user ? user.lastName : '',
-  profilePic: user ? user.profilePic: '',
-  _id: user ? user._id: '',
+  profilePic: user ? user.profilePic : '',
+  _id: user ? user._id : '',
 });
 
 const aggregatePitch = async (
