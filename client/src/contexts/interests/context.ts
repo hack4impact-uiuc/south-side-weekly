@@ -8,6 +8,7 @@ import { IInterestsContext } from './types';
 export const initialValues: IInterestsContext = {
   interests: [],
   fetchInterests: defaultFunc,
+  getInterestsByID: (): undefined => undefined,
 };
 
 // create the context

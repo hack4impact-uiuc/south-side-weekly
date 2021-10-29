@@ -64,7 +64,7 @@ const aggregatePitch = async (rawPitch: IPitch): Promise<IPitchAggregate> => {
       };
     }),
   );
-  
+
   const teams = await Promise.all(
     rawPitch.teams.map(({ teamId, target }) =>
       Team.findById(teamId)

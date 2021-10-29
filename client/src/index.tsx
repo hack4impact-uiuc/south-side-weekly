@@ -18,7 +18,7 @@ import {
 } from './pages';
 import Wizard from './wizard';
 import { PrivateRoute } from './components';
-import { AuthProvider, TeamsProvider, InterestsProvider } from './contexts'; 
+import { AuthProvider, TeamsProvider, InterestsProvider } from './contexts';
 
 import './styles/styles.scss';
 
@@ -26,22 +26,22 @@ ReactDOM.render(
   <React.StrictMode>
     <AuthProvider>
       <InterestsProvider>
-      <TeamsProvider>
-        <Router>
-          <Switch>
-            <Route exact path="/">
-              <Redirect to="/login" />
-            </Route>
-            <PrivateRoute exact path="/pitches" component={PitchDoc} />
-            <PrivateRoute exact path="/resources" component={Resources} />
-            <PrivateRoute exact path="/profile/:userId" component={Profile} />
-            <PrivateRoute exact path="/users" component={Directory} />
-            <PrivateRoute exact path="/login" component={Login} />
-            <PrivateRoute exact path="/join" component={Wizard} />
-            <PrivateRoute exact path="*" component={NotFound} />
-          </Switch>
-        </Router>
-      </TeamsProvider>
+        <TeamsProvider>
+          <Router>
+            <Switch>
+              <Route exact path="/">
+                <Redirect to="/login" />
+              </Route>
+              <PrivateRoute exact path="/pitches" component={PitchDoc} />
+              <PrivateRoute exact path="/resources" component={Resources} />
+              <PrivateRoute exact path="/profile/:userId" component={Profile} />
+              <PrivateRoute exact path="/users" component={Directory} />
+              <PrivateRoute exact path="/login" component={Login} />
+              <PrivateRoute exact path="/join" component={Wizard} />
+              <PrivateRoute exact path="*" component={NotFound} />
+            </Switch>
+          </Router>
+        </TeamsProvider>
       </InterestsProvider>
     </AuthProvider>
   </React.StrictMode>,

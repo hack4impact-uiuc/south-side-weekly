@@ -23,7 +23,6 @@ import {
   InterestsSelect,
 } from '../../components';
 import { useAuth, useTeams } from '../../contexts';
-import { allTeams } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
 
 import { filterInterests, filterClaimStatus, filterTeams } from './helpers';
@@ -47,7 +46,7 @@ const PitchDoc = (): ReactElement => {
 
   const [currentPitches, setCurrentPitches] = useState<IPitch[]>([]);
   const [filteredPitches, setFilteredPitches] = useState<IPitch[]>([]);
- 
+
   const [claimStatus, setClaimStatus] = useState<string>('');
   const [interests, setInterests] = useState<string[]>([]);
   const [teamFilters, setTeamFilters] = useState<string[]>([]);

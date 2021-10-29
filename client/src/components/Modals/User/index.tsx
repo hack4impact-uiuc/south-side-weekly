@@ -7,9 +7,9 @@ import FieldTag from '../../FieldTag';
 import { getUserFullName } from '../../../utils/helpers';
 import UserCard from '../../UserCard';
 import UserPicture from '../../UserPicture';
+import { useTeams } from '../../../contexts';
 
 import './styles.scss';
-import { useTeams } from '../../../contexts';
 
 interface UserModalProps extends ModalProps {
   user: IUser;

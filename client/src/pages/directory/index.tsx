@@ -1,10 +1,10 @@
 import React, { useEffect, useState, ReactElement } from 'react';
 import { startsWith, toLower, toString } from 'lodash';
 import { Input } from 'semantic-ui-react';
-import { IUser } from 'ssw-common'; 
+import { IUser } from 'ssw-common';
 
 import { getUsers, isError } from '../../api';
-import { allInterests, allRoles } from '../../utils/constants';
+import { allRoles } from '../../utils/constants';
 import { useTeams } from '../../contexts';
 import {
   MultiSelect,
