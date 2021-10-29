@@ -12,11 +12,6 @@ import Swal from 'sweetalert2';
 
 import './styles.scss';
 
-const TestData: { name: string; color: string }[] = [
-  { name: 'Test1', color: 'blue' },
-  { name: 'Test2', color: 'orange' },
-];
-
 // interface TeamModalProps extends ModalProps {}
 
 const TeamModalTrigger: FC<ButtonProps> = ({ ...rest }): ReactElement => (
@@ -37,8 +32,10 @@ const ConfirmTeam = () => {
     }
   });
 };
+
+// For testing purposes
 interface NewTeamType {
-  _id: string;
+  _id?: string;
   name: string;
   color: string;
   active: boolean;
@@ -67,14 +64,12 @@ const teams: NewTeamType[] = [
 
 const copy = [...teams.map((t) => ({ ...t }))];
 
-// changedValues
-// newTeams
-
 const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
   // const { teams } = useTeams();
   const [isOpen, setIsOpen] = useState(false);
   const [formValues, setFormValues] = useState<NewTeamType[]>([...teams]);
 
+  // Add a new field in form
   const addField = () => {
     setFormValues([
       ...formValues,
@@ -82,46 +77,49 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
     ]);
   };
 
+  // Remove a field in form
   const removeField = (i: number) => {
     const newFormValues = [...formValues];
     newFormValues.splice(i, 1);
     setFormValues(newFormValues);
   };
 
+  // Update team names (input type = text)
   const updateFieldText = (i: number, text: string) => {
     const formValue = formValues[i];
     formValue.name = text;
     setFormValues([...formValues]);
   };
 
+  // Update team colors (input type = color)
   const updateFieldColor = (i: number, color: string) => {
     const formValue = formValues[i];
-    formValue.name = color;
+    formValue.color = color;
     setFormValues([...formValues]);
   };
 
+  // Save newTeams and changedTeams
   const saveForm = (): void => {
-    console.log(copy);
-    const newTeams = formValues.filter((team) => team._id === 'NEW');
+    let newTeams = formValues.filter((team) => team._id === 'NEW');
+    newTeams = newTeams.map(({ _id, ...rest }) => rest);
     console.log(newTeams);
 
-    const changedValues: typeof newTeams = [];
+    const changedTeams: typeof newTeams = [];
 
     copy.forEach((team, index) => {
       if (
         team.name !== formValues[index].name ||
         team.color !== formValues[index].color
       ) {
-        changedValues.push(formValues[index]);
+        changedTeams.push(formValues[index]);
       }
     });
 
-    console.log(changedValues);
+    console.log(changedTeams);
   };
 
   return (
     <Modal
-      closeIcon
       size="tiny"
       open={isOpen}
       onOpen={() => setIsOpen(true)}
@@ -136,7 +134,13 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
           {formValues.map((team, index) => (
             <div key={index} className="lines">
               <div className="color-pick">
-                <input type="color" value={team.color} />
+                <input
+                  type="color"
+                  value={team.color}
+                  onChange={(e) =>
+                    updateFieldColor(index, e.currentTarget.value)
+                  }
+                />
               </div>
               <Input
                 type="text"
