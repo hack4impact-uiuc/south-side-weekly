@@ -40,14 +40,18 @@
   }
 }
 
-.avatar-name {
+.category-name {
+  h4 {
+    margin: 0;
+    padding: 0;
+  }
   display: flex;
-}
-.avatar-pic {
-  margin-left: 10%;
-  vertical-align: middle;
+  align-items: center;
 }
 
+.move-nametag {
+  margin-left: 5%;
+}
 
 
 .editors-section {

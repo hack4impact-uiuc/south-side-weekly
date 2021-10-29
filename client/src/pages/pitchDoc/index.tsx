@@ -168,8 +168,9 @@ const PitchDoc = (): ReactElement => {
         content="The Pitch Doc is where you can claim, submit, and view pitches! Use the filters to find pitches you are interested in."
       />
       <h1>Pitch Doc</h1>
-      <div><ViewPitchModal pitchId="6177acc8d688764d3848b07b
-"></ViewPitchModal></div>
+      <div>
+        <ViewPitchModal pitchId="617663c0304187734cbdd71b"></ViewPitchModal>
+      </div>
       <Menu className="tab-menu" tabular size="large">
         <Menu.Item
           name={TABS.UNCLAIMED}
