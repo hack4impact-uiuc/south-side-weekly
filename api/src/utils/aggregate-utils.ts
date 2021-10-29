@@ -67,13 +67,10 @@ const aggregatePitch = async (rawPitch: IPitch): Promise<IPitchAggregate> => {
       reviewedBy: reviewer,
       assignmentContributors: assignmentContributors,
       pendingContributors: pendingContributors,
-<<<<<<< HEAD
       teams: teams,
-=======
       primaryEditor: primaryEditor,
       secondaryEditors: secondEditors,
       thirdEditors: thirdEditors,
->>>>>>> origin/main
     },
   };
 
