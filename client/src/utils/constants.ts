@@ -117,6 +117,7 @@ const emptyAggregatePitch: IPitchAggregate = {
     pendingContributors: [],
     reviewedBy: emptyUser,
     teams: [],
+    interests: [],
   },
   ...emptyPitch,
 };
