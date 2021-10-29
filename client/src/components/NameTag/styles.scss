@@ -1,11 +1,13 @@
-.tag-container {
-  display: flex;
-}
-.user-name {
-  margin-left: 2%;
-  vertical-align: middle;
-  white-space: nowrap;
-  font-weight: normal;
-  font-size: 150%;
-  color: black;
+.name-tag {
+  .tag-container {
+    display: flex;
+  }
+  .user-name {
+    margin-left: 2%;
+    vertical-align: middle;
+    white-space: nowrap;
+    font-weight: normal;
+    font-size: 150%;
+    color: black;
+  }
 }

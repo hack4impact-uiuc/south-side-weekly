@@ -1,63 +1,71 @@
-.team-tags {
-  display: flex;
-  align-items: center;
-}
-.team-tag-name {
-  margin-left: 5px;
-  font-size: 1em;
-  color: #fac1d2;
-  margin-top: 2px;
-}
+@import '../../../styles/colors.scss';
 
-.tag-container {
-  display: flex;
-  align-items: center;
-}
-.tag-outline {
-  border-radius: 0.5em;
-  border-color: #ffe9e7;
-  background-color: #ffe9e7;
-  width: 10%;
-  padding: 5px;
-}
-.tag-text {
-  text-align: center;
-  color: #000000;
-  font-size: 1em;
-  font-family: 'Lato';
-}
+.view-pitch {
+  .header {
+    background-color: $primary !important;
+    color: white !important;
+  }
+  .team-tags {
+    display: flex;
+    align-items: center;
+  }
+  .team-tag-name {
+    margin-left: 5px;
+    font-size: 1em;
+    color: #fac1d2;
+    margin-top: 2px;
+  }
 
-.teams-section {
-  display: flex;
+  .tag-container {
+    display: flex;
+    align-items: center;
+  }
+  .tag-outline {
+    border-radius: 0.5em;
+    border-color: #ffe9e7;
+    background-color: #ffe9e7;
+    width: 10%;
+    padding: 5px;
+  }
+  .tag-text {
+    text-align: center;
+    color: #000000;
+    font-size: 1em;
+    font-family: 'Lato';
+  }
 
-  .team {
-    margin-right: 20px;
-    h3 {
-      font-weight: normal;
+  .teams-section {
+    display: flex;
+
+    .team {
+      margin-right: 20px;
+      h3 {
+        font-weight: normal;
+      }
     }
   }
-}
 
-.category-name {
-  h4 {
-    margin: 0;
-    padding: 0;
+  .category-name {
+    h4 {
+      margin: 0;
+      padding: 0;
+    }
+    display: flex;
+    align-items: center;
   }
-  display: flex;
-  align-items: center;
-}
 
-.move-nametag {
-  margin-left: 5%;
-}
+  .move-nametag {
+    margin-left: 5%;
+  }
 
-.editors-section {
-  display: flex;
+  .editors-section {
+    display: flex;
 
-  .editor {
-    margin-right: 20px;
-    h3 {
-      font-weight: normal;
+    .editor {
+      margin-right: 20px;
+      h3 {
+        font-weight: normal;
+      }
     }
   }
 }

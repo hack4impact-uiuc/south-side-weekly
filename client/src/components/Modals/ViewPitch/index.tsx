@@ -79,7 +79,7 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
       open={isOpen}
       onClose={() => setIsOpen(false)}
       onOpen={() => setIsOpen(true)}
-      className="claim-modal"
+      className="view-pitch"
       {...rest}
     >
       <Modal.Header content="View Pitch" />

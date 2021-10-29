@@ -22,6 +22,7 @@ const NameTag: FC<NameTagProps> = ({
 
   return (
     <Label
+      className="name-tag"
       content={
         <div className="tag-container">
           <Image src={user?.profilePic} avatar />
