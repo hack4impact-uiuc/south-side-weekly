@@ -5,6 +5,7 @@ import { toString } from 'lodash';
 
 import FieldTag from '../FieldTag';
 import { classNames } from '../../utils/helpers';
+import { useInterests } from '../../contexts';
 
 import './styles.scss';
 
@@ -15,6 +16,8 @@ interface IProps extends CardProps {
 const MAX_LENGTH = 100;
 
 const PitchCard: FC<IProps> = ({ pitch, ...rest }): ReactElement => {
+  const { getInterestsByID } = useInterests();
+
   const formatDescription = (description: string): string => {
     description = toString(description);
 
@@ -41,7 +44,7 @@ const PitchCard: FC<IProps> = ({ pitch, ...rest }): ReactElement => {
                 size="tiny"
                 key={index}
                 className="topic"
-                content={topic}
+                content={getInterestsByID(topic)?.name}
               />
             ))}
           </div>
