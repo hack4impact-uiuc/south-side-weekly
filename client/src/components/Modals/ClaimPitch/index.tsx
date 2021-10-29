@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 
 import { isError, submitPitchClaim } from '../../../api';
 import { getAggregatedPitch } from '../../../api/pitch';
-import { useAuth } from '../../../contexts';
+import { useAuth, useInterests } from '../../../contexts';
 import { emptyAggregatePitch } from '../../../utils/constants';
 import { convertMap, getUserFullName } from '../../../utils/helpers';
 import FieldTag from '../../FieldTag';
@@ -30,6 +30,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
   const [aggregatedPitch, setAggregatedPitch] = useState(emptyAggregatePitch);
 
   const { user } = useAuth();
+  const { getInterestById } = useInterests();
 
   useEffect(() => {
     if (!isOpen) {
@@ -131,9 +132,17 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
       <Modal.Content>
         <h1>{pitch.title}</h1>
         <div className="topics-section">
-          {pitch.topics.map((topic, index) => (
-            <FieldTag key={index} content={topic} />
-          ))}
+          {pitch.topics.map((topic, index) => {
+            const interest = getInterestById(topic);
+
+            return (
+              <FieldTag
+                key={index}
+                name={interest?.name}
+                hexcode={interest?.color}
+              />
+            );
+          })}
         </div>
         <div className="author-section">
           <div className="author">

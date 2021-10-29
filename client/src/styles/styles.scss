@@ -27,63 +27,6 @@ body {
   padding: 5vh 0 5vh 0;
 }
 
-.fun-tag-color {
-  background-color: $fun !important;
-}
-
-.cannabis-tag-color {
-  background-color: $cannabis !important;
-}
-
-.health-tag-color {
-  background-color: $health !important;
-}
-
-.music-tag-color {
-  background-color: $music !important;
-}
-
-.nature-tag-color {
-  background-color: $nature !important;
-}
-
-.politics-tag-color {
-  background-color: $politics !important;
-}
-
-.housing-tag-color {
-  background-color: $housing !important;
-}
-
-.visual-arts-tag-color {
-  background-color: $visualArts !important;
-}
-
-.immigration-tag-color {
-  background-color: $immigration !important;
-}
-
-.food-and-land-tag-color {
-  background-color: $foodAndLand !important;
-}
-
-.transportation-tag-color {
-  background-color: $transportation !important;
-}
-
-.stage-and-screen-tag-color {
-  background-color: $stageAndScreen !important;
-}
-
-.lit-tag-color,
-.literature-tag-color {
-  background-color: $lit !important;
-}
-
-.education-tag-color {
-  background-color: $education !important;
-}
-
 .admin-tag-color {
   background-color: $admin !important;
 }
@@ -120,7 +63,8 @@ body {
   background-color: $active !important;
 }
 
-.inactive-tag-color {
+.inactive-tag-color,
+.stalled-tag-color {
   background-color: $inactive !important;
 }
 

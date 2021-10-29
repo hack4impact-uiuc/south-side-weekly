@@ -7,7 +7,7 @@ import FieldTag from '../../FieldTag';
 import { getUserFullName } from '../../../utils/helpers';
 import UserCard from '../../UserCard';
 import UserPicture from '../../UserPicture';
-import { useTeams } from '../../../contexts';
+import { useInterests, useTeams } from '../../../contexts';
 
 import './styles.scss';
 
@@ -18,6 +18,7 @@ interface UserModalProps extends ModalProps {
 const UserModal: FC<UserModalProps> = ({ user, ...rest }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
   const { getTeamFromId } = useTeams();
+  const { getInterestById } = useInterests();
 
   const openUserProfile = (): void =>
     window.open(`/profile/${user._id}`)!.focus();
@@ -60,11 +61,18 @@ const UserModal: FC<UserModalProps> = ({ user, ...rest }): ReactElement => {
           </Grid.Column>
           <Grid.Column>
             <h1 className="list-header">Topics</h1>
-            {user.interests.map((interest: string, index: number) => (
-              <Grid.Row key={index}>
-                <FieldTag className="interest-tag" content={interest} />
-              </Grid.Row>
-            ))}
+            {user.interests.map((interest: string, index: number) => {
+              const fullInterest = getInterestById(interest);
+
+              return (
+                <FieldTag
+                  className="team-tag"
+                  key={index}
+                  name={fullInterest?.name}
+                  hexcode={fullInterest?.color}
+                />
+              );
+            })}
           </Grid.Column>
           <Grid.Column>
             <h1 className="list-header">Teams</h1>

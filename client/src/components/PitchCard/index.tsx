@@ -39,14 +39,19 @@ const PitchCard: FC<IProps> = ({ pitch, ...rest }): ReactElement => {
             <p>{formatDescription(pitch.description)}</p>
           </Card.Description>
           <div className="topics">
-            {pitch.topics.map((topic, index) => (
-              <FieldTag
-                size="tiny"
-                key={index}
-                className="topic"
-                content={getInterestById(topic)?.name}
-              />
-            ))}
+            {pitch.topics.map((topic, index) => {
+              const interest = getInterestById(topic);
+
+              return (
+                <FieldTag
+                  key={index}
+                  name={interest?.name}
+                  hexcode={interest?.color}
+                  size="tiny"
+                  className="topic"
+                />
+              );
+            })}
           </div>
         </div>
       </Card.Content>

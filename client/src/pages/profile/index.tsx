@@ -354,16 +354,19 @@ const Profile = (): ReactElement => {
                   ))}
                 </Container>
               ) : (
-                user.interests
-                  .sort()
-                  .map((interest, index) => (
+                user.interests.sort().map((interest, index) => {
+                  const fullInterst = getInterestById(interest);
+
+                  return (
                     <FieldTag
                       size="medium"
                       key={index}
                       className="field-label"
-                      content={getInterestById(interest)?.name}
+                      name={fullInterst?.name}
+                      hexcode={fullInterst?.color}
                     />
-                  ))
+                  );
+                })
               )}
             </Grid.Column>
           )}

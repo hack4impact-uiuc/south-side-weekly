@@ -7,7 +7,7 @@ const filterInterests = (users: IUser[], interests: string[]): IUser[] => {
   }
 
   return users.filter((user) =>
-    interests.every((interest) => user.interests.includes(toUpper(interest))),
+    interests.every((interest) => user.interests.includes(interest)),
   );
 };
 
