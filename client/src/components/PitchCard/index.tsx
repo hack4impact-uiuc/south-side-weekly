@@ -16,7 +16,7 @@ interface IProps extends CardProps {
 const MAX_LENGTH = 100;
 
 const PitchCard: FC<IProps> = ({ pitch, ...rest }): ReactElement => {
-  const { getInterestsByID } = useInterests();
+  const { getInterestById } = useInterests();
 
   const formatDescription = (description: string): string => {
     description = toString(description);
@@ -44,7 +44,7 @@ const PitchCard: FC<IProps> = ({ pitch, ...rest }): ReactElement => {
                 size="tiny"
                 key={index}
                 className="topic"
-                content={getInterestsByID(topic)?.name}
+                content={getInterestById(topic)?.name}
               />
             ))}
           </div>

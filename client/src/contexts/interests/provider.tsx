@@ -17,7 +17,7 @@ const InterestsProvider: FC = ({ children }): ReactElement => {
     initialValues.interests,
   );
 
-  const getInterestsByID = (id: string): IInterest | undefined =>
+  const getInterestById = (id: string): IInterest | undefined =>
     interests.find(({ _id }) => _id === id);
 
   const fetchInterests = useCallback(async () => {
@@ -37,7 +37,7 @@ const InterestsProvider: FC = ({ children }): ReactElement => {
       value={{
         interests,
         fetchInterests,
-        getInterestsByID,
+        getInterestById,
       }}
     >
       {children}

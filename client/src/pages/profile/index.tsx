@@ -69,7 +69,7 @@ const Profile = (): ReactElement => {
 
   const auth = useAuth();
   const { teams } = useTeams();
-  const { interests, getInterestsByID } = useInterests();
+  const { interests, getInterestById } = useInterests();
 
   useEffect(() => {
     const loadUser = async (): Promise<void> => {
@@ -361,7 +361,7 @@ const Profile = (): ReactElement => {
                       size="medium"
                       key={index}
                       className="field-label"
-                      content={getInterestsByID(interest)?.name}
+                      content={getInterestById(interest)?.name}
                     />
                   ))
               )}
