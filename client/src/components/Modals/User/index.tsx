@@ -68,11 +68,17 @@ const UserModal: FC<UserModalProps> = ({ user, ...rest }): ReactElement => {
           </Grid.Column>
           <Grid.Column>
             <h1 className="list-header">Teams</h1>
-            {user.teams.map(getTeamFromId).map((team: ITeam | undefined, index: number) => (
-              <Grid.Row key={index}>
-                <FieldTag className="team-tag" name={team?.name} hexcode={team?.color} />
-              </Grid.Row>
-            ))}
+            {user.teams
+              .map(getTeamFromId)
+              .map((team: ITeam | undefined, index: number) => (
+                <Grid.Row key={index}>
+                  <FieldTag
+                    className="team-tag"
+                    name={team?.name}
+                    hexcode={team?.color}
+                  />
+                </Grid.Row>
+              ))}
           </Grid.Column>
         </Grid>
       </Modal.Content>
