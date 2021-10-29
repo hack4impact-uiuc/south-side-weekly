@@ -4,6 +4,7 @@ import User from '../models/user';
 export interface EmailMessage {
   to: string;
   from: string;
+  cc?: string;
   subject: string;
   html: string;
 }
@@ -21,6 +22,17 @@ const getAllTeams = (teamNamesToUsers: teamsUsers): string => {
   return message.join('');
 };
 
+export const notifyMessage = (
+  recipient: Partial<IUser>,
+  pitch: IPitchAggregate,
+  ccUser: Partial<IUser>,
+): EmailMessage => ({
+  to: recipient.email,
+  from: process.env.EMAIL_USERNAME,
+  cc: ccUser.email,
+  subject: `New Role Assigned To "${pitch.title}"`,
+  html: `You have just been assigned to the pitch titled: ${pitch.title} as the writer`,
+});
 export const declinedMessage = (
   author: IUser,
   pitch: IPitch,
@@ -94,6 +106,7 @@ export const approveClaim = async (
   admin: Partial<IUser>,
   teams: [string],
 ): Promise<EmailMessage> => {
+  // if person
   const teamNamesToUsers: teamsUsers = {};
   for (const user of pitch.assignmentContributors) {
     for (const teamName of user.teams) {

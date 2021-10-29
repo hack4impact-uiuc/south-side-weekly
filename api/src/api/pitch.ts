@@ -13,6 +13,7 @@ import { pitchStatusEnum } from '../utils/enums';
 import { isPitchClaimed } from '../utils/helpers';
 import { sendMail } from '../utils/mailer';
 import {
+  notifyMessage,
   approvedMessage,
   declinedMessage,
   approveClaim,
@@ -245,6 +246,15 @@ router.put(
     const author = await User.findById(pitch.author);
     const message = approvedMessage(author, pitch, req.user);
     await sendMail(message);
+    if (pitch.writer) {
+      const aggregatedPitch = await aggregatePitch(pitch);
+      const notification = notifyMessage(
+        aggregatedPitch.aggregated.writer,
+        aggregatedPitch,
+        aggregatedPitch.aggregated.primaryEditor,
+      );
+      await sendMail(notification);
+    }
     res.status(200).json({
       success: true,
       message: 'Successfully updated pitch',
