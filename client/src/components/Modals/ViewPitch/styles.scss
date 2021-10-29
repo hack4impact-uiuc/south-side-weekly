@@ -1,4 +1,3 @@
-
 .team-tags {
   display: flex;
   align-items: center;
@@ -15,9 +14,9 @@
   align-items: center;
 }
 .tag-outline {
-  border-radius: .5em;
-  border-color: #FFE9E7;
-  background-color: #FFE9E7;
+  border-radius: 0.5em;
+  border-color: #ffe9e7;
+  background-color: #ffe9e7;
   width: 10%;
   padding: 5px;
 }
@@ -25,14 +24,13 @@
   text-align: center;
   color: #000000;
   font-size: 1em;
-  font-family: "Lato";
+  font-family: 'Lato';
 }
-
 
 .teams-section {
   display: flex;
 
-  .team{
+  .team {
     margin-right: 20px;
     h3 {
       font-weight: normal;
@@ -53,11 +51,10 @@
   margin-left: 5%;
 }
 
-
 .editors-section {
   display: flex;
 
-  .editor{
+  .editor {
     margin-right: 20px;
     h3 {
       font-weight: normal;
