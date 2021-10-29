@@ -39,10 +39,15 @@ interface IUserAggregate extends IUser {
 /**
  * Interface for a Pitch Schema.
  */
-export interface IPitch {
+ export interface IPitch {
   _id: string;
   title: string;
+  issues: {issueFormat: string, issueDate: Date}[];
   author: string;
+  writer: string;
+  primaryEditor: string;
+  secondEditors: string[];
+  thirdEditors: string[];
   description: string;
   status: string;
   assignmentStatus: string;
@@ -82,9 +87,13 @@ export interface IPitch {
   conflictOfInterest: boolean;
 }
 
-interface IPitchAggregate extends IPitch {
+export interface IPitchAggregate extends IPitch {
   aggregated: {
       author: Partial<IUser>,
+      writer: Partial<IUser>,
+      primaryEditor: Partial<IUser>,
+      secondaryEditors: Partial<IUser>[],
+      thirdEditors: Partial<IUser>[],
       assignmentContributors: {
           user: Partial<IUser>,
           teams: string[]
