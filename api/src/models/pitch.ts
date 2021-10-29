@@ -50,7 +50,6 @@ const Pitch = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
     default: null,
-    required: true,
   },
   secondEditors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   thirdEditors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
