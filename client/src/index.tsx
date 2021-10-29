@@ -18,7 +18,7 @@ import {
 } from './pages';
 import Wizard from './wizard';
 import { PrivateRoute } from './components';
-import { AuthProvider, InterestsProvider } from './contexts';
+import { AuthProvider, TeamsProvider, InterestsProvider } from './contexts'; 
 
 import './styles/styles.scss';
 
@@ -26,6 +26,7 @@ ReactDOM.render(
   <React.StrictMode>
     <AuthProvider>
       <InterestsProvider>
+      <TeamsProvider>
         <Router>
           <Switch>
             <Route exact path="/">
@@ -40,6 +41,7 @@ ReactDOM.render(
             <PrivateRoute exact path="*" component={NotFound} />
           </Switch>
         </Router>
+      </TeamsProvider>
       </InterestsProvider>
     </AuthProvider>
   </React.StrictMode>,

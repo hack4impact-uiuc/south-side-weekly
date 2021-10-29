@@ -1,9 +1,11 @@
 import React, { useEffect, useState, ReactElement } from 'react';
 import { startsWith, toLower, toString } from 'lodash';
 import { Input } from 'semantic-ui-react';
-import { IUser } from 'ssw-common';
+import { IUser } from 'ssw-common'; 
 
 import { getUsers, isError } from '../../api';
+import { allInterests, allRoles } from '../../utils/constants';
+import { useTeams } from '../../contexts';
 import {
   MultiSelect,
   Select,
@@ -11,7 +13,6 @@ import {
   Walkthrough,
   InterestsSelect,
 } from '../../components';
-import { allRoles, allTeams } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
 
 import { filterInterests, filterRole, filterTeams } from './helpers';
@@ -32,6 +33,8 @@ const Directory = (): ReactElement => {
   const [interests, setInterests] = useState<string[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
   const [query, setQuery] = useState<string>('');
+
+  const { teams: allTeams } = useTeams();
 
   useEffect(() => {
     const getAllUsers = async (): Promise<void> => {
@@ -124,8 +127,8 @@ const Directory = (): ReactElement => {
               setTeams(values ? values.map((item) => item.value) : [])
             }
             options={allTeams.map((team) => ({
-              label: team,
-              value: team,
+              label: team.name,
+              value: team._id,
             }))}
             placeholder="Teams"
           />

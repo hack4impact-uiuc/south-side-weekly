@@ -61,6 +61,11 @@ const assignmentStatusEnum = {
   NONE: 'NONE',
 };
 
+const issueFormatEnum = {
+  PRINT: 'PRINT',
+  ONLINE: 'ONLINE',
+};
+
 const visibilityEnum = {
   PUBLIC: 'PUBLIC',
   PRIVATE: 'PRIVATE',
@@ -68,6 +73,7 @@ const visibilityEnum = {
 
 export {
   interestsEnum,
+  issueFormatEnum,
   rolesEnum,
   racesEnum,
   onboardingStatusEnum,

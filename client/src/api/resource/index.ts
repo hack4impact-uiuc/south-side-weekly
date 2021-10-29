@@ -1,5 +1,7 @@
-import { ApiResponseBase, Response } from '../types';
+import { IResource } from 'ssw-common';
+
 import { buildEndpoint, del, get, post, put } from '../builders';
+import { ApiResponseBase, Response } from '../types';
 
 import { ResourceResponse, ResourcesResponse } from './types';
 
@@ -14,9 +16,9 @@ const getAllResources = async (): Promise<Response<ResourcesResponse>> => {
 };
 
 // Creates a resource
-const createResource = async (newResource: {
-  [key: string]: string | string[] | null;
-}): Promise<Response<ResourceResponse>> => {
+const createResource = async (
+  newResource: Partial<IResource>,
+): Promise<Response<ResourceResponse>> => {
   const url = buildEndpoint(RESOURCE_ENDPOINT);
   const failureMessage = 'CREATE_RESOURCE_FAIL';
 
@@ -36,9 +38,7 @@ const deleteResource = async (
 // Edits a resource
 const editResource = async (
   resourceId: string,
-  editedResource: {
-    [key: string]: string | string[] | null;
-  },
+  editedResource: Partial<IResource>,
 ): Promise<Response<ResourceResponse>> => {
   const url = buildEndpoint(RESOURCE_ENDPOINT, resourceId!);
   const failureMessage = 'EDIT_RESOURCE_FAIL';

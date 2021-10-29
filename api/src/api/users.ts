@@ -48,7 +48,7 @@ router.get(
 router.get(
   '/:userId/aggregate',
   errorWrap(async (req: Request, res: Response) => {
-    const user = await User.findById(req.params.userId);
+    const user = await User.findById(req.params.userId).lean();
     if (!user) {
       res.status(404).json({
         success: false,
