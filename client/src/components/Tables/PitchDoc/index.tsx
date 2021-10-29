@@ -7,22 +7,22 @@ import { getUserFullName } from '../../../utils/helpers';
 
 import './styles.scss';
 
-interface DirectoryTableProps {
+interface PitchTableProps {
   users: IUser[];
 }
 
-interface DirectoryHeaderProps {
+interface PitchHeaderProps {
   users: IUser[];
   data: IUser[];
   setData: (data: IUser[]) => void;
 }
 
-interface DirectoryBodyProps {
-  data: IUser[];
+interface PitchRowProps {
+  user: IUser;
 }
 
-interface DirctoryRowProps {
-  user: IUser;
+interface PitchBodyProps {
+  data: IUser[];
 }
 
 const ROLE_WIDTH = 2;
@@ -81,7 +81,7 @@ const columnsEnum: { [key: string]: ColumnEnumValue } = {
   },
 };
 
-const DirectoryHeader: FC<DirectoryHeaderProps> = ({
+const DirectoryHeader: FC<PitchHeaderProps> = ({
   users,
   data,
   setData,
@@ -162,7 +162,7 @@ const DirectoryHeader: FC<DirectoryHeaderProps> = ({
   );
 };
 
-const DirectoryBody: FC<DirectoryBodyProps> = ({ data }): ReactElement => (
+const DirectoryBody: FC<PitchBodyProps> = ({ data }): ReactElement => (
   <>
     {data.length === 0 && (
       <Table.Row>
@@ -177,7 +177,7 @@ const DirectoryBody: FC<DirectoryBodyProps> = ({ data }): ReactElement => (
   </>
 );
 
-const DirectoryRow: FC<DirctoryRowProps> = ({ user }): ReactElement => (
+const DirectoryRow: FC<PitchRowProps> = ({ user }): ReactElement => (
   <Table.Row>
     <Table.Cell className="picture-col" width={1}>
       <UserPicture id="user-picture" user={user} />
@@ -221,7 +221,7 @@ const DirectoryRow: FC<DirctoryRowProps> = ({ user }): ReactElement => (
   </Table.Row>
 );
 
-const DirectoryTable: FC<DirectoryTableProps> = ({ users }): ReactElement => {
+const DirectoryTable: FC<PitchTableProps> = ({ users }): ReactElement => {
   const [data, setData] = useState<IUser[]>([]);
 
   useEffect(() => {
