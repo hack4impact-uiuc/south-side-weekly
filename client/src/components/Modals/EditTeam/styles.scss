@@ -1,6 +1,8 @@
 @import '../../../styles/colors.scss';
 $width: 25px;
 $height: 25px;
+$inputLength: 200px;
+$leftmargin: 50px;
 
 .team-modal {
     .header {
@@ -21,10 +23,13 @@ $height: 25px;
       }
 
       .content{
+        margin-top: 20px;
         .lines{
           display:flex;
-          margin-bottom:10px;
+          margin-bottom:17px;
+          margin-left:$leftmargin;
           align-items: center;
+
         }
         .color-pick {
             width:$width;
@@ -34,7 +39,7 @@ $height: 25px;
             display: inline-block;
             text-align:center;
             margin-right:10px;
-            border:1px solid rgba(34,36,38,.15);
+            border:1px solid rgb(163,163,163);
         }
         input[type='color'] {
             width:$width + 10;
@@ -43,8 +48,26 @@ $height: 25px;
             box-shadow: 0px 3px 6px #0000001A;
             transform:scale(2);
         }
-        input[type='text']{
+        .ui.input{
           display:inline-block;
+
+          input[type='text']{
+            border-radius:5px;
+            border:1px solid rgb(163,163,163);
+            width:218px;
+            height:31px;
+          }
+
+        }
+        .addTeam{
+          display:flex;
+          margin-top:17px;
+          margin-left:$leftmargin - 15;
+          align-items: center;
+          color:gray;
+          border:none;
+          background-color: transparent;
+          font-weight: lighter;
         }
       }
 }
