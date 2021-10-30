@@ -5,34 +5,6 @@
     background-color: $primary !important;
     color: white !important;
   }
-  .team-tags {
-    display: flex;
-    align-items: center;
-  }
-  .team-tag-name {
-    margin-left: 5px;
-    font-size: 1em;
-    color: #fac1d2;
-    margin-top: 2px;
-  }
-
-  .tag-container {
-    display: flex;
-    align-items: center;
-  }
-  .tag-outline {
-    border-radius: 0.5em;
-    border-color: #ffe9e7;
-    background-color: #ffe9e7;
-    width: 10%;
-    padding: 5px;
-  }
-  .tag-text {
-    text-align: center;
-    color: #000000;
-    font-size: 1em;
-    font-family: 'Lato';
-  }
 
   .teams-section {
     display: flex;
@@ -52,10 +24,20 @@
     }
     display: flex;
     align-items: center;
+    margin-bottom: 3%;
   }
 
   .move-nametag {
     margin-left: 5%;
+  }
+
+  .title-spacing {
+    padding-bottom: 5%;
+  }
+
+  .next-spacing {
+    padding-bottom: 5%;
+    padding-left: 8%;
   }
 
   .editors-section {
