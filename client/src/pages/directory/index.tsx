@@ -114,7 +114,7 @@ const Directory = (): ReactElement => {
         <div className="wrapper">
           <MultiSelect
             value={interests}
-            onChange={(values) =>
+            onChange={(values) => 
               setInterests(values ? values.map((item) => item.value) : [])
             }
             options={allInterests.map((interest) => ({

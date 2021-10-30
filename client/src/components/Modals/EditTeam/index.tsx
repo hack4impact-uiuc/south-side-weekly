@@ -10,7 +10,12 @@ import {
 } from 'semantic-ui-react';
 import Swal from 'sweetalert2';
 
+import { ITeam } from 'ssw-common';
+
 import './styles.scss';
+import { useTeams } from '../../../contexts';
+import { createManyTeams, updateManyTeams } from '../../../api';
+import { useEffect } from 'react';
 
 // interface TeamModalProps extends ModalProps {}
 
@@ -20,54 +25,30 @@ const TeamModalTrigger: FC<ButtonProps> = ({ ...rest }): ReactElement => (
   </Button>
 );
 
-const ConfirmTeam = () => {
-  Swal.fire({
-    text: 'Are you sure you want to save your “Teams” changes?',
-    confirmButtonText: 'Confirm',
-    showCancelButton: true,
-    cancelButtonText: 'Return',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      Swal.fire('Team updated!', 'Team formation has been updated', 'success');
-    }
-  });
-};
-
-// For testing purposes
-interface NewTeamType {
-  _id?: string;
-  name: string;
-  color: string;
-  active: boolean;
-}
-
-const teams: NewTeamType[] = [
-  {
-    _id: '5jfjaskdjfjasdf',
-    name: 'Editing',
-    color: '#E7F2FC',
-    active: true,
-  },
-  {
-    _id: '5jfjaskdjfjasdf',
-    name: 'Writing',
-    color: '#FFECE4',
-    active: true,
-  },
-  {
-    _id: '5jfjaskdjfjasdf',
-    name: 'cat',
-    color: 'F6EEFC',
-    active: true,
-  },
-];
-
-const copy = [...teams.map((t) => ({ ...t }))];
+// const copy = [...teams.map((t) => ({ ...t }))];
 
 const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
-  // const { teams } = useTeams();
+  const { teams, fetchTeams } = useTeams();
   const [isOpen, setIsOpen] = useState(false);
-  const [formValues, setFormValues] = useState<NewTeamType[]>([...teams]);
+  const [formValues, setFormValues] = useState<ITeam[]>([]);
+
+  const [clonedTeams, setClonedTeams] = useState<Partial<ITeam>[]>([]);
+
+  useEffect(() => {
+    fetchTeams();
+    setFormValues(teams);
+
+    const clone = teams.map(team => ({
+      _id: team._id,
+      name: team.name,
+      color: team.color,
+      active: team.active
+    }));
+
+    setClonedTeams([...clone])
+    console.log(teams);
+  }, [isOpen])
+
 
   // Add a new field in form
   const addField = () => {
@@ -100,13 +81,12 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
 
   // Save newTeams and changedTeams
   const saveForm = (): void => {
-    let newTeams = formValues.filter((team) => team._id === 'NEW');
-    newTeams = newTeams.map(({ _id, ...rest }) => rest);
-    console.log(newTeams);
+    const newTeams = formValues.filter((team) => team._id === 'NEW');
+    const parsedNewTeams: Partial<ITeam>[] = newTeams.map(({ _id, ...rest }) => rest);
 
-    const changedTeams: typeof newTeams = [];
+    const changedTeams: ITeam[] = [];
 
-    copy.forEach((team, index) => {
+    clonedTeams.forEach((team, index) => {
       if (
         team.name !== formValues[index].name ||
         team.color !== formValues[index].color
@@ -115,7 +95,27 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
       }
     });
 
-    console.log(changedTeams);
+    // Check if the changedTeam names is in cloned Teams
+    // Check if the new team names
+    
+    Swal.fire({
+      icon: 'question',
+      text: 'Are you sure you want to save your “Teams” changes?',
+      showCancelButton: true,
+      cancelButtonText: 'Cancel',
+      confirmButtonText: 'Confirm',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        createManyTeams(parsedNewTeams);
+        updateManyTeams(changedTeams);
+
+        setIsOpen(false);
+        fetchTeams();
+        setFormValues([]);
+
+        Swal.fire('Team updated!', 'Team formation has been updated', 'success');
+      }
+    });
   };
 
   return (

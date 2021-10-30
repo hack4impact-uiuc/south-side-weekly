@@ -3,6 +3,7 @@ import { errorWrap } from '../middleware';
 
 import Team from '../models/team';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
+import { ITeam } from '../../../common';
 
 const router = express.Router();
 
@@ -57,6 +58,76 @@ router.post(
   }),
 );
 
+// Create many new teams
+router.post(
+  '/many',
+  requireAdmin,
+  errorWrap(async (req: Request, res: Response) => {
+    const newTeams: Partial<ITeam>[] = req.body.teams;
+
+    const createdTeams = await Promise.all(newTeams.map(async (team) => Team.create(team)));
+
+    const failedTeams = createdTeams.filter(team => !team);
+
+    if (failedTeams.length > 0) {
+
+      const failedTeamNames = failedTeams.map(team => team.name);
+
+      res.status(400).json({
+        message: `Failed to create teams: ${failedTeamNames.join(', ')}`,
+        success: false,
+      })
+
+    }
+
+    res.status(200).json({
+      message: 'Successfully created all teams',
+      success: true,
+      result: createdTeams
+    })
+  }),
+);
+
+// Update many 
+router.put(
+  '/many',
+  requireAdmin,
+  errorWrap(async(req:Request, res:Response) => {
+    const changedTeams: ITeam[] = req.body.teams;
+    const updatedTeams = await Promise.all(changedTeams.map(async (team) => {
+      const body = {
+        name: team.name,
+        color: team.color,
+        active: team.active,
+      }
+
+      return Team.findByIdAndUpdate(team._id, body, { new: true, runValidators: true})
+      
+      }))
+
+      console.log(updatedTeams);
+
+    const failedTeams = updatedTeams.filter(team => !team);
+
+    if (failedTeams.length > 0) {
+
+      const failedTeamNames = failedTeams.map(team => team.name);
+
+      res.status(400).json({
+        message: `Failed to create teams: ${failedTeamNames.join(', ')}`,
+        success: false,
+      })
+
+    }
+
+    res.status(200).json({
+      message: 'Successfully created all teams',
+      success: true,
+      result: updatedTeams
+    })
+
+  }))
+  
 // Updates a team
 router.put(
   '/:teamId',

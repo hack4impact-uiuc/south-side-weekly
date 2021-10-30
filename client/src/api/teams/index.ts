@@ -1,7 +1,8 @@
-import { Response } from '../types';
-import { get, buildEndpoint } from '../builders';
+import { ApiResponseBase, Response } from '../types';
+import { get, buildEndpoint, post, put } from '../builders';
 
 import { TeamsResponse } from './types';
+import { ITeam } from '../../../../common';
 
 const TEAMS_ENDPOINT = '/teams';
 
@@ -13,4 +14,18 @@ const getTeams = async (): Promise<Response<TeamsResponse>> => {
   return await get(url, failureMessage);
 };
 
-export { getTeams };
+const createManyTeams = async (teams: Partial<ITeam>[]): Promise<Response<ApiResponseBase>> => {
+  const url = buildEndpoint(TEAMS_ENDPOINT, 'many');
+  const failureMessage = 'CREATE_MANY_TEAMS_FAIL';
+
+  return await post(url, { teams }, failureMessage);
+}
+
+const updateManyTeams = async (teams: ITeam[]): Promise<Response<ApiResponseBase>> => {
+  const url = buildEndpoint(TEAMS_ENDPOINT, 'many');
+  const failureMessage = 'UPDATE_MANY_TEAMS_FAIL';
+
+  return await put(url, { teams }, failureMessage);
+}
+
+export { getTeams, createManyTeams, updateManyTeams };

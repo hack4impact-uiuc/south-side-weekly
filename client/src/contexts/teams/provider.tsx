@@ -1,4 +1,5 @@
 import React, { ReactElement, FC, useState, useEffect } from 'react';
+import { useCallback } from 'react';
 import { ITeam } from 'ssw-common';
 
 import { getTeams, isError } from '../../api';
@@ -6,28 +7,25 @@ import { getTeams, isError } from '../../api';
 import { TeamsContext, initialValues, useTeams } from './context';
 
 const TeamsProvider: FC = ({ children }): ReactElement => {
-  const [teams, setTeams] = useState<{ teams: ITeam[] }>(initialValues);
+  const [teams, setTeams] = useState< ITeam[] >(initialValues.teams);
 
   const getTeamFromId = (teamId: string): ITeam | undefined =>
-    teams.teams.find(({ _id }) => _id === teamId);
+    teams.find(({ _id }) => _id === teamId);
 
-  useEffect(() => {
-    const loadTeams = async (): Promise<void> => {
+    const fetchTeams = useCallback(async () => {
       const res = await getTeams();
 
-      if (!isError(res)) {
-        console.log(res);
-        setTeams({ teams: res.data.result });
-      } else {
-        setTeams({ teams: [] });
+      if(!isError(res)) {
+        setTeams(res.data.result);
       }
-    };
+    }, []);
 
-    loadTeams();
-  }, []);
+  useEffect(() => {
+    fetchTeams();
+  }, [fetchTeams]);
 
   return (
-    <TeamsContext.Provider value={{ ...teams, getTeamFromId }}>
+    <TeamsContext.Provider value={{ teams, getTeamFromId, fetchTeams }}>
       {children}
     </TeamsContext.Provider>
   );
