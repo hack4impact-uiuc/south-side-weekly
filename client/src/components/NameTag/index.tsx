@@ -2,7 +2,7 @@ import React, { FC, ReactElement } from 'react';
 import { Label, LabelProps, Image } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
-import { getUserFullName, titleCase } from '../../utils/helpers';
+import { getUserFullName } from '../../utils/helpers';
 
 import './styles.scss';
 interface NameTagProps extends LabelProps {
@@ -20,7 +20,7 @@ const NameTag: FC<NameTagProps> = ({
     const firstLast = fullName.split(' ');
     const lastInitial = firstLast[1].charAt(0);
 
-    return `${firstLast[0]} ${lastInitial}.`
+    return `${firstLast[0]} ${lastInitial}.`;
 
     // const name = `${firstLast[0]} ${lastInitial}`;
     // return `${titleCase(name);

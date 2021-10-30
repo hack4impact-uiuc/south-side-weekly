@@ -1,4 +1,4 @@
-import { IPitch, IPitchAggregate } from 'ssw-common';
+import { IPitch } from 'ssw-common';
 
 import { Response } from '../types';
 import { get, post, put, buildEndpoint } from '../builders';
