@@ -5,7 +5,7 @@ import { buildEndpoint, get, post, put } from '../builders';
 
 import { InterestsResponse, InterestResponse } from './types';
 
-const INTEREST_ENDPOINT = '/interest';
+const INTEREST_ENDPOINT = '/interests';
 
 // Returns all of the interests from the database
 const getInterests = async (): Promise<Response<InterestsResponse>> => {

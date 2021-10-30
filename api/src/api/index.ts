@@ -12,7 +12,7 @@ router.use('/users', users);
 router.use('/pitch', pitch);
 router.use('/auth', auth);
 router.use('/resources', resources);
-router.use('/interest', interests);
+router.use('/interests', interests);
 router.use('/teams', teams);
 
 export default router;

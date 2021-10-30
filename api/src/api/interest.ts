@@ -45,7 +45,7 @@ router.get(
 // Create a new interest
 router.post(
   '/',
-  // requireAdmin,
+  requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
     const interest = await Interest.create(req.body);
 

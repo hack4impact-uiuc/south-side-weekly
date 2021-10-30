@@ -53,16 +53,11 @@ const aggregatePitch = async (rawPitch: IPitch): Promise<IPitchAggregate> => {
   );
 
   const interests = await Promise.all(
-    rawPitch.topics.map(async (topic) => {
-      const interest = await Interest.findById(topic);
-
-      return {
-        _id: interest._id,
-        name: interest.name,
-        color: interest.color,
-        active: interest.active,
-      };
-    }),
+    rawPitch.topics.map((interestId) =>
+      Interest.findById(interestId)
+        .lean()
+        .then((interest) => ({ ...interest })),
+    ),
   );
 
   const teams = await Promise.all(
