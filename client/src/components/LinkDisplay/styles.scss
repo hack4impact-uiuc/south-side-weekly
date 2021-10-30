@@ -1,0 +1,9 @@
+@import '../../styles/colors.scss';
+
+.link-display-link {
+  color: $buttonBlue;
+
+  i {
+    transform: rotate(45deg);
+  }
+}

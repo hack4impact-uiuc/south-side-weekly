@@ -1,5 +1,5 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Button, Form, Modal, ModalProps } from 'semantic-ui-react';
+import { Button, Form, Icon, Modal, ModalProps } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
 import Swal from 'sweetalert2';
 
@@ -9,6 +9,7 @@ import { useAuth } from '../../../contexts';
 import { emptyAggregatePitch } from '../../../utils/constants';
 import { convertMap, getUserFullName } from '../../../utils/helpers';
 import FieldTag from '../../FieldTag';
+import LinkDisplay from '../../LinkDisplay';
 import PitchCard from '../../PitchCard';
 import UserPicture from '../../UserPicture';
 import './styles.scss';
@@ -127,9 +128,17 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
       className="claim-modal"
       {...rest}
     >
-      <Modal.Header content={getHeader()} />
+      <Modal.Header>
+        <div className="modal-header">
+          {getHeader()}
+          <Icon name="close" onClick={() => setIsOpen(false)} />
+        </div>
+      </Modal.Header>
       <Modal.Content>
-        <h1>{pitch.title}</h1>
+        <h1>
+          {pitch.title}
+          <LinkDisplay href={pitch.assignmentGoogleDocLink} />
+        </h1>
         <div className="topics-section">
           {aggregatedPitch.aggregated.interests.map((interest, index) => (
             <FieldTag
