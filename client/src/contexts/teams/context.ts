@@ -6,7 +6,7 @@ import { ITeamsContext } from './types';
 const initialValues = {
   teams: [],
   getTeamFromId: (): undefined => undefined,
-  fetchTeams: defaultFunc
+  fetchTeams: defaultFunc,
 };
 
 const TeamsContext = createContext<ITeamsContext>(initialValues);

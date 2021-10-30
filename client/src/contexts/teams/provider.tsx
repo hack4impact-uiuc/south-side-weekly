@@ -7,18 +7,18 @@ import { getTeams, isError } from '../../api';
 import { TeamsContext, initialValues, useTeams } from './context';
 
 const TeamsProvider: FC = ({ children }): ReactElement => {
-  const [teams, setTeams] = useState< ITeam[] >(initialValues.teams);
+  const [teams, setTeams] = useState<ITeam[]>(initialValues.teams);
 
   const getTeamFromId = (teamId: string): ITeam | undefined =>
     teams.find(({ _id }) => _id === teamId);
 
-    const fetchTeams = useCallback(async () => {
-      const res = await getTeams();
+  const fetchTeams = useCallback(async () => {
+    const res = await getTeams();
 
-      if(!isError(res)) {
-        setTeams(res.data.result);
-      }
-    }, []);
+    if (!isError(res)) {
+      setTeams(res.data.result);
+    }
+  }, []);
 
   useEffect(() => {
     fetchTeams();

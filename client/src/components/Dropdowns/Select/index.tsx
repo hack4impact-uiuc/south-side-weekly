@@ -1,5 +1,5 @@
 import React, { FC, ReactElement } from 'react';
-import ReactSelect, { SingleValue, ActionMeta } from 'react-select'; 
+import ReactSelect, { SingleValue, ActionMeta } from 'react-select';
 
 interface SelectOption {
   value: string;

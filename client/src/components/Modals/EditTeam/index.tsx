@@ -38,17 +38,16 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
     fetchTeams();
     setFormValues(teams);
 
-    const clone = teams.map(team => ({
+    const clone = teams.map((team) => ({
       _id: team._id,
       name: team.name,
       color: team.color,
-      active: team.active
+      active: team.active,
     }));
 
-    setClonedTeams([...clone])
+    setClonedTeams([...clone]);
     console.log(teams);
-  }, [isOpen])
-
+  }, [isOpen]);
 
   // Add a new field in form
   const addField = () => {
@@ -82,7 +81,9 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
   // Save newTeams and changedTeams
   const saveForm = (): void => {
     const newTeams = formValues.filter((team) => team._id === 'NEW');
-    const parsedNewTeams: Partial<ITeam>[] = newTeams.map(({ _id, ...rest }) => rest);
+    const parsedNewTeams: Partial<ITeam>[] = newTeams.map(
+      ({ _id, ...rest }) => rest,
+    );
 
     const changedTeams: ITeam[] = [];
 
@@ -97,17 +98,19 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
 
     // Check if the changedTeam names is in cloned Teams
     // Check if the new team names
-    const valuesName = formValues.map((item)=>(item.name));
-    const isDuplicate = valuesName.some((item, idx)=> valuesName.indexOf(item) !== idx);
+    const valuesName = formValues.map((item) => item.name);
+    const isDuplicate = valuesName.some(
+      (item, idx) => valuesName.indexOf(item) !== idx,
+    );
     console.log(isDuplicate);
     if (isDuplicate) {
       Swal.fire({
         icon: 'error',
-        title: 'Cannot create duplicate team name!'
+        title: 'Cannot create duplicate team name!',
       });
       return;
     }
-    
+
     Swal.fire({
       icon: 'question',
       text: 'Are you sure you want to save your “Teams” changes?',
@@ -123,7 +126,11 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
         fetchTeams();
         setFormValues([]);
 
-        Swal.fire('Team updated!', 'Team formation has been updated', 'success');
+        Swal.fire(
+          'Team updated!',
+          'Team formation has been updated',
+          'success',
+        );
       }
     });
   };
