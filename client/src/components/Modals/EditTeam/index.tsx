@@ -97,6 +97,16 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
 
     // Check if the changedTeam names is in cloned Teams
     // Check if the new team names
+    const valuesName = formValues.map((item)=>(item.name));
+    const isDuplicate = valuesName.some((item, idx)=> valuesName.indexOf(item) !== idx);
+    console.log(isDuplicate);
+    if (isDuplicate) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Cannot create duplicate team name!'
+      });
+      return;
+    }
     
     Swal.fire({
       icon: 'question',
