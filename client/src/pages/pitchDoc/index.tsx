@@ -22,8 +22,8 @@ import {
   Select,
   Walkthrough,
 } from '../../components';
-import { useAuth } from '../../contexts';
-import { allInterests, allTeams } from '../../utils/constants';
+import { useAuth, useTeams } from '../../contexts';
+import { allInterests } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
 
 import { filterInterests, filterClaimStatus, filterTeams } from './helpers';
@@ -50,10 +50,11 @@ const PitchDoc = (): ReactElement => {
 
   const [claimStatus, setClaimStatus] = useState<string>('');
   const [interests, setInterests] = useState<string[]>([]);
-  const [teams, setTeams] = useState<string[]>([]);
+  const [teamFilters, setTeamFilters] = useState<string[]>([]);
   const [query, setQuery] = useState('');
 
   const { isAdmin, isStaff } = useAuth();
+  const { teams } = useTeams();
 
   const getApproved = async (): Promise<void> => {
     const res = await getApprovedPitches();
@@ -130,13 +131,13 @@ const PitchDoc = (): ReactElement => {
     const filter = (pitches: IPitch[]): IPitch[] => {
       let filtered = filterInterests(pitches, interests);
       filtered = filterClaimStatus(filtered, claimStatus);
-      filtered = filterTeams(filtered, teams);
+      filtered = filterTeams(filtered, teamFilters);
 
       return filtered;
     };
 
     setFilteredPitches([...search(filter(currentPitches))]);
-  }, [currentPitches, query, interests, teams, claimStatus]);
+  }, [currentPitches, query, interests, teamFilters, claimStatus]);
 
   useEffect(() => {
     if (currentTab !== TABS.APPROVED) {
@@ -222,17 +223,23 @@ const PitchDoc = (): ReactElement => {
             onChange={(values) =>
               setInterests(values ? values.map((item) => item.value) : [])
             }
-            options={allInterests}
+            options={allInterests.map((interest) => ({
+              label: interest,
+              value: interest,
+            }))}
             placeholder="Interests"
           />
         </div>
         <div className="wrapper">
           <MultiSelect
-            value={teams}
+            value={teamFilters}
             onChange={(values) =>
-              setTeams(values ? values.map((item) => item.value) : [])
+              setTeamFilters(values ? values.map((item) => item.value) : [])
             }
-            options={allTeams}
+            options={teams.map((team) => ({
+              label: team.name,
+              value: team._id,
+            }))}
             placeholder="Teams"
           />
         </div>

@@ -43,7 +43,7 @@ const filterTeams = (pitches: IPitch[], teams: string[]): IPitch[] => {
   }
 
   return pitches.filter((pitch) =>
-    teams.every((team) => getPitchTeams(pitch).includes(toUpper(team))),
+    teams.every((team) => getPitchTeams(pitch).includes(team)),
   );
 };
 

@@ -6,6 +6,10 @@ export interface PitchesResponse extends ApiResponseBase {
   result: IPitch[];
 }
 
+export interface AggregatedPitchResponse extends ApiResponseBase {
+  result: IPitchAggregate;
+}
+
 export interface GetOpenTeamsResponse extends ApiResponseBase {
   result: IPitch['teams'];
 }

@@ -18,6 +18,14 @@ const contributor = new mongoose.Schema(
   { _id: false },
 );
 
+const team = new mongoose.Schema(
+  {
+    teamId: { type: Schema.Types.ObjectId, ref: 'Team' },
+    target: Number,
+  },
+  { _id: false },
+);
+
 const issue = new mongoose.Schema(
   {
     format: {
@@ -42,7 +50,6 @@ const Pitch = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
     default: null,
-    required: true,
   },
   secondEditors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   thirdEditors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
@@ -73,32 +80,7 @@ const Pitch = new mongoose.Schema({
       default: interestsEnum.NONE,
     },
   ],
-  teams: {
-    writers: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-    editors: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-    visuals: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-    illustration: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-    photography: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-    factChecking: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-  },
+  teams: [team],
   reviewedBy: { type: Schema.Types.ObjectId, ref: 'User' },
   similarStories: [{ type: String, default: null }],
   deadline: { type: Date, default: null },

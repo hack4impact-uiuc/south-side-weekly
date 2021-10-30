@@ -23,7 +23,6 @@ import { FieldTag, UserPicture } from '../../components';
 import Masthead from '../../assets/masthead.svg';
 import {
   allInterests,
-  allTeams,
   allGenders,
   allPronouns,
   allRoles,
@@ -31,7 +30,7 @@ import {
   emptyUser,
 } from '../../utils/constants';
 import { parseOptions, updateUserField, titleCase } from '../../utils/helpers';
-import { useAuth } from '../../contexts';
+import { useAuth, useTeams } from '../../contexts';
 
 import SocialsInput from './SocialsInput';
 import StringAttribute from './BasicInfoInput/StringAttribute';
@@ -70,6 +69,7 @@ const Profile = (): ReactElement => {
   });
 
   const auth = useAuth();
+  const { teams } = useTeams();
 
   useEffect(() => {
     const loadUser = async (): Promise<void> => {
@@ -160,12 +160,12 @@ const Profile = (): ReactElement => {
   };
 
   /**
-   * Adds a team to a user's currentTeams
+   * Adds a team to a user's teams
    *
    * @param team the team to add
    */
   const addTeam = (team: string): void => {
-    const teams = [...user.currentTeams];
+    const teams = user.teams;
     const currentIndex = teams.indexOf(team);
     if (currentIndex >= 0) {
       teams.splice(currentIndex, 1);
@@ -174,7 +174,7 @@ const Profile = (): ReactElement => {
     } else {
       teams.push(team);
     }
-    setUser(updateUserField(user, 'currentTeams', teams));
+    setUser(updateUserField(user, 'teams', teams));
   };
 
   /**
@@ -368,31 +368,32 @@ const Profile = (): ReactElement => {
             </Grid.Column>
           )}
 
-          {isViewable('currentTeams') && (
+          {isViewable('teams') && (
             <Grid.Column textAlign="center" width={3}>
               <HeaderTag as="h2">My Teams</HeaderTag>
-              {isEditable('currentTeams') ? (
+              {isEditable('teams') ? (
                 <div className="checkbox-group">
-                  {allTeams.map((team, index) => (
+                  {teams.map((team, index) => (
                     <Checkbox
                       key={index}
                       className="checkbox"
-                      value={team}
-                      label={titleCase(team)}
-                      checked={user.currentTeams.includes(team)}
-                      onChange={(e, data) => addTeam(`${data.value!}`)}
+                      value={team.name}
+                      label={titleCase(team.name)}
+                      checked={user.teams.includes(team._id)}
+                      onChange={() => addTeam(team._id)}
                     />
                   ))}
                 </div>
               ) : (
-                user.currentTeams
+                user.teams
                   .sort()
-                  .map((team, index) => (
+                  .map((teamId, index) => (
                     <FieldTag
                       size="medium"
                       key={index}
                       className="field-label"
-                      content={team}
+                      name={teams.find((team) => team._id === teamId)?.name}
+                      hexcode={teams.find((team) => team._id === teamId)?.color}
                     />
                   ))
               )}

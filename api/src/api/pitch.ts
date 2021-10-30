@@ -125,7 +125,7 @@ router.get(
 router.get(
   '/:pitchId/aggregate',
   errorWrap(async (req: Request, res: Response) => {
-    const pitch = await Pitch.findById(req.params.pitchId);
+    const pitch = await Pitch.findById(req.params.pitchId).lean();
     if (!pitch) {
       res.status(404).json({
         success: false,

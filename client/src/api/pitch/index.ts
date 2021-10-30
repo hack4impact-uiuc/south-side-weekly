@@ -4,10 +4,9 @@ import { Response } from '../types';
 import { get, post, put, buildEndpoint } from '../builders';
 
 import {
-  GetOpenTeamsResponse,
+  AggregatedPitchResponse,
   PitchesResponse,
   PitchResponse,
-  AggregatePitchResponse,
 } from './types';
 
 const PITCH_ENDPOINT = '/pitch';
@@ -22,12 +21,11 @@ const getApprovedPitches = async (): Promise<Pitches> => {
   return await get(url, failureMessage);
 };
 
-// Returns the teams that can still claim a specified pitch
-const getOpenTeams = async (
-  pitchId: string,
-): Promise<Response<GetOpenTeamsResponse>> => {
-  const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'openTeams');
-  const failureMessage = 'GET_OPEN_TEAMS_FAIL';
+const getAggregatedPitch = async (
+  id: string,
+): Promise<Response<AggregatedPitchResponse>> => {
+  const url = buildEndpoint(PITCH_ENDPOINT, id, 'aggregate');
+  const failureMessage = 'GET_AGGREGATE_PITCH_FAIL';
 
   return await get(url, failureMessage);
 };
@@ -117,7 +115,7 @@ const createPitch = async (newPitch: {
 
 export {
   getApprovedPitches,
-  getOpenTeams,
+  getAggregatedPitch,
   submitPitchClaim,
   updatePitch,
   getPitchesPendingApproval,

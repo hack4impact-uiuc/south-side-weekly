@@ -40,15 +40,6 @@ export const pagesEnum = {
   RESOURCES: 'RESOURCES',
 };
 
-export const teamEnum = {
-  EDITING: 'EDITING',
-  FACT_CHECKING: 'FACT-CHECKING',
-  ILLUSTRATION: 'ILLUSTRATION',
-  PHOTOGRAPHY: 'PHOTOGRAPHY',
-  VISUALS: 'VISUALS',
-  WRITING: 'WRITING',
-};
-
 export const rolesEnum = {
   STAFF: 'STAFF',
   CONTRIBUTOR: 'CONTRIBUTOR',
