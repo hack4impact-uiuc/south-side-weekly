@@ -5,7 +5,7 @@ import NameTag from '../../NameTag';
 
 import './styles.scss';
 interface RoleTagProps {
-  users: (Partial<IUser> | undefined)[] | Partial<IUser>[] | undefined;
+  users: Partial<IUser>[];
   roleName: string;
 }
 const RoleTag: FC<RoleTagProps> = ({ users, roleName }): ReactElement => (

@@ -63,7 +63,7 @@ const declinePitch = async (
 
 const aggregatePitch = async (
   pitchId: string,
-): Promise<Response<AggregatePitchResponse>> => {
+): Promise<Response<AggregatedPitchResponse>> => {
   const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'aggregate');
   const failureMessage = 'GET_AGGREGATE_FAIL';
 

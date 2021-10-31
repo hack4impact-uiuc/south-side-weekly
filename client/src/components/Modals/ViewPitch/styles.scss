@@ -16,38 +16,4 @@
       }
     }
   }
-
-  .category-name {
-    h4 {
-      margin: 0;
-      padding: 0;
-    }
-    display: flex;
-    align-items: center;
-    margin-bottom: 3%;
-  }
-
-  .move-nametag {
-    margin-left: 5%;
-  }
-
-  .title-spacing {
-    padding-bottom: 5%;
-  }
-
-  .next-spacing {
-    padding-bottom: 5%;
-    padding-left: 8%;
-  }
-
-  .editors-section {
-    display: flex;
-
-    .editor {
-      margin-right: 20px;
-      h3 {
-        font-weight: normal;
-      }
-    }
-  }
 }

@@ -6,7 +6,7 @@ import { getUserFullName } from '../../utils/helpers';
 
 import './styles.scss';
 interface NameTagProps extends LabelProps {
-  user: Partial<IUser> | undefined;
+  user: Partial<IUser>;
 }
 const NameTag: FC<NameTagProps> = ({
   user,
@@ -21,9 +21,6 @@ const NameTag: FC<NameTagProps> = ({
     const lastInitial = firstLast[1].charAt(0);
 
     return `${firstLast[0]} ${lastInitial}.`;
-
-    // const name = `${firstLast[0]} ${lastInitial}`;
-    // return `${titleCase(name);
   };
 
   return (

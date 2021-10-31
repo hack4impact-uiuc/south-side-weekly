@@ -11,6 +11,8 @@ import { IPitchAggregate, IUser } from 'ssw-common';
 
 import { FieldTag } from '../..';
 import { aggregatePitch, isError } from '../../../api';
+import { useTeams } from '../../../contexts';
+import { emptyAggregatePitch } from '../../../utils/constants';
 import RoleRow from '../RoleRow';
 
 import './styles.scss';
@@ -28,8 +30,11 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
   pitchId,
   ...rest
 }): ReactElement => {
+  const { getTeamFromId } = useTeams();
+
   const [isOpen, setIsOpen] = useState(false);
-  const [aggregate, setAggregate] = useState<IPitchAggregate>(); // update to empty Aggregate
+  const [aggregate, setAggregate] =
+    useState<IPitchAggregate>(emptyAggregatePitch); // update to empty Aggregate
   const [teamsToContributors, setTeamsToContributors] =
     useState<GroupedContributors[]>();
   useEffect(() => {
@@ -127,12 +132,12 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
         </Grid>
         <h4> Other Contributors Currently On Pitch </h4>
         <Divider></Divider>
-        <Grid>
+        <Grid columns="2">
           <GridColumn>
             {teamsToContributors?.map((team, index) => (
               <RoleRow
                 key={index}
-                roleName={team.team}
+                roleName={getTeamFromId(team.team)?.name || ''}
                 users={team.users}
               ></RoleRow>
             ))}
