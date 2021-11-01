@@ -53,11 +53,7 @@ const aggregatePitch = async (rawPitch: IPitch): Promise<IPitchAggregate> => {
   );
 
   const interests = await Promise.all(
-    rawPitch.topics.map((interestId) =>
-      Interest.findById(interestId)
-        .lean()
-        .then((interest) => ({ ...interest })),
-    ),
+    rawPitch.topics.map((interestId) => Interest.findById(interestId).lean()),
   );
 
   const teams = await Promise.all(
@@ -113,16 +109,7 @@ const aggregateUser = async (rawUser: IUser): Promise<IUserAggregate> => {
   );
 
   const interests = await Promise.all(
-    rawUser.interests.map(async (topic) => {
-      const interest = await Interest.findById(topic);
-
-      return {
-        _id: interest._id,
-        name: interest.name,
-        color: interest.color,
-        active: interest.active,
-      };
-    }),
+    rawUser.interests.map((interestId) => Interest.findById(interestId).lean()),
   );
 
   const aggregatedPitch = {

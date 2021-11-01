@@ -39,7 +39,7 @@ const FieldTag: FC<FieldTagProps> = ({
     const storedBackground =
       hexcode === undefined ? '' : toClassName(toString(content));
 
-    return classNames('interest-team-label', storedBackground, rest.className);
+    return classNames('field-tag-label', storedBackground, rest.className);
   };
 
   return (

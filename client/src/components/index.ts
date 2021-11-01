@@ -24,6 +24,7 @@ import DirectoryTable from './Tables/Directory';
 import Walkthrough from './Walkthrough';
 import InterestsSelect from './Dropdowns/InterestsSelect';
 import ProviderWrapper from './ProviderWrapper';
+import TeamsSelect from './Dropdowns/TeamsSelect';
 
 export {
   Header,
@@ -52,4 +53,5 @@ export {
   Walkthrough,
   InterestsSelect,
   ProviderWrapper,
+  TeamsSelect,
 };
