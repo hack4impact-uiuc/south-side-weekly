@@ -16,7 +16,6 @@ const TeamsProvider: FC = ({ children }): ReactElement => {
       const res = await getTeams();
 
       if (!isError(res)) {
-        console.log(res);
         setTeams({ teams: res.data.result });
       } else {
         setTeams({ teams: [] });
