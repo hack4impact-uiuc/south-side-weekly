@@ -6,12 +6,24 @@ import { classNames, titleCase } from '../../utils/helpers';
 
 import './styles.scss';
 
-const FieldTag: FC<LabelProps> = ({
+//TODO: Remove this once flexible interests is added
+interface FieldTagProps extends LabelProps {
+  name?: string;
+  hexcode?: string;
+}
+
+const FieldTag: FC<FieldTagProps> = ({
+  name = '',
+  hexcode = 'transparent',
   content,
   size = 'large',
   ...rest
 }): ReactElement => {
   const toClassName = (str: string): string => {
+    if (name !== '') {
+      return '';
+    }
+
     str = toLower(str);
 
     let split = str.split(' ');
@@ -26,8 +38,9 @@ const FieldTag: FC<LabelProps> = ({
   return (
     <Label
       {...rest}
-      content={titleCase(toString(content))}
+      content={titleCase(toString(name !== '' ? name : content))}
       size={size}
+      style={name !== '' ? { backgroundColor: hexcode } : {}}
       className={classNames(
         'interest-team-label',
         toClassName(toString(content)),

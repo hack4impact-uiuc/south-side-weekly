@@ -3,6 +3,7 @@ import { Button, Icon, Table } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { AdminView, FieldTag, UserModal, UserPicture, TableTool } from '../..';
+import { useTeams } from '../../../contexts';
 import { getUserFullName } from '../../../utils/helpers';
 
 import './styles.scss';
@@ -177,49 +178,57 @@ const DirectoryBody: FC<DirectoryBodyProps> = ({ data }): ReactElement => (
   </>
 );
 
-const DirectoryRow: FC<DirctoryRowProps> = ({ user }): ReactElement => (
-  <Table.Row>
-    <Table.Cell className="picture-col" width={1}>
-      <UserPicture id="user-picture" user={user} />
-    </Table.Cell>
-    <Table.Cell>{getUserFullName(user)}</Table.Cell>
-    <Table.Cell width={ROLE_WIDTH}>
-      <FieldTag size="small" content={user.role} />
-    </Table.Cell>
-    <Table.Cell>
-      {user.currentTeams.map((team, index) => (
-        <FieldTag size="small" key={index} content={team} />
-      ))}
-    </Table.Cell>
-    <Table.Cell>
-      {user.interests.map((interest, index) => (
-        <FieldTag size="small" key={index} content={interest} />
-      ))}
-    </Table.Cell>
-    <AdminView>
-      <Table.Cell width={ONBOARDING_WIDTH}>
-        <FieldTag size="small" content={user.onboardingStatus} />
+const DirectoryRow: FC<DirctoryRowProps> = ({ user }): ReactElement => {
+  const { getTeamFromId } = useTeams();
+  return (
+    <Table.Row>
+      <Table.Cell className="picture-col" width={1}>
+        <UserPicture id="user-picture" user={user} />
       </Table.Cell>
-      <Table.Cell width={ACTIVITY_WIDTH}>
-        <FieldTag size="small" content="Active" />
+      <Table.Cell>{getUserFullName(user)}</Table.Cell>
+      <Table.Cell width={ROLE_WIDTH}>
+        <FieldTag size="small" content={user.role} />
       </Table.Cell>
-      <Table.Cell width={JOINED_WIDTH}>
-        {new Date(user.dateJoined).getFullYear()}
+      <Table.Cell>
+        {user.teams.map((team, index) => (
+          <FieldTag
+            size="small"
+            key={index}
+            name={getTeamFromId(team)?.name}
+            hexcode={getTeamFromId(team)?.color}
+          />
+        ))}
       </Table.Cell>
+      <Table.Cell>
+        {user.interests.map((interest, index) => (
+          <FieldTag size="small" key={index} content={interest} />
+        ))}
+      </Table.Cell>
+      <AdminView>
+        <Table.Cell width={ONBOARDING_WIDTH}>
+          <FieldTag size="small" content={user.onboardingStatus} />
+        </Table.Cell>
+        <Table.Cell width={ACTIVITY_WIDTH}>
+          <FieldTag size="small" content="Active" />
+        </Table.Cell>
+        <Table.Cell width={JOINED_WIDTH}>
+          {new Date(user.dateJoined).getFullYear()}
+        </Table.Cell>
 
-      <Table.Cell width={1}>
-        <UserModal
-          trigger={
-            <Button className="open-user-button" size="tiny" circular icon>
-              <Icon name="pencil" />
-            </Button>
-          }
-          user={user}
-        />
-      </Table.Cell>
-    </AdminView>
-  </Table.Row>
-);
+        <Table.Cell width={1}>
+          <UserModal
+            trigger={
+              <Button className="open-user-button" size="tiny" circular icon>
+                <Icon name="pencil" />
+              </Button>
+            }
+            user={user}
+          />
+        </Table.Cell>
+      </AdminView>
+    </Table.Row>
+  );
+};
 
 const DirectoryTable: FC<DirectoryTableProps> = ({ users }): ReactElement => {
   const [data, setData] = useState<IUser[]>([]);

@@ -3,14 +3,38 @@ import { PitchSchema } from '../models/pitch';
 import { UserSchema } from '../models/user';
 
 export const isPitchClaimed = (pitch: IPitch): boolean =>
-  Object.entries(pitch.teams).every(
-    (team) => team[1].current === team[1].target,
-  );
+  getOpenTeamsForPitch(pitch).length === 0;
+
+export const getOpenTeamsForPitch = (pitch: IPitch): IPitch['teams'] => {
+  let openTeams: IPitch['teams'] = [];
+  if (pitch.teams !== null && pitch.teams.length !== undefined) {
+    openTeams = pitch.teams.filter((team) => team.target > 0);
+  }
+  return openTeams;
+};
+
+export const updatePitchTeamTargets = (
+  pitch: IPitch,
+  teams: string[],
+): void => {
+  teams.forEach((teamId) => {
+    const team = pitch.teams.find(
+      ({ teamId: pitchTeamId }) => pitchTeamId === teamId,
+    );
+
+    team.target--;
+  });
+};
 
 export const santitizePitch = (pitch: PitchSchema): IPitch => ({
   _id: pitch._id,
   title: pitch.title,
   author: pitch.author,
+  primaryEditor: pitch.primaryEditor,
+  secondEditors: pitch.secondEditors,
+  thirdEditors: pitch.thirdEditors,
+  writer: pitch.writer,
+  issues: pitch.issues,
   description: pitch.description,
   status: pitch.status,
   assignmentStatus: pitch.assignmentStatus,
@@ -46,7 +70,7 @@ export const santitizeUser = (user: UserSchema): IUser => ({
   involvementResponse: user.involvementResponse,
   claimedPitches: user.claimedPitches,
   submittedPitches: user.submittedPitches,
-  currentTeams: user.currentTeams,
+  teams: user.teams,
   role: user.role,
   hasRoleApproved: user.hasRoleApproved,
   races: user.races,

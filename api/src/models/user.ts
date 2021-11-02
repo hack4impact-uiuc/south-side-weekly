@@ -37,7 +37,7 @@ const User = new mongoose.Schema({
   twitter: { type: String, default: null },
   claimedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
   submittedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
-  currentTeams: [{ type: String, default: null }],
+  teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
   involvementResponse: { type: String, default: null },
 
   role: {
