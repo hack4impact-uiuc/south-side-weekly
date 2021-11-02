@@ -1,4 +1,3 @@
-import { toUpper } from 'lodash';
 import { IPitch } from 'ssw-common';
 
 import { getPitchTeams, isPitchClaimed } from '../../utils/helpers';
@@ -9,7 +8,7 @@ const filterInterests = (pitches: IPitch[], interests: string[]): IPitch[] => {
   }
 
   return pitches.filter((pitch) =>
-    interests.every((interest) => pitch.topics.includes(toUpper(interest))),
+    interests.every((interest) => pitch.topics.includes(interest)),
   );
 };
 

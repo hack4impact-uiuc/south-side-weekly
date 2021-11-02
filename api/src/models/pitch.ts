@@ -2,7 +2,6 @@ import mongoose, { Document, Schema } from 'mongoose';
 import { IPitch } from 'ssw-common';
 
 import {
-  interestsEnum,
   pitchStatusEnum,
   assignmentStatusEnum,
   issueFormatEnum,
@@ -73,13 +72,7 @@ const Pitch = new mongoose.Schema({
   assignmentGoogleDocLink: { type: String, default: null },
   assignmentContributors: [contributor],
   pendingContributors: [contributor],
-  topics: [
-    {
-      type: String,
-      enum: Object.values(interestsEnum),
-      default: interestsEnum.NONE,
-    },
-  ],
+  topics: [{ type: Schema.Types.ObjectId, ref: 'Interest' }],
   teams: [team],
   reviewedBy: { type: Schema.Types.ObjectId, ref: 'User' },
   similarStories: [{ type: String, default: null }],

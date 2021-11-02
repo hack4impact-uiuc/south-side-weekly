@@ -1,21 +1,3 @@
-const interestsEnum = {
-  POLITICS: 'POLITICS',
-  EDUCATION: 'EDUCATION',
-  HOUSING: 'HOUSING',
-  LIT: 'LIT',
-  MUSIC: 'MUSIC',
-  VISUAL_ARTS: 'VISUAL ARTS',
-  STAGE_AND_SCREEN: 'STAGE AND SCREEN',
-  FOOD_AND_LAND: 'FOOD AND LAND',
-  NATURE: 'NATURE',
-  TRANSPORTATION: 'TRANSPORTATION',
-  HEALTH: 'HEALTH',
-  CANNABIS: 'CANNABIS',
-  IMMIGRATION: 'IMMIGRATION',
-  FUN: 'FUN',
-  NONE: 'NONE',
-};
-
 const rolesEnum = {
   CONTRIBUTOR: 'CONTRIBUTOR',
   STAFF: 'STAFF',
@@ -72,7 +54,6 @@ const visibilityEnum = {
 };
 
 export {
-  interestsEnum,
   issueFormatEnum,
   rolesEnum,
   racesEnum,
