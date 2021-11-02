@@ -1,7 +1,16 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Button, Form, Grid, Modal, ModalProps } from 'semantic-ui-react';
+import {
+  Button,
+  Form,
+  Grid,
+  Header,
+  Input,
+  Modal,
+  ModalProps,
+} from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
 import Swal from 'sweetalert2';
+import { LinkDisplay } from '../..';
 
 import {
   approvePitch,
@@ -134,35 +143,28 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       trigger={<PitchCard pitch={pitch} />}
       className={classNames('approve-pitch-modal', rest.className)}
     >
-      <Modal.Header content="Approve or Decline Pitch" />
-      <Modal.Content>
-        <h1>{pitch.title}</h1>
-        <Grid className="topics-section" columns={6}>
+      <Modal.Header content="Review Pitch" />
+      <Modal.Content scrolling className="content">
+        <div className="title-section">
+          <h1 className="title">{pitch.title}</h1>
+          <LinkDisplay href={pitch.assignmentGoogleDocLink} />
+        </div>
+        <div className="topics-section">
           {pitch.topics.map((topic, index) => (
-            <Grid.Column key={index}>
-              <FieldTag content={topic} />
-            </Grid.Column>
+            <FieldTag key={index} content={topic} />
           ))}
-        </Grid>
-        <div className="author-section">
-          <div className="author">
-            <h3>{`Submitted by: ${author}`}</h3>
-          </div>
         </div>
         <p className="description">{pitch.description}</p>
-        <p>
-          Link to Pitch:{' '}
-          <a href={pitch.assignmentGoogleDocLink}>
-            {pitch.assignmentGoogleDocLink}
-          </a>
-        </p>
-        <h2>Set positions Available Per Team: </h2>
-        <p>
-          If approving this Pitch, please indicate the amount of positions that
-          each team will have for this Pitch:
-        </p>
+        <div className="author-section">
+          <div className="author">
+            <h3>{`Pitch Creator: ${author}`}</h3>
+          </div>
+        </div>
+
         <Form>
-          <Form.Group inline widths={5} className="team-select-group">
+          <Form.Input fluid label="Associated Neighborhoods" />
+          <h2>Number of Contributors Needed Per Team </h2>
+          <Form.Group inline widths="equal" className="team-select-group">
             {teams.map((team, index) => (
               <div key={index} className="input-group">
                 <FieldTag name={team.name} hexcode={team.color} />
@@ -173,16 +175,28 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
                   value={findTeamTarget(team._id)}
                   type="number"
                   min={0}
+                  //fluid
+                  className="team-input"
                 />
               </div>
             ))}
           </Form.Group>
+          {/* <Form.Group inline>
+            {teams.map((team, index) => (
+              <Form.Field
+                control={Input}
+                label="First name"
+                placeholder="First name"
+                key={index}
+              />
+            ))}
+          </Form.Group> */}
         </Form>
+        <Modal.Actions>
+          <Button onClick={handleApprove} content="Approve Pitch" positive />
+          <Button onClick={handleDecline} content="Decline Pitch" negative />
+        </Modal.Actions>
       </Modal.Content>
-      <Modal.Actions>
-        <Button onClick={handleApprove} content="Approve Pitch" positive />
-        <Button onClick={handleDecline} content="Decline Pitch" negative />
-      </Modal.Actions>
     </Modal>
   );
 };
