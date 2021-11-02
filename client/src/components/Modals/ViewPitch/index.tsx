@@ -34,18 +34,20 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
 
   const [isOpen, setIsOpen] = useState(false);
   const [aggregate, setAggregate] =
-    useState<IPitchAggregate>(emptyAggregatePitch); // update to empty Aggregate
+    useState<IPitchAggregate>(emptyAggregatePitch);
   const [teamsToContributors, setTeamsToContributors] =
     useState<GroupedContributors[]>();
+
   useEffect(() => {
     const getAggregate = async (): Promise<void> => {
       const res = await aggregatePitch(pitchId);
+
       if (!isError(res)) {
         const aggregatedPitch = res.data.result;
-        console.log(aggregatedPitch);
         const groupedContributors = groupContributorsByTeam(
           aggregatedPitch.aggregated.assignmentContributors,
         );
+
         setTeamsToContributors(groupedContributors);
         setAggregate(aggregatedPitch);
       }
@@ -57,6 +59,7 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
     assignmentContributors: IPitchAggregate['aggregated']['assignmentContributors'],
   ): GroupedContributors[] {
     const teamsToContributors = new Map<string, Partial<IUser>[]>();
+
     assignmentContributors.forEach((contributor) => {
       contributor.teams.forEach((teamName) => {
         if (teamsToContributors.has(teamName)) {
@@ -67,10 +70,12 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
         }
       });
     });
+
     const groupedContributors = Array.from(
       teamsToContributors,
       ([team, users]) => ({ team, users }),
     );
+
     return groupedContributors.sort((a, b) => a.team.localeCompare(b.team));
   }
 
@@ -100,13 +105,13 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
               <RoleRow
                 roleName="Pitch Creator"
                 users={[aggregate?.aggregated.author]}
-              ></RoleRow>
+              />
             </div>
             <div>
               <RoleRow
                 roleName="Writer"
                 users={[aggregate?.aggregated.writer]}
-              ></RoleRow>
+              />
             </div>
           </GridColumn>
           <GridColumn>
@@ -114,24 +119,24 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
               <RoleRow
                 roleName="Primary Editor"
                 users={[aggregate?.aggregated.primaryEditor]}
-              ></RoleRow>
+              />
             </div>
             <div>
               <RoleRow
                 roleName="Second Editor"
                 users={aggregate?.aggregated.secondaryEditors}
-              ></RoleRow>
+              />
             </div>
             <div>
               <RoleRow
                 roleName="Third Editor"
                 users={aggregate?.aggregated.thirdEditors}
-              ></RoleRow>
+              />
             </div>
           </GridColumn>
         </Grid>
         <h4> Other Contributors Currently On Pitch </h4>
-        <Divider></Divider>
+        <Divider />
         <Grid columns="2">
           <GridColumn>
             {teamsToContributors?.map((team, index) => (
@@ -139,7 +144,7 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
                 key={index}
                 roleName={getTeamFromId(team.team)?.name || ''}
                 users={team.users}
-              ></RoleRow>
+              />
             ))}
           </GridColumn>
         </Grid>
