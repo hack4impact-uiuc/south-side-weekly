@@ -31,9 +31,10 @@ export interface IUser {
 
 export interface IUserAggregate extends IUser {
   aggregated: {
-    claimedPitches: Partial<IPitch>[];
-    submittedPitches: Partial<IPitch>[];
-  };
+      claimedPitches: Partial<IPitch>[],
+      submittedPitches: Partial<IPitch>[],
+      interests: IInterest[],
+  }
 }
 
 /**
@@ -82,6 +83,7 @@ export interface IPitchAggregate extends IPitch {
     }[];
     reviewedBy: Partial<IUser>;
     teams: Array<ITeam & { target: number }>;
+    interests: IInterest[],
   };
 }
 
@@ -95,6 +97,16 @@ export interface IResource {
   teams: string[];
   isGeneral: boolean;
   visibility: string;
+}
+
+/**
+ * Interface for a Interest Schema.
+ */
+export interface IInterest {
+  _id: string;
+  name: string;
+  color: string;
+  active: boolean;
 }
 
 /**

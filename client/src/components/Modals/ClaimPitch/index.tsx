@@ -131,8 +131,12 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
       <Modal.Content>
         <h1>{pitch.title}</h1>
         <div className="topics-section">
-          {pitch.topics.map((topic, index) => (
-            <FieldTag key={index} content={topic} />
+          {aggregatedPitch.aggregated.interests.map((interest, index) => (
+            <FieldTag
+              key={index}
+              name={interest.name}
+              hexcode={interest.color}
+            />
           ))}
         </div>
         <div className="author-section">

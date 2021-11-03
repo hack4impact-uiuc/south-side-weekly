@@ -3,8 +3,7 @@ import { Form, Grid } from 'semantic-ui-react';
 import { isEmpty, reject } from 'lodash';
 import Swal from 'sweetalert2';
 
-import { useAuth, useTeams, useWizard } from '../../contexts';
-import { allInterests } from '../../utils/constants';
+import { useAuth, useInterests, useTeams, useWizard } from '../../contexts';
 import { formatNumber, titleCase } from '../../utils/helpers';
 import { isError, updateUser } from '../../api';
 
@@ -14,9 +13,10 @@ const Onboard3 = (): ReactElement => {
   const { store, data } = useWizard();
   const { user } = useAuth();
 
-  const [interests, setInterests] = useState(new Set(data.interests));
+  const [selectedInterests, setInterests] = useState(new Set(data.interests));
   const [selectedTeams, setSelectedTeams] = useState(new Set<string>());
   const { teams } = useTeams();
+  const { interests } = useInterests();
 
   const onSubmit = (): void => {
     if (data.role === 'STAFF') {
@@ -28,7 +28,7 @@ const Onboard3 = (): ReactElement => {
 
   const contributorSubmit = (): void => {
     const data = {
-      interests: Array.from(interests),
+      interests: Array.from(selectedInterests),
       teams: Array.from(selectedTeams),
     };
 
@@ -47,7 +47,7 @@ const Onboard3 = (): ReactElement => {
       teams: Array.from(selectedTeams),
       role: data.role,
       races: reject(data.races, isEmpty),
-      interests: Array.from(interests),
+      interests: Array.from(selectedInterests),
     };
 
     const onboardUser = async (): Promise<void> => {
@@ -76,7 +76,7 @@ const Onboard3 = (): ReactElement => {
   }, [data.teams, data.interests]);
 
   const handleInterests = (interest: string): void => {
-    if (!interests.has(interest) && interests.size === 5) {
+    if (!selectedInterests.has(interest) && selectedInterests.size === 5) {
       Swal.fire({
         title: 'Please select a maximum of 5 teams!',
         icon: 'error',
@@ -84,10 +84,10 @@ const Onboard3 = (): ReactElement => {
       return;
     }
 
-    interests.has(interest)
-      ? interests.delete(interest)
-      : interests.add(interest);
-    setInterests(new Set(interests));
+    selectedInterests.has(interest)
+      ? selectedInterests.delete(interest)
+      : selectedInterests.add(interest);
+    setInterests(new Set(selectedInterests));
   };
 
   const handleTeams = (team: string): void => {
@@ -133,13 +133,13 @@ const Onboard3 = (): ReactElement => {
             Please limit your selection to no more than 5.
           </div>
           <Grid columns={2}>
-            {allInterests.map((interest, index) => (
+            {interests.map((interest, index) => (
               <Grid.Column key={index}>
                 <Form.Checkbox
-                  value={interest}
-                  checked={interests.has(interest)}
-                  label={titleCase(interest)}
-                  onClick={() => handleInterests(interest)}
+                  value={interest._id}
+                  checked={selectedInterests.has(interest._id)}
+                  label={interest.name}
+                  onClick={() => handleInterests(interest._id)}
                 />
               </Grid.Column>
             ))}

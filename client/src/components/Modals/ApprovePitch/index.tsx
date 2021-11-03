@@ -18,7 +18,7 @@ import {
   isError,
   getAggregatedPitch,
 } from '../../../api';
-import { useTeams } from '../../../contexts';
+import { useInterests, useTeams } from '../../../contexts';
 import { classNames, getUserFullName } from '../../../utils/helpers';
 import FieldTag from '../../FieldTag';
 import PitchCard from '../../PitchCard';
@@ -39,6 +39,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   const [author, setAuthor] = useState('');
   const [teamMap, setTeamMap] = useState<IPitch['teams']>([]);
   const { teams } = useTeams();
+  const { getInterestById } = useInterests();
 
   useEffect(() => {
     if (!isOpen) {

@@ -8,8 +8,8 @@ import './styles.scss';
 
 //TODO: Remove this once flexible interests is added
 interface FieldTagProps extends LabelProps {
-  name?: string;
-  hexcode?: string;
+  name?: string | undefined;
+  hexcode?: string | undefined;
 }
 
 const FieldTag: FC<FieldTagProps> = ({
@@ -35,17 +35,20 @@ const FieldTag: FC<FieldTagProps> = ({
     return `${split.join('-')}-tag-color`;
   };
 
+  const getFullClassName = (): string => {
+    const storedBackground =
+      hexcode === undefined ? '' : toClassName(toString(content));
+
+    return classNames('field-tag-label', storedBackground, rest.className);
+  };
+
   return (
     <Label
       {...rest}
-      content={titleCase(toString(name !== '' ? name : content))}
+      content={name || titleCase(toString(content))}
       size={size}
-      style={name !== '' ? { backgroundColor: hexcode } : {}}
-      className={classNames(
-        'interest-team-label',
-        toClassName(toString(content)),
-        rest.className,
-      )}
+      style={{ backgroundColor: hexcode }}
+      className={getFullClassName()}
     />
   );
 };

@@ -22,7 +22,6 @@ import {
 import { FieldTag, UserPicture } from '../../components';
 import Masthead from '../../assets/masthead.svg';
 import {
-  allInterests,
   allGenders,
   allPronouns,
   allRoles,
@@ -30,7 +29,7 @@ import {
   emptyUser,
 } from '../../utils/constants';
 import { parseOptions, updateUserField, titleCase } from '../../utils/helpers';
-import { useAuth, useTeams } from '../../contexts';
+import { useAuth, useInterests, useTeams } from '../../contexts';
 
 import SocialsInput from './SocialsInput';
 import StringAttribute from './BasicInfoInput/StringAttribute';
@@ -70,6 +69,7 @@ const Profile = (): ReactElement => {
 
   const auth = useAuth();
   const { teams } = useTeams();
+  const { interests, getInterestById } = useInterests();
 
   useEffect(() => {
     const loadUser = async (): Promise<void> => {
@@ -339,13 +339,13 @@ const Profile = (): ReactElement => {
               <HeaderTag as="h2">My Interests</HeaderTag>
               {isEditable('interests') ? (
                 <Container>
-                  {allInterests.map((interest, index) => (
+                  {interests.map((interest, index) => (
                     <div key={index} className="checkbox-group">
                       <Checkbox
                         className="checkbox"
-                        value={interest}
-                        label={titleCase(interest)}
-                        checked={user.interests.includes(interest)}
+                        value={interest._id}
+                        label={titleCase(interest.name)}
+                        checked={user.interests.includes(interest._id)}
                         onChange={(e, { value }) => {
                           addInterest(`${value}`);
                         }}
@@ -354,16 +354,19 @@ const Profile = (): ReactElement => {
                   ))}
                 </Container>
               ) : (
-                user.interests
-                  .sort()
-                  .map((interest, index) => (
+                user.interests.sort().map((interest, index) => {
+                  const fullInterst = getInterestById(interest);
+
+                  return (
                     <FieldTag
                       size="medium"
                       key={index}
                       className="field-label"
-                      content={interest}
+                      name={fullInterst?.name}
+                      hexcode={fullInterst?.color}
                     />
-                  ))
+                  );
+                })
               )}
             </Grid.Column>
           )}
