@@ -13,12 +13,12 @@ interface PitchTableProps {
 
 interface PitchHeaderProps {
   pitches: IPitch[];
-  data: IPitch[];
-  setData: (data: IPitch[]) => void;
+  sortedPitches: IPitch[];
+  setSortedPitches: (sortedPitches: IPitch[]) => void;
 }
 
 interface PitchBodyProps {
-  data: IPitch[];
+  sortedPitches: IPitch[];
 }
 
 interface PitchRowProps {
@@ -49,8 +49,8 @@ const columnsEnum: { [key: string]: ColumnEnumValue } = {
 
 const PitchHeader: FC<PitchHeaderProps> = ({
   pitches,
-  data,
-  setData,
+  sortedPitches,
+  setSortedPitches,
 }): ReactElement => {
   const [column, setColumn] = useState<ColumnEnumValue>();
   const [direction, setDirection] = useState<'ascending' | 'descending'>();
@@ -59,28 +59,28 @@ const PitchHeader: FC<PitchHeaderProps> = ({
     if (column?.title === newColumn.title) {
       if (direction === 'ascending') {
         setDirection('descending');
-        setData(data.slice().reverse());
+        setSortedPitches(sortedPitches.slice().reverse());
       } else if (direction === 'descending') {
-        setData(pitches);
+        setSortedPitches(pitches);
         setDirection(undefined);
         setColumn(undefined);
       } else {
         setDirection('ascending');
-        setData(data.slice().reverse());
+        setSortedPitches(sortedPitches.slice().reverse());
       }
     } else {
       setColumn(newColumn);
       setDirection('ascending');
 
-      const copy = [...data];
+      const copy = [...sortedPitches];
       copy.sort(newColumn.sort);
-      setData(copy);
+      setSortedPitches(copy);
     }
   };
 
   useEffect(() => {
-    setData(pitches);
-  }, [pitches, setData]);
+    setSortedPitches(pitches);
+  }, [pitches, setSortedPitches]);
 
   return (
     <Table.Row>
@@ -102,76 +102,86 @@ const PitchHeader: FC<PitchHeaderProps> = ({
   );
 };
 
-const PitchBody: FC<PitchBodyProps> = ({ data }): ReactElement => (
+const PitchBody: FC<PitchBodyProps> = ({ sortedPitches }): ReactElement => (
   <>
-    {data.length === 0 && (
+    {sortedPitches.length === 0 && (
       <Table.Row>
         <Table.Cell textAlign="center" width={1}>
           <div className="no-results-found">No results found!</div>
         </Table.Cell>
       </Table.Row>
     )}
-    {data.map((user, index) => (
+    {sortedPitches.map((user, index) => (
       <PitchRow pitch={user} key={index} />
     ))}
   </>
 );
 
-const getClaimableTeams = (pitch: IPitch, user: IUser): string[] => (
-    pitch.writer ? pitch.teams
-    .filter((team) => team.target > 0 && user.teams.includes(team.teamId))
-    .map((team) => team.teamId) : []);
+const getClaimableTeams = (pitch: IPitch, user: IUser): string[] =>
+  pitch.writer
+    ? pitch.teams
+        .filter((team) => team.target > 0 && user.teams.includes(team.teamId))
+        .map((team) => team.teamId)
+    : [];
 
 const PitchRow: FC<PitchRowProps> = ({ pitch }): ReactElement => {
   const { user } = useAuth();
   const { getInterestById } = useInterests();
   const { getTeamFromId } = useTeams();
 
-  return (<Table.Row>
-    <Table.Cell>{pitch.title}</Table.Cell>
-    <Table.Cell>{pitch.description}</Table.Cell>
-    <Table.Cell>
-      {pitch.topics.map((interest, index) => {
-        const fullInterest = getInterestById(interest);
+  return (
+    <Table.Row>
+      <Table.Cell>{pitch.title}</Table.Cell>
+      <Table.Cell>{pitch.description}</Table.Cell>
+      <Table.Cell>
+        {pitch.topics.map((interest, index) => {
+          const fullInterest = getInterestById(interest);
 
-        return (
-          <FieldTag
-            size="small"
-            key={index}
-            name={fullInterest?.name}
-            hexcode={fullInterest?.color}
-          />
-        );
-      })}
-    </Table.Cell>
-    <Table.Cell>{getClaimableTeams(pitch, user).map((team, index)=> {
-      const fullTeam = getTeamFromId(team);
+          return (
+            <FieldTag
+              size="small"
+              key={index}
+              name={fullInterest?.name}
+              hexcode={fullInterest?.color}
+            />
+          );
+        })}
+      </Table.Cell>
+      <Table.Cell>
+        {getClaimableTeams(pitch, user).map((team, index) => {
+          const fullTeam = getTeamFromId(team);
 
-      return (
-        <FieldTag
-          size="small"
-          key={index}
-          name={fullTeam?.name}
-          hexcode={fullTeam?.color}
-        />
-      );
-    })}</Table.Cell>
-  </Table.Row>)
+          return (
+            <FieldTag
+              size="small"
+              key={index}
+              name={fullTeam?.name}
+              hexcode={fullTeam?.color}
+            />
+          );
+        })}
+      </Table.Cell>
+    </Table.Row>
+  );
 };
 
 const PitchTable: FC<PitchTableProps> = ({ pitches }): ReactElement => {
-  const [data, setData] = useState<IPitch[]>([]);
+  const [sortedPitches, setSortedPitches] = useState<IPitch[]>([]);
 
   useEffect(() => {
-    setData(pitches);
+    setSortedPitches(pitches);
   }, [pitches]);
 
   return (
     <TableTool
       tableHeader={
-        <PitchHeader pitches={pitches} data={data} setData={setData} />
+        <PitchHeader
+          pitches={pitches}
+          sortedPitches={sortedPitches}
+          setSortedPitches={setSortedPitches}
+        />
       }
-      tableBody={<PitchBody data={data} />}
+      tableBody={<PitchBody sortedPitches={sortedPitches} />}
       singleLine={pitches.length > 0}
     />
   );

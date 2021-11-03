@@ -11,12 +11,9 @@ import {
   isError,
 } from '../../api';
 import {
-  PitchCard,
   SubmitPitchModal,
   StaffView,
   AdminView,
-  ClaimPitchModal,
-  ApprovePitchModal,
   Select,
   Walkthrough,
   InterestsSelect,
@@ -240,29 +237,6 @@ const PitchDoc = (): ReactElement => {
       </div>
       <div className="pitch-doc">
         <PitchTable pitches={filteredPitches} />
-        {filteredPitches.map((pitch, index) => {
-          if (currentTab === TABS.UNCLAIMED) {
-            return (
-              <ClaimPitchModal
-                callback={populatePitches}
-                key={index}
-                pitch={pitch}
-              />
-            );
-          } else if (currentTab === TABS.PITCH_APPROVAL) {
-            return (
-              <ApprovePitchModal
-                callback={populatePitches}
-                key={index}
-                pitch={pitch}
-              />
-            );
-          } else if (currentTab === TABS.CLAIM_APPROVAL) {
-            return <PitchCard key={index} pitch={pitch} />;
-          } else if (currentTab === TABS.APPROVED) {
-            return <PitchCard key={index} pitch={pitch} />;
-          }
-        })}
       </div>
     </div>
   );
