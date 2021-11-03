@@ -9,18 +9,32 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
+
+      i {
+        cursor: pointer;
+      }
     }
   }
 
   .content {
-    .author-section {
+    .pitch-title {
       display: flex;
+      align-items: center;
+      gap: 18px;
+    }
 
-      .author {
-        margin-right: 20px;
-        h3 {
-          font-weight: normal;
+    .contributors {
+      margin: 40px 0px;
+      .contributors-summary {
+        cursor: default;
+
+        > h4 {
+          display: inline;
         }
+      }
+
+      > *:not(summary) {
+        margin-left: 15px;
       }
     }
 
@@ -34,15 +48,20 @@
 
     .team-select-group {
       display: flex;
+      flex-flow: column nowrap;
+      padding: 20px;
+      border-radius: 5px;
+      border: 1px solid $secondaryColor;
+
+      .select-team-message {
+        color: $secondaryColor;
+        font-weight: bold;
+      }
 
       .checkbox-wrapper {
         display: flex;
-        flex-direction: column;
         align-items: center;
-
-        * {
-          margin: 5px;
-        }
+        gap: 10px;
       }
     }
 
@@ -53,6 +72,11 @@
         margin-right: 10px;
       }
     }
+  }
+
+  .word-limit {
+    margin-left: auto;
+    text-align: right;
   }
 
   .actions {
