@@ -129,7 +129,7 @@ router.put(
 
         return Interest.findByIdAndUpdate(interest._id, body, {
           new: true,
-          // runValidators: true,
+          runValidators: true,
         });
       }),
     );
