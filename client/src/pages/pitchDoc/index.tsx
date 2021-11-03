@@ -21,6 +21,7 @@ import {
   Walkthrough,
   InterestsSelect,
   TeamsSelect,
+  PitchTable,
 } from '../../components';
 import { useAuth } from '../../contexts';
 import { pagesEnum } from '../../utils/enums';
@@ -238,6 +239,7 @@ const PitchDoc = (): ReactElement => {
         )}
       </div>
       <div className="pitch-doc">
+        <PitchTable pitches={filteredPitches} />
         {filteredPitches.map((pitch, index) => {
           if (currentTab === TABS.UNCLAIMED) {
             return (

@@ -1,89 +1,54 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Button, Icon, Table } from 'semantic-ui-react';
-import { IUser } from 'ssw-common';
+import { Table } from 'semantic-ui-react';
+import { IPitch, IUser } from 'ssw-common';
 
-import { AdminView, FieldTag, UserModal, UserPicture, TableTool } from '../..';
-import { useTeams } from '../../../contexts';
-import { getUserFullName } from '../../../utils/helpers';
+import { FieldTag, TableTool } from '../..';
+import { useAuth, useInterests, useTeams } from '../../../contexts';
 
 import './styles.scss';
 
 interface PitchTableProps {
-  users: IUser[];
+  pitches: IPitch[];
 }
 
 interface PitchHeaderProps {
-  users: IUser[];
-  data: IUser[];
-  setData: (data: IUser[]) => void;
-}
-
-interface PitchRowProps {
-  user: IUser;
+  pitches: IPitch[];
+  data: IPitch[];
+  setData: (data: IPitch[]) => void;
 }
 
 interface PitchBodyProps {
-  data: IUser[];
+  data: IPitch[];
 }
 
-const ROLE_WIDTH = 2;
-const ONBOARDING_WIDTH = 2;
-const ACTIVITY_WIDTH = 1;
-const JOINED_WIDTH = 1;
-const EDITED_WIDTH = 1;
+interface PitchRowProps {
+  pitch: IPitch;
+}
 
-const fullNameSort = (a: IUser, b: IUser): number => {
-  const aFullName = getUserFullName(a);
-  const bFullName = getUserFullName(b);
+const titleSort = (a: IPitch, b: IPitch): number =>
+  a.title.localeCompare(b.title);
 
-  return aFullName.localeCompare(bFullName);
-};
-
-const roleSort = (a: IUser, b: IUser): number => a.role.localeCompare(b.role);
-
-const onboardingSort = (a: IUser, b: IUser): number =>
-  a.onboardingStatus.localeCompare(b.onboardingStatus);
-
-// @todo - implement acitivty
-const activitySort = (a: IUser, b: IUser): number => roleSort(a, b);
-
-const joinedSort = (a: IUser, b: IUser): number => {
-  const first = new Date(a.dateJoined);
-  const second = new Date(b.dateJoined);
-
-  return first.getTime() - second.getTime();
-};
+const descriptionSort = (a: IPitch, b: IPitch): number =>
+  a.description.localeCompare(b.description);
 
 interface ColumnEnumValue {
   title: string;
-  sort: (a: IUser, b: IUser) => number;
+  sort: (a: IPitch, b: IPitch) => number;
 }
 
 const columnsEnum: { [key: string]: ColumnEnumValue } = {
-  NAME: {
-    title: 'NAME',
-    sort: fullNameSort,
+  TITLE: {
+    title: 'TITLE',
+    sort: titleSort,
   },
-  ROLE: {
-    title: 'ROLE',
-    sort: roleSort,
-  },
-  ONBOARDING: {
-    title: 'ONBOARDING',
-    sort: onboardingSort,
-  },
-  ACTIVITY: {
-    title: 'ACTIVITY',
-    sort: activitySort,
-  },
-  JOINED: {
-    title: 'JOINED',
-    sort: joinedSort,
+  DESCRIPTION: {
+    title: 'DESCRIPTION',
+    sort: descriptionSort,
   },
 };
 
-const DirectoryHeader: FC<PitchHeaderProps> = ({
-  users,
+const PitchHeader: FC<PitchHeaderProps> = ({
+  pitches,
   data,
   setData,
 }): ReactElement => {
@@ -96,7 +61,7 @@ const DirectoryHeader: FC<PitchHeaderProps> = ({
         setDirection('descending');
         setData(data.slice().reverse());
       } else if (direction === 'descending') {
-        setData(users);
+        setData(pitches);
         setDirection(undefined);
         setColumn(undefined);
       } else {
@@ -114,56 +79,30 @@ const DirectoryHeader: FC<PitchHeaderProps> = ({
   };
 
   useEffect(() => {
-    setData(users);
-  }, [users, setData]);
+    setData(pitches);
+  }, [pitches, setData]);
 
   return (
     <Table.Row>
-      <Table.HeaderCell width={1} />
       <Table.HeaderCell
-        onClick={() => handleSort(columnsEnum.NAME)}
-        sorted={column === columnsEnum.NAME ? direction : undefined}
+        onClick={() => handleSort(columnsEnum.TITLE)}
+        sorted={column === columnsEnum.TITLE ? direction : undefined}
       >
-        Name
+        Title
       </Table.HeaderCell>
       <Table.HeaderCell
-        onClick={() => handleSort(columnsEnum.ROLE)}
-        sorted={column === columnsEnum.ROLE ? direction : undefined}
-        width={ROLE_WIDTH}
+        onClick={() => handleSort(columnsEnum.DESCRIPTION)}
+        sorted={column === columnsEnum.DESCRIPTION ? direction : undefined}
       >
-        Role
+        Description
       </Table.HeaderCell>
-      <Table.HeaderCell>Teams</Table.HeaderCell>
-      <Table.HeaderCell>Interests</Table.HeaderCell>
-      <AdminView>
-        <Table.HeaderCell
-          onClick={() => handleSort(columnsEnum.ONBOARDING)}
-          sorted={column === columnsEnum.ONBOARDING ? direction : undefined}
-          width={ONBOARDING_WIDTH}
-        >
-          Onboarding
-        </Table.HeaderCell>
-        <Table.HeaderCell
-          onClick={() => handleSort(columnsEnum.ACTIVITY)}
-          sorted={column === columnsEnum.ACTIVITY ? direction : undefined}
-          width={ACTIVITY_WIDTH}
-        >
-          Activity
-        </Table.HeaderCell>
-        <Table.HeaderCell
-          onClick={() => handleSort(columnsEnum.JOINED)}
-          sorted={column === columnsEnum.JOINED ? direction : undefined}
-          width={JOINED_WIDTH}
-        >
-          Joined
-        </Table.HeaderCell>
-        <Table.HeaderCell width={EDITED_WIDTH} />
-      </AdminView>
+      <Table.HeaderCell>Associated Interests</Table.HeaderCell>
+      <Table.HeaderCell>Teams You Can Claim</Table.HeaderCell>
     </Table.Row>
   );
 };
 
-const DirectoryBody: FC<PitchBodyProps> = ({ data }): ReactElement => (
+const PitchBody: FC<PitchBodyProps> = ({ data }): ReactElement => (
   <>
     {data.length === 0 && (
       <Table.Row>
@@ -173,79 +112,69 @@ const DirectoryBody: FC<PitchBodyProps> = ({ data }): ReactElement => (
       </Table.Row>
     )}
     {data.map((user, index) => (
-      <DirectoryRow user={user} key={index} />
+      <PitchRow pitch={user} key={index} />
     ))}
   </>
 );
 
-const DirectoryRow: FC<PitchRowProps> = ({ user }): ReactElement => {
+const getClaimableTeams = (pitch: IPitch, user: IUser): string[] => (
+    pitch.writer ? pitch.teams
+    .filter((team) => team.target > 0 && user.teams.includes(team.teamId))
+    .map((team) => team.teamId) : []);
+
+const PitchRow: FC<PitchRowProps> = ({ pitch }): ReactElement => {
+  const { user } = useAuth();
+  const { getInterestById } = useInterests();
   const { getTeamFromId } = useTeams();
-  return (
-    <Table.Row>
-      <Table.Cell className="picture-col" width={1}>
-        <UserPicture id="user-picture" user={user} />
-      </Table.Cell>
-      <Table.Cell>{getUserFullName(user)}</Table.Cell>
-      <Table.Cell width={ROLE_WIDTH}>
-        <FieldTag size="small" content={user.role} />
-      </Table.Cell>
-      <Table.Cell>
-        {user.teams.map((team, index) => (
+
+  return (<Table.Row>
+    <Table.Cell>{pitch.title}</Table.Cell>
+    <Table.Cell>{pitch.description}</Table.Cell>
+    <Table.Cell>
+      {pitch.topics.map((interest, index) => {
+        const fullInterest = getInterestById(interest);
+
+        return (
           <FieldTag
             size="small"
             key={index}
-            name={getTeamFromId(team)?.name}
-            hexcode={getTeamFromId(team)?.color}
+            name={fullInterest?.name}
+            hexcode={fullInterest?.color}
           />
-        ))}
-      </Table.Cell>
-      <Table.Cell>
-        {user.interests.map((interest, index) => (
-          <FieldTag size="small" key={index} content={interest} />
-        ))}
-      </Table.Cell>
-      <AdminView>
-        <Table.Cell width={ONBOARDING_WIDTH}>
-          <FieldTag size="small" content={user.onboardingStatus} />
-        </Table.Cell>
-        <Table.Cell width={ACTIVITY_WIDTH}>
-          <FieldTag size="small" content="Active" />
-        </Table.Cell>
-        <Table.Cell width={JOINED_WIDTH}>
-          {new Date(user.dateJoined).getFullYear()}
-        </Table.Cell>
+        );
+      })}
+    </Table.Cell>
+    <Table.Cell>{getClaimableTeams(pitch, user).map((team, index)=> {
+      const fullTeam = getTeamFromId(team);
 
-        <Table.Cell width={1}>
-          <UserModal
-            trigger={
-              <Button className="open-user-button" size="tiny" circular icon>
-                <Icon name="pencil" />
-              </Button>
-            }
-            user={user}
-          />
-        </Table.Cell>
-      </AdminView>
-    </Table.Row>
-  );
+      return (
+        <FieldTag
+          size="small"
+          key={index}
+          name={fullTeam?.name}
+          hexcode={fullTeam?.color}
+        />
+      );
+    })}</Table.Cell>
+  </Table.Row>)
 };
 
-const DirectoryTable: FC<PitchTableProps> = ({ users }): ReactElement => {
-  const [data, setData] = useState<IUser[]>([]);
+const PitchTable: FC<PitchTableProps> = ({ pitches }): ReactElement => {
+  const [data, setData] = useState<IPitch[]>([]);
 
   useEffect(() => {
-    setData(users);
-  }, [users]);
+    setData(pitches);
+  }, [pitches]);
 
   return (
     <TableTool
       tableHeader={
-        <DirectoryHeader users={users} data={data} setData={setData} />
+        <PitchHeader pitches={pitches} data={data} setData={setData} />
       }
-      tableBody={<DirectoryBody data={data} />}
-      singleLine={users.length > 0}
+      tableBody={<PitchBody data={data} />}
+      singleLine={pitches.length > 0}
     />
   );
 };
 
-export default DirectoryTable;
+export default PitchTable;
