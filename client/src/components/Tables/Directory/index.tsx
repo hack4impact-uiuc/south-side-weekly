@@ -5,6 +5,7 @@ import { IUser } from 'ssw-common';
 import { AdminView, FieldTag, UserModal, UserPicture } from '../..';
 import { useInterests, useTeams } from '../../../contexts';
 import { getUserFullName } from '../../../utils/helpers';
+import InterestsModal from '../../Modals/EditInterests';
 
 import './styles.scss';
 
@@ -131,7 +132,7 @@ const DirectoryTable: FC<DirectoryTableProps> = ({ users }): ReactElement => {
               Role
             </Table.HeaderCell>
             <Table.HeaderCell>Teams</Table.HeaderCell>
-            <Table.HeaderCell>Interests</Table.HeaderCell>
+            <Table.HeaderCell>Interests <InterestsModal /></Table.HeaderCell>
             <AdminView>
               <Table.HeaderCell
                 onClick={() => handleSort(columnsEnum.ONBOARDING)}

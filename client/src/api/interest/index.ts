@@ -44,4 +44,24 @@ const updateInterest = async (
   return await put(url, { interest }, failureMessage);
 };
 
-export { getInterests, getInterest, createInterest, updateInterest };
+// Creates many interests in the database
+const createManyInterests = async (
+  interests: Partial<IInterest>[],
+): Promise<Response<InterestResponse>> => {
+  const url = buildEndpoint(INTEREST_ENDPOINT, 'many');
+  const failureMessage = 'Failed to create many interests';
+
+  return await post(url, { interests }, failureMessage);
+};
+
+// Updates many interests in the database
+const updateManyInterests = async (
+  interests: IInterest[],
+): Promise<Response<InterestResponse>> => {
+  const url = buildEndpoint(INTEREST_ENDPOINT, 'many');
+  const failureMessage = 'Failed to update many interests';
+
+  return await put(url, { interests }, failureMessage);
+};
+
+export { getInterests, getInterest, createInterest, updateInterest, updateManyInterests, createManyInterests };
