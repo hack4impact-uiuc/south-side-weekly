@@ -50,12 +50,9 @@
         display: flex;
         flex-direction: column;
         align-items: flex-start;
-        //min-width: 10px;
+        width: fit-content;
 
         .field {
-          //padding: 0 !important;
-          width: '80%';
-
           // https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp
           input::-webkit-outer-spin-button,
           input::-webkit-inner-spin-button {
@@ -66,15 +63,36 @@
           input {
             margin-top: 10px;
             text-align: center;
+            width: 100% !important;
           }
         }
       }
+    }
+    .format-deadline-section {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      .issue-format-section {
+        flex-direction: column;
+      }
+
+      .prints-input {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    .writer-editors-section {
+      //flex-direction: column !important;
+      // justify-content: flex-start !important;
+      align-items: flex-start !important;
     }
   }
 
   .actions {
     border-top: none !important;
-    background-color: white !important;
+    background-color: #f6f7fb !important;
     text-align: right;
     padding: 10px !important;
 
@@ -82,4 +100,10 @@
       margin: 0px 20px 20px 0px !important;
     }
   }
+}
+
+mark.optional {
+  color: #9b9b9b;
+  background-color: transparent !important;
+  font-weight: lighter !important;
 }

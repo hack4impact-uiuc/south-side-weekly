@@ -163,9 +163,11 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
 
         <Form>
           <Form.Input fluid label="Associated Neighborhoods" />
-          <h2>Number of Contributors Needed Per Team </h2>
+          <label htmlFor="testts">
+            Number of Contributors Needed Per Team{' '}
+          </label>
           <Form.Group inline widths="equal" className="team-select-group">
-            {teams.map((team, index) => (
+            {[...teams, ...teams].slice(0, 7).map((team, index) => (
               <div key={index} className="input-group">
                 <FieldTag name={team.name} hexcode={team.color} />
                 <Form.Input
@@ -175,7 +177,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
                   value={findTeamTarget(team._id)}
                   type="number"
                   min={0}
-                  //fluid
+                  fluid
                   className="team-input"
                 />
               </div>
@@ -191,6 +193,50 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
               />
             ))}
           </Form.Group> */}
+          <Form.Group inline className="format-deadline-section">
+            <Form.Group grouped>
+              <label htmlFor="testtest">Issue Format</label>
+              <Form.Checkbox
+                label={'Print'}
+                value={'Print'}
+                //checked={false}
+                //onChange={(_, value) =>{}}
+              />
+              <Form.Checkbox
+                label={'Online'}
+                value={'Online'}
+                //checked={false}
+                //onChange={(_, value) =>{}}
+              />
+            </Form.Group>
+            <Form.Input
+              label={'Deadline'}
+              value={'0'}
+              className="prints-input"
+            />
+          </Form.Group>
+          <Form.Group inline className="writer-editors-section">
+            <Form.Group grouped>
+              <label htmlFor="testtest">
+                Writer <mark className="optional">- Optional</mark>
+              </label>
+              <Form.Input />
+            </Form.Group>
+            <Form.Group grouped>
+              <label htmlFor="testtest">Editors</label>
+              <Form.Input />
+              <Form.Input />
+              <Form.Input />
+            </Form.Group>
+          </Form.Group>
+          <Form.Input
+            fluid
+            label={
+              <label htmlFor="testtest">
+                Writer <mark className="optional">- Optional</mark>
+              </label>
+            }
+          />
         </Form>
         <Modal.Actions>
           <Button onClick={handleApprove} content="Approve Pitch" positive />
