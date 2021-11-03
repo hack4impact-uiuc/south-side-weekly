@@ -15,15 +15,11 @@ import './styles.scss';
 import { useTeams } from '../../../contexts';
 import { createManyTeams, updateManyTeams } from '../../../api';
 
-// interface TeamModalProps extends ModalProps {}
-
 const TeamModalTrigger: FC<ButtonProps> = ({ ...rest }): ReactElement => (
   <Button {...rest} size="tiny" circular icon style={{ background: 'none' }}>
     <Icon name="pencil" />
   </Button>
 );
-
-// const copy = [...teams.map((t) => ({ ...t }))];
 
 const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
   const { teams, fetchTeams } = useTeams();
@@ -33,9 +29,7 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
   const [clonedTeams, setClonedTeams] = useState<Partial<ITeam>[]>([]);
 
   useEffect(() => {
-    fetchTeams();
     setFormValues(teams);
-
     const clone = teams.map((team) => ({
       _id: team._id,
       name: team.name,
@@ -44,6 +38,10 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
     }));
 
     setClonedTeams([...clone]);
+    fetchTeams();
+
+    // DON'T DO THIS UNLESS AMIT SAYS SO
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   // Add a new field in form
@@ -80,9 +78,11 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
     // Save newly created teams in newTeams
     const newTeams = formValues.filter((team) => team._id === 'NEW');
     // Take out _id = "NEW" field from newTeams
-    const parsedNewTeams: Partial<ITeam>[] = newTeams.map(
-      ({ _id, ...rest }) => rest,
-    );
+    const parsedNewTeams: Partial<ITeam>[] = newTeams.map((team) => ({
+      name: team.name,
+      color: team.color,
+      active: team.active,
+    }));
 
     // Save changes to existing team in changedTeams
     const changedTeams: ITeam[] = [];
