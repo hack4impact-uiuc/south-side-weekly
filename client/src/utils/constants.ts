@@ -2,32 +2,6 @@ import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
 
 import { wizardPages } from './enums';
 
-const allInterests = [
-  'POLITICS',
-  'EDUCATION',
-  'HOUSING',
-  'LIT',
-  'MUSIC',
-  'VISUAL ARTS',
-  'STAGE AND SCREEN',
-  'FOOD AND LAND',
-  'NATURE',
-  'TRANSPORTATION',
-  'HEALTH',
-  'CANNABIS',
-  'IMMIGRATION',
-  'FUN',
-];
-
-const allTeams = [
-  'EDITING',
-  'WRITING',
-  'VISUALS',
-  'PHOTOGRAPHY',
-  'ILLUSTRATION',
-  'FACT-CHECKING',
-];
-
 const allGenders = ['Man', 'Woman', 'Nonbinary', 'Other'];
 const allPronouns = ['He/his', 'She/her', 'They/them', 'Ze/hir', 'Other'];
 const allRoles = ['ADMIN', 'STAFF', 'CONTRIBUTOR'];
@@ -117,13 +91,12 @@ const emptyAggregatePitch: IPitchAggregate = {
     pendingContributors: [],
     reviewedBy: emptyUser,
     teams: [],
+    interests: [],
   },
   ...emptyPitch,
 };
 
 export {
-  allInterests,
-  allTeams,
   allGenders,
   allPronouns,
   allRoles,

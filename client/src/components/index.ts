@@ -24,6 +24,9 @@ import DirectoryTable from './Tables/Directory';
 import PitchTable from './Tables/PitchDoc';
 import TableTool from './Tables/TableTool';
 import Walkthrough from './Walkthrough';
+import InterestsSelect from './Dropdowns/InterestsSelect';
+import ProviderWrapper from './ProviderWrapper';
+import TeamsSelect from './Dropdowns/TeamsSelect';
 
 export {
   Header,
@@ -52,4 +55,7 @@ export {
   PitchTable,
   TableTool,
   Walkthrough,
+  InterestsSelect,
+  ProviderWrapper,
+  TeamsSelect,
 };

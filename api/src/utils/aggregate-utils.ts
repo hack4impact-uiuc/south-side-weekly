@@ -3,6 +3,7 @@ import { IPitch, IUser, IUserAggregate, IPitchAggregate } from 'ssw-common';
 import Pitch from '../models/pitch';
 import User from '../models/user';
 import Team from '../models/team';
+import Interest from '../models/interest';
 
 const simplifyUser = (user: IUser | null): Partial<IUser> => {
   if (user === null) {
@@ -51,6 +52,10 @@ const aggregatePitch = async (rawPitch: IPitch): Promise<IPitchAggregate> => {
     })),
   );
 
+  const interests = await Promise.all(
+    rawPitch.topics.map((interestId) => Interest.findById(interestId).lean()),
+  );
+
   const teams = await Promise.all(
     rawPitch.teams.map(({ teamId, target }) =>
       Team.findById(teamId)
@@ -67,6 +72,7 @@ const aggregatePitch = async (rawPitch: IPitch): Promise<IPitchAggregate> => {
       reviewedBy: reviewer,
       assignmentContributors: assignmentContributors,
       pendingContributors: pendingContributors,
+      interests: interests,
       teams: teams,
       primaryEditor: primaryEditor,
       secondaryEditors: secondEditors,
@@ -102,11 +108,16 @@ const aggregateUser = async (rawUser: IUser): Promise<IUserAggregate> => {
     ),
   );
 
+  const interests = await Promise.all(
+    rawUser.interests.map((interestId) => Interest.findById(interestId).lean()),
+  );
+
   const aggregatedPitch = {
     ...rawUser,
     aggregated: {
       claimedPitches: claimedPitches,
       submittedPitches: submittedPitches,
+      interests: interests,
     },
   };
 

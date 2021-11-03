@@ -4,13 +4,13 @@ import { Input } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { getUsers, isError } from '../../api';
-import { allInterests, allRoles } from '../../utils/constants';
-import { useTeams } from '../../contexts';
+import { allRoles } from '../../utils/constants';
 import {
-  MultiSelect,
   Select,
   DirectoryTable,
   Walkthrough,
+  InterestsSelect,
+  TeamsSelect,
 } from '../../components';
 import { pagesEnum } from '../../utils/enums';
 
@@ -32,8 +32,6 @@ const Directory = (): ReactElement => {
   const [interests, setInterests] = useState<string[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
   const [query, setQuery] = useState<string>('');
-
-  const { teams: allTeams } = useTeams();
 
   useEffect(() => {
     const getAllUsers = async (): Promise<void> => {
@@ -112,29 +110,17 @@ const Directory = (): ReactElement => {
           />
         </div>
         <div className="wrapper">
-          <MultiSelect
-            value={interests}
+          <InterestsSelect
+            values={interests}
             onChange={(values) =>
-              setInterests(values ? values.map((item) => item.value) : [])
+              setInterests(values.map((item) => item.value))
             }
-            options={allInterests.map((interest) => ({
-              label: interest,
-              value: interest,
-            }))}
-            placeholder="Interests"
           />
         </div>
         <div className="wrapper">
-          <MultiSelect
-            value={teams}
-            onChange={(values) =>
-              setTeams(values ? values.map((item) => item.value) : [])
-            }
-            options={allTeams.map((team) => ({
-              label: team.name,
-              value: team._id,
-            }))}
-            placeholder="Teams"
+          <TeamsSelect
+            values={teams}
+            onChange={(values) => setTeams(values.map((item) => item.value))}
           />
         </div>
       </div>
