@@ -10,7 +10,7 @@ export interface EmailMessage {
 }
 type userInfo = { name: string; email: string };
 type teamsUsers = Record<string, userInfo[]>;
-
+const getPitchDocLink = (): string => ('https://south-side-weekly-dpoizlx6i-hack4impact1.vercel.app/pitches')
 const getAllTeams = (teamNamesToUsers: teamsUsers): string => {
   const message: string[] = [];
   for (const key in teamNamesToUsers) {
@@ -26,12 +26,13 @@ export const notifyMessage = (
   recipient: Partial<IUser>,
   pitch: IPitchAggregate,
   ccUser: Partial<IUser>,
+  admin: IUser,
 ): EmailMessage => ({
   to: recipient.email,
   from: process.env.EMAIL_USERNAME,
   cc: ccUser.email,
   subject: `New Role Assigned To "${pitch.title}"`,
-  html: `You have just been assigned to the pitch titled: ${pitch.title} as the writer`,
+  html: `You have just been assigned by ${admin.firstName} to the pitch titled: ${pitch.title} as the writer`,
 });
 export const declinedMessage = (
   author: IUser,
@@ -54,7 +55,7 @@ export const declinedMessage = (
                   admin.email
                 }. 
                 Check out more <a href='www.google.com'>pitch-writing resources</a>. In the meantime, feel free to check the 
-                  <a href='http://south-side-weekly.vercel.app/pitches'>pitch doc</a> for potential new stories to claim!</dt>
+                  <a href='${getPitchDocLink()}'>pitch doc</a> for potential new stories to claim!</dt>
                 <br>
                 <dt>Thank you,
                     <br>
@@ -67,9 +68,11 @@ export const approvedMessage = (
   author: IUser,
   pitch: IPitch,
   admin: IUser,
+  ccUser?: Partial<IUser>,
 ): EmailMessage => ({
   to: author.email,
   from: process.env.EMAIL_USERNAME,
+  cc: ccUser.email,
   subject: `Pitch "${pitch.title}" Approved`,
   html: `<div>
                 <dt>Hi ${author.preferredName || author.firstName},</dt>
@@ -82,19 +85,24 @@ export const approvedMessage = (
                 <br>
                 <b>Description:</b> ${pitch.description}
                 <br>
-                <b>Link:</b> ${pitch.assignmentGoogleDocLink}
+                <br>
+                <dt>
+                  Your pitch has been added to the <a href="${getPitchDocLink()}">Pitch Doc</a>
+                ${ccUser && 
+                `
+                  Your primary editor, ${ccUser.firstName}, is cc’ed on this email and will be following up to begin discussing your story
+                  </dt>
+                  <br>
+                  <br>
+                  <dt>
+                  We can't wait to see your story come together!
+                `
+                }
+                </dt>
                 <br>
                 <br>
-                <dt>Your pitch is due on ${
-                  pitch.deadline ? pitch.deadline.toDateString() : 'no date'
-                }. 
-                If you have any questions or need any additional support, please contact ${
-                  admin.email
-                }. 
-                We can't wait to see your story come together!</dt>
+                <dt>Thanks for submitting your pitch,
                 <br>
-                <dt>Thank you,
-                    <br>
                 ${admin.preferredName || admin.firstName}
                 </dt>
                 </div>`,

@@ -244,17 +244,9 @@ router.put(
       return;
     }
     const author = await User.findById(pitch.author);
-    const message = approvedMessage(author, pitch, req.user);
+    const aggregatedPitch = await aggregatePitch(pitch);
+    const message = approvedMessage(author, pitch, req.user, pitch.writer ? aggregatedPitch.aggregated.primaryEditor : undefined );
     await sendMail(message);
-    if (pitch.writer) {
-      const aggregatedPitch = await aggregatePitch(pitch);
-      const notification = notifyMessage(
-        aggregatedPitch.aggregated.writer,
-        aggregatedPitch,
-        aggregatedPitch.aggregated.primaryEditor,
-      );
-      await sendMail(notification);
-    }
     res.status(200).json({
       success: true,
       message: 'Successfully updated pitch',
