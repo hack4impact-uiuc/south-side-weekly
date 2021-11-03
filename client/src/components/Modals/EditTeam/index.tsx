@@ -76,7 +76,7 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
   };
 
   // Save newTeams and changedTeams
-  const saveForm = (): void => {
+  const saveTeam = (): void => {
     const newTeams = formValues.filter((team) => team._id === 'NEW');
     const parsedNewTeams: Partial<ITeam>[] = newTeams.map(
       ({ _id, ...rest }) => rest,
@@ -181,7 +181,7 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
           content="Save"
           form="submit-team"
           className="save-button"
-          onClick={saveForm}
+          onClick={saveTeam}
           style={{ backgroundColor: 'black' }}
         />
       </Modal.Actions>
