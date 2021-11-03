@@ -1,32 +1,6 @@
-import { IPitch, IUser } from 'ssw-common';
+import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
 
 import { wizardPages } from './enums';
-
-const allInterests = [
-  'POLITICS',
-  'EDUCATION',
-  'HOUSING',
-  'LIT',
-  'MUSIC',
-  'VISUAL ARTS',
-  'STAGE AND SCREEN',
-  'FOOD AND LAND',
-  'NATURE',
-  'TRANSPORTATION',
-  'HEALTH',
-  'CANNABIS',
-  'IMMIGRATION',
-  'FUN',
-];
-
-const allTeams = [
-  'EDITING',
-  'WRITING',
-  'VISUALS',
-  'PHOTOGRAPHY',
-  'ILLUSTRATION',
-  'FACT-CHECKING',
-];
 
 const allGenders = ['Man', 'Woman', 'Nonbinary', 'Other'];
 const allPronouns = ['He/his', 'She/her', 'They/them', 'Ze/hir', 'Other'];
@@ -76,7 +50,7 @@ const emptyUser: IUser = {
   involvementResponse: '',
   claimedPitches: [],
   submittedPitches: [],
-  currentTeams: [],
+  teams: [],
   role: '',
   hasRoleApproved: false,
   races: [],
@@ -100,46 +74,36 @@ const emptyPitch: IPitch = {
   assignmentContributors: [],
   pendingContributors: [],
   topics: [],
-  teams: {
-    writers: {
-      current: 0,
-      target: 0,
-    },
-    editors: {
-      current: 0,
-      target: 0,
-    },
-    visuals: {
-      current: 0,
-      target: 0,
-    },
-    illustration: {
-      current: 0,
-      target: 0,
-    },
-    photography: {
-      current: 0,
-      target: 0,
-    },
-    factChecking: {
-      current: 0,
-      target: 0,
-    },
-  },
+  teams: [],
   reviewedBy: '',
   similarStories: [],
   deadline: new Date(),
 };
 
+const emptyAggregatePitch: IPitchAggregate = {
+  aggregated: {
+    author: emptyUser,
+    writer: emptyUser,
+    primaryEditor: emptyUser,
+    secondaryEditors: [emptyUser],
+    thirdEditors: [emptyUser],
+    assignmentContributors: [],
+    pendingContributors: [],
+    reviewedBy: emptyUser,
+    teams: [],
+    interests: [],
+  },
+  ...emptyPitch,
+};
+
 export {
-  allInterests,
-  allTeams,
   allGenders,
   allPronouns,
   allRoles,
   allRaces,
   emptyUser,
   emptyPitch,
+  emptyAggregatePitch,
   staffPages,
   contributorPages,
 };

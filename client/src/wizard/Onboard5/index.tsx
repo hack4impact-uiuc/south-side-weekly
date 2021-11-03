@@ -39,7 +39,7 @@ const Onboard5 = (): ReactElement => {
       dateJoined: new Date(Date.now()),
       onboardingStatus: 'ONBOARDING_SCHEDULED',
       involvementResponse: data.involvementResponse,
-      currentTeams: data.currentTeams,
+      teams: data.teams,
       role: data.role,
       races: reject(data.races, isEmpty),
       interests: reject(data.interests, isEmpty),

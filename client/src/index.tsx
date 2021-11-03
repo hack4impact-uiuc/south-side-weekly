@@ -17,29 +17,55 @@ import {
   Resources,
 } from './pages';
 import Wizard from './wizard';
-import { PrivateRoute } from './components';
-import { AuthProvider } from './contexts';
+import { PrivateRoute, ProviderWrapper } from './components';
 
 import './styles/styles.scss';
 
+const routes = [
+  {
+    path: '/users',
+    component: Directory,
+  },
+  {
+    path: '/profile/:userId',
+    component: Profile,
+  },
+  {
+    path: '/login',
+    component: Login,
+  },
+  {
+    path: '/pitches',
+    component: PitchDoc,
+  },
+  {
+    path: '/resources',
+    component: Resources,
+  },
+  {
+    path: '/join',
+    component: Wizard,
+  },
+  {
+    path: '*',
+    component: NotFound,
+  },
+];
+
 ReactDOM.render(
   <React.StrictMode>
-    <AuthProvider>
+    <ProviderWrapper>
       <Router>
         <Switch>
           <Route exact path="/">
             <Redirect to="/login" />
           </Route>
-          <PrivateRoute exact path="/pitches" component={PitchDoc} />
-          <PrivateRoute exact path="/resources" component={Resources} />
-          <PrivateRoute exact path="/profile/:userId" component={Profile} />
-          <PrivateRoute exact path="/users" component={Directory} />
-          <PrivateRoute exact path="/login" component={Login} />
-          <PrivateRoute exact path="/join" component={Wizard} />
-          <PrivateRoute exact path="*" component={NotFound} />
+          {routes.map(({ path, component }) => (
+            <PrivateRoute key={path} exact path={path} component={component} />
+          ))}
         </Switch>
       </Router>
-    </AuthProvider>
+    </ProviderWrapper>
   </React.StrictMode>,
   document.getElementById('root'),
 );

@@ -2,7 +2,6 @@ import mongoose, { Document, Schema } from 'mongoose';
 import { IUser } from 'ssw-common';
 
 import {
-  interestsEnum,
   onboardingStatusEnum,
   pagesEnum,
   rolesEnum,
@@ -37,7 +36,7 @@ const User = new mongoose.Schema({
   twitter: { type: String, default: null },
   claimedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
   submittedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
-  currentTeams: [{ type: String, default: null }],
+  teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
   involvementResponse: { type: String, default: null },
 
   role: {
@@ -56,13 +55,7 @@ const User = new mongoose.Schema({
     },
   ],
 
-  interests: [
-    {
-      type: String,
-      enum: Object.values(interestsEnum),
-      default: interestsEnum.NONE,
-    },
-  ],
+  interests: [{ type: Schema.Types.ObjectId, ref: 'Interest' }],
 });
 
 export default mongoose.model<UserSchema>('User', User);

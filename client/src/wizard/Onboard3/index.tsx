@@ -3,8 +3,7 @@ import { Form, Grid } from 'semantic-ui-react';
 import { isEmpty, reject } from 'lodash';
 import Swal from 'sweetalert2';
 
-import { useAuth, useWizard } from '../../contexts';
-import { allInterests, allTeams } from '../../utils/constants';
+import { useAuth, useInterests, useTeams, useWizard } from '../../contexts';
 import { formatNumber, titleCase } from '../../utils/helpers';
 import { isError, updateUser } from '../../api';
 
@@ -14,8 +13,10 @@ const Onboard3 = (): ReactElement => {
   const { store, data } = useWizard();
   const { user } = useAuth();
 
-  const [interests, setInterests] = useState(new Set(data.interests));
-  const [teams, setTeams] = useState(new Set(data.currentTeams));
+  const [selectedInterests, setInterests] = useState(new Set(data.interests));
+  const [selectedTeams, setSelectedTeams] = useState(new Set<string>());
+  const { teams } = useTeams();
+  const { interests } = useInterests();
 
   const onSubmit = (): void => {
     if (data.role === 'STAFF') {
@@ -27,8 +28,8 @@ const Onboard3 = (): ReactElement => {
 
   const contributorSubmit = (): void => {
     const data = {
-      interests: Array.from(interests),
-      currentTeams: Array.from(teams),
+      interests: Array.from(selectedInterests),
+      teams: Array.from(selectedTeams),
     };
 
     store(data);
@@ -43,10 +44,10 @@ const Onboard3 = (): ReactElement => {
       genders: reject(data.genders, isEmpty),
       pronouns: reject(data.pronouns, isEmpty),
       dateJoined: new Date(Date.now()),
-      currentTeams: Array.from(teams),
+      teams: Array.from(selectedTeams),
       role: data.role,
       races: reject(data.races, isEmpty),
-      interests: Array.from(interests),
+      interests: Array.from(selectedInterests),
     };
 
     const onboardUser = async (): Promise<void> => {
@@ -67,17 +68,15 @@ const Onboard3 = (): ReactElement => {
   };
 
   useEffect(() => {
-    const initialTeams = data.currentTeams.filter((team) => !isEmpty(team));
     const initialInterets = data.interests.filter(
       (interest) => !isEmpty(interest),
     );
 
-    setTeams(new Set(initialTeams));
     setInterests(new Set(initialInterets));
-  }, [data.currentTeams, data.interests]);
+  }, [data.teams, data.interests]);
 
   const handleInterests = (interest: string): void => {
-    if (!interests.has(interest) && interests.size === 5) {
+    if (!selectedInterests.has(interest) && selectedInterests.size === 5) {
       Swal.fire({
         title: 'Please select a maximum of 5 teams!',
         icon: 'error',
@@ -85,14 +84,14 @@ const Onboard3 = (): ReactElement => {
       return;
     }
 
-    interests.has(interest)
-      ? interests.delete(interest)
-      : interests.add(interest);
-    setInterests(new Set(interests));
+    selectedInterests.has(interest)
+      ? selectedInterests.delete(interest)
+      : selectedInterests.add(interest);
+    setInterests(new Set(selectedInterests));
   };
 
   const handleTeams = (team: string): void => {
-    if (!teams.has(team) && teams.size === 2) {
+    if (!selectedTeams.has(team) && selectedTeams.size === 2) {
       Swal.fire({
         title: 'Please select a maximum of 2 teams!',
         icon: 'error',
@@ -100,8 +99,10 @@ const Onboard3 = (): ReactElement => {
       return;
     }
 
-    teams.has(team) ? teams.delete(team) : teams.add(team);
-    setTeams(new Set(teams));
+    selectedTeams.has(team)
+      ? selectedTeams.delete(team)
+      : selectedTeams.add(team);
+    setSelectedTeams(new Set(selectedTeams));
   };
 
   return (
@@ -114,13 +115,13 @@ const Onboard3 = (): ReactElement => {
             Please limit your selection to no more than 2.
           </div>
           <Grid columns={2}>
-            {allTeams.map((team, index) => (
+            {teams.map((team, index) => (
               <Grid.Column key={index}>
                 <Form.Checkbox
-                  value={team}
-                  checked={teams.has(team)}
-                  label={titleCase(team)}
-                  onClick={() => handleTeams(team)}
+                  value={team.name}
+                  checked={selectedTeams.has(team._id)}
+                  label={titleCase(team.name)}
+                  onClick={() => handleTeams(team._id)}
                 />
               </Grid.Column>
             ))}
@@ -132,13 +133,13 @@ const Onboard3 = (): ReactElement => {
             Please limit your selection to no more than 5.
           </div>
           <Grid columns={2}>
-            {allInterests.map((interest, index) => (
+            {interests.map((interest, index) => (
               <Grid.Column key={index}>
                 <Form.Checkbox
-                  value={interest}
-                  checked={interests.has(interest)}
-                  label={titleCase(interest)}
-                  onClick={() => handleInterests(interest)}
+                  value={interest._id}
+                  checked={selectedInterests.has(interest._id)}
+                  label={interest.name}
+                  onClick={() => handleInterests(interest._id)}
                 />
               </Grid.Column>
             ))}
