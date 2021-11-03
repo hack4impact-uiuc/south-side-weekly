@@ -1,5 +1,10 @@
-import React, { ReactElement, FC, useState, useEffect } from 'react';
-import { useCallback } from 'react';
+import React, {
+  ReactElement,
+  FC,
+  useState,
+  useEffect,
+  useCallback,
+} from 'react';
 import { ITeam } from 'ssw-common';
 
 import { getTeams, isError } from '../../api';

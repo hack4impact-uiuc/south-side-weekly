@@ -1,8 +1,9 @@
-import { ApiResponseBase, Response } from '../types';
+import { ITeam } from 'ssw-common';
+
 import { get, buildEndpoint, post, put } from '../builders';
+import { ApiResponseBase, Response } from '../types';
 
 import { TeamsResponse } from './types';
-import { ITeam } from '../../../../common';
 
 const TEAMS_ENDPOINT = '/teams';
 

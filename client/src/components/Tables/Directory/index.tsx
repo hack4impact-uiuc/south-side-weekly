@@ -5,6 +5,7 @@ import { IUser } from 'ssw-common';
 import { AdminView, FieldTag, UserModal, UserPicture } from '../..';
 import { useTeams } from '../../../contexts';
 import { getUserFullName } from '../../../utils/helpers';
+import TeamModal from '../../Modals/EditTeam';
 
 import './styles.scss';
 
@@ -130,7 +131,9 @@ const DirectoryTable: FC<DirectoryTableProps> = ({ users }): ReactElement => {
             >
               Role
             </Table.HeaderCell>
-            <Table.HeaderCell>Teams</Table.HeaderCell>
+            <Table.HeaderCell>
+              Teams <TeamModal />
+            </Table.HeaderCell>
             <Table.HeaderCell>Interests</Table.HeaderCell>
             <AdminView>
               <Table.HeaderCell

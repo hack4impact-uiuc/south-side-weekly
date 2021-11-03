@@ -1,4 +1,5 @@
 import { createContext, useContext } from 'react';
+
 import { defaultFunc } from '../../utils/helpers';
 
 import { ITeamsContext } from './types';

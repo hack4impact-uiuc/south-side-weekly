@@ -3,7 +3,7 @@ import { errorWrap } from '../middleware';
 
 import Team from '../models/team';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
-import { ITeam } from '../../../common';
+import { ITeam } from 'ssw-common';
 
 const router = express.Router();
 
@@ -88,7 +88,7 @@ router.post(
   }),
 );
 
-// Update many
+// Update many changed teams
 router.put(
   '/many',
   requireAdmin,
@@ -108,8 +108,6 @@ router.put(
         });
       }),
     );
-
-    console.log(updatedTeams);
 
     const failedTeams = updatedTeams.filter((team) => !team);
 

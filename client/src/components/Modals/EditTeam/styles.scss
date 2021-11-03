@@ -4,11 +4,16 @@ $height: 25px;
 $inputLength: 200px;
 $leftmargin: 50px;
 
+.open-edit-button {
+  background: none;
+}
+
 .team-modal {
   .header {
     background-color: $primary !important;
     color: white !important;
   }
+
   .actions {
     margin-top: 30px;
     text-align: right;

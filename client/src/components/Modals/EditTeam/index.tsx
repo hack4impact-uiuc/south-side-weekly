@@ -1,4 +1,4 @@
-import React, { ReactElement, FC, useState } from 'react';
+import React, { ReactElement, FC, useState, useEffect } from 'react';
 import {
   Button,
   ButtonProps,
@@ -9,18 +9,16 @@ import {
   ModalProps,
 } from 'semantic-ui-react';
 import Swal from 'sweetalert2';
-
 import { ITeam } from 'ssw-common';
 
 import './styles.scss';
 import { useTeams } from '../../../contexts';
 import { createManyTeams, updateManyTeams } from '../../../api';
-import { useEffect } from 'react';
 
 // interface TeamModalProps extends ModalProps {}
 
 const TeamModalTrigger: FC<ButtonProps> = ({ ...rest }): ReactElement => (
-  <Button {...rest} icon>
+  <Button {...rest} size="tiny" circular icon style={{ background: 'none' }}>
     <Icon name="pencil" />
   </Button>
 );
@@ -46,11 +44,10 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
     }));
 
     setClonedTeams([...clone]);
-    console.log(teams);
   }, [isOpen]);
 
   // Add a new field in form
-  const addField = () => {
+  const addField = (): void => {
     setFormValues([
       ...formValues,
       { _id: 'NEW', name: '', color: '#3d4f91', active: true },
@@ -58,21 +55,21 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
   };
 
   // Remove a field in form
-  const removeField = (i: number) => {
+  const removeField = (i: number): void => {
     const newFormValues = [...formValues];
     newFormValues.splice(i, 1);
     setFormValues(newFormValues);
   };
 
   // Update team names (input type = text)
-  const updateFieldText = (i: number, text: string) => {
+  const updateFieldText = (i: number, text: string): void => {
     const formValue = formValues[i];
     formValue.name = text;
     setFormValues([...formValues]);
   };
 
   // Update team colors (input type = color)
-  const updateFieldColor = (i: number, color: string) => {
+  const updateFieldColor = (i: number, color: string): void => {
     const formValue = formValues[i];
     formValue.color = color;
     setFormValues([...formValues]);
@@ -102,7 +99,6 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
     const isDuplicate = valuesName.some(
       (item, idx) => valuesName.indexOf(item) !== idx,
     );
-    console.log(isDuplicate);
     if (isDuplicate) {
       Swal.fire({
         icon: 'error',
@@ -186,6 +182,7 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
           form="submit-team"
           className="save-button"
           onClick={saveForm}
+          style={{ backgroundColor: 'black' }}
         />
       </Modal.Actions>
     </Modal>
