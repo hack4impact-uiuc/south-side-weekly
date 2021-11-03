@@ -77,11 +77,14 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
 
   // Save newTeams and changedTeams
   const saveTeam = (): void => {
+    // Save newly created teams in newTeams
     const newTeams = formValues.filter((team) => team._id === 'NEW');
+    // Take out _id = "NEW" field from newTeams
     const parsedNewTeams: Partial<ITeam>[] = newTeams.map(
       ({ _id, ...rest }) => rest,
     );
 
+    // Save changes to existing team in changedTeams
     const changedTeams: ITeam[] = [];
 
     clonedTeams.forEach((team, index) => {
