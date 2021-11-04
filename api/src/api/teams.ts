@@ -90,7 +90,7 @@ router.post(
 
 // Update many changed teams
 router.put(
-  '/many',
+  '/update/many',
   requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
     const changedTeams: ITeam[] = req.body.teams;
