@@ -9,6 +9,12 @@
     color: white !important;
   }
 
+  .form-label {
+    //background-color: blue !important;
+    font-weight: bold !important;
+    font-size: 0.92857143em !important;
+    margin: 0 1rem 0.33571429rem 0 !important;
+  }
   .title-section {
     display: flex;
     flex-direction: row;
@@ -21,25 +27,19 @@
   }
 
   .content {
-    .author-section {
-      display: flex;
-
-      .author {
-        margin-right: 20px;
-        h3 {
-          font-weight: normal;
-        }
-      }
-    }
-
-    .description {
-      margin-top: 20px;
+    .pitch-author-section {
+      margin-bottom: 1rem;
+      flex-direction: row !important;
     }
 
     .topics-section {
-      margin-bottom: 8px;
+      //margin: 0 0 0.33571429rem 0 !important;
       display: flex;
       flex-direction: row;
+      margin-bottom: 0.53571429rem !important;
+      margin-top: 0.33571429rem !important;
+
+      //padding-left: 0px !important;
     }
 
     .team-select-group {
@@ -84,9 +84,14 @@
     }
 
     .writer-editors-section {
-      //flex-direction: column !important;
-      // justify-content: flex-start !important;
-      align-items: flex-start !important;
+      width: 80% !important;
+
+      .issue-format-column {
+        align-items: flex-start !important;
+        flex-direction: column !important;
+        display: flex !important;
+        margin-left: 0 !important;
+      }
     }
   }
 
@@ -94,10 +99,21 @@
     border-top: none !important;
     background-color: #f6f7fb !important;
     text-align: right;
-    padding: 10px !important;
+    //padding: 10px !important;
+    padding: 20px 0px 10px 0px !important;
 
     .button {
-      margin: 0px 20px 20px 0px !important;
+      margin: 0px 0px 0px 20px !important;
+    }
+
+    .positive {
+      background-color: #5a72e1 !important;
+    }
+
+    .negative {
+      background-color: transparent !important;
+      border: 1px solid #5a72e1 !important;
+      color: #5a72e1 !important;
     }
   }
 }

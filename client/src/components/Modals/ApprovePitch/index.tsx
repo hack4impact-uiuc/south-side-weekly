@@ -5,10 +5,11 @@ import {
   Grid,
   Header,
   Input,
+  Label,
   Modal,
   ModalProps,
 } from 'semantic-ui-react';
-import { IPitch } from 'ssw-common';
+import { IPitch, IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
 import { LinkDisplay } from '../..';
 
@@ -17,11 +18,14 @@ import {
   declinePitch,
   isError,
   getAggregatedPitch,
+  getUsers,
 } from '../../../api';
 import { useInterests, useTeams } from '../../../contexts';
 import { classNames, getUserFullName } from '../../../utils/helpers';
 import FieldTag from '../../FieldTag';
 import PitchCard from '../../PitchCard';
+
+import { Select } from '../../../components';
 
 import './styles.scss';
 
@@ -37,7 +41,14 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
 }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
   const [author, setAuthor] = useState('');
+  const [authorImage, setAuthorImage] = useState<string | undefined>('');
   const [teamMap, setTeamMap] = useState<IPitch['teams']>([]);
+  const [users, setUsers] = useState<IUser[]>([]);
+  const [writer, setWriter] = useState('');
+  const [primaryEditor, setPrimaryEditor] = useState('');
+  const [secondaryEditor, setSecondaryEditor] = useState('');
+  const [tertiaryEditor, setTertiaryEditor] = useState('');
+
   const { teams } = useTeams();
   const { getInterestById } = useInterests();
 
@@ -51,9 +62,19 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
 
       if (!isError(res)) {
         setAuthor(getUserFullName(res.data.result.aggregated.author));
+        setAuthorImage(res.data.result.aggregated.author.profilePic);
       }
     };
 
+    const getAllUsers = async (): Promise<void> => {
+      const res = await getUsers();
+
+      if (!isError(res)) {
+        setUsers(res.data.result);
+      }
+    };
+
+    getAllUsers();
     fetchAggregatedPitch();
 
     return () => {
@@ -147,28 +168,38 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       <Modal.Header content="Review Pitch" />
       <Modal.Content scrolling className="content">
         <div className="title-section">
-          <h1 className="title">{pitch.title}</h1>
+          <h2 className="title">{pitch.title}</h2>
           <LinkDisplay href={pitch.assignmentGoogleDocLink} />
         </div>
         <div className="topics-section">
-          {pitch.topics.map((topic, index) => (
-            <FieldTag key={index} content={topic} />
-          ))}
+          {pitch.topics.map((topic, index) => {
+            const interest = getInterestById(topic);
+
+            return (
+              <FieldTag
+                key={index}
+                name={interest?.name}
+                hexcode={interest?.color}
+              />
+            );
+          })}
         </div>
         <p className="description">{pitch.description}</p>
-        <div className="author-section">
-          <div className="author">
-            <h3>{`Pitch Creator: ${author}`}</h3>
-          </div>
+
+        {/* TODO: Replace with Neha's NameTag Component */}
+        <div className="pitch-author-section">
+          <span className="form-label">Pitch Creator:</span>
+          <Label as="a" image>
+            <img src={authorImage} alt="Author Profile" /> {author}
+          </Label>
         </div>
 
         <Form>
-          <Form.Input fluid label="Associated Neighborhoods" />
-          <label htmlFor="testts">
-            Number of Contributors Needed Per Team{' '}
-          </label>
+          <p className="form-label">Associated Neighborhoods</p>
+          <Form.Input fluid />
+          <p className="form-label">Number of Contributors Needed Per Team </p>
           <Form.Group inline widths="equal" className="team-select-group">
-            {[...teams, ...teams].slice(0, 7).map((team, index) => (
+            {teams.map((team, index) => (
               <div key={index} className="input-group">
                 <FieldTag name={team.name} hexcode={team.color} />
                 <Form.Input
@@ -184,19 +215,9 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
               </div>
             ))}
           </Form.Group>
-          {/* <Form.Group inline>
-            {teams.map((team, index) => (
-              <Form.Field
-                control={Input}
-                label="First name"
-                placeholder="First name"
-                key={index}
-              />
-            ))}
-          </Form.Group> */}
-          <Form.Group inline className="format-deadline-section">
-            <Form.Group grouped>
-              <label htmlFor="testtest">Issue Format</label>
+          <Grid columns={2} className="writer-editors-section">
+            <Grid.Column className="issue-format-column">
+              <p className="form-label">Issue Format</p>
               <Form.Checkbox
                 label={'Print'}
                 value={'Print'}
@@ -209,39 +230,52 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
                 //checked={false}
                 //onChange={(_, value) =>{}}
               />
-            </Form.Group>
-            <Form.Input
-              label={'Deadline'}
-              value={'0'}
-              className="prints-input"
-            />
-          </Form.Group>
-          <Form.Group inline className="writer-editors-section">
-            <Form.Group grouped>
-              <label htmlFor="testtest">
+            </Grid.Column>
+            <Grid.Column>
+              <p className="form-label">Deadline</p>
+              <Form.Input value={'0'} className="prints-input" />
+            </Grid.Column>
+            <Grid.Column>
+              <p className="form-label">
                 Writer <mark className="optional">- Optional</mark>
-              </label>
-              <Form.Input />
-            </Form.Group>
-            <Form.Group grouped>
-              <label htmlFor="testtest">Editors</label>
-              <Form.Input />
-              <Form.Input />
-              <Form.Input />
-            </Form.Group>
-          </Form.Group>
-          <Form.Input
-            fluid
-            label={
-              <label htmlFor="testtest">
-                Writer <mark className="optional">- Optional</mark>
-              </label>
-            }
-          />
+              </p>
+              <Select
+                value={writer}
+                options={users.map(getUserFullName)}
+                onChange={(e) => setWriter(e ? e.value : '')}
+                placeholder="Select"
+              />
+            </Grid.Column>
+            <Grid.Column>
+              <p className="form-label">Editors</p>
+              <Select
+                value={primaryEditor}
+                options={users.map(getUserFullName)}
+                onChange={(e) => setPrimaryEditor(e ? e.value : '')}
+                placeholder="Select Primary Editor"
+              />
+              <Select
+                value={secondaryEditor}
+                options={users.map(getUserFullName)}
+                onChange={(e) => setSecondaryEditor(e ? e.value : '')}
+                placeholder="Select Secondary Editor - Optional"
+              />
+              <Select
+                value={tertiaryEditor}
+                options={users.map(getUserFullName)}
+                onChange={(e) => setTertiaryEditor(e ? e.value : '')}
+                placeholder="Select Tertiary Editor - Optional"
+              />
+            </Grid.Column>
+          </Grid>
+          <p className="form-label">
+            Reasoning <mark className="optional">- Optional</mark>
+          </p>
+          <Form.Input fluid />
         </Form>
         <Modal.Actions>
-          <Button onClick={handleApprove} content="Approve Pitch" positive />
-          <Button onClick={handleDecline} content="Decline Pitch" negative />
+          <Button onClick={handleApprove} content="Approve" positive />
+          <Button onClick={handleDecline} content="Decline" negative />
         </Modal.Actions>
       </Modal.Content>
     </Modal>
