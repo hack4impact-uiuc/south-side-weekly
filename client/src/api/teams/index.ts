@@ -27,7 +27,7 @@ const createManyTeams = async (
 const updateManyTeams = async (
   teams: ITeam[],
 ): Promise<Response<ApiResponseBase>> => {
-  const url = buildEndpoint(TEAMS_ENDPOINT, 'many');
+  const url = buildEndpoint(TEAMS_ENDPOINT, 'update', 'many');
   const failureMessage = 'UPDATE_MANY_TEAMS_FAIL';
 
   return await put(url, { teams }, failureMessage);
