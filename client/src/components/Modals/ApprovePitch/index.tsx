@@ -11,7 +11,7 @@ import {
 } from 'semantic-ui-react';
 import { IPitch, IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
-import { LinkDisplay } from '../..';
+import { LinkDisplay, MultiSelect } from '../..';
 
 import {
   approvePitch,
@@ -28,11 +28,35 @@ import PitchCard from '../../PitchCard';
 import { Select } from '../../../components';
 
 import './styles.scss';
+import { neighborhoods } from '../../../utils/constants';
 
 interface ApprovePitchProps extends ModalProps {
   pitch: IPitch;
   callback(): void;
 }
+
+type FormData = Pick<
+  IPitch,
+  | 'neighborhoods'
+  | 'teams'
+  | 'issues'
+  | 'deadline'
+  | 'writer'
+  | 'primaryEditor'
+  | 'secondEditors'
+  | 'thirdEditors'
+>;
+
+const defaultData: FormData = {
+  neighborhoods: [],
+  teams: [],
+  issues: [],
+  deadline: new Date(),
+  writer: '',
+  primaryEditor: '',
+  secondEditors: [],
+  thirdEditors: [],
+};
 
 const ApprovePitchModal: FC<ApprovePitchProps> = ({
   pitch,
@@ -42,12 +66,13 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [author, setAuthor] = useState('');
   const [authorImage, setAuthorImage] = useState<string | undefined>('');
-  const [teamMap, setTeamMap] = useState<IPitch['teams']>([]);
+  //const [teamMap, setTeamMap] = useState<IPitch['teams']>([]);
   const [users, setUsers] = useState<IUser[]>([]);
-  const [writer, setWriter] = useState('');
+  /*  const [writer, setWriter] = useState('');
   const [primaryEditor, setPrimaryEditor] = useState('');
   const [secondaryEditor, setSecondaryEditor] = useState('');
-  const [tertiaryEditor, setTertiaryEditor] = useState('');
+  const [tertiaryEditor, setTertiaryEditor] = useState(''); */
+  const [formData, setFormData] = useState<FormData>(defaultData);
 
   const { teams } = useTeams();
   const { getInterestById } = useInterests();
@@ -79,18 +104,19 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
 
     return () => {
       setAuthor('');
-      setTeamMap([]);
+      setFormData({ ...defaultData });
     };
   }, [isOpen, pitch._id]);
 
   const findTeamTarget = (teamId: string): number => {
-    const team = teamMap.find(
+    const team = formData.teams.find(
       (teamMapElement) => teamMapElement.teamId === teamId,
     );
     return team === undefined ? 0 : team.target;
   };
 
-  const changeTeam = (teamId: string, value: number): void => {
+  const changeTeam = (teamId: string, value: number): IPitch['teams'] => {
+    const teamMap = formData.teams;
     const indexOfTeamId = teamMap.findIndex((team) => team.teamId === teamId)!;
     const notFoundIndex = -1;
     if (indexOfTeamId === notFoundIndex) {
@@ -103,11 +129,35 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       }
     }
     const teamMapCopy = [...teamMap];
-    setTeamMap(teamMapCopy);
+    return teamMapCopy;
+  };
+
+  const changeIssue = (issueType: string): IPitch['issues'] => {
+    const issues = formData.issues;
+    const indexOfIssue = issues.findIndex(
+      (issue) => issue.issueFormat === issueType,
+    );
+    const notFoundIndex = -1;
+    if (indexOfIssue === notFoundIndex) {
+      issues.push({ issueFormat: issueType, issueDate: new Date() });
+    } else {
+      issues.splice(indexOfIssue, 1);
+    }
+    const issuesCopy = [...issues];
+    return issuesCopy;
+  };
+
+  const changeField = <T extends keyof FormData>(
+    key: T,
+    value: FormData[T],
+  ): void => {
+    const data = { ...formData };
+    data[key] = value;
+    setFormData(data);
   };
 
   const handleApprove = async (): Promise<void> => {
-    const validForm = teamMap.length > 0;
+    const validForm = formData.teams.length > 0;
 
     if (!validForm) {
       Swal.fire({
@@ -117,7 +167,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       return;
     }
 
-    const res = await approvePitch(pitch._id, teamMap);
+    const res = await approvePitch(pitch._id, formData);
 
     if (!isError(res)) {
       callback();
@@ -155,6 +205,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       });
     }
   };
+  console.log(formData);
 
   return (
     <Modal
@@ -196,7 +247,21 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
 
         <Form>
           <p className="form-label">Associated Neighborhoods</p>
-          <Form.Input fluid />
+          <MultiSelect
+            options={neighborhoods.map((neighborhood) => ({
+              value: neighborhood,
+              label: neighborhood,
+            }))}
+            placeholder="Select Neighborhoods"
+            onChange={(values) =>
+              changeField(
+                'neighborhoods',
+                values.map(({ value }) => value),
+              )
+            }
+            value={formData.neighborhoods}
+            className="neighborhood-dropdown"
+          />
           <p className="form-label">Number of Contributors Needed Per Team </p>
           <Form.Group inline widths="equal" className="team-select-group">
             {teams.map((team, index) => (
@@ -204,7 +269,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
                 <FieldTag name={team.name} hexcode={team.color} />
                 <Form.Input
                   onChange={(e, { value }) =>
-                    changeTeam(team._id, parseInt(value))
+                    changeField('teams', changeTeam(team._id, parseInt(value)))
                   }
                   value={findTeamTarget(team._id)}
                   type="number"
@@ -221,50 +286,81 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
               <Form.Checkbox
                 label={'Print'}
                 value={'Print'}
-                //checked={false}
-                //onChange={(_, value) =>{}}
+                checked={formData.issues.some(
+                  ({ issueFormat }) => issueFormat === 'Print',
+                )}
+                onChange={(_, { value }) =>
+                  changeField('issues', changeIssue(`${value}`))
+                }
               />
               <Form.Checkbox
                 label={'Online'}
                 value={'Online'}
-                //checked={false}
-                //onChange={(_, value) =>{}}
+                checked={formData.issues.some(
+                  ({ issueFormat }) => issueFormat === 'Online',
+                )}
+                onChange={(_, { value }) =>
+                  changeField('issues', changeIssue(`${value}`))
+                }
               />
             </Grid.Column>
             <Grid.Column>
               <p className="form-label">Deadline</p>
-              <Form.Input value={'0'} className="prints-input" />
+              <Form.Input
+                value={new Date(formData.deadline).toISOString().split('T')[0]}
+                className="prints-input"
+                type="date"
+                onChange={(e, { value }) =>
+                  changeField('deadline', new Date(value))
+                }
+              />
             </Grid.Column>
             <Grid.Column>
               <p className="form-label">
                 Writer <mark className="optional">- Optional</mark>
               </p>
               <Select
-                value={writer}
+                value={formData.writer}
                 options={users.map(getUserFullName)}
-                onChange={(e) => setWriter(e ? e.value : '')}
+                onChange={(e) => console.log(e ? e.value : '')}
                 placeholder="Select"
               />
             </Grid.Column>
             <Grid.Column>
               <p className="form-label">Editors</p>
               <Select
-                value={primaryEditor}
+                value={formData.primaryEditor}
                 options={users.map(getUserFullName)}
-                onChange={(e) => setPrimaryEditor(e ? e.value : '')}
+                onChange={(e) => console.log(e ? e.value : '')}
                 placeholder="Select Primary Editor"
               />
-              <Select
-                value={secondaryEditor}
-                options={users.map(getUserFullName)}
-                onChange={(e) => setSecondaryEditor(e ? e.value : '')}
+              <MultiSelect
+                options={users.map((user) => ({
+                  value: user._id,
+                  label: getUserFullName(user),
+                }))}
                 placeholder="Select Secondary Editor - Optional"
+                onChange={(values) =>
+                  changeField(
+                    'secondEditors',
+                    values.map(({ value }) => value),
+                  )
+                }
+                value={formData.secondEditors}
               />
-              <Select
-                value={tertiaryEditor}
-                options={users.map(getUserFullName)}
-                onChange={(e) => setTertiaryEditor(e ? e.value : '')}
+              <MultiSelect
+                options={users.map((user) => ({
+                  value: user._id,
+                  label: getUserFullName(user),
+                }))}
                 placeholder="Select Tertiary Editor - Optional"
+                onChange={(values) =>
+                  changeField(
+                    'thirdEditors',
+                    values.map(({ value }) => value),
+                  )
+                }
+                value={formData.thirdEditors}
               />
             </Grid.Column>
           </Grid>

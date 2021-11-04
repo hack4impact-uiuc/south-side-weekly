@@ -64,6 +64,7 @@ export interface IPitch {
   similarStories: string[];
   deadline: Date;
   conflictOfInterest: boolean;
+  neighborhoods: string[];
 }
 
 export interface IPitchAggregate extends IPitch {
