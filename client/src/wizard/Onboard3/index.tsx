@@ -1,5 +1,6 @@
 import React, { ReactElement, useState, useEffect } from 'react';
 import { Form, Grid } from 'semantic-ui-react';
+import { ITeam } from 'ssw-common';
 import { isEmpty, reject } from 'lodash';
 import Swal from 'sweetalert2';
 
@@ -105,6 +106,9 @@ const Onboard3 = (): ReactElement => {
     setSelectedTeams(new Set(selectedTeams));
   };
 
+  const getContributorTeams = (): ITeam[] =>
+    teams.filter((team) => team.name !== 'Editing');
+
   return (
     <Form className="onboard3-wrapper" id="onboard-3" onSubmit={onSubmit}>
       <Grid columns={2}>
@@ -115,7 +119,7 @@ const Onboard3 = (): ReactElement => {
             Please limit your selection to no more than 2.
           </div>
           <Grid columns={2}>
-            {teams.map((team, index) => (
+            {getContributorTeams().map((team, index) => (
               <Grid.Column key={index}>
                 <Form.Checkbox
                   value={team.name}

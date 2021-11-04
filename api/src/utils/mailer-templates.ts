@@ -92,7 +92,7 @@ export const approveClaim = async (
   author: IUser,
   pitch: IPitchAggregate,
   admin: Partial<IUser>,
-  teams: [string],
+  teams: string[],
 ): Promise<EmailMessage> => {
   const teamNamesToUsers: teamsUsers = {};
   for (const user of pitch.assignmentContributors) {

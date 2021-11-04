@@ -6,6 +6,7 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import 'semantic-ui-css/semantic.min.css';
 
 import {
@@ -54,6 +55,7 @@ const routes = [
 
 ReactDOM.render(
   <React.StrictMode>
+    <Toaster />
     <ProviderWrapper>
       <Router>
         <Switch>

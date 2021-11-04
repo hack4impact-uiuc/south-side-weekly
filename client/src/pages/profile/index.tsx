@@ -4,7 +4,6 @@ import { IUser } from 'ssw-common';
 import {
   Button,
   Container,
-  Checkbox,
   Divider,
   Grid,
   Header as HeaderTag,
@@ -12,6 +11,7 @@ import {
   DropdownItemProps,
 } from 'semantic-ui-react';
 import { startCase } from 'lodash';
+import Swal from 'sweetalert2';
 
 import {
   isError,
@@ -19,7 +19,13 @@ import {
   updateUser,
   getUserPermissionsByID,
 } from '../../api';
-import { FieldTag, UserPicture } from '../../components';
+import {
+  FieldTag,
+  InterestsSelect,
+  TeamsSelect,
+  triggerSuccessToast,
+  UserPicture,
+} from '../../components';
 import Masthead from '../../assets/masthead.svg';
 import {
   allGenders,
@@ -68,8 +74,8 @@ const Profile = (): ReactElement => {
   });
 
   const auth = useAuth();
-  const { teams } = useTeams();
-  const { interests, getInterestById } = useInterests();
+  const { getTeamFromId } = useTeams();
+  const { getInterestById } = useInterests();
 
   useEffect(() => {
     const loadUser = async (): Promise<void> => {
@@ -140,6 +146,12 @@ const Profile = (): ReactElement => {
 
     if (!isError(res)) {
       setIsEditMode(false);
+      triggerSuccessToast('Profile saved!');
+    } else {
+      Swal.fire({
+        title: 'Error',
+        text: 'There was an error saving your profile',
+      });
     }
   };
 
@@ -148,32 +160,24 @@ const Profile = (): ReactElement => {
    *
    * @param interest the interest to add
    */
-  const addInterest = (interest: string): void => {
-    const interests = [...user.interests];
-    const currentIndex = interests.indexOf(interest);
-    if (currentIndex >= 0) {
-      interests.splice(currentIndex, 1);
-    } else {
-      interests.push(interest);
-    }
+  const addInterest = (interests: string[]): void =>
     setUser(updateUserField(user, 'interests', interests));
-  };
 
   /**
    * Adds a team to a user's teams
    *
    * @param team the team to add
    */
-  const addTeam = (team: string): void => {
-    const teams = user.teams;
-    const currentIndex = teams.indexOf(team);
-    if (currentIndex >= 0) {
-      teams.splice(currentIndex, 1);
-    } else if (teams.length >= 2) {
+  const addTeam = (teams: string[]): void => {
+    if (teams.length > 2) {
+      Swal.fire({
+        title: 'Too many teams!',
+        text: 'You can only have up to 2 teams.',
+        icon: 'error',
+      });
       return;
-    } else {
-      teams.push(team);
     }
+
     setUser(updateUserField(user, 'teams', teams));
   };
 
@@ -339,19 +343,12 @@ const Profile = (): ReactElement => {
               <HeaderTag as="h2">My Interests</HeaderTag>
               {isEditable('interests') ? (
                 <Container>
-                  {interests.map((interest, index) => (
-                    <div key={index} className="checkbox-group">
-                      <Checkbox
-                        className="checkbox"
-                        value={interest._id}
-                        label={titleCase(interest.name)}
-                        checked={user.interests.includes(interest._id)}
-                        onChange={(e, { value }) => {
-                          addInterest(`${value}`);
-                        }}
-                      />
-                    </div>
-                  ))}
+                  <InterestsSelect
+                    values={user.interests}
+                    onChange={(values) =>
+                      addInterest(values.map((value) => value.value))
+                    }
+                  />
                 </Container>
               ) : (
                 user.interests.sort().map((interest, index) => {
@@ -375,18 +372,12 @@ const Profile = (): ReactElement => {
             <Grid.Column textAlign="center" width={3}>
               <HeaderTag as="h2">My Teams</HeaderTag>
               {isEditable('teams') ? (
-                <div className="checkbox-group">
-                  {teams.map((team, index) => (
-                    <Checkbox
-                      key={index}
-                      className="checkbox"
-                      value={team.name}
-                      label={titleCase(team.name)}
-                      checked={user.teams.includes(team._id)}
-                      onChange={() => addTeam(team._id)}
-                    />
-                  ))}
-                </div>
+                <TeamsSelect
+                  values={user.teams}
+                  onChange={(values) =>
+                    addTeam(values.map((value) => value.value))
+                  }
+                />
               ) : (
                 user.teams
                   .sort()
@@ -395,8 +386,8 @@ const Profile = (): ReactElement => {
                       size="medium"
                       key={index}
                       className="field-label"
-                      name={teams.find((team) => team._id === teamId)?.name}
-                      hexcode={teams.find((team) => team._id === teamId)?.color}
+                      name={getTeamFromId(teamId)?.name}
+                      hexcode={getTeamFromId(teamId)?.color}
                     />
                   ))
               )}

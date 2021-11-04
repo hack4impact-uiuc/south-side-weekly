@@ -46,7 +46,7 @@
     "@hack4impact-uiuc/eslint-plugin": "^2.0.9",
     "eslint": "^7.18.0",
     "jest": "^26.6.3",
-    "nodemon": "^2.0.7",
+    "nodemon": "2.0.2",
     "prettier": "^2.2.1",
     "ssw-common": "file:../common",
     "supertest": "^6.1.1",

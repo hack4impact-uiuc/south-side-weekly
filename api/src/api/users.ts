@@ -216,6 +216,48 @@ router.get(
   }),
 );
 
+// An endpoint that requires admin status that gets all of the users with hasRoleApproved set to false
+router.get(
+  'all/pending',
+  requireAdmin,
+  errorWrap(async (req: Request, res: Response) => {
+    const users = await User.find({ hasRoleApproved: false });
+    res.status(200).json({
+      message: `Successfully retrieved all pending users.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
+// An endpoint that gets all users with a role of Admin
+router.get(
+  '/all/admins',
+  requireAdmin,
+  errorWrap(async (req: Request, res: Response) => {
+    const users = await User.find({ role: rolesEnum.ADMIN });
+    res.status(200).json({
+      message: `Successfully retrieved all admins.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
+// An endpoint that gets all users with a role of staff
+router.get(
+  '/all/staff',
+  requireAdmin,
+  errorWrap(async (req: Request, res: Response) => {
+    const users = await User.find({ role: rolesEnum.STAFF });
+    res.status(200).json({
+      message: `Successfully retrieved all staff.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
 // Adds new page to user's list of visited pages
 router.post(
   '/visitPage',

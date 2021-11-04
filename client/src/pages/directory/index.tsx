@@ -104,7 +104,10 @@ const Directory = (): ReactElement => {
         <div className="wrapper">
           <Select
             value={role}
-            options={allRoles}
+            options={allRoles.map((role) => ({
+              label: role,
+              value: role,
+            }))}
             onChange={(e) => setRole(e ? e.value : '')}
             placeholder="Role"
           />

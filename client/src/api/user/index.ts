@@ -96,6 +96,20 @@ const addVisitedPage = async (
   return await post(url, { page }, failureMessage);
 };
 
+const getAdmins = async (): Promise<Response<UsersResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, 'all', 'admins');
+  const failureMessage = 'GET_ADMINS_FAIL';
+
+  return await get(url, failureMessage);
+};
+
+const getStaff = async (): Promise<Response<UsersResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, 'all', 'staff');
+  const failureMessage = 'GET_STAFF_FAIL';
+
+  return await get(url, failureMessage);
+};
+
 export {
   getUsers,
   getPendingContributors,
@@ -105,4 +119,6 @@ export {
   updateUser,
   updateOnboardingStatus,
   addVisitedPage,
+  getAdmins,
+  getStaff,
 };

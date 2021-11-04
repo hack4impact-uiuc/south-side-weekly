@@ -230,7 +230,10 @@ const PitchDoc = (): ReactElement => {
           <div className="wrapper">
             <Select
               value={claimStatus}
-              options={['Claimed', 'Unclaimed']}
+              options={['Claimed', 'Unclaimed'].map((status) => ({
+                label: status,
+                value: status,
+              }))}
               onChange={(e) => setClaimStatus(e ? e.value : '')}
               placeholder="Claim status"
             />
