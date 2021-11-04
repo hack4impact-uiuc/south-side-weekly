@@ -145,6 +145,40 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     ));
   };
 
+  const getSelectableTeams = () => {
+    const { aggregated: { teams }} = aggregatedPitch;
+
+    if (teams.length === 0) {
+      return <p>There are no more teams available.</p>
+    }
+
+    teams.map((team, i) => (
+      <div className="checkbox-wrapper" key={i}>
+        {teams.length === 1
+          ? <Form.Radio
+              disabled={team.target <= 0 || disableCheckbox(team._id)}
+              checked={checkboxes.get(team._id)}
+              onClick={() => {
+                updateCheckboxes(team._id);
+                setDidSubmit(false);
+              }}
+              error={isCheckboxError}
+            />
+          : <Form.Checkbox
+              disabled={team.target <= 0 || disableCheckbox(team._id)}
+              checked={checkboxes.get(team._id)}
+              onClick={() => {
+                updateCheckboxes(team._id);
+                setDidSubmit(false);
+              }}
+              error={isCheckboxError}
+            />
+        }
+        <p><span style={{fontWeight: 'bold'}}>{team.name}</span> - {team.target} {pluralize('spot', team.target)} left</p>
+      </div>
+    ))
+  }
+
   return (
     <Modal
       open={isOpen}
@@ -184,31 +218,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
         <Form>
           <Form.Group className="team-select-group">
               <p className="select-team-message">Select Team(s) to Join</p>
-              {aggregatedPitch.aggregated.teams.map((team, i) => (
-                  <div className="checkbox-wrapper" key={i}>
-                    {aggregatedPitch.aggregated.teams.length === 1
-                      ? <Form.Radio
-                          disabled={team.target <= 0 || disableCheckbox(team._id)}
-                          checked={checkboxes.get(team._id)}
-                          onClick={() => {
-                            updateCheckboxes(team._id);
-                            setDidSubmit(false);
-                          }}
-                          error={isCheckboxError}
-                        />
-                      : <Form.Checkbox
-                          disabled={team.target <= 0 || disableCheckbox(team._id)}
-                          checked={checkboxes.get(team._id)}
-                          onClick={() => {
-                            updateCheckboxes(team._id);
-                            setDidSubmit(false);
-                          }}
-                          error={isCheckboxError}
-                        />
-                    }
-                    <p><span style={{fontWeight: 'bold'}}>{team.name}</span> - {team.target} {pluralize('spot', team.target)} left</p>
-                  </div>
-              ))}
+              {getSelectableTeams()}
           </Form.Group>
           <h4>Why are you a good fit for this story?</h4>
           <Form.TextArea rows={4} value={longAnswer} onChange={(e) => setLongAnswer(e.target.value)} maxLength={250} />

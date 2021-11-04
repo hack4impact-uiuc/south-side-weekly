@@ -1,0 +1,9 @@
+@import '../../styles/colors.scss';
+
+.user-chip-wrapper {
+  display: flex;
+  align-items: center;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: gray;
+}
