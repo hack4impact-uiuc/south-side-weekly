@@ -115,9 +115,10 @@ router.post(
 
 // Update many changed interests
 router.put(
-  '/many',
+  '/update/many',
   requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
+    console.log('I AM HERE BITCH');
     const changedInterests: IInterest[] = req.body.interests;
     const updatedInterests = await Promise.all(
       changedInterests.map(async (interest) => {

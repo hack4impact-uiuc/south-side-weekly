@@ -58,10 +58,17 @@ const createManyInterests = async (
 const updateManyInterests = async (
   interests: IInterest[],
 ): Promise<Response<InterestResponse>> => {
-  const url = buildEndpoint(INTEREST_ENDPOINT, 'many');
+  const url = buildEndpoint(INTEREST_ENDPOINT, 'update', 'many');
   const failureMessage = 'Failed to update many interests';
 
   return await put(url, { interests }, failureMessage);
 };
 
-export { getInterests, getInterest, createInterest, updateInterest, updateManyInterests, createManyInterests };
+export {
+  getInterests,
+  getInterest,
+  createInterest,
+  updateInterest,
+  updateManyInterests,
+  createManyInterests,
+};

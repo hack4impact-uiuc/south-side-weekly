@@ -132,7 +132,9 @@ const DirectoryTable: FC<DirectoryTableProps> = ({ users }): ReactElement => {
               Role
             </Table.HeaderCell>
             <Table.HeaderCell>Teams</Table.HeaderCell>
-            <Table.HeaderCell>Interests <InterestsModal /></Table.HeaderCell>
+            <Table.HeaderCell>
+              Interests <InterestsModal />
+            </Table.HeaderCell>
             <AdminView>
               <Table.HeaderCell
                 onClick={() => handleSort(columnsEnum.ONBOARDING)}

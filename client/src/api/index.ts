@@ -31,7 +31,7 @@ export {
   createInterest,
   updateInterest,
   createManyInterests,
-  updateManyInterests
+  updateManyInterests,
 } from './interest';
 export { getTeams } from './teams';
 export { isError, buildURI } from './builders';

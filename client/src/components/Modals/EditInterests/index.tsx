@@ -27,7 +27,9 @@ const InterestsModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
   const [formValues, setFormValues] = useState<IInterest[]>([]);
 
-  const [clonedInterests, setClonedInterests] = useState<Partial<IInterest>[]>([]);
+  const [clonedInterests, setClonedInterests] = useState<Partial<IInterest>[]>(
+    [],
+  );
 
   useEffect(() => {
     fetchInterests();
@@ -41,7 +43,9 @@ const InterestsModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
     }));
 
     setClonedInterests([...clone]);
-  }, [isOpen]);
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen, fetchInterests]);
 
   // Add a new field in form
   const addField = (): void => {
@@ -75,10 +79,16 @@ const InterestsModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
   // Save newInterests and changedInterests
   const saveInterest = (): void => {
     // Save newly created interests in newInterests
-    const newInterests = formValues.filter((interest) => interest._id === 'NEW');
+    const newInterests = formValues.filter(
+      (interest) => interest._id === 'NEW',
+    );
     // Take out _id = "NEW" field from newInterests
     const parsedNewInterests: Partial<IInterest>[] = newInterests.map(
-      ({ _id, ...rest }) => rest,
+      (interest) => ({
+        name: interest.name,
+        color: interest.color,
+        active: interest.active,
+      }),
     );
 
     // Save changes to existing interest in changedInterests
