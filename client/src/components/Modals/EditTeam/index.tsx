@@ -44,33 +44,39 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
-  // Add a new field in form
-  const addField = (): void => {
+  // Add a new input field in form
+  const addInputLine = (): void => {
     setFormValues([
       ...formValues,
       { _id: 'NEW', name: '', color: '#3d4f91', active: true },
     ]);
   };
 
-  // Remove a field in form
-  const removeField = (i: number): void => {
+  // Remove an input field in form
+  const removeInputLine = (i: number): void => {
     const newFormValues = [...formValues];
     newFormValues.splice(i, 1);
     setFormValues(newFormValues);
   };
 
   // Update team names (input type = text)
-  const updateFieldText = (i: number, text: string): void => {
+  const updateInputText = (i: number, text: string): void => {
     const formValue = formValues[i];
     formValue.name = text;
     setFormValues([...formValues]);
   };
 
   // Update team colors (input type = color)
-  const updateFieldColor = (i: number, color: string): void => {
+  const updateInputColor = (i: number, color: string): void => {
     const formValue = formValues[i];
     formValue.color = color;
     setFormValues([...formValues]);
+  };
+
+  // Check if team name inputs contain duplicates
+  const isDuplicate = (): boolean => {
+    const valuesName = formValues.map((item) => item.name);
+    return valuesName.some((item, idx) => valuesName.indexOf(item) !== idx);
   };
 
   // Save newTeams and changedTeams
@@ -84,25 +90,19 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
       active: team.active,
     }));
 
-    // Save changes to existing team in changedTeams
+    // Save the changes made to existing team in changedTeams
     const changedTeams: ITeam[] = [];
 
     clonedTeams.forEach((team, index) => {
-      if (
-        team.name !== formValues[index].name ||
-        team.color !== formValues[index].color
-      ) {
+      const diffName = team.name !== formValues[index].name;
+      const diffColor = team.color !== formValues[index].color;
+      if (diffName || diffColor) {
         changedTeams.push(formValues[index]);
       }
     });
 
-    // Check if the changedTeam names is in cloned Teams
-    // Check if the new team names
-    const valuesName = formValues.map((item) => item.name);
-    const isDuplicate = valuesName.some(
-      (item, idx) => valuesName.indexOf(item) !== idx,
-    );
-    if (isDuplicate) {
+    // Alert duplicates
+    if (isDuplicate()) {
       Swal.fire({
         icon: 'error',
         title: 'Cannot create duplicate team name!',
@@ -146,7 +146,7 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
     >
       <Modal.Header>Edit Teams</Modal.Header>
       <Modal.Content>
-        <Form id="submit-team">
+        <Form id="submit-team" onSubmit={saveTeam}>
           {formValues.map((team, index) => (
             <div key={index} className="lines">
               <div className="color-pick">
@@ -154,25 +154,25 @@ const TeamModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
                   type="color"
                   value={team.color}
                   onChange={(e) =>
-                    updateFieldColor(index, e.currentTarget.value)
+                    updateInputColor(index, e.currentTarget.value)
                   }
                 />
               </div>
               <Input
                 type="text"
-                onChange={(e, { value }) => updateFieldText(index, value)}
+                onChange={(e, { value }) => updateInputText(index, value)}
                 value={team.name}
                 disabled={team.name === 'Editing' || team.name === 'Writing'}
               />
               {team._id === 'NEW' && (
                 <Icon
                   name="minus square outline"
-                  onClick={() => removeField(index)}
+                  onClick={() => removeInputLine(index)}
                 />
               )}
             </div>
           ))}
-          <Button className="addTeam" onClick={addField}>
+          <Button type="button" className="addTeam" onClick={addInputLine}>
             <Icon name="plus square outline" />
             <p>Add a new team</p>
           </Button>
