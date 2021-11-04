@@ -1,5 +1,13 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Button, Form, Icon, Modal, ModalProps, Radio, TextArea } from 'semantic-ui-react';
+import {
+  Button,
+  Form,
+  Icon,
+  Modal,
+  ModalProps,
+  Radio,
+  TextArea,
+} from 'semantic-ui-react';
 import { IPitch, IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
 
@@ -7,7 +15,12 @@ import { isError, submitPitchClaim } from '../../../api';
 import { getAggregatedPitch } from '../../../api/pitch';
 import { useAuth, useTeams } from '../../../contexts';
 import { emptyAggregatePitch } from '../../../utils/constants';
-import { convertMap, getPitchTeams, getUserFullName, pluralize } from '../../../utils/helpers';
+import {
+  convertMap,
+  getPitchTeams,
+  getUserFullName,
+  pluralize,
+} from '../../../utils/helpers';
 import FieldTag from '../../FieldTag';
 import LinkDisplay from '../../LinkDisplay';
 import PitchCard from '../../PitchCard';
@@ -36,13 +49,15 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
   const { getTeamFromId } = useTeams();
 
   const teamMap = new Map<string, Partial<IUser>[]>();
-  aggregatedPitch.aggregated.assignmentContributors.map(({ user, teams: teamIds }) => {
-    for (const teamId of teamIds) {
-      const teamList = teamMap.get(teamId) ?? [];
-      teamList.push(user);
-      teamMap.set(teamId, teamList);
-    }
-  });
+  aggregatedPitch.aggregated.assignmentContributors.map(
+    ({ user, teams: teamIds }) => {
+      for (const teamId of teamIds) {
+        const teamList = teamMap.get(teamId) ?? [];
+        teamList.push(user);
+        teamMap.set(teamId, teamList);
+      }
+    },
+  );
 
   useEffect(() => {
     if (!isOpen) {
@@ -133,51 +148,65 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
 
   const getOtherContributors = () => {
     if (teamMap.size === 0) {
-      return <p>There are no other contributors on this pitch.</p>
+      return <p>There are no other contributors on this pitch.</p>;
     }
 
-    return [...teamMap.entries()].map(([ teamId, users ]) => (
-      <p key={teamId}><span style={{fontWeight: 'bold'}}>{getTeamFromId(teamId)?.name}</span>: {
-        users.map((user, i) => (
-          <UserChip user={user as IUser} key={i} />
+    return (
+      <div className="other-contributors">
+        {[...teamMap.entries()].map(([teamId, users]) => (
+          <p key={teamId}>
+            <span style={{ fontWeight: 'bold' }}>
+              {getTeamFromId(teamId)?.name}
+            </span>
+            :{' '}
+            {users.map((user, i) => (
+              <UserChip user={user as IUser} key={i} />
+            ))}
+          </p>
         ))}
-      </p>
-    ));
+      </div>
+    );
   };
 
   const getSelectableTeams = () => {
-    const { aggregated: { teams }} = aggregatedPitch;
+    const {
+      aggregated: { teams },
+    } = aggregatedPitch;
 
     if (teams.length === 0) {
-      return <p>There are no more teams available.</p>
+      return <p>There are no more teams available.</p>;
     }
 
-    teams.map((team, i) => (
+    return teams.map((team, i) => (
       <div className="checkbox-wrapper" key={i}>
-        {teams.length === 1
-          ? <Form.Radio
-              disabled={team.target <= 0 || disableCheckbox(team._id)}
-              checked={checkboxes.get(team._id)}
-              onClick={() => {
-                updateCheckboxes(team._id);
-                setDidSubmit(false);
-              }}
-              error={isCheckboxError}
-            />
-          : <Form.Checkbox
-              disabled={team.target <= 0 || disableCheckbox(team._id)}
-              checked={checkboxes.get(team._id)}
-              onClick={() => {
-                updateCheckboxes(team._id);
-                setDidSubmit(false);
-              }}
-              error={isCheckboxError}
-            />
-        }
-        <p><span style={{fontWeight: 'bold'}}>{team.name}</span> - {team.target} {pluralize('spot', team.target)} left</p>
+        {teams.length === 1 ? (
+          <Form.Radio
+            disabled={team.target <= 0 || disableCheckbox(team._id)}
+            checked={checkboxes.get(team._id)}
+            onClick={() => {
+              updateCheckboxes(team._id);
+              setDidSubmit(false);
+            }}
+            error={isCheckboxError}
+          />
+        ) : (
+          <Form.Checkbox
+            disabled={team.target <= 0 || disableCheckbox(team._id)}
+            checked={checkboxes.get(team._id)}
+            onClick={() => {
+              updateCheckboxes(team._id);
+              setDidSubmit(false);
+            }}
+            error={isCheckboxError}
+          />
+        )}
+        <p>
+          <span style={{ fontWeight: 'bold' }}>{team.name}</span> -{' '}
+          {team.target} {pluralize('spot', team.target)} left
+        </p>
       </div>
-    ))
-  }
+    ));
+  };
 
   return (
     <Modal
@@ -210,18 +239,25 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
         </div>
         <p className="description">{pitch.description}</p>
         <details className="contributors">
-          <summary className="contributors-summary"><h4>Contributors Currently on Pitch</h4></summary>
+          <summary className="contributors-summary">
+            <h4>Contributors Currently on Pitch</h4>
+          </summary>
           <h4>Other Contributors Currently on Pitch</h4>
           <hr></hr>
           {getOtherContributors()}
         </details>
         <Form>
           <Form.Group className="team-select-group">
-              <p className="select-team-message">Select Team(s) to Join</p>
-              {getSelectableTeams()}
+            <p className="select-team-message">Select Team(s) to Join</p>
+            {getSelectableTeams()}
           </Form.Group>
           <h4>Why are you a good fit for this story?</h4>
-          <Form.TextArea rows={4} value={longAnswer} onChange={(e) => setLongAnswer(e.target.value)} maxLength={250} />
+          <Form.TextArea
+            rows={4}
+            value={longAnswer}
+            onChange={(e) => setLongAnswer(e.target.value)}
+            maxLength={250}
+          />
           <p className="word-limit">{longAnswer.length} / 250</p>
         </Form>
       </Modal.Content>
