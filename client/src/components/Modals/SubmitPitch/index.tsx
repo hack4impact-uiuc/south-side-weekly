@@ -11,9 +11,9 @@ import {
 } from 'semantic-ui-react';
 import Swal from 'sweetalert2';
 
+import { InterestsSelect } from '../..';
 import { createPitch, isError } from '../../../api';
-import { useAuth, useInterests } from '../../../contexts';
-import { titleCase } from '../../../utils/helpers';
+import { useAuth } from '../../../contexts';
 
 import './styles.scss';
 
@@ -66,25 +66,19 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [link, setLink] = useState('');
-  const [topics, setTopics] = useState(new Set<string>());
+  const [topics, setTopics] = useState<string[]>([]);
   const [conflictofInterest, setConflictOfInterest] = useState<
     boolean | undefined
   >();
   const [didSubmit, setDidSubmit] = useState(false);
+  const [writerChoice, setWriterChoice] = useState(false);
 
   const { user } = useAuth();
-  const { interests } = useInterests();
-
-  const addTopic = (topic: string): void => {
-    topics.has(topic) ? topics.delete(topic) : topics.add(topic);
-    setTopics(new Set(topics));
-  };
 
   useEffect(() => {
     setTitle('');
     setDescription('');
     setLink('');
-    setTopics(new Set());
     setConflictOfInterest(undefined);
     setDidSubmit(false);
   }, [isOpen]);
@@ -96,10 +90,11 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
       const body = {
         title: title,
         author: user._id,
+        writer: writerChoice ? user._id : '',
         assignmentGoogleDocLink: link,
         status: 'PENDING',
         description: description,
-        topics: Array.from(topics),
+        topics: topics,
         conflictOfInterest: conflictofInterest!,
       };
 
@@ -161,47 +156,56 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
         <Form id="submit-pitch" onSubmit={submitPitch}>
           <Form.Group widths="equal">
             <Form.Input
-              required
               error={isFieldError(title)}
-              label="Title"
+              label={<h5 className="label">Pitch Title</h5>}
               value={title}
               onChange={(e, { value }) => setTitle(value)}
               size="small"
             />
+          </Form.Group>
+          <Form.Group widths="equal">
             <Form.Input
-              required
               error={isFieldError(link)}
-              label={'Link to Google Doc'}
+              label={<h5 className="label">Google Doc Link</h5>}
               value={link}
               onChange={(e, { value }) => setLink(value)}
               size="small"
             />
           </Form.Group>
-
           <Form.TextArea
-            required
             maxLength={MAX_LENGTH}
             value={description}
             onChange={(e, { value }) => setDescription(toString(value))}
-            label="Description"
+            label={<h5 className="label">Description</h5>}
             error={isFieldError(description)}
           />
-
-          <h3>Topics (Please select at least 1 topic)</h3>
-          <Form.Group inline widths="4" className="checkbox-group">
-            {interests.map((topic, index) => (
-              <Form.Checkbox
-                error={isFieldError(topics)}
-                className="checkbox"
-                key={index}
-                label={titleCase(topic.name)}
-                checked={topics.has(topic._id)}
-                onClick={() => addTopic(topic._id)}
-                value={topic._id}
-              />
-            ))}
+          <h5 className="label">Associated Topics</h5>
+          <InterestsSelect
+            values={topics}
+            onChange={(values) => {
+              if (values.length <= 4) {
+                setTopics(values.map((item) => item.value));
+              }
+            }}
+          />
+          <h5 className="label">Do you want to be the writer of the story? </h5>
+          <Form.Group inline>
+            <Form.Radio
+              name="writer-choice"
+              label="Yes"
+              onClick={() => setWriterChoice(true)}
+              checked={writerChoice}
+              error={isFieldError(writerChoice)}
+            />
+            <Form.Radio
+              name="writer-choice"
+              label="No, I want someone else to write the story"
+              onClick={() => setWriterChoice(false)}
+              checked={!isUndefined(writerChoice) && !writerChoice}
+              error={isFieldError(writerChoice)}
+            />
           </Form.Group>
-          <h3>Conflict of Interest Discolsure</h3>
+          <h5 className="label">Conflict of Interest Disclosure</h5>
           <p>
             Are you involved with the events or people covered in your pitch?
             i.e. do you have a relationship with them as an employee, family
