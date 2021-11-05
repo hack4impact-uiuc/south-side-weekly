@@ -1,16 +1,17 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Button, Form, Modal, ModalProps } from 'semantic-ui-react';
-import { IPitch } from 'ssw-common';
+import { Button, Form, Icon, Modal, ModalProps } from 'semantic-ui-react';
+import { IPitch, IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
 
 import { isError, submitPitchClaim } from '../../../api';
 import { getAggregatedPitch } from '../../../api/pitch';
-import { useAuth } from '../../../contexts';
+import { useAuth, useTeams } from '../../../contexts';
 import { emptyAggregatePitch } from '../../../utils/constants';
-import { convertMap, getUserFullName } from '../../../utils/helpers';
+import { convertMap, pluralize } from '../../../utils/helpers';
 import FieldTag from '../../FieldTag';
+import LinkDisplay from '../../LinkDisplay';
 import PitchCard from '../../PitchCard';
-import UserPicture from '../../UserPicture';
+import UserChip from '../../UserChip';
 import './styles.scss';
 
 interface ClaimPitchProps extends ModalProps {
@@ -25,11 +26,24 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
 }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
   const [checkboxes, setCheckboxes] = useState(new Map<string, boolean>());
+  const [message, setMessage] = useState('');
   const [didSubmit, setDidSubmit] = useState(false);
   const [isCheckboxError, setIsCheckboxError] = useState(false);
   const [aggregatedPitch, setAggregatedPitch] = useState(emptyAggregatePitch);
 
   const { user } = useAuth();
+  const { getTeamFromId } = useTeams();
+
+  const teamMap = new Map<string, Partial<IUser>[]>();
+  aggregatedPitch.aggregated.assignmentContributors.map(
+    ({ user, teams: teamIds }) => {
+      for (const teamId of teamIds) {
+        const teamList = teamMap.get(teamId) ?? [];
+        teamList.push(user);
+        teamMap.set(teamId, teamList);
+      }
+    },
+  );
 
   useEffect(() => {
     if (!isOpen) {
@@ -75,7 +89,12 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
       }
     });
 
-    const pitchRes = await submitPitchClaim(pitch._id, user._id, selectedTeams);
+    const pitchRes = await submitPitchClaim(
+      pitch._id,
+      user._id,
+      selectedTeams,
+      message,
+    );
     if (!isError(pitchRes)) {
       callback();
       Swal.fire({
@@ -83,6 +102,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
         icon: 'success',
       });
       setIsOpen(false);
+      setMessage('');
     }
   };
 
@@ -112,11 +132,106 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     return 'Claim Pitch';
   };
 
-  const { author, reviewedBy, assignmentContributors, teams } =
-    aggregatedPitch.aggregated;
-
   const isUserOnTeam = (team: string): boolean => user.teams.includes(team);
   const disableCheckbox = (team: string): boolean => !isUserOnTeam(team);
+
+  const getContributorChipFor = (
+    users: Partial<IUser>[],
+    title: string,
+  ): JSX.Element => (
+    <>
+      <span style={{ fontWeight: 'bold' }}>{title}:</span>
+      {users.length === 0 || users.every((user) => !user)
+        ? 'None'
+        : users.map((user) => <UserChip user={user} key={user._id} />)}
+    </>
+  );
+
+  const getContributors = (): JSX.Element => (
+    <div className="contributors-lists">
+      <div className="contributor-list">
+        {getContributorChipFor(
+          [aggregatedPitch.aggregated.author],
+          'Pitch Creator',
+        )}
+        {getContributorChipFor([aggregatedPitch.aggregated.writer], 'Writer')}
+      </div>
+      <div className="contributor-list">
+        {getContributorChipFor(
+          [aggregatedPitch.aggregated.primaryEditor],
+          'Primary Editor',
+        )}
+        {getContributorChipFor(
+          aggregatedPitch.aggregated.secondaryEditors,
+          'Second Editors',
+        )}
+        {getContributorChipFor(
+          aggregatedPitch.aggregated.thirdEditors,
+          'Third Editors',
+        )}
+      </div>
+    </div>
+  );
+
+  const getOtherContributors = (): JSX.Element => {
+    if (teamMap.size === 0) {
+      return <p>There are no other contributors on this pitch.</p>;
+    }
+
+    return (
+      <div className="other-contributors">
+        <div className="contributor-list">
+          {[...teamMap.entries()].map(([teamId, users]) =>
+            getContributorChipFor(users, getTeamFromId(teamId)!.name),
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const getSelectableTeams = (): JSX.Element => {
+    const {
+      aggregated: { teams },
+    } = aggregatedPitch;
+
+    if (teams.length === 0) {
+      return <p>There are no more teams available.</p>;
+    }
+
+    return (
+      <>
+        {teams.map((team, i) => (
+          <div className="checkbox-wrapper" key={i}>
+            {teams.length === 1 ? (
+              <Form.Radio
+                disabled={team.target <= 0 || disableCheckbox(team._id)}
+                checked={checkboxes.get(team._id)}
+                onClick={() => {
+                  updateCheckboxes(team._id);
+                  setDidSubmit(false);
+                }}
+                error={isCheckboxError}
+              />
+            ) : (
+              <Form.Checkbox
+                disabled={team.target <= 0 || disableCheckbox(team._id)}
+                checked={checkboxes.get(team._id)}
+                onClick={() => {
+                  updateCheckboxes(team._id);
+                  setDidSubmit(false);
+                }}
+                error={isCheckboxError}
+              />
+            )}
+            <p>
+              <span style={{ fontWeight: 'bold' }}>{team.name}</span> -{' '}
+              {team.target} {pluralize('spot', team.target)} left
+            </p>
+          </div>
+        ))}
+      </>
+    );
+  };
 
   return (
     <Modal
@@ -127,9 +242,17 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
       className="claim-modal"
       {...rest}
     >
-      <Modal.Header content={getHeader()} />
-      <Modal.Content>
-        <h1>{pitch.title}</h1>
+      <Modal.Header>
+        <div className="modal-header">
+          {getHeader()}
+          <Icon name="close" onClick={() => setIsOpen(false)} />
+        </div>
+      </Modal.Header>
+      <Modal.Content scrolling>
+        <h1 className="pitch-title">
+          {pitch.title}
+          <LinkDisplay href={pitch.assignmentGoogleDocLink} />
+        </h1>
         <div className="topics-section">
           {aggregatedPitch.aggregated.interests.map((interest, index) => (
             <FieldTag
@@ -139,66 +262,37 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
             />
           ))}
         </div>
-        <div className="author-section">
-          <div className="author">
-            <h3>{`Submitted by: ${getUserFullName(author)}`}</h3>
-          </div>
-          <div className="author">
-            <h3>{`Reviewed by: ${getUserFullName(reviewedBy)}`}</h3>
-          </div>
-        </div>
         <p className="description">{pitch.description}</p>
-        <p>
-          Link to Pitch:{' '}
-          <a href={pitch.assignmentGoogleDocLink}>
-            {pitch.assignmentGoogleDocLink}
-          </a>
-        </p>
-        <h2>Positions Available Per Team:</h2>
-        <p>
-          Please select the team that you will be filling the position for
-          before claiming this pitch.
-        </p>
+        <details className="contributors">
+          <summary className="contributors-summary">
+            <h4>Contributors Currently on Pitch</h4>
+          </summary>
+          {getContributors()}
+          <h4>Other Contributors Currently on Pitch</h4>
+          <hr></hr>
+          {getOtherContributors()}
+        </details>
         <Form>
-          <Form.Group inline widths={5} className="team-select-group">
-            {teams.map((team, index) => (
-              <div className="checkbox-wrapper" key={index}>
-                <Form.Checkbox
-                  disabled={
-                    team.target <= 0 ||
-                    disableCheckbox(pitch.teams[index].teamId)
-                  }
-                  checked={checkboxes.get(pitch.teams[index].teamId)}
-                  onClick={() => {
-                    updateCheckboxes(pitch.teams[index].teamId);
-                    setDidSubmit(false);
-                  }}
-                  error={isCheckboxError}
-                />
-                <FieldTag name={team.name} hexcode={team.color} />
-                <h4>{team.target}</h4>
-              </div>
-            ))}
+          <Form.Group className="team-select-group">
+            <p className="select-team-message">Select Team(s) to Join</p>
+            {getSelectableTeams()}
           </Form.Group>
+          <h4>Why are you a good fit for this story?</h4>
+          <Form.TextArea
+            rows={4}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            maxLength={250}
+          />
+          <p className="word-limit">{message.length} / 250</p>
         </Form>
-        <h2>Pitch Claimed By</h2>
-        <div className="contributors-section">
-          {assignmentContributors.map(({ user: contributor }, index) => (
-            <UserPicture
-              user={contributor}
-              title={getUserFullName(contributor)}
-              key={index}
-              size="tiny"
-            />
-          ))}
-        </div>
       </Modal.Content>
       <Modal.Actions>
         <Button
           type="submit"
           onClick={claimPitch}
-          content="Submit my Claim for Review"
-          positive
+          content="Submit Claim Request"
+          secondary
           disabled={didUserClaim() || didUserSubmitClaimReq()}
         />
       </Modal.Actions>
