@@ -9,18 +9,19 @@ import {
 
 export type PitchSchema = IPitch & Document<any>;
 
-const contributor = new mongoose.Schema(
-  {
-    userId: { type: Schema.Types.ObjectId, ref: 'User' },
-    teams: [{ type: String }],
-  },
-  { _id: false },
-);
 
 const team = new mongoose.Schema(
   {
     teamId: { type: Schema.Types.ObjectId, ref: 'Team' },
     target: Number,
+  },
+  { _id: false },
+);
+
+const contributor = new mongoose.Schema(
+  {
+    userId: { type: Schema.Types.ObjectId, ref: 'User' },
+    teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
   },
   { _id: false },
 );
