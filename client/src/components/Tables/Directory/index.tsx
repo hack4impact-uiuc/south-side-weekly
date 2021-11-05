@@ -5,6 +5,7 @@ import { IUser } from 'ssw-common';
 import { AdminView, FieldTag, UserModal, UserPicture, TableTool } from '../..';
 import { useInterests, useTeams } from '../../../contexts';
 import { getUserFullName } from '../../../utils/helpers';
+import TeamModal from '../../Modals/EditTeam';
 
 import './styles.scss';
 
@@ -133,7 +134,10 @@ const DirectoryHeader: FC<DirectoryHeaderProps> = ({
       >
         Role
       </Table.HeaderCell>
-      <Table.HeaderCell>Teams</Table.HeaderCell>
+      <Table.HeaderCell>
+        Teams
+        <TeamModal />
+      </Table.HeaderCell>
       <Table.HeaderCell>Interests</Table.HeaderCell>
       <AdminView>
         <Table.HeaderCell
