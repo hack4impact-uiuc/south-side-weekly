@@ -3,7 +3,7 @@ import { Button, Icon, Table } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { AdminView, FieldTag, UserModal, UserPicture } from '../..';
-import { useTeams } from '../../../contexts';
+import { useInterests, useTeams } from '../../../contexts';
 import { getUserFullName } from '../../../utils/helpers';
 import TeamModal from '../../Modals/EditTeam';
 
@@ -182,6 +182,8 @@ const DirectoryTable: FC<DirectoryTableProps> = ({ users }): ReactElement => {
 
 const DirectoryRow: FC<DirctoryRowProps> = ({ user }): ReactElement => {
   const { getTeamFromId } = useTeams();
+  const { getInterestById } = useInterests();
+
   return (
     <Table.Row>
       <Table.Cell className="picture-col" width={1}>
@@ -202,9 +204,18 @@ const DirectoryRow: FC<DirctoryRowProps> = ({ user }): ReactElement => {
         ))}
       </Table.Cell>
       <Table.Cell>
-        {user.interests.map((interest, index) => (
-          <FieldTag size="small" key={index} content={interest} />
-        ))}
+        {user.interests.map((interest, index) => {
+          const fullInterest = getInterestById(interest);
+
+          return (
+            <FieldTag
+              size="small"
+              key={index}
+              name={fullInterest?.name}
+              hexcode={fullInterest?.color}
+            />
+          );
+        })}
       </Table.Cell>
       <AdminView>
         <Table.Cell width={ONBOARDING_WIDTH}>

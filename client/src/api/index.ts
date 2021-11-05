@@ -25,5 +25,16 @@ export {
   deleteResource,
   editResource,
 } from './resource';
-export { getTeams, createManyTeams, updateManyTeams } from './teams';
+
+export {
+  getInterests,
+  getInterest,
+  createInterest,
+  updateInterest,
+} from './interest';
+export { 
+  getTeams, 
+  createManyTeams, 
+  updateManyTeams,
+} from './teams';
 export { isError, buildURI } from './builders';

@@ -9,7 +9,7 @@ import {
   isError,
   getAggregatedPitch,
 } from '../../../api';
-import { useTeams } from '../../../contexts';
+import { useInterests, useTeams } from '../../../contexts';
 import { classNames, getUserFullName } from '../../../utils/helpers';
 import FieldTag from '../../FieldTag';
 import PitchCard from '../../PitchCard';
@@ -30,6 +30,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   const [author, setAuthor] = useState('');
   const [teamMap, setTeamMap] = useState<IPitch['teams']>([]);
   const { teams } = useTeams();
+  const { getInterestById } = useInterests();
 
   useEffect(() => {
     if (!isOpen) {
@@ -138,11 +139,15 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       <Modal.Content>
         <h1>{pitch.title}</h1>
         <Grid className="topics-section" columns={6}>
-          {pitch.topics.map((topic, index) => (
-            <Grid.Column key={index}>
-              <FieldTag content={topic} />
-            </Grid.Column>
-          ))}
+          {pitch.topics.map((topic, index) => {
+            const interest = getInterestById(topic);
+
+            return (
+              <Grid.Column key={index}>
+                <FieldTag name={interest?.name} hexcode={interest?.color} />
+              </Grid.Column>
+            );
+          })}
         </Grid>
         <div className="author-section">
           <div className="author">
