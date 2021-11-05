@@ -21,6 +21,8 @@ import ApprovePitchModal from './Modals/ApprovePitch';
 import MultiSelect from './Dropdowns/MultiSelect';
 import Select from './Dropdowns/Select';
 import DirectoryTable from './Tables/Directory';
+import PitchTable from './Tables/PitchDoc';
+import TableTool from './Tables/TableTool';
 import Walkthrough from './Walkthrough';
 import InterestsSelect from './Dropdowns/InterestsSelect';
 import ProviderWrapper from './ProviderWrapper';
@@ -50,6 +52,8 @@ export {
   MultiSelect,
   Select,
   DirectoryTable,
+  PitchTable,
+  TableTool,
   Walkthrough,
   InterestsSelect,
   ProviderWrapper,
