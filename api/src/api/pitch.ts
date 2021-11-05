@@ -13,7 +13,6 @@ import { pitchStatusEnum } from '../utils/enums';
 import { isPitchClaimed } from '../utils/helpers';
 import { sendMail } from '../utils/mailer';
 import {
-  notifyMessage,
   approvedMessage,
   declinedMessage,
   approveClaim,
@@ -246,7 +245,7 @@ router.put(
     }
     const author = await User.findById(pitch.author);
     const aggregatedPitch = await aggregatePitch(pitch);
-    const message = approvedMessage(author, pitch, req.user, pitch.writer ? aggregatedPitch.aggregated.primaryEditor : undefined );
+    const message = approvedMessage(author, aggregatedPitch, req.user);
     await sendMail(message);
     res.status(200).json({
       success: true,
@@ -276,7 +275,8 @@ router.put(
       return;
     }
     const author = await User.findById(pitch.author);
-    const message = declinedMessage(author, pitch, req.user);
+    const aggregatedPitch = await aggregatePitch(pitch);
+    const message = declinedMessage(author, aggregatedPitch, req.user);
     await sendMail(message);
     res.status(200).json({
       success: true,
@@ -374,13 +374,11 @@ router.put(
       });
       return;
     }
-    const claimUser = await User.findById(userId);
     const aggregatedPitch = await aggregatePitch(pitch);
     const message = await approveClaim(
-      claimUser,
+      user,
       aggregatedPitch,
-      req.user,
-      teams,
+      req.user
     );
     await sendMail(message);
     res.status(200).json({
