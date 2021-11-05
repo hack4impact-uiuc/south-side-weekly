@@ -29,6 +29,8 @@ import { Select } from '../../../components';
 
 import './styles.scss';
 import { neighborhoods } from '../../../utils/constants';
+import { getUsersByTeam } from '../../../api/user';
+import { rolesEnum } from '../../../utils/enums';
 
 interface ApprovePitchProps extends ModalProps {
   pitch: IPitch;
@@ -66,13 +68,9 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [author, setAuthor] = useState('');
   const [authorImage, setAuthorImage] = useState<string | undefined>('');
-  //const [teamMap, setTeamMap] = useState<IPitch['teams']>([]);
-  const [users, setUsers] = useState<IUser[]>([]);
-  /*  const [writer, setWriter] = useState('');
-  const [primaryEditor, setPrimaryEditor] = useState('');
-  const [secondaryEditor, setSecondaryEditor] = useState('');
-  const [tertiaryEditor, setTertiaryEditor] = useState(''); */
   const [formData, setFormData] = useState<FormData>(defaultData);
+  const [editors, setEditors] = useState<IUser[]>([]);
+  const [writers, setWriters] = useState<IUser[]>([]);
 
   const { teams } = useTeams();
   const { getInterestById } = useInterests();
@@ -91,15 +89,24 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       }
     };
 
-    const getAllUsers = async (): Promise<void> => {
-      const res = await getUsers();
+    const getEditors = async (): Promise<void> => {
+      const res = await getUsersByTeam('Editing');
 
       if (!isError(res)) {
-        setUsers(res.data.result);
+        setEditors(res.data.result);
       }
     };
 
-    getAllUsers();
+    const getWriters = async (): Promise<void> => {
+      const res = await getUsersByTeam('Writing');
+
+      if (!isError(res)) {
+        setWriters(res.data.result);
+      }
+    };
+
+    getEditors();
+    getWriters();
     fetchAggregatedPitch();
 
     return () => {
@@ -207,6 +214,9 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   };
   console.log(formData);
 
+  const filterAdmin = (users: IUser[]): IUser[] =>
+    users.filter((user) => user.role === rolesEnum.ADMIN);
+
   return (
     <Modal
       {...rest}
@@ -241,7 +251,13 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
         <div className="pitch-author-section">
           <span className="form-label">Pitch Creator:</span>
           <Label as="a" image>
-            <img src={authorImage} alt="Author Profile" /> {author}
+            <img
+              src={authorImage}
+              alt="Author Profile"
+              className="nametag"
+              //style={{ borderRadius: '50%', height: '20px' !important }}
+            />{' '}
+            {author}
           </Label>
         </div>
 
@@ -321,8 +337,11 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
               </p>
               <Select
                 value={formData.writer}
-                options={users.map(getUserFullName)}
-                onChange={(e) => console.log(e ? e.value : '')}
+                options={writers.map((writer) => ({
+                  value: writer._id,
+                  label: getUserFullName(writer),
+                }))}
+                onChange={(e) => changeField('writer', e ? e.value : '')}
                 placeholder="Select"
               />
             </Grid.Column>
@@ -330,14 +349,17 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
               <p className="form-label">Editors</p>
               <Select
                 value={formData.primaryEditor}
-                options={users.map(getUserFullName)}
-                onChange={(e) => console.log(e ? e.value : '')}
+                options={filterAdmin(editors).map((editor) => ({
+                  value: editor._id,
+                  label: getUserFullName(editor),
+                }))}
+                onChange={(e) => changeField('primaryEditor', e ? e.value : '')}
                 placeholder="Select Primary Editor"
               />
               <MultiSelect
-                options={users.map((user) => ({
-                  value: user._id,
-                  label: getUserFullName(user),
+                options={editors.map((editor) => ({
+                  value: editor._id,
+                  label: getUserFullName(editor),
                 }))}
                 placeholder="Select Secondary Editor - Optional"
                 onChange={(values) =>
@@ -349,9 +371,9 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
                 value={formData.secondEditors}
               />
               <MultiSelect
-                options={users.map((user) => ({
-                  value: user._id,
-                  label: getUserFullName(user),
+                options={editors.map((editor) => ({
+                  value: editor._id,
+                  label: getUserFullName(editor),
                 }))}
                 placeholder="Select Tertiary Editor - Optional"
                 onChange={(values) =>

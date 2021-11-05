@@ -49,7 +49,7 @@ const approvePitch = async (
   const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'approve');
   const failureMessage = 'APPROVE_CLAIM_FAIL';
 
-  return await put(url, pitchData, failureMessage);
+  return await put(url, { pitchData }, failureMessage);
 };
 
 const declinePitch = async (
