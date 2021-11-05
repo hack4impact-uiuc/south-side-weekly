@@ -1,5 +1,6 @@
 import React, { FC } from 'react';
 import { IUser } from 'ssw-common';
+
 import { getUserFullName, getUserShortName } from '../../utils/helpers';
 
 import './styles.scss';

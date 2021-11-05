@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from 'react';
+import React, { FC } from 'react';
 import { Icon } from 'semantic-ui-react';
 
 import './styles.scss';

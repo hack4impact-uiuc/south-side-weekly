@@ -148,7 +148,7 @@ const openProfile = (user: IUser): void =>
  * @param word the word to pluralize
  * @param numberOf the number of the word that you want to describe
  */
-const pluralize = (word: string, numberOf: number) =>
+const pluralize = (word: string, numberOf: number): string =>
   word + (numberOf !== 1 ? 's' : '');
 
 export {

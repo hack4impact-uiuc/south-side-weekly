@@ -1,13 +1,5 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import {
-  Button,
-  Form,
-  Icon,
-  Modal,
-  ModalProps,
-  Radio,
-  TextArea,
-} from 'semantic-ui-react';
+import { Button, Form, Icon, Modal, ModalProps } from 'semantic-ui-react';
 import { IPitch, IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
 
@@ -15,17 +7,11 @@ import { isError, submitPitchClaim } from '../../../api';
 import { getAggregatedPitch } from '../../../api/pitch';
 import { useAuth, useTeams } from '../../../contexts';
 import { emptyAggregatePitch } from '../../../utils/constants';
-import {
-  convertMap,
-  getPitchTeams,
-  getUserFullName,
-  pluralize,
-} from '../../../utils/helpers';
+import { convertMap, pluralize } from '../../../utils/helpers';
 import FieldTag from '../../FieldTag';
 import LinkDisplay from '../../LinkDisplay';
 import PitchCard from '../../PitchCard';
 import UserChip from '../../UserChip';
-import UserPicture from '../../UserPicture';
 import './styles.scss';
 
 interface ClaimPitchProps extends ModalProps {
@@ -146,17 +132,13 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     return 'Claim Pitch';
   };
 
-  const { author, reviewedBy, assignmentContributors, teams } =
-    aggregatedPitch.aggregated;
-
   const isUserOnTeam = (team: string): boolean => user.teams.includes(team);
   const disableCheckbox = (team: string): boolean => !isUserOnTeam(team);
 
   const getContributorChipFor = (
     users: Partial<IUser>[],
     title: string,
-    key?: string | number,
-  ) => (
+  ): JSX.Element => (
     <>
       <span style={{ fontWeight: 'bold' }}>{title}:</span>
       {users.length === 0 || users.every((user) => !user)
@@ -165,7 +147,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     </>
   );
 
-  const getContributors = () => (
+  const getContributors = (): JSX.Element => (
     <div className="contributors-lists">
       <div className="contributor-list">
         {getContributorChipFor(
@@ -191,7 +173,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     </div>
   );
 
-  const getOtherContributors = () => {
+  const getOtherContributors = (): JSX.Element => {
     if (teamMap.size === 0) {
       return <p>There are no other contributors on this pitch.</p>;
     }
@@ -200,14 +182,14 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
       <div className="other-contributors">
         <div className="contributor-list">
           {[...teamMap.entries()].map(([teamId, users]) =>
-            getContributorChipFor(users, getTeamFromId(teamId)!.name, teamId),
+            getContributorChipFor(users, getTeamFromId(teamId)!.name),
           )}
         </div>
       </div>
     );
   };
 
-  const getSelectableTeams = () => {
+  const getSelectableTeams = (): JSX.Element => {
     const {
       aggregated: { teams },
     } = aggregatedPitch;
@@ -216,35 +198,39 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
       return <p>There are no more teams available.</p>;
     }
 
-    return teams.map((team, i) => (
-      <div className="checkbox-wrapper" key={i}>
-        {teams.length === 1 ? (
-          <Form.Radio
-            disabled={team.target <= 0 || disableCheckbox(team._id)}
-            checked={checkboxes.get(team._id)}
-            onClick={() => {
-              updateCheckboxes(team._id);
-              setDidSubmit(false);
-            }}
-            error={isCheckboxError}
-          />
-        ) : (
-          <Form.Checkbox
-            disabled={team.target <= 0 || disableCheckbox(team._id)}
-            checked={checkboxes.get(team._id)}
-            onClick={(e) => {
-              updateCheckboxes(team._id);
-              setDidSubmit(false);
-            }}
-            error={isCheckboxError}
-          />
-        )}
-        <p>
-          <span style={{ fontWeight: 'bold' }}>{team.name}</span> -{' '}
-          {team.target} {pluralize('spot', team.target)} left
-        </p>
-      </div>
-    ));
+    return (
+      <>
+        {teams.map((team, i) => (
+          <div className="checkbox-wrapper" key={i}>
+            {teams.length === 1 ? (
+              <Form.Radio
+                disabled={team.target <= 0 || disableCheckbox(team._id)}
+                checked={checkboxes.get(team._id)}
+                onClick={() => {
+                  updateCheckboxes(team._id);
+                  setDidSubmit(false);
+                }}
+                error={isCheckboxError}
+              />
+            ) : (
+              <Form.Checkbox
+                disabled={team.target <= 0 || disableCheckbox(team._id)}
+                checked={checkboxes.get(team._id)}
+                onClick={() => {
+                  updateCheckboxes(team._id);
+                  setDidSubmit(false);
+                }}
+                error={isCheckboxError}
+              />
+            )}
+            <p>
+              <span style={{ fontWeight: 'bold' }}>{team.name}</span> -{' '}
+              {team.target} {pluralize('spot', team.target)} left
+            </p>
+          </div>
+        ))}
+      </>
+    );
   };
 
   return (
