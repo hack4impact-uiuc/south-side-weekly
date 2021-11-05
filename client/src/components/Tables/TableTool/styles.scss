@@ -1,0 +1,19 @@
+.directory-table {
+  position: relative;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  td,
+  th {
+    border-left: none !important;
+  }
+
+  thead,
+  tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+}
