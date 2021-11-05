@@ -111,7 +111,7 @@ export const approvedMessage = (
 export const approveClaim = async (
   claimUser: Partial<IUser>,
   pitch: IPitchAggregate,
-  admin: IUser,
+  admin: Partial<IUser>,
 ): Promise<EmailMessage> => {
   type idToTeam = Record<string, Partial<ITeam>>;
 
@@ -129,7 +129,7 @@ export const approveClaim = async (
       if (!(teamId in teamIdToTeam)) {
         teamIdToTeam[teamId] = team;
       }
-      if (contributor.user._id === claimUser._id) {
+      if (String(contributor.user._id) === String(claimUser._id)) {
         claimUserTeams.push(team.name);
       }
       if (!(team.name in teamNamesToUsers)) {

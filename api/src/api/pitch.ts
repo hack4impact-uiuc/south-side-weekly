@@ -333,6 +333,7 @@ router.put(
 // Approves a claim on a pitch
 router.put(
   '/:pitchId/approveClaim',
+  requireStaff,
   errorWrap(async (req: Request, res: Response) => {
     const { userId, teams } = req.body;
     // Remove the user from the pending contributors and add it to the the assignment contributors
@@ -375,10 +376,11 @@ router.put(
       return;
     }
     const aggregatedPitch = await aggregatePitch(pitch);
+    const fakeAdmin = {firstName: 'Ya boy Andy', lastName: 'Wong'}
     const message = await approveClaim(
       user,
       aggregatedPitch,
-      req.user
+      fakeAdmin
     );
     await sendMail(message);
     res.status(200).json({
