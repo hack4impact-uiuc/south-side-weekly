@@ -350,6 +350,14 @@ router.put(
       { new: true, runValidators: true },
     );
 
+    if (!pitch) {
+      res.status(404).json({
+        success: false,
+        message: 'Pitch not found with id',
+      });
+      return;
+    }
+
     pitch.teams.forEach((team, index) => {
       if (teams.includes(team.teamId)) {
         pitch.teams[index].target -= 1;
@@ -373,13 +381,8 @@ router.put(
         message: 'User not found with id',
       });
       return;
-    } else if (!pitch) {
-      res.status(404).json({
-        success: false,
-        message: 'Pitch not found with id',
-      });
-      return;
     }
+
     const claimUser = await User.findById(userId);
     const aggregatedPitch = await aggregatePitch(pitch);
     const message = await approveClaim(

@@ -7,6 +7,7 @@ import { getEditableFields, getViewableFields } from '../utils/user-utils';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
 import { rolesEnum } from '../utils/enums';
 import { aggregateUser } from '../utils/aggregate-utils';
+import Team from '../models/team';
 
 const router = express.Router();
 
@@ -252,6 +253,45 @@ router.get(
     const users = await User.find({ role: rolesEnum.STAFF });
     res.status(200).json({
       message: `Successfully retrieved all staff.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
+// An endpoint to get all of the users on a specific team
+router.get(
+  '/all/team/:teamName',
+  requireAdmin,
+  errorWrap(async (req: Request, res: Response) => {
+    const teamName = req.params.teamName;
+
+    if (!teamName) {
+      res.status(400).json({
+        success: false,
+        message: 'Team id is required',
+      });
+      return;
+    }
+
+    const team = await Team.findOne({ name: teamName }).lean();
+
+    if (!team) {
+      res.status(404).json({
+        success: false,
+        message: 'Team not found with name',
+      });
+      return;
+    }
+
+    const users = await User.find({
+      teams: {
+        $in: [team._id],
+      },
+    }).lean();
+
+    res.status(200).json({
+      message: `Successfully retrieved all users on team.`,
       success: true,
       result: users,
     });
