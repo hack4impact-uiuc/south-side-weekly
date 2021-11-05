@@ -234,7 +234,7 @@ router.put(
         reviewedBy: req.user._id,
         teams: teams,
       },
-    });
+    }).lean();
 
     if (!pitch) {
       res.status(404).json({
@@ -265,7 +265,7 @@ router.put(
         status: pitchStatusEnum.REJECTED,
         reviewedBy: req.user._id,
       },
-    });
+    }).lean();
 
     if (!pitch) {
       res.status(404).json({
@@ -410,7 +410,7 @@ router.put(
         },
       },
       { new: true, runValidators: true },
-    );
+    ).lean();
 
     if (!pitch) {
       res.status(404).json({
