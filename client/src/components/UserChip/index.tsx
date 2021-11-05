@@ -13,10 +13,7 @@ const UserChip: FC<UserChipProps> = ({ user }) => {
   return (
     <a href={userProfileUrl}>
       <span className="user-chip-wrapper">
-        <img
-          src={user.profilePic}
-          alt={`Depiction of ${getUserFullName(user)}`}
-        />
+        <img src={user.profilePic} alt={getUserFullName(user)} />
         {getUserShortName(user)}
       </span>
     </a>
