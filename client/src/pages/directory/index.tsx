@@ -17,6 +17,7 @@ import { pagesEnum } from '../../utils/enums';
 import { filterInterests, filterRole, filterTeams } from './helpers';
 
 import './styles.scss';
+import { parseOptionsSelect } from '../../utils/helpers';
 
 const searchFields: (keyof IUser)[] = [
   'firstName',
@@ -104,7 +105,7 @@ const Directory = (): ReactElement => {
         <div className="wrapper">
           <Select
             value={role}
-            options={allRoles}
+            options={parseOptionsSelect(allRoles)}
             onChange={(e) => setRole(e ? e.value : '')}
             placeholder="Role"
           />

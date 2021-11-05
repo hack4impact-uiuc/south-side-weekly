@@ -24,6 +24,7 @@ import {
 } from '../../components';
 import { useAuth } from '../../contexts';
 import { pagesEnum } from '../../utils/enums';
+import { parseOptionsSelect } from '../../utils/helpers';
 
 import { filterInterests, filterClaimStatus, filterTeams } from './helpers';
 
@@ -230,7 +231,7 @@ const PitchDoc = (): ReactElement => {
           <div className="wrapper">
             <Select
               value={claimStatus}
-              options={['Claimed', 'Unclaimed']}
+              options={parseOptionsSelect(['Claimed', 'Unclaimed'])}
               onChange={(e) => setClaimStatus(e ? e.value : '')}
               placeholder="Claim status"
             />

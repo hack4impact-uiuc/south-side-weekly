@@ -7,7 +7,7 @@ interface SelectOption {
 }
 
 interface SelectProps {
-  options: string[];
+  options: SelectOption[];
   value: string;
   onChange: (
     newValue: SingleValue<SelectOption>,
@@ -21,24 +21,14 @@ const Select: FC<SelectProps> = ({
   value,
   onChange,
   placeholder = '',
-}): ReactElement => {
-  const parseOptions = (options: string[]): SelectOption[] =>
-    options.map((option) => ({
-      label: option,
-      value: option,
-    }));
-
-  const formmatedOptions = parseOptions(options);
-
-  return (
-    <ReactSelect<SelectOption>
-      placeholder={placeholder}
-      value={formmatedOptions.find((item) => value === item.value)}
-      options={formmatedOptions}
-      onChange={onChange}
-      isClearable
-    />
-  );
-};
+}): ReactElement => (
+  <ReactSelect<SelectOption>
+    placeholder={placeholder}
+    value={options.find((item) => value === item.value)}
+    options={options}
+    onChange={onChange}
+    isClearable
+  />
+);
 
 export default Select;
