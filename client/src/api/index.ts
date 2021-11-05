@@ -9,12 +9,12 @@ export {
 } from './user';
 export {
   getApprovedPitches,
-  getOpenTeams,
   updatePitch,
   submitPitchClaim,
   getPitchesPendingApproval,
   getUnclaimedPitches,
   getPendingContributorPitches,
+  getAggregatedPitch,
   createPitch,
   approvePitch,
   declinePitch,
@@ -25,4 +25,12 @@ export {
   deleteResource,
   editResource,
 } from './resource';
+
+export {
+  getInterests,
+  getInterest,
+  createInterest,
+  updateInterest,
+} from './interest';
+export { getTeams, createManyTeams, updateManyTeams } from './teams';
 export { isError, buildURI } from './builders';

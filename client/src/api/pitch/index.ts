@@ -3,7 +3,11 @@ import { IPitch } from 'ssw-common';
 import { Response } from '../types';
 import { get, post, put, buildEndpoint } from '../builders';
 
-import { GetOpenTeamsResponse, PitchesResponse, PitchResponse } from './types';
+import {
+  AggregatedPitchResponse,
+  PitchesResponse,
+  PitchResponse,
+} from './types';
 
 const PITCH_ENDPOINT = '/pitch';
 
@@ -17,12 +21,11 @@ const getApprovedPitches = async (): Promise<Pitches> => {
   return await get(url, failureMessage);
 };
 
-// Returns the teams that can still claim a specified pitch
-const getOpenTeams = async (
-  pitchId: string,
-): Promise<Response<GetOpenTeamsResponse>> => {
-  const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'openTeams');
-  const failureMessage = 'GET_OPEN_TEAMS_FAIL';
+const getAggregatedPitch = async (
+  id: string,
+): Promise<Response<AggregatedPitchResponse>> => {
+  const url = buildEndpoint(PITCH_ENDPOINT, id, 'aggregate');
+  const failureMessage = 'GET_AGGREGATE_PITCH_FAIL';
 
   return await get(url, failureMessage);
 };
@@ -32,11 +35,12 @@ const submitPitchClaim = async (
   pitchId: string,
   userId: string,
   teams: string[],
+  message: string,
 ): Promise<Pitches> => {
   const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'submitClaim');
   const failureMessage = 'SUBMIT_PITCH_CLAIM_FAIL';
 
-  return await put(url, { userId, teams }, failureMessage);
+  return await put(url, { userId, teams, message }, failureMessage);
 };
 
 const approvePitch = async (
@@ -103,7 +107,7 @@ const createPitch = async (newPitch: {
 
 export {
   getApprovedPitches,
-  getOpenTeams,
+  getAggregatedPitch,
   submitPitchClaim,
   updatePitch,
   getPitchesPendingApproval,

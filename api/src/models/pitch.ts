@@ -2,7 +2,6 @@ import mongoose, { Document, Schema } from 'mongoose';
 import { IPitch } from 'ssw-common';
 
 import {
-  interestsEnum,
   pitchStatusEnum,
   assignmentStatusEnum,
   issueFormatEnum,
@@ -14,6 +13,19 @@ const contributor = new mongoose.Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: 'User' },
     teams: [{ type: String }],
+  },
+  { _id: false },
+);
+
+const pendingContributor = new mongoose.Schema(
+  { ...contributor.obj, message: { type: String } },
+  { _id: false },
+);
+
+const team = new mongoose.Schema(
+  {
+    teamId: { type: Schema.Types.ObjectId, ref: 'Team' },
+    target: Number,
   },
   { _id: false },
 );
@@ -42,7 +54,6 @@ const Pitch = new mongoose.Schema({
     type: Schema.Types.ObjectId,
     ref: 'User',
     default: null,
-    required: true,
   },
   secondEditors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
   thirdEditors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
@@ -65,40 +76,9 @@ const Pitch = new mongoose.Schema({
   },
   assignmentGoogleDocLink: { type: String, default: null },
   assignmentContributors: [contributor],
-  pendingContributors: [contributor],
-  topics: [
-    {
-      type: String,
-      enum: Object.values(interestsEnum),
-      default: interestsEnum.NONE,
-    },
-  ],
-  teams: {
-    writers: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-    editors: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-    visuals: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-    illustration: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-    photography: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-    factChecking: {
-      current: { type: Number, default: 0 },
-      target: { type: Number, default: 0 },
-    },
-  },
+  pendingContributors: [pendingContributor],
+  topics: [{ type: Schema.Types.ObjectId, ref: 'Interest' }],
+  teams: [team],
   reviewedBy: { type: Schema.Types.ObjectId, ref: 'User' },
   similarStories: [{ type: String, default: null }],
   deadline: { type: Date, default: null },

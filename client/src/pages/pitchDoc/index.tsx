@@ -11,18 +11,16 @@ import {
   isError,
 } from '../../api';
 import {
-  PitchCard,
   SubmitPitchModal,
   StaffView,
   AdminView,
-  ClaimPitchModal,
-  ApprovePitchModal,
-  MultiSelect,
   Select,
   Walkthrough,
+  InterestsSelect,
+  TeamsSelect,
+  PitchTable,
 } from '../../components';
 import { useAuth } from '../../contexts';
-import { allInterests, allTeams } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
 
 import { filterInterests, filterClaimStatus, filterTeams } from './helpers';
@@ -213,23 +211,17 @@ const PitchDoc = (): ReactElement => {
           <h3>Filters: </h3>
         </div>
         <div className="wrapper">
-          <MultiSelect
-            value={interests}
+          <InterestsSelect
+            values={interests}
             onChange={(values) =>
               setInterests(values ? values.map((item) => item.value) : [])
             }
-            options={allInterests}
-            placeholder="Interests"
           />
         </div>
         <div className="wrapper">
-          <MultiSelect
-            value={teams}
-            onChange={(values) =>
-              setTeams(values ? values.map((item) => item.value) : [])
-            }
-            options={allTeams}
-            placeholder="Teams"
+          <TeamsSelect
+            values={teams}
+            onChange={(values) => setTeams(values.map((item) => item.value))}
           />
         </div>
         {isEqual(currentTab, TABS.APPROVED) && (
@@ -244,29 +236,7 @@ const PitchDoc = (): ReactElement => {
         )}
       </div>
       <div className="pitch-doc">
-        {filteredPitches.map((pitch, index) => {
-          if (currentTab === TABS.UNCLAIMED) {
-            return (
-              <ClaimPitchModal
-                callback={populatePitches}
-                key={index}
-                pitch={pitch}
-              />
-            );
-          } else if (currentTab === TABS.PITCH_APPROVAL) {
-            return (
-              <ApprovePitchModal
-                callback={populatePitches}
-                key={index}
-                pitch={pitch}
-              />
-            );
-          } else if (currentTab === TABS.CLAIM_APPROVAL) {
-            return <PitchCard key={index} pitch={pitch} />;
-          } else if (currentTab === TABS.APPROVED) {
-            return <PitchCard key={index} pitch={pitch} />;
-          }
-        })}
+        <PitchTable pitches={filteredPitches} />
       </div>
     </div>
   );

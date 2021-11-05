@@ -27,90 +27,6 @@ body {
   padding: 5vh 0 5vh 0;
 }
 
-.editing-tag-color,
-.editors-tag-color {
-  background-color: $editing !important;
-}
-
-.writing-tag-color,
-.writers-tag-color {
-  background-color: $writing !important;
-}
-
-.visuals-tag-color {
-  background-color: $visuals !important;
-}
-
-.photography-tag-color {
-  background-color: $photography !important;
-}
-
-.illustration-tag-color {
-  background-color: $illustration !important;
-}
-
-.fact-checking-tag-color,
-.factchecking-tag-color {
-  background-color: $factChecking !important;
-}
-
-.fun-tag-color {
-  background-color: $fun !important;
-}
-
-.cannabis-tag-color {
-  background-color: $cannabis !important;
-}
-
-.health-tag-color {
-  background-color: $health !important;
-}
-
-.music-tag-color {
-  background-color: $music !important;
-}
-
-.nature-tag-color {
-  background-color: $nature !important;
-}
-
-.politics-tag-color {
-  background-color: $politics !important;
-}
-
-.housing-tag-color {
-  background-color: $housing !important;
-}
-
-.visual-arts-tag-color {
-  background-color: $visualArts !important;
-}
-
-.immigration-tag-color {
-  background-color: $immigration !important;
-}
-
-.food-and-land-tag-color {
-  background-color: $foodAndLand !important;
-}
-
-.transportation-tag-color {
-  background-color: $transportation !important;
-}
-
-.stage-and-screen-tag-color {
-  background-color: $stageAndScreen !important;
-}
-
-.lit-tag-color,
-.literature-tag-color {
-  background-color: $lit !important;
-}
-
-.education-tag-color {
-  background-color: $education !important;
-}
-
 .admin-tag-color {
   background-color: $admin !important;
 }
@@ -147,7 +63,8 @@ body {
   background-color: $active !important;
 }
 
-.inactive-tag-color {
+.inactive-tag-color,
+.stalled-tag-color {
   background-color: $inactive !important;
 }
 
@@ -160,5 +77,24 @@ body {
     background-color: $primary !important;
     color: white !important;
     opacity: 0.9;
+  }
+}
+
+.ui {
+  &.button {
+    font-weight: normal;
+
+    &.secondary {
+      background-color: $secondaryColor;
+
+      &:hover,
+      &:focus {
+        background-color: darken($secondaryColor, 2.5%);
+      }
+
+      &:active {
+        background-color: darken($secondaryColor, 5%);
+      }
+    }
   }
 }

@@ -4,13 +4,14 @@ import { Input } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { getUsers, isError } from '../../api';
+import { allRoles } from '../../utils/constants';
 import {
-  MultiSelect,
   Select,
   DirectoryTable,
   Walkthrough,
+  InterestsSelect,
+  TeamsSelect,
 } from '../../components';
-import { allInterests, allRoles, allTeams } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
 
 import { filterInterests, filterRole, filterTeams } from './helpers';
@@ -109,23 +110,17 @@ const Directory = (): ReactElement => {
           />
         </div>
         <div className="wrapper">
-          <MultiSelect
-            value={interests}
+          <InterestsSelect
+            values={interests}
             onChange={(values) =>
-              setInterests(values ? values.map((item) => item.value) : [])
+              setInterests(values.map((item) => item.value))
             }
-            options={allInterests}
-            placeholder="Interests"
           />
         </div>
         <div className="wrapper">
-          <MultiSelect
-            value={teams}
-            onChange={(values) =>
-              setTeams(values ? values.map((item) => item.value) : [])
-            }
-            options={allTeams}
-            placeholder="Teams"
+          <TeamsSelect
+            values={teams}
+            onChange={(values) => setTeams(values.map((item) => item.value))}
           />
         </div>
       </div>

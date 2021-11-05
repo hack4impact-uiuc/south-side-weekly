@@ -4,17 +4,68 @@
   .header {
     background-color: $primary !important;
     color: white !important;
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      i {
+        cursor: pointer;
+      }
+    }
   }
 
   .content {
-    .author-section {
+    .pitch-title {
       display: flex;
+      align-items: center;
+      gap: 18px;
+    }
 
-      .author {
-        margin-right: 20px;
-        h3 {
-          font-weight: normal;
+    .contributors {
+      margin: 40px 0px;
+      .contributors-summary {
+        cursor: default;
+        margin-bottom: 10px;
+
+        > h4 {
+          display: inline;
         }
+      }
+
+      .contributor-chips {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .contributors-lists {
+        display: flex;
+        flex-flow: row nowrap;
+        gap: 100px;
+      }
+
+      .contributor-list {
+        display: grid;
+        grid-template-columns: minmax(min-content, max-content) 1fr;
+        grid-auto-rows: min-content;
+        align-items: center;
+        gap: 10px 50px;
+      }
+
+      > *:not(summary) {
+        margin-left: 15px;
+      }
+
+      h4 {
+        margin-bottom: 0px;
+      }
+
+      .other-contributors {
+        margin-top: 10px;
+        align-items: center;
       }
     }
 
@@ -28,16 +79,20 @@
 
     .team-select-group {
       display: flex;
-      justify-content: space-between;
+      flex-flow: column nowrap;
+      padding: 20px;
+      border-radius: 5px;
+      border: 1px solid $secondaryColor;
+
+      .select-team-message {
+        color: $secondaryColor;
+        font-weight: bold;
+      }
 
       .checkbox-wrapper {
         display: flex;
-        flex-direction: column;
         align-items: center;
-
-        * {
-          margin: 5px;
-        }
+        gap: 10px;
       }
     }
 
@@ -48,6 +103,11 @@
         margin-right: 10px;
       }
     }
+  }
+
+  .word-limit {
+    margin-left: auto;
+    text-align: right;
   }
 
   .actions {

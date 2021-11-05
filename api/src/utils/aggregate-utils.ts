@@ -1,22 +1,32 @@
-import { IPitch, IUser, IUserAggregate, IPitchAggregate } from 'ssw-common';
+import {
+  IPitch,
+  IUser,
+  IUserAggregate,
+  IPitchAggregate,
+  IInterest,
+} from 'ssw-common';
 
-import Pitch, { PitchSchema } from '../models/pitch';
-import User, { UserSchema } from '../models/user';
+import Pitch from '../models/pitch';
+import User from '../models/user';
+import Team from '../models/team';
+import Interest from '../models/interest';
 
-import { santitizePitch, santitizeUser } from './helpers';
+const simplifyUser = (user: IUser | null): Partial<IUser> => {
+  if (user === null) {
+    return null;
+  }
 
-const simplifyUser = (user: IUser): Partial<IUser> => ({
-  firstName: user.firstName,
-  preferredName: user.preferredName,
-  lastName: user.lastName,
-  email: user.email,
-  profilePic: user.profilePic,
-  _id: user._id,
-});
+  return {
+    firstName: user.firstName,
+    preferredName: user.preferredName,
+    lastName: user.lastName,
+    email: user.email,
+    profilePic: user.profilePic,
+    _id: user._id,
+  };
+};
 
-const aggregatePitch = async (
-  rawPitch: PitchSchema,
-): Promise<IPitchAggregate> => {
+const aggregatePitch = async (rawPitch: IPitch): Promise<IPitchAggregate> => {
   const author = simplifyUser(await User.findById(rawPitch.author));
   const reviewer = simplifyUser(await User.findById(rawPitch.reviewedBy));
   const writer = simplifyUser(await User.findById(rawPitch.writer));
@@ -48,14 +58,28 @@ const aggregatePitch = async (
     })),
   );
 
+  // const interests = await Promise.all(
+  //   rawPitch.topics.map((interestId) => Interest.findById(interestId).lean()),
+  // );
+
+  const teams = await Promise.all(
+    rawPitch.teams.map(({ teamId, target }) =>
+      Team.findById(teamId)
+        .lean()
+        .then((team) => ({ target, ...team })),
+    ),
+  );
+
   const aggregatedPitch = {
-    ...santitizePitch(rawPitch),
+    ...rawPitch,
     aggregated: {
       author: author,
       writer: writer,
       reviewedBy: reviewer,
       assignmentContributors: assignmentContributors,
       pendingContributors: pendingContributors,
+      interests: [] as IInterest[],
+      teams: teams,
       primaryEditor: primaryEditor,
       secondaryEditors: secondEditors,
       thirdEditors: thirdEditors,
@@ -65,13 +89,19 @@ const aggregatePitch = async (
   return aggregatedPitch;
 };
 
-const simplifyPitch = (pitch: IPitch): Partial<IPitch> => ({
-  title: pitch.title,
-  description: pitch.description,
-  author: pitch.author,
-});
+const simplifyPitch = (pitch: IPitch | null): Partial<IPitch> => {
+  if (pitch === null) {
+    return null;
+  }
 
-const aggregateUser = async (rawUser: UserSchema): Promise<IUserAggregate> => {
+  return {
+    title: pitch.title,
+    description: pitch.description,
+    author: pitch.author,
+  };
+};
+
+const aggregateUser = async (rawUser: IUser): Promise<IUserAggregate> => {
   const claimedPitches = await Promise.all(
     rawUser.claimedPitches.map(async (id) =>
       simplifyPitch(await Pitch.findById(id)),
@@ -84,11 +114,16 @@ const aggregateUser = async (rawUser: UserSchema): Promise<IUserAggregate> => {
     ),
   );
 
+  const interests = await Promise.all(
+    rawUser.interests.map((interestId) => Interest.findById(interestId).lean()),
+  );
+
   const aggregatedPitch = {
-    ...santitizeUser(rawUser),
+    ...rawUser,
     aggregated: {
       claimedPitches: claimedPitches,
       submittedPitches: submittedPitches,
+      interests: interests,
     },
   };
 

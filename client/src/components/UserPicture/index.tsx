@@ -7,7 +7,7 @@ import { classNames, getUserFullName } from '../../utils/helpers';
 import DefaultProfile from '../../assets/default_profile.png';
 
 interface UserPictureProps extends ImageProps {
-  user: IUser;
+  user: Partial<IUser>;
 }
 
 const UserPicture: FC<UserPictureProps> = ({
@@ -16,14 +16,14 @@ const UserPicture: FC<UserPictureProps> = ({
   className,
   ...rest
 }): ReactElement => {
-  const getPicture = (user: IUser): string =>
-    !isEmpty(user.profilePic) ? user.profilePic : DefaultProfile;
+  const getPicture = (profilePic: IUser['profilePic'] = ''): string =>
+    !isEmpty(profilePic) ? profilePic : DefaultProfile;
 
   return (
     <Image
       circular
       size={size}
-      src={getPicture(user)}
+      src={getPicture(user.profilePic)}
       alt={getUserFullName(user)}
       className={classNames('user-picture', className)}
       {...rest}

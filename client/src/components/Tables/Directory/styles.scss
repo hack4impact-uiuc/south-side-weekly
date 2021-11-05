@@ -1,54 +1,34 @@
-.directory-table {
-  position: relative;
+tbody {
+  display: block;
+  height: max-content;
+  max-height: 60vh;
+  overflow: auto;
 
-  ::-webkit-scrollbar {
-    display: none;
+  .picture-col {
+    #user-picture {
+      width: 25px;
+      margin: auto;
+    }
   }
 
-  td,
-  th {
-    border-left: none !important;
+  .name-col {
+    display: flex;
+    align-items: center;
+
+    #name-text {
+      margin-left: 8px;
+    }
   }
 
-  tbody {
-    display: block;
-    height: max-content;
-    max-height: 60vh;
-    overflow: auto;
+  .no-results-found {
+    padding: 50px;
+  }
 
-    .picture-col {
-      #user-picture {
-        width: 25px;
-        margin: auto;
-      }
-    }
+  .open-user-button {
+    background: none !important;
 
-    .name-col {
-      display: flex;
-      align-items: center;
-
-      #name-text {
-        margin-left: 8px;
-      }
-    }
-
-    .no-results-found {
-      padding: 50px;
-    }
-
-    .open-user-button {
+    &:hover {
       background: none;
-
-      &:hover {
-        background: none;
-      }
     }
-  }
-
-  thead,
-  tbody tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
   }
 }
