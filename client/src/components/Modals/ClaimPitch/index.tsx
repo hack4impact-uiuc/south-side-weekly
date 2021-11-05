@@ -262,7 +262,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
           <Icon name="close" onClick={() => setIsOpen(false)} />
         </div>
       </Modal.Header>
-      <Modal.Content>
+      <Modal.Content scrolling>
         <h1 className="pitch-title">
           {pitch.title}
           <LinkDisplay href={pitch.assignmentGoogleDocLink} />
