@@ -40,7 +40,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
 }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
   const [checkboxes, setCheckboxes] = useState(new Map<string, boolean>());
-  const [longAnswer, setLongAnswer] = useState('');
+  const [message, setMessage] = useState('');
   const [didSubmit, setDidSubmit] = useState(false);
   const [isCheckboxError, setIsCheckboxError] = useState(false);
   const [aggregatedPitch, setAggregatedPitch] = useState(emptyAggregatePitch);
@@ -103,7 +103,12 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
       }
     });
 
-    const pitchRes = await submitPitchClaim(pitch._id, user._id, selectedTeams);
+    const pitchRes = await submitPitchClaim(
+      pitch._id,
+      user._id,
+      selectedTeams,
+      message,
+    );
     if (!isError(pitchRes)) {
       callback();
       Swal.fire({
@@ -111,6 +116,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
         icon: 'success',
       });
       setIsOpen(false);
+      setMessage('');
     }
   };
 
@@ -146,6 +152,45 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
   const isUserOnTeam = (team: string): boolean => user.teams.includes(team);
   const disableCheckbox = (team: string): boolean => !isUserOnTeam(team);
 
+  const getContributorChipFor = (
+    users: Partial<IUser>[],
+    title: string,
+    key?: string | number,
+  ) => (
+    <>
+      <span style={{ fontWeight: 'bold' }}>{title}:</span>
+      {users.length === 0 || users.every((user) => !user)
+        ? 'None'
+        : users.map((user) => <UserChip user={user} key={user._id} />)}
+    </>
+  );
+
+  const getContributors = () => (
+    <div className="contributors-lists">
+      <div className="contributor-list">
+        {getContributorChipFor(
+          [aggregatedPitch.aggregated.author],
+          'Pitch Creator',
+        )}
+        {getContributorChipFor([aggregatedPitch.aggregated.writer], 'Writer')}
+      </div>
+      <div className="contributor-list">
+        {getContributorChipFor(
+          [aggregatedPitch.aggregated.primaryEditor],
+          'Primary Editor',
+        )}
+        {getContributorChipFor(
+          aggregatedPitch.aggregated.secondaryEditors,
+          'Second Editors',
+        )}
+        {getContributorChipFor(
+          aggregatedPitch.aggregated.thirdEditors,
+          'Third Editors',
+        )}
+      </div>
+    </div>
+  );
+
   const getOtherContributors = () => {
     if (teamMap.size === 0) {
       return <p>There are no other contributors on this pitch.</p>;
@@ -153,17 +198,11 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
 
     return (
       <div className="other-contributors">
-        {[...teamMap.entries()].map(([teamId, users]) => (
-          <p key={teamId}>
-            <span style={{ fontWeight: 'bold' }}>
-              {getTeamFromId(teamId)?.name}
-            </span>
-            :{' '}
-            {users.map((user, i) => (
-              <UserChip user={user as IUser} key={i} />
-            ))}
-          </p>
-        ))}
+        <div className="contributor-list">
+          {[...teamMap.entries()].map(([teamId, users]) =>
+            getContributorChipFor(users, getTeamFromId(teamId)!.name, teamId),
+          )}
+        </div>
       </div>
     );
   };
@@ -193,7 +232,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
           <Form.Checkbox
             disabled={team.target <= 0 || disableCheckbox(team._id)}
             checked={checkboxes.get(team._id)}
-            onClick={() => {
+            onClick={(e) => {
               updateCheckboxes(team._id);
               setDidSubmit(false);
             }}
@@ -242,6 +281,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
           <summary className="contributors-summary">
             <h4>Contributors Currently on Pitch</h4>
           </summary>
+          {getContributors()}
           <h4>Other Contributors Currently on Pitch</h4>
           <hr></hr>
           {getOtherContributors()}
@@ -254,11 +294,11 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
           <h4>Why are you a good fit for this story?</h4>
           <Form.TextArea
             rows={4}
-            value={longAnswer}
-            onChange={(e) => setLongAnswer(e.target.value)}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
             maxLength={250}
           />
-          <p className="word-limit">{longAnswer.length} / 250</p>
+          <p className="word-limit">{message.length} / 250</p>
         </Form>
       </Modal.Content>
       <Modal.Actions>

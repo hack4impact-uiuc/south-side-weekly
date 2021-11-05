@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, mongo, Schema } from 'mongoose';
 import { IPitch } from 'ssw-common';
 
 import {
@@ -14,6 +14,11 @@ const contributor = new mongoose.Schema(
     userId: { type: Schema.Types.ObjectId, ref: 'User' },
     teams: [{ type: String }],
   },
+  { _id: false },
+);
+
+const pendingContributor = new mongoose.Schema(
+  { ...contributor.obj, message: { type: String } },
   { _id: false },
 );
 
@@ -71,7 +76,7 @@ const Pitch = new mongoose.Schema({
   },
   assignmentGoogleDocLink: { type: String, default: null },
   assignmentContributors: [contributor],
-  pendingContributors: [contributor],
+  pendingContributors: [pendingContributor],
   topics: [{ type: Schema.Types.ObjectId, ref: 'Interest' }],
   teams: [team],
   reviewedBy: { type: Schema.Types.ObjectId, ref: 'User' },

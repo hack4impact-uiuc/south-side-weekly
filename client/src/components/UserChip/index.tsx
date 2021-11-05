@@ -5,7 +5,7 @@ import { getUserFullName, getUserShortName } from '../../utils/helpers';
 import './styles.scss';
 
 interface UserChipProps {
-  user: IUser;
+  user: Partial<IUser>;
 }
 
 const UserChip: FC<UserChipProps> = ({ user }) => {
