@@ -9,16 +9,21 @@ export interface EmailMessage {
   html: string;
 }
 
-const buildEmailQuery = (to: string, subject: string, html: string): EmailMessage => ({
-    to: to,
-    from: process.env.EMAIL_USERNAME,
-    subject: subject,
-    html: html
-  });
+const buildEmailQuery = (
+  to: string,
+  subject: string,
+  html: string,
+): EmailMessage => ({
+  to: to,
+  from: process.env.EMAIL_USERNAME,
+  subject: subject,
+  html: html,
+});
 
 type userInfo = { name: string; email: string };
 type teamsUsers = Record<string, userInfo[]>;
-const getPitchDocLink = (): string => ('https://south-side-weekly-dpoizlx6i-hack4impact1.vercel.app/pitches')
+const getPitchDocLink = (): string =>
+  'https://south-side-weekly-dpoizlx6i-hack4impact1.vercel.app/pitches';
 const getAllTeams = (teamNamesToUsers: teamsUsers): string => {
   const message: string[] = [];
   for (const key in teamNamesToUsers) {
@@ -36,17 +41,20 @@ export const notifyMessage = (
   admin: Partial<IUser>,
 ): EmailMessage => {
   const ccUser = pitch.aggregated.primaryEditor;
-  const basicEmail = buildEmailQuery(recipient.email, 
-    `New Role Assigned To "${pitch.title}"`, 
-    `You have just been assigned by ${admin.firstName} to the pitch titled: ${pitch.title} as the writer`)
-  return { ...basicEmail, cc: ccUser ? ccUser.email : ''};
+  const basicEmail = buildEmailQuery(
+    recipient.email,
+    `New Role Assigned To "${pitch.title}"`,
+    `You have just been assigned by ${admin.firstName} to the pitch titled: ${pitch.title} as the writer`,
+  );
+  return { ...basicEmail, cc: ccUser ? ccUser.email : '' };
 };
 export const declinedMessage = (
   author: Partial<IUser>,
   pitch: IPitchAggregate,
   admin: IUser,
 ): EmailMessage => {
-  const basicEmail = buildEmailQuery(author.email, 
+  const basicEmail = buildEmailQuery(
+    author.email,
     `Pitch "${pitch.title}" Declined`,
     `<div>
                 <p>Hi ${author.preferredName || author.firstName},</p>
@@ -54,8 +62,8 @@ export const declinedMessage = (
                 <p>Thank you for submitting your pitch <a href='"${
                   pitch.assignmentGoogleDocLink
                 }"'>"${
-    pitch.title
-  }"</a> Unfortunately, your pitch was declined. </p>
+      pitch.title
+    }"</a> Unfortunately, your pitch was declined. </p>
     If you have any questions or need any additional support, please contact ${
       admin.email
     }. 
@@ -66,7 +74,8 @@ export const declinedMessage = (
         <br>
     ${admin.preferredName || admin.firstName}
     </p>
-    </div>`)
+    </div>`,
+  );
   return basicEmail;
 };
 
@@ -75,37 +84,41 @@ export const approvedMessage = (
   pitch: IPitchAggregate,
   admin: Partial<IUser>,
 ): EmailMessage => {
-  const ccUser = pitch.writer ? pitch.aggregated.primaryEditor : undefined
-  const basicEmail = buildEmailQuery(author.email,
-    `Pitch "${pitch.title}" Approved`, 
+  const ccUser = pitch.writer ? pitch.aggregated.primaryEditor : undefined;
+  const basicEmail = buildEmailQuery(
+    author.email,
+    `Pitch "${pitch.title}" Approved`,
     `<div>
                 <p>Hi ${author.preferredName || author.firstName},</p>
                 <p>Congratulations, your pitch <a href='"${
                   pitch.assignmentGoogleDocLink
                 }"'>"${
-    pitch.title
-  }"</a> has been approved! Here are the details you provided regarding the pitch:</p>
+      pitch.title
+    }"</a> has been approved! Here are the details you provided regarding the pitch:</p>
                 <br>
                 <b>Description:</b> <p>${pitch.description}</p>
                 <br>
                 <br>
                 <p>
                   Your pitch has been added to the <a href="${getPitchDocLink()}">Pitch Doc</a>
-                ${ccUser ? 
-                `
+                ${
+                  ccUser
+                    ? `
                   Your primary editor, ${ccUser.firstName}, is cc’ed on this email and will be following up to begin discussing your story
                   </p>
                   <p>
                   We can't wait to see your story come together!
-                ` : ``
+                `
+                    : ``
                 }
                 </p>
                 <p>Thanks for submitting your pitch,
                 <br>
                 ${admin.preferredName || admin.firstName}
                 </p>
-                </div>`)
-  return {...basicEmail, cc: ccUser ? ccUser.email : ''};
+                </div>`,
+  );
+  return { ...basicEmail, cc: ccUser ? ccUser.email : '' };
 };
 
 export const approveClaim = async (
@@ -116,8 +129,8 @@ export const approveClaim = async (
   type idToTeam = Record<string, Partial<ITeam>>;
 
   const teamNamesToUsers: teamsUsers = {};
-  const teamIdToTeam:idToTeam = {}
-  const claimUserTeams = []
+  const teamIdToTeam: idToTeam = {};
+  const claimUserTeams = [];
 
   for (const contributor of pitch.aggregated.assignmentContributors) {
     const info: userInfo = {
@@ -125,7 +138,10 @@ export const approveClaim = async (
       email: contributor.user.email,
     };
     for (const teamId of contributor.teams) {
-      const team = teamId in teamIdToTeam ? teamIdToTeam[teamId] : await Team.findById(teamId)
+      const team =
+        teamId in teamIdToTeam
+          ? teamIdToTeam[teamId]
+          : await Team.findById(teamId);
       if (!(teamId in teamIdToTeam)) {
         teamIdToTeam[teamId] = team;
       }
@@ -139,7 +155,8 @@ export const approveClaim = async (
       }
     }
   }
-  const basicEmail = buildEmailQuery(claimUser.email,
+  const basicEmail = buildEmailQuery(
+    claimUser.email,
     `Claim Request for "${pitch.title}" Approved`,
     `<html>
       Hi ${claimUser.preferredName || claimUser.firstName},
@@ -156,15 +173,19 @@ export const approveClaim = async (
       </ul>
       <br>
       If you have any questions or need any additional support, 
-      please contact your primary editor, ${pitch.aggregated.primaryEditor.preferredName || pitch.aggregated.primaryEditor.firstName} ${pitch.aggregated.primaryEditor.lastName}, 
+      please contact your primary editor, ${
+        pitch.aggregated.primaryEditor.preferredName ||
+        pitch.aggregated.primaryEditor.firstName
+      } ${pitch.aggregated.primaryEditor.lastName}, 
       who is cc’ed on this email. We can’t wait to see what you all come up with!
       <br>
       <br>
       Thank you,
       <br>
       ${admin.preferredName || admin.firstName} ${admin.lastName}
-      </html>`)
-  return {...basicEmail, cc: pitch.aggregated.primaryEditor.email};
+      </html>`,
+  );
+  return { ...basicEmail, cc: pitch.aggregated.primaryEditor.email };
 };
 
 export const declineClaim = (
@@ -172,7 +193,8 @@ export const declineClaim = (
   pitch: IPitchAggregate,
   admin: Partial<IUser>,
 ): EmailMessage => {
-  const basicEmail = buildEmailQuery(claimUser.email, 
+  const basicEmail = buildEmailQuery(
+    claimUser.email,
     `Story Claim Request for ${pitch.title}" Declined`,
     `Hi ${claimUser.preferredName || claimUser.firstName},
     <br>
@@ -193,6 +215,7 @@ export const declineClaim = (
     <br>
     Thank you,
     <br>
-    ${admin.preferredName || admin.firstName}` )
+    ${admin.preferredName || admin.firstName}`,
+  );
   return basicEmail;
 };

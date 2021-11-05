@@ -9,7 +9,6 @@ import {
 
 export type PitchSchema = IPitch & Document<any>;
 
-
 const team = new mongoose.Schema(
   {
     teamId: { type: Schema.Types.ObjectId, ref: 'Team' },

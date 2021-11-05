@@ -343,14 +343,14 @@ router.put(
         $pull: {
           pendingContributors: { userId: userId, teams: teams },
         },
-        //TODO: Target in teams should decrease after 
+        //TODO: Target in teams should decrease after
         $addToSet: {
           assignmentContributors: { userId: userId, teams: teams },
         },
       },
       { new: true, runValidators: true },
     ).lean();
-    
+
     // Add the pitch to the user's claimed Pitches
     const user = await User.findByIdAndUpdate(
       userId,
@@ -376,12 +376,8 @@ router.put(
       return;
     }
     const aggregatedPitch = await aggregatePitch(pitch);
-    const fakeAdmin = {firstName: 'Ya boy Andy', lastName: 'Wong'}
-    const message = await approveClaim(
-      user,
-      aggregatedPitch,
-      fakeAdmin
-    );
+    const fakeAdmin = { firstName: 'Ya boy Andy', lastName: 'Wong' };
+    const message = await approveClaim(user, aggregatedPitch, fakeAdmin);
     await sendMail(message);
     res.status(200).json({
       success: true,
