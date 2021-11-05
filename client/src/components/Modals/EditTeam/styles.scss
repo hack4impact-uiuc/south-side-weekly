@@ -5,7 +5,9 @@ $inputLength: 200px;
 $leftmargin: 50px;
 
 .open-edit-button {
-  background: none;
+  background: none !important;
+  padding: 0px !important;
+  padding-left: 10px !important;
 }
 
 .team-modal {

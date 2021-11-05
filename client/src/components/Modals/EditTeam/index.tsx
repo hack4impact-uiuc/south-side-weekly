@@ -16,7 +16,7 @@ import { useTeams } from '../../../contexts';
 import { createManyTeams, updateManyTeams } from '../../../api';
 
 const TeamModalTrigger: FC<ButtonProps> = ({ ...rest }): ReactElement => (
-  <Button {...rest} size="tiny" circular icon style={{ background: 'none' }}>
+  <Button className="open-edit-button" {...rest} size="tiny" circular icon>
     <Icon name="pencil" />
   </Button>
 );
