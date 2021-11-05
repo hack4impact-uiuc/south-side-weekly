@@ -226,14 +226,12 @@ router.put(
   '/:pitchId/approve',
   requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
-    const { teams } = req.body;
+    const { pitchData } = req.body;
 
     const pitch = await Pitch.findByIdAndUpdate(req.params.pitchId, {
-      $set: {
-        status: pitchStatusEnum.APPROVED,
-        reviewedBy: req.user._id,
-        teams: teams,
-      },
+      status: pitchStatusEnum.APPROVED,
+      reviewedBy: req.user._id,
+      ...pitchData,
     });
 
     if (!pitch) {
