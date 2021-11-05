@@ -28,9 +28,6 @@ interface PitchRowProps {
 const titleSort = (a: IPitch, b: IPitch): number =>
   a.title.localeCompare(b.title);
 
-const descriptionSort = (a: IPitch, b: IPitch): number =>
-  a.description.localeCompare(b.description);
-
 interface ColumnEnumValue {
   title: string;
   sort: (a: IPitch, b: IPitch) => number;
@@ -40,10 +37,6 @@ const columnsEnum: { [key: string]: ColumnEnumValue } = {
   TITLE: {
     title: 'TITLE',
     sort: titleSort,
-  },
-  DESCRIPTION: {
-    title: 'DESCRIPTION',
-    sort: descriptionSort,
   },
 };
 
@@ -90,12 +83,7 @@ const PitchHeader: FC<PitchHeaderProps> = ({
       >
         Title
       </Table.HeaderCell>
-      <Table.HeaderCell
-        onClick={() => handleSort(columnsEnum.DESCRIPTION)}
-        sorted={column === columnsEnum.DESCRIPTION ? direction : undefined}
-      >
-        Description
-      </Table.HeaderCell>
+      <Table.HeaderCell>Description</Table.HeaderCell>
       <Table.HeaderCell>Associated Interests</Table.HeaderCell>
       <Table.HeaderCell>Teams You Can Claim</Table.HeaderCell>
     </Table.Row>
