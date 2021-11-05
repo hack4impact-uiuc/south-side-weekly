@@ -358,6 +358,7 @@ router.put(
       return;
     }
 
+    // @Todo: check to see if this works
     pitch.teams.forEach((team, index) => {
       if (teams.includes(team.teamId)) {
         pitch.teams[index].target -= 1;
