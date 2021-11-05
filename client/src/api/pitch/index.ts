@@ -35,11 +35,12 @@ const submitPitchClaim = async (
   pitchId: string,
   userId: string,
   teams: string[],
+  message: string,
 ): Promise<Pitches> => {
   const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'submitClaim');
   const failureMessage = 'SUBMIT_PITCH_CLAIM_FAIL';
 
-  return await put(url, { userId, teams }, failureMessage);
+  return await put(url, { userId, teams, message }, failureMessage);
 };
 
 const approvePitch = async (

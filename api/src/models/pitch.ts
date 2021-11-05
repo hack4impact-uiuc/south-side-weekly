@@ -9,18 +9,23 @@ import {
 
 export type PitchSchema = IPitch & Document<any>;
 
-const team = new mongoose.Schema(
+const contributor = new mongoose.Schema(
   {
-    teamId: { type: Schema.Types.ObjectId, ref: 'Team' },
-    target: Number,
+    userId: { type: Schema.Types.ObjectId, ref: 'User' },
+    teams: [{ type: String }],
   },
   { _id: false },
 );
 
-const contributor = new mongoose.Schema(
+const pendingContributor = new mongoose.Schema(
+  { ...contributor.obj, message: { type: String } },
+  { _id: false },
+);
+
+const team = new mongoose.Schema(
   {
-    userId: { type: Schema.Types.ObjectId, ref: 'User' },
-    teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
+    teamId: { type: Schema.Types.ObjectId, ref: 'Team' },
+    target: Number,
   },
   { _id: false },
 );
@@ -71,7 +76,7 @@ const Pitch = new mongoose.Schema({
   },
   assignmentGoogleDocLink: { type: String, default: null },
   assignmentContributors: [contributor],
-  pendingContributors: [contributor],
+  pendingContributors: [pendingContributor],
   topics: [{ type: Schema.Types.ObjectId, ref: 'Interest' }],
   teams: [team],
   reviewedBy: { type: Schema.Types.ObjectId, ref: 'User' },
