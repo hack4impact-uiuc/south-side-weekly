@@ -115,13 +115,13 @@ router.put(
       const failedTeamNames = failedTeams.map((team) => team.name);
 
       res.status(400).json({
-        message: `Failed to create teams: ${failedTeamNames.join(', ')}`,
+        message: `Failed to update teams: ${failedTeamNames.join(', ')}`,
         success: false,
       });
     }
 
     res.status(200).json({
-      message: 'Successfully created all teams',
+      message: 'Successfully updated all teams',
       success: true,
       result: updatedTeams,
     });
