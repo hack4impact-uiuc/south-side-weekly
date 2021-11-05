@@ -110,6 +110,15 @@ const getStaff = async (): Promise<Response<UsersResponse>> => {
   return await get(url, failureMessage);
 };
 
+const getUsersByTeam = async (
+  teamName: string,
+): Promise<Response<UsersResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, 'all', 'team', teamName);
+  const failureMessage = 'GET_USERS_BY_TEAM_FAIL';
+
+  return await get(url, failureMessage);
+};
+
 export {
   getUsers,
   getPendingContributors,
@@ -121,4 +130,5 @@ export {
   addVisitedPage,
   getAdmins,
   getStaff,
+  getUsersByTeam,
 };

@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useEffect } from 'react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { ActionMeta, SingleValue } from 'react-select';
 import { IUser } from 'ssw-common';
 
@@ -26,7 +26,7 @@ const AdminSingleSelect: FC<AdminSingleSelectProps> = ({
   onChange,
   values,
 }): ReactElement => {
-  const [admins, setAdmins] = React.useState<IUser[]>([]);
+  const [admins, setAdmins] = useState<IUser[]>([]);
 
   useEffect(() => {
     const fetchAdmins = async (): Promise<void> => {
@@ -48,7 +48,7 @@ const AdminSingleSelect: FC<AdminSingleSelectProps> = ({
         label: getUserFullName(admin),
       }))}
       onChange={onChange as SingleSelectType}
-      placeholder="Role"
+      placeholder="Admin"
     />
   );
 };

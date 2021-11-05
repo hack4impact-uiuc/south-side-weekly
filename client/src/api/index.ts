@@ -8,6 +8,9 @@ export {
   updateOnboardingStatus,
   getAdmins,
   getStaff,
+  getPendingContributors,
+  getPendingStaff,
+  getUsersByTeam,
 } from './user';
 export {
   getApprovedPitches,

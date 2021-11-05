@@ -28,6 +28,10 @@ import TeamsSelect from './Dropdowns/TeamsSelect';
 import { AdminMultiSelect, AdminSingleSelect } from './Dropdowns/AdminsSelect';
 import { StaffSingleSelect, StaffMultiSelect } from './Dropdowns/StaffSelect';
 import { triggerSuccessToast } from './Toasts';
+import {
+  UserMultiSelectByTeam,
+  UserSingleSelectByTeam,
+} from './Dropdowns/UserSelectByTeam';
 
 export {
   Header,
@@ -62,4 +66,6 @@ export {
   StaffMultiSelect,
   StaffSingleSelect,
   triggerSuccessToast,
+  UserMultiSelectByTeam,
+  UserSingleSelectByTeam,
 };
