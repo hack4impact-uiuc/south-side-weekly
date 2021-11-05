@@ -9,6 +9,7 @@ import {
   Popup,
   Header,
 } from 'semantic-ui-react';
+import { IPitch } from 'ssw-common';
 import Swal from 'sweetalert2';
 
 import { InterestsSelect } from '../..';
@@ -71,7 +72,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
     boolean | undefined
   >();
   const [didSubmit, setDidSubmit] = useState(false);
-  const [writerChoice, setWriterChoice] = useState(false);
+  const [writerChoice, setWriterChoice] = useState<boolean | undefined>();
 
   const { user } = useAuth();
 
@@ -81,33 +82,45 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
     setLink('');
     setConflictOfInterest(undefined);
     setDidSubmit(false);
+    setWriterChoice(undefined);
+    setTopics([]);
   }, [isOpen]);
 
   const submitPitch = async (): Promise<void> => {
     setDidSubmit(true);
 
-    if (!isInvalidForm()) {
-      const body = {
-        title: title,
-        author: user._id,
-        writer: writerChoice ? user._id : '',
-        assignmentGoogleDocLink: link,
-        status: 'PENDING',
-        description: description,
-        topics: topics,
-        conflictOfInterest: conflictofInterest!,
-      };
+    if (isInvalidForm()) {
+      Swal.fire({
+        title: 'Failed to submit pitch',
+        icon: 'error',
+        text: 'Please fill out all fields.',
+      });
+      return;
+    }
 
-      const res = await createPitch({ ...body });
+    let body: Partial<IPitch> = {
+      title: title,
+      author: user._id,
+      assignmentGoogleDocLink: link,
+      status: 'PENDING',
+      description: description,
+      topics: topics,
+      conflictOfInterest: conflictofInterest!,
+    };
 
-      if (!isError(res)) {
-        callback();
-        Swal.fire({
-          title: 'Successfully submitted pitch!',
-          icon: 'success',
-        });
-        setIsOpen(false);
-      }
+    if (writerChoice) {
+      body = { ...body, writer: user._id };
+    }
+
+    const res = await createPitch({ ...body });
+
+    if (!isError(res)) {
+      callback();
+      Swal.fire({
+        title: 'Successfully submitted pitch!',
+        icon: 'success',
+      });
+      setIsOpen(false);
     }
 
     return;
@@ -156,30 +169,33 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
         <Form id="submit-pitch" onSubmit={submitPitch}>
           <Form.Group widths="equal">
             <Form.Input
+              required
               error={isFieldError(title)}
               label={<h5 className="label">Pitch Title</h5>}
               value={title}
               onChange={(e, { value }) => setTitle(value)}
-              size="small"
             />
           </Form.Group>
           <Form.Group widths="equal">
             <Form.Input
+              required
               error={isFieldError(link)}
               label={<h5 className="label">Google Doc Link</h5>}
               value={link}
               onChange={(e, { value }) => setLink(value)}
-              size="small"
             />
           </Form.Group>
           <Form.TextArea
+            required
             maxLength={MAX_LENGTH}
             value={description}
             onChange={(e, { value }) => setDescription(toString(value))}
             label={<h5 className="label">Description</h5>}
             error={isFieldError(description)}
           />
-          <h5 className="label">Associated Topics</h5>
+          <h5 className="label-topics">
+            Associated Topics<p className="unbold">(select 1-4 topics) </p>
+          </h5>
           <InterestsSelect
             values={topics}
             onChange={(values) => {

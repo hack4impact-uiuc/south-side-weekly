@@ -95,9 +95,9 @@ const getPendingContributorPitches = async (): Promise<Pitches> => {
   return await get(url, failureMessage);
 };
 
-const createPitch = async (newPitch: {
-  [key: string]: number | string | string[] | boolean;
-}): Promise<Response<PitchResponse>> => {
+const createPitch = async (
+  newPitch: Partial<IPitch>,
+): Promise<Response<PitchResponse>> => {
   const url = buildEndpoint(PITCH_ENDPOINT);
   const failureMessage = 'CREATE_PITCH_FAIL';
 
