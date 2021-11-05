@@ -7,7 +7,6 @@ import FieldTag from '../../FieldTag';
 import { getUserFullName } from '../../../utils/helpers';
 import UserCard from '../../UserCard';
 import UserPicture from '../../UserPicture';
-
 import { useInterests, useTeams } from '../../../contexts';
 
 import './styles.scss';
