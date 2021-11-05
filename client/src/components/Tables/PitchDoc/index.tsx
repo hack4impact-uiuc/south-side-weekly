@@ -1,9 +1,10 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Table } from 'semantic-ui-react';
-import { IPitch, IUser } from 'ssw-common';
+import { IPitch } from 'ssw-common';
 
 import { FieldTag, TableTool } from '../..';
 import { useAuth, useInterests, useTeams } from '../../../contexts';
+import { getClaimableTeams } from '../../../utils/helpers';
 
 import './styles.scss';
 
@@ -104,13 +105,6 @@ const PitchBody: FC<PitchBodyProps> = ({ sortedPitches }): ReactElement => (
     ))}
   </>
 );
-
-const getClaimableTeams = (pitch: IPitch, user: IUser): string[] =>
-  pitch.writer
-    ? pitch.teams
-        .filter((team) => team.target > 0 && user.teams.includes(team.teamId))
-        .map((team) => team.teamId)
-    : [];
 
 const PitchRow: FC<PitchRowProps> = ({ pitch }): ReactElement => {
   const { user } = useAuth();
