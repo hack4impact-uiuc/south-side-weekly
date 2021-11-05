@@ -13,7 +13,6 @@ import { IInterest } from 'ssw-common';
 
 import './styles.scss';
 import { useInterests } from '../../../contexts';
-// TODO
 import { createManyInterests, updateManyInterests } from '../../../api';
 
 const InterestsModalTrigger: FC<ButtonProps> = ({ ...rest }): ReactElement => (
@@ -48,7 +47,7 @@ const InterestsModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
   }, [isOpen, fetchInterests]);
 
   // Add a new field in form
-  const addField = (): void => {
+  const addInputLine = (): void => {
     setFormValues([
       ...formValues,
       { _id: 'NEW', name: '', color: '#3d4f91', active: true },
@@ -63,17 +62,23 @@ const InterestsModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
   };
 
   // Update interest names (input type = text)
-  const updateFieldText = (i: number, text: string): void => {
+  const updateInputText = (i: number, text: string): void => {
     const formValue = formValues[i];
     formValue.name = text;
     setFormValues([...formValues]);
   };
 
   // Update interest colors (input type = color)
-  const updateFieldColor = (i: number, color: string): void => {
+  const updateInputColor = (i: number, color: string): void => {
     const formValue = formValues[i];
     formValue.color = color;
     setFormValues([...formValues]);
+  };
+
+  // Check if interest name inputs contain duplicates
+  const isDuplicate = (): boolean => {
+    const valuesName = formValues.map((item) => item.name);
+    return valuesName.some((item, idx) => valuesName.indexOf(item) !== idx);
   };
 
   // Save newInterests and changedInterests
@@ -91,33 +96,25 @@ const InterestsModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
       }),
     );
 
-    // Save changes to existing interest in changedInterests
+    // Save the changes made to existing interests in changedInterests
     const changedInterests: IInterest[] = [];
 
     clonedInterests.forEach((interest, index) => {
-      if (
-        interest.name !== formValues[index].name ||
-        interest.color !== formValues[index].color
-      ) {
+      const diffName = interest.name !== formValues[index].name;
+      const diffColor = interest.color !== formValues[index].color;
+      if (diffName || diffColor) {
         changedInterests.push(formValues[index]);
       }
     });
 
-    // Check if the changedInterest names is in cloned Interests
-    // Check if the new interest names
-    const valuesName = formValues.map((item) => item.name);
-    const isDuplicate = valuesName.some(
-      (item, idx) => valuesName.indexOf(item) !== idx,
-    );
-    if (isDuplicate) {
+    // Alert duplicates
+    if (isDuplicate()) {
       Swal.fire({
         icon: 'error',
         title: 'Cannot create duplicate interest name!',
       });
       return;
     }
-
-    console.log(changedInterests);
 
     Swal.fire({
       icon: 'question',
@@ -155,7 +152,7 @@ const InterestsModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
     >
       <Modal.Header>Edit Interests</Modal.Header>
       <Modal.Content scrolling>
-        <Form id="submit-interests">
+        <Form id="submit-interests" onSubmit={saveInterest}>
           {formValues.map((interest, index) => (
             <div key={index} className="lines">
               <div className="color-pick">
@@ -163,13 +160,13 @@ const InterestsModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
                   type="color"
                   value={interest.color}
                   onChange={(e) =>
-                    updateFieldColor(index, e.currentTarget.value)
+                    updateInputColor(index, e.currentTarget.value)
                   }
                 />
               </div>
               <Input
                 type="text"
-                onChange={(e, { value }) => updateFieldText(index, value)}
+                onChange={(e, { value }) => updateInputText(index, value)}
                 value={interest.name}
               />
               {interest._id === 'NEW' && (
@@ -180,7 +177,7 @@ const InterestsModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
               )}
             </div>
           ))}
-          <Button className="addInterest" onClick={addField}>
+          <Button type="button" className="addInterest" onClick={addInputLine}>
             <Icon name="plus square outline" />
             <p>Add a new interest</p>
           </Button>

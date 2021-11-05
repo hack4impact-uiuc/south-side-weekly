@@ -97,10 +97,14 @@ router.post(
     const failedInterests = createdInterests.filter((interest) => !interest);
 
     if (failedInterests.length > 0) {
-      const failedInterestNames = failedInterests.map((interest) => interest.name);
+      const failedInterestNames = failedInterests.map(
+        (interest) => interest.name,
+      );
 
       res.status(400).json({
-        message: `Failed to create interests: ${failedInterestNames.join(', ')}`,
+        message: `Failed to create interests: ${failedInterestNames.join(
+          ', ',
+        )}`,
         success: false,
       });
     }
@@ -118,7 +122,6 @@ router.put(
   '/update/many',
   requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
-    console.log('I AM HERE BITCH');
     const changedInterests: IInterest[] = req.body.interests;
     const updatedInterests = await Promise.all(
       changedInterests.map(async (interest) => {
@@ -138,16 +141,20 @@ router.put(
     const failedInterests = updatedInterests.filter((interest) => !interest);
 
     if (failedInterests.length > 0) {
-      const failedInterestNames = failedInterests.map((interest) => interest.name);
+      const failedInterestNames = failedInterests.map(
+        (interest) => interest.name,
+      );
 
       res.status(400).json({
-        message: `Failed to create interests: ${failedInterestNames.join(', ')}`,
+        message: `Failed to update interests: ${failedInterestNames.join(
+          ', ',
+        )}`,
         success: false,
       });
     }
 
     res.status(200).json({
-      message: 'Successfully created all interests',
+      message: 'Successfully updated all interests',
       success: true,
       result: updatedInterests,
     });
