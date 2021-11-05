@@ -70,7 +70,6 @@ const PitchDoc = (): ReactElement => {
         (pitch: IPitch) => getClaimableTeams(pitch, user).length > 0,
       );
 
-
       setUnclaimed(claimablePitches);
       setCurrentPitches(claimablePitches);
       setFilteredPitches(claimablePitches);
