@@ -1,7 +1,8 @@
 import React, { FC, ReactElement } from 'react';
 import { IUser } from 'ssw-common';
 
-import NameTag from '../../NameTag';
+import UserChip from '../../UserChip';
+
 import './styles.scss';
 
 interface RoleRowProps {
@@ -14,9 +15,9 @@ const RoleRow: FC<RoleRowProps> = ({ users, roleName }): ReactElement => (
     <div className="row-title">
       <h4>{`${roleName}: `}</h4>
     </div>
-    {users?.map((user, index) => (
-      <NameTag key={index} user={user} />
-    ))}
+    {users?.map((user, index) =>
+      user ? <UserChip key={index} user={user} /> : <></>,
+    )}
   </div>
 );
 
