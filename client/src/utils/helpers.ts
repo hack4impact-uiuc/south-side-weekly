@@ -49,6 +49,15 @@ const getUserFullName = (user: Partial<IUser>): string =>
   }`;
 
 /**
+ * Gets a user's first name and last initial, preferring their preferred name over first name
+ *
+ * @param user the user to get the short name of
+ * @returns the shortname of the user
+ */
+const getUserShortName = (user: Partial<IUser>): string =>
+  `${user.preferredName || user.firstName} ${user.lastName?.slice(0, 1)}.`;
+
+/**
  * Parses an array of options into Semantic UI style Dropdown Items objects
  *
  * @param options the dropdown options to create
@@ -149,11 +158,20 @@ const parseOptionsSelect = (options: string[]): SelectOption[] =>
     label: option,
     value: option,
   }));
+/**
+ * Adds an "s" to a word if the "numberOf" parameter is not 1
+ *
+ * @param word the word to pluralize
+ * @param numberOf the number of the word that you want to describe
+ */
+const pluralize = (word: string, numberOf: number): string =>
+  word + (numberOf !== 1 ? 's' : '');
 
 export {
   getPitchTeams,
   updateUserField,
   getUserFullName,
+  getUserShortName,
   parseOptions,
   parseOptionsSelect,
   isPitchClaimed,
@@ -163,4 +181,5 @@ export {
   formatNumber,
   classNames,
   openProfile,
+  pluralize,
 };

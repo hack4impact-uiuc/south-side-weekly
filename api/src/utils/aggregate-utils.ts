@@ -1,4 +1,10 @@
-import { IPitch, IUser, IUserAggregate, IPitchAggregate } from 'ssw-common';
+import {
+  IPitch,
+  IUser,
+  IUserAggregate,
+  IPitchAggregate,
+  IInterest,
+} from 'ssw-common';
 
 import Pitch from '../models/pitch';
 import User from '../models/user';
@@ -52,9 +58,9 @@ const aggregatePitch = async (rawPitch: IPitch): Promise<IPitchAggregate> => {
     })),
   );
 
-  const interests = await Promise.all(
-    rawPitch.topics.map((interestId) => Interest.findById(interestId).lean()),
-  );
+  // const interests = await Promise.all(
+  //   rawPitch.topics.map((interestId) => Interest.findById(interestId).lean()),
+  // );
 
   const teams = await Promise.all(
     rawPitch.teams.map(({ teamId, target }) =>
@@ -72,7 +78,7 @@ const aggregatePitch = async (rawPitch: IPitch): Promise<IPitchAggregate> => {
       reviewedBy: reviewer,
       assignmentContributors: assignmentContributors,
       pendingContributors: pendingContributors,
-      interests: interests,
+      interests: [] as IInterest[],
       teams: teams,
       primaryEditor: primaryEditor,
       secondaryEditors: secondEditors,

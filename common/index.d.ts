@@ -31,10 +31,10 @@ export interface IUser {
 
 export interface IUserAggregate extends IUser {
   aggregated: {
-      claimedPitches: Partial<IPitch>[],
-      submittedPitches: Partial<IPitch>[],
-      interests: IInterest[],
-  }
+    claimedPitches: Partial<IPitch>[];
+    submittedPitches: Partial<IPitch>[];
+    interests: IInterest[];
+  };
 }
 
 /**
@@ -54,7 +54,7 @@ export interface IPitch {
   assignmentStatus: string;
   assignmentGoogleDocLink: string;
   assignmentContributors: { userId: string; teams: string[] }[];
-  pendingContributors: { userId: string; teams: string[] }[];
+  pendingContributors: { userId: string; teams: string[]; message: string }[];
   topics: string[];
   teams: {
     teamId: string;
@@ -84,7 +84,7 @@ export interface IPitchAggregate extends IPitch {
     }[];
     reviewedBy: Partial<IUser>;
     teams: Array<ITeam & { target: number }>;
-    interests: IInterest[],
+    interests: IInterest[];
   };
 }
 

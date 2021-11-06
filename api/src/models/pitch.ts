@@ -17,6 +17,11 @@ const contributor = new mongoose.Schema(
   { _id: false },
 );
 
+const pendingContributor = new mongoose.Schema(
+  { ...contributor.obj, message: { type: String } },
+  { _id: false },
+);
+
 const team = new mongoose.Schema(
   {
     teamId: { type: Schema.Types.ObjectId, ref: 'Team' },
@@ -71,7 +76,7 @@ const Pitch = new mongoose.Schema({
   },
   assignmentGoogleDocLink: { type: String, default: null },
   assignmentContributors: [contributor],
-  pendingContributors: [contributor],
+  pendingContributors: [pendingContributor],
   topics: [{ type: Schema.Types.ObjectId, ref: 'Interest' }],
   teams: [team],
   reviewedBy: { type: Schema.Types.ObjectId, ref: 'User' },
