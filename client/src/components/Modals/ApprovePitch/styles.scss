@@ -107,13 +107,13 @@
     }
 
     .positive {
-      background-color: $buttonBlue !important;
+      background-color: $secondaryColor !important;
     }
 
     .negative {
       background-color: transparent !important;
-      border: 1px solid $buttonBlue !important;
-      color: $buttonBlue !important;
+      border: 1px solid $secondaryColor !important;
+      color: $secondaryColor !important;
     }
   }
 }
