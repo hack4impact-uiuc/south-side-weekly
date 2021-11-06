@@ -39,7 +39,6 @@ const ResourceModal: FC<ResourceProps> = ({
   const [formData, setFormData] = useState<FormData>({
     ...defaultData,
   });
-  // const [teams, setTeams] = useState<string[]>(formData.teams);
 
   // Resets the form data on every open
   useEffect(() => {
