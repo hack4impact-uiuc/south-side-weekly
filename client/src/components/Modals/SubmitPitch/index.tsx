@@ -8,6 +8,7 @@ import {
   ModalProps,
   Popup,
   Header,
+  Message,
 } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
 import Swal from 'sweetalert2';
@@ -72,7 +73,8 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
     boolean | undefined
   >();
   const [didSubmit, setDidSubmit] = useState(false);
-  const [writerChoice, setWriterChoice] = useState<boolean | undefined>();
+  const [writerChoice, setWriterChoice] = useState<boolean>();
+  const [topicsToast, setTopicsToast] = useState<boolean>();
 
   const { user } = useAuth();
 
@@ -90,11 +92,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
     setDidSubmit(true);
 
     if (isInvalidForm()) {
-      Swal.fire({
-        title: 'Failed to submit pitch',
-        icon: 'error',
-        text: 'Please fill out all fields.',
-      });
+      setTopicsToast(true);
       return;
     }
 
@@ -120,6 +118,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
         title: 'Successfully submitted pitch!',
         icon: 'success',
       });
+
       setIsOpen(false);
     }
 
@@ -196,6 +195,15 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
           <h5 className="label-topics">
             Associated Topics<p className="unbold">(select 1-4 topics) </p>
           </h5>
+          {topicsToast ? (
+            <div>
+              <Message negative>
+                <p>Please pick up to 4 topics</p>
+              </Message>{' '}
+            </div>
+          ) : (
+            <></>
+          )}
           <InterestsSelect
             values={topics}
             onChange={(values) => {
