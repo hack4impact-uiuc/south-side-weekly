@@ -12,7 +12,7 @@ export type PitchSchema = IPitch & Document<any>;
 const contributor = new mongoose.Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: 'User' },
-    teams: [{ type: String }],
+    teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
   },
   { _id: false },
 );
