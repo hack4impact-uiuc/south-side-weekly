@@ -177,6 +177,7 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
                 type="text"
                 onChange={(e, { value }) => updateInputText(index, value)}
                 value={value.name}
+                disabled={value.name === 'Editing' || value.name === 'Writing'}
               />
               {value._id === 'NEW' && (
                 <Icon
