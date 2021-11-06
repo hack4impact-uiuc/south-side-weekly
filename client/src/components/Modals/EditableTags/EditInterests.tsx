@@ -2,8 +2,8 @@ import React, { ReactElement } from 'react';
 import { IInterest } from 'ssw-common';
 
 import { createManyInterests, updateManyInterests } from '../../../api';
-
 import { useInterests } from '../../../contexts';
+
 import EditableTagModal from './EditableTag';
 
 const EditInterests = (): ReactElement => {
