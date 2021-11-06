@@ -1,12 +1,12 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { CheckboxProps, Form, Modal, ModalProps } from 'semantic-ui-react';
-import { IResource, ITeam } from 'ssw-common';
+import { Form, Modal, ModalProps } from 'semantic-ui-react';
+import { IResource } from 'ssw-common';
 import Swal from 'sweetalert2';
 
 import { createResource, editResource, isError } from '../../../api';
 import './styles.scss';
-import { useTeams } from '../../../contexts';
 import { visibilityEnum } from '../../../utils/enums';
+import TeamsSelect from '../../Dropdowns/TeamsSelect';
 
 interface ResourceProps extends ModalProps {
   resource?: IResource;
@@ -17,7 +17,7 @@ interface ResourceProps extends ModalProps {
 interface FormData {
   name: string;
   link: string;
-  tags: Set<string>;
+  teams: string[];
   isGeneral: boolean;
   visibility: string;
 }
@@ -25,16 +25,9 @@ interface FormData {
 const defaultData: FormData = {
   name: '',
   link: '',
-  tags: new Set(),
+  teams: [],
   isGeneral: false,
   visibility: '',
-};
-
-const generalTeam: ITeam = {
-  _id: 'General',
-  name: 'General',
-  color: '',
-  active: false,
 };
 
 const ResourceModal: FC<ResourceProps> = ({
@@ -45,15 +38,12 @@ const ResourceModal: FC<ResourceProps> = ({
 }): ReactElement => {
   const [formData, setFormData] = useState<FormData>({
     ...defaultData,
-    tags: new Set(),
   });
-
-  let { teams: allTeams } = useTeams();
-  allTeams = [generalTeam, ...allTeams];
+  // const [teams, setTeams] = useState<string[]>(formData.teams);
 
   // Resets the form data on every open
   useEffect(() => {
-    setFormData({ ...defaultData, tags: new Set() });
+    setFormData({ ...defaultData });
   }, [rest.open]);
 
   useEffect(() => {
@@ -61,7 +51,7 @@ const ResourceModal: FC<ResourceProps> = ({
       const body = {
         name: resource.name,
         link: resource.link,
-        tags: new Set(resource.teams),
+        teams: resource.teams,
         isGeneral: resource.isGeneral,
         visibility: resource.visibility,
       };
@@ -73,13 +63,16 @@ const ResourceModal: FC<ResourceProps> = ({
   const parseFormData = (data: FormData): Partial<IResource> => ({
     name: data.name,
     link: data.link,
-    teams: Array.from(data.tags),
+    teams: data.teams,
     isGeneral: data.isGeneral,
     visibility: data.visibility,
   });
 
   const updateResource = async (): Promise<void> => {
+    console.log(formData);
+    console.log(parseFormData(formData));
     if (resource) {
+      console.log('yo');
       await editResource(resource._id, {
         ...parseFormData(formData),
       });
@@ -109,12 +102,6 @@ const ResourceModal: FC<ResourceProps> = ({
     }
   };
 
-  const getSelectedTeams = (tag: string): Set<string> => {
-    const tags = formData.tags;
-    tags.has(tag) ? tags.delete(tag) : tags.add(tag);
-    return tags;
-  };
-
   const changeField = <T extends keyof FormData>(
     key: T,
     value: FormData[T],
@@ -123,18 +110,6 @@ const ResourceModal: FC<ResourceProps> = ({
     data[key] = value;
     setFormData(data);
   };
-
-  const isChecked = (teamId: string): boolean => {
-    if (teamId === 'General') {
-      return formData.isGeneral;
-    }
-    return formData.tags.has(teamId);
-  };
-
-  const onChecked = (team: ITeam, { value }: CheckboxProps): void =>
-    team._id === 'General'
-      ? changeField('isGeneral', !formData.isGeneral)
-      : changeField('tags', getSelectedTeams(`${value}`));
 
   return (
     <Modal className="resource-modal" {...rest}>
@@ -157,17 +132,15 @@ const ResourceModal: FC<ResourceProps> = ({
               onChange={(e, { value }) => changeField('link', value)}
             />
             <h4>Teams</h4>
-            <Form.Group className="checkbox-group">
-              {allTeams.map((team, index) => (
-                <Form.Checkbox
-                  key={index}
-                  label={team.name}
-                  value={team._id}
-                  checked={isChecked(team._id)}
-                  onChange={(_, value) => onChecked(team, value)}
-                />
-              ))}
-            </Form.Group>
+            <TeamsSelect
+              values={formData.teams}
+              onChange={(values) =>
+                changeField(
+                  'teams',
+                  values.map((item) => item.value),
+                )
+              }
+            />
             <h4>Resource Visibility</h4>
             <div className="resource-visibility">
               <Form.Radio
