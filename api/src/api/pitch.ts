@@ -306,6 +306,7 @@ router.put(
           pendingContributors: {
             userId: req.body.userId,
             teams: req.body.teams,
+            message: req.body.message,
           },
         },
       },
