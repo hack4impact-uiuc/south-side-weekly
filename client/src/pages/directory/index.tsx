@@ -1,23 +1,22 @@
-import React, { useEffect, useState, ReactElement } from 'react';
 import { startsWith, toLower, toString } from 'lodash';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { Input } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { getUsers, isError } from '../../api';
-import { allRoles } from '../../utils/constants';
 import {
-  Select,
   DirectoryTable,
-  Walkthrough,
   InterestsSelect,
+  Select,
   TeamsSelect,
+  Walkthrough,
 } from '../../components';
+import { allRoles } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
+import { parseOptionsSelect } from '../../utils/helpers';
 
 import { filterInterests, filterRole, filterTeams } from './helpers';
-
 import './styles.scss';
-import { parseOptionsSelect } from '../../utils/helpers';
 
 const searchFields: (keyof IUser)[] = [
   'firstName',

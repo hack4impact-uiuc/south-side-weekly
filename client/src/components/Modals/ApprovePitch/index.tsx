@@ -1,37 +1,31 @@
+import { isEmpty } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import {
   Button,
   Form,
   Grid,
-  Header,
-  Input,
   Label,
   Modal,
   ModalProps,
 } from 'semantic-ui-react';
 import { IPitch, IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
-import { LinkDisplay, MultiSelect } from '../..';
 
 import {
   approvePitch,
   declinePitch,
-  isError,
   getAggregatedPitch,
-  getUsers,
+  isError,
 } from '../../../api';
+import { getUsersByTeam } from '../../../api/user';
+import { Select, LinkDisplay, MultiSelect } from '../../../components';
 import { useInterests, useTeams } from '../../../contexts';
+import { neighborhoods } from '../../../utils/constants';
+import { rolesEnum } from '../../../utils/enums';
 import { classNames, getUserFullName } from '../../../utils/helpers';
 import FieldTag from '../../FieldTag';
 import PitchCard from '../../PitchCard';
-
-import { Select } from '../../../components';
-
 import './styles.scss';
-import { neighborhoods } from '../../../utils/constants';
-import { getUsersByTeam } from '../../../api/user';
-import { rolesEnum } from '../../../utils/enums';
-import { isEmpty } from 'lodash';
 
 interface ApprovePitchProps extends ModalProps {
   pitch: IPitch;

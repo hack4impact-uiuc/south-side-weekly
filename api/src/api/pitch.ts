@@ -245,10 +245,9 @@ router.put(
       return;
     }
 
-    //TODO: Uncomment when errors are fixed
-    /* const author = await User.findById(pitch.author);
+    const author = await User.findById(pitch.author);
     const message = approvedMessage(author, pitch, req.user);
-    await sendMail(message); */
+    await sendMail(message);
     res.status(200).json({
       success: true,
       message: 'Successfully updated pitch',

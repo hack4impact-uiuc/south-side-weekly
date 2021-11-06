@@ -1,6 +1,4 @@
-import { IPitch, IUser } from 'ssw-common';
-import { PitchSchema } from '../models/pitch';
-import { UserSchema } from '../models/user';
+import { IPitch } from 'ssw-common';
 
 export const isPitchClaimed = (pitch: IPitch): boolean =>
   getOpenTeamsForPitch(pitch).length === 0;
