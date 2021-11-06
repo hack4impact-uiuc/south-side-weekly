@@ -1,4 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react';
+import { openPopupWidget } from 'react-calendly';
 import { Button, Card, Menu, Radio } from 'semantic-ui-react';
 import { IResource, ITeam } from 'ssw-common';
 import Swal from 'sweetalert2';
@@ -103,6 +104,7 @@ const Resources = (): ReactElement => {
         onOpen={() => openModal(modal.action)}
         onClose={closeModal}
       />
+
       <div className="resources-page">
         <Walkthrough
           page={pagesEnum.RESOURCES}
@@ -115,6 +117,18 @@ const Resources = (): ReactElement => {
               <Radio checked={edit} slider onClick={() => setEdit(!edit)} />
             </AdminView>
           </div>
+          {!edit && (
+            <Button
+              className="calendly-button"
+              onClick={() =>
+                openPopupWidget({
+                  url: 'https://calendly.com/sawhney4/60min',
+                })
+              }
+            >
+              Schedule Office Hours
+            </Button>
+          )}
           <div className="push" />
           {edit && (
             <Button
