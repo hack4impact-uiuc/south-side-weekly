@@ -2,7 +2,7 @@
 
 .approve-pitch-modal {
   .content {
-    background-color: #f6f7fb !important;
+    background-color: $mainBackground !important;
   }
   .header {
     background-color: $primary !important;
@@ -10,7 +10,6 @@
   }
 
   .form-label {
-    //background-color: blue !important;
     font-weight: bold !important;
     font-size: 0.92857143em !important;
     margin: 0 1rem 0.33571429rem 0 !important;
@@ -37,20 +36,10 @@
     }
 
     .topics-section {
-      //margin: 0 0 0.33571429rem 0 !important;
       display: flex;
       flex-direction: row;
       margin-bottom: 0.53571429rem !important;
       margin-top: 0.33571429rem !important;
-
-      //padding-left: 0px !important;
-    }
-
-    .nametag {
-      /* border-radius: 50% !important;
-      height: 20px !important;
-      justify-content: center !important;
-      align-items: center !important; */
     }
 
     .neighborhood-dropdown {
@@ -58,9 +47,6 @@
     }
 
     .team-select-group {
-      /* display: flex;
-      justify-content: flex-start; */
-
       .input-group {
         display: flex;
         flex-direction: column;
@@ -112,9 +98,8 @@
 
   .actions {
     border-top: none !important;
-    background-color: #f6f7fb !important;
+    background-color: $mainBackground !important;
     text-align: right;
-    //padding: 10px !important;
     padding: 20px 0px 10px 0px !important;
 
     .button {
@@ -122,13 +107,13 @@
     }
 
     .positive {
-      background-color: #5a72e1 !important;
+      background-color: $buttonBlue !important;
     }
 
     .negative {
       background-color: transparent !important;
-      border: 1px solid #5a72e1 !important;
-      color: #5a72e1 !important;
+      border: 1px solid $buttonBlue !important;
+      color: $buttonBlue !important;
     }
   }
 }
