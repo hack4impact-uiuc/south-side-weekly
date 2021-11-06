@@ -1,0 +1,9 @@
+@import '../../styles/colors.scss';
+
+.icon-button-wrapper {
+  cursor: pointer;
+
+  &:hover {
+    color: '#FFFFFFAA';
+  }
+}
