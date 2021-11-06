@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { IInterest } from '../../../common';
+import { IInterest } from 'ssw-common';
 
 import { errorWrap } from '../middleware';
 import { requireAdmin, requireRegistered } from '../middleware/auth';

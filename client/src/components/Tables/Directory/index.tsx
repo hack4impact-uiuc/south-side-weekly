@@ -5,8 +5,8 @@ import { IUser } from 'ssw-common';
 import { AdminView, FieldTag, UserModal, UserPicture, TableTool } from '../..';
 import { useInterests, useTeams } from '../../../contexts';
 import { getUserFullName } from '../../../utils/helpers';
-import InterestsModal from '../../Modals/EditInterests';
 import TeamModal from '../../Modals/EditTeam';
+import { EditInterests, EditTeams } from '../../Modals/EditableTags';
 
 import './styles.scss';
 
@@ -139,7 +139,7 @@ const DirectoryHeader: FC<DirectoryHeaderProps> = ({
         Teams
         <TeamModal />
       </Table.HeaderCell>
-      <Table.HeaderCell>Interests <InterestsModal /></Table.HeaderCell>
+      <Table.HeaderCell>Interests <EditInterests /></Table.HeaderCell>
       <AdminView>
         <Table.HeaderCell
           onClick={() => handleSort(columnsEnum.ONBOARDING)}

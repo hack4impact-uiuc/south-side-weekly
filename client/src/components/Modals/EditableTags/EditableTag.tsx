@@ -9,43 +9,56 @@ import {
   ModalProps,
 } from 'semantic-ui-react';
 import Swal from 'sweetalert2';
-import { IInterest } from 'ssw-common';
-
-import { useInterests } from '../../../contexts';
-import { createManyInterests, updateManyInterests } from '../../../api';
 
 import './styles.scss';
 
-const InterestsModalTrigger: FC<ButtonProps> = ({ ...rest }): ReactElement => (
+const ModalTrigger: FC<ButtonProps> = ({ ...rest }): ReactElement => (
   <Button {...rest} size="tiny" circular icon style={{ background: 'none' }}>
     <Icon name="pencil" />
   </Button>
 );
 
-const InterestsModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
-  const { interests, fetchInterests } = useInterests();
-  const [isOpen, setIsOpen] = useState(false);
-  const [formValues, setFormValues] = useState<IInterest[]>([]);
+// A tag will have the same interface as IInterest and ITema
+interface Tag {
+  _id: string;
+  name: string;
+  color: string;
+  active: boolean;
+}
 
-  const [clonedInterests, setClonedInterests] = useState<Partial<IInterest>[]>(
-    [],
-  );
+interface EditableTagModalProps extends ModalProps {
+  title: string;
+  allTags: Tag[];
+  onCreate: (tags: Partial<Tag>[]) => void;
+  onUpdate: (tags: Tag[]) => void;
+}
+
+const EditableTagModal: FC<EditableTagModalProps> = ({
+  title,
+  allTags,
+  onCreate,
+  onUpdate,
+  ...rest
+}): ReactElement => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [formValues, setFormValues] = useState<Tag[]>([]);
+
+  const [clonedTags, setClonedTags] = useState<Partial<Tag>[]>([]);
 
   useEffect(() => {
-    fetchInterests();
-    setFormValues(interests);
+    setFormValues(allTags);
 
-    const clone = interests.map((interest) => ({
-      _id: interest._id,
-      name: interest.name,
-      color: interest.color,
-      active: interest.active,
+    const clone = allTags.map((tag) => ({
+      _id: tag._id,
+      name: tag.name,
+      color: tag.color,
+      active: tag.active,
     }));
 
-    setClonedInterests([...clone]);
+    setClonedTags([...clone]);
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, fetchInterests]);
+  }, [isOpen]);
 
   // Add a new field in form
   const addInputLine = (): void => {
@@ -62,49 +75,45 @@ const InterestsModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
     setFormValues(newFormValues);
   };
 
-  // Update interest names (input type = text)
+  // Update input names (input type = text)
   const updateInputText = (i: number, text: string): void => {
     const formValue = formValues[i];
     formValue.name = text;
     setFormValues([...formValues]);
   };
 
-  // Update interest colors (input type = color)
+  // Update input colors (input type = color)
   const updateInputColor = (i: number, color: string): void => {
     const formValue = formValues[i];
     formValue.color = color;
     setFormValues([...formValues]);
   };
 
-  // Check if interest name inputs contain duplicates
+  // Check if input contain duplicates
   const isDuplicate = (): boolean => {
     const valuesName = formValues.map((item) => item.name);
     return valuesName.some((item, idx) => valuesName.indexOf(item) !== idx);
   };
 
-  // Save newInterests and changedInterests
-  const saveInterest = (): void => {
-    // Save newly created interests in newInterests
-    const newInterests = formValues.filter(
-      (interest) => interest._id === 'NEW',
-    );
-    // Take out _id = "NEW" field from newInterests
-    const parsedNewInterests: Partial<IInterest>[] = newInterests.map(
-      (interest) => ({
-        name: interest.name,
-        color: interest.color,
-        active: interest.active,
-      }),
-    );
+  // Save newTags and changedTags
+  const saveForm = (): void => {
+    // Save newly created tags in newTags
+    const newTags = formValues.filter((tag) => tag._id === 'NEW');
+    // Take out _id = "NEW" field from newTags
+    const parsedNewTags: Partial<Tag>[] = newTags.map((tag) => ({
+      name: tag.name,
+      color: tag.color,
+      active: tag.active,
+    }));
 
-    // Save the changes made to existing interests in changedInterests
-    const changedInterests: IInterest[] = [];
+    // Save the changes made to existing tags in changedTags
+    const changedTags: Tag[] = [];
 
-    clonedInterests.forEach((interest, index) => {
-      const diffName = interest.name !== formValues[index].name;
-      const diffColor = interest.color !== formValues[index].color;
+    clonedTags.forEach((tag, index) => {
+      const diffName = tag.name !== formValues[index].name;
+      const diffColor = tag.color !== formValues[index].color;
       if (diffName || diffColor) {
-        changedInterests.push(formValues[index]);
+        changedTags.push(formValues[index]);
       }
     });
 
@@ -112,29 +121,28 @@ const InterestsModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
     if (isDuplicate()) {
       Swal.fire({
         icon: 'error',
-        title: 'Cannot create duplicate interest name!',
+        title: 'Cannot create duplicate tag name!',
       });
       return;
     }
 
     Swal.fire({
       icon: 'question',
-      text: 'Are you sure you want to save your “Interests” changes?',
+      text: `Are you sure you want to save your ${title} changes?`,
       showCancelButton: true,
       cancelButtonText: 'Cancel',
       confirmButtonText: 'Confirm',
     }).then((result) => {
       if (result.isConfirmed) {
-        createManyInterests(parsedNewInterests);
-        updateManyInterests(changedInterests);
+        onCreate(parsedNewTags);
+        onUpdate(changedTags);
 
         setIsOpen(false);
-        fetchInterests();
         setFormValues([]);
 
         Swal.fire(
-          'Interest updated!',
-          'Interest formation has been updated',
+          `${title} updated!`,
+          `${title} tags has been updated`,
           'success',
         );
       }
@@ -147,19 +155,19 @@ const InterestsModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
       open={isOpen}
       onOpen={() => setIsOpen(true)}
       onClose={() => setIsOpen(false)}
-      trigger={<InterestsModalTrigger />}
-      className="interests-modal"
+      trigger={<ModalTrigger />}
+      className="tags-modal"
       {...rest}
     >
-      <Modal.Header>Edit Interests</Modal.Header>
+      <Modal.Header>Edit {title}</Modal.Header>
       <Modal.Content scrolling>
-        <Form id="submit-interests" onSubmit={saveInterest}>
-          {formValues.map((interest, index) => (
+        <Form id="submit-tags" onSubmit={saveForm}>
+          {formValues.map((value, index) => (
             <div key={index} className="lines">
               <div className="color-pick">
                 <input
                   type="color"
-                  value={interest.color}
+                  value={value.color}
                   onChange={(e) =>
                     updateInputColor(index, e.currentTarget.value)
                   }
@@ -168,9 +176,9 @@ const InterestsModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
               <Input
                 type="text"
                 onChange={(e, { value }) => updateInputText(index, value)}
-                value={interest.name}
+                value={value.name}
               />
-              {interest._id === 'NEW' && (
+              {value._id === 'NEW' && (
                 <Icon
                   name="minus square outline"
                   onClick={() => removeField(index)}
@@ -178,9 +186,11 @@ const InterestsModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
               )}
             </div>
           ))}
-          <Button type="button" className="addInterest" onClick={addInputLine}>
+          <Button type="button" className="addvalue" onClick={addInputLine}>
             <Icon name="plus square outline" />
-            <p>Add a new interest</p>
+            <p>
+              Add a new {title.substring(0, title.length - 1).toLowerCase()}
+            </p>
           </Button>
         </Form>
       </Modal.Content>
@@ -188,9 +198,8 @@ const InterestsModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
         <Button
           type="submit"
           content="Save"
-          form="submit-interests"
+          form="submit-tags"
           className="save-button"
-          onClick={saveInterest}
           style={{ backgroundColor: 'black' }}
         />
       </Modal.Actions>
@@ -198,4 +207,4 @@ const InterestsModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
   );
 };
 
-export default InterestsModal;
+export default EditableTagModal;
