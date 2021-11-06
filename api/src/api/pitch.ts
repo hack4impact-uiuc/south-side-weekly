@@ -226,7 +226,10 @@ router.put(
   '/:pitchId/approve',
   requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
-    const { pitchData } = req.body;
+    const { pitchData, response } = req.body;
+
+    //TODO: Add response to mail message
+    console.log(response);
 
     const pitch = await Pitch.findByIdAndUpdate(req.params.pitchId, {
       status: pitchStatusEnum.APPROVED,
@@ -241,9 +244,11 @@ router.put(
       });
       return;
     }
-    const author = await User.findById(pitch.author);
+
+    //TODO: Uncomment when errors are fixed
+    /* const author = await User.findById(pitch.author);
     const message = approvedMessage(author, pitch, req.user);
-    await sendMail(message);
+    await sendMail(message); */
     res.status(200).json({
       success: true,
       message: 'Successfully updated pitch',

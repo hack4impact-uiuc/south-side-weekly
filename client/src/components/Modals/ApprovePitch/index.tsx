@@ -31,6 +31,7 @@ import './styles.scss';
 import { neighborhoods } from '../../../utils/constants';
 import { getUsersByTeam } from '../../../api/user';
 import { rolesEnum } from '../../../utils/enums';
+import { isEmpty } from 'lodash';
 
 interface ApprovePitchProps extends ModalProps {
   pitch: IPitch;
@@ -49,6 +50,8 @@ type FormData = Pick<
   | 'thirdEditors'
 >;
 
+type OptionalFields = keyof FormData;
+
 const defaultData: FormData = {
   neighborhoods: [],
   teams: [],
@@ -59,6 +62,12 @@ const defaultData: FormData = {
   secondEditors: [],
   thirdEditors: [],
 };
+
+const optionalFields: OptionalFields[] = [
+  'writer',
+  'secondEditors',
+  'thirdEditors',
+];
 
 const ApprovePitchModal: FC<ApprovePitchProps> = ({
   pitch,
@@ -71,6 +80,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   const [formData, setFormData] = useState<FormData>(defaultData);
   const [editors, setEditors] = useState<IUser[]>([]);
   const [writers, setWriters] = useState<IUser[]>([]);
+  const [reasoning, setReasoning] = useState('');
 
   const { teams } = useTeams();
   const { getInterestById } = useInterests();
@@ -84,8 +94,9 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       const res = await getAggregatedPitch(pitch._id);
 
       if (!isError(res)) {
-        setAuthor(getUserFullName(res.data.result.aggregated.author));
-        setAuthorImage(res.data.result.aggregated.author.profilePic);
+        const { author } = res.data.result.aggregated;
+        setAuthor(getUserFullName(author));
+        setAuthorImage(author.profilePic);
       }
     };
 
@@ -142,11 +153,11 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   const changeIssue = (issueType: string): IPitch['issues'] => {
     const issues = formData.issues;
     const indexOfIssue = issues.findIndex(
-      (issue) => issue.issueFormat === issueType,
+      (issue) => issue.format === issueType,
     );
     const notFoundIndex = -1;
     if (indexOfIssue === notFoundIndex) {
-      issues.push({ issueFormat: issueType, issueDate: new Date() });
+      issues.push({ format: issueType, publicationDate: new Date() });
     } else {
       issues.splice(indexOfIssue, 1);
     }
@@ -163,6 +174,16 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
     setFormData(data);
   };
 
+  const removeOptionalEmptyKeys = (): Partial<IPitch> => {
+    const formDataCopy = { ...formData };
+    optionalFields.map((field) => {
+      if (isEmpty(formDataCopy[field])) {
+        delete formDataCopy[field];
+      }
+    });
+    return formDataCopy;
+  };
+
   const handleApprove = async (): Promise<void> => {
     const validForm = formData.teams.length > 0;
 
@@ -174,7 +195,11 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       return;
     }
 
-    const res = await approvePitch(pitch._id, formData);
+    const res = await approvePitch(
+      pitch._id,
+      removeOptionalEmptyKeys(),
+      reasoning,
+    );
 
     if (!isError(res)) {
       callback();
@@ -212,7 +237,6 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       });
     }
   };
-  console.log(formData);
 
   const filterAdmin = (users: IUser[]): IUser[] =>
     users.filter((user) => user.role === rolesEnum.ADMIN);
@@ -251,13 +275,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
         <div className="pitch-author-section">
           <span className="form-label">Pitch Creator:</span>
           <Label as="a" image>
-            <img
-              src={authorImage}
-              alt="Author Profile"
-              className="nametag"
-              //style={{ borderRadius: '50%', height: '20px' !important }}
-            />{' '}
-            {author}
+            <img src={authorImage} alt="Author Profile" /> {author}
           </Label>
         </div>
 
@@ -303,7 +321,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
                 label={'Print'}
                 value={'Print'}
                 checked={formData.issues.some(
-                  ({ issueFormat }) => issueFormat === 'Print',
+                  ({ format }) => format === 'Print',
                 )}
                 onChange={(_, { value }) =>
                   changeField('issues', changeIssue(`${value}`))
@@ -313,7 +331,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
                 label={'Online'}
                 value={'Online'}
                 checked={formData.issues.some(
-                  ({ issueFormat }) => issueFormat === 'Online',
+                  ({ format }) => format === 'Online',
                 )}
                 onChange={(_, { value }) =>
                   changeField('issues', changeIssue(`${value}`))
@@ -389,7 +407,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
           <p className="form-label">
             Reasoning <mark className="optional">- Optional</mark>
           </p>
-          <Form.Input fluid />
+          <Form.Input fluid onChange={(e, { value }) => setReasoning(value)} />
         </Form>
         <Modal.Actions>
           <Button onClick={handleApprove} content="Approve" positive />
