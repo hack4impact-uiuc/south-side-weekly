@@ -62,7 +62,7 @@ const getClaimableTeams = (pitch: IPitch, user: IUser): string[] =>
         .map((team) => team.teamId)
     : [];
 
-/** 
+/**
  * Gets a user's first name and last initial, preferring their preferred name over first name
  *
  * @param user the user to get the short name of
