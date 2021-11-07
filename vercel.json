@@ -6,8 +6,7 @@
     "GOOGLE_CLIENT_SECRET": "@ssw_google_client_secret",
     "GOOGLE_CALLBACK_URL": "https://south-side-weekly.vercel.app/api/auth/redirectURI",
     "SESS_SECRET": "@ssw_session_secret",
-    "REQUEST_SECRET": "@ssw_request_secret",
-    "TZ": "America/Chicago"
+    "REQUEST_SECRET": "@ssw_request_secret"
   },
   "builds": [
     { "src": "api/src/app.ts", "use": "@vercel/node" },

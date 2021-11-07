@@ -11,6 +11,7 @@ import {
 } from '../middleware/auth';
 import { onboardingStatusEnum, rolesEnum } from '../utils/enums';
 import { aggregateUser } from '../utils/aggregate-utils';
+import timezone from '../middleware/timezone';
 
 const router = express.Router();
 
@@ -253,6 +254,7 @@ const TWO_WEEKS_AGO = 13;
 router.post(
   '/update-stalled',
   requireRequestSecret,
+  timezone('America/Chicago'),
   errorWrap(async (req: Request, res: Response) => {
     const twoWeeksAgoDate = new Date();
     twoWeeksAgoDate.setDate(twoWeeksAgoDate.getDate() - TWO_WEEKS_AGO);
