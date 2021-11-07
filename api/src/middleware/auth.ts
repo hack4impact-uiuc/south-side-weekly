@@ -55,7 +55,7 @@ const requireRequestSecret = (
   req: Request,
   res: Response,
   next: NextFunction,
-) => {
+): Response => {
   const requestSecretHeaderValue = req.headers[requestSecretHeader];
   if (requestSecretHeaderValue !== process.env.REQUEST_SECRET) {
     return res.status(401).json({
