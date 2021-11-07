@@ -94,8 +94,12 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
       <Modal.Content>
         <h3> Pitch Title: {aggregate?.title} </h3>
         <div className="teams-section">
-          {aggregate?.topics.map((topic, index) => (
-            <FieldTag key={index} content={topic}></FieldTag>
+          {aggregate?.aggregated.interests.map((interest, index) => (
+            <FieldTag
+              key={index}
+              content={interest.name}
+              hexcode={interest.color}
+            ></FieldTag>
           ))}
         </div>
         <p className="description">{aggregate?.description}</p>
