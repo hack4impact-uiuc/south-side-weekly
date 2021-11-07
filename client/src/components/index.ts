@@ -28,6 +28,11 @@ import Walkthrough from './Walkthrough';
 import InterestsSelect from './Dropdowns/InterestsSelect';
 import ProviderWrapper from './ProviderWrapper';
 import TeamsSelect from './Dropdowns/TeamsSelect';
+import {
+  EditableTagModal,
+  EditInterests,
+  EditTeams,
+} from './Modals/EditableTags';
 
 export {
   Header,
@@ -60,4 +65,7 @@ export {
   InterestsSelect,
   ProviderWrapper,
   TeamsSelect,
+  EditInterests,
+  EditTeams,
+  EditableTagModal,
 };
