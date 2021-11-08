@@ -10,21 +10,23 @@ import { emptyAggregatePitch } from '../../../utils/constants';
 import { convertMap, pluralize } from '../../../utils/helpers';
 import FieldTag from '../../FieldTag';
 import LinkDisplay from '../../LinkDisplay';
-import PitchCard from '../../PitchCard';
 import UserChip from '../../UserChip';
 import './styles.scss';
 
 interface ClaimPitchProps extends ModalProps {
   pitch: IPitch;
   callback(): void;
+  isOpen: boolean;
+  setIsOpen(isOpen: boolean): void;
 }
 
 const ClaimPitchModal: FC<ClaimPitchProps> = ({
   pitch,
   callback,
+  isOpen,
+  setIsOpen,
   ...rest
 }): ReactElement => {
-  const [isOpen, setIsOpen] = useState(false);
   const [checkboxes, setCheckboxes] = useState(new Map<string, boolean>());
   const [message, setMessage] = useState('');
   const [didSubmit, setDidSubmit] = useState(false);
@@ -238,7 +240,6 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
       open={isOpen}
       onClose={() => setIsOpen(false)}
       onOpen={() => setIsOpen(true)}
-      trigger={<PitchCard pitch={pitch} />}
       className="claim-modal"
       {...rest}
     >

@@ -242,7 +242,7 @@ const PitchDoc = (): ReactElement => {
         )}
       </div>
       <div className="pitch-doc">
-        <PitchTable pitches={filteredPitches} />
+        <PitchTable pitches={filteredPitches} callback={populatePitches} />
       </div>
     </div>
   );

@@ -5,11 +5,13 @@ import { IPitch } from 'ssw-common';
 import { FieldTag, TableTool } from '../..';
 import { useAuth, useInterests, useTeams } from '../../../contexts';
 import { getClaimableTeams } from '../../../utils/helpers';
+import ClaimPitchModal from '../../Modals/ClaimPitch';
 
 import './styles.scss';
 
 interface PitchTableProps {
   pitches: IPitch[];
+  callback(): void;
 }
 
 interface PitchHeaderProps {
@@ -20,10 +22,12 @@ interface PitchHeaderProps {
 
 interface PitchBodyProps {
   sortedPitches: IPitch[];
+  callback(): void;
 }
 
 interface PitchRowProps {
   pitch: IPitch;
+  callback(): void;
 }
 
 const titleSort = (a: IPitch, b: IPitch): number =>
@@ -91,7 +95,10 @@ const PitchHeader: FC<PitchHeaderProps> = ({
   );
 };
 
-const PitchBody: FC<PitchBodyProps> = ({ sortedPitches }): ReactElement => (
+const PitchBody: FC<PitchBodyProps> = ({
+  sortedPitches,
+  callback,
+}): ReactElement => (
   <>
     {sortedPitches.length === 0 && (
       <Table.Row>
@@ -101,18 +108,26 @@ const PitchBody: FC<PitchBodyProps> = ({ sortedPitches }): ReactElement => (
       </Table.Row>
     )}
     {sortedPitches.map((user, index) => (
-      <PitchRow pitch={user} key={index} />
+      <PitchRow pitch={user} key={index} callback={callback} />
     ))}
   </>
 );
 
-const PitchRow: FC<PitchRowProps> = ({ pitch }): ReactElement => {
+const PitchRow: FC<PitchRowProps> = ({ pitch, callback }): ReactElement => {
   const { user } = useAuth();
   const { getInterestById } = useInterests();
   const { getTeamFromId } = useTeams();
 
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <Table.Row>
+    <Table.Row onClick={() => setIsOpen(true)}>
+      <ClaimPitchModal
+        callback={callback}
+        pitch={pitch}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
+      />
       <Table.Cell>{pitch.title}</Table.Cell>
       <Table.Cell>{pitch.description}</Table.Cell>
       <Table.Cell>
@@ -147,7 +162,10 @@ const PitchRow: FC<PitchRowProps> = ({ pitch }): ReactElement => {
   );
 };
 
-const PitchTable: FC<PitchTableProps> = ({ pitches }): ReactElement => {
+const PitchTable: FC<PitchTableProps> = ({
+  pitches,
+  callback,
+}): ReactElement => {
   const [sortedPitches, setSortedPitches] = useState<IPitch[]>([]);
 
   useEffect(() => {
@@ -163,7 +181,9 @@ const PitchTable: FC<PitchTableProps> = ({ pitches }): ReactElement => {
           setSortedPitches={setSortedPitches}
         />
       }
-      tableBody={<PitchBody sortedPitches={sortedPitches} />}
+      tableBody={
+        <PitchBody sortedPitches={sortedPitches} callback={callback} />
+      }
       singleLine={pitches.length > 0}
     />
   );
