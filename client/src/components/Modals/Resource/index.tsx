@@ -68,10 +68,7 @@ const ResourceModal: FC<ResourceProps> = ({
   });
 
   const updateResource = async (): Promise<void> => {
-    console.log(formData);
-    console.log(parseFormData(formData));
     if (resource) {
-      console.log('yo');
       await editResource(resource._id, {
         ...parseFormData(formData),
       });
@@ -117,14 +114,12 @@ const ResourceModal: FC<ResourceProps> = ({
         <Modal.Description>
           <Form>
             <Form.Input
-              required
               label="Name"
               type="text"
               value={formData.name}
               onChange={(e, { value }) => changeField('name', value)}
             />
             <Form.Input
-              required
               label="Link"
               type="text"
               value={formData.link}
