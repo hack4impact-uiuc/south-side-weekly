@@ -31,6 +31,7 @@ interface EditableTagModalProps extends ModalProps {
   allTags: Tag[];
   onCreate: (tags: Partial<Tag>[]) => void;
   onUpdate: (tags: Tag[]) => void;
+  onFetch: () => void;
 }
 
 const EditableTagModal: FC<EditableTagModalProps> = ({
@@ -38,6 +39,7 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
   allTags,
   onCreate,
   onUpdate,
+  onFetch,
   ...rest
 }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
@@ -56,7 +58,7 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
     }));
 
     setClonedTags([...clone]);
-
+    onFetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
@@ -138,6 +140,7 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
         onUpdate(changedTags);
 
         setIsOpen(false);
+        onFetch();
         setFormValues([]);
 
         Swal.fire(
