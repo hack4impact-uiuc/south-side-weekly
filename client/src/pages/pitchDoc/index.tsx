@@ -21,6 +21,7 @@ import {
   PitchTable,
 } from '../../components';
 import { useAuth } from '../../contexts';
+import { pitchDocTabs } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
 import { parseOptionsSelect } from '../../utils/helpers';
 
@@ -29,19 +30,13 @@ import { filterInterests, filterClaimStatus, filterTeams } from './helpers';
 import './styles.scss';
 
 const searchFields: (keyof IPitch)[] = ['title'];
-const TABS = {
-  UNCLAIMED: 'Unclaimed Pitches',
-  PITCH_APPROVAL: 'Pitches Pending Approval',
-  CLAIM_APPROVAL: 'Claims Pending Approval',
-  APPROVED: 'Approved Pitches',
-};
 
 const PitchDoc = (): ReactElement => {
   const [approved, setApproved] = useState<IPitch[]>([]);
   const [unclaimed, setUnclaimed] = useState<IPitch[]>([]);
   const [pendingApprovals, setPendingApprovals] = useState<IPitch[]>([]);
   const [pendingClaims, setPendingClaims] = useState<IPitch[]>([]);
-  const [currentTab, setCurrentTab] = useState(TABS.UNCLAIMED);
+  const [currentTab, setCurrentTab] = useState(pitchDocTabs.UNCLAIMED);
 
   const [currentPitches, setCurrentPitches] = useState<IPitch[]>([]);
   const [filteredPitches, setFilteredPitches] = useState<IPitch[]>([]);
@@ -88,7 +83,7 @@ const PitchDoc = (): ReactElement => {
   };
 
   useEffect(() => {
-    setCurrentTab(TABS.UNCLAIMED);
+    setCurrentTab(pitchDocTabs.UNCLAIMED);
     getUnclaimed();
     getApproved();
 
@@ -137,17 +132,17 @@ const PitchDoc = (): ReactElement => {
   }, [currentPitches, query, interests, teams, claimStatus]);
 
   useEffect(() => {
-    if (currentTab !== TABS.APPROVED) {
+    if (currentTab !== pitchDocTabs.APPROVED) {
       setClaimStatus('');
     }
 
-    if (currentTab === TABS.UNCLAIMED) {
+    if (currentTab === pitchDocTabs.UNCLAIMED) {
       setCurrentPitches([...unclaimed]);
-    } else if (currentTab === TABS.PITCH_APPROVAL) {
+    } else if (currentTab === pitchDocTabs.PITCH_APPROVAL) {
       setCurrentPitches([...pendingApprovals]);
-    } else if (currentTab === TABS.CLAIM_APPROVAL) {
+    } else if (currentTab === pitchDocTabs.CLAIM_APPROVAL) {
       setCurrentPitches([...pendingClaims]);
-    } else if (currentTab === TABS.APPROVED) {
+    } else if (currentTab === pitchDocTabs.APPROVED) {
       setCurrentPitches([...approved]);
     }
   }, [currentTab, unclaimed, pendingApprovals, pendingClaims, approved]);
@@ -168,28 +163,28 @@ const PitchDoc = (): ReactElement => {
       <h1>Pitch Doc</h1>
       <Menu className="tab-menu" tabular size="large">
         <Menu.Item
-          name={TABS.UNCLAIMED}
-          active={TABS.UNCLAIMED === currentTab}
+          name={pitchDocTabs.UNCLAIMED}
+          active={pitchDocTabs.UNCLAIMED === currentTab}
           onClick={(e, { name }) => setCurrentTab(name!)}
         />
 
         <StaffView>
           <Menu.Item
-            name={TABS.PITCH_APPROVAL}
-            active={TABS.PITCH_APPROVAL === currentTab}
+            name={pitchDocTabs.PITCH_APPROVAL}
+            active={pitchDocTabs.PITCH_APPROVAL === currentTab}
             onClick={(e, { name }) => setCurrentTab(name!)}
           />
         </StaffView>
 
         <Menu.Item
-          name={TABS.APPROVED}
-          active={TABS.APPROVED === currentTab}
+          name={pitchDocTabs.APPROVED}
+          active={pitchDocTabs.APPROVED === currentTab}
           onClick={(e, { name }) => setCurrentTab(name!)}
         />
         <AdminView>
           <Menu.Item
-            name={TABS.CLAIM_APPROVAL}
-            active={TABS.CLAIM_APPROVAL === currentTab}
+            name={pitchDocTabs.CLAIM_APPROVAL}
+            active={pitchDocTabs.CLAIM_APPROVAL === currentTab}
             onClick={(e, { name }) => setCurrentTab(name!)}
           />
         </AdminView>
@@ -225,7 +220,7 @@ const PitchDoc = (): ReactElement => {
             onChange={(values) => setTeams(values.map((item) => item.value))}
           />
         </div>
-        {isEqual(currentTab, TABS.APPROVED) && (
+        {isEqual(currentTab, pitchDocTabs.APPROVED) && (
           <div className="wrapper">
             <Select
               value={claimStatus}
@@ -237,7 +232,7 @@ const PitchDoc = (): ReactElement => {
         )}
       </div>
       <div className="pitch-doc">
-        <PitchTable pitches={filteredPitches} />
+        <PitchTable pitches={filteredPitches} callback={callback} currentTab={currentTab}/>
       </div>
     </div>
   );

@@ -29,6 +29,13 @@ const contributorPages = [
   wizardPages.ONBOARD_5,
 ];
 
+const pitchDocTabs = {
+  UNCLAIMED: 'Unclaimed Pitches',
+  PITCH_APPROVAL: 'Pitches Pending Approval',
+  CLAIM_APPROVAL: 'Claims Pending Approval',
+  APPROVED: 'Approved Pitches',
+};
+
 const neighborhoods = [
   'Albany Park',
   'Altgeld Gardens',
@@ -357,5 +364,6 @@ export {
   emptyAggregatePitch,
   staffPages,
   contributorPages,
+  pitchDocTabs,
   neighborhoods,
 };

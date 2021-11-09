@@ -2,13 +2,17 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Table } from 'semantic-ui-react';
 import { IPitch, IUser } from 'ssw-common';
 
-import { FieldTag, TableTool } from '../..';
+import { ApprovePitchModal, FieldTag, TableTool } from '../..';
 import { useAuth, useInterests, useTeams } from '../../../contexts';
+
+import {pitchDocTabs} from "../../../utils/constants"
 
 import './styles.scss';
 
 interface PitchTableProps {
   pitches: IPitch[];
+  callback(): void;
+  currentTab: string;
 }
 
 interface PitchHeaderProps {
@@ -19,10 +23,13 @@ interface PitchHeaderProps {
 
 interface PitchBodyProps {
   sortedPitches: IPitch[];
+  callback(): void;
+  currentTab: string;
 }
 
 interface PitchRowProps {
   pitch: IPitch;
+  callback(): void;
 }
 
 const titleSort = (a: IPitch, b: IPitch): number =>
@@ -90,7 +97,11 @@ const PitchHeader: FC<PitchHeaderProps> = ({
   );
 };
 
-const PitchBody: FC<PitchBodyProps> = ({ sortedPitches }): ReactElement => (
+const PitchBody: FC<PitchBodyProps> = ({
+  sortedPitches,
+  callback,
+  currentTab,
+}): ReactElement => (
   <>
     {sortedPitches.length === 0 && (
       <Table.Row>
@@ -99,9 +110,21 @@ const PitchBody: FC<PitchBodyProps> = ({ sortedPitches }): ReactElement => (
         </Table.Cell>
       </Table.Row>
     )}
-    {sortedPitches.map((user, index) => (
-      <PitchRow pitch={user} key={index} />
-    ))}
+    {sortedPitches.map((pitch, index) => {
+      if (currentTab === pitchDocTabs.UNCLAIMED) {
+        return (
+          <ClaimPitchModal callback={callback} key={index} pitch={pitch} />
+        );
+      } else if (currentTab === pitchDocTabs.PITCH_APPROVAL) {
+        return (
+          <ApprovePitchModal callback={callback} key={index} pitch={pitch} />
+        );
+      } else if (currentTab === TABS.CLAIM_APPROVAL) {
+        /* return <PitchCard key={index} pitch={pitch} />; */
+      } else if (currentTab === TABS.APPROVED) {
+        /* return <PitchCard key={index} pitch={pitch} />; */
+      }
+    })}
   </>
 );
 
@@ -153,7 +176,7 @@ const PitchRow: FC<PitchRowProps> = ({ pitch }): ReactElement => {
   );
 };
 
-const PitchTable: FC<PitchTableProps> = ({ pitches }): ReactElement => {
+const PitchTable: FC<PitchTableProps> = ({ pitches, callback, currentTab }): ReactElement => {
   const [sortedPitches, setSortedPitches] = useState<IPitch[]>([]);
 
   useEffect(() => {
@@ -169,7 +192,7 @@ const PitchTable: FC<PitchTableProps> = ({ pitches }): ReactElement => {
           setSortedPitches={setSortedPitches}
         />
       }
-      tableBody={<PitchBody sortedPitches={sortedPitches} />}
+      tableBody={<PitchBody sortedPitches={sortedPitches} callback={callback} currentTab={currentTab}/>}
       singleLine={pitches.length > 0}
     />
   );

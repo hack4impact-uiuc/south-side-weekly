@@ -24,7 +24,7 @@ import { neighborhoods } from '../../../utils/constants';
 import { rolesEnum } from '../../../utils/enums';
 import { classNames, getUserFullName } from '../../../utils/helpers';
 import FieldTag from '../../FieldTag';
-import PitchCard from '../../PitchCard';
+import {PitchRow} from '../../PitchCard';
 import './styles.scss';
 
 interface ApprovePitchProps extends ModalProps {
@@ -241,7 +241,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       open={isOpen}
       onClose={() => setIsOpen(false)}
       onOpen={() => setIsOpen(true)}
-      trigger={<PitchCard pitch={pitch} />}
+      trigger={<PitchRow pitch={pitch} callback={callback}/>}
       className={classNames('approve-pitch-modal', rest.className)}
     >
       <Modal.Header content="Review Pitch" />
