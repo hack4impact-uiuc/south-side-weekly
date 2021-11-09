@@ -1,5 +1,6 @@
 {
   "regions": ["iad1"],
+  "alias": "https://south-side-weekly.vercel.app/",
   "env": {
     "PROD_MONGO_URL": "@ssw_db_url",
     "GOOGLE_CLIENT_ID": "@ssw_google_client_id",
