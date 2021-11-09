@@ -2,7 +2,7 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Table, Button, Icon } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
-import { AdminView, FieldTag, UserModal, UserPicture, TableTool } from '../..';
+import { FieldTag, UserPicture, TableTool } from '../..';
 import { getUserFullName } from '../../../utils/helpers';
 import { useInterests, useTeams } from '../../../contexts';
 import TeamModal from '../../Modals/EditTeam';
