@@ -2,11 +2,9 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Table } from 'semantic-ui-react';
 import { IPitch, IUser } from 'ssw-common';
 
-import { ApprovePitchModal, FieldTag, TableTool } from '../..';
+import { ApprovePitchModal, ClaimPitchModal, FieldTag, TableTool } from '../..';
 import { useAuth, useInterests, useTeams } from '../../../contexts';
-
-import {pitchDocTabs} from "../../../utils/constants"
-
+import { pitchDocTabs } from '../../../utils/constants';
 import './styles.scss';
 
 interface PitchTableProps {
@@ -119,9 +117,9 @@ const PitchBody: FC<PitchBodyProps> = ({
         return (
           <ApprovePitchModal callback={callback} key={index} pitch={pitch} />
         );
-      } else if (currentTab === TABS.CLAIM_APPROVAL) {
+      } else if (currentTab === pitchDocTabs.CLAIM_APPROVAL) {
         /* return <PitchCard key={index} pitch={pitch} />; */
-      } else if (currentTab === TABS.APPROVED) {
+      } else if (currentTab === pitchDocTabs.APPROVED) {
         /* return <PitchCard key={index} pitch={pitch} />; */
       }
     })}
@@ -176,7 +174,11 @@ const PitchRow: FC<PitchRowProps> = ({ pitch }): ReactElement => {
   );
 };
 
-const PitchTable: FC<PitchTableProps> = ({ pitches, callback, currentTab }): ReactElement => {
+const PitchTable: FC<PitchTableProps> = ({
+  pitches,
+  callback,
+  currentTab,
+}): ReactElement => {
   const [sortedPitches, setSortedPitches] = useState<IPitch[]>([]);
 
   useEffect(() => {
@@ -192,10 +194,16 @@ const PitchTable: FC<PitchTableProps> = ({ pitches, callback, currentTab }): Rea
           setSortedPitches={setSortedPitches}
         />
       }
-      tableBody={<PitchBody sortedPitches={sortedPitches} callback={callback} currentTab={currentTab}/>}
+      tableBody={
+        <PitchBody
+          sortedPitches={sortedPitches}
+          callback={callback}
+          currentTab={currentTab}
+        />
+      }
       singleLine={pitches.length > 0}
     />
   );
 };
 
-export default PitchTable;
+export { PitchTable, PitchRow };

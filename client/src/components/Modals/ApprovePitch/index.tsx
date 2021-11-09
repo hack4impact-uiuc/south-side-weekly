@@ -18,13 +18,13 @@ import {
   isError,
 } from '../../../api';
 import { getUsersByTeam } from '../../../api/user';
-import { Select, LinkDisplay, MultiSelect } from '../../../components';
+import { LinkDisplay, MultiSelect, Select } from '../../../components';
 import { useInterests, useTeams } from '../../../contexts';
 import { neighborhoods } from '../../../utils/constants';
 import { rolesEnum } from '../../../utils/enums';
 import { classNames, getUserFullName } from '../../../utils/helpers';
 import FieldTag from '../../FieldTag';
-import {PitchRow} from '../../PitchCard';
+import { PitchRow } from '../../Tables/PitchDoc';
 import './styles.scss';
 
 interface ApprovePitchProps extends ModalProps {
@@ -241,7 +241,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       open={isOpen}
       onClose={() => setIsOpen(false)}
       onOpen={() => setIsOpen(true)}
-      trigger={<PitchRow pitch={pitch} callback={callback}/>}
+      trigger={<PitchRow pitch={pitch} callback={callback} />}
       className={classNames('approve-pitch-modal', rest.className)}
     >
       <Modal.Header content="Review Pitch" />

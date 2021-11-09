@@ -232,7 +232,11 @@ const PitchDoc = (): ReactElement => {
         )}
       </div>
       <div className="pitch-doc">
-        <PitchTable pitches={filteredPitches} callback={callback} currentTab={currentTab}/>
+        <PitchTable
+          pitches={filteredPitches}
+          callback={populatePitches}
+          currentTab={currentTab}
+        />
       </div>
     </div>
   );
