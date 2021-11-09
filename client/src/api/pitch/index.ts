@@ -35,11 +35,12 @@ const submitPitchClaim = async (
   pitchId: string,
   userId: string,
   teams: string[],
+  message: string,
 ): Promise<Pitches> => {
   const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'submitClaim');
   const failureMessage = 'SUBMIT_PITCH_CLAIM_FAIL';
 
-  return await put(url, { userId, teams }, failureMessage);
+  return await put(url, { userId, teams, message }, failureMessage);
 };
 
 const approvePitch = async (
@@ -59,6 +60,15 @@ const declinePitch = async (
   const failureMessage = 'DECLINE_CLAIM_FAIL';
 
   return await put(url, {}, failureMessage);
+};
+
+const aggregatePitch = async (
+  pitchId: string,
+): Promise<Response<AggregatedPitchResponse>> => {
+  const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'aggregate');
+  const failureMessage = 'GET_AGGREGATE_FAIL';
+
+  return await get(url, failureMessage);
 };
 
 // Updates the information on a pitch
@@ -115,4 +125,5 @@ export {
   getUnclaimedPitches,
   approvePitch,
   declinePitch,
+  aggregatePitch,
 };
