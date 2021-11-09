@@ -238,7 +238,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
       open={isOpen}
       onClose={() => setIsOpen(false)}
       onOpen={() => setIsOpen(true)}
-      trigger={<PitchRow pitch={pitch} callback={callback} />}
+      trigger={<PitchRow pitch={pitch} />}
       className="claim-modal"
       {...rest}
     >

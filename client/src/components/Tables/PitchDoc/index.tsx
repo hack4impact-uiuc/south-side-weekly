@@ -27,7 +27,6 @@ interface PitchBodyProps {
 
 interface PitchRowProps {
   pitch: IPitch;
-  callback(): void;
 }
 
 const titleSort = (a: IPitch, b: IPitch): number =>
@@ -118,9 +117,11 @@ const PitchBody: FC<PitchBodyProps> = ({
           <ApprovePitchModal callback={callback} key={index} pitch={pitch} />
         );
       } else if (currentTab === pitchDocTabs.CLAIM_APPROVAL) {
-        /* return <PitchCard key={index} pitch={pitch} />; */
+        //TODO: Replace PitchRow with the modal component
+        return <PitchRow pitch={pitch} />;
       } else if (currentTab === pitchDocTabs.APPROVED) {
-        /* return <PitchCard key={index} pitch={pitch} />; */
+        //TODO: Replace PitchRow with the modal component
+        return <PitchRow pitch={pitch} />;
       }
     })}
   </>
@@ -133,13 +134,13 @@ const getClaimableTeams = (pitch: IPitch, user: IUser): string[] =>
         .map((team) => team.teamId)
     : [];
 
-const PitchRow: FC<PitchRowProps> = ({ pitch }): ReactElement => {
+const PitchRow: FC<PitchRowProps> = ({ pitch, ...rest }): ReactElement => {
   const { user } = useAuth();
   const { getInterestById } = useInterests();
   const { getTeamFromId } = useTeams();
 
   return (
-    <Table.Row>
+    <Table.Row {...rest}>
       <Table.Cell>{pitch.title}</Table.Cell>
       <Table.Cell>{pitch.description}</Table.Cell>
       <Table.Cell>

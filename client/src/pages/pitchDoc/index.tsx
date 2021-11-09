@@ -50,7 +50,7 @@ const PitchDoc = (): ReactElement => {
 
   const getApproved = async (): Promise<void> => {
     const res = await getApprovedPitches();
-
+    console.log(res);
     if (!isError(res)) {
       setApproved(res.data.result);
     }

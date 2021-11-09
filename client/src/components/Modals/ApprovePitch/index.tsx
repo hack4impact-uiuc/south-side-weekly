@@ -241,7 +241,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       open={isOpen}
       onClose={() => setIsOpen(false)}
       onOpen={() => setIsOpen(true)}
-      trigger={<PitchRow pitch={pitch} callback={callback} />}
+      trigger={<PitchRow pitch={pitch} />}
       className={classNames('approve-pitch-modal', rest.className)}
     >
       <Modal.Header content="Review Pitch" />
