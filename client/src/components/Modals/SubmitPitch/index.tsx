@@ -73,7 +73,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [link, setLink] = useState('');
-  const [topics, setTopics] = useState<string[]>([]);
+  const [interests, setInterests] = useState<string[]>([]);
   const [conflictofInterest, setConflictOfInterest] = useState<
     boolean | undefined
   >();
@@ -88,7 +88,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
     setConflictOfInterest(undefined);
     setDidSubmit(false);
     setWriterChoice(undefined);
-    setTopics([]);
+    setInterests([]);
   }, [isOpen]);
 
   const submitPitch = async (): Promise<void> => {
@@ -105,7 +105,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
       assignmentGoogleDocLink: link,
       status: 'PENDING',
       description: description,
-      topics: topics,
+      topics: interests,
       conflictOfInterest: conflictofInterest!,
     };
 
@@ -129,7 +129,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
   };
 
   const isInvalidForm = (): boolean =>
-    [title, description, link, topics].some(isEmpty) ||
+    [title, description, link, interests].some(isEmpty) ||
     isUndefined(conflictofInterest);
 
   const isFieldError = (
@@ -195,13 +195,14 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
               error={isFieldError(description)}
             />
             <h5 className="label-topics">
-              Associated Topics<p className="unbold">(select 1-4 topics) </p>
+              Associated Interests
+              <p className="unbold">(select 1-4 interests) </p>
             </h5>
             <InterestsSelect
-              values={topics}
+              values={interests}
               onChange={(values) => {
                 if (values.length <= 4) {
-                  setTopics(values.map((item) => item.value));
+                  setInterests(values.map((item) => item.value));
                 }
               }}
             />
