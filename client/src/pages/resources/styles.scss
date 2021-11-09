@@ -1,21 +1,17 @@
 @import '../../styles/colors.scss';
 
 .resources-page {
-  .calendly-button {
-    display: flex;
-    flex-direction: row;
-    align-items: flex-start;
-    border: 1px solid #5a72e1;
-    box-sizing: border-box;
-    border-radius: 5px;
-    background-color: transparent;
-    color: #5a72e1;
-    position: absolute;
-    right: 3.78%;
-  }
   .controls {
     display: flex;
     align-items: center;
+
+    .calendly-button {
+      border: 1px solid #5a72e1;
+      box-sizing: border-box;
+      border-radius: 5px;
+      background-color: transparent;
+      color: #5a72e1;
+    }
 
     .inactive {
       background-color: white;

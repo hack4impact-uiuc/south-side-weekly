@@ -112,24 +112,23 @@ const Resources = (): ReactElement => {
         />
         <div className="controls">
           <h1>Resource Page</h1>
-          <div>
+          <div className="slider">
             <AdminView>
               <Radio checked={edit} slider onClick={() => setEdit(!edit)} />
             </AdminView>
           </div>
+          <div className="push" />
           {!edit && (
             <Button
-              className="calendly-button"
               onClick={() =>
                 openPopupWidget({
                   url: 'https://calendly.com/sawhney4/60min',
                 })
               }
-            >
-              Schedule Office Hours
-            </Button>
+              content="Schedule Office Hour"
+              className="calendly-button"
+            />
           )}
-          <div className="push" />
           {edit && (
             <Button
               onClick={() => openModal('create')}
