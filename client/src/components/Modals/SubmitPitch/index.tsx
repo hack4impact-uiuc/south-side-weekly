@@ -29,6 +29,10 @@ const notify = (): string =>
   toast.error('Please fill out all the fields before submitting!', {
     position: 'bottom-right',
   });
+const interestNotify = (): string =>
+  toast.error("You can't select more than 4 interests", {
+    position: 'bottom-right',
+  });
 
 const HelperMessage = (): ReactElement => (
   <>
@@ -203,6 +207,8 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
               onChange={(values) => {
                 if (values.length <= 4) {
                   setInterests(values.map((item) => item.value));
+                } else {
+                  interestNotify();
                 }
               }}
             />
