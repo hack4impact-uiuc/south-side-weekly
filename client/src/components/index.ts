@@ -21,6 +21,7 @@ import ApprovePitchModal from './Modals/ApprovePitch';
 import MultiSelect from './Dropdowns/MultiSelect';
 import Select from './Dropdowns/Select';
 import DirectoryTable from './Tables/Directory';
+import OnboardingTable from './Tables/Onboarding';
 import PitchTable from './Tables/PitchDoc';
 import TableTool from './Tables/TableTool';
 import Walkthrough from './Walkthrough';
@@ -52,6 +53,7 @@ export {
   MultiSelect,
   Select,
   DirectoryTable,
+  OnboardingTable,
   PitchTable,
   TableTool,
   Walkthrough,

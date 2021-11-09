@@ -7,9 +7,11 @@ import { getUserFullName } from '../../../utils/helpers';
 import { useInterests, useTeams } from '../../../contexts';
 import TeamModal from '../../Modals/EditTeam';
 
+import './styles.scss';
+
 const ROLE_WIDTH = 2;
 const PIC_WIDTH = 1;
-const ACTION_WIDTH = 8;
+const ACTION_WIDTH = 3;
 const JOINED_WIDTH = 1;
 
 interface OnboardingHeaderProps {
@@ -105,13 +107,7 @@ const OnboardingHeader: FC<OnboardingHeaderProps> = ({
       </Table.HeaderCell>
       <Table.HeaderCell>
         Teams
-        <TeamModal
-          trigger={
-            <Button className="edit-button" size="tiny" circular icon>
-              <Icon name="pencil" />
-            </Button>
-          }
-        />
+        <TeamModal/>
       </Table.HeaderCell>
       <Table.HeaderCell>
         Interests
@@ -169,8 +165,10 @@ const OnboardingRow: FC<OnboardingRowProps> = ({ user }): ReactElement => {
         {new Date(user.dateJoined).getDate()}
       </Table.Cell>
       <Table.Cell width={ACTION_WIDTH}>
-        <Button className="decline-button">Decline</Button>
-        <Button className="approve-button">Approve</Button>
+        <div className="actions">
+            <Button id="decline" className="edit-button" size="small" compact>Decline</Button>
+            <Button id="approve" className="edit-button" size="small" compact>Approve</Button>
+        </div>
       </Table.Cell>
     </Table.Row>
   );
