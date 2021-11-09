@@ -11,6 +11,7 @@ export {
   getApprovedPitches,
   updatePitch,
   submitPitchClaim,
+  aggregatePitch,
   getPitchesPendingApproval,
   getUnclaimedPitches,
   getPendingContributorPitches,
