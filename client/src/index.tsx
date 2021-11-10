@@ -22,7 +22,6 @@ import { PrivateRoute, ProviderWrapper } from './components';
 import 'semantic-ui-css/semantic.min.css';
 import './styles/styles.scss';
 
-
 const routes = [
   {
     path: '/users',
