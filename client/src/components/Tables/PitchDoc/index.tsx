@@ -1,17 +1,22 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Table } from 'semantic-ui-react';
-import { IPitch } from 'ssw-common';
+import { IPitch, IUser } from 'ssw-common';
 
-import { FieldTag, TableTool } from '../..';
+import {
+  ApprovePitchModal,
+  ClaimPitchModal,
+  FieldTag,
+  TableTool,
+  ViewPitchModal,
+} from '../..';
 import { useAuth, useInterests, useTeams } from '../../../contexts';
-import { getClaimableTeams } from '../../../utils/helpers';
-import ClaimPitchModal from '../../Modals/ClaimPitch';
-
+import { pitchDocTabs } from '../../../utils/constants';
 import './styles.scss';
 
 interface PitchTableProps {
   pitches: IPitch[];
   callback(): void;
+  currentTab: string;
 }
 
 interface PitchHeaderProps {
@@ -23,11 +28,11 @@ interface PitchHeaderProps {
 interface PitchBodyProps {
   sortedPitches: IPitch[];
   callback(): void;
+  currentTab: string;
 }
 
 interface PitchRowProps {
   pitch: IPitch;
-  callback(): void;
 }
 
 const titleSort = (a: IPitch, b: IPitch): number =>
@@ -98,6 +103,7 @@ const PitchHeader: FC<PitchHeaderProps> = ({
 const PitchBody: FC<PitchBodyProps> = ({
   sortedPitches,
   callback,
+  currentTab,
 }): ReactElement => (
   <>
     {sortedPitches.length === 0 && (
@@ -107,27 +113,40 @@ const PitchBody: FC<PitchBodyProps> = ({
         </Table.Cell>
       </Table.Row>
     )}
-    {sortedPitches.map((user, index) => (
-      <PitchRow pitch={user} key={index} callback={callback} />
-    ))}
+    {sortedPitches.map((pitch, index) => {
+      if (currentTab === pitchDocTabs.UNCLAIMED) {
+        return (
+          <ClaimPitchModal callback={callback} key={index} pitch={pitch} />
+        );
+      } else if (currentTab === pitchDocTabs.PITCH_APPROVAL) {
+        return (
+          <ApprovePitchModal callback={callback} key={index} pitch={pitch} />
+        );
+      } else if (currentTab === pitchDocTabs.CLAIM_APPROVAL) {
+        //TODO: Replace PitchRow with the modal component
+        return <PitchRow pitch={pitch} />;
+      } else if (currentTab === pitchDocTabs.APPROVED) {
+        //TODO: Replace PitchRow with the modal component
+        return <ViewPitchModal key={index} pitch={pitch} />;
+      }
+    })}
   </>
 );
 
-const PitchRow: FC<PitchRowProps> = ({ pitch, callback }): ReactElement => {
+const getClaimableTeams = (pitch: IPitch, user: IUser): string[] =>
+  pitch.writer
+    ? pitch.teams
+        .filter((team) => team.target > 0 && user.teams.includes(team.teamId))
+        .map((team) => team.teamId)
+    : [];
+
+const PitchRow: FC<PitchRowProps> = ({ pitch, ...rest }): ReactElement => {
   const { user } = useAuth();
   const { getInterestById } = useInterests();
   const { getTeamFromId } = useTeams();
 
-  const [isOpen, setIsOpen] = useState(false);
-
   return (
-    <Table.Row onClick={() => setIsOpen(true)}>
-      <ClaimPitchModal
-        callback={callback}
-        pitch={pitch}
-        isOpen={isOpen}
-        setIsOpen={setIsOpen}
-      />
+    <Table.Row {...rest}>
       <Table.Cell>{pitch.title}</Table.Cell>
       <Table.Cell>{pitch.description}</Table.Cell>
       <Table.Cell>
@@ -165,6 +184,7 @@ const PitchRow: FC<PitchRowProps> = ({ pitch, callback }): ReactElement => {
 const PitchTable: FC<PitchTableProps> = ({
   pitches,
   callback,
+  currentTab,
 }): ReactElement => {
   const [sortedPitches, setSortedPitches] = useState<IPitch[]>([]);
 
@@ -182,11 +202,15 @@ const PitchTable: FC<PitchTableProps> = ({
         />
       }
       tableBody={
-        <PitchBody sortedPitches={sortedPitches} callback={callback} />
+        <PitchBody
+          sortedPitches={sortedPitches}
+          callback={callback}
+          currentTab={currentTab}
+        />
       }
       singleLine={pitches.length > 0}
     />
   );
 };
 
-export default PitchTable;
+export { PitchTable, PitchRow };

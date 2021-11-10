@@ -3,6 +3,7 @@ import { Button, Form, Icon, Modal, ModalProps } from 'semantic-ui-react';
 import { IPitch, IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
 
+import { PitchRow } from '../..';
 import { isError, submitPitchClaim } from '../../../api';
 import { getAggregatedPitch } from '../../../api/pitch';
 import { useAuth, useTeams } from '../../../contexts';
@@ -16,17 +17,14 @@ import './styles.scss';
 interface ClaimPitchProps extends ModalProps {
   pitch: IPitch;
   callback(): void;
-  isOpen: boolean;
-  setIsOpen(isOpen: boolean): void;
 }
 
 const ClaimPitchModal: FC<ClaimPitchProps> = ({
   pitch,
   callback,
-  isOpen,
-  setIsOpen,
   ...rest
 }): ReactElement => {
+  const [isOpen, setIsOpen] = useState(false);
   const [checkboxes, setCheckboxes] = useState(new Map<string, boolean>());
   const [message, setMessage] = useState('');
   const [didSubmit, setDidSubmit] = useState(false);
@@ -240,6 +238,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
       open={isOpen}
       onClose={() => setIsOpen(false)}
       onOpen={() => setIsOpen(true)}
+      trigger={<PitchRow pitch={pitch} />}
       className="claim-modal"
       {...rest}
     >

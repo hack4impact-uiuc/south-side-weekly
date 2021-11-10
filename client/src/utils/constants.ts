@@ -1,6 +1,7 @@
 import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
 
 import { wizardPages } from './enums';
+import neighborhoods from './neighborhoods';
 
 const allGenders = ['Man', 'Woman', 'Nonbinary', 'Other'];
 const allPronouns = ['He/his', 'She/her', 'They/them', 'Ze/hir', 'Other'];
@@ -28,6 +29,13 @@ const contributorPages = [
   wizardPages.ONBOARD_4,
   wizardPages.ONBOARD_5,
 ];
+
+const pitchDocTabs = {
+  UNCLAIMED: 'Claim a Pitch',
+  APPROVED: 'View All Pitches',
+  PITCH_APPROVAL: 'Review Pitches',
+  CLAIM_APPROVAL: 'Assign Pitch Contributors',
+};
 
 const emptyUser: IUser = {
   _id: '',
@@ -78,6 +86,7 @@ const emptyPitch: IPitch = {
   reviewedBy: '',
   similarStories: [],
   deadline: new Date(),
+  neighborhoods: [],
 };
 
 const emptyAggregatePitch: IPitchAggregate = {
@@ -106,4 +115,6 @@ export {
   emptyAggregatePitch,
   staffPages,
   contributorPages,
+  pitchDocTabs,
+  neighborhoods,
 };
