@@ -45,7 +45,6 @@ router.get(
 // Create a new issue
 router.post(
   '/',
-  requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
     const newIssue = await Issue.create(req.body);
     if (newIssue) {
