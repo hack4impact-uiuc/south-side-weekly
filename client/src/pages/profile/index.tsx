@@ -101,7 +101,7 @@ const Profile = (): ReactElement => {
   }, [userId]);
 
   /**
-   * Adds a dropdown option that was input by the user
+   * Adds a dropdown option that was input by the user.
    *
    * @param dropdown the dropdown to update
    * @param addedItem the new item to add
