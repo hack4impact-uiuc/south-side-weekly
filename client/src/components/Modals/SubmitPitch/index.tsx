@@ -1,6 +1,6 @@
 import { isEmpty, isUndefined, toString } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import {
   Button,
   Form,
@@ -15,7 +15,7 @@ import Swal from 'sweetalert2';
 
 import { InterestsSelect } from '../..';
 import { createPitch, isError } from '../../../api';
-import { useAuth } from '../../../contexts';
+import { useAuth, useTeams } from '../../../contexts';
 
 import './styles.scss';
 
@@ -78,12 +78,11 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
   const [description, setDescription] = useState('');
   const [link, setLink] = useState('');
   const [interests, setInterests] = useState<string[]>([]);
-  const [conflictofInterest, setConflictOfInterest] = useState<
-    boolean | undefined
-  >();
+  const [conflictofInterest, setConflictOfInterest] = useState<boolean>();
   const [didSubmit, setDidSubmit] = useState(false);
   const [writerChoice, setWriterChoice] = useState<boolean>();
   const { user } = useAuth();
+  const { teams } = useTeams();
 
   useEffect(() => {
     setTitle('');
@@ -132,6 +131,11 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
     return;
   };
 
+  const isWriter = (): boolean => {
+    const writerObject = teams.filter((team) => team.name === 'Writing');
+    return user.teams.includes(writerObject[0] ? writerObject[0]._id : '');
+  };
+
   const isInvalidForm = (): boolean =>
     [title, description, link, interests].some(isEmpty) ||
     isUndefined(conflictofInterest);
@@ -153,128 +157,113 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
   };
 
   return (
-    <div>
-      <Toaster></Toaster>
-      <Modal
-        trigger={<Button className="default-btn" content="Submit a Pitch" />}
-        open={isOpen}
-        className="submit-modal"
-        onOpen={() => setIsOpen(true)}
-        onClose={() => setIsOpen(false)}
-        {...rest}
-      >
-        <Modal.Header>
-          <span style={{ paddingRight: '10px' }}>Submit a pitch</span>
-          <Popup
-            content={HelperMessage()}
-            trigger={<Icon size="small" name="info circle" />}
-            position="bottom left"
-            wide="very"
-            hoverable
+    <Modal
+      trigger={<Button className="default-btn" content="Submit a Pitch" />}
+      open={isOpen}
+      className="submit-modal"
+      onOpen={() => setIsOpen(true)}
+      onClose={() => setIsOpen(false)}
+      {...rest}
+    >
+      <Modal.Header>
+        <span style={{ paddingRight: '10px' }}>Submit a pitch</span>
+        <Popup
+          content={HelperMessage()}
+          trigger={<Icon size="small" name="info circle" />}
+          position="bottom left"
+          wide="very"
+          hoverable
+        />
+      </Modal.Header>
+      <Modal.Content>
+        <Form id="submit-pitch" onSubmit={submitPitch}>
+          <Form.Group widths="equal">
+            <Form.Input
+              error={isFieldError(title)}
+              label={<h5>Pitch Title</h5>}
+              value={title}
+              onChange={(e, { value }) => setTitle(value)}
+            />
+          </Form.Group>
+          <Form.Group widths="equal">
+            <Form.Input
+              error={isFieldError(link)}
+              label={<h5>Google Doc Link</h5>}
+              value={link}
+              onChange={(e, { value }) => setLink(value)}
+            />
+          </Form.Group>
+          <Form.TextArea
+            maxLength={MAX_LENGTH}
+            value={description}
+            onChange={(e, { value }) => setDescription(toString(value))}
+            label={<h5>Description</h5>}
+            error={isFieldError(description)}
           />
-        </Modal.Header>
-        <Modal.Content>
-          <Form id="submit-pitch" onSubmit={submitPitch}>
-            <Form.Group widths="equal">
-              <Form.Input
-                error={isFieldError(title)}
-                label={<h5 className="label">Pitch Title</h5>}
-                value={title}
-                onChange={(e, { value }) => setTitle(value)}
-              />
-            </Form.Group>
-            <Form.Group widths="equal">
-              <Form.Input
-                error={isFieldError(link)}
-                label={<h5 className="label">Google Doc Link</h5>}
-                value={link}
-                onChange={(e, { value }) => setLink(value)}
-              />
-            </Form.Group>
-            <Form.TextArea
-              maxLength={MAX_LENGTH}
-              value={description}
-              onChange={(e, { value }) => setDescription(toString(value))}
-              label={<h5 className="label">Description</h5>}
-              error={isFieldError(description)}
-            />
-            <h5 className="label-topics">
-              Associated Interests
-              <p className="unbold">(select 1-4 interests) </p>
-            </h5>
-            <InterestsSelect
-              values={interests}
-              onChange={(values) => {
-                if (values.length <= 4) {
-                  setInterests(values.map((item) => item.value));
-                } else {
-                  interestNotify();
-                }
-              }}
-            />
-            {user.role === 'WRITER' ? (
-              <div>
-                {' '}
-                <h5 className="label">
-                  Do you want to be the writer of the story?{' '}
-                </h5>
-                <Form.Group inline>
-                  <Form.Radio
-                    name="writer-choice"
-                    label="Yes"
-                    onClick={() => setWriterChoice(true)}
-                    checked={writerChoice}
-                    error={isFieldError(writerChoice)}
-                  />
-                  <Form.Radio
-                    name="writer-choice"
-                    label="No, I want someone else to write the story"
-                    onClick={() => setWriterChoice(false)}
-                    checked={!isUndefined(writerChoice) && !writerChoice}
-                    error={isFieldError(writerChoice)}
-                  />
-                </Form.Group>{' '}
-              </div>
-            ) : (
-              <></>
-            )}
+          <h5 className="label-topics">
+            Associated Interests
+            <p className="unbold">(select 1-4 interests) </p>
+          </h5>
+          <InterestsSelect
+            values={interests}
+            onChange={(values) => {
+              if (values.length <= 4) {
+                setInterests(values.map((item) => item.value));
+              } else {
+                interestNotify();
+              }
+            }}
+          />
+          {isWriter() && (
+            <>
+              <h5>Do you want to be the writer of the story? </h5>
+              <Form.Group inline>
+                <Form.Radio
+                  name="writer-choice"
+                  label="Yes"
+                  onClick={() => setWriterChoice(true)}
+                  checked={writerChoice}
+                  error={isFieldError(writerChoice)}
+                />
+                <Form.Radio
+                  name="writer-choice"
+                  label="No, I want someone else to write the story"
+                  onClick={() => setWriterChoice(false)}
+                  checked={!isUndefined(writerChoice) && !writerChoice}
+                  error={isFieldError(writerChoice)}
+                />
+              </Form.Group>{' '}
+            </>
+          )}
 
-            <h5 className="label">Conflict of Interest Disclosure</h5>
-            <p>
-              Are you involved with the events or people covered in your pitch?
-              i.e. do you have a relationship with them as an employee, family
-              member, friend, or donor?
-            </p>
-            <Form.Group inline>
-              <Form.Radio
-                name="interest-conflict"
-                label="Yes"
-                onClick={() => setConflictOfInterest(true)}
-                checked={conflictofInterest}
-                error={isFieldError(conflictofInterest)}
-              />
-              <Form.Radio
-                name="interest-conflict"
-                label="No"
-                onClick={() => setConflictOfInterest(false)}
-                checked={
-                  !isUndefined(conflictofInterest) && !conflictofInterest
-                }
-                error={isFieldError(conflictofInterest)}
-              />
-            </Form.Group>
-          </Form>
-          <Modal.Actions>
-            <Button
-              type="submit"
-              content="Submit"
-              positive
-              form="submit-pitch"
+          <h5>Conflict of Interest Disclosure</h5>
+          <p>
+            Are you involved with the events or people covered in your pitch?
+            i.e. do you have a relationship with them as an employee, family
+            member, friend, or donor?
+          </p>
+          <Form.Group inline>
+            <Form.Radio
+              name="interest-conflict"
+              label="Yes"
+              onClick={() => setConflictOfInterest(true)}
+              checked={conflictofInterest}
+              error={isFieldError(conflictofInterest)}
             />
-          </Modal.Actions>
-        </Modal.Content>
-      </Modal>
-    </div>
+            <Form.Radio
+              name="interest-conflict"
+              label="No"
+              onClick={() => setConflictOfInterest(false)}
+              checked={!isUndefined(writerChoice) && !conflictofInterest}
+              error={isFieldError(conflictofInterest)}
+            />
+          </Form.Group>
+        </Form>
+        <Modal.Actions>
+          <Button type="submit" content="Submit" positive form="submit-pitch" />
+        </Modal.Actions>
+      </Modal.Content>
+    </Modal>
   );
 };
 

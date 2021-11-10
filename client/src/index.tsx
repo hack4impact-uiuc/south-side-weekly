@@ -7,6 +7,7 @@ import {
   Switch,
 } from 'react-router-dom';
 import 'semantic-ui-css/semantic.min.css';
+import { Toaster } from 'react-hot-toast';
 
 import {
   Directory,
@@ -55,6 +56,7 @@ const routes = [
 ReactDOM.render(
   <React.StrictMode>
     <ProviderWrapper>
+      <Toaster />
       <Router>
         <Switch>
           <Route exact path="/">
