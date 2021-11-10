@@ -3,10 +3,16 @@ import { errorWrap } from '../middleware';
 
 import User from '../models/user';
 import Pitch from '../models/pitch';
+import Team from '../models/team';
 import { getEditableFields, getViewableFields } from '../utils/user-utils';
-import { requireAdmin, requireRegistered } from '../middleware/auth';
-import { rolesEnum } from '../utils/enums';
+import {
+  requireAdmin,
+  requireRegistered,
+  requireRequestSecret,
+} from '../middleware/auth';
+import { onboardingStatusEnum, rolesEnum } from '../utils/enums';
 import { aggregateUser } from '../utils/aggregate-utils';
+import timezone from '../middleware/timezone';
 
 const router = express.Router();
 
@@ -216,6 +222,45 @@ router.get(
   }),
 );
 
+// An endpoint to get all of the users on a specific team
+router.get(
+  '/all/team/:teamName',
+  //requireAdmin,
+  errorWrap(async (req: Request, res: Response) => {
+    const teamName = req.params.teamName;
+
+    if (!teamName) {
+      res.status(400).json({
+        success: false,
+        message: 'Team id is required',
+      });
+      return;
+    }
+
+    const team = await Team.findOne({ name: teamName }).lean();
+
+    if (!team) {
+      res.status(404).json({
+        success: false,
+        message: 'Team not found with name',
+      });
+      return;
+    }
+
+    const users = await User.find({
+      teams: {
+        $in: [team._id],
+      },
+    }).lean();
+
+    res.status(200).json({
+      message: `Successfully retrieved all users on team.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
 // Adds new page to user's list of visited pages
 router.post(
   '/visitPage',
@@ -239,6 +284,39 @@ router.post(
         message: `Successfully added page to user's visited pages`,
       });
     }
+  }),
+);
+
+// One day short of two weeks to account for onboarding statuses
+// that will switch to stalled that day.
+const TWO_WEEKS_AGO = 13;
+// Updates all user onboarding statuses for users who haven't been onboarded in two weeks to stalled
+router.post(
+  '/update-stalled',
+  requireRequestSecret,
+  timezone('America/Chicago'),
+  errorWrap(async (req: Request, res: Response) => {
+    const twoWeeksAgoDate = new Date();
+    twoWeeksAgoDate.setDate(twoWeeksAgoDate.getDate() - TWO_WEEKS_AGO);
+
+    // Find all users that were created more than two weeks ago and have a scheduled onboarding
+    // and update these onboarding statuses to 'STALLED'
+    await User.updateMany(
+      {
+        dateJoined: { $lt: twoWeeksAgoDate },
+        onboardingStatus: onboardingStatusEnum.ONBOARDING_SCHEDULED,
+      },
+      {
+        $set: {
+          onboardingStatus: onboardingStatusEnum.STALLED,
+        },
+      },
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully updated user documents',
+    });
   }),
 );
 

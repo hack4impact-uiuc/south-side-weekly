@@ -226,14 +226,15 @@ router.put(
   '/:pitchId/approve',
   requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
-    const { teams } = req.body;
+    const { pitchData, response } = req.body;
+
+    //TODO: Add response to mail message
+    console.log(response);
 
     const pitch = await Pitch.findByIdAndUpdate(req.params.pitchId, {
-      $set: {
-        status: pitchStatusEnum.APPROVED,
-        reviewedBy: req.user._id,
-        teams: teams,
-      },
+      status: pitchStatusEnum.APPROVED,
+      reviewedBy: req.user._id,
+      ...pitchData,
     });
 
     if (!pitch) {
@@ -243,6 +244,7 @@ router.put(
       });
       return;
     }
+
     const author = await User.findById(pitch.author);
     const message = approvedMessage(author, pitch, req.user);
     await sendMail(message);
