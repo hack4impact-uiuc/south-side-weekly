@@ -39,9 +39,6 @@ require('./setup/passport-setup');
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Cron jobs
-require('./cron/onboarding-status');
-
 // Routes
 app.use('/api', apiRoutes);
 app.get('/', (req: Request, res: Response) => res.json('API working!'));
