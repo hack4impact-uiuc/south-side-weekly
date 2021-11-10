@@ -5,6 +5,7 @@ import { ParsedQs } from 'qs';
 import { errorWrap } from '../middleware';
 
 const CALLBACK_ROUTE = '/api/auth/google/callback';
+const LOGIN_SUCCESS_REDIRECT = process.env.FE_URI ? process.env.FE_URI : '/';
 
 interface IQuery {
   state: any;
@@ -52,13 +53,13 @@ router.get(
 );
 
 router.get('/login', (req: Request, res: Response, next: NextFunction) => {
-  const { successRedirect = '/', failureRedirect = '/login' } = req.query;
+  const { failureRedirect = '/login' } = req.query;
 
   const callbackUrl = `${req.protocol}://${req.get('host')}${CALLBACK_ROUTE}`;
 
   const state: IState = {
     callbackUrl,
-    successRedirect,
+    successRedirect: LOGIN_SUCCESS_REDIRECT,
     failureRedirect,
   };
 
