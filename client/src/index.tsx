@@ -20,6 +20,7 @@ import Wizard from './wizard';
 import { PrivateRoute, ProviderWrapper } from './components';
 
 import './styles/styles.scss';
+import { Toaster } from 'react-hot-toast';
 
 const routes = [
   {
@@ -55,6 +56,7 @@ const routes = [
 ReactDOM.render(
   <React.StrictMode>
     <ProviderWrapper>
+      <Toaster />
       <Router>
         <Switch>
           <Route exact path="/">

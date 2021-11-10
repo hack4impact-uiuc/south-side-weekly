@@ -1,4 +1,5 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { Form, Modal, ModalProps } from 'semantic-ui-react';
 import { IResource } from 'ssw-common';
 import Swal from 'sweetalert2';
@@ -7,6 +8,7 @@ import { createResource, editResource, isError } from '../../../api';
 import './styles.scss';
 import { visibilityEnum } from '../../../utils/enums';
 import TeamsSelect from '../../Dropdowns/TeamsSelect';
+import { isEmpty } from 'lodash';
 
 interface ResourceProps extends ModalProps {
   resource?: IResource;
@@ -82,6 +84,17 @@ const ResourceModal: FC<ResourceProps> = ({
 
   const submitResource = async (): Promise<void> => {
     const res = await createResource({ ...parseFormData(formData) });
+    const emptyForm = [
+      formData.name,
+      formData.link,
+      formData.teams,
+      formData.visibility,
+    ].some(isEmpty);
+
+    if (emptyForm) {
+      notify();
+      return;
+    }
 
     if (isError(res)) {
       Swal.fire({
@@ -106,6 +119,11 @@ const ResourceModal: FC<ResourceProps> = ({
     data[key] = value;
     setFormData(data);
   };
+
+  const notify = (): string =>
+    toast.error('Please fill out all the fields before submitting!', {
+      position: 'bottom-right',
+    });
 
   return (
     <Modal className="resource-modal" {...rest}>
