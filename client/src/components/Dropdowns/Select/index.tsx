@@ -14,6 +14,7 @@ interface SelectProps {
     actionMeta: ActionMeta<SelectOption>,
   ) => void;
   placeholder?: string;
+  className?: string | undefined;
 }
 
 const Select: FC<SelectProps> = ({
@@ -21,6 +22,7 @@ const Select: FC<SelectProps> = ({
   value,
   onChange,
   placeholder = '',
+  className = undefined,
 }): ReactElement => (
   <ReactSelect<SelectOption>
     placeholder={placeholder}
@@ -28,6 +30,7 @@ const Select: FC<SelectProps> = ({
     options={options}
     onChange={onChange}
     isClearable
+    className={className}
   />
 );
 

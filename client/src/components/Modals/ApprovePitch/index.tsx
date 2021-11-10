@@ -1,14 +1,7 @@
 import { isEmpty } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import {
-  Button,
-  Form,
-  Grid,
-  Label,
-  Modal,
-  ModalProps,
-} from 'semantic-ui-react';
-import { IPitch, IUser } from 'ssw-common';
+import { Button, Form, Grid, Modal, ModalProps } from 'semantic-ui-react';
+import { IPitch, ITeam, IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
 
 import {
@@ -25,6 +18,7 @@ import { rolesEnum } from '../../../utils/enums';
 import { classNames, getUserFullName } from '../../../utils/helpers';
 import FieldTag from '../../FieldTag';
 import { PitchRow } from '../../Tables/PitchDoc';
+import UserChip from '../../UserChip';
 import './styles.scss';
 
 interface ApprovePitchProps extends ModalProps {
@@ -69,8 +63,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   ...rest
 }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
-  const [author, setAuthor] = useState('');
-  const [authorImage, setAuthorImage] = useState<string | undefined>('');
+  const [author, setAuthor] = useState<Partial<IUser>>({});
   const [formData, setFormData] = useState<FormData>(defaultData);
   const [editors, setEditors] = useState<IUser[]>([]);
   const [writers, setWriters] = useState<IUser[]>([]);
@@ -89,8 +82,11 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
 
       if (!isError(res)) {
         const { author } = res.data.result.aggregated;
-        setAuthor(getUserFullName(author));
-        setAuthorImage(author.profilePic);
+        setAuthor(author);
+
+        if (res.data.result.writer) {
+          changeField('writer', res.data.result.writer);
+        }
       }
     };
 
@@ -115,7 +111,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
     fetchAggregatedPitch();
 
     return () => {
-      setAuthor('');
+      setAuthor({});
       setFormData({ ...defaultData });
     };
   }, [isOpen, pitch._id]);
@@ -144,16 +140,22 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
     return teamMapCopy;
   };
 
-  const changeIssue = (issueType: string): IPitch['issues'] => {
+  const changeIssue = (
+    issueType: string,
+    date: Date,
+    checkBox = true,
+  ): IPitch['issues'] => {
     const issues = formData.issues;
     const indexOfIssue = issues.findIndex(
       (issue) => issue.format === issueType,
     );
     const notFoundIndex = -1;
     if (indexOfIssue === notFoundIndex) {
-      issues.push({ format: issueType, publicationDate: new Date() });
-    } else {
+      issues.push({ format: issueType, publicationDate: date });
+    } else if (checkBox) {
       issues.splice(indexOfIssue, 1);
+    } else {
+      issues[indexOfIssue].publicationDate = date;
     }
     const issuesCopy = [...issues];
     return issuesCopy;
@@ -165,6 +167,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   ): void => {
     const data = { ...formData };
     data[key] = value;
+    console.log(data);
     setFormData(data);
   };
 
@@ -232,8 +235,43 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
     }
   };
 
-  const filterAdmin = (users: IUser[]): IUser[] =>
-    users.filter((user) => user.role === rolesEnum.ADMIN);
+  const filterPrimaryEditors = (users: IUser[]): IUser[] =>
+    users.filter(
+      (user) =>
+        user.role === rolesEnum.ADMIN &&
+        !formData.secondEditors.includes(user._id) &&
+        !formData.thirdEditors.includes(user._id),
+    );
+
+  const filterSecondaryEditors = (users: IUser[]): IUser[] =>
+    users.filter(
+      (user) =>
+        user._id !== formData.primaryEditor &&
+        !formData.thirdEditors.includes(user._id),
+    );
+
+  const filterTertiaryEditors = (users: IUser[]): IUser[] =>
+    users.filter(
+      (user) =>
+        user._id !== formData.primaryEditor &&
+        !formData.secondEditors.includes(user._id),
+    );
+
+  const isChecked = (issueFormat: string): boolean =>
+    formData.issues.some(({ format }) => format === issueFormat);
+
+  const formatDate = (date: Date | undefined): string =>
+    new Date(date || new Date()).toISOString().split('T')[0];
+
+  const findIssueDate = (issueFormat: string): string | undefined =>
+    formatDate(
+      formData.issues.find((issue) => issue.format === issueFormat)
+        ?.publicationDate,
+    );
+  const filterTeams = (): ITeam[] =>
+    teams.filter((team) => team.name !== 'Writing' && team.name !== 'Editing');
+
+  const filteredTeams = filterTeams();
 
   return (
     <Modal
@@ -265,12 +303,9 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
         </div>
         <p className="description">{pitch.description}</p>
 
-        {/* TODO: Replace with Neha's NameTag Component */}
         <div className="pitch-author-section">
           <span className="form-label">Pitch Creator:</span>
-          <Label as="a" image>
-            <img src={authorImage} alt="Author Profile" /> {author}
-          </Label>
+          <UserChip user={author} />
         </div>
 
         <Form>
@@ -292,7 +327,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
           />
           <p className="form-label">Number of Contributors Needed Per Team </p>
           <Form.Group inline widths="equal" className="team-select-group">
-            {teams.map((team, index) => (
+            {filteredTeams.map((team, index) => (
               <div key={index} className="input-group">
                 <FieldTag name={team.name} hexcode={team.color} />
                 <Form.Input
@@ -311,31 +346,66 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
           <Grid columns={2} className="writer-editors-section">
             <Grid.Column className="issue-format-column">
               <p className="form-label">Issue Format</p>
-              <Form.Checkbox
-                label={'Print'}
-                value={'Print'}
-                checked={formData.issues.some(
-                  ({ format }) => format === 'Print',
+              <div className="issue-format-date-row">
+                <Form.Checkbox
+                  label={'Print'}
+                  value={'Print'}
+                  checked={isChecked('Print')}
+                  onChange={(_, { value }) =>
+                    changeField(
+                      'issues',
+                      changeIssue(`${value}`, new Date(), true),
+                    )
+                  }
+                  className="format-checkbox"
+                />
+                {isChecked('Print') && (
+                  <Form.Input
+                    className="publication-date"
+                    placeholder="Publication Date"
+                    size="small"
+                    type="date"
+                    value={findIssueDate('Print')}
+                    onChange={(_, { value }) =>
+                      changeField(
+                        'issues',
+                        changeIssue('Print', new Date(value), false),
+                      )
+                    }
+                  />
                 )}
-                onChange={(_, { value }) =>
-                  changeField('issues', changeIssue(`${value}`))
-                }
-              />
-              <Form.Checkbox
-                label={'Online'}
-                value={'Online'}
-                checked={formData.issues.some(
-                  ({ format }) => format === 'Online',
+              </div>
+              <div className="issue-format-date-row">
+                <Form.Checkbox
+                  label={'Online'}
+                  value={'Online'}
+                  checked={isChecked('Online')}
+                  onChange={(_, { value }) =>
+                    changeField('issues', changeIssue(`${value}`, new Date()))
+                  }
+                  className="format-checkbox"
+                />
+                {isChecked('Online') && (
+                  <Form.Input
+                    className="publication-date"
+                    placeholder="Publication Date"
+                    size="small"
+                    type="date"
+                    value={findIssueDate('Online')}
+                    onChange={(_, { value }) =>
+                      changeField(
+                        'issues',
+                        changeIssue('Online', new Date(value), false),
+                      )
+                    }
+                  />
                 )}
-                onChange={(_, { value }) =>
-                  changeField('issues', changeIssue(`${value}`))
-                }
-              />
+              </div>
             </Grid.Column>
             <Grid.Column>
               <p className="form-label">Deadline</p>
               <Form.Input
-                value={new Date(formData.deadline).toISOString().split('T')[0]}
+                value={formatDate(formData.deadline)}
                 className="prints-input"
                 type="date"
                 onChange={(e, { value }) =>
@@ -361,39 +431,47 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
               <p className="form-label">Editors</p>
               <Select
                 value={formData.primaryEditor}
-                options={filterAdmin(editors).map((editor) => ({
+                options={filterPrimaryEditors(editors).map((editor) => ({
                   value: editor._id,
                   label: getUserFullName(editor),
                 }))}
                 onChange={(e) => changeField('primaryEditor', e ? e.value : '')}
                 placeholder="Select Primary Editor"
+                className="editor-select"
               />
               <MultiSelect
-                options={editors.map((editor) => ({
+                options={filterSecondaryEditors(editors).map((editor) => ({
                   value: editor._id,
                   label: getUserFullName(editor),
                 }))}
                 placeholder="Select Secondary Editor - Optional"
-                onChange={(values) =>
+                onChange={(values) => {
+                  if (values.length > 2) {
+                    return;
+                  }
                   changeField(
                     'secondEditors',
                     values.map(({ value }) => value),
-                  )
-                }
+                  );
+                }}
                 value={formData.secondEditors}
+                className="editor-select"
               />
               <MultiSelect
-                options={editors.map((editor) => ({
+                options={filterTertiaryEditors(editors).map((editor) => ({
                   value: editor._id,
                   label: getUserFullName(editor),
                 }))}
                 placeholder="Select Tertiary Editor - Optional"
-                onChange={(values) =>
+                onChange={(values) => {
+                  if (values.length > 2) {
+                    return;
+                  }
                   changeField(
                     'thirdEditors',
                     values.map(({ value }) => value),
-                  )
-                }
+                  );
+                }}
                 value={formData.thirdEditors}
               />
             </Grid.Column>

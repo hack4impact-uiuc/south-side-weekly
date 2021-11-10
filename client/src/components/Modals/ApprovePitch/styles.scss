@@ -32,7 +32,9 @@
   .content {
     .pitch-author-section {
       margin-bottom: 1rem;
-      flex-direction: row !important;
+      flex-direction: row;
+      display: flex;
+      align-items: flex-end;
     }
 
     .topics-section {
@@ -92,7 +94,28 @@
         flex-direction: column !important;
         display: flex !important;
         margin-left: 0 !important;
+
+        .issue-format-date-row {
+          flex-direction: row !important;
+          display: flex !important;
+          align-items: center !important;
+          width: 100% !important;
+          justify-content: space-between;
+          margin-bottom: 5px;
+
+          .format-checkbox {
+            margin-bottom: 0 !important;
+          }
+
+          .publication-date {
+            margin-right: 25px !important;
+          }
+        }
       }
+    }
+
+    .editor-select {
+      margin-bottom: 5px;
     }
   }
 
