@@ -3,6 +3,7 @@ import { Button, Form, Icon, Modal, ModalProps } from 'semantic-ui-react';
 import { IPitch, IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
 
+import { PitchRow } from '../..';
 import { isError, submitPitchClaim } from '../../../api';
 import { getAggregatedPitch } from '../../../api/pitch';
 import { useAuth, useTeams } from '../../../contexts';
@@ -10,7 +11,6 @@ import { emptyAggregatePitch } from '../../../utils/constants';
 import { convertMap, pluralize } from '../../../utils/helpers';
 import FieldTag from '../../FieldTag';
 import LinkDisplay from '../../LinkDisplay';
-import PitchCard from '../../PitchCard';
 import UserChip from '../../UserChip';
 import './styles.scss';
 
@@ -238,7 +238,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
       open={isOpen}
       onClose={() => setIsOpen(false)}
       onOpen={() => setIsOpen(true)}
-      trigger={<PitchCard pitch={pitch} />}
+      trigger={<PitchRow pitch={pitch} />}
       className="claim-modal"
       {...rest}
     >
