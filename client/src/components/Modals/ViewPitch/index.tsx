@@ -1,6 +1,5 @@
 import React, { FC, ReactElement, useState, useEffect } from 'react';
 import {
-  Button,
   Modal,
   ModalProps,
   Grid,
