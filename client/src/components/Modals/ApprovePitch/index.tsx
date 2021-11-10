@@ -15,7 +15,7 @@ import FieldTag from '../../FieldTag';
 import PitchCard from '../../PitchCard';
 
 import './styles.scss';
-
+ 
 interface ApprovePitchProps extends ModalProps {
   pitch: IPitch;
   callback(): void;
