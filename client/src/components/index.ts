@@ -22,9 +22,10 @@ import ViewPitchModal from './Modals/ViewPitch';
 import MultiSelect from './Dropdowns/MultiSelect';
 import Select from './Dropdowns/Select';
 import DirectoryTable from './Tables/Directory';
-import PitchTable from './Tables/PitchDoc';
+import { PitchTable, PitchRow } from './Tables/PitchDoc';
 import TableTool from './Tables/TableTool';
 import Walkthrough from './Walkthrough';
+import LinkDisplay from './LinkDisplay';
 import InterestsSelect from './Dropdowns/InterestsSelect';
 import ProviderWrapper from './ProviderWrapper';
 import TeamsSelect from './Dropdowns/TeamsSelect';
@@ -60,8 +61,10 @@ export {
   Select,
   DirectoryTable,
   PitchTable,
+  PitchRow,
   TableTool,
   Walkthrough,
+  LinkDisplay,
   InterestsSelect,
   ProviderWrapper,
   TeamsSelect,
