@@ -15,7 +15,5 @@
       "cd client && yarn lint"
     ]
   },
-  "dependencies": {
-    "react-hot-toast": "^2.1.1"
-  }
+  "dependencies": {}
 }
