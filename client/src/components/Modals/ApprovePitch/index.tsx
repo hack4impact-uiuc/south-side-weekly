@@ -85,7 +85,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
         setAuthor(author);
 
         if (res.data.result.writer) {
-          changeField('writer', res.data.result.writer);
+          setFormData((f) => ({ ...f, writer: res.data.result.writer }));
         }
       }
     };
