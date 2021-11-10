@@ -1,5 +1,5 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Table, Button, Icon } from 'semantic-ui-react';
+import { Table, Button } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { FieldTag, UserPicture, TableTool } from '../..';
