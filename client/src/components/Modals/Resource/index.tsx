@@ -3,12 +3,12 @@ import toast from 'react-hot-toast';
 import { Form, Modal, ModalProps } from 'semantic-ui-react';
 import { IResource } from 'ssw-common';
 import Swal from 'sweetalert2';
+import { isEmpty } from 'lodash';
 
 import { createResource, editResource, isError } from '../../../api';
 import './styles.scss';
 import { visibilityEnum } from '../../../utils/enums';
 import TeamsSelect from '../../Dropdowns/TeamsSelect';
-import { isEmpty } from 'lodash';
 
 interface ResourceProps extends ModalProps {
   resource?: IResource;

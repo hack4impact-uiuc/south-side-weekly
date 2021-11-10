@@ -8,6 +8,8 @@ import {
 } from 'react-router-dom';
 import 'semantic-ui-css/semantic.min.css';
 
+import { Toaster } from 'react-hot-toast';
+
 import {
   Directory,
   Profile,
@@ -20,7 +22,6 @@ import Wizard from './wizard';
 import { PrivateRoute, ProviderWrapper } from './components';
 
 import './styles/styles.scss';
-import { Toaster } from 'react-hot-toast';
 
 const routes = [
   {
