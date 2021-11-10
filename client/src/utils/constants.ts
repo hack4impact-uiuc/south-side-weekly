@@ -31,10 +31,10 @@ const contributorPages = [
 ];
 
 const pitchDocTabs = {
-  UNCLAIMED: 'Unclaimed Pitches',
-  PITCH_APPROVAL: 'Pitches Pending Approval',
-  CLAIM_APPROVAL: 'Claims Pending Approval',
-  APPROVED: 'Approved Pitches',
+  UNCLAIMED: 'Claim a Pitch',
+  APPROVED: 'View All Pitches',
+  PITCH_APPROVAL: 'Review Pitches',
+  CLAIM_APPROVAL: 'Assign Pitch Contributors',
 };
 
 const emptyUser: IUser = {

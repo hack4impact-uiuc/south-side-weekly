@@ -169,6 +169,12 @@ const PitchDoc = (): ReactElement => {
           onClick={(e, { name }) => setCurrentTab(name!)}
         />
 
+        <Menu.Item
+          name={pitchDocTabs.APPROVED}
+          active={pitchDocTabs.APPROVED === currentTab}
+          onClick={(e, { name }) => setCurrentTab(name!)}
+        />
+
         <StaffView>
           <Menu.Item
             name={pitchDocTabs.PITCH_APPROVAL}
@@ -176,12 +182,6 @@ const PitchDoc = (): ReactElement => {
             onClick={(e, { name }) => setCurrentTab(name!)}
           />
         </StaffView>
-
-        <Menu.Item
-          name={pitchDocTabs.APPROVED}
-          active={pitchDocTabs.APPROVED === currentTab}
-          onClick={(e, { name }) => setCurrentTab(name!)}
-        />
         <AdminView>
           <Menu.Item
             name={pitchDocTabs.CLAIM_APPROVAL}

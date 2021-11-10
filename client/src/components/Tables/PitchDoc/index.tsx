@@ -2,7 +2,13 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Table } from 'semantic-ui-react';
 import { IPitch, IUser } from 'ssw-common';
 
-import { ApprovePitchModal, ClaimPitchModal, FieldTag, TableTool } from '../..';
+import {
+  ApprovePitchModal,
+  ClaimPitchModal,
+  FieldTag,
+  TableTool,
+  ViewPitchModal,
+} from '../..';
 import { useAuth, useInterests, useTeams } from '../../../contexts';
 import { pitchDocTabs } from '../../../utils/constants';
 import './styles.scss';
@@ -121,7 +127,7 @@ const PitchBody: FC<PitchBodyProps> = ({
         return <PitchRow pitch={pitch} />;
       } else if (currentTab === pitchDocTabs.APPROVED) {
         //TODO: Replace PitchRow with the modal component
-        return <PitchRow pitch={pitch} />;
+        return <ViewPitchModal key={index} pitch={pitch} />;
       }
     })}
   </>
