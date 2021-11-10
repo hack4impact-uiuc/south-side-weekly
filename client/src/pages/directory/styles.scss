@@ -1,5 +1,18 @@
 @import '../../styles/colors.scss';
 
+.ui {
+  &.bottom.attached.segment.tab {
+    box-shadow: none;
+    background: transparent;
+    border: none;
+  }
+
+  &.tabular.menu .active.item {
+    background-color: black;
+    color: white;
+  }
+}
+
 .directory-page {
   .filters {
     display: flex;

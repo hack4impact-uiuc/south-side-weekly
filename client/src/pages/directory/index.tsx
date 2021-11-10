@@ -34,10 +34,17 @@ const ApprovedUsers = (): ReactElement => {
   const [teams, setTeams] = useState<string[]>([]);
   const [query, setQuery] = useState<string>('');
 
+  // const resetFilters = () => {
+  //   setRole('');
+  //   setInterests([]);
+  //   setTeams([]);
+  //   setQuery('');
+  // };
+
   useEffect(() => {
     const getAllUsers = async (): Promise<void> => {
       const res = await getUsers();
-
+      //This gets all users regardless of their approval status
       if (!isError(res)) {
         setDirectory(res.data.result);
         setFilteredDirectory(res.data.result);
@@ -85,11 +92,6 @@ const ApprovedUsers = (): ReactElement => {
 
   return (
     <div className="directory-page">
-      <Walkthrough
-        page={pagesEnum.DIRECTORY}
-        content="Check out the members on the SSW team and click their profiles to view more details!"
-      />
-      <h2>Directory</h2>
       <Input
         value={query}
         onChange={(e, { value }) => setQuery(value)}
@@ -135,8 +137,7 @@ const ApprovedUsers = (): ReactElement => {
 const PendingUsers = (): ReactElement => {
   const [directory, setDirectory] = useState<IUser[]>([]);
   const [filteredDirectory, setFilteredDirectory] = useState<IUser[]>([]);
-  const [interests, setInterests] = useState<string[]>([]);
-  const [teams, setTeams] = useState<string[]>([]);
+
   const [query, setQuery] = useState<string>('');
 
   useEffect(() => {
@@ -177,23 +178,11 @@ const PendingUsers = (): ReactElement => {
       );
     };
 
-    const filter = (users: IUser[]): IUser[] => {
-      let filtered = filterInterests(users, interests);
-      filtered = filterTeams(filtered, teams);
-
-      return filtered;
-    };
-
-    setFilteredDirectory([...search(filter(directory))]);
-  }, [directory, query, interests, teams]);
+    setFilteredDirectory([...search(directory)]);
+  }, [directory, query]);
 
   return (
     <div className="directory-page">
-      <Walkthrough
-        page={pagesEnum.DIRECTORY}
-        content="Check out the members on the SSW team and click their profiles to view more details!"
-      />
-      <h2>Directory</h2>
       <Input
         value={query}
         onChange={(e, { value }) => setQuery(value)}
@@ -228,12 +217,36 @@ const PendingUsers = (): ReactElement => {
   );
 };
 
-
 const panes = [
-  { menuItem: 'Approved Users', render: function pane() {return <Tab.Pane> <ApprovedUsers/> </Tab.Pane>}},
-  { menuItem: 'Pending Users', render: function pane() {return <Tab.Pane> <PendingUsers/> </Tab.Pane>}},
-]
+  {
+    menuItem: 'Approved Users',
+    pane: (
+      <Tab.Pane>
+        {' '}
+        <ApprovedUsers />{' '}
+      </Tab.Pane>
+    ),
+  },
+  {
+    menuItem: 'Pending Users',
+    pane: (
+      <Tab.Pane>
+        {' '}
+        <PendingUsers />{' '}
+      </Tab.Pane>
+    ),
+  },
+];
 
-const Directory = () => <Tab panes={panes}/>
+const Directory = (): ReactElement => (
+  <>
+    <Walkthrough
+      page={pagesEnum.DIRECTORY}
+      content="Check out the members on the SSW team and click their profiles to view more details!"
+    />
+    <h2>Directory</h2>
+    <Tab panes={panes} renderActiveOnly={false} />
+  </>
+);
 
 export default Directory;

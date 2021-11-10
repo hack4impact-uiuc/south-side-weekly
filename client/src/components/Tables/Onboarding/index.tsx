@@ -9,10 +9,8 @@ import TeamModal from '../../Modals/EditTeam';
 
 import './styles.scss';
 
-const ROLE_WIDTH = 2;
 const PIC_WIDTH = 1;
 const ACTION_WIDTH = 3;
-const JOINED_WIDTH = 1;
 
 interface OnboardingHeaderProps {
   users: IUser[];
@@ -107,7 +105,7 @@ const OnboardingHeader: FC<OnboardingHeaderProps> = ({
       </Table.HeaderCell>
       <Table.HeaderCell>
         Teams
-        <TeamModal/>
+        <TeamModal />
       </Table.HeaderCell>
       <Table.HeaderCell>
         Interests
@@ -134,9 +132,6 @@ const OnboardingRow: FC<OnboardingRowProps> = ({ user }): ReactElement => {
         <UserPicture id="user-picture" user={user} />
       </Table.Cell>
       <Table.Cell>{getUserFullName(user)}</Table.Cell>
-      <Table.Cell width={ROLE_WIDTH}>
-        <FieldTag size="small" content={user.role} />
-      </Table.Cell>
       <Table.Cell>
         {user.teams.map((team, index) => (
           <FieldTag
@@ -161,13 +156,29 @@ const OnboardingRow: FC<OnboardingRowProps> = ({ user }): ReactElement => {
           );
         })}
       </Table.Cell>
-      <Table.Cell width={JOINED_WIDTH}>
-        {new Date(user.dateJoined).getDate()}
+      <Table.Cell>
+        {new Date(user.dateJoined).toISOString().split('T')[0]}
       </Table.Cell>
-      <Table.Cell width={ACTION_WIDTH}>
+      <Table.Cell>
         <div className="actions">
-            <Button id="decline" className="edit-button" size="small" compact>Decline</Button>
-            <Button id="approve" className="edit-button" size="small" compact>Approve</Button>
+          <Button
+            id="decline"
+            className="edit-button"
+            size="small"
+            basic
+            compact
+          >
+            Decline
+          </Button>
+          <Button
+            id="approve"
+            className="edit-button"
+            size="small"
+            color="blue"
+            compact
+          >
+            Approve
+          </Button>
         </div>
       </Table.Cell>
     </Table.Row>
