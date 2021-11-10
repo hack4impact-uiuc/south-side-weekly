@@ -77,7 +77,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [link, setLink] = useState('');
-  const [interests, setInterests] = useState<string[]>([]);
+  const [topics, setTopics] = useState<string[]>([]);
   const [conflictofInterest, setConflictOfInterest] = useState<boolean>();
   const [didSubmit, setDidSubmit] = useState(false);
   const [writerChoice, setWriterChoice] = useState<boolean>();
@@ -91,7 +91,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
     setConflictOfInterest(undefined);
     setDidSubmit(false);
     setWriterChoice(undefined);
-    setInterests([]);
+    setTopics([]);
   }, [isOpen]);
 
   const submitPitch = async (): Promise<void> => {
@@ -108,7 +108,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
       assignmentGoogleDocLink: link,
       status: 'PENDING',
       description: description,
-      topics: interests,
+      topics: topics,
       conflictOfInterest: conflictofInterest!,
     };
 
@@ -137,7 +137,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
   };
 
   const isInvalidForm = (): boolean =>
-    [title, description, link, interests].some(isEmpty) ||
+    [title, description, link, topics].some(isEmpty) ||
     isUndefined(conflictofInterest);
 
   const isFieldError = (
@@ -201,14 +201,14 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
             error={isFieldError(description)}
           />
           <h5 className="label-topics">
-            Associated Interests
-            <p className="unbold">(select 1-4 interests) </p>
+            Associated topics
+            <p className="unbold">(select 1-4 topics) </p>
           </h5>
           <InterestsSelect
-            values={interests}
+            values={topics}
             onChange={(values) => {
               if (values.length <= 4) {
-                setInterests(values.map((item) => item.value));
+                setTopics(values.map((item) => item.value));
               } else {
                 interestNotify();
               }
