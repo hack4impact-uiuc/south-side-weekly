@@ -43,10 +43,16 @@ const updateUserField = <T extends keyof IUser>(
  * @param user the user to get the fullname of
  * @returns the fullname of the user
  */
-const getUserFullName = (user: Partial<IUser>): string =>
-  `${user.preferredName ? user.preferredName : user.firstName} ${
-    user.lastName
-  }`;
+const getUserFullName = (user?: Partial<IUser>): string => {
+  if (user === null || user === undefined) {
+    return '';
+  }
+
+  const firstName = user.preferredName ? user.preferredName : user.firstName;
+  const lastName = user.lastName;
+
+  return `${firstName} ${lastName}`;
+};
 
 /**
  * Gets a user's first name and last initial, preferring their preferred name over first name
@@ -142,6 +148,22 @@ const classNames = (...classNames: (string | undefined)[]): string => {
 const openProfile = (user: IUser): void =>
   window.open(`/profile/${user._id}`)!.focus();
 
+interface SelectOption {
+  value: string;
+  label: string;
+}
+
+/**
+ * Parses an array of options into React Select style Dropdown Items objects
+ *
+ * @param options the dropdown options to create
+ * @returns the Semantic-UI Dropdown options
+ */
+const parseOptionsSelect = (options: string[]): SelectOption[] =>
+  options.map((option) => ({
+    label: option,
+    value: option,
+  }));
 /**
  * Adds an "s" to a word if the "numberOf" parameter is not 1
  *
@@ -157,6 +179,7 @@ export {
   getUserFullName,
   getUserShortName,
   parseOptions,
+  parseOptionsSelect,
   isPitchClaimed,
   convertMap,
   titleCase,
