@@ -45,4 +45,32 @@ const requireStaff = requireRole([rolesEnum.STAFF, rolesEnum.ADMIN]);
 // Requires a user to have Admin status
 const requireAdmin = requireRole([rolesEnum.ADMIN]);
 
-export { requireRegistered, requireContributor, requireStaff, requireAdmin };
+const requestSecretHeader = 'x-request-secret';
+/**
+ * Middleware that makes sure the request contains the pre-defined request secret as a header
+ * @returns 401 HTTP Response if the request doesn't have the header or the request secret doesn't match
+ *          otherwise calls next() to continue to request
+ */
+const requireRequestSecret = (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Response => {
+  const requestSecretHeaderValue = req.headers[requestSecretHeader];
+  if (requestSecretHeaderValue !== process.env.REQUEST_SECRET) {
+    return res.status(401).json({
+      success: false,
+      message: 'Unauthorized',
+    });
+  }
+
+  next();
+};
+
+export {
+  requireRegistered,
+  requireContributor,
+  requireStaff,
+  requireAdmin,
+  requireRequestSecret,
+};
