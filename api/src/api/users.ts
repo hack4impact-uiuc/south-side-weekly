@@ -187,6 +187,22 @@ router.put(
   }),
 );
 
+// Gets all pending users
+router.get(
+  '/users/pending',
+  requireAdmin,
+  errorWrap(async (req: Request, res: Response) => {
+    const users = await User.find({
+      hasRoleApproved: false,
+    });
+    res.status(200).json({
+      message: `Successfully retrieved all pending users.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
 // Gets all pending contributors
 router.get(
   '/contributors/pending',
