@@ -229,6 +229,7 @@ router.put(
     const { pitchData, response } = req.body;
 
     //TODO: Add response to mail message
+    console.log(response);
 
     const pitch = await Pitch.findByIdAndUpdate(req.params.pitchId, {
       status: pitchStatusEnum.APPROVED,
