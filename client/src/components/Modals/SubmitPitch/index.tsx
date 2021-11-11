@@ -29,6 +29,7 @@ const notify = (): string =>
   toast.error('Please fill out all the fields before submitting!', {
     position: 'bottom-right',
   });
+
 const interestNotify = (): string =>
   toast.error("You can't select more than 4 interests", {
     position: 'bottom-right',
@@ -132,8 +133,16 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
   };
 
   const isWriter = (): boolean => {
-    const writerObject = teams.filter((team) => team.name === 'Writing');
-    return user.teams.includes(writerObject[0] ? writerObject[0]._id : '');
+    const writerObj = teams.find((team) => team.name === 'Writing');
+
+    if (!writerObj) {
+      console.error('No team with name Writing');
+      return false;
+    }
+
+    const writerId = writerObj._id;
+
+    return user.teams.includes(writerId);
   };
 
   const isInvalidForm = (): boolean =>
