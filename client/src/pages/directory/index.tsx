@@ -245,7 +245,7 @@ const Directory = (): ReactElement => (
       content="Check out the members on the SSW team and click their profiles to view more details!"
     />
     <h2>Directory</h2>
-    <Tab panes={panes} renderActiveOnly={false} />
+    <Tab panes={panes} />
   </>
 );
 
