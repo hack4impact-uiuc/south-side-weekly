@@ -15,7 +15,15 @@ const TableTool: FC<TableProps> = ({
   singleLine,
 }): ReactElement => (
   <div className="directory-table">
-    <Table size="small" sortable compact celled fixed singleLine={singleLine}>
+    <Table
+      size="small"
+      sortable
+      compact
+      celled
+      fixed
+      singleLine={singleLine}
+      selectable
+    >
       <Table.Header>{tableHeader}</Table.Header>
       <Table.Body>{tableBody}</Table.Body>
     </Table>
