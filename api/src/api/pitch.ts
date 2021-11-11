@@ -232,19 +232,10 @@ router.put(
     console.log(response);
 
     const pitch = await Pitch.findByIdAndUpdate(req.params.pitchId, {
-<<<<<<< HEAD
-      $set: {
-        status: pitchStatusEnum.APPROVED,
-        reviewedBy: req.user._id,
-        teams: teams,
-      },
-    }).lean();
-=======
       status: pitchStatusEnum.APPROVED,
       reviewedBy: req.user._id,
       ...pitchData,
     });
->>>>>>> c7f82e12673b1aaef484603f0eaa956bb5e313ae
 
     if (!pitch) {
       res.status(404).json({
@@ -388,8 +379,7 @@ router.put(
       return;
     }
     const aggregatedPitch = await aggregatePitch(pitch);
-    const fakeAdmin = { firstName: 'Ya boy Andy', lastName: 'Wong' };
-    const message = await approveClaim(user, aggregatedPitch, fakeAdmin);
+    const message = await approveClaim(user, aggregatedPitch, req.user);
     await sendMail(message);
     res.status(200).json({
       success: true,
