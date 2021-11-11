@@ -3,7 +3,6 @@ import { errorWrap } from '../middleware';
 
 import Issue from '../models/issue';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
-import { IIssue } from 'ssw-common';
 
 const router = express.Router();
 
@@ -45,6 +44,7 @@ router.get(
 // Create a new issue
 router.post(
   '/',
+  requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
     const newIssue = await Issue.create(req.body);
     if (newIssue) {
@@ -54,79 +54,6 @@ router.post(
         result: newIssue,
       });
     }
-  }),
-);
-
-// Create many new isssues
-router.post(
-  '/many',
-  requireAdmin,
-  errorWrap(async (req: Request, res: Response) => {
-    const newIssues: Partial<IIssue>[] = req.body.issues;
-
-    const createdIssues = await Promise.all(
-      newIssues.map(async (issue) => Issue.create(issue)),
-    );
-
-    const failedIssues = createdIssues.filter((issue) => !issue);
-
-    if (failedIssues.length > 0) {
-      const failedIssueNames = failedIssues.map((issue) => issue.name);
-
-      res.status(400).json({
-        message: `Failed to create issues: ${failedIssueNames.join(', ')}`,
-        success: false,
-      });
-    }
-
-    res.status(200).json({
-      message: 'Successfully created all issues',
-      success: true,
-      result: createdIssues,
-    });
-  }),
-);
-
-// Update many changed issues
-router.put(
-  '/update/many',
-  requireAdmin,
-  errorWrap(async (req: Request, res: Response) => {
-    const changedIssues: IIssue[] = req.body.issues;
-    const updatedIssues = await Promise.all(
-      changedIssues.map(async (issue) => {
-        const body = {
-          name: issue.name,
-          deadlineDate: issue.deadlineDate,
-          releaseDate: issue.releaseDate,
-          pitches: issue.pitches,
-          printIssue: issue.printIssue,
-          onlineIssue: issue.onlineIssue,
-        };
-
-        return Issue.findByIdAndUpdate(issue._id, body, {
-          new: true,
-          runValidators: true,
-        });
-      }),
-    );
-
-    const failedIssues = updatedIssues.filter((issue) => !issue);
-
-    if (failedIssues.length > 0) {
-      const failedIssueNames = failedIssues.map((issue) => issue.name);
-
-      res.status(400).json({
-        message: `Failed to update issues: ${failedIssueNames.join(', ')}`,
-        success: false,
-      });
-    }
-
-    res.status(200).json({
-      message: 'Successfully updated all issues',
-      success: true,
-      result: updatedIssues,
-    });
   }),
 );
 
