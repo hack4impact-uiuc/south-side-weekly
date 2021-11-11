@@ -82,6 +82,7 @@ const Pitch = new mongoose.Schema({
   reviewedBy: { type: Schema.Types.ObjectId, ref: 'User' },
   similarStories: [{ type: String, default: null }],
   deadline: { type: Date, default: null },
+  neighborhoods: [{ type: String, default: null }],
 });
 
 export default mongoose.model<PitchSchema>('Pitch', Pitch);

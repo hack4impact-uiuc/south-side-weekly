@@ -14,6 +14,7 @@ interface MultiSelectProps {
     actionMeta: ActionMeta<MultiSelectOption>,
   ) => void;
   placeholder?: string;
+  className?: string;
 }
 
 const MultiSelect: FC<MultiSelectProps> = ({
@@ -21,6 +22,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
   value,
   onChange,
   placeholder = '',
+  className = '',
 }): ReactElement => (
   <Select<MultiSelectOption, true>
     isMulti
@@ -30,6 +32,7 @@ const MultiSelect: FC<MultiSelectProps> = ({
     onChange={onChange}
     closeMenuOnSelect={false}
     hideSelectedOptions={false}
+    className={className}
   />
 );
 

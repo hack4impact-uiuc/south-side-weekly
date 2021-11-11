@@ -246,7 +246,7 @@ const Profile = (): ReactElement => {
   };
 
   return (
-    <div>
+    <div className="profile-page">
       <Grid padded stackable>
         <Grid.Row columns={4}>
           <Grid.Column className="profile-pic-col">

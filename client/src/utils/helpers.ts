@@ -148,6 +148,22 @@ const classNames = (...classNames: (string | undefined)[]): string => {
 const openProfile = (user: IUser): void =>
   window.open(`/profile/${user._id}`)!.focus();
 
+interface SelectOption {
+  value: string;
+  label: string;
+}
+
+/**
+ * Parses an array of options into React Select style Dropdown Items objects
+ *
+ * @param options the dropdown options to create
+ * @returns the Semantic-UI Dropdown options
+ */
+const parseOptionsSelect = (options: string[]): SelectOption[] =>
+  options.map((option) => ({
+    label: option,
+    value: option,
+  }));
 /**
  * Adds an "s" to a word if the "numberOf" parameter is not 1
  *
@@ -163,6 +179,7 @@ export {
   getUserFullName,
   getUserShortName,
   parseOptions,
+  parseOptionsSelect,
   isPitchClaimed,
   convertMap,
   titleCase,
