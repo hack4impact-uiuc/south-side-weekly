@@ -12,9 +12,9 @@ enum Type {
 const Issue = new mongoose.Schema({
   name: { type: String, default: null, required: true },
   deadlineDate: { type: String, default: null, required: true },
-  releaseDate: { type: String, default: null, required: true},
+  releaseDate: { type: String, default: null, required: true },
   pitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
-  type: {type: Type, required: true} 
+  type: { type: Type, required: true },
 });
 
 export default mongoose.model<IssueSchema>('Issue', Issue);
