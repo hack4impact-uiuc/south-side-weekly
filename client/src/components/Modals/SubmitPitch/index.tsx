@@ -140,21 +140,11 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
     [title, description, link, topics].some(isEmpty) ||
     isUndefined(conflictofInterest);
 
-  const isFieldError = (
-    field: string | Set<string> | boolean | undefined,
-  ): boolean => {
-    if (!didSubmit) {
-      return false;
-    }
-
-    if (isUndefined(field)) {
-      return true;
-    } else if ((field instanceof Set && isEmpty(field)) || field === '') {
-      return true;
-    }
-
-    return false;
-  };
+  type FieldProps = string | Set<any> | boolean | undefined;
+  const isFieldError = (field: FieldProps): boolean =>
+    didSubmit &&
+    typeof field !== 'boolean' &&
+    (isUndefined(field) || isEmpty(field));
 
   return (
     <Modal
@@ -254,7 +244,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
               name="interest-conflict"
               label="No"
               onClick={() => setConflictOfInterest(false)}
-              checked={!isUndefined(writerChoice) && !conflictofInterest}
+              checked={!isUndefined(conflictofInterest) && !conflictofInterest}
               error={isFieldError(conflictofInterest)}
             />
           </Form.Group>
