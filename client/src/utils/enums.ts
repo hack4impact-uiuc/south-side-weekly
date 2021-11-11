@@ -36,6 +36,7 @@ export const racesEnum = {
 };
 
 export const pagesEnum = {
+  HOMEPAGE: 'HOMEPAGE',
   PITCHDOC: 'PITCHDOC',
   DIRECTORY: 'DIRECTORY',
   RESOURCES: 'RESOURCES',

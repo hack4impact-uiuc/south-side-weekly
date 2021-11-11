@@ -18,6 +18,7 @@ const Navbar = (): ReactElement => {
       </Menu.Item>
       <Menu.Menu position="right">
         <ApprovedView>
+          <Menu.Item as={NavLink} to="/home" name="Home" />
           <Menu.Item as={NavLink} to="/pitches" name="Pitch Doc" />
           <Menu.Item as={NavLink} to="/users" name="Directory" />
         </ApprovedView>

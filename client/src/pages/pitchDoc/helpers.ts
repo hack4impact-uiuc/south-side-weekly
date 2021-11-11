@@ -1,16 +1,5 @@
 import { IPitch } from 'ssw-common';
-
 import { getPitchTeams, isPitchClaimed } from '../../utils/helpers';
-
-const filterInterests = (pitches: IPitch[], interests: string[]): IPitch[] => {
-  if (interests.length === 0) {
-    return pitches;
-  }
-
-  return pitches.filter((pitch) =>
-    interests.every((interest) => pitch.topics.includes(interest)),
-  );
-};
 
 const filterClaimStatus = (
   pitches: IPitch[],
@@ -46,25 +35,4 @@ const filterTeams = (pitches: IPitch[], teams: string[]): IPitch[] => {
   );
 };
 
-const sortPitches = (
-  pitches: IPitch[],
-  sort: 'none' | 'increase' | 'decrease',
-): IPitch[] => {
-  if (sort === 'none') {
-    return pitches;
-  }
-
-  pitches.sort((a, b) => {
-    const first = new Date(a.deadline);
-    const second = new Date(b.deadline);
-    if (sort === 'increase') {
-      return first.getTime() - second.getTime();
-    }
-
-    return second.getTime() - first.getTime();
-  });
-
-  return pitches;
-};
-
-export { filterInterests, filterClaimStatus, filterTeams, sortPitches };
+export { filterClaimStatus, filterTeams };

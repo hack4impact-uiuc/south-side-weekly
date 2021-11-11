@@ -20,6 +20,56 @@ const getPitchTeams = (pitch: IPitch): string[] => {
 };
 
 /**
+ * Filters a list of pitches by a list of interests
+ *
+ * Returns the pitches in the pitches list which have all of the interests contained in interests
+ *
+ * @param pitches the pitches to filter
+ * @param interests the interests to filter by
+ * @returns all the pitches which contain all the interests
+ */
+const filterPitchesByInterests = (
+  pitches: IPitch[],
+  interests: string[],
+): IPitch[] => {
+  if (interests.length === 0) {
+    return pitches;
+  }
+
+  return pitches.filter((pitch) =>
+    interests.every((interest) => pitch.topics.includes(interest)),
+  );
+};
+
+/**
+ * Sorts a list of pitches by their deadline
+ *
+ * @param pitches the list of pitches
+ * @param sort the sort direction
+ * @returns the sorted list of pitches
+ */
+const sortPitches = (
+  pitches: IPitch[],
+  sort: 'none' | 'increase' | 'decrease',
+): IPitch[] => {
+  if (sort === 'none') {
+    return pitches;
+  }
+
+  pitches.sort((a, b) => {
+    const first = new Date(a.deadline);
+    const second = new Date(b.deadline);
+    if (sort === 'increase') {
+      return first.getTime() - second.getTime();
+    }
+
+    return second.getTime() - first.getTime();
+  });
+
+  return pitches;
+};
+
+/**
  * Updates a user's field generically
  *
  * @param user the user to update
@@ -189,6 +239,8 @@ const pluralize = (word: string, numberOf: number): string =>
 
 export {
   getPitchTeams,
+  filterPitchesByInterests,
+  sortPitches,
   updateUserField,
   getUserFullName,
   getUserShortName,

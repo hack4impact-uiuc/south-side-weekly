@@ -21,8 +21,13 @@ import { PrivateRoute, ProviderWrapper } from './components';
 
 import 'semantic-ui-css/semantic.min.css';
 import './styles/styles.scss';
+import Homepage from './pages/home';
 
 const routes = [
+  {
+    path: '/home',
+    component: Homepage,
+  },
   {
     path: '/users',
     component: Directory,
