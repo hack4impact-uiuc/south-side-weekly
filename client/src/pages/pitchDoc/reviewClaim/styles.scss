@@ -1,0 +1,29 @@
+.review-claim-page {
+  .content {
+    width: 95%;
+    margin: auto;
+
+    .form-label {
+      font-weight: bold !important;
+      font-size: 0.92857143em !important;
+      margin-right: 1rem;
+    }
+
+    .form-label-section {
+      margin-bottom: 0.53571429rem;
+      margin-top: 2rem;
+      flex-direction: row;
+      display: flex;
+      align-items: center;
+
+      i {
+        margin-bottom: 0 !important;
+        margin-top: 0 !important;
+      }
+    }
+
+    .row {
+      margin-bottom: 0 !important;
+    }
+  }
+}

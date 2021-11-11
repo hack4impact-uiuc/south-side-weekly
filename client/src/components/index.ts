@@ -34,6 +34,8 @@ import {
   EditInterests,
   EditTeams,
 } from './Modals/EditableTags';
+import BackButton from './BackButton';
+import UserChip from './UserChip';
 
 export {
   Header,
@@ -71,4 +73,6 @@ export {
   EditInterests,
   EditTeams,
   EditableTagModal,
+  BackButton,
+  UserChip,
 };

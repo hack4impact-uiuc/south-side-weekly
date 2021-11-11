@@ -1,4 +1,5 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Table } from 'semantic-ui-react';
 import { IPitch, IUser } from 'ssw-common';
 
@@ -144,9 +145,13 @@ const PitchRow: FC<PitchRowProps> = ({ pitch, ...rest }): ReactElement => {
   const { user } = useAuth();
   const { getInterestById } = useInterests();
   const { getTeamFromId } = useTeams();
+  const history = useHistory();
 
   return (
-    <Table.Row {...rest}>
+    <Table.Row
+      {...rest}
+      onClick={() => history.push(`/pitches/reviewClaim/${pitch._id}`)}
+    >
       <Table.Cell>{pitch.title}</Table.Cell>
       <Table.Cell>{pitch.description}</Table.Cell>
       <Table.Cell>

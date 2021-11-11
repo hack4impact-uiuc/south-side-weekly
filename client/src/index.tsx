@@ -6,20 +6,20 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
-import 'semantic-ui-css/semantic.min.css';
 
+import 'semantic-ui-css/semantic.min.css';
+import { PrivateRoute, ProviderWrapper } from './components';
 import {
   Directory,
-  Profile,
-  NotFound,
   Login,
+  NotFound,
   PitchDoc,
+  Profile,
   Resources,
 } from './pages';
-import Wizard from './wizard';
-import { PrivateRoute, ProviderWrapper } from './components';
-
+import ReviewClaim from './pages/pitchDoc/reviewClaim';
 import './styles/styles.scss';
+import Wizard from './wizard';
 
 const routes = [
   {
@@ -37,6 +37,10 @@ const routes = [
   {
     path: '/pitches',
     component: PitchDoc,
+  },
+  {
+    path: '/pitches/reviewClaim/:pitchId',
+    component: ReviewClaim,
   },
   {
     path: '/resources',
