@@ -1,5 +1,5 @@
 import { isEqual, startsWith, toLower, toString } from 'lodash';
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { Input, Menu } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
 
@@ -23,7 +23,7 @@ import {
 import { useAuth } from '../../contexts';
 import { pitchDocTabs } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
-import { parseOptionsSelect } from '../../utils/helpers';
+import { getClaimableTeams, parseOptionsSelect } from '../../utils/helpers';
 
 import { filterInterests, filterClaimStatus, filterTeams } from './helpers';
 
@@ -46,7 +46,7 @@ const PitchDoc = (): ReactElement => {
   const [teams, setTeams] = useState<string[]>([]);
   const [query, setQuery] = useState('');
 
-  const { isAdmin, isStaff } = useAuth();
+  const { user, isAdmin, isStaff } = useAuth();
 
   const getApproved = async (): Promise<void> => {
     const res = await getApprovedPitches();
@@ -56,15 +56,20 @@ const PitchDoc = (): ReactElement => {
     }
   };
 
-  const getUnclaimed = async (): Promise<void> => {
+  const getUnclaimed = useCallback(async (): Promise<void> => {
     const res = await getUnclaimedPitches();
 
     if (!isError(res)) {
-      setUnclaimed(res.data.result);
-      setCurrentPitches(res.data.result);
-      setFilteredPitches(res.data.result);
+      const unclaimedPitches = res.data.result;
+      const claimablePitches = unclaimedPitches.filter(
+        (pitch: IPitch) => getClaimableTeams(pitch, user).length > 0,
+      );
+
+      setUnclaimed(claimablePitches);
+      setCurrentPitches(claimablePitches);
+      setFilteredPitches(claimablePitches);
     }
-  };
+  }, [user]);
 
   const getPendingApprovals = async (): Promise<void> => {
     const res = await getPitchesPendingApproval();
@@ -103,7 +108,7 @@ const PitchDoc = (): ReactElement => {
       setFilteredPitches([]);
       setCurrentPitches([]);
     };
-  }, [isAdmin, isStaff]);
+  }, [isAdmin, isStaff, getUnclaimed]);
 
   useEffect(() => {
     const search = (pitches: IPitch[]): IPitch[] => {

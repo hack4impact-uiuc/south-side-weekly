@@ -1,6 +1,6 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Table } from 'semantic-ui-react';
-import { IPitch, IUser } from 'ssw-common';
+import { IPitch } from 'ssw-common';
 
 import {
   ApprovePitchModal,
@@ -12,6 +12,7 @@ import {
 import { useAuth, useInterests, useTeams } from '../../../contexts';
 import { pitchDocTabs } from '../../../utils/constants';
 import './styles.scss';
+import { getClaimableTeams } from '../../../utils/helpers';
 
 interface PitchTableProps {
   pitches: IPitch[];
@@ -132,13 +133,6 @@ const PitchBody: FC<PitchBodyProps> = ({
     })}
   </>
 );
-
-const getClaimableTeams = (pitch: IPitch, user: IUser): string[] =>
-  pitch.writer
-    ? pitch.teams
-        .filter((team) => team.target > 0 && user.teams.includes(team.teamId))
-        .map((team) => team.teamId)
-    : [];
 
 const PitchRow: FC<PitchRowProps> = ({ pitch, ...rest }): ReactElement => {
   const { user } = useAuth();
