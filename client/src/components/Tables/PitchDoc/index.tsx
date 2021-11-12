@@ -169,6 +169,7 @@ const PitchTable: FC<PitchTableProps> = ({ pitches }): ReactElement => {
     {
       title: 'Description',
       extractor: 'description',
+      sorter: (a, b) => a.description.localeCompare(b.description),
     },
   ] as ColumnType<IPitch>[];
   return <ExtendedTable<IPitch> records={pitches} columns={columns} />;

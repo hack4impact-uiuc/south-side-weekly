@@ -11,6 +11,7 @@ interface DirectoryRowProps<RecordType> {
 
 interface DirectoryHeaderProps<RecordType> {
   columns: ColumnType<RecordType>[];
+  sortColumn: ColumnType<RecordType>;
   handleSort: (column: ColumnType<RecordType>) => void;
 }
 
@@ -27,6 +28,7 @@ interface ColumnType<RecordType> {
 
 const TableHeader = <IRecord,>({
   columns,
+  sortColumn,
   handleSort,
 }: DirectoryHeaderProps<IRecord>): ReactElement => (
   <Table.Header>
@@ -34,7 +36,7 @@ const TableHeader = <IRecord,>({
       <Table.HeaderCell
         width={column.width ?? (columns.length as SemanticWIDTHS)}
         onClick={() => handleSort(column)}
-        sorted={column.order}
+        sorted={sortColumn === column ? sortColumn.order : undefined}
         key={index}
       >
         {column.title}
@@ -85,6 +87,10 @@ const ExtendedTable = <RecordType,>({
   }, [records]);
 
   const handleSort = (newColumn: Column): void => {
+    if (newColumn.sorter === undefined) {
+      return;
+    }
+
     if (sortColumn?.title === newColumn.title) {
       if (sortDirection !== 'descending') {
         setSortDirection('descending');
@@ -106,7 +112,11 @@ const ExtendedTable = <RecordType,>({
 
   return (
     <Table>
-      <TableHeader columns={columns} handleSort={handleSort} />
+      <TableHeader
+        columns={columns}
+        sortColumn={sortColumn}
+        handleSort={handleSort}
+      />
       {sortedRecords.map((record, i) => (
         <TableRow record={record} columns={columns} key={i} />
       ))}
