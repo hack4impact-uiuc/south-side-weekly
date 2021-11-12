@@ -8,7 +8,12 @@ import { getUserFullName } from '../../../utils/helpers';
 import TeamModal from '../../Modals/EditTeam';
 
 import './styles.scss';
-
+import { fullNameSort,
+  roleSort,
+  onboardingSort,
+  activitySort,
+  joinedSort
+} from '../Util/TableUtil'
 interface DirectoryTableProps {
   users: IUser[];
 }
@@ -33,27 +38,7 @@ const ACTIVITY_WIDTH = 1;
 const JOINED_WIDTH = 1;
 const EDITED_WIDTH = 1;
 
-const fullNameSort = (a: IUser, b: IUser): number => {
-  const aFullName = getUserFullName(a);
-  const bFullName = getUserFullName(b);
 
-  return aFullName.localeCompare(bFullName);
-};
-
-const roleSort = (a: IUser, b: IUser): number => a.role.localeCompare(b.role);
-
-const onboardingSort = (a: IUser, b: IUser): number =>
-  a.onboardingStatus.localeCompare(b.onboardingStatus);
-
-// @todo - implement acitivty
-const activitySort = (a: IUser, b: IUser): number => roleSort(a, b);
-
-const joinedSort = (a: IUser, b: IUser): number => {
-  const first = new Date(a.dateJoined);
-  const second = new Date(b.dateJoined);
-
-  return first.getTime() - second.getTime();
-};
 
 interface ColumnEnumValue {
   title: string;
