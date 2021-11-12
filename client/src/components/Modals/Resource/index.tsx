@@ -171,7 +171,7 @@ const ResourceModal: FC<ResourceProps> = ({
               }
             />
             <Form.Checkbox
-              label="Is this Resource a general resource?"
+              label="General Resource"
               labelPosition="right"
               className="general-checkbox"
               checked={formData.isGeneral}
