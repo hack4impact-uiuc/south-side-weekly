@@ -8,6 +8,8 @@ import {
   SubmitPitchModal,
   Walkthrough,
 } from '../../components';
+import ExtendedTableTool from '../../components/Tables/ExtendedTableTool';
+import { HomepageTable } from '../../components/Tables/Homepage';
 import { useAuth, useInterests } from '../../contexts';
 import { pagesEnum } from '../../utils/enums';
 import { filterPitchesByInterests } from '../../utils/helpers';
@@ -20,17 +22,20 @@ const TABS = {
   SUBMITTED_PITCHES: 'Pitches You Submitted',
   SUBMITTED_CLAIMS: 'Your Claim Requests',
   SUBMITTED_PUBLICATIONS: 'Your Publications',
-};
+} as const;
+type Tab = typeof TABS[keyof typeof TABS];
 
 const Homepage: FC = () => {
   const { user } = useAuth();
+
   const [currentPitches, setCurrentPitches] = useState<IPitch[]>([]);
-  const [filteredPitches, setFilteredPitches] = useState<IPitch[]>([]);
-  const [searchInput, setSearchInput] = useState<string>('');
-  const [currentTab, setCurrentTab] = useState(TABS.MEMBER_PITCHES);
   const [interests, setInterests] = useState<string[]>([]);
 
+  const [currentTab, setCurrentTab] = useState<Tab>(TABS.MEMBER_PITCHES);
+
+  const [searchInput, setSearchInput] = useState<string>('');
   const [filteredTopics, setFilteredTopics] = useState([]);
+  const [filteredPitches, setFilteredPitches] = useState<IPitch[]>([]);
 
   const canFilterInterests = currentTab !== TABS.MEMBER_PITCHES;
 
@@ -71,6 +76,8 @@ const Homepage: FC = () => {
     // getApproved();
   };
 
+  const getPitchTable = (): JSX.Element => {};
+
   return (
     <div className="homepage-wrapper">
       <Walkthrough
@@ -89,25 +96,25 @@ const Homepage: FC = () => {
         <Menu.Item
           name={TABS.MEMBER_PITCHES}
           active={TABS.MEMBER_PITCHES === currentTab}
-          onClick={(_, { name }) => setCurrentTab(name!)}
+          onClick={() => setCurrentTab(TABS.MEMBER_PITCHES)}
         />
 
         <Menu.Item
           name={TABS.SUBMITTED_PITCHES}
           active={TABS.SUBMITTED_PITCHES === currentTab}
-          onClick={(_, { name }) => setCurrentTab(name!)}
+          onClick={() => setCurrentTab(TABS.SUBMITTED_PITCHES)}
         />
 
         <Menu.Item
           name={TABS.SUBMITTED_CLAIMS}
           active={TABS.SUBMITTED_CLAIMS === currentTab}
-          onClick={(_, { name }) => setCurrentTab(name!)}
+          onClick={() => setCurrentTab(TABS.SUBMITTED_CLAIMS)}
         />
 
         <Menu.Item
           name={TABS.SUBMITTED_PUBLICATIONS}
           active={TABS.SUBMITTED_PUBLICATIONS === currentTab}
-          onClick={(_, { name }) => setCurrentTab(name!)}
+          onClick={() => setCurrentTab(TABS.SUBMITTED_PUBLICATIONS)}
         />
       </Menu>
 
@@ -139,12 +146,8 @@ const Homepage: FC = () => {
         )} */}
       </div>
 
-      <div className="pitch-doc">
-        <PitchTable
-          pitches={filteredPitches}
-          callback={populatePitches}
-          currentTab={currentTab}
-        />
+      <div className="pitch-table">
+        <ExtendedTableTool<IPitch> />
       </div>
     </div>
   );
