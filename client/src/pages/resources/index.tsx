@@ -2,9 +2,8 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { openPopupWidget } from 'react-calendly';
 import { Button, Card, Icon, Menu } from 'semantic-ui-react';
 import { IResource, ITeam } from 'ssw-common';
-import Swal from 'sweetalert2';
 
-import { deleteResource, getAllResources, isError } from '../../api';
+import { getAllResources, isError } from '../../api';
 import { useAuth, useTeams } from '../../contexts';
 import { ResourceModal, Walkthrough } from '../../components';
 import { pagesEnum } from '../../utils/enums';
@@ -57,18 +56,6 @@ const Resources = (): ReactElement => {
 
     return () => setResources([]);
   }, [modal.isOpen]);
-
-  const removeResource = async (resource: IResource): Promise<void> => {
-    const res = await deleteResource(resource._id);
-
-    if (!isError(res)) {
-      getResources();
-      Swal.fire({
-        title: 'Successfully deleted resource',
-        icon: 'success',
-      });
-    }
-  };
 
   const closeModal = (): void => {
     modal.isOpen = false;
@@ -150,18 +137,6 @@ const Resources = (): ReactElement => {
               key={index}
             >
               <p>{resource.name}</p>
-              {isAdmin && (
-                <Button
-                  className="delete-btn"
-                  circular
-                  size="massive"
-                  icon="minus circle"
-                  onClick={(e) => {
-                    removeResource(resource);
-                    e.stopPropagation();
-                  }}
-                />
-              )}
             </Card>
           ))}
         </div>

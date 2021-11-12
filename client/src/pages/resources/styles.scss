@@ -49,20 +49,16 @@
 
   .resource-group {
     display: flex;
-    flex-wrap: wrap;
 
     .resource {
-      position: relative;
-      display: flex;
       height: 200px;
       width: 200px;
       justify-content: center;
-      align-items: center;
-      margin: 30px 30px 0px 0px;
+      margin: 0px !important;
+      margin-right: 30px !important;
       background-color: $primary;
       color: white;
       text-align: center;
-      padding: 10px;
       border-radius: 1rem;
 
       &:hover,
@@ -70,17 +66,6 @@
         background-color: $primary;
         opacity: 0.9;
         color: white;
-      }
-
-      .delete-btn {
-        position: absolute;
-        top: -18px;
-        right: -18px;
-        padding: 0;
-        height: 36px;
-        width: 36px;
-        background: transparent;
-        color: #c17979;
       }
     }
   }

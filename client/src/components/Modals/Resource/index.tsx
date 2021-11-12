@@ -5,7 +5,12 @@ import { IResource } from 'ssw-common';
 import Swal from 'sweetalert2';
 import { isEmpty } from 'lodash';
 
-import { createResource, editResource, isError } from '../../../api';
+import {
+  createResource,
+  deleteResource,
+  editResource,
+  isError,
+} from '../../../api';
 import './styles.scss';
 import { visibilityEnum } from '../../../utils/enums';
 import TeamsSelect from '../../Dropdowns/TeamsSelect';
@@ -82,6 +87,18 @@ const ResourceModal: FC<ResourceProps> = ({
     }
   };
 
+  const removeResource = async (resource: IResource): Promise<void> => {
+    const res = await deleteResource(resource._id);
+
+    if (!isError(res)) {
+      closeModal();
+      Swal.fire({
+        title: 'Successfully deleted resource',
+        icon: 'success',
+      });
+    }
+  };
+
   const submitResource = async (): Promise<void> => {
     const res = await createResource({ ...parseFormData(formData) });
     const emptyForm = [
@@ -143,7 +160,7 @@ const ResourceModal: FC<ResourceProps> = ({
               value={formData.link}
               onChange={(e, { value }) => changeField('link', value)}
             />
-            <h4>Teams</h4>
+            <h5>Teams</h5>
             <TeamsSelect
               values={formData.teams}
               onChange={(values) =>
@@ -153,7 +170,14 @@ const ResourceModal: FC<ResourceProps> = ({
                 )
               }
             />
-            <h4>Resource Visibility</h4>
+            <Form.Checkbox
+              label="Is this Resource a general resource?"
+              labelPosition="right"
+              className="general-checkbox"
+              checked={formData.isGeneral}
+              onChange={(e, { checked }) => changeField('isGeneral', checked!)}
+            />
+            <h5>Resource Visibility</h5>
             <div className="resource-visibility">
               <Form.Radio
                 style={{ marginRight: 20, paddingLeft: 0 }}
@@ -178,14 +202,24 @@ const ResourceModal: FC<ResourceProps> = ({
           </Form>
         </Modal.Description>
         <Modal.Actions>
-          <Form.Button
-            className="submit-btn"
-            content={action === 'edit' ? 'Save' : 'Create Resource'}
-            type="submit"
-            onClick={() =>
-              action === 'create' ? submitResource() : updateResource()
-            }
-          />
+          <Form.Group>
+            <Form.Button
+              className="submit-btn"
+              content={action === 'edit' ? 'Save' : 'Create Resource'}
+              type="submit"
+              onClick={() =>
+                action === 'create' ? submitResource() : updateResource()
+              }
+            />
+            {action === 'edit' && (
+              <Form.Button
+                className="delete-btn"
+                content="Delete Resource"
+                type="submit"
+                onClick={() => removeResource(resource!)}
+              />
+            )}
+          </Form.Group>
         </Modal.Actions>
       </Modal.Content>
     </Modal>
