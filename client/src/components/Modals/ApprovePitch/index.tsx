@@ -1,6 +1,13 @@
 import { isEmpty } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Button, Form, Grid, Modal, ModalProps } from 'semantic-ui-react';
+import {
+  Button,
+  Form,
+  Grid,
+  Modal,
+  ModalProps,
+  Message,
+} from 'semantic-ui-react';
 import { IPitch, ITeam, IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
 
@@ -12,7 +19,7 @@ import {
 } from '../../../api';
 import { getUsersByTeam } from '../../../api/user';
 import { LinkDisplay, MultiSelect, Select } from '../../../components';
-import { useInterests, useTeams } from '../../../contexts';
+import { useAuth, useInterests, useTeams } from '../../../contexts';
 import { neighborhoods } from '../../../utils/constants';
 import { rolesEnum } from '../../../utils/enums';
 import { classNames, getUserFullName } from '../../../utils/helpers';
@@ -71,6 +78,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
 
   const { teams } = useTeams();
   const { getInterestById } = useInterests();
+  const { user } = useAuth();
 
   useEffect(() => {
     if (!isOpen) {
@@ -182,6 +190,9 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   };
 
   const handleApprove = async (): Promise<void> => {
+    if (user._id === author._id) {
+      return;
+    }
     const validForm = formData.teams.length > 0;
 
     if (!validForm) {
@@ -216,6 +227,9 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   };
 
   const handleDecline = async (): Promise<void> => {
+    if (user._id === author._id) {
+      return;
+    }
     const res = await declinePitch(pitch._id);
 
     if (!isError(res)) {
@@ -282,8 +296,12 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       trigger={<PitchRow pitch={pitch} />}
       className={classNames('approve-pitch-modal', rest.className)}
     >
-      <Modal.Header content="Review Pitch" />
-      <Modal.Content scrolling className="content">
+      <Modal.Header className="review-pitch-header" content="Review Pitch" />
+
+      <Modal.Content scrolling className="review-pitch-content">
+        {user._id === author._id && (
+          <Message warning header="You can't approve your own pitch." />
+        )}
         <div className="title-section">
           <h2 className="title">{pitch.title}</h2>
           <LinkDisplay href={pitch.assignmentGoogleDocLink} />
@@ -482,7 +500,12 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
           <Form.Input fluid onChange={(e, { value }) => setReasoning(value)} />
         </Form>
         <Modal.Actions>
-          <Button onClick={handleApprove} content="Approve" positive />
+          <Button
+            disabled={user._id === author._id}
+            onClick={handleApprove}
+            content="Approve"
+            positive
+          />
           <Button onClick={handleDecline} content="Decline" negative />
         </Modal.Actions>
       </Modal.Content>
