@@ -136,27 +136,22 @@ export const approveClaim = async (
   const teamIdToTeam: idToTeam = {};
   const claimUserTeams = [];
 
+  for (const team of pitch.aggregated.teams) {
+    teamIdToTeam[team._id] = team;
+    teamNamesToUsers[team.name] = [];
+  }
+
   for (const contributor of pitch.aggregated.assignmentContributors) {
     const info: userInfo = {
       name: `${contributor.user.firstName} ${contributor.user.lastName}`,
       email: contributor.user.email,
     };
     for (const teamId of contributor.teams) {
-      const team =
-        teamId in teamIdToTeam
-          ? teamIdToTeam[teamId]
-          : await Team.findById(teamId);
-      if (!(teamId in teamIdToTeam)) {
-        teamIdToTeam[teamId] = team;
-      }
+      const team = teamIdToTeam[teamId];
       if (String(contributor.user._id) === String(claimUser._id)) {
         claimUserTeams.push(team.name);
       }
-      if (!(team.name in teamNamesToUsers)) {
-        teamNamesToUsers[team.name] = [info];
-      } else {
-        teamNamesToUsers[team.name].push(info);
-      }
+      teamNamesToUsers[team.name].push(info);
     }
   }
   const basicEmail = buildEmailQuery(
