@@ -36,4 +36,4 @@ export {
   updateManyInterests,
 } from './interest';
 export { getTeams, createManyTeams, updateManyTeams } from './teams';
-export { isError, buildURI } from './builders';
+export { isError, buildLoginEndpoint, buildEndpoint } from './builders';
