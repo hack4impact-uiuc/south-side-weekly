@@ -7,7 +7,7 @@ import { ErrorWrapper, ApiResponse } from './types';
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 axios.defaults.withCredentials = true;
 
-console.log("Running API URI: ", API_URI);
+console.log('Running API URI: ', API_URI);
 
 const instance = axios.create({
   baseURL: API_URI,
