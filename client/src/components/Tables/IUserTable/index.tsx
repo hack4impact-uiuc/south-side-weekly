@@ -11,7 +11,7 @@ interface DirectoryRowProps<RecordType> {
 
 interface DirectoryHeaderProps<RecordType> {
   columns: ColumnType<RecordType>[];
-  sortColumn: ColumnType<RecordType>;
+  sortColumn?: ColumnType<RecordType>;
   handleSort: (column: ColumnType<RecordType>) => void;
 }
 
