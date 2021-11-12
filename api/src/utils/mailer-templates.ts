@@ -49,15 +49,17 @@ export const notifyMessage = (
   return { ...basicEmail, cc: ccUser ? ccUser.email : '' };
 };
 export const declinedMessage = (
-  author: Partial<IUser>,
   pitch: IPitchAggregate,
   admin: IUser,
 ): EmailMessage => {
   const basicEmail = buildEmailQuery(
-    author.email,
+    pitch.aggregated.author.email,
     `Pitch "${pitch.title}" Declined`,
     `<div>
-                <p>Hi ${author.preferredName || author.firstName},</p>
+                <p>Hi ${
+                  pitch.aggregated.author.preferredName ||
+                  pitch.aggregated.author.firstName
+                },</p>
                 <br>
                 <p>Thank you for submitting your pitch <a href='"${
                   pitch.assignmentGoogleDocLink
@@ -80,16 +82,18 @@ export const declinedMessage = (
 };
 
 export const approvedMessage = (
-  author: Partial<IUser>,
   pitch: IPitchAggregate,
   admin: Partial<IUser>,
 ): EmailMessage => {
   const ccUser = pitch.writer ? pitch.aggregated.primaryEditor : undefined;
   const basicEmail = buildEmailQuery(
-    author.email,
+    pitch.aggregated.author.email,
     `Pitch "${pitch.title}" Approved`,
     `<div>
-                <p>Hi ${author.preferredName || author.firstName},</p>
+                <p>Hi ${
+                  pitch.aggregated.author.preferredName ||
+                  pitch.aggregated.author.firstName
+                },</p>
                 <p>Congratulations, your pitch <a href='"${
                   pitch.assignmentGoogleDocLink
                 }"'>"${

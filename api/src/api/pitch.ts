@@ -245,9 +245,8 @@ router.put(
       return;
     }
 
-    const author = await User.findById(pitch.author);
     const aggregatedPitch = await aggregatePitch(pitch);
-    const message = approvedMessage(author, aggregatedPitch, req.user);
+    const message = approvedMessage(aggregatedPitch, req.user);
     await sendMail(message);
     res.status(200).json({
       success: true,
@@ -276,9 +275,8 @@ router.put(
       });
       return;
     }
-    const author = await User.findById(pitch.author);
     const aggregatedPitch = await aggregatePitch(pitch);
-    const message = declinedMessage(author, aggregatedPitch, req.user);
+    const message = declinedMessage(aggregatedPitch, req.user);
     await sendMail(message);
     res.status(200).json({
       success: true,
