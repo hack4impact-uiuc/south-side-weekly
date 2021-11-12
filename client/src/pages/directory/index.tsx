@@ -18,6 +18,7 @@ import { pagesEnum } from '../../utils/enums';
 import { filterInterests, filterRole, filterTeams } from './helpers';
 
 import './styles.scss';
+import ExtendedTable from '../../components/Tables/IUserTable';
 
 const searchFields: (keyof IUser)[] = [
   'firstName',
@@ -128,7 +129,10 @@ const ApprovedUsers = (): ReactElement => {
         </div>
       </div>
       <div className="directory">
-        <DirectoryTable users={filteredDirectory} />
+        <ExtendedTable<IUser>
+          records={filteredDirectory}
+          columns={[{ title: 'First name', extractor: 'firstName' }]}
+        />
       </div>
     </div>
   );

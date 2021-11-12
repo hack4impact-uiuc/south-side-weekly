@@ -4,6 +4,7 @@ import { IPitch, IUser } from 'ssw-common';
 
 import { FieldTag, TableTool } from '../..';
 import { useAuth, useInterests, useTeams } from '../../../contexts';
+import ExtendedTable, { ColumnType } from '../IUserTable';
 
 import './styles.scss';
 
@@ -160,19 +161,17 @@ const PitchTable: FC<PitchTableProps> = ({ pitches }): ReactElement => {
     setSortedPitches(pitches);
   }, [pitches]);
 
-  return (
-    <TableTool
-      tableHeader={
-        <PitchHeader
-          pitches={pitches}
-          sortedPitches={sortedPitches}
-          setSortedPitches={setSortedPitches}
-        />
-      }
-      tableBody={<PitchBody sortedPitches={sortedPitches} />}
-      singleLine={pitches.length > 0}
-    />
-  );
+  const columns = [
+    {
+      title: 'Title',
+      extractor: 'title',
+    },
+    {
+      title: 'Description',
+      extractor: 'description',
+    },
+  ] as ColumnType<IPitch>[];
+  return <ExtendedTable<IPitch> records={pitches} columns={columns} />;
 };
 
 export default PitchTable;
