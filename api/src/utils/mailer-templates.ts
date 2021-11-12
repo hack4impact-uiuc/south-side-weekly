@@ -1,5 +1,4 @@
 import { IUser, ITeam, IPitchAggregate } from 'ssw-common';
-import Team from '../models/team';
 
 export interface EmailMessage {
   to: string;
