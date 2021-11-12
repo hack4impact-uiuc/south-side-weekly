@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Toaster } from 'react-hot-toast';
 import {
   BrowserRouter as Router,
   Redirect,
@@ -59,6 +60,7 @@ const routes = [
 ReactDOM.render(
   <React.StrictMode>
     <ProviderWrapper>
+      <Toaster />
       <Router>
         <Switch>
           <Route exact path="/">

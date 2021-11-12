@@ -1,5 +1,6 @@
 import { isEmpty, isUndefined, toString } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import {
   Button,
   Form,
@@ -9,11 +10,12 @@ import {
   Popup,
   Header,
 } from 'semantic-ui-react';
+import { IPitch } from 'ssw-common';
 import Swal from 'sweetalert2';
 
+import { InterestsSelect } from '../..';
 import { createPitch, isError } from '../../../api';
-import { useAuth, useInterests } from '../../../contexts';
-import { titleCase } from '../../../utils/helpers';
+import { useAuth, useTeams } from '../../../contexts';
 
 import './styles.scss';
 
@@ -22,6 +24,16 @@ const MAX_LENGTH = 300;
 interface SubmitPitchModalProps extends ModalProps {
   callback(): void;
 }
+
+const notify = (): string =>
+  toast.error('Please fill out all the fields before submitting!', {
+    position: 'bottom-right',
+  });
+
+const interestNotify = (): string =>
+  toast.error("You can't select more than 4 interests", {
+    position: 'bottom-right',
+  });
 
 const HelperMessage = (): ReactElement => (
   <>
@@ -66,77 +78,82 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [link, setLink] = useState('');
-  const [topics, setTopics] = useState(new Set<string>());
-  const [conflictofInterest, setConflictOfInterest] = useState<
-    boolean | undefined
-  >();
+  const [topics, setTopics] = useState<string[]>([]);
+  const [conflictofInterest, setConflictOfInterest] = useState<boolean>();
   const [didSubmit, setDidSubmit] = useState(false);
-
+  const [writerChoice, setWriterChoice] = useState<boolean>();
   const { user } = useAuth();
-  const { interests } = useInterests();
-
-  const addTopic = (topic: string): void => {
-    topics.has(topic) ? topics.delete(topic) : topics.add(topic);
-    setTopics(new Set(topics));
-  };
+  const { teams } = useTeams();
 
   useEffect(() => {
     setTitle('');
     setDescription('');
     setLink('');
-    setTopics(new Set());
     setConflictOfInterest(undefined);
     setDidSubmit(false);
+    setWriterChoice(undefined);
+    setTopics([]);
   }, [isOpen]);
 
   const submitPitch = async (): Promise<void> => {
     setDidSubmit(true);
 
-    if (!isInvalidForm()) {
-      const body = {
-        title: title,
-        author: user._id,
-        assignmentGoogleDocLink: link,
-        status: 'PENDING',
-        description: description,
-        topics: Array.from(topics),
-        conflictOfInterest: conflictofInterest!,
-      };
+    if (isInvalidForm()) {
+      notify();
+      return;
+    }
 
-      const res = await createPitch({ ...body });
+    let body: Partial<IPitch> = {
+      title: title,
+      author: user._id,
+      assignmentGoogleDocLink: link,
+      status: 'PENDING',
+      description: description,
+      topics: topics,
+      conflictOfInterest: conflictofInterest!,
+    };
 
-      if (!isError(res)) {
-        callback();
-        Swal.fire({
-          title: 'Successfully submitted pitch!',
-          icon: 'success',
-        });
-        setIsOpen(false);
-      }
+    if (writerChoice) {
+      body = { ...body, writer: user._id };
+    }
+
+    const res = await createPitch({ ...body });
+
+    if (!isError(res)) {
+      callback();
+      Swal.fire({
+        title: 'Successfully submitted pitch!',
+        icon: 'success',
+      });
+
+      setIsOpen(false);
     }
 
     return;
+  };
+
+  const isWriter = (): boolean => {
+    const writerObj = teams.find((team) => team.name === 'Writing');
+
+    if (!writerObj) {
+      console.error('No team with name Writing');
+      return false;
+    }
+
+    const writerId = writerObj._id;
+
+    return user.teams.includes(writerId);
   };
 
   const isInvalidForm = (): boolean =>
     [title, description, link, topics].some(isEmpty) ||
     isUndefined(conflictofInterest);
 
-  const isFieldError = (
-    field: string | Set<string> | boolean | undefined,
-  ): boolean => {
-    if (!didSubmit) {
-      return false;
-    }
-
-    if (isUndefined(field)) {
-      return true;
-    } else if (field instanceof Set && isEmpty(field)) {
-      return true;
-    }
-
-    return false;
-  };
+  type FieldProps = string | Set<any> | boolean | undefined;
+  const isFieldError = (field: FieldProps): boolean =>
+    didSubmit &&
+    typeof field !== 'boolean' &&
+    (isUndefined(field) || isEmpty(field));
 
   return (
     <Modal
@@ -161,47 +178,64 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
         <Form id="submit-pitch" onSubmit={submitPitch}>
           <Form.Group widths="equal">
             <Form.Input
-              required
               error={isFieldError(title)}
-              label="Title"
+              label={<h5>Pitch Title</h5>}
               value={title}
               onChange={(e, { value }) => setTitle(value)}
-              size="small"
-            />
-            <Form.Input
-              required
-              error={isFieldError(link)}
-              label={'Link to Google Doc'}
-              value={link}
-              onChange={(e, { value }) => setLink(value)}
-              size="small"
             />
           </Form.Group>
-
+          <Form.Group widths="equal">
+            <Form.Input
+              error={isFieldError(link)}
+              label={<h5>Google Doc Link</h5>}
+              value={link}
+              onChange={(e, { value }) => setLink(value)}
+            />
+          </Form.Group>
           <Form.TextArea
-            required
             maxLength={MAX_LENGTH}
             value={description}
             onChange={(e, { value }) => setDescription(toString(value))}
-            label="Description"
+            label={<h5>Description</h5>}
             error={isFieldError(description)}
           />
+          <h5 className="label-topics">
+            Associated topics
+            <p className="unbold">(select 1-4 topics) </p>
+          </h5>
+          <InterestsSelect
+            values={topics}
+            onChange={(values) => {
+              if (values.length <= 4) {
+                setTopics(values.map((item) => item.value));
+              } else {
+                interestNotify();
+              }
+            }}
+          />
+          {isWriter() && (
+            <>
+              <h5>Do you want to be the writer of the story? </h5>
+              <Form.Group inline>
+                <Form.Radio
+                  name="writer-choice"
+                  label="Yes"
+                  onClick={() => setWriterChoice(true)}
+                  checked={writerChoice}
+                  error={isFieldError(writerChoice)}
+                />
+                <Form.Radio
+                  name="writer-choice"
+                  label="No, I want someone else to write the story"
+                  onClick={() => setWriterChoice(false)}
+                  checked={!isUndefined(writerChoice) && !writerChoice}
+                  error={isFieldError(writerChoice)}
+                />
+              </Form.Group>{' '}
+            </>
+          )}
 
-          <h3>Topics (Please select at least 1 topic)</h3>
-          <Form.Group inline widths="4" className="checkbox-group">
-            {interests.map((topic, index) => (
-              <Form.Checkbox
-                error={isFieldError(topics)}
-                className="checkbox"
-                key={index}
-                label={titleCase(topic.name)}
-                checked={topics.has(topic._id)}
-                onClick={() => addTopic(topic._id)}
-                value={topic._id}
-              />
-            ))}
-          </Form.Group>
-          <h3>Conflict of Interest Discolsure</h3>
+          <h5>Conflict of Interest Disclosure</h5>
           <p>
             Are you involved with the events or people covered in your pitch?
             i.e. do you have a relationship with them as an employee, family
@@ -225,12 +259,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
           </Form.Group>
         </Form>
         <Modal.Actions>
-          <Button
-            type="submit"
-            content="Submit pitch for review"
-            positive
-            form="submit-pitch"
-          />
+          <Button type="submit" content="Submit" positive form="submit-pitch" />
         </Modal.Actions>
       </Modal.Content>
     </Modal>
