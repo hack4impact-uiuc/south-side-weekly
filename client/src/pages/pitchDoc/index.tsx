@@ -175,20 +175,20 @@ const PitchDoc = (): ReactElement => {
           onClick={(e, { name }) => setCurrentTab(name!)}
         />
 
-        <StaffView>
+        <AdminView>
           <Menu.Item
             name={pitchDocTabs.PITCH_APPROVAL}
             active={pitchDocTabs.PITCH_APPROVAL === currentTab}
             onClick={(e, { name }) => setCurrentTab(name!)}
           />
-        </StaffView>
-        <AdminView>
+        </AdminView>
+        <StaffView>
           <Menu.Item
             name={pitchDocTabs.CLAIM_APPROVAL}
             active={pitchDocTabs.CLAIM_APPROVAL === currentTab}
             onClick={(e, { name }) => setCurrentTab(name!)}
           />
-        </AdminView>
+        </StaffView>
       </Menu>
       <div className="search-add-wrapper">
         <Input

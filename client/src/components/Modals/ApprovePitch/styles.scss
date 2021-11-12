@@ -1,10 +1,10 @@
 @import '../../../styles/colors.scss';
 
 .approve-pitch-modal {
-  .content {
+  .review-pitch-content {
     background-color: $mainBackground !important;
   }
-  .header {
+  .review-pitch-header {
     background-color: $primary !important;
     color: white !important;
   }
