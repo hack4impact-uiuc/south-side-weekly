@@ -40,13 +40,13 @@
   }
 
   .submit-btn .button {
-    background-color: $primary !important;
+    background-color: $secondaryColor !important;
     color: white !important;
     float: right;
     margin: 20px;
 
     &:hover {
-      background-color: $primary;
+      background-color: $secondaryColor;
       color: white;
       opacity: 0.9;
     }
