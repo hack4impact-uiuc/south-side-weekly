@@ -1,19 +1,15 @@
 import { startsWith, toLower, toString } from 'lodash';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { Icon, Input, Tab } from 'semantic-ui-react';
-import { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic';
 import { IUser } from 'ssw-common';
 import { getUsers, isError } from '../../api';
 import {
-  EditInterests,
-  FieldTag,
   InterestsSelect,
   OnboardingTable,
   Select,
   TeamsSelect,
   Walkthrough,
 } from '../../components';
-import DynamicTable from '../../components/Tables/DyanmicTable';
 import { useInterests } from '../../contexts';
 import { allRoles } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
@@ -144,42 +140,7 @@ const ApprovedUsers = (): ReactElement => {
         </div>
       </div>
       <div className="directory">
-        <DynamicTable<IUser>
-          records={filteredDirectory}
-          columns={[
-            {
-              title: 'First name',
-              extractor: 'firstName',
-              sorter: (a, b) => a.firstName.localeCompare(b.firstName),
-            },
-            {
-              title: 'Last name',
-              extractor: 'lastName',
-              sorter: (a, b) => a.firstName.localeCompare(b.firstName),
-            },
-            {
-              title: 'Email',
-              extractor: EmailCell,
-            },
-            {
-              title: (
-                <>
-                  Topics <EditInterests />
-                </>
-              ),
-              extractor: function TopicsCell({ interests }) {
-                return interests.map((interest, i) => (
-                  <FieldTag
-                    name={getInterestById(interest)?.name}
-                    hexcode={getInterestById(interest)?.color as SemanticCOLORS}
-                    key={i}
-                  />
-                ));
-              },
-            },
-          ]}
-          singleLine
-        />
+        <ApprovedUsers />
       </div>
     </div>
   );
