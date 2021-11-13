@@ -93,6 +93,13 @@ const ApprovedUsers = (): ReactElement => {
     setFilteredDirectory([...search(filter(directory))]);
   }, [directory, query, interests, teams, role]);
 
+  const EmailCell = ({ email }: IUser): ReactElement => (
+    <>
+      <Icon name="mail" />
+      {email}
+    </>
+  );
+
   return (
     <div className="directory-page">
       <Walkthrough
@@ -152,18 +159,14 @@ const ApprovedUsers = (): ReactElement => {
             },
             {
               title: 'Email',
-              extractor: function EmailCell({ email }) {
-                return (
-                  <>
-                    <Icon name="mail" />
-                    {email}
-                  </>
-                );
-              },
+              extractor: EmailCell,
             },
             {
-              title: 'Topics',
-              headerModal: EditInterests,
+              title: (
+                <>
+                  Topics <EditInterests />
+                </>
+              ),
               extractor: function TopicsCell({ interests }) {
                 return interests.map((interest, i) => (
                   <FieldTag

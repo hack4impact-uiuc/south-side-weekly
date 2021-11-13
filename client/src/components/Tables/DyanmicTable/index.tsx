@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, ReactNode, useEffect, useState } from 'react';
 import { Icon, ModalProps, SemanticWIDTHS, Table } from 'semantic-ui-react';
 import './styles.scss';
 
@@ -18,9 +18,8 @@ interface TableHeaderProps<RecordType> {
 }
 
 interface ColumnType<RecordType> {
-  title: string;
+  title: ReactNode;
   width?: SemanticWIDTHS;
-  headerModal?: React.FC<ModalProps>;
   sorter?: (a: RecordType, b: RecordType) => number;
   extractor:
     | keyof RecordType
@@ -42,7 +41,6 @@ const TableHeader = <RecordType,>({
         key={index}
       >
         {column.title}
-        {column.headerModal}
       </Table.HeaderCell>
     ))}
   </Table.Header>
