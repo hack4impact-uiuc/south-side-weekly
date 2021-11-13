@@ -1,15 +1,24 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Table } from 'semantic-ui-react';
-import { IPitch, IUser } from 'ssw-common';
+import { IPitch } from 'ssw-common';
 
-import { FieldTag, TableTool } from '../..';
+import {
+  ApprovePitchModal,
+  ClaimPitchModal,
+  FieldTag,
+  TableTool,
+  ViewPitchModal,
+} from '../..';
 import { useAuth, useInterests, useTeams } from '../../../contexts';
-import ExtendedTable, { ColumnType } from '../DyanmicTable';
 
+import { pitchDocTabs } from '../../../utils/constants';
 import './styles.scss';
+import { getClaimableTeams } from '../../../utils/helpers';
 
 interface PitchTableProps {
   pitches: IPitch[];
+  callback(): void;
+  currentTab: string;
 }
 
 interface PitchHeaderProps {
@@ -20,6 +29,8 @@ interface PitchHeaderProps {
 
 interface PitchBodyProps {
   sortedPitches: IPitch[];
+  callback(): void;
+  currentTab: string;
 }
 
 interface PitchRowProps {
@@ -91,7 +102,11 @@ const PitchHeader: FC<PitchHeaderProps> = ({
   );
 };
 
-const PitchBody: FC<PitchBodyProps> = ({ sortedPitches }): ReactElement => (
+const PitchBody: FC<PitchBodyProps> = ({
+  sortedPitches,
+  callback,
+  currentTab,
+}): ReactElement => (
   <>
     {sortedPitches.length === 0 && (
       <Table.Row>
@@ -100,26 +115,33 @@ const PitchBody: FC<PitchBodyProps> = ({ sortedPitches }): ReactElement => (
         </Table.Cell>
       </Table.Row>
     )}
-    {sortedPitches.map((user, index) => (
-      <PitchRow pitch={user} key={index} />
-    ))}
+    {sortedPitches.map((pitch, index) => {
+      if (currentTab === pitchDocTabs.UNCLAIMED) {
+        return (
+          <ClaimPitchModal callback={callback} key={index} pitch={pitch} />
+        );
+      } else if (currentTab === pitchDocTabs.PITCH_APPROVAL) {
+        return (
+          <ApprovePitchModal callback={callback} key={index} pitch={pitch} />
+        );
+      } else if (currentTab === pitchDocTabs.CLAIM_APPROVAL) {
+        //TODO: Replace PitchRow with the modal component
+        return <PitchRow pitch={pitch} />;
+      } else if (currentTab === pitchDocTabs.APPROVED) {
+        //TODO: Replace PitchRow with the modal component
+        return <ViewPitchModal key={index} pitch={pitch} />;
+      }
+    })}
   </>
 );
 
-const getClaimableTeams = (pitch: IPitch, user: IUser): string[] =>
-  pitch.writer
-    ? pitch.teams
-        .filter((team) => team.target > 0 && user.teams.includes(team.teamId))
-        .map((team) => team.teamId)
-    : [];
-
-const PitchRow: FC<PitchRowProps> = ({ pitch }): ReactElement => {
+const PitchRow: FC<PitchRowProps> = ({ pitch, ...rest }): ReactElement => {
   const { user } = useAuth();
   const { getInterestById } = useInterests();
   const { getTeamFromId } = useTeams();
 
   return (
-    <Table.Row>
+    <Table.Row {...rest}>
       <Table.Cell>{pitch.title}</Table.Cell>
       <Table.Cell>{pitch.description}</Table.Cell>
       <Table.Cell>
@@ -154,24 +176,17 @@ const PitchRow: FC<PitchRowProps> = ({ pitch }): ReactElement => {
   );
 };
 
-const PitchTable: FC<PitchTableProps> = ({ pitches }): ReactElement => {
+const PitchTable: FC<PitchTableProps> = ({
+  pitches,
+  callback,
+  currentTab,
+}): ReactElement => {
   const [sortedPitches, setSortedPitches] = useState<IPitch[]>([]);
 
   useEffect(() => {
     setSortedPitches(pitches);
   }, [pitches]);
 
-  const columns = [
-    {
-      title: 'Title',
-      extractor: 'title',
-    },
-    {
-      title: 'Description',
-      extractor: 'description',
-      sorter: (a, b) => a.description.localeCompare(b.description),
-    },
-  ] as ColumnType<IPitch>[];
   return (
     <TableTool
       tableHeader={
@@ -181,10 +196,16 @@ const PitchTable: FC<PitchTableProps> = ({ pitches }): ReactElement => {
           setSortedPitches={setSortedPitches}
         />
       }
-      tableBody={<PitchBody sortedPitches={sortedPitches} />}
+      tableBody={
+        <PitchBody
+          sortedPitches={sortedPitches}
+          callback={callback}
+          currentTab={currentTab}
+        />
+      }
       singleLine={pitches.length > 0}
     />
   );
 };
 
-export default PitchTable;
+export { PitchTable, PitchRow };

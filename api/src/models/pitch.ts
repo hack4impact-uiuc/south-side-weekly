@@ -12,7 +12,7 @@ export type PitchSchema = IPitch & Document<any>;
 const contributor = new mongoose.Schema(
   {
     userId: { type: Schema.Types.ObjectId, ref: 'User' },
-    teams: [{ type: String }],
+    teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
   },
   { _id: false },
 );
@@ -82,6 +82,7 @@ const Pitch = new mongoose.Schema({
   reviewedBy: { type: Schema.Types.ObjectId, ref: 'User' },
   similarStories: [{ type: String, default: null }],
   deadline: { type: Date, default: null },
+  neighborhoods: [{ type: String, default: null }],
 });
 
 export default mongoose.model<PitchSchema>('Pitch', Pitch);

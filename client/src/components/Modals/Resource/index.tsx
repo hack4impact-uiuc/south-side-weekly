@@ -1,12 +1,19 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { CheckboxProps, Form, Modal, ModalProps } from 'semantic-ui-react';
-import { IResource, ITeam } from 'ssw-common';
+import toast from 'react-hot-toast';
+import { Form, Modal, ModalProps } from 'semantic-ui-react';
+import { IResource } from 'ssw-common';
 import Swal from 'sweetalert2';
+import { isEmpty } from 'lodash';
 
-import { createResource, editResource, isError } from '../../../api';
+import {
+  createResource,
+  deleteResource,
+  editResource,
+  isError,
+} from '../../../api';
 import './styles.scss';
-import { useTeams } from '../../../contexts';
 import { visibilityEnum } from '../../../utils/enums';
+import TeamsSelect from '../../Dropdowns/TeamsSelect';
 
 interface ResourceProps extends ModalProps {
   resource?: IResource;
@@ -17,7 +24,7 @@ interface ResourceProps extends ModalProps {
 interface FormData {
   name: string;
   link: string;
-  tags: Set<string>;
+  teams: string[];
   isGeneral: boolean;
   visibility: string;
 }
@@ -25,16 +32,9 @@ interface FormData {
 const defaultData: FormData = {
   name: '',
   link: '',
-  tags: new Set(),
+  teams: [],
   isGeneral: false,
   visibility: '',
-};
-
-const generalTeam: ITeam = {
-  _id: 'General',
-  name: 'General',
-  color: '',
-  active: false,
 };
 
 const ResourceModal: FC<ResourceProps> = ({
@@ -45,15 +45,11 @@ const ResourceModal: FC<ResourceProps> = ({
 }): ReactElement => {
   const [formData, setFormData] = useState<FormData>({
     ...defaultData,
-    tags: new Set(),
   });
-
-  let { teams: allTeams } = useTeams();
-  allTeams = [generalTeam, ...allTeams];
 
   // Resets the form data on every open
   useEffect(() => {
-    setFormData({ ...defaultData, tags: new Set() });
+    setFormData({ ...defaultData });
   }, [rest.open]);
 
   useEffect(() => {
@@ -61,7 +57,7 @@ const ResourceModal: FC<ResourceProps> = ({
       const body = {
         name: resource.name,
         link: resource.link,
-        tags: new Set(resource.teams),
+        teams: resource.teams,
         isGeneral: resource.isGeneral,
         visibility: resource.visibility,
       };
@@ -73,7 +69,7 @@ const ResourceModal: FC<ResourceProps> = ({
   const parseFormData = (data: FormData): Partial<IResource> => ({
     name: data.name,
     link: data.link,
-    teams: Array.from(data.tags),
+    teams: data.teams,
     isGeneral: data.isGeneral,
     visibility: data.visibility,
   });
@@ -91,8 +87,31 @@ const ResourceModal: FC<ResourceProps> = ({
     }
   };
 
+  const removeResource = async (resource: IResource): Promise<void> => {
+    const res = await deleteResource(resource._id);
+
+    if (!isError(res)) {
+      closeModal();
+      Swal.fire({
+        title: 'Successfully deleted resource',
+        icon: 'success',
+      });
+    }
+  };
+
   const submitResource = async (): Promise<void> => {
     const res = await createResource({ ...parseFormData(formData) });
+    const emptyForm = [
+      formData.name,
+      formData.link,
+      formData.teams,
+      formData.visibility,
+    ].some(isEmpty);
+
+    if (emptyForm) {
+      notify();
+      return;
+    }
 
     if (isError(res)) {
       Swal.fire({
@@ -109,12 +128,6 @@ const ResourceModal: FC<ResourceProps> = ({
     }
   };
 
-  const getSelectedTeams = (tag: string): Set<string> => {
-    const tags = formData.tags;
-    tags.has(tag) ? tags.delete(tag) : tags.add(tag);
-    return tags;
-  };
-
   const changeField = <T extends keyof FormData>(
     key: T,
     value: FormData[T],
@@ -124,17 +137,10 @@ const ResourceModal: FC<ResourceProps> = ({
     setFormData(data);
   };
 
-  const isChecked = (teamId: string): boolean => {
-    if (teamId === 'General') {
-      return formData.isGeneral;
-    }
-    return formData.tags.has(teamId);
-  };
-
-  const onChecked = (team: ITeam, { value }: CheckboxProps): void =>
-    team._id === 'General'
-      ? changeField('isGeneral', !formData.isGeneral)
-      : changeField('tags', getSelectedTeams(`${value}`));
+  const notify = (): string =>
+    toast.error('Please fill out all the fields before submitting!', {
+      position: 'bottom-right',
+    });
 
   return (
     <Modal className="resource-modal" {...rest}>
@@ -143,32 +149,35 @@ const ResourceModal: FC<ResourceProps> = ({
         <Modal.Description>
           <Form>
             <Form.Input
-              required
               label="Name"
               type="text"
               value={formData.name}
               onChange={(e, { value }) => changeField('name', value)}
             />
             <Form.Input
-              required
               label="Link"
               type="text"
               value={formData.link}
               onChange={(e, { value }) => changeField('link', value)}
             />
-            <h4>Teams</h4>
-            <Form.Group className="checkbox-group">
-              {allTeams.map((team, index) => (
-                <Form.Checkbox
-                  key={index}
-                  label={team.name}
-                  value={team._id}
-                  checked={isChecked(team._id)}
-                  onChange={(_, value) => onChecked(team, value)}
-                />
-              ))}
-            </Form.Group>
-            <h4>Resource Visibility</h4>
+            <h5>Teams</h5>
+            <TeamsSelect
+              values={formData.teams}
+              onChange={(values) =>
+                changeField(
+                  'teams',
+                  values.map((item) => item.value),
+                )
+              }
+            />
+            <Form.Checkbox
+              label="General Resource"
+              labelPosition="right"
+              className="general-checkbox"
+              checked={formData.isGeneral}
+              onChange={(e, { checked }) => changeField('isGeneral', checked!)}
+            />
+            <h5>Resource Visibility</h5>
             <div className="resource-visibility">
               <Form.Radio
                 style={{ marginRight: 20, paddingLeft: 0 }}
@@ -193,14 +202,24 @@ const ResourceModal: FC<ResourceProps> = ({
           </Form>
         </Modal.Description>
         <Modal.Actions>
-          <Form.Button
-            className="submit-btn"
-            content={action === 'edit' ? 'Save' : 'Create Resource'}
-            type="submit"
-            onClick={() =>
-              action === 'create' ? submitResource() : updateResource()
-            }
-          />
+          <Form.Group>
+            <Form.Button
+              className="submit-btn"
+              content={action === 'edit' ? 'Save' : 'Create Resource'}
+              type="submit"
+              onClick={() =>
+                action === 'create' ? submitResource() : updateResource()
+              }
+            />
+            {action === 'edit' && (
+              <Form.Button
+                className="delete-btn"
+                content="Delete Resource"
+                type="submit"
+                onClick={() => removeResource(resource!)}
+              />
+            )}
+          </Form.Group>
         </Modal.Actions>
       </Modal.Content>
     </Modal>

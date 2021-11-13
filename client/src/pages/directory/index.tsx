@@ -1,27 +1,24 @@
-import React, { useEffect, useState, ReactElement } from 'react';
 import { startsWith, toLower, toString } from 'lodash';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { Icon, Input, Tab } from 'semantic-ui-react';
-import { IUser } from 'ssw-common';
-
-import { getUsers, isError } from '../../api';
-import { allRoles } from '../../utils/constants';
-import {
-  Select,
-  DirectoryTable,
-  OnboardingTable,
-  Walkthrough,
-  InterestsSelect,
-  TeamsSelect,
-  FieldTag,
-} from '../../components';
-import { pagesEnum } from '../../utils/enums';
-
-import { filterInterests, filterRole, filterTeams } from './helpers';
-
-import './styles.scss';
-import { useInterests } from '../../contexts';
 import { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic';
+import { IUser } from 'ssw-common';
+import { getUsers, isError } from '../../api';
+import {
+  FieldTag,
+  InterestsSelect,
+  OnboardingTable,
+  Select,
+  TeamsSelect,
+  Walkthrough,
+} from '../../components';
 import DynamicTable from '../../components/Tables/DyanmicTable';
+import { useInterests } from '../../contexts';
+import { allRoles } from '../../utils/constants';
+import { pagesEnum } from '../../utils/enums';
+import { parseOptionsSelect } from '../../utils/helpers';
+import { filterInterests, filterRole, filterTeams } from './helpers';
+import './styles.scss';
 
 const searchFields: (keyof IUser)[] = [
   'firstName',
@@ -97,6 +94,12 @@ const ApprovedUsers = (): ReactElement => {
 
   return (
     <div className="directory-page">
+      <Walkthrough
+        page={pagesEnum.DIRECTORY}
+        content="Check out the members on the SSW team and click their profiles to view more details!"
+      />
+
+      <h2>Directory</h2>
       <Input
         value={query}
         onChange={(e, { value }) => setQuery(value)}
@@ -112,7 +115,7 @@ const ApprovedUsers = (): ReactElement => {
         <div className="wrapper">
           <Select
             value={role}
-            options={allRoles}
+            options={parseOptionsSelect(allRoles)}
             onChange={(e) => setRole(e ? e.value : '')}
             placeholder="Role"
           />
