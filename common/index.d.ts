@@ -129,5 +129,5 @@ export interface IIssue {
   deadlineDate: string;
   releaseDate: string;
   pitches: string[];
-  type: IssueFormatEnum;
+  type: string;
 }
