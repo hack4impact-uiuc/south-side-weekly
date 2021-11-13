@@ -119,11 +119,6 @@ export interface ITeam {
   color: string;
 }
 
-declare enum Type {
-  printIssue,
-  onlineIssue,
-}
-
 /**
  * Interface for a Issue Schema.
  */
@@ -133,5 +128,5 @@ export interface IIssue {
   deadlineDate: string;
   releaseDate: string;
   pitches: string[];
-  type: Type;
+  type: IssueFormatEnum;
 }
