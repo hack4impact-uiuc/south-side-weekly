@@ -12,6 +12,7 @@ import {
   Walkthrough,
   InterestsSelect,
   TeamsSelect,
+  FieldTag,
 } from '../../components';
 import { pagesEnum } from '../../utils/enums';
 
@@ -19,6 +20,8 @@ import { filterInterests, filterRole, filterTeams } from './helpers';
 
 import './styles.scss';
 import ExtendedTable from '../../components/Tables/DyanmicTable';
+import { useInterests } from '../../contexts';
+import { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic';
 
 const searchFields: (keyof IUser)[] = [
   'firstName',
@@ -34,6 +37,7 @@ const ApprovedUsers = (): ReactElement => {
   const [interests, setInterests] = useState<string[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
   const [query, setQuery] = useState<string>('');
+  const { getInterestById } = useInterests();
 
   // const resetFilters = () => {
   //   setRole('');
@@ -151,6 +155,18 @@ const ApprovedUsers = (): ReactElement => {
                     {email}
                   </>
                 );
+              },
+            },
+            {
+              title: 'Topics',
+              extractor: function TopicsCell({ interests }) {
+                return interests.map((interest, i) => (
+                  <FieldTag
+                    name={getInterestById(interest)?.name}
+                    hexcode={getInterestById(interest)?.color as SemanticCOLORS}
+                    key={i}
+                  />
+                ));
               },
             },
           ]}

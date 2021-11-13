@@ -22,7 +22,9 @@ interface ColumnType<RecordType> {
   width?: SemanticWIDTHS;
   headerModal?: React.FC<ModalProps>;
   sorter?: (a: RecordType, b: RecordType) => number;
-  extractor: keyof RecordType | ((record: RecordType) => ReactElement);
+  extractor:
+    | keyof RecordType
+    | ((record: RecordType) => ReactElement | ReactElement[]);
 }
 
 const TableHeader = <RecordType,>({
