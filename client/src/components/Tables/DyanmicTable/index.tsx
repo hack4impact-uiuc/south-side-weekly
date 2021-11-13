@@ -32,24 +32,21 @@ const TableHeader = <RecordType,>({
   sortDirection,
   sortColumn,
   handleSort,
-}: TableHeaderProps<RecordType>): ReactElement => {
-  console.log(columns, sortColumn, sortDirection);
-  return (
-    <Table.Header>
-      {columns.map((column, index) => (
-        <Table.HeaderCell
-          width={column.width}
-          onClick={() => handleSort(column)}
-          sorted={sortColumn === column ? sortDirection : undefined}
-          key={index}
-        >
-          {column.title}
-          {column.headerModal !== undefined && <Icon name="pencil" />}
-        </Table.HeaderCell>
-      ))}
-    </Table.Header>
-  );
-};
+}: TableHeaderProps<RecordType>): ReactElement => (
+  <Table.Header>
+    {columns.map((column, index) => (
+      <Table.HeaderCell
+        width={column.width}
+        onClick={() => handleSort(column)}
+        sorted={sortColumn === column ? sortDirection : undefined}
+        key={index}
+      >
+        {column.title}
+        {column.headerModal}
+      </Table.HeaderCell>
+    ))}
+  </Table.Header>
+);
 
 const TableRow = <RecordType,>({
   record,

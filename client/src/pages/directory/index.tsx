@@ -19,9 +19,9 @@ import { pagesEnum } from '../../utils/enums';
 import { filterInterests, filterRole, filterTeams } from './helpers';
 
 import './styles.scss';
-import ExtendedTable from '../../components/Tables/DyanmicTable';
 import { useInterests } from '../../contexts';
 import { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic';
+import DynamicTable from '../../components/Tables/DyanmicTable';
 
 const searchFields: (keyof IUser)[] = [
   'firstName',
@@ -133,7 +133,7 @@ const ApprovedUsers = (): ReactElement => {
         </div>
       </div>
       <div className="directory">
-        <ExtendedTable<IUser>
+        <DynamicTable<IUser>
           records={filteredDirectory}
           columns={[
             {
