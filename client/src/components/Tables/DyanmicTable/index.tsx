@@ -55,12 +55,13 @@ const TableRow = <RecordType,>({
   onClick,
 }: TableRowProps<RecordType>): ReactElement => (
   <Table.Row onClick={onClick}>
-    {columns.map((column, i) => {
-      if (typeof column.extractor !== 'function') {
-        return <Table.Cell key={i}>{record[column.extractor]}</Table.Cell>;
-      }
-      return column.extractor(record);
-    })}
+    {columns.map((column, i) => (
+      <Table.Cell key={i}>
+        {typeof column.extractor !== 'function'
+          ? record[column.extractor]
+          : column.extractor(record)}
+      </Table.Cell>
+    ))}
   </Table.Row>
 );
 

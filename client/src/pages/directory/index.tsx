@@ -1,6 +1,6 @@
 import React, { useEffect, useState, ReactElement } from 'react';
 import { startsWith, toLower, toString } from 'lodash';
-import { Input, Tab } from 'semantic-ui-react';
+import { Icon, Input, Tab } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { getUsers, isError } from '../../api';
@@ -144,7 +144,14 @@ const ApprovedUsers = (): ReactElement => {
             },
             {
               title: 'Email',
-              extractor: 'email',
+              extractor: function EmailCell({ email }) {
+                return (
+                  <>
+                    <Icon name="mail" />
+                    {email}
+                  </>
+                );
+              },
             },
           ]}
           singleLine
