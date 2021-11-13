@@ -2,18 +2,20 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Button, Icon, Table } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
-import { AdminView, FieldTag, UserModal, UserPicture, TableTool } from '../..';
+import { AdminView, FieldTag, TableTool, UserModal, UserPicture } from '../..';
 import { useInterests, useTeams } from '../../../contexts';
 import { getUserFullName } from '../../../utils/helpers';
 import { EditInterests, EditTeams } from '../../Modals/EditableTags';
+import {
+  activitySort,
+  fullNameSort,
+  joinedSort,
+  onboardingSort,
+  roleSort,
+} from '../Util/TableUtil';
 
 import './styles.scss';
-import { fullNameSort,
-  roleSort,
-  onboardingSort,
-  activitySort,
-  joinedSort
-} from '../Util/TableUtil'
+
 interface DirectoryTableProps {
   users: IUser[];
 }
@@ -37,8 +39,6 @@ const ONBOARDING_WIDTH = 2;
 const ACTIVITY_WIDTH = 1;
 const JOINED_WIDTH = 1;
 const EDITED_WIDTH = 1;
-
-
 
 interface ColumnEnumValue {
   title: string;

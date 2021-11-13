@@ -10,7 +10,6 @@ import {
   ViewPitchModal,
 } from '../..';
 import { useAuth, useInterests, useTeams } from '../../../contexts';
-
 import { pitchDocTabs } from '../../../utils/constants';
 import './styles.scss';
 import { getClaimableTeams } from '../../../utils/helpers';

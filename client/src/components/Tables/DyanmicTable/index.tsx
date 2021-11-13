@@ -1,5 +1,5 @@
 import React, { ReactElement, ReactNode, useEffect, useState } from 'react';
-import { Icon, ModalProps, SemanticWIDTHS, Table } from 'semantic-ui-react';
+import { SemanticWIDTHS, Table } from 'semantic-ui-react';
 import './styles.scss';
 
 interface TableRowProps<RecordType> {
@@ -87,15 +87,6 @@ const DynamicTable = <RecordType,>({
     initialSortDirection,
   );
 
-  useEffect(() => {
-    setSortedRecords(records);
-    if (sortColumn) {
-      const oldSortColumn = sortColumn;
-      setSortColumn(undefined);
-      handleSort(oldSortColumn);
-    }
-  }, [records]);
-
   const handleSort = (newColumn: Column): void => {
     if (newColumn.sorter === undefined) {
       return;
@@ -119,6 +110,17 @@ const DynamicTable = <RecordType,>({
       setSortedRecords(copy);
     }
   };
+
+  useEffect(() => {
+    setSortedRecords(records);
+    if (sortColumn) {
+      const oldSortColumn = sortColumn;
+      setSortColumn(undefined);
+      handleSort(oldSortColumn);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [records, handleSort]);
 
   return (
     <Table

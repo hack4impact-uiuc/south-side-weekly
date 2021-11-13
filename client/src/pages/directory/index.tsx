@@ -1,20 +1,23 @@
 import { startsWith, toLower, toString } from 'lodash';
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Icon, Input, Tab } from 'semantic-ui-react';
+import { Input, Tab } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
+
 import { getUsers, isError } from '../../api';
 import {
+  DirectoryTable,
   InterestsSelect,
   OnboardingTable,
   Select,
   TeamsSelect,
   Walkthrough,
 } from '../../components';
-import { useInterests } from '../../contexts';
 import { allRoles } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
 import { parseOptionsSelect } from '../../utils/helpers';
+
 import { filterInterests, filterRole, filterTeams } from './helpers';
+
 import './styles.scss';
 
 const searchFields: (keyof IUser)[] = [
@@ -31,7 +34,6 @@ const ApprovedUsers = (): ReactElement => {
   const [interests, setInterests] = useState<string[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
   const [query, setQuery] = useState<string>('');
-  const { getInterestById } = useInterests();
 
   // const resetFilters = () => {
   //   setRole('');
@@ -89,13 +91,6 @@ const ApprovedUsers = (): ReactElement => {
     setFilteredDirectory([...search(filter(directory))]);
   }, [directory, query, interests, teams, role]);
 
-  const EmailCell = ({ email }: IUser): ReactElement => (
-    <>
-      <Icon name="mail" />
-      {email}
-    </>
-  );
-
   return (
     <div className="directory-page">
       <Walkthrough
@@ -140,7 +135,7 @@ const ApprovedUsers = (): ReactElement => {
         </div>
       </div>
       <div className="directory">
-        <ApprovedUsers />
+        <DirectoryTable users={filteredDirectory} />
       </div>
     </div>
   );
