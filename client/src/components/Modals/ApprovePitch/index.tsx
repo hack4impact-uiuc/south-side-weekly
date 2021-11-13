@@ -506,8 +506,8 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
             content="Approve"
             positive
           />
-          <Button 
-            disabled={user._id === author._id} 
+          <Button
+            disabled={user._id === author._id}
             onClick={handleDecline}
             content="Decline"
             negative
