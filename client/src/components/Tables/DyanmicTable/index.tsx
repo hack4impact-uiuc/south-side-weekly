@@ -25,12 +25,12 @@ interface ColumnType<RecordType> {
   extractor: keyof RecordType | ((record: RecordType) => ReactElement);
 }
 
-const TableHeader = <IRecord,>({
+const TableHeader = <RecordType,>({
   columns,
   sortDirection,
   sortColumn,
   handleSort,
-}: TableHeaderProps<IRecord>): ReactElement => {
+}: TableHeaderProps<RecordType>): ReactElement => {
   console.log(columns, sortColumn, sortDirection);
   return (
     <Table.Header>
@@ -134,6 +134,7 @@ const DynamicTable = <RecordType,>({
       celled
       fixed
       singleLine={singleLine}
+      className="dynamic-table"
     >
       <TableHeader
         columns={columns}
