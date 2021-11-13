@@ -1,15 +1,14 @@
 import React, { FC, ReactElement, useState, useEffect } from 'react';
 import {
-  Button,
   Modal,
   ModalProps,
   Grid,
   GridColumn,
   Divider,
 } from 'semantic-ui-react';
-import { IPitchAggregate, IUser } from 'ssw-common';
+import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
 
-import { FieldTag } from '../..';
+import { FieldTag, PitchRow } from '../..';
 import { aggregatePitch, isError } from '../../../api';
 import { useTeams } from '../../../contexts';
 import { emptyAggregatePitch } from '../../../utils/constants';
@@ -18,7 +17,7 @@ import RoleRow from '../RoleRow';
 import './styles.scss';
 
 interface ViewPitchProps extends ModalProps {
-  pitchId: string;
+  pitch: IPitch;
 }
 
 interface GroupedContributors {
@@ -27,11 +26,12 @@ interface GroupedContributors {
 }
 
 const ViewPitchModal: FC<ViewPitchProps> = ({
-  pitchId,
+  pitch,
   ...rest
 }): ReactElement => {
   const { getTeamFromId } = useTeams();
 
+  const pitchId = pitch._id;
   const [isOpen, setIsOpen] = useState(false);
   const [aggregate, setAggregate] =
     useState<IPitchAggregate>(emptyAggregatePitch);
@@ -81,9 +81,7 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
 
   return (
     <Modal
-      trigger={
-        <Button className="default-btn" content="View an Example Pitch" />
-      }
+      trigger={<PitchRow pitch={pitch} />}
       open={isOpen}
       onClose={() => setIsOpen(false)}
       onOpen={() => setIsOpen(true)}

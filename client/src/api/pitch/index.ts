@@ -45,12 +45,13 @@ const submitPitchClaim = async (
 
 const approvePitch = async (
   pitchId: string,
-  teams: IPitch['teams'],
+  pitchData: Partial<IPitch>,
+  reasoning: string,
 ): Promise<Response<PitchResponse>> => {
   const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'approve');
   const failureMessage = 'APPROVE_CLAIM_FAIL';
 
-  return await put(url, { teams }, failureMessage);
+  return await put(url, { pitchData, reasoning }, failureMessage);
 };
 
 const declinePitch = async (
@@ -105,9 +106,9 @@ const getPendingContributorPitches = async (): Promise<Pitches> => {
   return await get(url, failureMessage);
 };
 
-const createPitch = async (newPitch: {
-  [key: string]: number | string | string[] | boolean;
-}): Promise<Response<PitchResponse>> => {
+const createPitch = async (
+  newPitch: Partial<IPitch>,
+): Promise<Response<PitchResponse>> => {
   const url = buildEndpoint(PITCH_ENDPOINT);
   const failureMessage = 'CREATE_PITCH_FAIL';
 

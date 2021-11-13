@@ -64,6 +64,20 @@ const getUserShortName = (user: Partial<IUser>): string =>
   `${user.preferredName || user.firstName} ${user.lastName?.slice(0, 1)}.`;
 
 /**
+ * Gets the teams on a pitch that a user can claimed
+ *
+ * @param pitch the pitch to check the teams for
+ * @param user the user to check the teams for
+ * @returns the teams that the user can claim
+ */
+const getClaimableTeams = (pitch: IPitch, user: IUser): string[] =>
+  pitch.writer
+    ? pitch.teams
+        .filter((team) => team.target > 0 && user.teams.includes(team.teamId))
+        .map((team) => team.teamId)
+    : [];
+
+/**
  * Parses an array of options into Semantic UI style Dropdown Items objects
  *
  * @param options the dropdown options to create
@@ -148,6 +162,22 @@ const classNames = (...classNames: (string | undefined)[]): string => {
 const openProfile = (user: IUser): void =>
   window.open(`/profile/${user._id}`)!.focus();
 
+interface SelectOption {
+  value: string;
+  label: string;
+}
+
+/**
+ * Parses an array of options into React Select style Dropdown Items objects
+ *
+ * @param options the dropdown options to create
+ * @returns the Semantic-UI Dropdown options
+ */
+const parseOptionsSelect = (options: string[]): SelectOption[] =>
+  options.map((option) => ({
+    label: option,
+    value: option,
+  }));
 /**
  * Adds an "s" to a word if the "numberOf" parameter is not 1
  *
@@ -162,7 +192,9 @@ export {
   updateUserField,
   getUserFullName,
   getUserShortName,
+  getClaimableTeams,
   parseOptions,
+  parseOptionsSelect,
   isPitchClaimed,
   convertMap,
   titleCase,
