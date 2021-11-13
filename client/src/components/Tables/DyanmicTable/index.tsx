@@ -5,6 +5,7 @@ import './styles.scss';
 interface TableRowProps<RecordType> {
   record: RecordType;
   columns: ColumnType<RecordType>[];
+  onClick: (record: RecordType) => void;
 }
 
 type SortDirection = 'ascending' | 'descending';
@@ -35,7 +36,7 @@ const TableHeader = <IRecord,>({
     <Table.Header>
       {columns.map((column, index) => (
         <Table.HeaderCell
-          width={column.width ?? ('1' as SemanticWIDTHS)}
+          width={column.width}
           onClick={() => handleSort(column)}
           sorted={sortColumn === column ? sortDirection : undefined}
           key={index}
@@ -51,8 +52,9 @@ const TableHeader = <IRecord,>({
 const TableRow = <RecordType,>({
   record,
   columns,
+  onClick,
 }: TableRowProps<RecordType>): ReactElement => (
-  <Table.Row>
+  <Table.Row onClick={onClick}>
     {columns.map((column, i) => {
       if (typeof column.extractor !== 'function') {
         return <Table.Cell key={i}>{record[column.extractor]}</Table.Cell>;
@@ -68,6 +70,7 @@ interface TableProps<RecordType> {
   initialSortColumn?: ColumnType<RecordType>;
   initialSortDirection?: SortDirection;
   singleLine?: boolean;
+  onRecordClick?: (record: RecordType) => void;
 }
 
 const DynamicTable = <RecordType,>({
@@ -76,6 +79,7 @@ const DynamicTable = <RecordType,>({
   initialSortColumn,
   initialSortDirection,
   singleLine,
+  onRecordClick,
 }: TableProps<RecordType>): ReactElement => {
   type Column = ColumnType<RecordType>;
 
@@ -121,7 +125,15 @@ const DynamicTable = <RecordType,>({
   };
 
   return (
-    <Table size="small" sortable compact celled fixed singleLine={singleLine}>
+    <Table
+      size="small"
+      sortable
+      compact
+      selectable={onRecordClick !== undefined}
+      celled
+      fixed
+      singleLine={singleLine}
+    >
       <TableHeader
         columns={columns}
         sortColumn={sortColumn}
@@ -130,7 +142,12 @@ const DynamicTable = <RecordType,>({
       />
       <Table.Body>
         {sortedRecords.map((record, i) => (
-          <TableRow record={record} columns={columns} key={i} />
+          <TableRow
+            record={record}
+            columns={columns}
+            key={i}
+            onClick={() => onRecordClick && onRecordClick(record)}
+          />
         ))}
       </Table.Body>
     </Table>

@@ -136,9 +136,18 @@ const ApprovedUsers = (): ReactElement => {
               title: 'First name',
               extractor: 'firstName',
               sorter: (a, b) => a.firstName.localeCompare(b.firstName),
-              width: 'ten',
+            },
+            {
+              title: 'Last name',
+              extractor: 'lastName',
+              sorter: (a, b) => a.firstName.localeCompare(b.firstName),
+            },
+            {
+              title: 'Email',
+              extractor: 'email',
             },
           ]}
+          singleLine
         />
       </div>
     </div>
