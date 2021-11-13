@@ -21,9 +21,7 @@ interface ColumnType<RecordType> {
   title: ReactNode;
   width?: SemanticWIDTHS;
   sorter?: (a: RecordType, b: RecordType) => number;
-  extractor:
-    | keyof RecordType
-    | ((record: RecordType) => ReactElement | ReactElement[]);
+  extractor: keyof RecordType | ((record: RecordType) => ReactNode);
 }
 
 const TableHeader = <RecordType,>({
