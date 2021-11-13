@@ -187,18 +187,46 @@ router.put(
   }),
 );
 
-// Gets all pending users
+// Get all pending users
 router.get(
   '/users/pending',
-  requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
     const users = await User.find({
-      onboardingStatus:
-        onboardingStatusEnum.ONBOARDING_SCHEDULED ||
-        onboardingStatusEnum.STALLED,
+      onboardingStatus: onboardingStatusEnum.ONBOARDING_SCHEDULED ||
+      onboardingStatusEnum.STALLED
     });
     res.status(200).json({
       message: `Successfully retrieved all pending users.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
+// Get all approved users
+router.get(
+  '/users/approved',
+  errorWrap(async (req: Request, res: Response) => {
+    const users = await User.find({
+      onboardingStatus: onboardingStatusEnum.ONBOARDED
+    });
+    res.status(200).json({
+      message: `Successfully retrieved all approved users.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
+// Get all rejected users
+router.get(
+  '/users/rejected',
+  errorWrap(async (req: Request, res: Response) => {
+    const users = await User.find({
+      onboardingStatus: onboardingStatusEnum.REJECTED
+    });
+    res.status(200).json({
+      message: `Successfully retrieved all rejected users.`,
       success: true,
       result: users,
     });
