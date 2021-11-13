@@ -18,7 +18,7 @@ import { pagesEnum } from '../../utils/enums';
 import { filterInterests, filterRole, filterTeams } from './helpers';
 
 import './styles.scss';
-import ExtendedTable from '../../components/Tables/IUserTable';
+import ExtendedTable from '../../components/Tables/DyanmicTable';
 
 const searchFields: (keyof IUser)[] = [
   'firstName',
@@ -131,7 +131,14 @@ const ApprovedUsers = (): ReactElement => {
       <div className="directory">
         <ExtendedTable<IUser>
           records={filteredDirectory}
-          columns={[{ title: 'First name', extractor: 'firstName' }]}
+          columns={[
+            {
+              title: 'First name',
+              extractor: 'firstName',
+              sorter: (a, b) => a.firstName.localeCompare(b.firstName),
+              width: 'ten',
+            },
+          ]}
         />
       </div>
     </div>
@@ -224,21 +231,16 @@ const PendingUsers = (): ReactElement => {
 const panes = [
   {
     menuItem: 'Approved Users',
-    pane: (
+    // eslint-disable-next-line react/display-name
+    render: () => (
       <Tab.Pane>
-        {' '}
-        <ApprovedUsers />{' '}
+        <ApprovedUsers />
       </Tab.Pane>
     ),
   },
   {
     menuItem: 'Pending Users',
-    pane: (
-      <Tab.Pane>
-        {' '}
-        <PendingUsers />{' '}
-      </Tab.Pane>
-    ),
+    pane: <PendingUsers />,
   },
 ];
 

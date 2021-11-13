@@ -1,58 +1,61 @@
-import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { ModalProps, SemanticWIDTHS, Table } from 'semantic-ui-react';
-import { IPitch, IUser } from 'ssw-common';
-
+import React, { ReactElement, useEffect, useState } from 'react';
+import { Icon, ModalProps, SemanticWIDTHS, Table } from 'semantic-ui-react';
 import './styles.scss';
 
-interface DirectoryRowProps<RecordType> {
+interface TableRowProps<RecordType> {
   record: RecordType;
   columns: ColumnType<RecordType>[];
 }
 
-interface DirectoryHeaderProps<RecordType> {
+type SortDirection = 'ascending' | 'descending';
+
+interface TableHeaderProps<RecordType> {
   columns: ColumnType<RecordType>[];
   sortColumn?: ColumnType<RecordType>;
+  sortDirection?: SortDirection;
   handleSort: (column: ColumnType<RecordType>) => void;
 }
-
-type SortDirection = 'ascending' | 'descending';
 
 interface ColumnType<RecordType> {
   title: string;
   width?: SemanticWIDTHS;
-  // headerModal?: React.FC<ModalProps>;
-  order?: SortDirection;
+  headerModal?: React.FC<ModalProps>;
   sorter?: (a: RecordType, b: RecordType) => number;
   extractor: keyof RecordType | ((record: RecordType) => ReactElement);
 }
 
 const TableHeader = <IRecord,>({
   columns,
+  sortDirection,
   sortColumn,
   handleSort,
-}: DirectoryHeaderProps<IRecord>): ReactElement => (
-  <Table.Header>
-    {columns.map((column, index) => (
-      <Table.HeaderCell
-        width={column.width ?? (columns.length as SemanticWIDTHS)}
-        onClick={() => handleSort(column)}
-        sorted={sortColumn === column ? sortColumn.order : undefined}
-        key={index}
-      >
-        {column.title}
-      </Table.HeaderCell>
-    ))}
-  </Table.Header>
-);
+}: TableHeaderProps<IRecord>): ReactElement => {
+  console.log(columns, sortColumn, sortDirection);
+  return (
+    <Table.Header>
+      {columns.map((column, index) => (
+        <Table.HeaderCell
+          width={column.width ?? ('1' as SemanticWIDTHS)}
+          onClick={() => handleSort(column)}
+          sorted={sortColumn === column ? sortDirection : undefined}
+          key={index}
+        >
+          {column.title}
+          {column.headerModal !== undefined && <Icon name="pencil" />}
+        </Table.HeaderCell>
+      ))}
+    </Table.Header>
+  );
+};
 
 const TableRow = <RecordType,>({
   record,
   columns,
-}: DirectoryRowProps<RecordType>): ReactElement => (
+}: TableRowProps<RecordType>): ReactElement => (
   <Table.Row>
-    {columns.map((column) => {
+    {columns.map((column, i) => {
       if (typeof column.extractor !== 'function') {
-        return <Table.Cell>{record[column.extractor]}</Table.Cell>;
+        return <Table.Cell key={i}>{record[column.extractor]}</Table.Cell>;
       }
       return column.extractor(record);
     })}
@@ -64,13 +67,15 @@ interface TableProps<RecordType> {
   columns: ColumnType<RecordType>[];
   initialSortColumn?: ColumnType<RecordType>;
   initialSortDirection?: SortDirection;
+  singleLine?: boolean;
 }
 
-const ExtendedTable = <RecordType,>({
+const DynamicTable = <RecordType,>({
   records,
   columns,
   initialSortColumn,
   initialSortDirection,
+  singleLine,
 }: TableProps<RecordType>): ReactElement => {
   type Column = ColumnType<RecordType>;
 
@@ -84,6 +89,11 @@ const ExtendedTable = <RecordType,>({
 
   useEffect(() => {
     setSortedRecords(records);
+    if (sortColumn) {
+      const oldSortColumn = sortColumn;
+      setSortColumn(undefined);
+      handleSort(oldSortColumn);
+    }
   }, [records]);
 
   const handleSort = (newColumn: Column): void => {
@@ -92,9 +102,9 @@ const ExtendedTable = <RecordType,>({
     }
 
     if (sortColumn?.title === newColumn.title) {
-      if (sortDirection !== 'descending') {
+      if (sortDirection === 'ascending') {
         setSortDirection('descending');
-        setSortedRecords(records.slice().reverse());
+        setSortedRecords(sortedRecords.slice().reverse());
       } else {
         setSortedRecords(records);
         setSortDirection(undefined);
@@ -111,19 +121,21 @@ const ExtendedTable = <RecordType,>({
   };
 
   return (
-    <Table>
+    <Table size="small" sortable compact celled fixed singleLine={singleLine}>
       <TableHeader
         columns={columns}
         sortColumn={sortColumn}
+        sortDirection={sortDirection}
         handleSort={handleSort}
       />
-      {sortedRecords.map((record, i) => (
-        <TableRow record={record} columns={columns} key={i} />
-      ))}
+      <Table.Body>
+        {sortedRecords.map((record, i) => (
+          <TableRow record={record} columns={columns} key={i} />
+        ))}
+      </Table.Body>
     </Table>
   );
 };
 
-export default ExtendedTable;
-export { TableHeader, TableRow };
+export default DynamicTable;
 export type { ColumnType };
