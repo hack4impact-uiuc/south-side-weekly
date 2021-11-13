@@ -5,7 +5,7 @@ import { IUser } from 'ssw-common';
 import { FieldTag, UserPicture, TableTool } from '../..';
 import { getUserFullName } from '../../../utils/helpers';
 import { useInterests, useTeams } from '../../../contexts';
-import TeamModal from '../../Modals/EditTeam';
+import TeamModal from '../../Modals/EditableTags/EditTeams';
 
 import './styles.scss';
 

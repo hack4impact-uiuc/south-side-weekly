@@ -5,6 +5,7 @@ import { SemanticCOLORS } from 'semantic-ui-react/dist/commonjs/generic';
 import { IUser } from 'ssw-common';
 import { getUsers, isError } from '../../api';
 import {
+  EditInterests,
   FieldTag,
   InterestsSelect,
   OnboardingTable,
@@ -162,6 +163,7 @@ const ApprovedUsers = (): ReactElement => {
             },
             {
               title: 'Topics',
+              headerModal: EditInterests,
               extractor: function TopicsCell({ interests }) {
                 return interests.map((interest, i) => (
                   <FieldTag
