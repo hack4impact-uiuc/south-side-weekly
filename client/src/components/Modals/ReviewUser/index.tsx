@@ -32,6 +32,13 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
     setIsOpen(false);
   };
 
+  const toString = (date: Date): string => {
+    const str = date.toLocaleString();
+    const extractedStr = str.split('T', 1)[0];
+    const modifiedStr = extractedStr.replace(/-/gi, '/');
+    return modifiedStr;
+  };
+
   const rejectUser = (u: IUser): void => {
     updateUser(
       {
@@ -143,7 +150,9 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
                 <br />
                 Place Holder, update after user onboarding field is added
               </div>
-              <span style={{ color: 'gray' }}>Registered on 10/28/2002</span>
+              <span style={{ color: 'gray' }}>
+                Registered on {toString(user.dateJoined)}
+              </span>
               <h5>
                 Reasoning <span style={{ color: 'gray' }}>- Optional</span>
               </h5>
