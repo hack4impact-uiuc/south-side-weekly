@@ -24,7 +24,7 @@ const PrivateRoute: FC<RouteProps> = ({ ...routeProps }) => {
           )}
           {isAuthenticated &&
             isRegistered &&
-            !user.onboardingStatus === onboardingStatusEnum.ONBOARDED && (
+            !(user.onboardingStatus === onboardingStatusEnum.ONBOARDED) && (
               <Redirect to="/resources" from={location.pathname} />
             )}
         </>
