@@ -157,7 +157,12 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
 
   return (
     <Modal
-      trigger={<Button className="default-btn" content="Submit a Pitch" />}
+      trigger={
+        <Button secondary>
+          <Icon name="send" />
+          Submit Pitch
+        </Button>
+      }
       open={isOpen}
       className="submit-modal"
       onOpen={() => setIsOpen(true)}

@@ -8,8 +8,7 @@ import {
   SubmitPitchModal,
   Walkthrough,
 } from '../../components';
-import ExtendedTableTool from '../../components/Tables/ExtendedTableTool';
-import { HomepageTable } from '../../components/Tables/Homepage';
+// import { HomepageTable } from '../../components/Tables/Homepage';
 import { useAuth, useInterests } from '../../contexts';
 import { pagesEnum } from '../../utils/enums';
 import { filterPitchesByInterests } from '../../utils/helpers';
@@ -76,8 +75,6 @@ const Homepage: FC = () => {
     // getApproved();
   };
 
-  const getPitchTable = (): JSX.Element => {};
-
   return (
     <div className="homepage-wrapper">
       <Walkthrough
@@ -86,10 +83,7 @@ const Homepage: FC = () => {
       />
       <div className="header">
         <h1>Welcome, {user.preferredName || user.firstName}!</h1>
-        <Button secondary>
-          <Icon name="send" />
-          Submit Pitch
-        </Button>
+        <SubmitPitchModal callback={populatePitches} />
       </div>
 
       <Menu className="tab-menu" tabular size="large">
@@ -128,6 +122,14 @@ const Homepage: FC = () => {
           className="search"
           style={{ minWidth: '400px' }}
         />
+        {
+          /* {canFilterStatuses */ true && (
+            <Select
+              options={[{ text: 'In Progress', value: 'in-progress' }]}
+              onChange={(_, data) => console.log(data)}
+            />
+          )
+        }
         {canFilterInterests && (
           <InterestsSelect
             values={interests}
@@ -142,13 +144,12 @@ const Homepage: FC = () => {
             onChange={(values) =>
               setInterests(values ? values.map((item) => item.value) : [])
             }
+            options={[]}
           />
         )} */}
       </div>
 
-      <div className="pitch-table">
-        <ExtendedTableTool<IPitch> />
-      </div>
+      <div className="pitch-table"></div>
     </div>
   );
 };
