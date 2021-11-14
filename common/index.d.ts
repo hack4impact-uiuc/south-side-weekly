@@ -27,6 +27,7 @@ export interface IUser {
   hasRoleApproved: boolean;
   races: string[];
   interests: string[];
+  rejectReasoning: string;
 }
 
 export interface IUserAggregate extends IUser {

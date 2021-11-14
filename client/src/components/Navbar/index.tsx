@@ -5,8 +5,8 @@ import { Menu } from 'semantic-ui-react';
 import ProfileDropdown from '../Dropdowns/Profile';
 import ApprovedView from '../Auth/ApprovedView';
 import { useAuth } from '../../contexts';
-
 import './styles.scss';
+import { onboardingStatusEnum } from '../../utils/enums';
 
 const Navbar = (): ReactElement => {
   const { user } = useAuth();
@@ -15,7 +15,7 @@ const Navbar = (): ReactElement => {
     <Menu attached="top" className="navbar" borderless size="large">
       <Menu.Item
         className="header"
-        as={user.hasRoleApproved && Link}
+        as={user.onboardingStatus === onboardingStatusEnum.ONBOARDED && Link}
         to="/homepage"
       >
         <h2>South Side Weekly</h2>

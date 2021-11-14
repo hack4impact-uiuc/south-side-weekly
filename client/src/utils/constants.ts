@@ -55,6 +55,7 @@ const emptyUser: IUser = {
   hasRoleApproved: false,
   races: [],
   interests: [],
+  rejectReasoning: '',
 };
 
 const emptyPitch: IPitch = {

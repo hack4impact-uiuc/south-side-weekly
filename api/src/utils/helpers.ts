@@ -75,4 +75,5 @@ export const santitizeUser = (user: UserSchema): IUser => ({
   hasRoleApproved: user.hasRoleApproved,
   races: user.races,
   interests: user.interests,
+  rejectReasoning: user.rejectReasoning,
 });

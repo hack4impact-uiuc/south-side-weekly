@@ -72,6 +72,7 @@ const updateUser = async (
 };
 
 // Update user's onboarding status
+// Will also send email here
 const updateOnboardingStatus = async (
   userId: string,
   status: keyof typeof onboardingStatusEnum,

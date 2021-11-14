@@ -1,6 +1,6 @@
 import { IUser } from 'ssw-common';
 
-import { rolesEnum } from '../utils/enums';
+import { onboardingStatusEnum, rolesEnum } from '../utils/enums';
 
 /**
  * Determines whether or not a user has the minimum level role required
@@ -18,7 +18,8 @@ const hasRole = (
 ): boolean =>
   user &&
   roles.includes(user.role) &&
-  (user.hasRoleApproved || !requireApproved);
+  (user.onboardingStatus === onboardingStatusEnum.ONBOARDED ||
+    !requireApproved);
 
 /**
  * Determines if a user has contributor level access

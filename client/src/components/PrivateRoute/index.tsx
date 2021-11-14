@@ -4,6 +4,7 @@ import { Redirect, Route, RouteProps, useLocation } from 'react-router-dom';
 import { useAuth } from '../../contexts';
 import Page from '../Page';
 import Loading from '../Loading';
+import { onboardingStatusEnum } from '../../utils/enums';
 
 const PrivateRoute: FC<RouteProps> = ({ ...routeProps }) => {
   const { isAuthenticated, isLoading, isRegistered, user } = useAuth();
@@ -21,9 +22,11 @@ const PrivateRoute: FC<RouteProps> = ({ ...routeProps }) => {
           {isAuthenticated && !isRegistered && (
             <Redirect to="/join" from={location.pathname} />
           )}
-          {isAuthenticated && isRegistered && !user.hasRoleApproved && (
-            <Redirect to="/resources" from={location.pathname} />
-          )}
+          {isAuthenticated &&
+            isRegistered &&
+            !user.onboardingStatus === onboardingStatusEnum.ONBOARDED && (
+              <Redirect to="/resources" from={location.pathname} />
+            )}
         </>
       )}
       {canShowPage() && (

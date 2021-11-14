@@ -192,8 +192,9 @@ router.get(
   '/users/pending',
   errorWrap(async (req: Request, res: Response) => {
     const users = await User.find({
-      onboardingStatus: onboardingStatusEnum.ONBOARDING_SCHEDULED ||
-      onboardingStatusEnum.STALLED
+      onboardingStatus:
+        onboardingStatusEnum.ONBOARDING_SCHEDULED ||
+        onboardingStatusEnum.STALLED,
     });
     res.status(200).json({
       message: `Successfully retrieved all pending users.`,
@@ -208,7 +209,7 @@ router.get(
   '/users/approved',
   errorWrap(async (req: Request, res: Response) => {
     const users = await User.find({
-      onboardingStatus: onboardingStatusEnum.ONBOARDED
+      onboardingStatus: onboardingStatusEnum.ONBOARDED,
     });
     res.status(200).json({
       message: `Successfully retrieved all approved users.`,
@@ -220,13 +221,13 @@ router.get(
 
 // Get all rejected users
 router.get(
-  '/users/rejected',
+  '/users/denied',
   errorWrap(async (req: Request, res: Response) => {
     const users = await User.find({
-      onboardingStatus: onboardingStatusEnum.REJECTED
+      onboardingStatus: onboardingStatusEnum.DENIED,
     });
     res.status(200).json({
-      message: `Successfully retrieved all rejected users.`,
+      message: `Successfully retrieved all denied users.`,
       success: true,
       result: users,
     });

@@ -10,12 +10,9 @@ import {
 } from 'semantic-ui-react';
 import { IUser, ITeam } from 'ssw-common';
 
-import { updateUser } from '../../../api';
+import { updateUser, updateOnboardingStatus } from '../../../api';
 import { useInterests, useTeams } from '../../../contexts';
 import { UserPicture, FieldTag } from '../..';
-import { onboardingStatusEnum } from '../../../utils/enums';
-import Swal from 'sweetalert2';
-
 import './styles.scss';
 import { getUserFullName, titleCase } from '../../../utils/helpers';
 
@@ -31,12 +28,19 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
   const { getInterestById } = useInterests();
 
   const approveUser = (u: IUser): void => {
-    u.onboardingStatus = onboardingStatusEnum.ONBOARDED;
-    updateUser(u, u._id);
+    updateOnboardingStatus(u._id, 'ONBOARDED');
+    setIsOpen(false);
   };
 
   const rejectUser = (u: IUser): void => {
-    updateUser({ onboardingStatus: onboardingStatusEnum.REJECTED }, u._id);
+    updateUser(
+      {
+        rejectReasoning: formValue,
+      },
+      u._id,
+    );
+    updateOnboardingStatus(u._id, 'DENIED');
+    setIsOpen(false);
   };
 
   return (
@@ -78,14 +82,19 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
               <b>Genders:</b> {user.genders.join(', ')}
               <br /> <b>Races:</b> {titleCase(user.races.join(', '))}
               {/* Place Holder To Be Updated */}
-              <br /> <b>Neighborhood:</b> Place Holder
+              <br /> <b>Neighborhood:</b> Place Holder, update after user
+              onboarding field is added
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={4}>
             <Grid.Column>
               <b>Role</b>
               <br />
-              <FieldTag className="role-tag" content={user.role} size="tiny" />
+              <FieldTag
+                className="role-tag"
+                content={user.role}
+                size="medium"
+              />
             </Grid.Column>
             <Grid.Column>
               <b>Teams</b>
@@ -98,7 +107,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
                       className="team-tag"
                       name={team?.name}
                       hexcode={team?.color}
-                      size="tiny"
+                      size="medium"
                     />
                   </Grid.Row>
                 ))}
@@ -115,7 +124,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
                     key={index}
                     name={fullInterest?.name}
                     hexcode={fullInterest?.color}
-                    size="tiny"
+                    size="medium"
                   />
                 );
               })}
@@ -132,7 +141,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
                 {/* Place Holder To Be Updated  */}
                 <b>User's past experience</b>
                 <br />
-                Place Holder.
+                Place Holder, update after user onboarding field is added
               </div>
               <span style={{ color: 'gray' }}>Registered on 10/28/2002</span>
               <h5>
@@ -149,20 +158,20 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
         </Grid>
         <Modal.Actions>
           <Button
-            className="reject-button"
-            onClick={() => {
-              rejectUser(user);
-            }}
-          >
-            Reject
-          </Button>
-          <Button
             className="approve-button"
             onClick={() => {
               approveUser(user);
             }}
           >
             Approve
+          </Button>
+          <Button
+            className="reject-button"
+            onClick={() => {
+              rejectUser(user);
+            }}
+          >
+            Decline
           </Button>
         </Modal.Actions>
       </Modal.Content>
