@@ -226,14 +226,15 @@ router.put(
   '/:pitchId/approve',
   requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
-    const { teams } = req.body;
+    const { pitchData, response } = req.body;
+
+    //TODO: Add response to mail message
+    console.log(response);
 
     const pitch = await Pitch.findByIdAndUpdate(req.params.pitchId, {
-      $set: {
-        status: pitchStatusEnum.APPROVED,
-        reviewedBy: req.user._id,
-        teams: teams,
-      },
+      status: pitchStatusEnum.APPROVED,
+      reviewedBy: req.user._id,
+      ...pitchData,
     });
 
     if (!pitch) {
@@ -243,8 +244,9 @@ router.put(
       });
       return;
     }
-    const author = await User.findById(pitch.author);
-    const message = approvedMessage(author, pitch, req.user);
+
+    const aggregatedPitch = await aggregatePitch(pitch);
+    const message = approvedMessage(aggregatedPitch, req.user);
     await sendMail(message);
     res.status(200).json({
       success: true,
@@ -264,7 +266,7 @@ router.put(
         status: pitchStatusEnum.REJECTED,
         reviewedBy: req.user._id,
       },
-    });
+    }).lean();
 
     if (!pitch) {
       res.status(404).json({
@@ -273,8 +275,8 @@ router.put(
       });
       return;
     }
-    const author = await User.findById(pitch.author);
-    const message = declinedMessage(author, pitch, req.user);
+    const aggregatedPitch = await aggregatePitch(pitch);
+    const message = declinedMessage(aggregatedPitch, req.user);
     await sendMail(message);
     res.status(200).json({
       success: true,
@@ -335,7 +337,6 @@ router.put(
   requireStaff,
   errorWrap(async (req: Request, res: Response) => {
     const { userId, teams } = req.body;
-
     // Remove the user from the pending contributors and add it to the the assignment contributors
     const pitch = await Pitch.findByIdAndUpdate(
       req.params.pitchId,
@@ -343,12 +344,13 @@ router.put(
         $pull: {
           pendingContributors: { userId: userId, teams: teams },
         },
+        //TODO: Target in teams should decrease after
         $addToSet: {
           assignmentContributors: { userId: userId, teams: teams },
         },
       },
       { new: true, runValidators: true },
-    );
+    ).lean();
 
     // Add the pitch to the user's claimed Pitches
     const user = await User.findByIdAndUpdate(
@@ -374,14 +376,8 @@ router.put(
       });
       return;
     }
-    const claimUser = await User.findById(userId);
     const aggregatedPitch = await aggregatePitch(pitch);
-    const message = await approveClaim(
-      claimUser,
-      aggregatedPitch,
-      req.user,
-      teams,
-    );
+    const message = await approveClaim(user, aggregatedPitch, req.user);
     await sendMail(message);
     res.status(200).json({
       success: true,
@@ -414,7 +410,7 @@ router.put(
         },
       },
       { new: true, runValidators: true },
-    );
+    ).lean();
 
     if (!pitch) {
       res.status(404).json({

@@ -1,13 +1,16 @@
 import axios, { AxiosResponse } from 'axios';
 
-import { BASE_URL } from './urls';
+import { API_URI } from './urls';
 import { ErrorWrapper, ApiResponse } from './types';
 
 // Generalized axios configuration
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 axios.defaults.withCredentials = true;
+
+console.log('Running API URI: ', API_URI);
+
 const instance = axios.create({
-  baseURL: BASE_URL,
+  baseURL: API_URI,
 });
 
 /**
@@ -95,24 +98,8 @@ const isError = <T>(res: ApiResponse<T>): res is ErrorWrapper =>
  * @param failureRedirect the failure url query parameter to redirect to
  * @returns returns the uri href string
  */
-const buildURI = (
-  endpoint: string,
-  successRedirect: string,
-  failureRedirect = '/login',
-): string => {
-  const uri = new URL(`${BASE_URL}/${endpoint}`);
-
-  switch (endpoint) {
-    case 'auth/login':
-      uri.searchParams.append('successRedirect', successRedirect);
-      uri.searchParams.append('failureRedirect', failureRedirect);
-      break;
-    default:
-      break;
-  }
-
-  return uri.href;
-};
+const buildLoginEndpoint = (endpoint: string): string =>
+  `${API_URI}/${endpoint}`;
 
 /**
  * Builds the paths to a URL
@@ -123,4 +110,4 @@ const buildURI = (
  */
 const buildEndpoint = (...paths: string[]): string => paths.join('/');
 
-export { buildURI, get, post, put, del, isError, buildEndpoint };
+export { buildLoginEndpoint, get, post, put, del, isError, buildEndpoint };

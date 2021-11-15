@@ -1,43 +1,66 @@
 @import '../../../styles/colors.scss';
 
 .approve-pitch-modal {
-  .header {
+  .review-pitch-content {
+    background-color: $mainBackground !important;
+  }
+  .review-pitch-header {
     background-color: $primary !important;
     color: white !important;
   }
 
+  .form-label {
+    font-weight: bold !important;
+    font-size: 0.92857143em !important;
+    margin: 0 1rem 0.33571429rem 0 !important;
+  }
+  .title-section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .title {
+    margin-bottom: 0 !important;
+    margin-right: 10px;
+  }
+
+  .description {
+    line-height: 1.7rem;
+  }
+
   .content {
-    .author-section {
+    .pitch-author-section {
+      margin-bottom: 1rem;
+      flex-direction: row;
       display: flex;
-
-      .author {
-        margin-right: 20px;
-        h3 {
-          font-weight: normal;
-        }
-      }
-    }
-
-    .description {
-      margin-top: 20px;
+      align-items: flex-end;
     }
 
     .topics-section {
-      margin-bottom: 8px;
+      display: flex;
+      flex-direction: row;
+      margin-bottom: 0.53571429rem !important;
+      margin-top: 0.33571429rem !important;
+    }
+
+    .neighborhood-dropdown {
+      margin: 0 0 1em !important;
     }
 
     .team-select-group {
-      display: flex;
-      justify-content: space-between;
-
       .input-group {
         display: flex;
         flex-direction: column;
         align-items: center;
+        width: fit-content;
+        margin-right: 20px;
+
+        .team-input {
+          padding: 0 !important;
+        }
 
         .field {
-          padding: 0 !important;
-
           // https://www.w3schools.com/howto/howto_css_hide_arrow_number.asp
           input::-webkit-outer-spin-button,
           input::-webkit-inner-spin-button {
@@ -47,23 +70,86 @@
 
           input {
             margin-top: 10px;
-            width: 50px !important;
-            height: 50px !important;
             text-align: center;
+            //width: 100% !important;
+            width: 45px !important;
+            height: 45px !important;
           }
         }
       }
+    }
+    .format-deadline-section {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+
+      .issue-format-section {
+        flex-direction: column;
+      }
+
+      .prints-input {
+        display: flex;
+        flex-direction: column;
+      }
+    }
+
+    .writer-editors-section {
+      width: 80% !important;
+
+      .issue-format-column {
+        align-items: flex-start !important;
+        flex-direction: column !important;
+        display: flex !important;
+        margin-left: 0 !important;
+
+        .issue-format-date-row {
+          flex-direction: row !important;
+          display: flex !important;
+          align-items: center !important;
+          width: 100% !important;
+          justify-content: space-between;
+          margin-bottom: 5px;
+
+          .format-checkbox {
+            margin-bottom: 0 !important;
+          }
+
+          .publication-date {
+            margin-right: 25px !important;
+          }
+        }
+      }
+    }
+
+    .editor-select {
+      margin-bottom: 5px;
     }
   }
 
   .actions {
     border-top: none !important;
-    background-color: white !important;
+    background-color: $mainBackground !important;
     text-align: right;
-    padding: 10px !important;
+    padding: 20px 0px 10px 0px !important;
 
     .button {
-      margin: 0px 20px 20px 0px !important;
+      margin: 0px 0px 0px 20px !important;
+    }
+
+    .positive {
+      background-color: $secondaryColor !important;
+    }
+
+    .negative {
+      background-color: transparent !important;
+      border: 1px solid $secondaryColor !important;
+      color: $secondaryColor !important;
     }
   }
+}
+
+mark.optional {
+  color: #9b9b9b;
+  background-color: transparent !important;
+  font-weight: lighter !important;
 }

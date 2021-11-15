@@ -43,7 +43,7 @@ export interface IUserAggregate extends IUser {
 export interface IPitch {
   _id: string;
   title: string;
-  issues: { issueFormat: string; issueDate: Date }[];
+  issues: { format: string; publicationDate: Date }[];
   author: string;
   writer: string;
   primaryEditor: string;
@@ -64,6 +64,7 @@ export interface IPitch {
   similarStories: string[];
   deadline: Date;
   conflictOfInterest: boolean;
+  neighborhoods: string[];
 }
 
 export interface IPitchAggregate extends IPitch {
