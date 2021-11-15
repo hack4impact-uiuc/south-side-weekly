@@ -1,13 +1,14 @@
 import { startsWith, toLower, toString } from 'lodash';
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Input, Tab } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { getUsers, isError } from '../../api';
+import { getPendingContributors } from '../../api/user';
 import {
-  DirectoryTable,
+  ApprovedUsers,
   InterestsSelect,
-  OnboardingTable,
+  PendingUsers,
   Select,
   TeamsSelect,
   Walkthrough,
@@ -27,7 +28,11 @@ const searchFields: (keyof IUser)[] = [
   'email',
 ];
 
-const ApprovedUsers = (): ReactElement => {
+interface PaneWrapperProps {
+  status: 'approved' | 'pending';
+}
+
+const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
   const [directory, setDirectory] = useState<IUser[]>([]);
   const [filteredDirectory, setFilteredDirectory] = useState<IUser[]>([]);
   const [role, setRole] = useState<string>('');
@@ -35,16 +40,15 @@ const ApprovedUsers = (): ReactElement => {
   const [teams, setTeams] = useState<string[]>([]);
   const [query, setQuery] = useState<string>('');
 
-  // const resetFilters = () => {
-  //   setRole('');
-  //   setInterests([]);
-  //   setTeams([]);
-  //   setQuery('');
-  // };
-
   useEffect(() => {
     const getAllUsers = async (): Promise<void> => {
-      const res = await getUsers();
+      let res;
+
+      if (status === 'approved') {
+        res = await getUsers();
+      } else {
+        res = await getPendingContributors();
+      }
       //This gets all users regardless of their approval status
       if (!isError(res)) {
         setDirectory(res.data.result);
@@ -58,7 +62,7 @@ const ApprovedUsers = (): ReactElement => {
       setDirectory([]);
       setFilteredDirectory([]);
     };
-  }, []);
+  }, [status]);
 
   useEffect(() => {
     const search = (users: IUser[]): IUser[] => {
@@ -92,7 +96,7 @@ const ApprovedUsers = (): ReactElement => {
   }, [directory, query, interests, teams, role]);
 
   return (
-    <div className="table">
+    <>
       <Input
         value={query}
         onChange={(e, { value }) => setQuery(value)}
@@ -128,108 +132,35 @@ const ApprovedUsers = (): ReactElement => {
           />
         </div>
       </div>
-      <div className="directory">
-        <DirectoryTable users={filteredDirectory} />
-      </div>
-    </div>
+      {status === 'approved' ? (
+        <ApprovedUsers users={filteredDirectory} />
+      ) : (
+        <PendingUsers users={filteredDirectory} />
+      )}
+    </>
   );
 };
-
-const PendingUsers = (): ReactElement => {
-  const [directory, setDirectory] = useState<IUser[]>([]);
-  const [filteredDirectory, setFilteredDirectory] = useState<IUser[]>([]);
-
-  const [query, setQuery] = useState<string>('');
-
-  useEffect(() => {
-    const getAllUsers = async (): Promise<void> => {
-      const res = await getUsers();
-
-      if (!isError(res)) {
-        setDirectory(res.data.result);
-        setFilteredDirectory(res.data.result);
-      }
-    };
-
-    getAllUsers();
-
-    return () => {
-      setDirectory([]);
-      setFilteredDirectory([]);
-    };
-  }, []);
-
-  useEffect(() => {
-    const search = (users: IUser[]): IUser[] => {
-      if (query.length === 0) {
-        return users;
-      }
-
-      const searchTerm = toLower(query.trim());
-      const queryParts = searchTerm.split(' ');
-
-      return users.filter((user) =>
-        queryParts.every((part) =>
-          searchFields.some(
-            (field) =>
-              startsWith(toLower(toString(user[field])), part) ||
-              startsWith(toLower(toString(user[field])), searchTerm),
-          ),
-        ),
-      );
-    };
-
-    setFilteredDirectory([...search(directory)]);
-  }, [directory, query]);
-
-  return (
-    <div className="table">
-      <Input
-        value={query}
-        onChange={(e, { value }) => setQuery(value)}
-        fluid
-        placeholder="Search..."
-        icon="search"
-        iconPosition="left"
-      />
-      {/* <div className="filters">
-        <div>
-          <h3>Filters: </h3>
-        </div>
-        <div className="wrapper">
-          <InterestsSelect
-            values={interests}
-            onChange={(values) =>
-              setInterests(values.map((item) => item.value))
-            }
-          />
-        </div>
-        <div className="wrapper">
-          <TeamsSelect
-            values={teams}
-            onChange={(values) => setTeams(values.map((item) => item.value))}
-          />
-        </div>
-      </div> */}
-      <div className="directory">
-        <OnboardingTable users={filteredDirectory} />
-      </div>
-    </div>
-  );
-};
-
-function renderTable(table: ReactElement): ReactElement {
-  return <Tab.Pane>{table}</Tab.Pane>;
-}
 
 const panes = [
   {
     menuItem: 'Approved Users',
-    render: () => renderTable(<ApprovedUsers />),
+    render: function show() {
+      return (
+        <Tab.Pane>
+          <PaneWrapper status="approved" />
+        </Tab.Pane>
+      );
+    },
   },
   {
     menuItem: 'Pending Users',
-    render: () => renderTable(<PendingUsers />),
+    render: function show() {
+      return (
+        <Tab.Pane>
+          <PaneWrapper status="pending" />
+        </Tab.Pane>
+      );
+    },
   },
 ];
 
@@ -239,8 +170,11 @@ const Directory = (): ReactElement => (
       page={pagesEnum.DIRECTORY}
       content="Check out the members on the SSW team and click their profiles to view more details!"
     />
-    <h2>Directory</h2>
-    <Tab id="directory-tabs" panes={panes} />
+    <Tab
+      menu={{ secondary: true, pointing: true }}
+      id="directory-tabs"
+      panes={panes}
+    />
   </div>
 );
 

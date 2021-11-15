@@ -1,22 +1,22 @@
-@import '../../../styles/colors.scss';
-.edit-button {
-  padding: 5px;
-}
-
-#approve {
-  background-color: $secondaryColor;
-}
-
-.actions {
-  display: flex;
-  justify-content: space-between;
-}
+@import '../../../../styles/colors.scss';
 
 tbody {
   display: block;
   height: max-content;
   max-height: 60vh;
   overflow: auto;
+
+  .edit-button {
+    padding: 5px;
+    margin-left: 10px !important;
+    color: white !important;
+    background-color: $secondaryColor !important;
+  }
+
+  .actions {
+    display: flex;
+    float: right;
+  }
 
   .picture-col {
     #user-picture {

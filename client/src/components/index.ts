@@ -21,8 +21,6 @@ import ApprovePitchModal from './Modals/ApprovePitch';
 import ViewPitchModal from './Modals/ViewPitch';
 import MultiSelect from './Dropdowns/MultiSelect';
 import Select from './Dropdowns/Select';
-import DirectoryTable from './Tables/Directory';
-import OnboardingTable from './Tables/Onboarding';
 import { PitchTable, PitchRow } from './Tables/PitchDoc';
 import TableTool from './Tables/TableTool';
 import Walkthrough from './Walkthrough';
@@ -35,6 +33,8 @@ import {
   EditInterests,
   EditTeams,
 } from './Modals/EditableTags';
+import { UserInterests, UserTeams } from './Lists';
+import { PendingUsers, ApprovedUsers } from './Tables';
 
 export {
   Header,
@@ -60,8 +60,7 @@ export {
   ViewPitchModal,
   MultiSelect,
   Select,
-  DirectoryTable,
-  OnboardingTable,
+  // DirectoryTable,
   PitchTable,
   PitchRow,
   TableTool,
@@ -73,4 +72,8 @@ export {
   EditInterests,
   EditTeams,
   EditableTagModal,
+  UserInterests,
+  UserTeams,
+  PendingUsers,
+  ApprovedUsers,
 };

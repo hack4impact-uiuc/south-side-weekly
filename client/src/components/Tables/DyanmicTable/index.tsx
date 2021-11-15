@@ -1,64 +1,11 @@
-import React, { ReactElement, ReactNode, useEffect, useState } from 'react';
-import { SemanticWIDTHS, Table } from 'semantic-ui-react';
+import React, { ReactElement, useEffect, useState } from 'react';
+import { Table } from 'semantic-ui-react';
+
+import TableHeader from './TableHeader';
+import TableRow from './TableRow';
+import { ColumnType, SortDirection } from './types';
+
 import './styles.scss';
-
-interface TableRowProps<RecordType> {
-  record: RecordType;
-  columns: ColumnType<RecordType>[];
-  onClick: (record: RecordType) => void;
-}
-
-type SortDirection = 'ascending' | 'descending';
-
-interface TableHeaderProps<RecordType> {
-  columns: ColumnType<RecordType>[];
-  sortColumn?: ColumnType<RecordType>;
-  sortDirection?: SortDirection;
-  handleSort: (column: ColumnType<RecordType>) => void;
-}
-
-interface ColumnType<RecordType> {
-  title: ReactNode;
-  width?: SemanticWIDTHS;
-  sorter?: (a: RecordType, b: RecordType) => number;
-  extractor: keyof RecordType | ((record: RecordType) => ReactNode);
-}
-
-const TableHeader = <RecordType,>({
-  columns,
-  sortDirection,
-  sortColumn,
-  handleSort,
-}: TableHeaderProps<RecordType>): ReactElement => (
-  <Table.Header>
-    {columns.map((column, index) => (
-      <Table.HeaderCell
-        width={column.width}
-        onClick={() => handleSort(column)}
-        sorted={sortColumn?.title === column.title ? sortDirection : undefined}
-        key={index}
-      >
-        {column.title}
-      </Table.HeaderCell>
-    ))}
-  </Table.Header>
-);
-
-const TableRow = <RecordType,>({
-  record,
-  columns,
-  onClick,
-}: TableRowProps<RecordType>): ReactElement => (
-  <Table.Row onClick={onClick}>
-    {columns.map((column, i) => (
-      <Table.Cell key={i} width={column.width}>
-        {typeof column.extractor !== 'function'
-          ? record[column.extractor]
-          : column.extractor(record)}
-      </Table.Cell>
-    ))}
-  </Table.Row>
-);
 
 interface TableProps<RecordType> {
   records: RecordType[];
@@ -88,9 +35,10 @@ const DynamicTable = <RecordType,>({
   );
 
   const handleSort = (newColumn: Column): void => {
-    if (newColumn.sorter === undefined) {
+    if (!newColumn.sorter) {
       return;
     }
+
     if (sortColumn?.title === newColumn.title) {
       if (sortDirection === 'ascending') {
         setSortDirection('descending');
@@ -142,7 +90,7 @@ const DynamicTable = <RecordType,>({
             record={record}
             columns={columns}
             key={i}
-            onClick={() => onRecordClick && onRecordClick(record)}
+            onClick={() => onRecordClick ?? record}
           />
         ))}
       </Table.Body>
