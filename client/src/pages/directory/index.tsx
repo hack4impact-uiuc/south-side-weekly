@@ -92,13 +92,7 @@ const ApprovedUsers = (): ReactElement => {
   }, [directory, query, interests, teams, role]);
 
   return (
-    <div className="directory-page">
-      <Walkthrough
-        page={pagesEnum.DIRECTORY}
-        content="Check out the members on the SSW team and click their profiles to view more details!"
-      />
-
-      <h2>Directory</h2>
+    <div className="table">
       <Input
         value={query}
         onChange={(e, { value }) => setQuery(value)}
@@ -189,7 +183,7 @@ const PendingUsers = (): ReactElement => {
   }, [directory, query]);
 
   return (
-    <div className="directory-page">
+    <div className="table">
       <Input
         value={query}
         onChange={(e, { value }) => setQuery(value)}
@@ -224,31 +218,30 @@ const PendingUsers = (): ReactElement => {
   );
 };
 
+function renderTable(table: ReactElement): ReactElement {
+  return <Tab.Pane>{table}</Tab.Pane>;
+}
+
 const panes = [
   {
     menuItem: 'Approved Users',
-    // eslint-disable-next-line react/display-name
-    render: () => (
-      <Tab.Pane>
-        <ApprovedUsers />
-      </Tab.Pane>
-    ),
+    render: () => renderTable(<ApprovedUsers />),
   },
   {
     menuItem: 'Pending Users',
-    pane: <PendingUsers />,
+    render: () => renderTable(<PendingUsers />),
   },
 ];
 
 const Directory = (): ReactElement => (
-  <>
+  <div className="directory-page">
     <Walkthrough
       page={pagesEnum.DIRECTORY}
       content="Check out the members on the SSW team and click their profiles to view more details!"
     />
     <h2>Directory</h2>
-    <Tab panes={panes} />
-  </>
+    <Tab id="directory-tabs" panes={panes} />
+  </div>
 );
 
 export default Directory;

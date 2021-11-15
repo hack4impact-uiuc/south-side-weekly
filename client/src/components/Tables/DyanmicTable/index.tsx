@@ -21,7 +21,7 @@ interface ColumnType<RecordType> {
   title: ReactNode;
   width?: SemanticWIDTHS;
   sorter?: (a: RecordType, b: RecordType) => number;
-  extractor: keyof RecordType | ((record: RecordType) => ReactNode);
+  extractor: keyof RecordType | ((record: RecordType) => ReactElement);
 }
 
 const TableHeader = <RecordType,>({
@@ -35,7 +35,7 @@ const TableHeader = <RecordType,>({
       <Table.HeaderCell
         width={column.width}
         onClick={() => handleSort(column)}
-        sorted={sortColumn === column ? sortDirection : undefined}
+        sorted={sortColumn?.title === column.title ? sortDirection : undefined}
         key={index}
       >
         {column.title}
@@ -51,7 +51,7 @@ const TableRow = <RecordType,>({
 }: TableRowProps<RecordType>): ReactElement => (
   <Table.Row onClick={onClick}>
     {columns.map((column, i) => (
-      <Table.Cell key={i}>
+      <Table.Cell key={i} width={column.width}>
         {typeof column.extractor !== 'function'
           ? record[column.extractor]
           : column.extractor(record)}
@@ -91,7 +91,6 @@ const DynamicTable = <RecordType,>({
     if (newColumn.sorter === undefined) {
       return;
     }
-
     if (sortColumn?.title === newColumn.title) {
       if (sortDirection === 'ascending') {
         setSortDirection('descending');
@@ -102,9 +101,9 @@ const DynamicTable = <RecordType,>({
         setSortColumn(undefined);
       }
     } else {
+      console.log('Yessir');
       setSortColumn(newColumn);
       setSortDirection('ascending');
-
       const copy = [...records];
       copy.sort(newColumn.sorter);
       setSortedRecords(copy);
@@ -120,7 +119,7 @@ const DynamicTable = <RecordType,>({
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [records, handleSort]);
+  }, [records]);
 
   return (
     <Table

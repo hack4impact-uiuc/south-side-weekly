@@ -1,9 +1,10 @@
+@import '../../../styles/colors.scss';
 .edit-button {
   padding: 5px;
 }
 
 #approve {
-  background-color: #5a72e1;
+  background-color: $secondaryColor;
 }
 
 .actions {
@@ -26,6 +27,7 @@ tbody {
 
   .name-col {
     display: flex;
+    justify-content: space-between;
     align-items: center;
 
     #name-text {
