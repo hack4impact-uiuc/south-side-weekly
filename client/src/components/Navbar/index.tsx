@@ -13,7 +13,7 @@ const Navbar = (): ReactElement => {
 
   return (
     <Menu attached="top" className="navbar" borderless size="large">
-      <Menu.Item className="header" as={isOnboarded && Link} to="/homepage">
+      <Menu.Item className="header" as={isOnboarded && Link} to="/home">
         <h2>South Side Weekly</h2>
       </Menu.Item>
       <Menu.Menu position="right">
