@@ -72,8 +72,7 @@ export const santitizeUser = (user: UserSchema): IUser => ({
   submittedPitches: user.submittedPitches,
   teams: user.teams,
   role: user.role,
-  hasRoleApproved: user.hasRoleApproved,
   races: user.races,
   interests: user.interests,
-  rejectReasoning: user.rejectReasoning,
+  onboardReasoning: user.onboardReasoning,
 });

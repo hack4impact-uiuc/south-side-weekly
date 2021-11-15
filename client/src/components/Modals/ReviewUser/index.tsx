@@ -1,4 +1,5 @@
 import React, { ReactElement, FC, useState } from 'react';
+import toast from 'react-hot-toast';
 import {
   Button,
   Grid,
@@ -9,13 +10,14 @@ import {
   Input,
 } from 'semantic-ui-react';
 import { IUser, ITeam } from 'ssw-common';
+import { isError } from 'lodash';
 
 import { updateUser, updateOnboardingStatus } from '../../../api';
 import { useInterests, useTeams } from '../../../contexts';
 import { UserPicture, FieldTag } from '../..';
-import './styles.scss';
 import { getUserFullName, titleCase } from '../../../utils/helpers';
 
+import './styles.scss';
 interface ReviewUserProps extends ModalProps {
   user: IUser;
 }
@@ -27,9 +29,38 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
   const { getTeamFromId } = useTeams();
   const { getInterestById } = useInterests();
 
-  const approveUser = (u: IUser): void => {
-    updateOnboardingStatus(u._id, 'ONBOARDED');
-    setIsOpen(false);
+  // const notifySuccess = (message: string): string =>
+  //   toast.success(`Successfully ${message} user!`, {
+  //     position: 'bottom-right',
+  //   });
+
+  const notifySuccess = (): string => {
+    console.log('ayo');
+    return toast.success(`Successfully yo user!`, {
+      position: 'bottom-right',
+    });
+  };
+
+  const notifyFail = (message: string): string =>
+    toast.success(`${message} user was unsuccessful!`, {
+      position: 'bottom-right',
+    });
+
+  const approveUser = (user: IUser): void => {
+    const reasoningAdded = updateUser(
+      {
+        onboardReasoning: formValue,
+      },
+      user._id,
+    );
+    const userApproved = updateOnboardingStatus(user._id, 'ONBOARDED');
+    if (!isError(reasoningAdded) && !isError(userApproved)) {
+      console.log('ok!');
+      notifySuccess();
+      setIsOpen(false);
+    } else {
+      notifyFail('Approving');
+    }
   };
 
   const toString = (date: Date): string => {
@@ -39,15 +70,21 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
     return modifiedStr;
   };
 
-  const rejectUser = (u: IUser): void => {
-    updateUser(
+  const declineUser = (user: IUser): void => {
+    const reasoningAdded = updateUser(
       {
-        rejectReasoning: formValue,
+        onboardReasoning: formValue,
       },
-      u._id,
+      user._id,
     );
-    updateOnboardingStatus(u._id, 'DENIED');
-    setIsOpen(false);
+    const userDenied = updateOnboardingStatus(user._id, 'DENIED');
+    if (!isError(reasoningAdded) && !isError(userDenied)) {
+      console.log('ok!');
+      notifySuccess();
+      setIsOpen(false);
+    } else {
+      notifyFail('Declining');
+    }
   };
 
   return (
@@ -88,9 +125,9 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
             <Grid.Column>
               <b>Genders:</b> {user.genders.join(', ')}
               <br /> <b>Races:</b> {titleCase(user.races.join(', '))}
-              {/* Place Holder To Be Updated */}
-              <br /> <b>Neighborhood:</b> Place Holder, update after user
-              onboarding field is added
+              {/* TODO - update when the neighborhoods field is added to the user model */}
+              <br /> <b>Neighborhood:</b> Place Holder, update when the
+              neighborhoods field is added to the user model
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={4}>
@@ -145,10 +182,11 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
                 {user.involvementResponse}
               </div>
               <div className="paragraph">
-                {/* Place Holder To Be Updated  */}
                 <b>User's past experience</b>
                 <br />
-                Place Holder, update after user onboarding field is added
+                {/* TODO - update when past experience field is added to the user model */}
+                Place Holder, update when past experience field is added to the
+                user model
               </div>
               <span style={{ color: 'gray' }}>
                 Registered on {toString(user.dateJoined)}
@@ -175,9 +213,9 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
             Approve
           </Button>
           <Button
-            className="reject-button"
+            className="decline-button"
             onClick={() => {
-              rejectUser(user);
+              declineUser(user);
             }}
           >
             Decline

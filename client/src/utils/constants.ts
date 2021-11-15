@@ -52,10 +52,9 @@ const emptyUser: IUser = {
   submittedPitches: [],
   teams: [],
   role: '',
-  hasRoleApproved: false,
   races: [],
   interests: [],
-  rejectReasoning: '',
+  onboardReasoning: '',
 };
 
 const emptyPitch: IPitch = {

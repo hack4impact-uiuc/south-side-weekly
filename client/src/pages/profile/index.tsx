@@ -13,7 +13,7 @@ import {
 } from 'semantic-ui-react';
 import { startCase } from 'lodash';
 
-import { FieldTag, UserPicture } from '../../components';
+import { ReviewUserModal , FieldTag, UserPicture } from '../../components';
 import {
   isError,
   getUser,
@@ -247,6 +247,7 @@ const Profile = (): ReactElement => {
 
   return (
     <div>
+      <ReviewUserModal user={user} />
       <Grid padded stackable>
         <Grid.Row columns={4}>
           <Grid.Column className="profile-pic-col">

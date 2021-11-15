@@ -38,15 +38,13 @@ const User = new mongoose.Schema({
   submittedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
   teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
   involvementResponse: { type: String, default: null },
-  rejectReasoning: { type: String, default: null },
+  onboardReasoning: { type: String, default: null },
 
   role: {
     type: String,
     enum: Object.values(rolesEnum),
     default: rolesEnum.TBD,
   },
-
-  hasRoleApproved: { type: Boolean, default: false },
 
   races: [
     {

@@ -189,7 +189,7 @@ router.put(
 
 // Get all pending users
 router.get(
-  '/users/pending',
+  '/all/pending',
   errorWrap(async (req: Request, res: Response) => {
     const users = await User.find({
       onboardingStatus:
@@ -206,7 +206,7 @@ router.get(
 
 // Get all approved users
 router.get(
-  '/users/approved',
+  '/all/approved',
   errorWrap(async (req: Request, res: Response) => {
     const users = await User.find({
       onboardingStatus: onboardingStatusEnum.ONBOARDED,
@@ -221,7 +221,7 @@ router.get(
 
 // Get all rejected users
 router.get(
-  '/users/denied',
+  '/all/denied',
   errorWrap(async (req: Request, res: Response) => {
     const users = await User.find({
       onboardingStatus: onboardingStatusEnum.DENIED,
