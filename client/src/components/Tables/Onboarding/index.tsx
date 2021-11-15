@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 import { Button } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
@@ -22,21 +22,21 @@ const OnboardingTable = ({ users }: OnboardingTableProps): ReactElement => {
   const userColumn: ColumnType<IUser> = {
     title: '',
     width: 1,
-    extractor: function getPicture(user: IUser): ReactElement {
+    extractor: function getPicture(user: IUser): ReactNode {
       return <UserPicture id="user-picture" user={user} />;
     },
   };
   const nameColumn: ColumnType<IUser> = {
     title: 'Name',
     sorter: fullNameSort,
-    extractor: function getUserName(user: IUser): ReactElement {
+    extractor: function getUserName(user: IUser): ReactNode {
       return <>{getUserFullName(user)}</>;
     },
   };
   const roleColumn: ColumnType<IUser> = {
     title: 'Role',
     sorter: roleSort,
-    extractor: function getRoles(user: IUser): ReactElement {
+    extractor: function getRoles(user: IUser): ReactNode {
       return <FieldTag size="small" content={user.role} />;
     },
   };
@@ -46,7 +46,7 @@ const OnboardingTable = ({ users }: OnboardingTableProps): ReactElement => {
         Teams <EditTeams />
       </>
     ),
-    extractor: function getTeams(user: IUser): ReactElement {
+    extractor: function getTeams(user: IUser): ReactNode {
       return (
         <>
           {user.teams.map((team, index) => (
@@ -63,7 +63,7 @@ const OnboardingTable = ({ users }: OnboardingTableProps): ReactElement => {
   };
   const interestsColumn: ColumnType<IUser> = {
     title: <>Interests </>,
-    extractor: function getInterests(user: IUser): ReactElement {
+    extractor: function getInterests(user: IUser): ReactNode {
       return (
         <>
           {user.interests.map((interest, index) => (
@@ -81,13 +81,13 @@ const OnboardingTable = ({ users }: OnboardingTableProps): ReactElement => {
   const dateColumn: ColumnType<IUser> = {
     title: 'Registration Date',
     sorter: joinedSort,
-    extractor: function getRegistrationDate(user: IUser): ReactElement {
+    extractor: function getRegistrationDate(user: IUser): ReactNode {
       return <>{new Date(user.dateJoined).toISOString().split('T')[0]}</>;
     },
   };
   const actionsColumn: ColumnType<IUser> = {
     title: '',
-    extractor: function getActions(): ReactElement {
+    extractor: function getActions(): ReactNode {
       return (
         <div className="actions">
           <Button

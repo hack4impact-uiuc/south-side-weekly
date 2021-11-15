@@ -21,7 +21,7 @@ interface ColumnType<RecordType> {
   title: ReactNode;
   width?: SemanticWIDTHS;
   sorter?: (a: RecordType, b: RecordType) => number;
-  extractor: keyof RecordType | ((record: RecordType) => ReactElement);
+  extractor: keyof RecordType | ((record: RecordType) => ReactNode);
 }
 
 const TableHeader = <RecordType,>({
@@ -101,7 +101,6 @@ const DynamicTable = <RecordType,>({
         setSortColumn(undefined);
       }
     } else {
-      console.log('Yessir');
       setSortColumn(newColumn);
       setSortDirection('ascending');
       const copy = [...records];
@@ -117,7 +116,6 @@ const DynamicTable = <RecordType,>({
       setSortColumn(undefined);
       handleSort(oldSortColumn);
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [records]);
 
