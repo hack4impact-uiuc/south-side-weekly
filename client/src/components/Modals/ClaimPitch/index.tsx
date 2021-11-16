@@ -2,6 +2,7 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Button, Form, Icon, Modal, ModalProps } from 'semantic-ui-react';
 import { IPitch, IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
+import * as yup from 'yup';
 
 import { PitchRow } from '../..';
 import { isError, submitPitchClaim } from '../../../api';
@@ -30,6 +31,13 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
   const [didSubmit, setDidSubmit] = useState(false);
   const [isCheckboxError, setIsCheckboxError] = useState(false);
   const [aggregatedPitch, setAggregatedPitch] = useState(emptyAggregatePitch);
+
+  const pitchClaimSchema = yup.object({
+    message: yup.string().required(),
+    checkboxes: yup.array().of(yup.string().required()),
+  });
+
+  type PitchClaim = yup.InferType<typeof pitchClaimSchema>;
 
   const { user } = useAuth();
   const { getTeamFromId } = useTeams();
