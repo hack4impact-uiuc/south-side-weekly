@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 
 import { getCurrentUser, isError, logout as clearSession } from '../../api';
-import { rolesEnum } from '../../utils/enums';
+import { onboardingStatusEnum, rolesEnum } from '../../utils/enums';
 
 import { AuthContext, initialValues, useAuth } from './context';
 import { IAuthContext } from './types';
@@ -37,6 +37,7 @@ const AuthProvider: FC = ({ children }): ReactElement => {
           isRegistered: user.role !== 'TBD',
           logout: logout,
           register: loadCurrentUser,
+          isOnboarded: user.onboardingStatus === onboardingStatusEnum.ONBOARDED,
         };
 
         setAuth(sessionizedUser);

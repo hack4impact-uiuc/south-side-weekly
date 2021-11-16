@@ -33,15 +33,15 @@
   }
 
   .decline-button {
-    background-color: transparent;
-    border: 1px solid darkgray;
+    background-color: transparent !important;
+    border: 1px solid darkgray !important;
     color: darkgray;
     float: right;
     margin-bottom: 30px;
   }
   .approve-button {
-    background-color: $secondaryColor;
-    color: white;
+    background-color: $secondaryColor !important;
+    color: white !important;
     float: right;
   }
 }

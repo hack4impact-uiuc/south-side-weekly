@@ -29,23 +29,19 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
   const { getTeamFromId } = useTeams();
   const { getInterestById } = useInterests();
 
-  // const notifySuccess = (message: string): string =>
-  //   toast.success(`Successfully ${message} user!`, {
-  //     position: 'bottom-right',
-  //   });
-
-  const notifySuccess = (): string => {
-    console.log('ayo');
-    return toast.success(`Successfully yo user!`, {
+  // Toast success
+  const notifySuccess = (message: string): string =>
+    toast.success(`Successfully ${message} user!`, {
       position: 'bottom-right',
     });
-  };
 
+  // Toast fail
   const notifyFail = (message: string): string =>
     toast.success(`${message} user was unsuccessful!`, {
       position: 'bottom-right',
     });
 
+  // Handle approve
   const approveUser = (user: IUser): void => {
     const reasoningAdded = updateUser(
       {
@@ -55,21 +51,14 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
     );
     const userApproved = updateOnboardingStatus(user._id, 'ONBOARDED');
     if (!isError(reasoningAdded) && !isError(userApproved)) {
-      console.log('ok!');
-      notifySuccess();
+      notifySuccess('approved');
       setIsOpen(false);
     } else {
       notifyFail('Approving');
     }
   };
 
-  const toString = (date: Date): string => {
-    const str = date.toLocaleString();
-    const extractedStr = str.split('T', 1)[0];
-    const modifiedStr = extractedStr.replace(/-/gi, '/');
-    return modifiedStr;
-  };
-
+  // Handle decline
   const declineUser = (user: IUser): void => {
     const reasoningAdded = updateUser(
       {
@@ -79,12 +68,19 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
     );
     const userDenied = updateOnboardingStatus(user._id, 'DENIED');
     if (!isError(reasoningAdded) && !isError(userDenied)) {
-      console.log('ok!');
-      notifySuccess();
+      notifySuccess('declined');
       setIsOpen(false);
     } else {
       notifyFail('Declining');
     }
+  };
+
+  // Convert Date to mm/dd/yyyy format
+  const toString = (date: Date): string => {
+    const str = date.toLocaleString();
+    const dateArr = str.split('T', 1)[0].split('-');
+    const dateStr = `${dateArr[1]}/${dateArr[2]}/${dateArr[0]}`;
+    return dateStr;
   };
 
   return (

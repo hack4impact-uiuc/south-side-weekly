@@ -47,4 +47,13 @@ const isStaff = (user: IUser): boolean =>
  */
 const isAdmin = (user: IUser): boolean => hasRole(user, [rolesEnum.ADMIN]);
 
-export { hasRole, isContributor, isStaff, isAdmin };
+/**
+ * Determines if a user has been onboarded
+ *
+ * @param user the user to check
+ * @returns true if uesr is onboarded, else false
+ */
+const isOnboarded = (user: IUser): boolean =>
+  user.onboardingStatus === onboardingStatusEnum.ONBOARDED;
+
+export { hasRole, isContributor, isStaff, isAdmin, isOnboarded };
