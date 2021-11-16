@@ -32,16 +32,25 @@
     width: 100%;
   }
 
-  .decline-button {
-    background-color: transparent !important;
-    border: 1px solid darkgray !important;
-    color: darkgray;
-    float: right;
-    margin-bottom: 30px;
+  .team-tag,
+  .interest-tag {
+    margin-right: 5px !important;
   }
-  .approve-button {
-    background-color: $secondaryColor !important;
-    color: white !important;
-    float: right;
+
+  .review-user-actions {
+    margin-top: 20px;
+
+    .decline-button {
+      background-color: transparent;
+      border: 1px solid darkgray;
+      color: darkgray;
+      float: right;
+      margin-bottom: 30px;
+    }
+    .approve-button {
+      background-color: $secondaryColor !important;
+      color: white !important;
+      float: right;
+    }
   }
 }

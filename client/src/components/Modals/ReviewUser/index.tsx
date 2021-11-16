@@ -9,7 +9,7 @@ import {
   Form,
   Input,
 } from 'semantic-ui-react';
-import { IUser, ITeam } from 'ssw-common';
+import { IUser } from 'ssw-common';
 import { isError } from 'lodash';
 
 import { updateUser, updateOnboardingStatus } from '../../../api';
@@ -29,15 +29,13 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
   const { getTeamFromId } = useTeams();
   const { getInterestById } = useInterests();
 
-  // Toast success
-  const notifySuccess = (message: string): string =>
-    toast.success(`Successfully ${message} user!`, {
+  const notifySuccess = (): string =>
+    toast.success(`Approved User`, {
       position: 'bottom-right',
     });
 
-  // Toast fail
-  const notifyFail = (message: string): string =>
-    toast.success(`${message} user was unsuccessful!`, {
+  const notifyDecline = (): string =>
+    toast.success('Declined user', {
       position: 'bottom-right',
     });
 
@@ -51,14 +49,20 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
     );
     const userApproved = updateOnboardingStatus(user._id, 'ONBOARDED');
     if (!isError(reasoningAdded) && !isError(userApproved)) {
-      notifySuccess('approved');
+      notifySuccess();
       setIsOpen(false);
-    } else {
-      notifyFail('Approving');
     }
   };
 
-  // Handle decline
+  const formatDate = (date: Date): string => {
+    date = new Date(date);
+    const day = date.getDate();
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+
+    return `${month}/${day}/${year}`;
+  };
+
   const declineUser = (user: IUser): void => {
     const reasoningAdded = updateUser(
       {
@@ -68,19 +72,9 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
     );
     const userDenied = updateOnboardingStatus(user._id, 'DENIED');
     if (!isError(reasoningAdded) && !isError(userDenied)) {
-      notifySuccess('declined');
+      notifyDecline();
       setIsOpen(false);
-    } else {
-      notifyFail('Declining');
     }
-  };
-
-  // Convert Date to mm/dd/yyyy format
-  const toString = (date: Date): string => {
-    const str = date.toLocaleString();
-    const dateArr = str.split('T', 1)[0].split('-');
-    const dateStr = `${dateArr[1]}/${dateArr[2]}/${dateArr[0]}`;
-    return dateStr;
   };
 
   return (
@@ -110,17 +104,20 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
               </div>
             </Grid.Column>
             <Grid.Column>
-              <Icon name="mail" />
-              {user.email}
-              <br></br>
-              <Icon name="phone" />
-              {user.phone}
+              <div>
+                <Icon name="mail" />
+                {user.email}
+              </div>
+              <div>
+                <Icon name="phone" />
+                {user.phone}
+              </div>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
               <b>Genders:</b> {user.genders.join(', ')}
-              <br /> <b>Races:</b> {titleCase(user.races.join(', '))}
+              <br /> <b>Races:</b> {user.races.map(titleCase).join(', ')}
               {/* TODO - update when the neighborhoods field is added to the user model */}
               <br /> <b>Neighborhood:</b> Place Holder, update when the
               neighborhoods field is added to the user model
@@ -129,44 +126,46 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
           <Grid.Row columns={4}>
             <Grid.Column>
               <b>Role</b>
-              <br />
-              <FieldTag
-                className="role-tag"
-                content={user.role}
-                size="medium"
-              />
+              <div>
+                <FieldTag
+                  className="role-tag"
+                  content={user.role}
+                  size="medium"
+                />
+              </div>
             </Grid.Column>
             <Grid.Column>
               <b>Teams</b>
-              <br />
-              {user.teams
-                .map(getTeamFromId)
-                .map((team: ITeam | undefined, index: number) => (
-                  <FieldTag
-                    className="team-tag"
-                    name={team?.name}
-                    hexcode={team?.color}
-                    size="medium"
-                    key={index}
-                  />
+              <div style={{ display: 'flex' }}>
+                {user.teams.map(getTeamFromId).map((team, index) => (
+                  <Grid.Row key={index}>
+                    <FieldTag
+                      className="team-tag"
+                      name={team?.name}
+                      hexcode={team?.color}
+                      size="medium"
+                    />
+                  </Grid.Row>
                 ))}
+              </div>
             </Grid.Column>
             <Grid.Column>
               <b>Topic Interests</b>
-              <br />
-              {user.interests.map((interest: string, index: number) => {
-                const fullInterest = getInterestById(interest);
+              <div>
+                {user.interests.map((interest: string, index: number) => {
+                  const fullInterest = getInterestById(interest);
 
-                return (
-                  <FieldTag
-                    className="team-tag"
-                    key={index}
-                    name={fullInterest?.name}
-                    hexcode={fullInterest?.color}
-                    size="medium"
-                  />
-                );
-              })}
+                  return (
+                    <FieldTag
+                      className="interest-tag"
+                      key={index}
+                      name={fullInterest?.name}
+                      hexcode={fullInterest?.color}
+                      size="medium"
+                    />
+                  );
+                })}
+              </div>
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={1}>
@@ -184,7 +183,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
                 user model
               </div>
               <span style={{ color: 'gray' }}>
-                Registered on {toString(user.dateJoined)}
+                Registered on {formatDate(user.dateJoined)}
               </span>
               <h5>
                 Reasoning <span style={{ color: 'gray' }}>- Optional</span>
@@ -198,7 +197,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
             </Grid.Column>
           </Grid.Row>
         </Grid>
-        <Modal.Actions>
+        <Modal.Actions className="review-user-actions">
           <Button
             className="approve-button"
             onClick={() => {
