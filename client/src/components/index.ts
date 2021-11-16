@@ -14,6 +14,7 @@ import FilterDropdown from './Dropdowns/Filter';
 import FieldTag from './FieldTag';
 import UserPicture from './UserPicture';
 import UserCard from './UserCard';
+import { UserInterests, UserTeams } from './Lists';
 import Navbar from './Navbar';
 import SubmitButton from './Wizard/SubmitButton';
 import PrevButton from './Wizard/PrevButton';
@@ -33,8 +34,8 @@ import {
   EditInterests,
   EditTeams,
 } from './Modals/EditableTags';
-import { UserInterests, UserTeams } from './Lists';
-import { PendingUsers, ApprovedUsers } from './Tables';
+import ReviewUserModal from './Modals/ReviewUser';
+import { ApprovedUsers, PendingUsers } from './Tables';
 
 export {
   Header,
@@ -53,6 +54,8 @@ export {
   FieldTag,
   UserPicture,
   UserCard,
+  UserInterests,
+  UserTeams,
   Navbar,
   SubmitButton,
   PrevButton,
@@ -72,8 +75,7 @@ export {
   EditInterests,
   EditTeams,
   EditableTagModal,
-  UserInterests,
-  UserTeams,
-  PendingUsers,
+  ReviewUserModal,
   ApprovedUsers,
+  PendingUsers
 };

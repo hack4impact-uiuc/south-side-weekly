@@ -2,6 +2,7 @@ import React, { FC, ReactElement } from 'react';
 import { IUser } from 'ssw-common';
 
 import DynamicTable from '../../DyanmicTable';
+import ReviewUserModal from '../../../Modals/ReviewUser';
 import {
   nameColumn,
   roleColumn,
@@ -36,6 +37,7 @@ const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
           records={users}
           columns={columns}
           singleLine={users.length > 0}
+          onRecordClick={(user: IUser) => ReviewUserModal({user})}
         />
       </div>
     </div>

@@ -17,6 +17,31 @@ const getUsers = async (): Promise<Response<UsersResponse>> => {
   return await get(url, failureMessage);
 };
 
+// Returns all pending users
+const getPendingUsers = async (): Promise<Response<UsersResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, 'all', 'pending');
+  const failureMessage = 'GET_PENDING_USERS_FAIL';
+
+  return await get(url, failureMessage);
+};
+
+// Returns all approved users
+const getApprovedUsers = async (): Promise<Response<UsersResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, 'all', 'approved');
+  const failureMessage = 'GET_APPROVED_USERS_FAIL';
+
+  return await get(url, failureMessage);
+};
+
+// Returns all denied users
+const getDeniedUsers = async (): Promise<Response<UsersResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, 'all', 'denied');
+  const failureMessage = 'GET_DENIED_USERS_FAIL';
+
+  return await get(url, failureMessage);
+};
+
+// Returns all pending contributors
 const getPendingContributors = async (): Promise<Response<UsersResponse>> => {
   const url = buildEndpoint(USER_ENDPOINT, 'contributors', 'pending');
   const failureMessage = 'GET_PENDING_CONTRIBUTORS_FAIL';
@@ -24,6 +49,7 @@ const getPendingContributors = async (): Promise<Response<UsersResponse>> => {
   return await get(url, failureMessage);
 };
 
+// Returns all pending staff
 const getPendingStaff = async (): Promise<Response<UsersResponse>> => {
   const url = buildEndpoint(USER_ENDPOINT, 'staff', 'pending');
   const failureMessage = 'GET_PENDING_STAFF_FAIL';
@@ -62,6 +88,7 @@ const updateUser = async (
 };
 
 // Update user's onboarding status
+// Will also send email here
 const updateOnboardingStatus = async (
   userId: string,
   status: keyof typeof onboardingStatusEnum,
@@ -107,6 +134,9 @@ const getUsersByTeam = async (
 
 export {
   getUsers,
+  getPendingUsers,
+  getApprovedUsers,
+  getDeniedUsers,
   getPendingContributors,
   getPendingStaff,
   getUser,
