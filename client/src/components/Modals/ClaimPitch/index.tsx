@@ -3,6 +3,7 @@ import { Button, Form, Icon, Modal, ModalProps } from 'semantic-ui-react';
 import { IPitch, IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
 import * as yup from 'yup';
+import { Formik, Field, Form as FormikForm } from 'formik';
 
 import { PitchRow } from '../..';
 import { isError, submitPitchClaim } from '../../../api';
@@ -241,6 +242,44 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     );
   };
 
+  const getSelectableTeamsFormik = (): JSX.Element => {
+    const {
+      aggregated: { teams },
+    } = aggregatedPitch;
+
+    if (teams.length === 0) {
+      return <p>There are no more teams available.</p>;
+    }
+
+    return (
+      <>
+        {teams.map((team, i) => (
+          <div className="checkbox-wrapper" key={i}>
+            {teams.length === 1 ? (
+              <Field
+                type="radio"
+                name="checkboxes"
+                value={team.name}
+                disabled={team.target <= 0 || disableCheckbox(team._id)}
+              />
+            ) : (
+              <Field
+                type="checkbox"
+                name="checkboxes"
+                value={team.name}
+                disabled={team.target <= 0 || disableCheckbox(team._id)}
+              />
+            )}
+            <p>
+              <span style={{ fontWeight: 'bold' }}>{team.name}</span> -{' '}
+              {team.target} {pluralize('spot', team.target)} left
+            </p>
+          </div>
+        ))}
+      </>
+    );
+  };
+
   return (
     <Modal
       open={isOpen}
@@ -280,6 +319,23 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
           <hr></hr>
           {getOtherContributors()}
         </details>
+        <Formik
+          initialValues={{
+            message: '',
+            checkboxes: [],
+          }}
+          onSubmit={(values) => console.log(values)}
+        >
+          {
+            <FormikForm>
+              <Form.Group className="team-select-group">
+                <p className="select-team-message">Select Team(s) to Join</p>
+                {getSelectableTeamsFormik()}
+              </Form.Group>
+              <button type="submit">Submit</button>
+            </FormikForm>
+          }
+        </Formik>
         <Form>
           <Form.Group className="team-select-group">
             <p className="select-team-message">Select Team(s) to Join</p>
