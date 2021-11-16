@@ -16,10 +16,7 @@ const hasRole = (
   roles: string[],
   requireApproved = true,
 ): boolean =>
-  user &&
-  roles.includes(user.role) &&
-  (user.onboardingStatus === onboardingStatusEnum.ONBOARDED ||
-    !requireApproved);
+  user && roles.includes(user.role) && (isOnboarded(user) || !requireApproved);
 
 /**
  * Determines if a user has contributor level access
