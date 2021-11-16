@@ -21,7 +21,7 @@ router.get(
       res.status(200).json({
         success: true,
         result: issue,
-        message: `Successfully retrieved issue`,
+        message: 'Successfully retrieved issue',
       });
     }
   }),
@@ -34,7 +34,7 @@ router.get(
   errorWrap(async (req: Request, res: Response) => {
     const issues = await Issue.find({});
     res.status(200).json({
-      message: `Successfully retrieved all issues.`,
+      message: 'Successfully retrieved all issues.',
       success: true,
       result: issues,
     });
