@@ -147,6 +147,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
                     name={team?.name}
                     hexcode={team?.color}
                     size="medium"
+                    key={index}
                   />
                 ))}
             </Grid.Column>
@@ -158,7 +159,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
 
                 return (
                   <FieldTag
-                    className="interest-tag"
+                    className="team-tag"
                     key={index}
                     name={fullInterest?.name}
                     hexcode={fullInterest?.color}
