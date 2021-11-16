@@ -34,6 +34,7 @@ interface PitchBodyProps {
 
 interface PitchRowProps {
   pitch: IPitch;
+  pageRedirect?: boolean;
 }
 
 const titleSort = (a: IPitch, b: IPitch): number =>
@@ -125,7 +126,7 @@ const PitchBody: FC<PitchBodyProps> = ({
         );
       } else if (currentTab === pitchDocTabs.CLAIM_APPROVAL) {
         //TODO: Replace PitchRow with the modal component
-        return <PitchRow pitch={pitch} />;
+        return <PitchRow pitch={pitch} pageRedirect />;
       } else if (currentTab === pitchDocTabs.APPROVED) {
         //TODO: Replace PitchRow with the modal component
         return <ViewPitchModal key={index} pitch={pitch} />;
@@ -141,7 +142,11 @@ const getClaimableTeams = (pitch: IPitch, user: IUser): string[] =>
         .map((team) => team.teamId)
     : [];
 
-const PitchRow: FC<PitchRowProps> = ({ pitch, ...rest }): ReactElement => {
+const PitchRow: FC<PitchRowProps> = ({
+  pitch,
+  pageRedirect = false,
+  ...rest
+}): ReactElement => {
   const { user } = useAuth();
   const { getInterestById } = useInterests();
   const { getTeamFromId } = useTeams();
@@ -149,8 +154,8 @@ const PitchRow: FC<PitchRowProps> = ({ pitch, ...rest }): ReactElement => {
 
   return (
     <Table.Row
-      {...rest}
       onClick={() => history.push(`/pitches/reviewClaim/${pitch._id}`)}
+      {...rest}
     >
       <Table.Cell>{pitch.title}</Table.Cell>
       <Table.Cell>{pitch.description}</Table.Cell>

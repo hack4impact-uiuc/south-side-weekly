@@ -1,1 +1,57 @@
 @import '../../styles/colors.scss';
+
+.approve-claim-card {
+  background-color: white;
+  border-radius: 5px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  //row-gap: 15px;
+
+  .card-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    //column-gap: 7px;
+    width: 65%;
+    justify-content: space-between;
+
+    p {
+      margin-bottom: 0 !important;
+      margin-top: 0 !important;
+    }
+
+    i {
+      margin-bottom: 0 !important;
+      margin-top: 0 !important;
+    }
+  }
+
+  .header-divider {
+    margin-top: 12px;
+    margin-bottom: 10px;
+    color: black;
+    width: 100%;
+    //border: 9px;
+  }
+
+  .claim-section {
+    display: flex;
+    flex-direction: column;
+    row-gap: 15px;
+
+    .claim-row {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+
+      .radio-group {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        width: 45%;
+      }
+    }
+  }
+}

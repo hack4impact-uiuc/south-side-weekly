@@ -18,7 +18,7 @@ import {
   Profile,
   Resources,
 } from './pages';
-import ReviewClaim from './pages/pitchDoc/reviewClaim';
+import ReviewClaim from './pages/reviewClaim';
 import './styles/styles.scss';
 import Wizard from './wizard';
 
