@@ -142,14 +142,12 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
               {user.teams
                 .map(getTeamFromId)
                 .map((team: ITeam | undefined, index: number) => (
-                  <Grid.Row key={index}>
-                    <FieldTag
-                      className="team-tag"
-                      name={team?.name}
-                      hexcode={team?.color}
-                      size="medium"
-                    />
-                  </Grid.Row>
+                  <FieldTag
+                    className="team-tag"
+                    name={team?.name}
+                    hexcode={team?.color}
+                    size="medium"
+                  />
                 ))}
             </Grid.Column>
             <Grid.Column>
@@ -160,7 +158,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
 
                 return (
                   <FieldTag
-                    className="team-tag"
+                    className="interest-tag"
                     key={index}
                     name={fullInterest?.name}
                     hexcode={fullInterest?.color}
