@@ -24,9 +24,9 @@ export interface IUser {
   submittedPitches: string[];
   teams: string[];
   role: string;
-  hasRoleApproved: boolean;
   races: string[];
   interests: string[];
+  onboardReasoning: string;
 }
 
 export interface IUserAggregate extends IUser {
