@@ -34,6 +34,7 @@ import {
   EditInterests,
   EditTeams,
 } from './Modals/EditableTags';
+import ReviewUserModal from './Modals/ReviewUser';
 
 export {
   Header,
@@ -71,4 +72,5 @@ export {
   EditInterests,
   EditTeams,
   EditableTagModal,
+  ReviewUserModal,
 };

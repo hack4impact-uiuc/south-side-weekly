@@ -188,6 +188,53 @@ router.put(
   }),
 );
 
+// Get all pending users
+router.get(
+  '/all/pending',
+  errorWrap(async (req: Request, res: Response) => {
+    const users = await User.find({
+      onboardingStatus:
+        onboardingStatusEnum.ONBOARDING_SCHEDULED ||
+        onboardingStatusEnum.STALLED,
+    });
+    res.status(200).json({
+      message: `Successfully retrieved all pending users.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
+// Get all approved users
+router.get(
+  '/all/approved',
+  errorWrap(async (req: Request, res: Response) => {
+    const users = await User.find({
+      onboardingStatus: onboardingStatusEnum.ONBOARDED,
+    });
+    res.status(200).json({
+      message: `Successfully retrieved all approved users.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
+// Get all rejected users
+router.get(
+  '/all/denied',
+  errorWrap(async (req: Request, res: Response) => {
+    const users = await User.find({
+      onboardingStatus: onboardingStatusEnum.DENIED,
+    });
+    res.status(200).json({
+      message: `Successfully retrieved all denied users.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
 // Gets all pending contributors
 router.get(
   '/contributors/pending',
@@ -195,7 +242,9 @@ router.get(
   errorWrap(async (req: Request, res: Response) => {
     const users = await User.find({
       role: rolesEnum.CONTRIBUTOR,
-      hasRoleApproved: false,
+      onboardingStatus:
+        onboardingStatusEnum.ONBOARDING_SCHEDULED ||
+        onboardingStatusEnum.STALLED,
     });
     res.status(200).json({
       message: `Successfully retrieved all pending contributors.`,
@@ -212,7 +261,9 @@ router.get(
   errorWrap(async (req: Request, res: Response) => {
     const users = await User.find({
       role: rolesEnum.STAFF,
-      hasRoleApproved: false,
+      onboardingStatus:
+        onboardingStatusEnum.ONBOARDING_SCHEDULED ||
+        onboardingStatusEnum.STALLED,
     });
     res.status(200).json({
       message: `Successfully retrieved all pending staff.`,

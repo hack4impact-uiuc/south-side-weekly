@@ -10,4 +10,5 @@ export interface IAuthContext {
   isRegistered: boolean;
   logout(): void;
   register(): void;
+  isOnboarded: boolean;
 }

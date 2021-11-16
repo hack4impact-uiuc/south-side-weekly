@@ -9,15 +9,11 @@ import { useAuth } from '../../contexts';
 import './styles.scss';
 
 const Navbar = (): ReactElement => {
-  const { user } = useAuth();
+  const { isOnboarded } = useAuth();
 
   return (
     <Menu attached="top" className="navbar" borderless size="large">
-      <Menu.Item
-        className="header"
-        as={user.hasRoleApproved && Link}
-        to="/homepage"
-      >
+      <Menu.Item className="header" as={isOnboarded && Link} to="/homepage">
         <h2>South Side Weekly</h2>
       </Menu.Item>
       <Menu.Menu position="right">
