@@ -28,7 +28,7 @@ import {
   allRaces,
   emptyUser,
 } from '../../utils/constants';
-import { parseOptions, updateUserField, titleCase } from '../../utils/helpers';
+import { parseOptions, updateUserField, titleCase, getUserFullName } from '../../utils/helpers';
 import { useAuth, useInterests, useTeams } from '../../contexts';
 
 import SocialsInput from './SocialsInput';
@@ -248,8 +248,14 @@ const Profile = (): ReactElement => {
   return (
     <div className="profile-page">
       <Grid padded stackable>
-        <Grid.Row columns={4}>
-          <Grid.Column className="profile-pic-col">
+        <Grid.Row columns={5}>
+          <Grid.Column className="profile-pic-col" width={10}>
+            <div className="user-pic"> <UserPicture size="tiny" user={user} /></div>
+            <div className="name-pronouns">
+            <h2 className="name">{getUserFullName(auth.user)}</h2>
+            {auth.user.pronouns.map((pronoun, i) => (
+              <p className="pronouns" key={i}> {pronoun} </p>
+            ))}
             {(userId === auth.user._id || auth.isAdmin) && (
               <Button
                 size="medium"
@@ -258,14 +264,13 @@ const Profile = (): ReactElement => {
                 content="Edit Profile"
               />
             )}
-
-            <UserPicture size="small" user={user} />
+            </div>
 
             {user.masthead && (
               <Image className="masthead" size="small" src={Masthead} />
             )}
 
-            {isEditMode && (
+            {/* {isEditMode && (
               <div style={{ display: 'inline-block', textAlign: 'center' }}>
                 <Button
                   className="edit-mode-btn save"
@@ -280,9 +285,9 @@ const Profile = (): ReactElement => {
                   size="medium"
                 />
               </div>
-            )}
+            )} */}
           </Grid.Column>
-          <Grid.Column width={5}>
+          {/* <Grid.Column width={5}>
             <HeaderTag as="h2">Basic Information</HeaderTag>
             <Container>
               {stringAttributes.map((attribute, index) => (
@@ -332,7 +337,8 @@ const Profile = (): ReactElement => {
                 editable={isEditable('dateJoined')}
               />
             </Container>
-          </Grid.Column>
+          </Grid.Column> */}
+          
 
           {isViewable('interests') && (
             <Grid.Column textAlign="center" width={3}>

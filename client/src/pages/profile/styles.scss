@@ -23,7 +23,7 @@
 
 .edit-profile-btn {
   color: white !important;
-  background-color: #3d4f91 !important;
+  background-color: black !important;
   margin-bottom: 10% !important;
 }
 
@@ -49,16 +49,20 @@
 
 .profile-pic-col {
   display: flex !important;
-  align-items: center;
-  flex-direction: column;
-}
-
-.masthead {
-  margin-top: -25px;
-}
-
-.checkbox-group {
   text-align: left;
+}
+
+.user-pic {
+  margin-right: 5%;
+}
+
+.name-pronouns {
+  .name {
+    font-weight: 700;
+  }
+  .pronouns {
+    font-weight: 400;
+  }
 }
 
 .profile-page {
