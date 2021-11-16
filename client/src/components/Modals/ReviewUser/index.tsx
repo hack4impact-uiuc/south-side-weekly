@@ -30,7 +30,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
   const { getInterestById } = useInterests();
 
   const notifySuccess = (): string =>
-    toast.success(`Approved User`, {
+    toast.success('Approved User', {
       position: 'bottom-right',
     });
 
