@@ -3,8 +3,12 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Input, Tab } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
-import { getUsers, isError } from '../../api';
-import { getPendingContributors } from '../../api/user';
+import { isError } from '../../api';
+import {
+  getApprovedUsers,
+  getDeniedUsers,
+  getPendingUsers,
+} from '../../api/user';
 import {
   ApprovedUsers,
   InterestsSelect,
@@ -45,9 +49,11 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
       let res;
 
       if (status === 'approved') {
-        res = await getUsers();
+        res = await getApprovedUsers();
+      } else if (status === 'pending') {
+        res = await getPendingUsers();
       } else {
-        res = await getPendingContributors();
+        res = await getDeniedUsers();
       }
       //This gets all users regardless of their approval status
       if (!isError(res)) {
@@ -105,7 +111,7 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
         icon="search"
         iconPosition="left"
       />
-      <div className="filters">
+      {status === 'approved' ? (<div className="filters">
         <div>
           <h3>Filters: </h3>
         </div>
@@ -131,7 +137,7 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
             onChange={(values) => setTeams(values.map((item) => item.value))}
           />
         </div>
-      </div>
+      </div>) : ''}
       {status === 'approved' ? (
         <ApprovedUsers users={filteredDirectory} />
       ) : (
@@ -171,7 +177,7 @@ const Directory = (): ReactElement => (
       content="Check out the members on the SSW team and click their profiles to view more details!"
     />
     <Tab
-      menu={{ secondary: true, pointing: true }}
+      menu={{ secondary: true, pointing: true}}
       id="directory-tabs"
       panes={panes}
     />

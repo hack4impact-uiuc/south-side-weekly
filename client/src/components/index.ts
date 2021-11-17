@@ -77,5 +77,5 @@ export {
   EditableTagModal,
   ReviewUserModal,
   ApprovedUsers,
-  PendingUsers
+  PendingUsers,
 };

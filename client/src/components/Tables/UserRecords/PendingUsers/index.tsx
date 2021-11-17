@@ -33,11 +33,11 @@ const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
   return (
     <div className="table">
       <div className="directory">
-        <DynamicTable
+        <DynamicTable<IUser>
           records={users}
           columns={columns}
           singleLine={users.length > 0}
-          onRecordClick={(user: IUser) => ReviewUserModal({user})}
+          getModalContent={(user) => <ReviewUserModal user={user} />}
         />
       </div>
     </div>

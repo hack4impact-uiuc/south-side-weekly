@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Table } from 'semantic-ui-react';
+import { Modal, Table } from 'semantic-ui-react';
 
 import TableHeader from './TableHeader';
 import TableRow from './TableRow';
@@ -13,6 +13,7 @@ interface TableProps<RecordType> {
   initialSortColumn?: ColumnType<RecordType>;
   initialSortDirection?: SortDirection;
   singleLine?: boolean;
+  getModalContent?: (record: RecordType) => ReactElement;
   onRecordClick?: (record: RecordType) => void;
 }
 
@@ -22,6 +23,7 @@ const DynamicTable = <RecordType,>({
   initialSortColumn,
   initialSortDirection,
   singleLine,
+  getModalContent,
   onRecordClick,
 }: TableProps<RecordType>): ReactElement => {
   type Column = ColumnType<RecordType>;
@@ -30,10 +32,15 @@ const DynamicTable = <RecordType,>({
   const [sortColumn, setSortColumn] = useState<Column | undefined>(
     initialSortColumn,
   );
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [currentRecord, setCurrentRecord] = useState<RecordType>();
   const [sortDirection, setSortDirection] = useState<SortDirection | undefined>(
     initialSortDirection,
   );
-
+  const openModal = (record: RecordType): void => {
+    setCurrentRecord(record);
+    setIsOpen(true);
+  };
   const handleSort = (newColumn: Column): void => {
     if (!newColumn.sorter) {
       return;
@@ -72,7 +79,7 @@ const DynamicTable = <RecordType,>({
       size="small"
       sortable
       compact
-      selectable={onRecordClick !== undefined}
+      selectable
       celled
       fixed
       singleLine={singleLine}
@@ -90,9 +97,26 @@ const DynamicTable = <RecordType,>({
             record={record}
             columns={columns}
             key={i}
-            onClick={() => onRecordClick ?? record}
+            onClick={() =>
+              getModalContent
+                ? openModal(record)
+                : onRecordClick && onRecordClick(record)
+            }
           />
         ))}
+
+        {getModalContent ? (
+          <Modal
+            size="large"
+            open={isOpen}
+            onClose={() => setIsOpen(false)}
+            className="review-user-modal"
+          >
+            {currentRecord ? getModalContent(currentRecord) : ''}
+          </Modal>
+        ) : (
+          ''
+        )}
       </Table.Body>
     </Table>
   );
