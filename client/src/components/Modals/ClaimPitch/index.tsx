@@ -10,7 +10,7 @@ import { isError, submitPitchClaim } from '../../../api';
 import { getAggregatedPitch } from '../../../api/pitch';
 import { useAuth, useTeams } from '../../../contexts';
 import { emptyAggregatePitch } from '../../../utils/constants';
-import { convertMap, pluralize } from '../../../utils/helpers';
+import { pluralize } from '../../../utils/helpers';
 import FieldTag from '../../FieldTag';
 import LinkDisplay from '../../LinkDisplay';
 import UserChip from '../../UserChip';
@@ -27,18 +27,14 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
   ...rest
 }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
-  const [checkboxes, setCheckboxes] = useState(new Map<string, boolean>());
-  const [message, setMessage] = useState('');
-  const [didSubmit, setDidSubmit] = useState(false);
-  const [isCheckboxError, setIsCheckboxError] = useState(false);
   const [aggregatedPitch, setAggregatedPitch] = useState(emptyAggregatePitch);
 
   const pitchClaimSchema = yup.object({
     message: yup.string().required(),
-    checkboxes: yup.array().of(yup.string().required()),
+    checkboxes: yup.array().of(yup.string().required()).required().min(1),
   });
 
-  type PitchClaim = yup.InferType<typeof pitchClaimSchema>;
+  type pitchClaim = yup.InferType<typeof pitchClaimSchema>;
 
   const { user } = useAuth();
   const { getTeamFromId } = useTeams();
@@ -67,43 +63,18 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     };
 
     fetchAggregatedPitch(pitch._id);
-
-    const map = new Map<string, boolean>();
-
-    pitch.teams.map(({ teamId }) => {
-      map.set(teamId, false);
-    });
-
-    setCheckboxes(map);
   }, [isOpen, pitch.teams, pitch._id]);
 
-  const updateCheckboxes = (checkbox: string): void => {
-    const isChecked = checkboxes.get(checkbox);
-
-    checkboxes.set(checkbox, !isChecked);
-
-    setCheckboxes(new Map(checkboxes));
-  };
-
-  const claimPitch = async (): Promise<void> => {
-    setDidSubmit(true);
-
-    if (!isValidForm()) {
-      return;
-    }
-    const selectedTeams: string[] = [];
-    checkboxes.forEach((selected, team) => {
-      if (selected) {
-        selectedTeams.push(team);
-      }
-    });
+  const claimPitch = async (values: pitchClaim): Promise<void> => {
+    console.log(values);
 
     const pitchRes = await submitPitchClaim(
       pitch._id,
       user._id,
-      selectedTeams,
-      message,
+      values.checkboxes,
+      values.message,
     );
+
     if (!isError(pitchRes)) {
       callback();
       Swal.fire({
@@ -111,19 +82,8 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
         icon: 'success',
       });
       setIsOpen(false);
-      setMessage('');
     }
   };
-
-  useEffect(() => {
-    const somethingIsChecked = convertMap(checkboxes).every(
-      (checkbox) => !checkbox.value,
-    );
-    setIsCheckboxError(didSubmit && somethingIsChecked);
-  }, [checkboxes, didSubmit]);
-
-  const isValidForm = (): boolean =>
-    convertMap(checkboxes).some((checkbox) => checkbox.value);
 
   const didUserClaim = (): boolean =>
     pitch.assignmentContributors.some(({ userId }) => user._id === userId);
@@ -212,61 +172,17 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
         {teams.map((team, i) => (
           <div className="checkbox-wrapper" key={i}>
             {teams.length === 1 ? (
-              <Form.Radio
-                disabled={team.target <= 0 || disableCheckbox(team._id)}
-                checked={checkboxes.get(team._id)}
-                onClick={() => {
-                  updateCheckboxes(team._id);
-                  setDidSubmit(false);
-                }}
-                error={isCheckboxError}
-              />
-            ) : (
-              <Form.Checkbox
-                disabled={team.target <= 0 || disableCheckbox(team._id)}
-                checked={checkboxes.get(team._id)}
-                onClick={() => {
-                  updateCheckboxes(team._id);
-                  setDidSubmit(false);
-                }}
-                error={isCheckboxError}
-              />
-            )}
-            <p>
-              <span style={{ fontWeight: 'bold' }}>{team.name}</span> -{' '}
-              {team.target} {pluralize('spot', team.target)} left
-            </p>
-          </div>
-        ))}
-      </>
-    );
-  };
-
-  const getSelectableTeamsFormik = (): JSX.Element => {
-    const {
-      aggregated: { teams },
-    } = aggregatedPitch;
-
-    if (teams.length === 0) {
-      return <p>There are no more teams available.</p>;
-    }
-
-    return (
-      <>
-        {teams.map((team, i) => (
-          <div className="checkbox-wrapper" key={i}>
-            {teams.length === 1 ? (
               <Field
                 type="radio"
                 name="checkboxes"
-                value={team.name}
+                value={team._id}
                 disabled={team.target <= 0 || disableCheckbox(team._id)}
               />
             ) : (
               <Field
                 type="checkbox"
                 name="checkboxes"
-                value={team.name}
+                value={team._id}
                 disabled={team.target <= 0 || disableCheckbox(team._id)}
               />
             )}
@@ -324,37 +240,32 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
             message: '',
             checkboxes: [],
           }}
-          onSubmit={(values) => console.log(values)}
+          onSubmit={claimPitch}
+          validationSchema={pitchClaimSchema}
         >
-          {
-            <FormikForm>
+          {({ values }) => (
+            <FormikForm id="formik-form">
               <Form.Group className="team-select-group">
                 <p className="select-team-message">Select Team(s) to Join</p>
-                {getSelectableTeamsFormik()}
+                {getSelectableTeams()}
               </Form.Group>
-              <button type="submit">Submit</button>
+              <h4>Why are you a good fit for this story?</h4>
+              <Field
+                className="message-field"
+                as="textarea"
+                rows={4}
+                name="message"
+                maxLength={250}
+              />
+              <p className="word-limit">{values.message.length} / 250</p>
             </FormikForm>
-          }
+          )}
         </Formik>
-        <Form>
-          <Form.Group className="team-select-group">
-            <p className="select-team-message">Select Team(s) to Join</p>
-            {getSelectableTeams()}
-          </Form.Group>
-          <h4>Why are you a good fit for this story?</h4>
-          <Form.TextArea
-            rows={4}
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            maxLength={250}
-          />
-          <p className="word-limit">{message.length} / 250</p>
-        </Form>
       </Modal.Content>
       <Modal.Actions>
         <Button
           type="submit"
-          onClick={claimPitch}
+          form="formik-form"
           content="Submit Claim Request"
           secondary
           disabled={didUserClaim() || didUserSubmitClaimReq()}
