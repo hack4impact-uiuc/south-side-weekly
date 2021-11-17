@@ -66,8 +66,6 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
   }, [isOpen, pitch.teams, pitch._id]);
 
   const claimPitch = async (values: pitchClaim): Promise<void> => {
-    console.log(values);
-
     const pitchRes = await submitPitchClaim(
       pitch._id,
       user._id,
