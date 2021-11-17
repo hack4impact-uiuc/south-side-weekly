@@ -4,7 +4,7 @@ import { IPitch } from 'ssw-common';
 import {
   pitchStatusEnum,
   assignmentStatusEnum,
-  issueFormatEnum,
+  issueTypeEnum,
 } from '../utils/enums';
 
 export type PitchSchema = IPitch & Document<any>;
@@ -34,7 +34,7 @@ const issue = new mongoose.Schema(
   {
     format: {
       type: String,
-      enum: Object.values(issueFormatEnum),
+      enum: Object.values(issueTypeEnum),
       default: null,
       required: true,
     },

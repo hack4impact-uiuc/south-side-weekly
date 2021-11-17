@@ -119,3 +119,15 @@ export interface ITeam {
   active: boolean;
   color: string;
 }
+
+/**
+ * Interface for a Issue Schema.
+ */
+export interface IIssue {
+  _id: string;
+  name: string;
+  deadlineDate: string;
+  releaseDate: string;
+  pitches: string[];
+  type: string;
+}
