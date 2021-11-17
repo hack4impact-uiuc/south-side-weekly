@@ -111,33 +111,37 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
         icon="search"
         iconPosition="left"
       />
-      {status === 'approved' ? (<div className="filters">
-        <div>
-          <h3>Filters: </h3>
+      {status === 'approved' ? (
+        <div className="filters">
+          <div>
+            <h3>Filters: </h3>
+          </div>
+          <div className="wrapper">
+            <Select
+              value={role}
+              options={parseOptionsSelect(allRoles)}
+              onChange={(e) => setRole(e ? e.value : '')}
+              placeholder="Role"
+            />
+          </div>
+          <div className="wrapper">
+            <InterestsSelect
+              values={interests}
+              onChange={(values) =>
+                setInterests(values.map((item) => item.value))
+              }
+            />
+          </div>
+          <div className="wrapper">
+            <TeamsSelect
+              values={teams}
+              onChange={(values) => setTeams(values.map((item) => item.value))}
+            />
+          </div>
         </div>
-        <div className="wrapper">
-          <Select
-            value={role}
-            options={parseOptionsSelect(allRoles)}
-            onChange={(e) => setRole(e ? e.value : '')}
-            placeholder="Role"
-          />
-        </div>
-        <div className="wrapper">
-          <InterestsSelect
-            values={interests}
-            onChange={(values) =>
-              setInterests(values.map((item) => item.value))
-            }
-          />
-        </div>
-        <div className="wrapper">
-          <TeamsSelect
-            values={teams}
-            onChange={(values) => setTeams(values.map((item) => item.value))}
-          />
-        </div>
-      </div>) : ''}
+      ) : (
+        ''
+      )}
       {status === 'approved' ? (
         <ApprovedUsers users={filteredDirectory} />
       ) : (
@@ -177,7 +181,7 @@ const Directory = (): ReactElement => (
       content="Check out the members on the SSW team and click their profiles to view more details!"
     />
     <Tab
-      menu={{ secondary: true, pointing: true}}
+      menu={{ secondary: true, pointing: true }}
       id="directory-tabs"
       panes={panes}
     />

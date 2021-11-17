@@ -17,7 +17,6 @@ import { fullNameSort, joinedSort, roleSort } from '../Util/TableUtil';
 import { isError, updateUser } from '../../../api';
 import { onboardingStatusEnum } from '../../../utils/enums';
 
-
 const nameColumn = buildColumn<IUser>({
   title: 'Name',
   width: 2,
