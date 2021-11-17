@@ -3,9 +3,9 @@ import React, { FC } from 'react';
 import { useAuth } from '../../../contexts';
 
 const AdminView: FC = ({ children }) => {
-  const { isAdmin, user } = useAuth();
+  const { isAdmin, isOnboarded } = useAuth();
 
-  return <>{isAdmin && user.hasRoleApproved && children}</>;
+  return <>{isAdmin && isOnboarded && children}</>;
 };
 
 export default AdminView;

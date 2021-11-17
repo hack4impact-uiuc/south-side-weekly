@@ -24,9 +24,9 @@ export interface IUser {
   submittedPitches: string[];
   teams: string[];
   role: string;
-  hasRoleApproved: boolean;
   races: string[];
   interests: string[];
+  onboardReasoning: string;
 }
 
 export interface IUserAggregate extends IUser {
@@ -118,4 +118,16 @@ export interface ITeam {
   name: string;
   active: boolean;
   color: string;
+}
+
+/**
+ * Interface for a Issue Schema.
+ */
+export interface IIssue {
+  _id: string;
+  name: string;
+  deadlineDate: string;
+  releaseDate: string;
+  pitches: string[];
+  type: string;
 }
