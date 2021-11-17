@@ -1,17 +1,29 @@
 import { startsWith, toLower, toString } from 'lodash';
 import React, { FC, useEffect, useState } from 'react';
-import { Button, Icon, Input, Menu, Select } from 'semantic-ui-react';
+import {
+  Button,
+  DropdownItemProps,
+  Icon,
+  Input,
+  Menu,
+  Select,
+  Table,
+  TableHeader,
+  TableRow,
+} from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
 import {
   InterestsSelect,
   PitchTable,
   SubmitPitchModal,
+  TableTool,
   Walkthrough,
 } from '../../components';
 // import { HomepageTable } from '../../components/Tables/Homepage';
 import { useAuth, useInterests } from '../../contexts';
 import { pagesEnum } from '../../utils/enums';
 import { filterPitchesByInterests } from '../../utils/helpers';
+import { getYearsSinceSSWEstablished } from './helpers';
 
 import './styles.scss';
 
@@ -36,7 +48,11 @@ const Homepage: FC = () => {
   const [filteredTopics, setFilteredTopics] = useState([]);
   const [filteredPitches, setFilteredPitches] = useState<IPitch[]>([]);
 
-  const canFilterInterests = currentTab !== TABS.MEMBER_PITCHES;
+  const canFilterInterests =
+    currentTab !== TABS.MEMBER_PITCHES &&
+    currentTab !== TABS.SUBMITTED_PUBLICATIONS;
+  const canFilterStatuses = canFilterInterests;
+  const canFilterYear = canFilterInterests;
 
   useEffect(() => {
     const search = (pitches: IPitch[]): IPitch[] => {
@@ -75,16 +91,15 @@ const Homepage: FC = () => {
     // getApproved();
   };
 
+  const yearSelectOptions: DropdownItemProps[] =
+    getYearsSinceSSWEstablished().map((year) => ({ text: year, value: year }));
+
   return (
     <div className="homepage-wrapper">
       <Walkthrough
         page={pagesEnum.HOMEPAGE}
         content="The homepage is the main landing point for users to see their pitch history."
       />
-      <div className="header">
-        <h1>Welcome, {user.preferredName || user.firstName}!</h1>
-        <SubmitPitchModal callback={populatePitches} />
-      </div>
 
       <Menu className="tab-menu" tabular size="large">
         <Menu.Item
@@ -110,6 +125,11 @@ const Homepage: FC = () => {
           active={TABS.SUBMITTED_PUBLICATIONS === currentTab}
           onClick={() => setCurrentTab(TABS.SUBMITTED_PUBLICATIONS)}
         />
+
+        <Menu.Item
+          content={<SubmitPitchModal callback={populatePitches} />}
+          position="right"
+        />
       </Menu>
 
       <div className="filters-wrapper">
@@ -122,34 +142,55 @@ const Homepage: FC = () => {
           className="search"
           style={{ minWidth: '400px' }}
         />
-        {
-          /* {canFilterStatuses */ true && (
-            <Select
-              options={[{ text: 'In Progress', value: 'in-progress' }]}
-              onChange={(_, data) => console.log(data)}
-            />
-          )
-        }
-        {canFilterInterests && (
-          <InterestsSelect
-            values={interests}
-            onChange={(values) =>
-              setInterests(values ? values.map((item) => item.value) : [])
-            }
+        {canFilterStatuses && (
+          <Select
+            clearable
+            placeholder="Status"
+            options={[{ text: 'In Progress', value: 'in-progress' }]}
+            onChange={(_, data) => console.log(data)}
           />
         )}
-        {/* {currentTab !== TABS.MEMBER_PITCHES && (
+        {canFilterInterests && (
+          <div className="filter-dropdown">
+            <InterestsSelect
+              values={interests}
+              onChange={(values) =>
+                setInterests(values ? values.map((item) => item.value) : [])
+              }
+            />
+          </div>
+        )}
+        {canFilterYear && (
           <Select
-            values={interests}
-            onChange={(values) =>
-              setInterests(values ? values.map((item) => item.value) : [])
-            }
-            options={[]}
+            clearable
+            search
+            defaultValue="test"
+            placeholder="Year"
+            options={yearSelectOptions}
+            onChange={(_, data) => console.log(data)}
+            defaultUpward={false}
           />
-        )} */}
+        )}
       </div>
 
-      <div className="pitch-table"></div>
+      <div className="pitch-table">
+        <TableTool
+          singleLine={false}
+          tableBody={
+            <>
+              <Table.Row>
+                <Table.Cell>Big</Table.Cell>
+              </Table.Row>
+              <Table.Row>
+                <Table.Cell>Small</Table.Cell>
+              </Table.Row>
+            </>
+          }
+          tableHeader={
+            <Table.HeaderCell sorted={'descending'}>Title</Table.HeaderCell>
+          }
+        ></TableTool>
+      </div>
     </div>
   );
 };

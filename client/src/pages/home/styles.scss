@@ -1,13 +1,6 @@
 @import '../../styles/colors.scss';
 
 .homepage-wrapper {
-  .header {
-    display: flex;
-    flex-flow: row nowrap;
-    justify-content: space-between;
-    align-items: center;
-  }
-
   .tab-menu {
     .active {
       background-color: $primary !important;
@@ -21,5 +14,9 @@
     gap: 20px;
     align-items: center;
     margin-bottom: 20px;
+
+    .filter-dropdown {
+      width: 14em;
+    }
   }
 }
