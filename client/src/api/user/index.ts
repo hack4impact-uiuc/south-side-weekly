@@ -19,8 +19,24 @@ const getUsers = async (): Promise<Response<UsersResponse>> => {
 
 // Returns all pending users
 const getPendingUsers = async (): Promise<Response<UsersResponse>> => {
-  const url = buildEndpoint(USER_ENDPOINT, 'users', 'pending');
+  const url = buildEndpoint(USER_ENDPOINT, 'all', 'pending');
   const failureMessage = 'GET_PENDING_USERS_FAIL';
+
+  return await get(url, failureMessage);
+};
+
+// Returns all approved users
+const getApprovedUsers = async (): Promise<Response<UsersResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, 'all', 'approved');
+  const failureMessage = 'GET_APPROVED_USERS_FAIL';
+
+  return await get(url, failureMessage);
+};
+
+// Returns all denied users
+const getDeniedUsers = async (): Promise<Response<UsersResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, 'all', 'denied');
+  const failureMessage = 'GET_DENIED_USERS_FAIL';
 
   return await get(url, failureMessage);
 };
@@ -119,6 +135,8 @@ const getUsersByTeam = async (
 export {
   getUsers,
   getPendingUsers,
+  getApprovedUsers,
+  getDeniedUsers,
   getPendingContributors,
   getPendingStaff,
   getUser,
