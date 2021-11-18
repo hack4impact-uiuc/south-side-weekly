@@ -5,7 +5,7 @@ import { IResource, ITeam } from 'ssw-common';
 
 import { getAllResources, isError } from '../../api';
 import { useAuth, useTeams } from '../../contexts';
-import { ResourceModal, Walkthrough } from '../../components';
+import { ResourceModal, Walkthrough, ApprovedView } from '../../components';
 import { pagesEnum } from '../../utils/enums';
 
 import './styles.scss';
@@ -100,21 +100,26 @@ const Resources = (): ReactElement => {
         <div className="controls">
           <h1>Resource Page</h1>
           <div className="push" />
-          {isAdmin ? (
-            <Button onClick={() => openModal('create')} className="default-btn">
-              <Icon name="add" /> Add Resource
-            </Button>
-          ) : (
-            <Button
-              onClick={() =>
-                openPopupWidget({
-                  url: 'https://calendly.com/sawhney4/60min',
-                })
-              }
-              content="Schedule Office Hour"
-              className="calendly-button"
-            />
-          )}
+          <ApprovedView>
+            {isAdmin ? (
+              <Button
+                onClick={() => openModal('create')}
+                className="default-btn"
+              >
+                <Icon name="add" /> Add Resource
+              </Button>
+            ) : (
+              <Button
+                onClick={() =>
+                  openPopupWidget({
+                    url: 'https://calendly.com/sawhney4/60min',
+                  })
+                }
+                content="Schedule Office Hour"
+                className="calendly-button"
+              />
+            )}
+          </ApprovedView>
         </div>
 
         <Menu tabular size="large">
