@@ -10,6 +10,7 @@ import WizardSvg from './Wizard/Svg';
 import PrivateRoute from './PrivateRoute';
 import AdminView from './Auth/AdminView';
 import StaffView from './Auth/StaffView';
+import ApprovedView from './Auth/ApprovedView';
 import FilterDropdown from './Dropdowns/Filter';
 import FieldTag from './FieldTag';
 import UserPicture from './UserPicture';
@@ -73,4 +74,5 @@ export {
   EditTeams,
   EditableTagModal,
   ReviewUserModal,
+  ApprovedView,
 };
