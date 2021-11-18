@@ -21,16 +21,23 @@ interface ApprovedUserProps {
   auth?: keyof typeof rolesEnum;
 }
 
-const ApprovedUsers: FC<ApprovedUserProps> = ({ users, auth }): ReactElement => {
+const ApprovedUsers: FC<ApprovedUserProps> = ({
+  users,
+  auth,
+}): ReactElement => {
   const columns = [
     userColumn,
     nameColumn,
     roleColumn,
-    (auth && auth === rolesEnum.CONTRIBUTOR) ? teamsColumnNoModal : teamsColumnModal,
-    (auth && auth === rolesEnum.CONTRIBUTOR) ? interestsColumnNoModal : interestsColumnModal,
+    auth && auth === rolesEnum.CONTRIBUTOR
+      ? teamsColumnNoModal
+      : teamsColumnModal,
+    auth && auth === rolesEnum.CONTRIBUTOR
+      ? interestsColumnNoModal
+      : interestsColumnModal,
     activityColumn,
     viewDateColumn,
-    ... (auth && auth === rolesEnum.CONTRIBUTOR) ? [] : [viewUserColumn],
+    ...(auth && auth === rolesEnum.CONTRIBUTOR ? [] : [viewUserColumn]),
   ];
 
   return (

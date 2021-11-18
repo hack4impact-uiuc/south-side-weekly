@@ -39,7 +39,10 @@ interface PaneWrapperProps {
   user_auth?: keyof typeof rolesEnum;
 }
 
-const PaneWrapper: FC<PaneWrapperProps> = ({ status, user_auth }): ReactElement => {
+const PaneWrapper: FC<PaneWrapperProps> = ({
+  status,
+  user_auth,
+}): ReactElement => {
   const [directory, setDirectory] = useState<IUser[]>([]);
   const [filteredDirectory, setFilteredDirectory] = useState<IUser[]>([]);
   const [role, setRole] = useState<string>('');
@@ -146,9 +149,9 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status, user_auth }): ReactElement 
         ''
       )}
       {status === 'approved' ? (
-        <ApprovedUsers users={filteredDirectory} auth={user_auth}/>
+        <ApprovedUsers users={filteredDirectory} auth={user_auth} />
       ) : (
-        <PendingUsers users={filteredDirectory}/>
+        <PendingUsers users={filteredDirectory} />
       )}
     </>
   );
@@ -160,7 +163,7 @@ const panes = [
     render: function show() {
       return (
         <Tab.Pane>
-          <PaneWrapper status="approved" user_auth={'ADMIN'}/>
+          <PaneWrapper status="approved" user_auth={'ADMIN'} />
         </Tab.Pane>
       );
     },
@@ -191,10 +194,9 @@ const Directory = (): ReactElement => (
       />
     </AdminView>
     <ContributorView>
-      <PaneWrapper status="approved" user_auth={'CONTRIBUTOR'}/>
+      <PaneWrapper status="approved" user_auth={'CONTRIBUTOR'} />
     </ContributorView>
   </div>
-)
-
+);
 
 export default Directory;
