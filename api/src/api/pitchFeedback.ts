@@ -23,7 +23,8 @@ router.get(
 router.post(
   '/',
   errorWrap(async (req: Request, res: Response) => {
-    const feedback = await PitchFeedback.create({ ...req.body});
+    const createFeedback = await PitchFeedback.create({ ...req.body});
+    const feedback = await PitchFeedback.findById(createFeedback._id);
 
     res.status(200).json({
       success: true,
@@ -51,7 +52,7 @@ router.get(
 router.get(
   '/pitch/:id',
   errorWrap(async (req: Request, res: Response) => {
-    const feedback = await PitchFeedback.find({ pitch: req.params.id });
+    const feedback = await PitchFeedback.find({ pitchId: req.params.id });
 
     res.status(200).json({
       success: true,
