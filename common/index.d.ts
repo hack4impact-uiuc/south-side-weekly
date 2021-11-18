@@ -131,3 +131,13 @@ export interface IIssue {
   pitches: string[];
   type: string;
 }
+
+export interface IPitchFeedback {
+  userId: string;
+  pitchId: string;
+  responses: {
+    1: string;
+    2: string;
+    3: string;
+  }
+}
