@@ -81,8 +81,12 @@ const Profile = (): ReactElement => {
             </div>
             <div className="name-pronouns">
               <h2 className="name">{getUserFullName(user)}</h2>
-              <p>{user.pronouns}</p>
-              <FieldTag name={titleCase(auth.user.role.toLowerCase())} hexcode="#E9F4E7" />
+              {user.pronouns.map((pronoun, index) => (
+                <FieldTag key ={index} name={pronoun.toLowerCase()}/>
+              ))}
+              <div>
+              <FieldTag name={titleCase(auth.user.role.toLowerCase())} />
+              </div>
               <div>
                 {(userId === auth.user._id || auth.isAdmin) && (
                   <Button
