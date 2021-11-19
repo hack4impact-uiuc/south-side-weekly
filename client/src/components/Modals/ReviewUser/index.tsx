@@ -12,7 +12,7 @@ import {
 import { IUser } from 'ssw-common';
 import { isError } from 'lodash';
 
-import { updateUser, updateOnboardingStatus } from '../../../api';
+import { approveUser, declineUser, updateUser } from '../../../api';
 import { useInterests, useTeams } from '../../../contexts';
 import { UserPicture, FieldTag } from '../..';
 import { getUserFullName, titleCase } from '../../../utils/helpers';
@@ -39,14 +39,14 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
     });
 
   // Handle approve
-  const approveUser = (user: IUser): void => {
+  const handleApprove = (user: IUser): void => {
     const reasoningAdded = updateUser(
       {
         onboardReasoning: formValue,
       },
       user._id,
     );
-    const userApproved = updateOnboardingStatus(user._id, 'ONBOARDED');
+    const userApproved = approveUser(user._id);
     if (!isError(reasoningAdded) && !isError(userApproved)) {
       notifySuccess();
     }
@@ -61,14 +61,14 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
     return `${month}/${day}/${year}`;
   };
 
-  const declineUser = (user: IUser): void => {
+  const handleDecline = (user: IUser): void => {
     const reasoningAdded = updateUser(
       {
         onboardReasoning: formValue,
       },
       user._id,
     );
-    const userDenied = updateOnboardingStatus(user._id, 'DENIED');
+    const userDenied = declineUser(user._id);
     if (!isError(reasoningAdded) && !isError(userDenied)) {
       notifyDecline();
     }
@@ -192,7 +192,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
           <Button
             className="approve-button"
             onClick={() => {
-              approveUser(user);
+              handleApprove(user);
             }}
           >
             Approve
@@ -200,7 +200,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
           <Button
             className="decline-button"
             onClick={() => {
-              declineUser(user);
+              handleDecline(user);
             }}
           >
             Decline
