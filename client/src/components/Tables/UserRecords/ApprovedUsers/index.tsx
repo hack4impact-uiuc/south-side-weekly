@@ -20,21 +20,15 @@ interface ApprovedUserProps {
   users: IUser[];
 }
 
-const ApprovedUsers: FC<ApprovedUserProps> = ({
-  users,
-}): ReactElement => {
+const ApprovedUsers: FC<ApprovedUserProps> = ({ users }): ReactElement => {
   const { isContributor } = useAuth();
 
   const columns = [
     userColumn,
     nameColumn,
     roleColumn,
-    isContributor
-      ? teamsColumnNoModal
-      : teamsColumnModal,
-    isContributor
-      ? interestsColumnNoModal
-      : interestsColumnModal,
+    isContributor ? teamsColumnNoModal : teamsColumnModal,
+    isContributor ? interestsColumnNoModal : interestsColumnModal,
     activityColumn,
     viewDateColumn,
     ...(isContributor ? [] : [viewUserColumn]),

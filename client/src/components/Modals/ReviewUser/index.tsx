@@ -39,7 +39,6 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
   const { getTeamFromId } = useTeams();
   const { getInterestById } = useInterests();
 
-
   const formatDate = (date: Date): string => {
     date = new Date(date);
     const day = date.getDate();

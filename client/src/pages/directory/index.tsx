@@ -38,9 +38,7 @@ interface PaneWrapperProps {
   status: 'approved' | 'pending';
 }
 
-const PaneWrapper: FC<PaneWrapperProps> = ({
-  status,
-}): ReactElement => {
+const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
   const [directory, setDirectory] = useState<IUser[]>([]);
   const [filteredDirectory, setFilteredDirectory] = useState<IUser[]>([]);
   const [role, setRole] = useState<string>('');
@@ -63,11 +61,11 @@ const PaneWrapper: FC<PaneWrapperProps> = ({
         setDirectory(res.data.result);
       }
     };
-    
+
     getAllUsers();
     return () => {
       setDirectory([]);
-    }
+    };
   }, [status]);
 
   useEffect(() => {
