@@ -79,7 +79,7 @@ const DynamicTable = <RecordType,>({
       size="small"
       sortable
       compact
-      selectable
+      selectable={(onRecordClick !== undefined || getModalContent !== undefined)}
       celled
       fixed
       singleLine={singleLine}

@@ -1,5 +1,7 @@
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, ReactNode, useEffect, useState } from 'react';
 import { IUser } from 'ssw-common';
+import { Button } from 'semantic-ui-react';
+import toast from 'react-hot-toast';
 
 import DynamicTable from '../../DyanmicTable';
 import ReviewUserModal from '../../../Modals/ReviewUser';
@@ -10,8 +12,10 @@ import {
   teamsColumnModal,
   interestsColumnModal,
   onboardDateColumn,
-  onboardActionColumn,
 } from '../utils';
+import { isError, updateUser } from '../../../../api';
+import { onboardingStatusEnum } from '../../../../utils/enums';
+import { buildColumn } from '../../DyanmicTable/util';
 
 import './styles.scss';
 
@@ -19,7 +23,62 @@ interface PendingUserProps {
   users: IUser[];
 }
 
+
 const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
+  const [data, setData] = useState<IUser[]>(users);
+
+  const updateUserStatus = async (user: IUser, status: string): Promise<void> => {
+    const res = await updateUser({ onboardingStatus: status }, user._id);
+    if (!isError(res)) {
+      setData(data.filter(d => d !== user))
+      toast.success('Updated User Status!', {
+        position: 'bottom-right',
+      });
+    }
+  };
+  
+  const handleClick = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>, user:IUser, status:string):void => {
+    e.stopPropagation();
+    updateUserStatus(user, status);
+  }
+
+  const onboardActionColumn = buildColumn<IUser>({
+    title: '',
+    extractor: function getActions(user: IUser): ReactNode {
+      return (
+        <div className="actions">
+          <Button
+            id="decline"
+            className="edit-button"
+            size="small"
+            onClick={(e) => {
+              handleClick(e, user, onboardingStatusEnum.DENIED);
+            }}
+            basic
+            compact
+          >
+            Decline
+          </Button>
+          <Button
+            id="approve"
+            className="edit-button"
+            size="small"
+            onClick={(e) => {
+              handleClick(e, user, onboardingStatusEnum.ONBOARDED)
+            }
+            }
+          >
+            Approve
+          </Button>
+        </div>
+      );
+    },
+  });
+
+  useEffect(() => {
+    setData(users)
+  }, [users])
+
   const columns = [
     userColumn,
     nameColumn,
@@ -34,7 +93,7 @@ const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
     <div className="table">
       <div className="directory">
         <DynamicTable<IUser>
-          records={users}
+          records={data}
           columns={columns}
           singleLine={users.length > 0}
           getModalContent={(user) => <ReviewUserModal user={user} />}

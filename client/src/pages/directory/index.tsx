@@ -55,13 +55,15 @@ const PaneWrapper: FC<PaneWrapperProps> = ({
       let res;
 
       if (status === 'approved') {
+        console.log('approved');
         res = await getApprovedUsers();
       } else if (status === 'pending') {
+        console.log('pending');
         res = await getPendingUsers();
       } else {
         res = await getDeniedUsers();
       }
-      //This gets all users regardless of their approval status
+      
       if (!isError(res)) {
         setDirectory(res.data.result);
         setFilteredDirectory(res.data.result);
@@ -69,7 +71,6 @@ const PaneWrapper: FC<PaneWrapperProps> = ({
     };
 
     getAllUsers();
-
     return () => {
       setDirectory([]);
       setFilteredDirectory([]);
@@ -77,6 +78,7 @@ const PaneWrapper: FC<PaneWrapperProps> = ({
   }, [status]);
 
   useEffect(() => {
+    console.log(directory)
     const search = (users: IUser[]): IUser[] => {
       if (query.length === 0) {
         return users;
@@ -103,9 +105,12 @@ const PaneWrapper: FC<PaneWrapperProps> = ({
 
       return filtered;
     };
-
     setFilteredDirectory([...search(filter(directory))]);
   }, [directory, query, interests, teams, role]);
+
+  useEffect(() => {
+    console.log(filteredDirectory)
+  }, [filteredDirectory])
 
   return (
     <>
