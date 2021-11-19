@@ -3,7 +3,12 @@ import { Form, Grid } from 'semantic-ui-react';
 
 import { WizardListTitle, WizardSvg } from '../../components';
 import { useWizard } from '../../contexts';
-import { allGenders, allPronouns, allRaces } from '../../utils/constants';
+import {
+  allGenders,
+  allPronouns,
+  allRaces,
+  neighborhoods,
+} from '../../utils/constants';
 import { titleCase } from '../../utils/helpers';
 import { wizardPages } from '../../utils/enums';
 
@@ -15,14 +20,15 @@ const Onboard2 = (): ReactElement => {
   const [genders, setGenders] = useState(new Set(data.genders));
   const [pronouns, setPronouns] = useState(new Set(data.pronouns));
   const [races, setRaces] = useState(new Set(data.races));
+  const [neighborhood, setNeighborhood] = useState<string>(data.neighborhood);
 
   const onSubmit = (): void => {
     const data = {
       genders: Array.from(genders),
       pronouns: Array.from(pronouns),
       races: Array.from(races),
+      neighborhood: neighborhood,
     };
-
     store(data);
   };
 
@@ -51,6 +57,24 @@ const Onboard2 = (): ReactElement => {
       <Form id="onboard-2" onSubmit={onSubmit}>
         <Grid columns={4}>
           <Grid.Column width={6}>
+            <Form.Dropdown
+              placeholder="select"
+              fluid
+              search
+              selection
+              required
+              label={<h3 className="neighborhood-title">Neighborhood</h3>}
+              options={neighborhoods.map((neighborhood) => ({
+                value: neighborhood,
+                key: neighborhood,
+                text: neighborhood,
+              }))}
+              value={neighborhood}
+              onChange={(event, data) => {
+                setNeighborhood(data.value ? data.value?.toString() : '');
+              }}
+              className="neighborhood-drop"
+            />
             <WizardSvg className="image" page={wizardPages.ONBOARD_2} />
           </Grid.Column>
           <Grid.Column width={3}>

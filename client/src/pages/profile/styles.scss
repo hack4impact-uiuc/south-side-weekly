@@ -15,17 +15,33 @@
   }
 }
 
+.social-input {
+  margin-bottom: -3% !important;
+}
+
 .dropdown-field {
   border-color: transparent !important;
   background-color: transparent !important;
   font-size: 12px !important;
 }
 
+
 .edit-profile-btn {
   color: white !important;
   background-color: black !important;
-  margin-bottom: 10% !important;
+  margin-top: 15% !important;
 }
+
+
+.tag-spacing {
+  margin-top: 2%;
+}
+
+.table-header {
+  text-align: left !important;
+  margin-left: 3%;
+}
+
 
 .edit-mode-btn {
   margin: 10px 5px 10px 5px !important;
@@ -53,7 +69,7 @@
 }
 
 .user-pic {
-  margin-right: 5%;
+  margin-right: 3%;
 }
 
 .name-pronouns {

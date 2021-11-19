@@ -20,6 +20,8 @@ export interface IUser {
   linkedIn: string;
   twitter: string;
   involvementResponse: string;
+  journalismResponse: string;
+  neighborhood: string;
   claimedPitches: string[];
   submittedPitches: string[];
   teams: string[];
