@@ -133,11 +133,9 @@ export interface IIssue {
 }
 
 export interface IPitchFeedback {
-  userId: string;
   pitchId: string;
-  responses: {
-    1: string;
-    2: string;
-    3: string;
-  }
+  firstQuestion: string;
+  secondQuestion: string;
+  thirdQuestion: string;
+  dateCreated: Date;
 }

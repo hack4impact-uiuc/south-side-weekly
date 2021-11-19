@@ -27,6 +27,7 @@ const PitchFeedback = new mongoose.Schema({
     type: String,
     required: true,
   },
+  dateCreated: { type: Date, default: Date.now },
 });
 
 export default mongoose.model<PitchFeedbackSchema>(
