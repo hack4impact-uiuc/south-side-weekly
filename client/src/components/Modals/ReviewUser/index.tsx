@@ -20,12 +20,20 @@ import { onboardingStatusEnum } from '../../../utils/enums';
 import { updateUser } from '../../../api';
 interface ReviewUserProps extends ModalProps {
   user: IUser;
-  actionUpdate: (user: IUser, status: keyof typeof onboardingStatusEnum) => Promise<void>;
+  actionUpdate: (
+    user: IUser,
+    status: keyof typeof onboardingStatusEnum,
+  ) => Promise<void>;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ReviewUserModal: FC<ReviewUserProps> = ({ user, actionUpdate, open, setOpen }): ReactElement => {
+const ReviewUserModal: FC<ReviewUserProps> = ({
+  user,
+  actionUpdate,
+  open,
+  setOpen,
+}): ReactElement => {
   const [formValue, setFormValue] = useState('');
 
   const { getTeamFromId } = useTeams();
@@ -44,11 +52,11 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user, actionUpdate, open, setOpe
 
   return (
     <Modal
-            size="large"
-            open={open}
-            onClose={() => setOpen(false)}
-            className="review-user-modal"
-          >
+      size="large"
+      open={open}
+      onClose={() => setOpen(false)}
+      className="review-user-modal"
+    >
       <Modal.Header>Review User</Modal.Header>
       <Modal.Content>
         <Grid divided="vertically">
@@ -165,9 +173,9 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user, actionUpdate, open, setOpe
           <Button
             className="approve-button"
             onClick={() => {
-              updateUser({onboardReasoning: formValue}, user._id);
+              updateUser({ onboardReasoning: formValue }, user._id);
               actionUpdate(user, 'ONBOARDED');
-              setOpen(false)
+              setOpen(false);
             }}
           >
             Approve
@@ -175,9 +183,9 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user, actionUpdate, open, setOpe
           <Button
             className="decline-button"
             onClick={() => {
-              updateUser({onboardReasoning: formValue}, user._id);
+              updateUser({ onboardReasoning: formValue }, user._id);
               actionUpdate(user, 'DENIED');
-              setOpen(false)
+              setOpen(false);
             }}
           >
             Decline

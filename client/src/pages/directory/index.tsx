@@ -63,7 +63,7 @@ const PaneWrapper: FC<PaneWrapperProps> = ({
       } else {
         res = await getDeniedUsers();
       }
-      
+
       if (!isError(res)) {
         setDirectory(res.data.result);
         setFilteredDirectory(res.data.result);
@@ -78,7 +78,7 @@ const PaneWrapper: FC<PaneWrapperProps> = ({
   }, [status]);
 
   useEffect(() => {
-    console.log(directory)
+    console.log(directory);
     const search = (users: IUser[]): IUser[] => {
       if (query.length === 0) {
         return users;
@@ -109,8 +109,8 @@ const PaneWrapper: FC<PaneWrapperProps> = ({
   }, [directory, query, interests, teams, role]);
 
   useEffect(() => {
-    console.log(filteredDirectory)
-  }, [filteredDirectory])
+    console.log(filteredDirectory);
+  }, [filteredDirectory]);
 
   return (
     <>

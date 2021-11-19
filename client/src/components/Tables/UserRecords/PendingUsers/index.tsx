@@ -23,24 +23,30 @@ interface PendingUserProps {
   users: IUser[];
 }
 
-
 const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
   const [data, setData] = useState<IUser[]>(users);
 
-  const updateUserStatus = async (user: IUser, status: keyof typeof onboardingStatusEnum): Promise<void> => {
+  const updateUserStatus = async (
+    user: IUser,
+    status: keyof typeof onboardingStatusEnum,
+  ): Promise<void> => {
     const res = await updateOnboardingStatus(user._id, status);
     if (!isError(res)) {
-      setData(data.filter(d => d !== user))
+      setData(data.filter((d) => d !== user));
       toast.success('Updated User Status!', {
         position: 'bottom-right',
       });
     }
   };
-  
-  const handleClick = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>, user:IUser, status:keyof typeof onboardingStatusEnum):void => {
+
+  const handleClick = (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>,
+    user: IUser,
+    status: keyof typeof onboardingStatusEnum,
+  ): void => {
     e.stopPropagation();
     updateUserStatus(user, status);
-  }
+  };
 
   const onboardActionColumn = buildColumn<IUser>({
     title: '',
@@ -64,9 +70,8 @@ const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
             className="edit-button"
             size="small"
             onClick={(e) => {
-              handleClick(e, user, 'ONBOARDED')
-            }
-            }
+              handleClick(e, user, 'ONBOARDED');
+            }}
           >
             Approve
           </Button>
@@ -76,8 +81,8 @@ const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
   });
 
   useEffect(() => {
-    setData(users)
-  }, [users])
+    setData(users);
+  }, [users]);
 
   const columns = [
     userColumn,
@@ -96,7 +101,14 @@ const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
           records={data}
           columns={columns}
           singleLine={users.length > 0}
-          getModal={(user, isOpen, setIsOpen) => <ReviewUserModal user={user} open={isOpen} setOpen={setIsOpen} actionUpdate={updateUserStatus}/>}
+          getModal={(user, isOpen, setIsOpen) => (
+            <ReviewUserModal
+              user={user}
+              open={isOpen}
+              setOpen={setIsOpen}
+              actionUpdate={updateUserStatus}
+            />
+          )}
         />
       </div>
     </div>

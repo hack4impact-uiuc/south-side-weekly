@@ -13,7 +13,11 @@ interface TableProps<RecordType> {
   initialSortColumn?: ColumnType<RecordType>;
   initialSortDirection?: SortDirection;
   singleLine?: boolean;
-  getModal?: (record: RecordType, open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>) => ReactElement;
+  getModal?: (
+    record: RecordType,
+    open: boolean,
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  ) => ReactElement;
   onRecordClick?: (record: RecordType) => void;
 }
 
@@ -79,7 +83,7 @@ const DynamicTable = <RecordType,>({
       size="small"
       sortable
       compact
-      selectable={(onRecordClick !== undefined || getModal !== undefined)}
+      selectable={onRecordClick !== undefined || getModal !== undefined}
       celled
       fixed
       singleLine={singleLine}
@@ -105,11 +109,9 @@ const DynamicTable = <RecordType,>({
           />
         ))}
 
-        {getModal && currentRecord ? (
-          getModal(currentRecord, isOpen, setIsOpen)
-        ) : (
-          ''
-        )}
+        {getModal && currentRecord
+          ? getModal(currentRecord, isOpen, setIsOpen)
+          : ''}
       </Table.Body>
     </Table>
   );

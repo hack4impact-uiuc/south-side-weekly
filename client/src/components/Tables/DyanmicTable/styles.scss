@@ -16,11 +16,11 @@
     width: 100%;
     table-layout: fixed;
   }
-  
+
   &.ui.table > tr > td.selectable,
   &.ui.table > tbody > tr > td.selectable,
   &.ui.selectable.table > tbody > tr,
   &.ui.selectable.table > tr {
-    cursor:pointer;
+    cursor: pointer;
   }
 }
