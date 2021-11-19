@@ -217,3 +217,39 @@ export const declineClaim = (
   );
   return basicEmail;
 };
+
+export const approveUser = (user: IUser, admin: IUser): EmailMessage => {
+  const basicEmail = buildEmailQuery(
+    user.email,
+    `Welcome to the South Side Weekly Contributor Dashboard!`,
+    `Hi ${user.preferredName || user.firstName},
+    <br><br>
+    Your request to join the South Side Weekly contributor dashboard as a ${user.role.toLocaleLowerCase()} has been approved. You can login using your email here: <a href="https://ssw.h4i.app/login">ssw.h4i.app/login</a>.
+    <br>
+    We can't wait to see the work that you do here at South Side Weekly!
+    <br><br>
+    Thank you, 
+    <br>
+    ${admin.preferredName || admin.firstName}
+    `,
+  );
+  return basicEmail;
+};
+
+export const declineUser = (user: IUser, admin: IUser): EmailMessage => {
+  const basicEmail = buildEmailQuery(
+    user.email,
+    `South Side Weekly Contributor Dashboard Access Update`,
+    `Hi ${user.preferredName || user.firstName},
+    <br><br>
+    We appreciate you applying to be a ${user.role.toLocaleLowerCase()} at South Side Weekly. Unfortunately, your request to join the South Side Weekly contributor dashboard as a ${user.role.toLocaleLowerCase()} has been declined.
+    <br>
+    Please contact ${admin.email} if you have any questions.
+    <br><br>
+    Thank you, 
+    <br>
+    ${admin.preferredName || admin.firstName}
+    `,
+  );
+  return basicEmail;
+};
