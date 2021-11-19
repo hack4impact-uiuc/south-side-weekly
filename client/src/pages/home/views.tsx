@@ -16,8 +16,8 @@ const getViewForTab = (user: IUser, tab: Tab): View => {
       return getSubmittedClaimsView(user);
     case TABS.SUBMITTED_PITCHES:
       return getSubmittedPitchesView(user);
-    case TABS.SUBMITTED_PUBLICATIONS:
-      return getSubmittedPublicationsView(user);
+    // case TABS.SUBMITTED_PUBLICATIONS:
+    //   return getSubmittedPublicationsView(user);
     default:
       return [];
   }
@@ -58,7 +58,10 @@ const getMemberPitchesView = (user: IUser): View => [
 const getSubmittedPitchesView = (user: IUser): View => [
   titleColumn,
   descriptionColumn,
-  associatedTopicsColumn,
+  {
+    ...associatedTopicsColumn,
+    width: '2',
+  },
   {
     title: 'Status',
     width: '1',
@@ -148,7 +151,11 @@ const associatedTopicsColumn = buildColumn<IPitch>({
   width: '1',
   sorter: (p1, p2) => stringArraySorter(p1.topics, p2.topics),
   extractor: function InterestsCell(pitch) {
-    return <PitchInterests pitch={pitch} />;
+    return (
+      <div className="flex-cell">
+        <PitchInterests pitch={pitch} />
+      </div>
+    );
   },
 });
 

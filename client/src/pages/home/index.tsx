@@ -49,9 +49,8 @@ const Homepage: FC = () => {
   const [filteredStatus, setFilteredStatus] =
     useState<keyof typeof pitchStatusEnum>();
 
-  const canFilterInterests =
-    currentTab !== TABS.MEMBER_PITCHES &&
-    currentTab !== TABS.SUBMITTED_PUBLICATIONS;
+  const canFilterInterests = currentTab !== TABS.MEMBER_PITCHES;
+  // && currentTab !== TABS.SUBMITTED_PUBLICATIONS;
   const canFilterStatuses = currentTab === TABS.SUBMITTED_PITCHES;
   const canFilterYear = canFilterInterests;
 
@@ -132,8 +131,8 @@ const Homepage: FC = () => {
         return aggregated.submittedClaims as IPitch[];
       case TABS.SUBMITTED_PITCHES:
         return aggregated.submittedPitches as IPitch[];
-      case TABS.SUBMITTED_PUBLICATIONS:
-        return [];
+      // case TABS.SUBMITTED_PUBLICATIONS:
+      //   return [];
       default:
         return [];
     }
@@ -172,11 +171,11 @@ const Homepage: FC = () => {
           onClick={() => setCurrentTab(TABS.SUBMITTED_CLAIMS)}
         />
 
-        <Menu.Item
+        {/* <Menu.Item
           name={TABS.SUBMITTED_PUBLICATIONS}
           active={TABS.SUBMITTED_PUBLICATIONS === currentTab}
           onClick={() => setCurrentTab(TABS.SUBMITTED_PUBLICATIONS)}
-        />
+        /> */}
 
         <Menu.Item
           content={<SubmitPitchModal callback={onSubmitPitch} />}

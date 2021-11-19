@@ -20,10 +20,6 @@
       padding-inline-end: 4em;
     }
 
-    &.segment {
-      margin: 0px -6%;
-    }
-
     &.secondary.pointing.menu {
       border-bottom: 0px;
 
@@ -39,6 +35,15 @@
     }
     &.segment {
       padding: 1.5em 4em;
+      margin: 0px -6%;
+    }
+  }
+
+  .pitch-table {
+    .flex-cell {
+      display: flex;
+      flex-flow: row wrap;
+      gap: 5px;
     }
   }
 }
