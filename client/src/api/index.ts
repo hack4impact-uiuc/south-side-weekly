@@ -8,12 +8,12 @@ export {
   updateOnboardingStatus,
   approveUser,
   declineUser,
+  getAggregatedUser,
 } from './user';
 export {
   getApprovedPitches,
   updatePitch,
   submitPitchClaim,
-  aggregatePitch,
   getPitchesPendingApproval,
   getUnclaimedPitches,
   getPendingContributorPitches,

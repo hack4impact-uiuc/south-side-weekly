@@ -92,6 +92,12 @@ const simplifyPitch = (pitch: IPitch | null): Partial<IPitch> => {
     title: pitch.title,
     description: pitch.description,
     author: pitch.author,
+    createdAt: pitch.createdAt,
+    teams: pitch.teams,
+    topics: pitch.topics,
+    assignmentContributors: pitch.assignmentContributors,
+    pendingContributors: pitch.pendingContributors,
+    status: pitch.status,
   };
 };
 
@@ -108,20 +114,27 @@ const aggregateUser = async (rawUser: IUser): Promise<IUserAggregate> => {
     ),
   );
 
+  const submittedClaims = await Promise.all(
+    rawUser.submittedClaims.map(async (id) =>
+      simplifyPitch(await Pitch.findById(id)),
+    ),
+  );
+
   const interests = await Promise.all(
     rawUser.interests.map((interestId) => Interest.findById(interestId).lean()),
   );
 
-  const aggregatedPitch = {
+  const aggregatedUser = {
     ...rawUser,
     aggregated: {
       claimedPitches: claimedPitches,
       submittedPitches: submittedPitches,
+      submittedClaims: submittedClaims,
       interests: interests,
     },
   };
 
-  return aggregatedPitch;
+  return aggregatedUser;
 };
 
 export { aggregatePitch, aggregateUser };

@@ -58,6 +58,7 @@ const emptyUser: IUser = {
   involvementResponse: '',
   claimedPitches: [],
   submittedPitches: [],
+  submittedClaims: [],
   teams: [],
   role: '',
   races: [],
@@ -87,6 +88,8 @@ const emptyPitch: IPitch = {
   similarStories: [],
   deadline: new Date(),
   neighborhoods: [],
+  createdAt: new Date(),
+  updatedAt: new Date(),
 };
 
 const emptyAggregatePitch: IPitchAggregate = {

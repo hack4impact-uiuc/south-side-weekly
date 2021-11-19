@@ -22,6 +22,7 @@ export interface IUser {
   involvementResponse: string;
   claimedPitches: string[];
   submittedPitches: string[];
+  submittedClaims: string[];
   teams: string[];
   role: string;
   races: string[];
@@ -33,6 +34,7 @@ export interface IUserAggregate extends IUser {
   aggregated: {
     claimedPitches: Partial<IPitch>[];
     submittedPitches: Partial<IPitch>[];
+    submittedClaims: Partial<IPitch>[];
     interests: IInterest[];
   };
 }
@@ -54,7 +56,12 @@ export interface IPitch {
   assignmentStatus: string;
   assignmentGoogleDocLink: string;
   assignmentContributors: { userId: string; teams: string[] }[];
-  pendingContributors: { userId: string; teams: string[]; message: string }[];
+  pendingContributors: {
+    userId: string;
+    teams: string[];
+    message: string;
+    dateSubmitted: Date;
+  }[];
   topics: string[];
   teams: {
     teamId: string;
@@ -65,6 +72,8 @@ export interface IPitch {
   deadline: Date;
   conflictOfInterest: boolean;
   neighborhoods: string[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IPitchAggregate extends IPitch {

@@ -1,5 +1,6 @@
 import { startsWith, toLower, toString } from 'lodash';
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
+import { useHistory } from 'react-router';
 import {
   Button,
   DropdownItemProps,
@@ -11,7 +12,8 @@ import {
   TableHeader,
   TableRow,
 } from 'semantic-ui-react';
-import { IPitch } from 'ssw-common';
+import { IPitch, IUser, IUserAggregate } from 'ssw-common';
+import { getAggregatedUser, isError } from '../../api';
 import {
   InterestsSelect,
   PitchTable,
@@ -19,26 +21,23 @@ import {
   TableTool,
   Walkthrough,
 } from '../../components';
+import DynamicTable from '../../components/Tables/DyanmicTable';
 // import { HomepageTable } from '../../components/Tables/Homepage';
 import { useAuth, useInterests } from '../../contexts';
 import { pagesEnum } from '../../utils/enums';
-import { filterPitchesByInterests } from '../../utils/helpers';
-import { getYearsSinceSSWEstablished } from './helpers';
+import { defaultFunc, filterPitchesByInterests } from '../../utils/helpers';
+import { getYearsSinceSSWEstablished, Tab, TABS } from './helpers';
 
 import './styles.scss';
+import { getViewForTab } from './views';
 
 const searchFields: (keyof IPitch)[] = ['title'];
-const TABS = {
-  MEMBER_PITCHES: 'Your Current Pitches',
-  SUBMITTED_PITCHES: 'Pitches You Submitted',
-  SUBMITTED_CLAIMS: 'Your Claim Requests',
-  SUBMITTED_PUBLICATIONS: 'Your Publications',
-} as const;
-type Tab = typeof TABS[keyof typeof TABS];
 
 const Homepage: FC = () => {
   const { user } = useAuth();
 
+  const [refreshRecords, setRefreshRecords] = useState<boolean>(false);
+  const [aggregatedUser, setAggregatedUser] = useState<IUserAggregate>();
   const [currentPitches, setCurrentPitches] = useState<IPitch[]>([]);
   const [interests, setInterests] = useState<string[]>([]);
 
@@ -55,6 +54,10 @@ const Homepage: FC = () => {
   const canFilterYear = canFilterInterests;
 
   useEffect(() => {
+    if (!aggregatedUser) {
+      return;
+    }
+
     const search = (pitches: IPitch[]): IPitch[] => {
       if (searchInput.length === 0) {
         return pitches;
@@ -77,18 +80,56 @@ const Homepage: FC = () => {
       }
 
       // filtered = filterClaimStatus(filtered, claimStatus);
+      // filtered = filterYear(filtered, )
 
       return filtered;
     };
 
-    setFilteredPitches([...search(filter(currentPitches))]);
-  }, [currentPitches, searchInput, interests, canFilterInterests]);
+    setFilteredPitches([
+      ...search(filter(getPitchesForTab(aggregatedUser, currentTab))),
+    ]);
+  }, [
+    currentPitches,
+    searchInput,
+    interests,
+    canFilterInterests,
+    aggregatedUser,
+    currentTab,
+  ]);
 
-  const populatePitches = (): void => {
-    // getUnclaimed();
-    // getPendingApprovals();
-    // getPendingClaims();
-    // getApproved();
+  useEffect(() => {
+    const getAggregate = async () => {
+      const res = await getAggregatedUser(user._id);
+
+      if (!isError(res)) {
+        const aggregatedUser = res.data.result;
+        setAggregatedUser(aggregatedUser);
+      }
+    };
+
+    getAggregate();
+  }, [user, refreshRecords]);
+
+  const getPitchesForTab = (
+    { aggregated }: IUserAggregate,
+    tab: Tab,
+  ): IPitch[] => {
+    switch (tab) {
+      case TABS.MEMBER_PITCHES:
+        return aggregated.claimedPitches as IPitch[];
+      case TABS.SUBMITTED_CLAIMS:
+        return aggregated.submittedClaims as IPitch[];
+      case TABS.SUBMITTED_PITCHES:
+        return aggregated.submittedPitches as IPitch[];
+      case TABS.SUBMITTED_PUBLICATIONS:
+        return [];
+      default:
+        return [];
+    }
+  };
+
+  const onSubmitPitch = () => {
+    setRefreshRecords((refresh) => !refresh);
   };
 
   const yearSelectOptions: DropdownItemProps[] =
@@ -127,7 +168,7 @@ const Homepage: FC = () => {
         />
 
         <Menu.Item
-          content={<SubmitPitchModal callback={populatePitches} />}
+          content={<SubmitPitchModal callback={onSubmitPitch} />}
           position="right"
         />
       </Menu>
@@ -174,22 +215,12 @@ const Homepage: FC = () => {
       </div>
 
       <div className="pitch-table">
-        <TableTool
-          singleLine={false}
-          tableBody={
-            <>
-              <Table.Row>
-                <Table.Cell>Big</Table.Cell>
-              </Table.Row>
-              <Table.Row>
-                <Table.Cell>Small</Table.Cell>
-              </Table.Row>
-            </>
-          }
-          tableHeader={
-            <Table.HeaderCell sorted={'descending'}>Title</Table.HeaderCell>
-          }
-        ></TableTool>
+        <DynamicTable<IPitch>
+          records={filteredPitches}
+          columns={getViewForTab(user, currentTab)}
+          singleLine={filteredPitches.length === 0}
+          emptyMessage="You have no pitches in this category."
+        />
       </div>
     </div>
   );

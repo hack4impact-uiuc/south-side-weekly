@@ -7,4 +7,13 @@ const getYearsSinceSSWEstablished = (): number[] => {
     .map((_, i) => currentYear - i);
 };
 
-export { getYearsSinceSSWEstablished };
+const TABS = {
+  MEMBER_PITCHES: 'Your Current Pitches',
+  SUBMITTED_PITCHES: 'Pitches You Submitted',
+  SUBMITTED_CLAIMS: 'Your Claim Requests',
+  SUBMITTED_PUBLICATIONS: 'Your Publications',
+} as const;
+type Tab = typeof TABS[keyof typeof TABS];
+
+export { getYearsSinceSSWEstablished, TABS };
+export type { Tab };

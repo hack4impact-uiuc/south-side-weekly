@@ -68,6 +68,11 @@ body {
   background-color: $inactive !important;
 }
 
+.pending-tag-color,
+.pending-review-tag-color {
+  background-color: $pending !important;
+}
+
 .default-btn {
   background-color: $secondaryColor !important;
   color: white !important;

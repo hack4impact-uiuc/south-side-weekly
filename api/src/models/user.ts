@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema } from 'mongoose';
+import mongoose, { Document, Schema, SchemaTypes } from 'mongoose';
 import { IUser } from 'ssw-common';
 
 import {
@@ -36,6 +36,7 @@ const User = new mongoose.Schema({
   twitter: { type: String, default: null },
   claimedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
   submittedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
+  submittedClaims: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
   teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
   involvementResponse: { type: String, default: null },
   onboardReasoning: { type: String, default: null },

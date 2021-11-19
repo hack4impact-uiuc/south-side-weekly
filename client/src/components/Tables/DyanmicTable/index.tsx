@@ -1,5 +1,5 @@
-import React, { ReactElement, useEffect, useState } from 'react';
-import { Table } from 'semantic-ui-react';
+import React, { ReactElement, ReactNode, useEffect, useState } from 'react';
+import { Modal, Table } from 'semantic-ui-react';
 
 import TableHeader from './TableHeader';
 import TableRow from './TableRow';
@@ -18,6 +18,7 @@ interface TableProps<RecordType> {
     open: boolean,
     setOpen: React.Dispatch<React.SetStateAction<boolean>>,
   ) => ReactElement;
+  emptyMessage?: ReactNode;
   onRecordClick?: (record: RecordType) => void;
 }
 
@@ -28,6 +29,7 @@ const DynamicTable = <RecordType,>({
   initialSortDirection,
   singleLine,
   getModal,
+  emptyMessage,
   onRecordClick,
 }: TableProps<RecordType>): ReactElement => {
   type Column = ColumnType<RecordType>;
@@ -87,7 +89,9 @@ const DynamicTable = <RecordType,>({
       celled
       fixed
       singleLine={singleLine}
-      className="dynamic-table"
+      className={`dynamic-table ${
+        sortedRecords.length === 0 && 'no-results-found'
+      }`}
     >
       <TableHeader
         columns={columns}
@@ -96,6 +100,8 @@ const DynamicTable = <RecordType,>({
         handleSort={handleSort}
       />
       <Table.Body>
+        {sortedRecords.length === 0 && emptyMessage}
+
         {sortedRecords.map((record, i) => (
           <TableRow
             record={record}

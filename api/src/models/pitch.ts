@@ -18,7 +18,11 @@ const contributor = new mongoose.Schema(
 );
 
 const pendingContributor = new mongoose.Schema(
-  { ...contributor.obj, message: { type: String } },
+  {
+    ...contributor.obj,
+    message: { type: String },
+    dateSubmitted: { type: Date },
+  },
   { _id: false },
 );
 
@@ -46,43 +50,46 @@ const issue = new mongoose.Schema(
 /**
  * Mongoose Schema to represent a Pitch at South Side Weekly
  */
-const Pitch = new mongoose.Schema({
-  title: { type: String, default: null, required: true },
-  issues: [issue],
-  author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  primaryEditor: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    default: null,
+const Pitch = new mongoose.Schema(
+  {
+    title: { type: String, default: null, required: true },
+    issues: [issue],
+    author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    primaryEditor: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
+    secondEditors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    thirdEditors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
+    writer: {
+      type: Schema.Types.ObjectId,
+      ref: 'User',
+      default: null,
+    },
+    conflictOfInterest: { type: Boolean, required: true },
+    status: {
+      type: String,
+      enum: Object.values(pitchStatusEnum),
+      default: pitchStatusEnum.NONE,
+    },
+    description: { type: String, default: null, required: true },
+    assignmentStatus: {
+      type: String,
+      enum: Object.values(assignmentStatusEnum),
+      default: assignmentStatusEnum.NONE,
+    },
+    assignmentGoogleDocLink: { type: String, default: null },
+    assignmentContributors: [contributor],
+    pendingContributors: [pendingContributor],
+    topics: [{ type: Schema.Types.ObjectId, ref: 'Interest' }],
+    teams: [team],
+    reviewedBy: { type: Schema.Types.ObjectId, ref: 'User' },
+    similarStories: [{ type: String, default: null }],
+    deadline: { type: Date, default: null },
+    neighborhoods: [{ type: String, default: null }],
   },
-  secondEditors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  thirdEditors: [{ type: Schema.Types.ObjectId, ref: 'User' }],
-  writer: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
-    default: null,
-  },
-  conflictOfInterest: { type: Boolean, required: true },
-  status: {
-    type: String,
-    enum: Object.values(pitchStatusEnum),
-    default: pitchStatusEnum.NONE,
-  },
-  description: { type: String, default: null, required: true },
-  assignmentStatus: {
-    type: String,
-    enum: Object.values(assignmentStatusEnum),
-    default: assignmentStatusEnum.NONE,
-  },
-  assignmentGoogleDocLink: { type: String, default: null },
-  assignmentContributors: [contributor],
-  pendingContributors: [pendingContributor],
-  topics: [{ type: Schema.Types.ObjectId, ref: 'Interest' }],
-  teams: [team],
-  reviewedBy: { type: Schema.Types.ObjectId, ref: 'User' },
-  similarStories: [{ type: String, default: null }],
-  deadline: { type: Date, default: null },
-  neighborhoods: [{ type: String, default: null }],
-});
+  { timestamps: true },
+);
 
 export default mongoose.model<PitchSchema>('Pitch', Pitch);

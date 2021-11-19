@@ -309,11 +309,18 @@ router.put(
             userId: req.body.userId,
             teams: req.body.teams,
             message: req.body.message,
+            dateSubmitted: new Date(),
           },
         },
       },
       { new: true, runValidators: true },
     );
+
+    await User.findByIdAndUpdate(user._id, {
+      $addToSet: {
+        submittedClaims: updatedPitch._id,
+      },
+    });
 
     if (!updatedPitch) {
       res.status(404).json({
@@ -358,6 +365,9 @@ router.put(
       {
         $addToSet: {
           claimedPitches: req.params.pitchId,
+        },
+        $pull: {
+          submittedClaims: req.params.pitchId,
         },
       },
       { returnOriginal: false },
@@ -407,6 +417,7 @@ router.put(
       {
         $pull: {
           pendingContributors: { userId: userId },
+          submittedClaims: req.params.pitchId,
         },
       },
       { new: true, runValidators: true },
