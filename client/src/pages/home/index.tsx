@@ -182,7 +182,7 @@ const Homepage: FC = () => {
           position="right"
         />
       </Menu>
-      <Segment>
+      <Segment loading={aggregatedUser === undefined}>
         <div className="filters-wrapper">
           <Input
             value={searchInput}
