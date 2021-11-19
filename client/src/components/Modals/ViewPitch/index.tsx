@@ -39,6 +39,10 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
     useState<GroupedContributors[]>();
 
   useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
     const getAggregate = async (): Promise<void> => {
       const res = await aggregatePitch(pitchId);
 
@@ -53,7 +57,7 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
       }
     };
     getAggregate();
-  }, [pitchId]);
+  }, [isOpen, pitchId]);
 
   function groupContributorsByTeam(
     assignmentContributors: IPitchAggregate['aggregated']['assignmentContributors'],

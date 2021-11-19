@@ -1,21 +1,30 @@
 import { startsWith, toLower, toString } from 'lodash';
-import React, { ReactElement, useEffect, useState } from 'react';
-import { Input } from 'semantic-ui-react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
+import { Input, Tab } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
-import { getUsers, isError } from '../../api';
+import { isError } from '../../api';
 import {
-  DirectoryTable,
+  getApprovedUsers,
+  getDeniedUsers,
+  getPendingUsers,
+} from '../../api/user';
+import {
+  AdminView,
+  ApprovedUsers,
   InterestsSelect,
+  PendingUsers,
   Select,
   TeamsSelect,
   Walkthrough,
 } from '../../components';
+import ContributorView from '../../components/Auth/ContributorView';
 import { allRoles } from '../../utils/constants';
-import { pagesEnum } from '../../utils/enums';
+import { pagesEnum, rolesEnum } from '../../utils/enums';
 import { parseOptionsSelect } from '../../utils/helpers';
 
 import { filterInterests, filterRole, filterTeams } from './helpers';
+
 import './styles.scss';
 
 const searchFields: (keyof IUser)[] = [
@@ -25,7 +34,15 @@ const searchFields: (keyof IUser)[] = [
   'email',
 ];
 
-const Directory = (): ReactElement => {
+interface PaneWrapperProps {
+  status: 'approved' | 'pending';
+  user_auth?: keyof typeof rolesEnum;
+}
+
+const PaneWrapper: FC<PaneWrapperProps> = ({
+  status,
+  user_auth,
+}): ReactElement => {
   const [directory, setDirectory] = useState<IUser[]>([]);
   const [filteredDirectory, setFilteredDirectory] = useState<IUser[]>([]);
   const [role, setRole] = useState<string>('');
@@ -35,8 +52,16 @@ const Directory = (): ReactElement => {
 
   useEffect(() => {
     const getAllUsers = async (): Promise<void> => {
-      const res = await getUsers();
+      let res;
 
+      if (status === 'approved') {
+        res = await getApprovedUsers();
+      } else if (status === 'pending') {
+        res = await getPendingUsers();
+      } else {
+        res = await getDeniedUsers();
+      }
+      //This gets all users regardless of their approval status
       if (!isError(res)) {
         setDirectory(res.data.result);
         setFilteredDirectory(res.data.result);
@@ -49,7 +74,7 @@ const Directory = (): ReactElement => {
       setDirectory([]);
       setFilteredDirectory([]);
     };
-  }, []);
+  }, [status]);
 
   useEffect(() => {
     const search = (users: IUser[]): IUser[] => {
@@ -83,13 +108,7 @@ const Directory = (): ReactElement => {
   }, [directory, query, interests, teams, role]);
 
   return (
-    <div className="directory-page">
-      <Walkthrough
-        page={pagesEnum.DIRECTORY}
-        content="Check out the members on the SSW team and click their profiles to view more details!"
-      />
-
-      <h2>Directory</h2>
+    <>
       <Input
         value={query}
         onChange={(e, { value }) => setQuery(value)}
@@ -98,38 +117,86 @@ const Directory = (): ReactElement => {
         icon="search"
         iconPosition="left"
       />
-      <div className="filters">
-        <div>
-          <h3>Filters: </h3>
+      {status === 'approved' ? (
+        <div className="filters">
+          <div>
+            <h3>Filters: </h3>
+          </div>
+          <div className="wrapper">
+            <Select
+              value={role}
+              options={parseOptionsSelect(allRoles)}
+              onChange={(e) => setRole(e ? e.value : '')}
+              placeholder="Role"
+            />
+          </div>
+          <div className="wrapper">
+            <InterestsSelect
+              values={interests}
+              onChange={(values) =>
+                setInterests(values.map((item) => item.value))
+              }
+            />
+          </div>
+          <div className="wrapper">
+            <TeamsSelect
+              values={teams}
+              onChange={(values) => setTeams(values.map((item) => item.value))}
+            />
+          </div>
         </div>
-        <div className="wrapper">
-          <Select
-            value={role}
-            options={parseOptionsSelect(allRoles)}
-            onChange={(e) => setRole(e ? e.value : '')}
-            placeholder="Role"
-          />
-        </div>
-        <div className="wrapper">
-          <InterestsSelect
-            values={interests}
-            onChange={(values) =>
-              setInterests(values.map((item) => item.value))
-            }
-          />
-        </div>
-        <div className="wrapper">
-          <TeamsSelect
-            values={teams}
-            onChange={(values) => setTeams(values.map((item) => item.value))}
-          />
-        </div>
-      </div>
-      <div className="directory">
-        <DirectoryTable users={filteredDirectory} />
-      </div>
-    </div>
+      ) : (
+        ''
+      )}
+      {status === 'approved' ? (
+        <ApprovedUsers users={filteredDirectory} auth={user_auth} />
+      ) : (
+        <PendingUsers users={filteredDirectory} />
+      )}
+    </>
   );
 };
+
+const panes = [
+  {
+    menuItem: 'Approved Users',
+    render: function show() {
+      return (
+        <Tab.Pane>
+          <PaneWrapper status="approved" user_auth={'ADMIN'} />
+        </Tab.Pane>
+      );
+    },
+  },
+  {
+    menuItem: 'Pending Users',
+    render: function show() {
+      return (
+        <Tab.Pane>
+          <PaneWrapper status="pending" />
+        </Tab.Pane>
+      );
+    },
+  },
+];
+
+const Directory = (): ReactElement => (
+  <div className="directory-page">
+    <Walkthrough
+      page={pagesEnum.DIRECTORY}
+      content="Check out the members on the SSW team and click their profiles to view more details!"
+    />
+    <AdminView>
+      <Tab
+        menu={{ secondary: true, pointing: true }}
+        id="directory-tabs"
+        panes={panes}
+      />
+    </AdminView>
+    <ContributorView>
+      <PaneWrapper status="approved" user_auth={'CONTRIBUTOR'} />
+    </ContributorView>
+  </div>
+);
 
 export default Directory;

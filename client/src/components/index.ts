@@ -15,6 +15,7 @@ import FilterDropdown from './Dropdowns/Filter';
 import FieldTag from './FieldTag';
 import UserPicture from './UserPicture';
 import UserCard from './UserCard';
+import { UserInterests, UserTeams } from './Lists';
 import Navbar from './Navbar';
 import SubmitButton from './Wizard/SubmitButton';
 import PrevButton from './Wizard/PrevButton';
@@ -22,7 +23,6 @@ import ApprovePitchModal from './Modals/ApprovePitch';
 import ViewPitchModal from './Modals/ViewPitch';
 import MultiSelect from './Dropdowns/MultiSelect';
 import Select from './Dropdowns/Select';
-import DirectoryTable from './Tables/Directory';
 import { PitchTable, PitchRow } from './Tables/PitchDoc';
 import TableTool from './Tables/TableTool';
 import Walkthrough from './Walkthrough';
@@ -36,6 +36,7 @@ import {
   EditTeams,
 } from './Modals/EditableTags';
 import ReviewUserModal from './Modals/ReviewUser';
+import { ApprovedUsers, PendingUsers } from './Tables';
 
 export {
   Header,
@@ -54,6 +55,8 @@ export {
   FieldTag,
   UserPicture,
   UserCard,
+  UserInterests,
+  UserTeams,
   Navbar,
   SubmitButton,
   PrevButton,
@@ -61,7 +64,7 @@ export {
   ViewPitchModal,
   MultiSelect,
   Select,
-  DirectoryTable,
+  // DirectoryTable,
   PitchTable,
   PitchRow,
   TableTool,
@@ -74,5 +77,7 @@ export {
   EditTeams,
   EditableTagModal,
   ReviewUserModal,
+  ApprovedUsers,
+  PendingUsers,
   ApprovedView,
 };

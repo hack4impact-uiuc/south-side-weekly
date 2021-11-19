@@ -23,7 +23,6 @@ interface ReviewUserProps extends ModalProps {
 }
 
 const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
-  const [isOpen, setIsOpen] = useState(true);
   const [formValue, setFormValue] = useState('');
 
   const { getTeamFromId } = useTeams();
@@ -50,7 +49,6 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
     const userApproved = approveUser(user._id);
     if (!isError(reasoningAdded) && !isError(userApproved)) {
       notifySuccess();
-      setIsOpen(false);
     }
   };
 
@@ -73,18 +71,11 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
     const userDenied = declineUser(user._id);
     if (!isError(reasoningAdded) && !isError(userDenied)) {
       notifyDecline();
-      setIsOpen(false);
     }
   };
 
   return (
-    <Modal
-      size="large"
-      open={isOpen}
-      onOpen={() => setIsOpen(true)}
-      onClose={() => setIsOpen(false)}
-      className="review-user-modal"
-    >
+    <>
       <Modal.Header>Review User</Modal.Header>
       <Modal.Content>
         <Grid divided="vertically">
@@ -216,7 +207,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
           </Button>
         </Modal.Actions>
       </Modal.Content>
-    </Modal>
+    </>
   );
 };
 
