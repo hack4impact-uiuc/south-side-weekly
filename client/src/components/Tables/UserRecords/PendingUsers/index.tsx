@@ -13,7 +13,7 @@ import {
   interestsColumnModal,
   onboardDateColumn,
 } from '../utils';
-import { isError, updateUser } from '../../../../api';
+import { isError, updateOnboardingStatus } from '../../../../api';
 import { onboardingStatusEnum } from '../../../../utils/enums';
 import { buildColumn } from '../../DyanmicTable/util';
 
@@ -27,8 +27,8 @@ interface PendingUserProps {
 const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
   const [data, setData] = useState<IUser[]>(users);
 
-  const updateUserStatus = async (user: IUser, status: string): Promise<void> => {
-    const res = await updateUser({ onboardingStatus: status }, user._id);
+  const updateUserStatus = async (user: IUser, status: keyof typeof onboardingStatusEnum): Promise<void> => {
+    const res = await updateOnboardingStatus(user._id, status);
     if (!isError(res)) {
       setData(data.filter(d => d !== user))
       toast.success('Updated User Status!', {
@@ -37,7 +37,7 @@ const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
     }
   };
   
-  const handleClick = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>, user:IUser, status:string):void => {
+  const handleClick = (e:React.MouseEvent<HTMLButtonElement, MouseEvent>, user:IUser, status:keyof typeof onboardingStatusEnum):void => {
     e.stopPropagation();
     updateUserStatus(user, status);
   }
@@ -52,7 +52,7 @@ const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
             className="edit-button"
             size="small"
             onClick={(e) => {
-              handleClick(e, user, onboardingStatusEnum.DENIED);
+              handleClick(e, user, 'DENIED');
             }}
             basic
             compact
@@ -64,7 +64,7 @@ const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
             className="edit-button"
             size="small"
             onClick={(e) => {
-              handleClick(e, user, onboardingStatusEnum.ONBOARDED)
+              handleClick(e, user, 'ONBOARDED')
             }
             }
           >
@@ -96,7 +96,7 @@ const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
           records={data}
           columns={columns}
           singleLine={users.length > 0}
-          getModalContent={(user) => <ReviewUserModal user={user} />}
+          getModal={(user, isOpen, setIsOpen) => <ReviewUserModal user={user} open={isOpen} setOpen={setIsOpen} actionUpdate={updateUserStatus}/>}
         />
       </div>
     </div>

@@ -1,5 +1,4 @@
 import React, { ReactElement, FC, useState } from 'react';
-import toast from 'react-hot-toast';
 import {
   Button,
   Grid,
@@ -10,47 +9,29 @@ import {
   Input,
 } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
-import { isError } from 'lodash';
 
-import { updateUser, updateOnboardingStatus } from '../../../api';
 import { useInterests, useTeams } from '../../../contexts';
 import { UserPicture, FieldTag } from '../..';
+// eslint-disable-next-line import/order
 import { getUserFullName, titleCase } from '../../../utils/helpers';
 
 import './styles.scss';
+import { onboardingStatusEnum } from '../../../utils/enums';
+import { updateUser } from '../../../api';
 interface ReviewUserProps extends ModalProps {
   user: IUser;
+  actionUpdate: (user: IUser, status: keyof typeof onboardingStatusEnum) => Promise<void>;
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
+const ReviewUserModal: FC<ReviewUserProps> = ({ user, actionUpdate, open, setOpen }): ReactElement => {
   const [formValue, setFormValue] = useState('');
 
   const { getTeamFromId } = useTeams();
   const { getInterestById } = useInterests();
 
-  const notifySuccess = (): string =>
-    toast.success('Approved User', {
-      position: 'bottom-right',
-    });
-
-  const notifyDecline = (): string =>
-    toast.success('Declined user', {
-      position: 'bottom-right',
-    });
-
-  // Handle approve
-  const approveUser = (user: IUser): void => {
-    const reasoningAdded = updateUser(
-      {
-        onboardReasoning: formValue,
-      },
-      user._id,
-    );
-    const userApproved = updateOnboardingStatus(user._id, 'ONBOARDED');
-    if (!isError(reasoningAdded) && !isError(userApproved)) {
-      notifySuccess();
-    }
-  };
+  // Handle approv
 
   const formatDate = (date: Date): string => {
     date = new Date(date);
@@ -61,21 +42,13 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
     return `${month}/${day}/${year}`;
   };
 
-  const declineUser = (user: IUser): void => {
-    const reasoningAdded = updateUser(
-      {
-        onboardReasoning: formValue,
-      },
-      user._id,
-    );
-    const userDenied = updateOnboardingStatus(user._id, 'DENIED');
-    if (!isError(reasoningAdded) && !isError(userDenied)) {
-      notifyDecline();
-    }
-  };
-
   return (
-    <>
+    <Modal
+            size="large"
+            open={open}
+            onClose={() => setOpen(false)}
+            className="review-user-modal"
+          >
       <Modal.Header>Review User</Modal.Header>
       <Modal.Content>
         <Grid divided="vertically">
@@ -192,7 +165,9 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
           <Button
             className="approve-button"
             onClick={() => {
-              approveUser(user);
+              updateUser({onboardReasoning: formValue}, user._id);
+              actionUpdate(user, 'ONBOARDED');
+              setOpen(false)
             }}
           >
             Approve
@@ -200,14 +175,16 @@ const ReviewUserModal: FC<ReviewUserProps> = ({ user }): ReactElement => {
           <Button
             className="decline-button"
             onClick={() => {
-              declineUser(user);
+              updateUser({onboardReasoning: formValue}, user._id);
+              actionUpdate(user, 'DENIED');
+              setOpen(false)
             }}
           >
             Decline
           </Button>
         </Modal.Actions>
       </Modal.Content>
-    </>
+    </Modal>
   );
 };
 
