@@ -1,3 +1,5 @@
+import internal from "node:stream";
+
 /**
  * Interface for a User Schema.
  */
@@ -27,6 +29,7 @@ export interface IUser {
   races: string[];
   interests: string[];
   onboardReasoning: string;
+  feedback: string[];
 }
 
 export interface IUserAggregate extends IUser {
@@ -130,4 +133,16 @@ export interface IIssue {
   releaseDate: string;
   pitches: string[];
   type: string;
+}
+
+/**
+ * Interface for UserFeedback Schedma.
+ */
+export interface IUserFeedback {
+  _id: string;
+  staffId: string;
+  userId: string;
+  pitchId: string;
+  stars: number;
+  reasnoning: string;
 }
