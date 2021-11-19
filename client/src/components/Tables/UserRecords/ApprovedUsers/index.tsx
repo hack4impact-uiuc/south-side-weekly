@@ -1,7 +1,7 @@
 import React, { FC, ReactElement } from 'react';
 import { IUser } from 'ssw-common';
 
-import { rolesEnum } from '../../../../utils/enums';
+import { useAuth } from '../../../../contexts';
 import DynamicTable from '../../DyanmicTable';
 import {
   nameColumn,
@@ -18,26 +18,25 @@ import {
 
 interface ApprovedUserProps {
   users: IUser[];
-  auth?: keyof typeof rolesEnum;
 }
 
 const ApprovedUsers: FC<ApprovedUserProps> = ({
   users,
-  auth,
 }): ReactElement => {
+  const isContributor = useAuth();
   const columns = [
     userColumn,
     nameColumn,
     roleColumn,
-    auth && auth === rolesEnum.CONTRIBUTOR
+    isContributor
       ? teamsColumnNoModal
       : teamsColumnModal,
-    auth && auth === rolesEnum.CONTRIBUTOR
+    isContributor
       ? interestsColumnNoModal
       : interestsColumnModal,
     activityColumn,
     viewDateColumn,
-    ...(auth && auth === rolesEnum.CONTRIBUTOR ? [] : [viewUserColumn]),
+    ...(isContributor ? [] : [viewUserColumn]),
   ];
 
   return (

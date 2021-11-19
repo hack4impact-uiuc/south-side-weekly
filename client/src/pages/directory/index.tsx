@@ -20,7 +20,7 @@ import {
 } from '../../components';
 import ContributorView from '../../components/Auth/ContributorView';
 import { allRoles } from '../../utils/constants';
-import { pagesEnum, rolesEnum } from '../../utils/enums';
+import { pagesEnum } from '../../utils/enums';
 import { parseOptionsSelect } from '../../utils/helpers';
 
 import { filterInterests, filterRole, filterTeams } from './helpers';
@@ -36,12 +36,10 @@ const searchFields: (keyof IUser)[] = [
 
 interface PaneWrapperProps {
   status: 'approved' | 'pending';
-  user_auth?: keyof typeof rolesEnum;
 }
 
 const PaneWrapper: FC<PaneWrapperProps> = ({
   status,
-  user_auth,
 }): ReactElement => {
   const [directory, setDirectory] = useState<IUser[]>([]);
   const [filteredDirectory, setFilteredDirectory] = useState<IUser[]>([]);
@@ -154,7 +152,7 @@ const PaneWrapper: FC<PaneWrapperProps> = ({
         ''
       )}
       {status === 'approved' ? (
-        <ApprovedUsers users={filteredDirectory} auth={user_auth} />
+        <ApprovedUsers users={filteredDirectory} />
       ) : (
         <PendingUsers users={filteredDirectory} />
       )}
@@ -168,7 +166,7 @@ const panes = [
     render: function show() {
       return (
         <Tab.Pane>
-          <PaneWrapper status="approved" user_auth={'ADMIN'} />
+          <PaneWrapper status="approved" />
         </Tab.Pane>
       );
     },
@@ -199,7 +197,7 @@ const Directory = (): ReactElement => (
       />
     </AdminView>
     <ContributorView>
-      <PaneWrapper status="approved" user_auth={'CONTRIBUTOR'} />
+      <PaneWrapper status="approved" />
     </ContributorView>
   </div>
 );
