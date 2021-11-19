@@ -11,6 +11,7 @@ import {
 } from '../../api/user';
 import {
   AdminView,
+  ContributorView,
   ApprovedUsers,
   InterestsSelect,
   PendingUsers,
@@ -18,7 +19,6 @@ import {
   TeamsSelect,
   Walkthrough,
 } from '../../components';
-import ContributorView from '../../components/Auth/ContributorView';
 import { allRoles } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
 import { parseOptionsSelect } from '../../utils/helpers';
@@ -53,10 +53,8 @@ const PaneWrapper: FC<PaneWrapperProps> = ({
       let res;
 
       if (status === 'approved') {
-        console.log('approved');
         res = await getApprovedUsers();
       } else if (status === 'pending') {
-        console.log('pending');
         res = await getPendingUsers();
       } else {
         res = await getDeniedUsers();
@@ -64,19 +62,16 @@ const PaneWrapper: FC<PaneWrapperProps> = ({
 
       if (!isError(res)) {
         setDirectory(res.data.result);
-        setFilteredDirectory(res.data.result);
       }
     };
-
+    
     getAllUsers();
     return () => {
       setDirectory([]);
-      setFilteredDirectory([]);
-    };
+    }
   }, [status]);
 
   useEffect(() => {
-    console.log(directory);
     const search = (users: IUser[]): IUser[] => {
       if (query.length === 0) {
         return users;
@@ -107,8 +102,8 @@ const PaneWrapper: FC<PaneWrapperProps> = ({
   }, [directory, query, interests, teams, role]);
 
   useEffect(() => {
-    console.log(filteredDirectory);
-  }, [filteredDirectory]);
+    console.log(filteredDirectory)
+  });
 
   return (
     <>

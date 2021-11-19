@@ -23,7 +23,8 @@ interface ApprovedUserProps {
 const ApprovedUsers: FC<ApprovedUserProps> = ({
   users,
 }): ReactElement => {
-  const isContributor = useAuth();
+  const { isContributor } = useAuth();
+
   const columns = [
     userColumn,
     nameColumn,
