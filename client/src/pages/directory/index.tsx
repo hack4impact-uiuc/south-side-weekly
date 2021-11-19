@@ -19,9 +19,8 @@ import {
   TeamsSelect,
   Walkthrough,
 } from '../../components';
-import ContributorView from '../../components/Auth/ContributorView';
 import { allRoles } from '../../utils/constants';
-import { pagesEnum, rolesEnum } from '../../utils/enums';
+import { pagesEnum } from '../../utils/enums';
 import { parseOptionsSelect } from '../../utils/helpers';
 
 import { filterInterests, filterRole, filterTeams } from './helpers';
@@ -100,10 +99,6 @@ const PaneWrapper: FC<PaneWrapperProps> = ({
     };
     setFilteredDirectory([...search(filter(directory))]);
   }, [directory, query, interests, teams, role]);
-
-  useEffect(() => {
-    console.log(filteredDirectory)
-  });
 
   return (
     <>
