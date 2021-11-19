@@ -17,6 +17,31 @@ const getUsers = async (): Promise<Response<UsersResponse>> => {
   return await get(url, failureMessage);
 };
 
+// Returns all pending users
+const getPendingUsers = async (): Promise<Response<UsersResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, 'all', 'pending');
+  const failureMessage = 'GET_PENDING_USERS_FAIL';
+
+  return await get(url, failureMessage);
+};
+
+// Returns all approved users
+const getApprovedUsers = async (): Promise<Response<UsersResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, 'all', 'approved');
+  const failureMessage = 'GET_APPROVED_USERS_FAIL';
+
+  return await get(url, failureMessage);
+};
+
+// Returns all denied users
+const getDeniedUsers = async (): Promise<Response<UsersResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, 'all', 'denied');
+  const failureMessage = 'GET_DENIED_USERS_FAIL';
+
+  return await get(url, failureMessage);
+};
+
+// Returns all pending contributors
 const getPendingContributors = async (): Promise<Response<UsersResponse>> => {
   const url = buildEndpoint(USER_ENDPOINT, 'contributors', 'pending');
   const failureMessage = 'GET_PENDING_CONTRIBUTORS_FAIL';
@@ -24,6 +49,7 @@ const getPendingContributors = async (): Promise<Response<UsersResponse>> => {
   return await get(url, failureMessage);
 };
 
+// Returns all pending staff
 const getPendingStaff = async (): Promise<Response<UsersResponse>> => {
   const url = buildEndpoint(USER_ENDPOINT, 'staff', 'pending');
   const failureMessage = 'GET_PENDING_STAFF_FAIL';
@@ -62,6 +88,7 @@ const updateUser = async (
 };
 
 // Update user's onboarding status
+// Will also send email here
 const updateOnboardingStatus = async (
   userId: string,
   status: keyof typeof onboardingStatusEnum,
@@ -105,8 +132,28 @@ const getUsersByTeam = async (
   return await get(url, failureMessage);
 };
 
+// Approve user
+const approveUser = async (
+  userId: string,
+): Promise<Response<UsersResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, userId, 'approved');
+  const failureMessage = 'APPROVE_USER_FAIL';
+  return await put(url, onboardingStatusEnum.ONBOARDED, failureMessage);
+};
+
+const declineUser = async (
+  userId: string,
+): Promise<Response<UsersResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, userId, 'denied');
+  const failureMessage = 'DECLINE_USER_FAIL';
+  return await put(url, onboardingStatusEnum.DENIED, failureMessage);
+};
+
 export {
   getUsers,
+  getPendingUsers,
+  getApprovedUsers,
+  getDeniedUsers,
   getPendingContributors,
   getPendingStaff,
   getUser,
@@ -115,4 +162,6 @@ export {
   updateOnboardingStatus,
   addVisitedPage,
   getUsersByTeam,
+  approveUser,
+  declineUser,
 };

@@ -14,6 +14,9 @@ import { onboardingStatusEnum, rolesEnum } from '../utils/enums';
 import { aggregateUser } from '../utils/aggregate-utils';
 import timezone from '../middleware/timezone';
 
+import { approveUser, declineUser } from '../utils/mailer-templates';
+import { sendMail } from '../utils/mailer';
+
 const router = express.Router();
 
 // Gets all users
@@ -188,6 +191,53 @@ router.put(
   }),
 );
 
+// Get all pending users
+router.get(
+  '/all/pending',
+  errorWrap(async (req: Request, res: Response) => {
+    const users = await User.find({
+      onboardingStatus:
+        onboardingStatusEnum.ONBOARDING_SCHEDULED ||
+        onboardingStatusEnum.STALLED,
+    });
+    res.status(200).json({
+      message: `Successfully retrieved all pending users.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
+// Get all approved users
+router.get(
+  '/all/approved',
+  errorWrap(async (req: Request, res: Response) => {
+    const users = await User.find({
+      onboardingStatus: onboardingStatusEnum.ONBOARDED,
+    });
+    res.status(200).json({
+      message: `Successfully retrieved all approved users.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
+// Get all rejected users
+router.get(
+  '/all/denied',
+  errorWrap(async (req: Request, res: Response) => {
+    const users = await User.find({
+      onboardingStatus: onboardingStatusEnum.DENIED,
+    });
+    res.status(200).json({
+      message: `Successfully retrieved all denied users.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
 // Gets all pending contributors
 router.get(
   '/contributors/pending',
@@ -195,7 +245,9 @@ router.get(
   errorWrap(async (req: Request, res: Response) => {
     const users = await User.find({
       role: rolesEnum.CONTRIBUTOR,
-      hasRoleApproved: false,
+      onboardingStatus:
+        onboardingStatusEnum.ONBOARDING_SCHEDULED ||
+        onboardingStatusEnum.STALLED,
     });
     res.status(200).json({
       message: `Successfully retrieved all pending contributors.`,
@@ -212,7 +264,9 @@ router.get(
   errorWrap(async (req: Request, res: Response) => {
     const users = await User.find({
       role: rolesEnum.STAFF,
-      hasRoleApproved: false,
+      onboardingStatus:
+        onboardingStatusEnum.ONBOARDING_SCHEDULED ||
+        onboardingStatusEnum.STALLED,
     });
     res.status(200).json({
       message: `Successfully retrieved all pending staff.`,
@@ -316,6 +370,66 @@ router.post(
     res.status(200).json({
       success: true,
       message: 'Successfully updated user documents',
+    });
+  }),
+);
+
+// Approve a user, set status to onboarded
+router.put(
+  '/:userId/approved',
+  requireAdmin,
+  errorWrap(async (req: Request, res: Response) => {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.userId,
+      { onboardingStatus: onboardingStatusEnum.ONBOARDED },
+      { new: true, runValidators: true },
+    ).lean();
+
+    const message = approveUser(updatedUser, req.user);
+    await sendMail(message);
+
+    if (!updatedUser) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found with id',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully onboarded user',
+      result: updatedUser,
+    });
+  }),
+);
+
+// Decline a user, set status to denied
+router.put(
+  '/:userId/denied',
+  requireAdmin,
+  errorWrap(async (req: Request, res: Response) => {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.userId,
+      { onboardingStatus: onboardingStatusEnum.DENIED },
+      { new: true, runValidators: true },
+    );
+
+    const message = declineUser(updatedUser, req.user);
+    await sendMail(message);
+
+    if (!updatedUser) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found with id',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully denied user',
+      result: updatedUser,
     });
   }),
 );

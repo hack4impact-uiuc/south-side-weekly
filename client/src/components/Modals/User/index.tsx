@@ -5,7 +5,6 @@ import { ITeam, IUser } from 'ssw-common';
 
 import FieldTag from '../../FieldTag';
 import { getUserFullName } from '../../../utils/helpers';
-import UserCard from '../../UserCard';
 import UserPicture from '../../UserPicture';
 import { useInterests, useTeams } from '../../../contexts';
 
@@ -28,7 +27,15 @@ const UserModal: FC<UserModalProps> = ({ user, ...rest }): ReactElement => {
       open={isOpen}
       onOpen={() => setIsOpen(true)}
       onClose={() => setIsOpen(false)}
-      trigger={rest.trigger ? rest.trigger : <UserCard user={user} />}
+      trigger={
+        rest.trigger ? (
+          rest.trigger
+        ) : (
+          <Button className="open-user-button" size="tiny" circular icon>
+            <Icon name="pencil" />
+          </Button>
+        )
+      }
       className="user-modal"
       {...rest}
     >

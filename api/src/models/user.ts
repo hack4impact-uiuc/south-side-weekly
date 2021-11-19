@@ -40,14 +40,13 @@ const User = new mongoose.Schema({
   involvementResponse: { type: String, default: null },
   journalismResponse: {type: String, default: null},
   neighborhood: {type: String, required: true},
+  onboardReasoning: { type: String, default: null },
 
   role: {
     type: String,
     enum: Object.values(rolesEnum),
     default: rolesEnum.TBD,
   },
-
-  hasRoleApproved: { type: Boolean, default: false },
 
   races: [
     {

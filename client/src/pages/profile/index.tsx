@@ -8,12 +8,12 @@ import {
   Image,
 } from 'semantic-ui-react';
 
+import { FieldTag, UserPicture } from '../../components';
 import {
   isError,
   getUser,
   getUserPermissionsByID,
 } from '../../api';
-import { FieldTag, UserPicture } from '../../components';
 import Masthead from '../../assets/masthead.svg';
 import {
   emptyUser,
@@ -71,7 +71,7 @@ const Profile = (): ReactElement => {
   }, [userId]);
  
   return (
-    <div className="profile-page">
+    <div>
       <Grid padded stackable>
         <Grid.Row columns={5}>
           <Grid.Column className="profile-pic-col" text-align="left" width={3}>

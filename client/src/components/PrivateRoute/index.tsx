@@ -6,7 +6,7 @@ import Page from '../Page';
 import Loading from '../Loading';
 
 const PrivateRoute: FC<RouteProps> = ({ ...routeProps }) => {
-  const { isAuthenticated, isLoading, isRegistered, user } = useAuth();
+  const { isAuthenticated, isLoading, isRegistered, isOnboarded } = useAuth();
   const location = useLocation();
 
   const canShowPage = (): boolean =>
@@ -21,7 +21,7 @@ const PrivateRoute: FC<RouteProps> = ({ ...routeProps }) => {
           {isAuthenticated && !isRegistered && (
             <Redirect to="/join" from={location.pathname} />
           )}
-          {isAuthenticated && isRegistered && !user.hasRoleApproved && (
+          {isAuthenticated && isRegistered && !isOnboarded && (
             <Redirect to="/resources" from={location.pathname} />
           )}
         </>
