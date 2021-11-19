@@ -39,7 +39,6 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
   const { getTeamFromId } = useTeams();
   const { getInterestById } = useInterests();
 
-  // Handle approv
 
   const formatDate = (date: Date): string => {
     date = new Date(date);

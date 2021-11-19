@@ -6,6 +6,8 @@ export {
   updateUser,
   getUserPermissionsByID,
   updateOnboardingStatus,
+  approveUser,
+  declineUser,
 } from './user';
 export {
   getApprovedPitches,

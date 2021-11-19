@@ -1,7 +1,12 @@
+<<<<<<< HEAD
 import React, { FC, ReactElement, ReactNode, useEffect, useState } from 'react';
 import { IUser } from 'ssw-common';
 import { Button } from 'semantic-ui-react';
 import toast from 'react-hot-toast';
+=======
+import React, { FC, ReactElement } from 'react';
+import { IUser } from 'ssw-common';
+>>>>>>> dc00cefbbd8b967d31b74fcedf876cc16b7f7a08
 
 import DynamicTable from '../../DyanmicTable';
 import ReviewUserModal from '../../../Modals/ReviewUser';

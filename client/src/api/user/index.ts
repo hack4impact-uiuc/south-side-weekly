@@ -132,6 +132,23 @@ const getUsersByTeam = async (
   return await get(url, failureMessage);
 };
 
+// Approve user
+const approveUser = async (
+  userId: string,
+): Promise<Response<UsersResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, userId, 'approved');
+  const failureMessage = 'APPROVE_USER_FAIL';
+  return await put(url, onboardingStatusEnum.ONBOARDED, failureMessage);
+};
+
+const declineUser = async (
+  userId: string,
+): Promise<Response<UsersResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, userId, 'denied');
+  const failureMessage = 'DECLINE_USER_FAIL';
+  return await put(url, onboardingStatusEnum.DENIED, failureMessage);
+};
+
 export {
   getUsers,
   getPendingUsers,
@@ -145,4 +162,6 @@ export {
   updateOnboardingStatus,
   addVisitedPage,
   getUsersByTeam,
+  approveUser,
+  declineUser,
 };
