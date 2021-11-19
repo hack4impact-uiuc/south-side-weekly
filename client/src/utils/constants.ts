@@ -63,6 +63,7 @@ const emptyUser: IUser = {
   races: [],
   interests: [],
   onboardReasoning: '',
+  feedback: [],
 };
 
 const emptyPitch: IPitch = {
