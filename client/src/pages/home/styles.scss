@@ -1,13 +1,6 @@
 @import '../../styles/colors.scss';
 
 .homepage-wrapper {
-  .tab-menu {
-    .active {
-      background-color: $primary !important;
-      color: white !important;
-    }
-  }
-
   .filters-wrapper {
     display: flex;
     flex-flow: row wrap;
@@ -17,6 +10,35 @@
 
     .filter-dropdown {
       min-width: 14em;
+    }
+  }
+
+  .ui {
+    &.menu {
+      margin-bottom: 2px;
+      padding-inline-start: 4em;
+      padding-inline-end: 4em;
+    }
+
+    &.segment {
+      margin: 0px -6%;
+    }
+
+    &.secondary.pointing.menu {
+      border-bottom: 0px;
+
+      .active.item {
+        border-bottom: 4px solid;
+        border-color: $secondaryColor;
+      }
+      .item {
+        border-bottom-width: auto;
+        padding-left: 3em;
+        padding-right: 3em;
+      }
+    }
+    &.segment {
+      padding: 1.5em 4em;
     }
   }
 }

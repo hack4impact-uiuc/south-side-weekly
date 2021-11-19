@@ -1,33 +1,33 @@
 import { startsWith, toLower, toString } from 'lodash';
-import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { useHistory } from 'react-router';
+import React, { FC, useEffect, useState } from 'react';
 import {
-  Button,
   DropdownItemProps,
-  Icon,
   Input,
   Menu,
+  Segment,
   Select,
-  Table,
-  TableHeader,
-  TableRow,
 } from 'semantic-ui-react';
-import { IPitch, IUser, IUserAggregate } from 'ssw-common';
+import { IPitch, IUserAggregate } from 'ssw-common';
 import { getAggregatedUser, isError } from '../../api';
 import {
   InterestsSelect,
-  PitchTable,
   SubmitPitchModal,
-  TableTool,
   Walkthrough,
 } from '../../components';
 import DynamicTable from '../../components/Tables/DyanmicTable';
 // import { HomepageTable } from '../../components/Tables/Homepage';
-import { useAuth, useInterests } from '../../contexts';
-import { pagesEnum } from '../../utils/enums';
-import { defaultFunc, filterPitchesByInterests } from '../../utils/helpers';
-import { getYearsSinceSSWEstablished, Tab, TABS } from './helpers';
-
+import { useAuth } from '../../contexts';
+import { pagesEnum, pitchStatusEnum } from '../../utils/enums';
+import { filterPitchesByInterests, titleCase } from '../../utils/helpers';
+import { filterClaimStatus } from '../pitchDoc/helpers';
+import {
+  filterCreatedYear,
+  filterRequestClaimYear,
+  filterStatus,
+  getYearsSinceSSWEstablished,
+  Tab,
+  TABS,
+} from './helpers';
 import './styles.scss';
 import { getViewForTab } from './views';
 
@@ -38,7 +38,6 @@ const Homepage: FC = () => {
 
   const [refreshRecords, setRefreshRecords] = useState<boolean>(false);
   const [aggregatedUser, setAggregatedUser] = useState<IUserAggregate>();
-  const [currentPitches, setCurrentPitches] = useState<IPitch[]>([]);
   const [interests, setInterests] = useState<string[]>([]);
 
   const [currentTab, setCurrentTab] = useState<Tab>(TABS.MEMBER_PITCHES);
@@ -46,11 +45,14 @@ const Homepage: FC = () => {
   const [searchInput, setSearchInput] = useState<string>('');
   const [filteredTopics, setFilteredTopics] = useState([]);
   const [filteredPitches, setFilteredPitches] = useState<IPitch[]>([]);
+  const [filteredYear, setFilteredYear] = useState<string>();
+  const [filteredStatus, setFilteredStatus] =
+    useState<keyof typeof pitchStatusEnum>();
 
   const canFilterInterests =
     currentTab !== TABS.MEMBER_PITCHES &&
     currentTab !== TABS.SUBMITTED_PUBLICATIONS;
-  const canFilterStatuses = canFilterInterests;
+  const canFilterStatuses = currentTab === TABS.SUBMITTED_PITCHES;
   const canFilterYear = canFilterInterests;
 
   useEffect(() => {
@@ -73,26 +75,35 @@ const Homepage: FC = () => {
     };
 
     const filter = (pitches: IPitch[]): IPitch[] => {
-      let filtered = [] as IPitch[];
-
       if (canFilterInterests) {
-        filtered = filterPitchesByInterests(pitches, interests);
+        pitches = filterPitchesByInterests(pitches, interests);
       }
 
-      // filtered = filterClaimStatus(filtered, claimStatus);
-      // filtered = filterYear(filtered, )
+      if (canFilterStatuses && filteredStatus) {
+        pitches = filterStatus(pitches, filteredStatus);
+      }
 
-      return filtered;
+      if (canFilterYear && filteredYear) {
+        pitches =
+          currentTab === TABS.SUBMITTED_PITCHES
+            ? filterCreatedYear(pitches, filteredYear)
+            : filterRequestClaimYear(pitches, user, filteredYear);
+      }
+
+      return pitches;
     };
 
     setFilteredPitches([
       ...search(filter(getPitchesForTab(aggregatedUser, currentTab))),
     ]);
   }, [
-    currentPitches,
     searchInput,
     interests,
     canFilterInterests,
+    canFilterYear,
+    filteredYear,
+    filteredStatus,
+    canFilterStatuses,
     aggregatedUser,
     currentTab,
   ]);
@@ -142,7 +153,7 @@ const Homepage: FC = () => {
         content="The homepage is the main landing point for users to see their pitch history."
       />
 
-      <Menu className="tab-menu" tabular size="large">
+      <Menu className="tab-menu" tabular secondary pointing size="large">
         <Menu.Item
           name={TABS.MEMBER_PITCHES}
           active={TABS.MEMBER_PITCHES === currentTab}
@@ -172,56 +183,63 @@ const Homepage: FC = () => {
           position="right"
         />
       </Menu>
-
-      <div className="filters-wrapper">
-        <Input
-          value={searchInput}
-          onChange={(_, { value }) => setSearchInput(value)}
-          placeholder="Search pitches"
-          icon="search"
-          iconPosition="left"
-          className="search"
-          style={{ minWidth: '400px' }}
-        />
-        {canFilterStatuses && (
-          <Select
-            clearable
-            placeholder="Status"
-            options={[{ text: 'In Progress', value: 'in-progress' }]}
-            onChange={(_, data) => console.log(data)}
+      <Segment>
+        <div className="filters-wrapper">
+          <Input
+            value={searchInput}
+            onChange={(_, { value }) => setSearchInput(value)}
+            placeholder="Search pitches"
+            icon="search"
+            iconPosition="left"
+            className="search"
+            style={{ minWidth: '400px' }}
           />
-        )}
-        {canFilterInterests && (
-          <div className="filter-dropdown">
-            <InterestsSelect
-              values={interests}
-              onChange={(values) =>
-                setInterests(values ? values.map((item) => item.value) : [])
+          {canFilterStatuses && (
+            <Select
+              clearable
+              placeholder="Status"
+              value={filteredStatus}
+              options={Object.keys(pitchStatusEnum).map((id) => ({
+                text: titleCase(id),
+                value: id,
+              }))}
+              onChange={(_, data) =>
+                setFilteredStatus(data.value as keyof typeof pitchStatusEnum)
               }
             />
-          </div>
-        )}
-        {canFilterYear && (
-          <Select
-            clearable
-            search
-            defaultValue="test"
-            placeholder="Year"
-            options={yearSelectOptions}
-            onChange={(_, data) => console.log(data)}
-            defaultUpward={false}
-          />
-        )}
-      </div>
+          )}
+          {canFilterInterests && (
+            <div className="filter-dropdown">
+              <InterestsSelect
+                values={interests}
+                onChange={(values) =>
+                  setInterests(values ? values.map((item) => item.value) : [])
+                }
+              />
+            </div>
+          )}
+          {canFilterYear && (
+            <Select
+              clearable
+              search
+              placeholder="Year"
+              options={yearSelectOptions}
+              value={filteredYear}
+              onChange={(_, data) => setFilteredYear(data.value?.toString())}
+              defaultUpward={false}
+            />
+          )}
+        </div>
 
-      <div className="pitch-table">
-        <DynamicTable<IPitch>
-          records={filteredPitches}
-          columns={getViewForTab(user, currentTab)}
-          singleLine={filteredPitches.length === 0}
-          emptyMessage="You have no pitches in this category."
-        />
-      </div>
+        <div className="pitch-table">
+          <DynamicTable<IPitch>
+            records={filteredPitches}
+            columns={getViewForTab(user, currentTab)}
+            singleLine={filteredPitches.length === 0}
+            emptyMessage="You have no pitches in this category."
+          />
+        </div>
+      </Segment>
     </div>
   );
 };

@@ -2,6 +2,7 @@ import React from 'react';
 import { IPitch, IUser } from 'ssw-common';
 import { FieldTag, PitchInterests, PitchTeams } from '../../components';
 import { ColumnType } from '../../components/Tables/DyanmicTable';
+import { buildColumn } from '../../components/Tables/DyanmicTable/util';
 import { Tab, TABS } from './helpers';
 
 type Column = ColumnType<IPitch>;
@@ -27,20 +28,8 @@ const stringArraySorter = <T extends Array<any>>(a1: T, a2: T): number =>
   a1.reduce((sum, e, i) => sum + e.localeCompare(a2[i]), 0);
 
 const getMemberPitchesView = (user: IUser): View => [
-  {
-    title: 'Title',
-    width: '2',
-    sorter: (p1, p2) => p1.title.localeCompare(p2.title),
-    extractor: 'title',
-  },
-  {
-    title: 'Associated Topics',
-    width: '1',
-    sorter: (p1, p2) => stringArraySorter(p1.topics, p2.topics),
-    extractor: function InterestsCell(pitch) {
-      return <PitchInterests pitch={pitch} />;
-    },
-  },
+  titleColumn,
+  associatedTopicsColumn,
   {
     title: "Team(s) You're On",
     width: '1',
@@ -60,32 +49,16 @@ const getMemberPitchesView = (user: IUser): View => [
   {
     title: 'Deadline',
     width: '1',
-    sorter: (p1, p2) => p1.deadline.getTime() - p2.deadline.getTime(),
-    extractor: (pitch) => pitch.deadline && pitch.deadline.toLocaleDateString(),
+    sorter: (p1, p2) =>
+      new Date(p1.deadline).getTime() - new Date(p2.deadline).getTime(),
+    extractor: (pitch) => new Date(pitch.deadline).toLocaleDateString(),
   },
 ];
 
 const getSubmittedPitchesView = (user: IUser): View => [
-  {
-    title: 'Title',
-    width: '2',
-    sorter: (p1, p2) => p1.title.localeCompare(p2.title),
-    extractor: 'title',
-  },
-  {
-    title: 'Description',
-    width: '3',
-    sorter: (p1, p2) => p1.description.localeCompare(p2.description),
-    extractor: 'description',
-  },
-  {
-    title: 'Associated Topics',
-    width: '2',
-    sorter: (p1, p2) => stringArraySorter(p1.topics, p2.topics),
-    extractor: function InterestsCell(pitch) {
-      return <PitchInterests pitch={pitch} />;
-    },
-  },
+  titleColumn,
+  descriptionColumn,
+  associatedTopicsColumn,
   {
     title: 'Status',
     width: '1',
@@ -106,20 +79,8 @@ const getSubmittedPitchesView = (user: IUser): View => [
 ];
 
 const getSubmittedClaimsView = (user: IUser): View => [
-  {
-    title: 'Title',
-    width: '4',
-    sorter: (p1, p2) => p1.title.localeCompare(p2.title),
-    extractor: 'title',
-  },
-  {
-    title: 'Associated Topics',
-    width: '2',
-    sorter: (p1, p2) => stringArraySorter(p1.topics, p2.topics),
-    extractor: function InterestsCell(pitch) {
-      return <PitchInterests pitch={pitch} />;
-    },
-  },
+  titleColumn,
+  associatedTopicsColumn,
   {
     title: 'Team(s) Requested to Claim',
     width: '2',
@@ -167,5 +128,28 @@ const getSubmittedClaimsView = (user: IUser): View => [
 ];
 
 const getSubmittedPublicationsView = (user: IUser): View => [];
+
+const titleColumn = buildColumn<IPitch>({
+  title: 'Title',
+  width: '2',
+  sorter: (p1, p2) => p1.title.localeCompare(p2.title),
+  extractor: 'title',
+});
+
+const descriptionColumn = buildColumn<IPitch>({
+  title: 'Description',
+  width: '3',
+  sorter: (p1, p2) => p1.description.localeCompare(p2.description),
+  extractor: 'description',
+});
+
+const associatedTopicsColumn = buildColumn<IPitch>({
+  title: 'Associated Topics',
+  width: '1',
+  sorter: (p1, p2) => stringArraySorter(p1.topics, p2.topics),
+  extractor: function InterestsCell(pitch) {
+    return <PitchInterests pitch={pitch} />;
+  },
+});
 
 export { getViewForTab };

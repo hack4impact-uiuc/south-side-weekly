@@ -1,10 +1,13 @@
+import { IPitch, IPitchAggregate, IUser, IUserAggregate } from 'ssw-common';
+import { pitchStatusEnum } from '../../utils/enums';
+
 const sswEstablishedYear = 1995;
 
-const getYearsSinceSSWEstablished = (): number[] => {
+const getYearsSinceSSWEstablished = (): string[] => {
   const currentYear = new Date().getFullYear();
   return new Array(currentYear - sswEstablishedYear + 1)
     .fill(null)
-    .map((_, i) => currentYear - i);
+    .map((_, i) => (currentYear - i).toString());
 };
 
 const TABS = {
@@ -15,5 +18,37 @@ const TABS = {
 } as const;
 type Tab = typeof TABS[keyof typeof TABS];
 
-export { getYearsSinceSSWEstablished, TABS };
+const filterCreatedYear = (pitches: IPitch[], year?: string): IPitch[] =>
+  pitches.filter(
+    (pitch) => new Date(pitch.createdAt).getFullYear().toString() === year,
+  );
+
+const filterRequestClaimYear = (
+  pitches: IPitch[],
+  user: IUser,
+  year?: string,
+): IPitch[] =>
+  pitches.filter(
+    (pitch) =>
+      new Date(
+        pitch.pendingContributors.find(
+          (contributor) => contributor.userId === user._id,
+        )?.dateSubmitted ?? new Date(),
+      )
+        .getFullYear()
+        .toString() === year,
+  );
+
+const filterStatus = (
+  pitches: IPitch[],
+  status?: keyof typeof pitchStatusEnum,
+): IPitch[] => pitches.filter((pitch) => pitch.status === status);
+
+export {
+  getYearsSinceSSWEstablished,
+  filterCreatedYear,
+  filterRequestClaimYear,
+  filterStatus,
+  TABS,
+};
 export type { Tab };
