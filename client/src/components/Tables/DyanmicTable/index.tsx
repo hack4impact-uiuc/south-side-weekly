@@ -109,8 +109,9 @@ const DynamicTable = <RecordType,>({
           />
         ))}
 
-        {(getModal && currentRecord)
-          && getModal(currentRecord, isOpen, setIsOpen)}
+        {getModal &&
+          currentRecord &&
+          getModal(currentRecord, isOpen, setIsOpen)}
       </Table.Body>
     </Table>
   );
