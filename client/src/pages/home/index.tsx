@@ -250,7 +250,11 @@ const Homepage: FC = () => {
           <Input
             value={searchInput}
             onChange={(_, { value }) => setSearchInput(value)}
-            placeholder="Search pitches"
+            placeholder={`Search ${
+              currentTab !== TABS.SUBMITTED_PUBLICATIONS
+                ? 'pitches'
+                : 'publications'
+            }`}
             icon="search"
             iconPosition="left"
             className="search"
