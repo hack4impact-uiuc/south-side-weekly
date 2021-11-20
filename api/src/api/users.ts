@@ -3,10 +3,19 @@ import { errorWrap } from '../middleware';
 
 import User from '../models/user';
 import Pitch from '../models/pitch';
+import Team from '../models/team';
 import { getEditableFields, getViewableFields } from '../utils/user-utils';
-import { requireAdmin, requireRegistered } from '../middleware/auth';
-import { rolesEnum } from '../utils/enums';
+import {
+  requireAdmin,
+  requireRegistered,
+  requireRequestSecret,
+} from '../middleware/auth';
+import { onboardingStatusEnum, rolesEnum } from '../utils/enums';
 import { aggregateUser } from '../utils/aggregate-utils';
+import timezone from '../middleware/timezone';
+
+import { approveUser, declineUser } from '../utils/mailer-templates';
+import { sendMail } from '../utils/mailer';
 
 const router = express.Router();
 
@@ -182,6 +191,56 @@ router.put(
   }),
 );
 
+// Get all pending users
+router.get(
+  '/all/pending',
+  errorWrap(async (req: Request, res: Response) => {
+    const users = await User.find({
+      onboardingStatus: {
+        $in: [
+          onboardingStatusEnum.ONBOARDING_SCHEDULED,
+          onboardingStatusEnum.STALLED,
+        ],
+      },
+    });
+    res.status(200).json({
+      message: `Successfully retrieved all pending users.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
+// Get all approved users
+router.get(
+  '/all/approved',
+  errorWrap(async (req: Request, res: Response) => {
+    const users = await User.find({
+      onboardingStatus: onboardingStatusEnum.ONBOARDED,
+    });
+    res.status(200).json({
+      message: `Successfully retrieved all approved users.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
+// Get all rejected users
+router.get(
+  '/all/denied',
+  errorWrap(async (req: Request, res: Response) => {
+    const users = await User.find({
+      onboardingStatus: onboardingStatusEnum.DENIED,
+    });
+    res.status(200).json({
+      message: `Successfully retrieved all denied users.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
 // Gets all pending contributors
 router.get(
   '/contributors/pending',
@@ -189,7 +248,12 @@ router.get(
   errorWrap(async (req: Request, res: Response) => {
     const users = await User.find({
       role: rolesEnum.CONTRIBUTOR,
-      hasRoleApproved: false,
+      onboardingStatus: {
+        $in: [
+          onboardingStatusEnum.ONBOARDING_SCHEDULED,
+          onboardingStatusEnum.STALLED,
+        ],
+      },
     });
     res.status(200).json({
       message: `Successfully retrieved all pending contributors.`,
@@ -206,10 +270,54 @@ router.get(
   errorWrap(async (req: Request, res: Response) => {
     const users = await User.find({
       role: rolesEnum.STAFF,
-      hasRoleApproved: false,
+      onboardingStatus: {
+        $in: [
+          onboardingStatusEnum.ONBOARDING_SCHEDULED,
+          onboardingStatusEnum.STALLED,
+        ],
+      },
     });
     res.status(200).json({
       message: `Successfully retrieved all pending staff.`,
+      success: true,
+      result: users,
+    });
+  }),
+);
+
+// An endpoint to get all of the users on a specific team
+router.get(
+  '/all/team/:teamName',
+  //requireAdmin,
+  errorWrap(async (req: Request, res: Response) => {
+    const teamName = req.params.teamName;
+
+    if (!teamName) {
+      res.status(400).json({
+        success: false,
+        message: 'Team id is required',
+      });
+      return;
+    }
+
+    const team = await Team.findOne({ name: teamName }).lean();
+
+    if (!team) {
+      res.status(404).json({
+        success: false,
+        message: 'Team not found with name',
+      });
+      return;
+    }
+
+    const users = await User.find({
+      teams: {
+        $in: [team._id],
+      },
+    }).lean();
+
+    res.status(200).json({
+      message: `Successfully retrieved all users on team.`,
       success: true,
       result: users,
     });
@@ -239,6 +347,99 @@ router.post(
         message: `Successfully added page to user's visited pages`,
       });
     }
+  }),
+);
+
+// One day short of two weeks to account for onboarding statuses
+// that will switch to stalled that day.
+const TWO_WEEKS_AGO = 13;
+// Updates all user onboarding statuses for users who haven't been onboarded in two weeks to stalled
+router.post(
+  '/update-stalled',
+  requireRequestSecret,
+  timezone('America/Chicago'),
+  errorWrap(async (req: Request, res: Response) => {
+    const twoWeeksAgoDate = new Date();
+    twoWeeksAgoDate.setDate(twoWeeksAgoDate.getDate() - TWO_WEEKS_AGO);
+
+    // Find all users that were created more than two weeks ago and have a scheduled onboarding
+    // and update these onboarding statuses to 'STALLED'
+    await User.updateMany(
+      {
+        dateJoined: { $lt: twoWeeksAgoDate },
+        onboardingStatus: onboardingStatusEnum.ONBOARDING_SCHEDULED,
+      },
+      {
+        $set: {
+          onboardingStatus: onboardingStatusEnum.STALLED,
+        },
+      },
+    );
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully updated user documents',
+    });
+  }),
+);
+
+// Approve a user, set status to onboarded
+router.put(
+  '/:userId/approved',
+  requireAdmin,
+  errorWrap(async (req: Request, res: Response) => {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.userId,
+      { onboardingStatus: onboardingStatusEnum.ONBOARDED },
+      { new: true, runValidators: true },
+    ).lean();
+
+    const message = approveUser(updatedUser, req.user);
+    await sendMail(message);
+
+    if (!updatedUser) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found with id',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully onboarded user',
+      result: updatedUser,
+    });
+  }),
+);
+
+// Decline a user, set status to denied
+router.put(
+  '/:userId/denied',
+  requireAdmin,
+  errorWrap(async (req: Request, res: Response) => {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.userId,
+      { onboardingStatus: onboardingStatusEnum.DENIED },
+      { new: true, runValidators: true },
+    );
+
+    const message = declineUser(updatedUser, req.user);
+    await sendMail(message);
+
+    if (!updatedUser) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found with id',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully denied user',
+      result: updatedUser,
+    });
   }),
 );
 

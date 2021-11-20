@@ -6,15 +6,24 @@
     color: white !important;
   }
 
+  .positive {
+    background-color: $secondaryColor !important;
+  }
+
   .content {
-    label,
-    h3 {
-      font-weight: 500 !important;
+    .label-topics {
+      font-weight: 550 !important;
+      margin-bottom: 1%;
+      display: flex;
     }
 
-    textarea {
-      font-size: medium;
-      height: 90px !important;
+    .unbold {
+      font-weight: 100 !important;
+      margin-left: 1%;
+    }
+
+    h3 {
+      font-weight: 500 !important;
     }
 
     .checkbox {

@@ -17,3 +17,7 @@ export interface GetOpenTeamsResponse extends ApiResponseBase {
 export interface PitchResponse extends ApiResponseBase {
   result: IPitch;
 }
+
+export interface AggregatePitchResponse extends ApiResponseBase {
+  result: IPitchAggregate;
+}

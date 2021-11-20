@@ -15,6 +15,7 @@ const initialValues = {
   isRegistered: false,
   logout: defaultFunc,
   register: defaultFunc,
+  isOnboarded: false,
 };
 
 const AuthContext = createContext<IAuthContext>(initialValues);

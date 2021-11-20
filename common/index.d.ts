@@ -24,9 +24,9 @@ export interface IUser {
   submittedPitches: string[];
   teams: string[];
   role: string;
-  hasRoleApproved: boolean;
   races: string[];
   interests: string[];
+  onboardReasoning: string;
 }
 
 export interface IUserAggregate extends IUser {
@@ -43,7 +43,7 @@ export interface IUserAggregate extends IUser {
 export interface IPitch {
   _id: string;
   title: string;
-  issues: { issueFormat: string; issueDate: Date }[];
+  issues: { format: string; publicationDate: Date }[];
   author: string;
   writer: string;
   primaryEditor: string;
@@ -64,6 +64,7 @@ export interface IPitch {
   similarStories: string[];
   deadline: Date;
   conflictOfInterest: boolean;
+  neighborhoods: string[];
 }
 
 export interface IPitchAggregate extends IPitch {
@@ -117,4 +118,16 @@ export interface ITeam {
   name: string;
   active: boolean;
   color: string;
+}
+
+/**
+ * Interface for a Issue Schema.
+ */
+export interface IIssue {
+  _id: string;
+  name: string;
+  deadlineDate: string;
+  releaseDate: string;
+  pitches: string[];
+  type: string;
 }

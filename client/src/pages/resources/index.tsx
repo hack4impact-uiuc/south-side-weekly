@@ -1,11 +1,11 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Button, Card, Menu, Radio } from 'semantic-ui-react';
+import { openPopupWidget } from 'react-calendly';
+import { Button, Card, Icon, Menu } from 'semantic-ui-react';
 import { IResource, ITeam } from 'ssw-common';
-import Swal from 'sweetalert2';
 
-import { deleteResource, getAllResources, isError } from '../../api';
-import { useTeams } from '../../contexts';
-import { ResourceModal, AdminView, Walkthrough } from '../../components';
+import { getAllResources, isError } from '../../api';
+import { useAuth, useTeams } from '../../contexts';
+import { ResourceModal, Walkthrough, ApprovedView } from '../../components';
 import { pagesEnum } from '../../utils/enums';
 
 import './styles.scss';
@@ -24,16 +24,16 @@ const generalTeam: ITeam = {
 };
 
 const Resources = (): ReactElement => {
+  const { teams } = useTeams();
+  const { isAdmin } = useAuth();
+
   const [selectedTab, setSelectedTab] = useState('General');
-  const [edit, setEdit] = useState(false);
   const [resources, setResources] = useState<IResource[]>([]);
   const [modal, setModal] = useState<ModalInfo>({
     action: 'edit',
     isOpen: false,
     resource: undefined,
   });
-
-  const { teams } = useTeams();
   const tabs = [generalTeam, ...teams];
 
   const filterResources = (team: string): IResource[] => {
@@ -57,18 +57,6 @@ const Resources = (): ReactElement => {
     return () => setResources([]);
   }, [modal.isOpen]);
 
-  const removeResource = async (resource: IResource): Promise<void> => {
-    const res = await deleteResource(resource._id);
-
-    if (!isError(res)) {
-      getResources();
-      Swal.fire({
-        title: 'Successfully deleted resource',
-        icon: 'success',
-      });
-    }
-  };
-
   const closeModal = (): void => {
     modal.isOpen = false;
     setModal({ ...modal });
@@ -81,7 +69,7 @@ const Resources = (): ReactElement => {
   };
 
   const handleResourceAction = (selected: IResource): void => {
-    if (edit) {
+    if (isAdmin) {
       setModal({
         action: 'edit',
         isOpen: true,
@@ -103,6 +91,7 @@ const Resources = (): ReactElement => {
         onOpen={() => openModal(modal.action)}
         onClose={closeModal}
       />
+
       <div className="resources-page">
         <Walkthrough
           page={pagesEnum.RESOURCES}
@@ -110,19 +99,27 @@ const Resources = (): ReactElement => {
         />
         <div className="controls">
           <h1>Resource Page</h1>
-          <div>
-            <AdminView>
-              <Radio checked={edit} slider onClick={() => setEdit(!edit)} />
-            </AdminView>
-          </div>
           <div className="push" />
-          {edit && (
-            <Button
-              onClick={() => openModal('create')}
-              content="Create Resource"
-              className="default-btn"
-            />
-          )}
+          <ApprovedView>
+            {isAdmin ? (
+              <Button
+                onClick={() => openModal('create')}
+                className="default-btn"
+              >
+                <Icon name="add" /> Add Resource
+              </Button>
+            ) : (
+              <Button
+                onClick={() =>
+                  openPopupWidget({
+                    url: 'https://calendly.com/sawhney4/60min',
+                  })
+                }
+                content="Schedule Office Hour"
+                className="calendly-button"
+              />
+            )}
+          </ApprovedView>
         </div>
 
         <Menu tabular size="large">
@@ -145,18 +142,6 @@ const Resources = (): ReactElement => {
               key={index}
             >
               <p>{resource.name}</p>
-              {edit && (
-                <Button
-                  className="delete-btn"
-                  circular
-                  size="massive"
-                  icon="minus circle"
-                  onClick={(e) => {
-                    removeResource(resource);
-                    e.stopPropagation();
-                  }}
-                />
-              )}
             </Card>
           ))}
         </div>

@@ -13,13 +13,13 @@ import {
 } from 'semantic-ui-react';
 import { startCase } from 'lodash';
 
+import { FieldTag, UserPicture } from '../../components';
 import {
   isError,
   getUser,
   updateUser,
   getUserPermissionsByID,
 } from '../../api';
-import { FieldTag, UserPicture } from '../../components';
 import Masthead from '../../assets/masthead.svg';
 import {
   allGenders,
@@ -101,7 +101,7 @@ const Profile = (): ReactElement => {
   }, [userId]);
 
   /**
-   * Adds a dropdown option that was input by the user
+   * Adds a dropdown option that was input by the user.
    *
    * @param dropdown the dropdown to update
    * @param addedItem the new item to add

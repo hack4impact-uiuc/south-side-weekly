@@ -1,0 +1,26 @@
+.dynamic-table {
+  position: relative;
+
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
+  td,
+  th {
+    border-left: none !important;
+  }
+
+  thead,
+  tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  &.ui.table > tr > td.selectable,
+  &.ui.table > tbody > tr > td.selectable,
+  &.ui.selectable.table > tbody > tr,
+  &.ui.selectable.table > tr {
+    cursor: pointer;
+  }
+}

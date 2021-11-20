@@ -1,6 +1,6 @@
 import { IUser } from 'ssw-common';
 
-import { rolesEnum } from '../utils/enums';
+import { onboardingStatusEnum, rolesEnum } from '../utils/enums';
 
 /**
  * Determines whether or not a user has the minimum level role required
@@ -16,9 +16,7 @@ const hasRole = (
   roles: string[],
   requireApproved = true,
 ): boolean =>
-  user &&
-  roles.includes(user.role) &&
-  (user.hasRoleApproved || !requireApproved);
+  user && roles.includes(user.role) && (isOnboarded(user) || !requireApproved);
 
 /**
  * Determines if a user has contributor level access
@@ -46,4 +44,13 @@ const isStaff = (user: IUser): boolean =>
  */
 const isAdmin = (user: IUser): boolean => hasRole(user, [rolesEnum.ADMIN]);
 
-export { hasRole, isContributor, isStaff, isAdmin };
+/**
+ * Determines if a user has been onboarded
+ *
+ * @param user the user to check
+ * @returns true if uesr is onboarded, else false
+ */
+const isOnboarded = (user: IUser): boolean =>
+  user.onboardingStatus === onboardingStatusEnum.ONBOARDED;
+
+export { hasRole, isContributor, isStaff, isAdmin, isOnboarded };

@@ -20,6 +20,7 @@ export const onboardingStatusEnum = {
   ONBOARDING_SCHEDULED: 'ONBOARDING_SCHEDULED',
   STALLED: 'STALLED',
   ONBOARDED: 'ONBOARDED',
+  DENIED: 'DENIED',
 };
 
 export const racesEnum = {
