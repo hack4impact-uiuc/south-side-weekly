@@ -1,4 +1,4 @@
-import mongoose, { Document, Schema, SchemaTypes } from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 import { IUser } from 'ssw-common';
 
 import {
