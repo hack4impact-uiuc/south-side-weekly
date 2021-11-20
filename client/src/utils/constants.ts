@@ -59,6 +59,7 @@ const emptyUser: IUser = {
   claimedPitches: [],
   submittedPitches: [],
   submittedClaims: [],
+  publications: [],
   teams: [],
   role: '',
   races: [],
