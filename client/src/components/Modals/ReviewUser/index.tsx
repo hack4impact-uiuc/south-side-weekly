@@ -12,9 +12,7 @@ import { IUser } from 'ssw-common';
 
 import { useInterests, useTeams } from '../../../contexts';
 import { UserPicture, FieldTag } from '../..';
-// eslint-disable-next-line import/order
 import { getUserFullName, titleCase } from '../../../utils/helpers';
-
 import './styles.scss';
 import { onboardingStatusEnum } from '../../../utils/enums';
 import { updateUser } from '../../../api';

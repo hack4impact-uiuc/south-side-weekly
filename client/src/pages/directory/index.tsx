@@ -108,7 +108,7 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
         icon="search"
         iconPosition="left"
       />
-      {status === 'approved' ? (
+      {status === 'approved' && (
         <div className="filters">
           <div>
             <h3>Filters: </h3>
@@ -136,8 +136,6 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
             />
           </div>
         </div>
-      ) : (
-        ''
       )}
       {status === 'approved' ? (
         <ApprovedUsers users={filteredDirectory} />
