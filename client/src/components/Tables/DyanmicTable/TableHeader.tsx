@@ -7,20 +7,20 @@ interface TableHeaderProps<RecordType> {
   columns: ColumnType<RecordType>[];
   sortColumn?: ColumnType<RecordType>;
   sortDirection?: SortDirection;
-  handleSort: (column: ColumnType<RecordType>) => void;
+  onCellClick: (column: ColumnType<RecordType>) => void;
 }
 
 const TableHeader = <RecordType,>({
   columns,
   sortDirection,
   sortColumn,
-  handleSort,
+  onCellClick,
 }: TableHeaderProps<RecordType>): ReactElement => (
   <Table.Header>
     {columns.map((column, index) => (
       <Table.HeaderCell
         width={column.width}
-        onClick={() => handleSort(column)}
+        onClick={() => onCellClick(column)}
         sorted={sortColumn?.title === column.title ? sortDirection : undefined}
         key={index}
       >

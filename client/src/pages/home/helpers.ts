@@ -1,4 +1,10 @@
-import { IPitch, IPitchAggregate, IUser, IUserAggregate } from 'ssw-common';
+import {
+  IIssue,
+  IPitch,
+  IPitchAggregate,
+  IUser,
+  IUserAggregate,
+} from 'ssw-common';
 import { pitchStatusEnum } from '../../utils/enums';
 
 const sswEstablishedYear = 1995;
@@ -14,7 +20,7 @@ const TABS = {
   MEMBER_PITCHES: 'Your Current Pitches',
   SUBMITTED_PITCHES: 'Pitches You Submitted',
   SUBMITTED_CLAIMS: 'Your Claim Requests',
-  // SUBMITTED_PUBLICATIONS: 'Your Publications',
+  SUBMITTED_PUBLICATIONS: 'Your Publications',
 } as const;
 type Tab = typeof TABS[keyof typeof TABS];
 
@@ -44,11 +50,22 @@ const filterStatus = (
   status?: keyof typeof pitchStatusEnum,
 ): IPitch[] => pitches.filter((pitch) => pitch.status === status);
 
+const isPitchArray = (
+  array: Array<IPitch | IIssue>,
+): array is Array<IPitch> => {
+  if (array.length === 0) {
+    return true;
+  }
+
+  return 'title' in array[0];
+};
+
 export {
   getYearsSinceSSWEstablished,
   filterCreatedYear,
   filterRequestClaimYear,
   filterStatus,
+  isPitchArray,
   TABS,
 };
 export type { Tab };

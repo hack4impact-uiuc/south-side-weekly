@@ -1,14 +1,11 @@
 import React from 'react';
-import { IPitch, IUser } from 'ssw-common';
+import { IIssue, IPitch, IUser } from 'ssw-common';
 import { FieldTag, PitchInterests, PitchTeams } from '../../components';
 import { ColumnType } from '../../components/Tables/DyanmicTable';
 import { buildColumn } from '../../components/Tables/DyanmicTable/util';
 import { Tab, TABS } from './helpers';
 
-type Column = ColumnType<IPitch>;
-type View = Column[];
-
-const getViewForTab = (user: IUser, tab: Tab): View => {
+const getViewForTab = (user: IUser, tab: Tab): ColumnType<any>[] => {
   switch (tab) {
     case TABS.MEMBER_PITCHES:
       return getMemberPitchesView(user);
@@ -16,8 +13,8 @@ const getViewForTab = (user: IUser, tab: Tab): View => {
       return getSubmittedClaimsView(user);
     case TABS.SUBMITTED_PITCHES:
       return getSubmittedPitchesView(user);
-    // case TABS.SUBMITTED_PUBLICATIONS:
-    //   return getSubmittedPublicationsView(user);
+    case TABS.SUBMITTED_PUBLICATIONS:
+      return getSubmittedPublicationsView(user);
     default:
       return [];
   }
@@ -27,7 +24,7 @@ const stringArraySorter = <T extends Array<any>>(a1: T, a2: T): number =>
   a1.length - a2.length ||
   a1.reduce((sum, e, i) => sum + e.localeCompare(a2[i]), 0);
 
-const getMemberPitchesView = (user: IUser): View => [
+const getMemberPitchesView = (user: IUser): ColumnType<IPitch>[] => [
   titleColumn,
   associatedTopicsColumn,
   {
@@ -55,7 +52,7 @@ const getMemberPitchesView = (user: IUser): View => [
   },
 ];
 
-const getSubmittedPitchesView = (user: IUser): View => [
+const getSubmittedPitchesView = (user: IUser): ColumnType<IPitch>[] => [
   titleColumn,
   descriptionColumn,
   {
@@ -81,7 +78,7 @@ const getSubmittedPitchesView = (user: IUser): View => [
   },
 ];
 
-const getSubmittedClaimsView = (user: IUser): View => [
+const getSubmittedClaimsView = (user: IUser): ColumnType<IPitch>[] => [
   titleColumn,
   associatedTopicsColumn,
   {
@@ -121,6 +118,7 @@ const getSubmittedClaimsView = (user: IUser): View => [
         )?.dateSubmitted ?? Date.now(),
       ).getTime(),
     extractor: function DateCell(pitch) {
+      console.log(pitch);
       return new Date(
         pitch.pendingContributors.find(
           (contributor) => contributor.userId === user._id,
@@ -130,7 +128,23 @@ const getSubmittedClaimsView = (user: IUser): View => [
   },
 ];
 
-const getSubmittedPublicationsView = (user: IUser): View => [];
+const getSubmittedPublicationsView = (user: IUser): ColumnType<IIssue>[] => [
+  {
+    title: 'Title',
+    width: '2',
+    sorter: (i1, i2) => i1.name.localeCompare(i2.name),
+    extractor: 'name',
+  },
+  {
+    title: 'Publish Date',
+    width: '1',
+    sorter: (i1, i2) =>
+      new Date(i1.releaseDate).getTime() - new Date(i2.releaseDate).getTime(),
+    extractor: function DateCell(issue) {
+      return new Date(issue.releaseDate).toLocaleDateString();
+    },
+  },
+];
 
 const titleColumn = buildColumn<IPitch>({
   title: 'Title',

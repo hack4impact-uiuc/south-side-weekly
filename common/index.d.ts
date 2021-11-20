@@ -23,6 +23,7 @@ export interface IUser {
   claimedPitches: string[];
   submittedPitches: string[];
   submittedClaims: string[];
+  publications: string[];
   teams: string[];
   role: string;
   races: string[];
@@ -35,6 +36,7 @@ export interface IUserAggregate extends IUser {
     claimedPitches: Partial<IPitch>[];
     submittedPitches: Partial<IPitch>[];
     submittedClaims: Partial<IPitch>[];
+    publications: Partial<IIssue>[];
     interests: IInterest[];
   };
 }

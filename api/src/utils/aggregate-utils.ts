@@ -4,6 +4,7 @@ import Pitch from '../models/pitch';
 import User from '../models/user';
 import Team from '../models/team';
 import Interest from '../models/interest';
+import Issue from '../models/issue';
 
 const simplifyUser = (user: IUser | null): Partial<IUser> => {
   if (user === null) {
@@ -121,6 +122,10 @@ const aggregateUser = async (rawUser: IUser): Promise<IUserAggregate> => {
     ),
   );
 
+  const publications = await Promise.all(
+    rawUser.publications.map(async (id) => await Issue.findById(id)),
+  );
+
   const interests = await Promise.all(
     rawUser.interests.map((interestId) => Interest.findById(interestId).lean()),
   );
@@ -131,6 +136,7 @@ const aggregateUser = async (rawUser: IUser): Promise<IUserAggregate> => {
       claimedPitches: claimedPitches,
       submittedPitches: submittedPitches,
       submittedClaims: submittedClaims,
+      publications: publications,
       interests: interests,
     },
   };

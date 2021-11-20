@@ -7,14 +7,15 @@ import {
   Segment,
   Select,
 } from 'semantic-ui-react';
-import { IPitch, IUserAggregate } from 'ssw-common';
+import { IIssue, IPitch, IUserAggregate } from 'ssw-common';
 import { getAggregatedUser, isError } from '../../api';
 import {
   InterestsSelect,
   SubmitPitchModal,
   Walkthrough,
 } from '../../components';
-import DynamicTable from '../../components/Tables/DyanmicTable';
+import DynamicTable, { ColumnType } from '../../components/Tables/DyanmicTable';
+import { SortDirection } from '../../components/Tables/DyanmicTable/types';
 // import { HomepageTable } from '../../components/Tables/Homepage';
 import { useAuth } from '../../contexts';
 import { pagesEnum, pitchStatusEnum } from '../../utils/enums';
@@ -25,32 +26,38 @@ import {
   filterRequestClaimYear,
   filterStatus,
   getYearsSinceSSWEstablished,
+  isPitchArray,
   Tab,
   TABS,
 } from './helpers';
 import './styles.scss';
 import { getViewForTab } from './views';
 
-const searchFields: (keyof IPitch)[] = ['title'];
-
 const Homepage: FC = () => {
+  type RecordType = IPitch | IIssue;
+  type View = { records: RecordType[]; columns: ColumnType<RecordType>[] };
+
   const { user } = useAuth();
 
   const [refreshRecords, setRefreshRecords] = useState<boolean>(false);
   const [aggregatedUser, setAggregatedUser] = useState<IUserAggregate>();
-  const [interests, setInterests] = useState<string[]>([]);
 
   const [currentTab, setCurrentTab] = useState<Tab>(TABS.MEMBER_PITCHES);
 
   const [searchInput, setSearchInput] = useState<string>('');
-  const [filteredTopics, setFilteredTopics] = useState([]);
-  const [filteredPitches, setFilteredPitches] = useState<IPitch[]>([]);
+  const [filteredInterests, setFilteredInterests] = useState<string[]>([]);
   const [filteredYear, setFilteredYear] = useState<string>();
   const [filteredStatus, setFilteredStatus] =
     useState<keyof typeof pitchStatusEnum>();
 
-  const canFilterInterests = currentTab !== TABS.MEMBER_PITCHES;
-  // && currentTab !== TABS.SUBMITTED_PUBLICATIONS;
+  const [filteredView, setFilteredView] = useState<View>({
+    records: [],
+    columns: getViewForTab(user, currentTab),
+  });
+
+  const canFilterInterests =
+    currentTab !== TABS.MEMBER_PITCHES &&
+    currentTab !== TABS.SUBMITTED_PUBLICATIONS;
   const canFilterStatuses = currentTab === TABS.SUBMITTED_PITCHES;
   const canFilterYear = canFilterInterests;
 
@@ -59,23 +66,26 @@ const Homepage: FC = () => {
       return;
     }
 
-    const search = (pitches: IPitch[]): IPitch[] => {
+    const search = (records: RecordType[]): RecordType[] => {
       if (searchInput.length === 0) {
-        return pitches;
+        return records;
       }
 
       const searchTerm = toLower(searchInput.trim());
 
-      return pitches.filter((pitch) =>
-        searchFields.some((field) =>
-          startsWith(toLower(toString(pitch[field])), searchTerm),
+      return records.filter((record) =>
+        getSearchFields(records).some((field) =>
+          startsWith(
+            toLower(toString(record[field as keyof typeof record])),
+            searchTerm,
+          ),
         ),
       );
     };
 
-    const filter = (pitches: IPitch[]): IPitch[] => {
+    const filterPitches = (pitches: IPitch[]): IPitch[] => {
       if (canFilterInterests) {
-        pitches = filterPitchesByInterests(pitches, interests);
+        pitches = filterPitchesByInterests(pitches, filteredInterests);
       }
 
       if (canFilterStatuses && filteredStatus) {
@@ -92,12 +102,16 @@ const Homepage: FC = () => {
       return pitches;
     };
 
-    setFilteredPitches([
-      ...search(filter(getPitchesForTab(aggregatedUser, currentTab))),
-    ]);
+    const records = [...search(getRecordsForTab(aggregatedUser, currentTab))];
+    const filtered = isPitchArray(records) ? filterPitches(records) : records;
+
+    setFilteredView({
+      records: filtered,
+      columns: getViewForTab(user, currentTab),
+    });
   }, [
     searchInput,
-    interests,
+    filteredInterests,
     canFilterInterests,
     canFilterYear,
     filteredYear,
@@ -120,10 +134,17 @@ const Homepage: FC = () => {
     getAggregate();
   }, [user, refreshRecords]);
 
-  const getPitchesForTab = (
+  const getSearchFields = (records: RecordType[]): string[] => {
+    if (isPitchArray(records)) {
+      return ['title'];
+    }
+    return ['name'];
+  };
+
+  const getRecordsForTab = (
     { aggregated }: IUserAggregate,
     tab: Tab,
-  ): IPitch[] => {
+  ): RecordType[] => {
     switch (tab) {
       case TABS.MEMBER_PITCHES:
         return aggregated.claimedPitches as IPitch[];
@@ -131,10 +152,50 @@ const Homepage: FC = () => {
         return aggregated.submittedClaims as IPitch[];
       case TABS.SUBMITTED_PITCHES:
         return aggregated.submittedPitches as IPitch[];
-      // case TABS.SUBMITTED_PUBLICATIONS:
-      //   return [];
+      case TABS.SUBMITTED_PUBLICATIONS:
+        return aggregated.publications as IIssue[];
       default:
         return [];
+    }
+  };
+
+  const getInitialSort = (
+    tab: Tab,
+  ): {
+    column: ColumnType<RecordType>;
+    direction: SortDirection;
+  } | void => {
+    switch (tab) {
+      case TABS.MEMBER_PITCHES:
+        return {
+          column: getViewForTab(user, tab).find(
+            (column) => column.title === 'Deadline',
+          )!,
+          direction: 'descending',
+        };
+      case TABS.SUBMITTED_PITCHES:
+        return {
+          column: getViewForTab(user, tab).find(
+            (column) => column.title === 'Date Submitted',
+          )!,
+          direction: 'descending',
+        };
+      case TABS.SUBMITTED_CLAIMS:
+        return {
+          column: getViewForTab(user, tab).find(
+            (column) => column.title === 'Date Submitted',
+          )!,
+          direction: 'descending',
+        };
+      case TABS.SUBMITTED_PUBLICATIONS:
+        return {
+          column: getViewForTab(user, tab).find(
+            (column) => column.title === 'Publish Date',
+          )!,
+          direction: 'descending',
+        };
+      default:
+        return;
     }
   };
 
@@ -145,6 +206,8 @@ const Homepage: FC = () => {
   const yearSelectOptions: DropdownItemProps[] =
     getYearsSinceSSWEstablished().map((year) => ({ text: year, value: year }));
 
+  const { records, columns } = filteredView;
+  console.log(records, columns);
   return (
     <div className="homepage-wrapper">
       <Walkthrough
@@ -171,11 +234,11 @@ const Homepage: FC = () => {
           onClick={() => setCurrentTab(TABS.SUBMITTED_CLAIMS)}
         />
 
-        {/* <Menu.Item
+        <Menu.Item
           name={TABS.SUBMITTED_PUBLICATIONS}
           active={TABS.SUBMITTED_PUBLICATIONS === currentTab}
           onClick={() => setCurrentTab(TABS.SUBMITTED_PUBLICATIONS)}
-        /> */}
+        />
 
         <Menu.Item
           content={<SubmitPitchModal callback={onSubmitPitch} />}
@@ -210,9 +273,11 @@ const Homepage: FC = () => {
           {canFilterInterests && (
             <div className="filter-dropdown">
               <InterestsSelect
-                values={interests}
+                values={filteredInterests}
                 onChange={(values) =>
-                  setInterests(values ? values.map((item) => item.value) : [])
+                  setFilteredInterests(
+                    values ? values.map((item) => item.value) : [],
+                  )
                 }
               />
             </div>
@@ -231,11 +296,13 @@ const Homepage: FC = () => {
         </div>
 
         <div className="pitch-table">
-          <DynamicTable<IPitch>
-            records={filteredPitches}
-            columns={getViewForTab(user, currentTab)}
-            singleLine={filteredPitches.length === 0}
+          <DynamicTable<RecordType>
+            records={records}
+            columns={columns}
+            singleLine={records.length === 0}
             emptyMessage="You have no pitches in this category."
+            sortColumn={getInitialSort(currentTab)?.column}
+            sortDirection={getInitialSort(currentTab)?.direction}
           />
         </div>
       </Segment>

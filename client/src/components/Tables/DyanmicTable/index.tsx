@@ -10,8 +10,8 @@ import './styles.scss';
 interface TableProps<RecordType> {
   records: RecordType[];
   columns: ColumnType<RecordType>[];
-  initialSortColumn?: ColumnType<RecordType>;
-  initialSortDirection?: SortDirection;
+  sortColumn?: ColumnType<RecordType>;
+  sortDirection?: SortDirection;
   singleLine?: boolean;
   getModal?: (
     record: RecordType,
@@ -25,60 +25,87 @@ interface TableProps<RecordType> {
 const DynamicTable = <RecordType,>({
   records,
   columns,
-  initialSortColumn,
-  initialSortDirection,
+  sortColumn: sortColumnProp,
+  sortDirection: sortDirectionProp,
   singleLine,
   getModal,
   emptyMessage,
   onRecordClick,
 }: TableProps<RecordType>): ReactElement => {
   type Column = ColumnType<RecordType>;
+  type View = { records: RecordType[]; columns: ColumnType<RecordType>[] };
 
-  const [sortedRecords, setSortedRecords] = useState<RecordType[]>(records);
+  const [view, setView] = useState<View>({ records, columns });
   const [sortColumn, setSortColumn] = useState<Column | undefined>(
-    initialSortColumn,
+    sortColumnProp,
   );
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [currentRecord, setCurrentRecord] = useState<RecordType>();
   const [sortDirection, setSortDirection] = useState<SortDirection | undefined>(
-    initialSortDirection,
+    sortDirectionProp,
   );
+
   const openModal = (record: RecordType): void => {
     setCurrentRecord(record);
     setIsOpen(true);
   };
-  const handleSort = (newColumn: Column): void => {
-    if (!newColumn.sorter) {
+
+  useEffect(() => {
+    const sort = (column: Column, direction?: SortDirection) => {
+      setView(({ records, columns }) => {
+        records = [...records];
+
+        if (direction === 'ascending') {
+          records = records.sort(column.sorter);
+        }
+        if (direction === 'descending') {
+          records = records.sort(column.sorter).reverse();
+        }
+        return {
+          records,
+          columns,
+        };
+      });
+    };
+
+    if (sortColumn) {
+      sort(sortColumn, sortDirection);
+    }
+  }, [sortColumn, sortDirection, records]);
+
+  const handleColumnClick = (column: Column) => {
+    if (!column.sorter) {
       return;
     }
 
-    if (sortColumn?.title === newColumn.title) {
-      if (sortDirection === 'ascending') {
-        setSortDirection('descending');
-        setSortedRecords(sortedRecords.slice().reverse());
-      } else {
-        setSortedRecords(records);
-        setSortDirection(undefined);
-        setSortColumn(undefined);
+    setSortColumn(column);
+    setSortDirection((sortDirection) => {
+      if (!sortDirection) {
+        return 'ascending';
       }
-    } else {
-      setSortColumn(newColumn);
-      setSortDirection('ascending');
-      const copy = [...records];
-      copy.sort(newColumn.sorter);
-      setSortedRecords(copy);
-    }
+      if (sortDirection === 'ascending') {
+        return 'descending';
+      }
+      return undefined;
+    });
   };
 
   useEffect(() => {
-    setSortedRecords(records);
-    if (sortColumn) {
-      const oldSortColumn = sortColumn;
-      setSortColumn(undefined);
-      handleSort(oldSortColumn);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [records]);
+    setView({
+      records,
+      columns,
+    });
+  }, [records, columns]);
+
+  useEffect(() => {
+    setSortColumn(sortColumnProp);
+  }, [sortColumnProp]);
+
+  useEffect(() => {
+    setSortDirection(sortDirectionProp);
+  }, [sortDirectionProp]);
+
+  const { records: viewRecords, columns: viewColumns } = view;
 
   return (
     <Table
@@ -90,22 +117,22 @@ const DynamicTable = <RecordType,>({
       fixed
       singleLine={singleLine}
       className={`dynamic-table ${
-        sortedRecords.length === 0 && 'no-results-found'
+        viewRecords.length === 0 && 'no-results-found'
       }`}
     >
       <TableHeader
-        columns={columns}
+        columns={viewColumns}
         sortColumn={sortColumn}
         sortDirection={sortDirection}
-        handleSort={handleSort}
+        onCellClick={handleColumnClick}
       />
       <Table.Body>
-        {sortedRecords.length === 0 && emptyMessage}
+        {viewRecords.length === 0 && emptyMessage}
 
-        {sortedRecords.map((record, i) => (
+        {viewRecords.map((record, i) => (
           <TableRow
             record={record}
-            columns={columns}
+            columns={viewColumns}
             key={i}
             onClick={() =>
               getModal

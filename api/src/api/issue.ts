@@ -3,6 +3,7 @@ import { errorWrap } from '../middleware';
 
 import Issue from '../models/issue';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
+import User from '../models/user';
 
 const router = express.Router();
 
@@ -48,6 +49,12 @@ router.post(
   errorWrap(async (req: Request, res: Response) => {
     const newIssue = await Issue.create(req.body);
     if (newIssue) {
+      await User.findByIdAndUpdate(req.user._id, {
+        $addToSet: {
+          publications: newIssue._id,
+        },
+      });
+
       res.status(200).json({
         message: 'Successfully created new issue',
         success: true,
