@@ -1,10 +1,5 @@
-import {
-  IIssue,
-  IPitch,
-  IPitchAggregate,
-  IUser,
-  IUserAggregate,
-} from 'ssw-common';
+import { IIssue, IPitch, IUser, IUserAggregate } from 'ssw-common';
+
 import { pitchStatusEnum } from '../../utils/enums';
 
 const sswEstablishedYear = 1995;
@@ -50,6 +45,33 @@ const filterStatus = (
   status?: keyof typeof pitchStatusEnum,
 ): IPitch[] => pitches.filter((pitch) => pitch.status === status);
 
+type RecordType = IPitch | IIssue;
+
+const getSearchFields = (records: RecordType[]): string[] => {
+  if (isPitchArray(records)) {
+    return ['title'];
+  }
+  return ['name'];
+};
+
+const getRecordsForTab = (
+  { aggregated }: IUserAggregate,
+  tab: Tab,
+): RecordType[] => {
+  switch (tab) {
+    case TABS.MEMBER_PITCHES:
+      return aggregated.claimedPitches as IPitch[];
+    case TABS.SUBMITTED_CLAIMS:
+      return aggregated.submittedClaims as IPitch[];
+    case TABS.SUBMITTED_PITCHES:
+      return aggregated.submittedPitches as IPitch[];
+    case TABS.SUBMITTED_PUBLICATIONS:
+      return aggregated.publications as IIssue[];
+    default:
+      return [];
+  }
+};
+
 const isPitchArray = (
   array: Array<IPitch | IIssue>,
 ): array is Array<IPitch> => {
@@ -66,6 +88,8 @@ export {
   filterRequestClaimYear,
   filterStatus,
   isPitchArray,
+  getSearchFields,
+  getRecordsForTab,
   TABS,
 };
-export type { Tab };
+export type { Tab, RecordType };

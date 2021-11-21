@@ -8,23 +8,25 @@ import {
   Select,
 } from 'semantic-ui-react';
 import { IIssue, IPitch, IUserAggregate } from 'ssw-common';
+
 import { getAggregatedUser, isError } from '../../api';
 import {
   InterestsSelect,
   SubmitPitchModal,
   Walkthrough,
 } from '../../components';
-import DynamicTable, { ColumnType } from '../../components/Tables/DyanmicTable';
-import { SortDirection } from '../../components/Tables/DyanmicTable/types';
-// import { HomepageTable } from '../../components/Tables/Homepage';
+import DynamicTable, { ColumnType } from '../../components/Tables/DynamicTable';
+import { SortDirection } from '../../components/Tables/DynamicTable/types';
 import { useAuth } from '../../contexts';
 import { pagesEnum, pitchStatusEnum } from '../../utils/enums';
 import { filterPitchesByInterests, titleCase } from '../../utils/helpers';
-import { filterClaimStatus } from '../pitchDoc/helpers';
+
 import {
   filterCreatedYear,
   filterRequestClaimYear,
   filterStatus,
+  getRecordsForTab,
+  getSearchFields,
   getYearsSinceSSWEstablished,
   isPitchArray,
   Tab,
@@ -119,10 +121,11 @@ const Homepage: FC = () => {
     canFilterStatuses,
     aggregatedUser,
     currentTab,
+    user,
   ]);
 
   useEffect(() => {
-    const getAggregate = async () => {
+    const getAggregate = async (): Promise<void> => {
       const res = await getAggregatedUser(user._id);
 
       if (!isError(res)) {
@@ -133,31 +136,6 @@ const Homepage: FC = () => {
 
     getAggregate();
   }, [user, refreshRecords]);
-
-  const getSearchFields = (records: RecordType[]): string[] => {
-    if (isPitchArray(records)) {
-      return ['title'];
-    }
-    return ['name'];
-  };
-
-  const getRecordsForTab = (
-    { aggregated }: IUserAggregate,
-    tab: Tab,
-  ): RecordType[] => {
-    switch (tab) {
-      case TABS.MEMBER_PITCHES:
-        return aggregated.claimedPitches as IPitch[];
-      case TABS.SUBMITTED_CLAIMS:
-        return aggregated.submittedClaims as IPitch[];
-      case TABS.SUBMITTED_PITCHES:
-        return aggregated.submittedPitches as IPitch[];
-      case TABS.SUBMITTED_PUBLICATIONS:
-        return aggregated.publications as IIssue[];
-      default:
-        return [];
-    }
-  };
 
   const getInitialSort = (
     tab: Tab,
@@ -199,7 +177,7 @@ const Homepage: FC = () => {
     }
   };
 
-  const onSubmitPitch = () => {
+  const onSubmitPitch = (): void => {
     setRefreshRecords((refresh) => !refresh);
   };
 

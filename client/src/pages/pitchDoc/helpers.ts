@@ -1,4 +1,5 @@
 import { IPitch } from 'ssw-common';
+
 import { getPitchTeams, isPitchClaimed } from '../../utils/helpers';
 
 const filterClaimStatus = (

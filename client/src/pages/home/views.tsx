@@ -1,8 +1,10 @@
 import React from 'react';
 import { IIssue, IPitch, IUser } from 'ssw-common';
+
 import { FieldTag, PitchInterests, PitchTeams } from '../../components';
-import { ColumnType } from '../../components/Tables/DyanmicTable';
-import { buildColumn } from '../../components/Tables/DyanmicTable/util';
+import { ColumnType } from '../../components/Tables/DynamicTable';
+import { buildColumn } from '../../components/Tables/DynamicTable/util';
+
 import { Tab, TABS } from './helpers';
 
 const getViewForTab = (user: IUser, tab: Tab): ColumnType<any>[] => {
@@ -12,9 +14,9 @@ const getViewForTab = (user: IUser, tab: Tab): ColumnType<any>[] => {
     case TABS.SUBMITTED_CLAIMS:
       return getSubmittedClaimsView(user);
     case TABS.SUBMITTED_PITCHES:
-      return getSubmittedPitchesView(user);
+      return getSubmittedPitchesView();
     case TABS.SUBMITTED_PUBLICATIONS:
-      return getSubmittedPublicationsView(user);
+      return getSubmittedPublicationsView();
     default:
       return [];
   }
@@ -52,7 +54,7 @@ const getMemberPitchesView = (user: IUser): ColumnType<IPitch>[] => [
   },
 ];
 
-const getSubmittedPitchesView = (user: IUser): ColumnType<IPitch>[] => [
+const getSubmittedPitchesView = (): ColumnType<IPitch>[] => [
   titleColumn,
   descriptionColumn,
   {
@@ -99,7 +101,7 @@ const getSubmittedClaimsView = (user: IUser): ColumnType<IPitch>[] => [
     title: 'Status',
     width: '1',
     sorter: (p1, p2) => p1.status.localeCompare(p2.status),
-    extractor: function StatusCell({ status }) {
+    extractor: function StatusCell() {
       return <FieldTag content={'Pending'} />;
     },
   },
@@ -128,7 +130,7 @@ const getSubmittedClaimsView = (user: IUser): ColumnType<IPitch>[] => [
   },
 ];
 
-const getSubmittedPublicationsView = (user: IUser): ColumnType<IIssue>[] => [
+const getSubmittedPublicationsView = (): ColumnType<IIssue>[] => [
   {
     title: 'Title',
     width: '2',

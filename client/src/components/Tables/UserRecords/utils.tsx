@@ -10,7 +10,7 @@ import {
   UserTeams,
 } from '../..';
 import { getUserFullName } from '../../../utils/helpers';
-import { buildColumn } from '../DyanmicTable/util';
+import { buildColumn } from '../DynamicTable/util';
 import { fullNameSort, joinedSort, roleSort } from '../Util/TableUtil';
 
 const nameColumn = buildColumn<IUser>({

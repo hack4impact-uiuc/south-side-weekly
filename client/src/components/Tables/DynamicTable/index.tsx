@@ -51,7 +51,7 @@ const DynamicTable = <RecordType,>({
   };
 
   useEffect(() => {
-    const sort = (column: Column, direction?: SortDirection) => {
+    const sort = (column: Column, direction?: SortDirection): void => {
       setView(({ records, columns }) => {
         records = [...records];
 
@@ -73,7 +73,7 @@ const DynamicTable = <RecordType,>({
     }
   }, [sortColumn, sortDirection, records]);
 
-  const handleColumnClick = (column: Column) => {
+  const handleColumnClick = (column: Column): void => {
     if (!column.sorter) {
       return;
     }

@@ -18,7 +18,6 @@ import {
 } from './pages';
 import Wizard from './wizard';
 import { PrivateRoute, ProviderWrapper } from './components';
-
 import 'semantic-ui-css/semantic.min.css';
 import './styles/styles.scss';
 import Homepage from './pages/home';

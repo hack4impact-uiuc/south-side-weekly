@@ -3,7 +3,7 @@ import { IUser } from 'ssw-common';
 import { Button } from 'semantic-ui-react';
 import toast from 'react-hot-toast';
 
-import DynamicTable from '../../DyanmicTable';
+import DynamicTable from '../../DynamicTable';
 import ReviewUserModal from '../../../Modals/ReviewUser';
 import {
   nameColumn,

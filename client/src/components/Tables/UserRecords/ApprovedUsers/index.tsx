@@ -2,7 +2,7 @@ import React, { FC, ReactElement } from 'react';
 import { IUser } from 'ssw-common';
 
 import { useAuth } from '../../../../contexts';
-import DynamicTable from '../../DyanmicTable';
+import DynamicTable from '../../DynamicTable';
 import {
   nameColumn,
   roleColumn,
