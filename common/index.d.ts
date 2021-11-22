@@ -145,4 +145,6 @@ export interface IUserFeedback {
   pitchId: string;
   stars: number;
   reasnoning: string;
+  createdAt: Date;
+  updatedAt: Date;
 }

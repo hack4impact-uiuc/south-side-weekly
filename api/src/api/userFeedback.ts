@@ -27,7 +27,7 @@ router.get(
   }),
 );
 
-// Gets all feedback for contributors
+// Gets all feedback
 router.get(
   '/',
   errorWrap(async (req: Request, res: Response) => {
@@ -40,7 +40,7 @@ router.get(
   }),
 );
 
-// Gets all of the feedback for a specific user
+// Gets all feedback for a specific user
 router.get(
   '/user/:id',
   errorWrap(async (req: Request, res: Response) => {
@@ -73,6 +73,7 @@ router.post(
 // Updates a specific feedback
 router.put(
   '/:id',
+  requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
     const feedback = await UserFeedback.findByIdAndUpdate(
       req.params.id,
@@ -91,6 +92,7 @@ router.put(
 // Deletes a specific feedback
 router.delete(
   '/:id',
+  requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
     await UserFeedback.findByIdAndDelete(req.params.id);
 
