@@ -4,6 +4,7 @@ import { errorWrap } from '../middleware';
 import { requireAdmin } from '../middleware/auth';
 
 import UserFeedback from '../models/userFeedback';
+import User from '../models/user';
 
 const router = express.Router();
 
@@ -60,6 +61,13 @@ router.post(
   requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
     const newFeedback = await UserFeedback.create(req.body);
+
+    await User.findByIdAndUpdate(newFeedback.userId, {
+      $addToSet: {
+        feedback: newFeedback._id,
+      },
+    });
+
     if (newFeedback) {
       res.status(200).json({
         message: 'Successfully created new userFeedback',
