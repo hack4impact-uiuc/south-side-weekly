@@ -215,13 +215,42 @@ router.get(
 router.get(
   '/all/approved',
   errorWrap(async (req: Request, res: Response) => {
-    const users = await User.find({
+    let query = User.find({
       onboardingStatus: onboardingStatusEnum.ONBOARDED,
     });
+
+    type valueType = typeof req.query.page;
+    type queryFilter = Record<string, Record<string, valueType>>;
+
+    const filters: queryFilter = {};
+    for (const key in req.body) {
+      if (req.body[key] instanceof Array) {
+        filters[key] = { $all: req.body[key] };
+      } else {
+        filters[key] = req.body[key];
+      }
+    }
+    if (Object.keys(filters).length) {
+      query = query.find(filters);
+      console.log(query.getFilter());
+    }
+    let totalPages = 1;
+    if (req.query.page && req.query.limit) {
+      const page = parseInt(req.query.page as string);
+      const limit = parseInt(req.query.limit as string);
+      const skipIndex = (page - 1) * limit;
+
+      const totalDocs = await User.countDocuments();
+      totalPages = Math.ceil(totalDocs / limit);
+      query = query.limit(limit).skip(skipIndex);
+    }
+    const users = await query.exec();
+
     res.status(200).json({
       message: `Successfully retrieved all approved users.`,
       success: true,
       result: users,
+      totalPages: totalPages,
     });
   }),
 );
