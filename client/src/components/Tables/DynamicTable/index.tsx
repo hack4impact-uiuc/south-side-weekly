@@ -96,7 +96,7 @@ const DynamicTable = <RecordType,>({
       }
 
       const nextSortColumn =
-        sort.direction !== 'descending' ? column : undefined;
+        sort?.direction !== 'descending' ? column : undefined;
 
       if (!nextSortColumn) {
         setSort(undefined);
