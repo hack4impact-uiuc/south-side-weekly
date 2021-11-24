@@ -15,7 +15,10 @@ import {
   SubmitPitchModal,
   Walkthrough,
 } from '../../components';
-import DynamicTable, { ColumnType } from '../../components/Tables/DynamicTable';
+import DynamicTable, {
+  ColumnType,
+  View,
+} from '../../components/Tables/DynamicTable';
 import { SortDirection } from '../../components/Tables/DynamicTable/types';
 import { useAuth } from '../../contexts';
 import { pagesEnum, pitchStatusEnum } from '../../utils/enums';
@@ -33,11 +36,10 @@ import {
   TABS,
 } from './helpers';
 import './styles.scss';
-import { getViewForTab } from './views';
+import { getColumnsForTab } from './views';
 
 const Homepage: FC = () => {
   type RecordType = IPitch | IIssue;
-  type View = { records: RecordType[]; columns: ColumnType<RecordType>[] };
 
   const { user } = useAuth();
 
@@ -52,9 +54,9 @@ const Homepage: FC = () => {
   const [filteredStatus, setFilteredStatus] =
     useState<keyof typeof pitchStatusEnum>();
 
-  const [filteredView, setFilteredView] = useState<View>({
+  const [filteredView, setFilteredView] = useState<View<RecordType>>({
     records: [],
-    columns: getViewForTab(user, currentTab),
+    columns: getColumnsForTab(user, currentTab),
   });
 
   const canFilterInterests =
@@ -109,7 +111,7 @@ const Homepage: FC = () => {
 
     setFilteredView({
       records: filtered,
-      columns: getViewForTab(user, currentTab),
+      columns: getColumnsForTab(user, currentTab),
     });
   }, [
     searchInput,
@@ -146,28 +148,28 @@ const Homepage: FC = () => {
     switch (tab) {
       case TABS.MEMBER_PITCHES:
         return {
-          column: getViewForTab(user, tab).find(
+          column: getColumnsForTab(user, tab).find(
             (column) => column.title === 'Deadline',
           )!,
           direction: 'descending',
         };
       case TABS.SUBMITTED_PITCHES:
         return {
-          column: getViewForTab(user, tab).find(
+          column: getColumnsForTab(user, tab).find(
             (column) => column.title === 'Date Submitted',
           )!,
           direction: 'descending',
         };
       case TABS.SUBMITTED_CLAIMS:
         return {
-          column: getViewForTab(user, tab).find(
+          column: getColumnsForTab(user, tab).find(
             (column) => column.title === 'Date Submitted',
           )!,
           direction: 'descending',
         };
       case TABS.SUBMITTED_PUBLICATIONS:
         return {
-          column: getViewForTab(user, tab).find(
+          column: getColumnsForTab(user, tab).find(
             (column) => column.title === 'Publish Date',
           )!,
           direction: 'descending',
@@ -184,8 +186,6 @@ const Homepage: FC = () => {
   const yearSelectOptions: DropdownItemProps[] =
     getYearsSinceSSWEstablished().map((year) => ({ text: year, value: year }));
 
-  const { records, columns } = filteredView;
-  console.log(records, columns);
   return (
     <div className="homepage-wrapper">
       <Walkthrough
@@ -279,9 +279,8 @@ const Homepage: FC = () => {
 
         <div className="pitch-table">
           <DynamicTable<RecordType>
-            records={records}
-            columns={columns}
-            singleLine={records.length === 0}
+            view={filteredView}
+            singleLine={filteredView.records.length > 0}
             emptyMessage="You have no pitches in this category."
             sortColumn={getInitialSort(currentTab)?.column}
             sortDirection={getInitialSort(currentTab)?.direction}

@@ -7,7 +7,7 @@ import { buildColumn } from '../../components/Tables/DynamicTable/util';
 
 import { Tab, TABS } from './helpers';
 
-const getViewForTab = (user: IUser, tab: Tab): ColumnType<any>[] => {
+const getColumnsForTab = (user: IUser, tab: Tab): ColumnType<any>[] => {
   switch (tab) {
     case TABS.MEMBER_PITCHES:
       return getMemberPitchesView(user);
@@ -120,7 +120,6 @@ const getSubmittedClaimsView = (user: IUser): ColumnType<IPitch>[] => [
         )?.dateSubmitted ?? Date.now(),
       ).getTime(),
     extractor: function DateCell(pitch) {
-      console.log(pitch);
       return new Date(
         pitch.pendingContributors.find(
           (contributor) => contributor.userId === user._id,
@@ -175,4 +174,4 @@ const associatedTopicsColumn = buildColumn<IPitch>({
   },
 });
 
-export { getViewForTab };
+export { getColumnsForTab };

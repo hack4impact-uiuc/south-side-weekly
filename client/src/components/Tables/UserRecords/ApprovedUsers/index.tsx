@@ -34,14 +34,12 @@ const ApprovedUsers: FC<ApprovedUserProps> = ({ users }): ReactElement => {
     ...(isContributor ? [] : [viewUserColumn]),
   ];
 
+  const view = { records: users, columns };
+
   return (
     <div className="table">
       <div className="directory">
-        <DynamicTable
-          records={users}
-          columns={columns}
-          singleLine={users.length > 0}
-        />
+        <DynamicTable view={view} singleLine={users.length > 0} />
       </div>
     </div>
   );
