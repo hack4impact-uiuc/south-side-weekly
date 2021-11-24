@@ -1,5 +1,6 @@
 import React, { FC, ReactElement } from 'react';
 import { IIssueAggregate, IPitch } from 'ssw-common';
+
 import { PitchInterests } from '..';
 
 interface IssueInterestsProps {
