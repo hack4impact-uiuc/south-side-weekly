@@ -85,34 +85,28 @@ const DynamicTable = <RecordType,>({
         return;
       }
 
-      const newSortColumn = sort && column !== sort.column;
+      const newSortColumn = !sort || (sort && column !== sort.column);
 
-      if (!sort || newSortColumn) {
-        const newSort: Sort<RecordType> = {
+      if (newSortColumn) {
+        setSort({
           column,
           direction: 'ascending',
-        };
-
-        setSort(newSort);
+        });
         return;
       }
 
-      const { direction: sortDirection } = sort;
-
       const nextSortColumn =
-        sortDirection !== 'descending' ? column : undefined;
+        sort.direction !== 'descending' ? column : undefined;
 
       if (!nextSortColumn) {
         setSort(undefined);
         return;
       }
 
-      const newSort: Sort<RecordType> = {
+      setSort({
         column: nextSortColumn,
         direction: 'descending',
-      };
-
-      setSort(newSort);
+      });
     },
     [sort],
   );
