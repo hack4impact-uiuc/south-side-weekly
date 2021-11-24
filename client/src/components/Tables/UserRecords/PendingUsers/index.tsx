@@ -15,7 +15,6 @@ import {
 } from '../utils';
 import { isError, updateOnboardingStatus } from '../../../../api';
 import { onboardingStatusEnum } from '../../../../utils/enums';
-
 import './styles.scss';
 import { buildColumn } from '../../DynamicTable/util';
 

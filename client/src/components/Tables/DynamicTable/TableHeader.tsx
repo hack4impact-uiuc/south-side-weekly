@@ -1,19 +1,17 @@
 import React, { ReactElement } from 'react';
 import { Table } from 'semantic-ui-react';
 
-import { ColumnType, SortDirection } from './types';
+import { ColumnType, Sort } from './types';
 
 interface TableHeaderProps<RecordType> {
   columns: ColumnType<RecordType>[];
-  sortColumn?: ColumnType<RecordType>;
-  sortDirection?: SortDirection;
+  sort?: Sort<RecordType>;
   onCellClick: (column: ColumnType<RecordType>) => void;
 }
 
 const TableHeader = <RecordType,>({
   columns,
-  sortDirection,
-  sortColumn,
+  sort,
   onCellClick,
 }: TableHeaderProps<RecordType>): ReactElement => (
   <Table.Header>
@@ -21,7 +19,9 @@ const TableHeader = <RecordType,>({
       <Table.HeaderCell
         width={column.width}
         onClick={() => onCellClick(column)}
-        sorted={sortColumn?.title === column.title ? sortDirection : undefined}
+        sorted={
+          sort?.column?.title === column.title ? sort?.direction : undefined
+        }
         key={index}
       >
         {column.title}

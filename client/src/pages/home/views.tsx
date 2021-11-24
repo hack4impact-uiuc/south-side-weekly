@@ -2,7 +2,7 @@ import React from 'react';
 import { IIssue, IPitch, IUser } from 'ssw-common';
 
 import { FieldTag, PitchInterests, PitchTeams } from '../../components';
-import { ColumnType } from '../../components/Tables/DynamicTable';
+import { ColumnType } from '../../components/Tables/DynamicTable/types';
 import { buildColumn } from '../../components/Tables/DynamicTable/util';
 
 import { Tab, TABS } from './helpers';

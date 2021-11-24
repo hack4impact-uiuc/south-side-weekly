@@ -15,11 +15,8 @@ import {
   SubmitPitchModal,
   Walkthrough,
 } from '../../components';
-import DynamicTable, {
-  ColumnType,
-  View,
-} from '../../components/Tables/DynamicTable';
-import { SortDirection } from '../../components/Tables/DynamicTable/types';
+import DynamicTable from '../../components/Tables/DynamicTable';
+import { Sort, View } from '../../components/Tables/DynamicTable/types';
 import { useAuth } from '../../contexts';
 import { pagesEnum, pitchStatusEnum } from '../../utils/enums';
 import { filterPitchesByInterests, titleCase } from '../../utils/helpers';
@@ -139,12 +136,7 @@ const Homepage: FC = () => {
     getAggregate();
   }, [user, refreshRecords]);
 
-  const getInitialSort = (
-    tab: Tab,
-  ): {
-    column: ColumnType<RecordType>;
-    direction: SortDirection;
-  } | void => {
+  const getInitialSort = (tab: Tab): Sort<RecordType> | undefined => {
     switch (tab) {
       case TABS.MEMBER_PITCHES:
         return {
@@ -282,8 +274,7 @@ const Homepage: FC = () => {
             view={filteredView}
             singleLine={filteredView.records.length > 0}
             emptyMessage="You have no pitches in this category."
-            sortColumn={getInitialSort(currentTab)?.column}
-            sortDirection={getInitialSort(currentTab)?.direction}
+            sort={getInitialSort(currentTab)}
           />
         </div>
       </Segment>
