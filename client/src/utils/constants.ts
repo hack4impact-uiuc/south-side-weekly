@@ -1,4 +1,4 @@
-import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
+import { IPitch, IPitchAggregate, IUser, IUserAggregate } from 'ssw-common';
 
 import { wizardPages } from './enums';
 import neighborhoods from './neighborhoods';
@@ -67,6 +67,42 @@ const emptyUser: IUser = {
   onboardReasoning: '',
 };
 
+const emptyAggregateUser: IUserAggregate = {
+  _id: '',
+  firstName: '',
+  lastName: '',
+  preferredName: '',
+  email: '',
+  phone: '',
+  oauthID: '',
+  genders: [],
+  pronouns: [],
+  dateJoined: new Date(Date.now()),
+  masthead: false,
+  onboardingStatus: '',
+  visitedPages: [],
+  profilePic: '',
+  portfolio: '',
+  linkedIn: '',
+  twitter: '',
+  involvementResponse: '',
+  journalismResponse: '',
+  neighborhood: '',
+  claimedPitches: [],
+  submittedPitches: [],
+  teams: [],
+  role: '',
+  races: [],
+  interests: [],
+  onboardReasoning: '',
+  aggregated : {
+    claimedPitches: [],
+    submittedPitches: [],
+    interests: [],
+  }
+
+}
+
 const emptyPitch: IPitch = {
   _id: '',
   title: '',
@@ -119,4 +155,5 @@ export {
   contributorPages,
   pitchDocTabs,
   neighborhoods,
+  emptyAggregateUser
 };

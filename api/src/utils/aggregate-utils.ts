@@ -87,11 +87,13 @@ const simplifyPitch = (pitch: IPitch | null): Partial<IPitch> => {
   if (pitch === null) {
     return null;
   }
-
   return {
     title: pitch.title,
     description: pitch.description,
     author: pitch.author,
+    deadline: pitch.deadline,
+    topics: pitch.topics,
+    assignmentContributors: pitch.assignmentContributors
   };
 };
 

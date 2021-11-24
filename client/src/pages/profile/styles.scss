@@ -1,89 +1,108 @@
-.input-field {
-  position: relative;
-  align-items: center;
-  display: flex;
-  border: solid black 1px;
-  border-radius: 1rem;
-  width: 100%;
-  height: 13%;
-  margin-top: 5px;
-  padding: 3px;
-  font-size: 14px !important;
-
-  span {
-    flex-grow: 1;
-  }
-}
-
-.social-input {
-  margin-bottom: -3% !important;
-}
-
-.dropdown-field {
-  border-color: transparent !important;
-  background-color: transparent !important;
-  font-size: 12px !important;
-}
-
-
-.edit-profile-btn {
-  color: white !important;
-  background-color: black !important;
-  margin-top: 15% !important;
-}
-
-
-.tag-spacing {
-  margin-top: 2%;
-}
-
-.table-header {
-  text-align: left !important;
-  margin-left: 3%;
-}
-
-
-.edit-mode-btn {
-  margin: 10px 5px 10px 5px !important;
-}
-
-.edit-mode-btn.cancel {
-  color: white !important;
-  background-color: rgba(61, 79, 145, 0.55) !important;
-}
-
-.edit-mode-btn.save {
-  color: white !important;
-  background-color: #8cb076 !important;
-}
-
-.field-label {
-  margin: auto;
-  margin-top: 5% !important;
-  width: 65%;
-}
-
-.profile-pic-col {
-  display: flex !important;
-  text-align: left;
-}
-
-.user-pic {
-  margin-right: 3%;
-}
-
-.name-pronouns {
-  .name {
-    font-weight: 700;
-  }
-  .pronouns {
-    font-weight: 400;
-    text-align: left;
-  }
-}
 
 .profile-page {
-  .checkbox {
-    padding-left: 20% !important;
+  .input-field {
+    position: relative;
+    align-items: center;
+    display: flex;
+    border: solid black 1px;
+    border-radius: 1rem;
+    width: 100%;
+    height: 13%;
+    margin-top: 5px;
+    padding: 3px;
+    font-size: 14px !important;
+  
+    span {
+      flex-grow: 1;
+    }
   }
+  
+  .social-input {
+    margin-bottom: -3% !important;
+  }
+  
+  .dropdown-field {
+    border-color: transparent !important;
+    background-color: transparent !important;
+    font-size: 12px !important;
+  }
+  
+  
+  .edit-profile-btn {
+    color: white !important;
+    background-color: black !important;
+    margin-top: 5% !important;
+  }
+  
+  
+  .tag-spacing {
+    margin-top: 2%;
+  }
+  
+  .table-header {
+    text-align: left !important;
+  }
+  
+  .user-role {
+    margin-top: 3%;
+  }
+  
+  .edit-mode-btn {
+    margin: 10px 5px 10px 5px !important;
+  }
+  
+  
+  .field-label {
+    margin: auto;
+    margin-top: 5% !important;
+    width: 65%;
+  }
+  
+  .profile-pic-col {
+    display: flex !important;
+    text-align: left;
+  }
+  
+  .user-pic {
+    margin-right: 3%;
+  }
+  
+  .name-pronouns {
+    .name {
+      font-weight: 700;
+    }
+    .pronouns {
+      font-weight: 400;
+      text-align: left;
+    }
+  }
+  
+  .registration {
+    margin-top: 10% !important;
+    color: #575757;
+  }
+  
+  .rating {
+    display: flex;
+    margin-top: 3%;
+    .number-ratings {
+      margin-top: 2%;
+      margin-left: 2%;
+      font-size: 12px;
+    }
+  }
+  
+  .experience {
+    padding: 5% !important;
+  }
+  
+  .feedback-header {
+    margin-left: 10%;
+  }
+  
+  .feedback-container {
+    background-color: #F6F7FB !important;
+    border-radius: 5px;
+  }
+  
 }

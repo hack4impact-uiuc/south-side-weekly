@@ -20,9 +20,9 @@ const FieldTag: FC<FieldTagProps> = ({
   ...rest
 }): ReactElement => {
   const toClassName = (str: string): string => {
-    if (name !== '') {
-      return '';
-    }
+    // if (name !== '') {
+    //   return '';
+    // }
 
     str = toLower(str);
 

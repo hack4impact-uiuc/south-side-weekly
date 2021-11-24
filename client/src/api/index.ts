@@ -1,6 +1,7 @@
 export { getCurrentUser, logout } from './auth';
 export {
   getUser,
+  getAggregatedUser,
   getUsers,
   updateUserClaimedPitches,
   updateUser,
