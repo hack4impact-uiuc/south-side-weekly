@@ -5,7 +5,7 @@ import { FieldTag } from '../..';
 import { useInterests } from '../../../contexts';
 
 interface PitchInterestsProps {
-  pitch: IPitch;
+  pitch: Pick<IPitch, 'topics'>;
 }
 
 const PitchInterests: FC<PitchInterestsProps> = ({ pitch }): ReactElement => {

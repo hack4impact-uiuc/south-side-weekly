@@ -1,4 +1,11 @@
-import { IPitch, IUser, IUserAggregate, IPitchAggregate } from 'ssw-common';
+import {
+  IPitch,
+  IUser,
+  IUserAggregate,
+  IPitchAggregate,
+  IIssue,
+  IIssueAggregate,
+} from 'ssw-common';
 
 import Pitch from '../models/pitch';
 import User from '../models/user';
@@ -103,6 +110,36 @@ const simplifyPitch = (pitch: IPitch | null): Partial<IPitch> => {
   };
 };
 
+const aggregateIssue = async (rawIssue: IIssue): Promise<IIssueAggregate> => {
+  const pitches = await Promise.all(
+    rawIssue.pitches.map(async (id) => simplifyPitch(await Pitch.findById(id))),
+  );
+
+  const aggregatedIssue = {
+    ...rawIssue,
+    aggregated: {
+      pitches,
+    },
+  };
+
+  return aggregatedIssue;
+};
+
+const simplifyIssue = (issue: IIssue | null): IIssue => {
+  if (issue === null) {
+    return null;
+  }
+
+  return {
+    _id: issue._id,
+    name: issue.name,
+    deadlineDate: issue.deadlineDate,
+    releaseDate: issue.releaseDate,
+    pitches: issue.pitches,
+    type: issue.type,
+  };
+};
+
 const aggregateUser = async (rawUser: IUser): Promise<IUserAggregate> => {
   const claimedPitches = await Promise.all(
     rawUser.claimedPitches.map(async (id) =>
@@ -123,7 +160,10 @@ const aggregateUser = async (rawUser: IUser): Promise<IUserAggregate> => {
   );
 
   const publications = await Promise.all(
-    rawUser.publications.map(async (id) => await Issue.findById(id)),
+    rawUser.publications.map(
+      async (id) =>
+        await aggregateIssue(simplifyIssue(await Issue.findById(id))),
+    ),
   );
 
   const interests = await Promise.all(

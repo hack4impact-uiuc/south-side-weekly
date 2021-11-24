@@ -36,7 +36,7 @@ export interface IUserAggregate extends IUser {
     claimedPitches: Partial<IPitch>[];
     submittedPitches: Partial<IPitch>[];
     submittedClaims: Partial<IPitch>[];
-    publications: Partial<IIssue>[];
+    publications: IIssueAggregate[];
     interests: IInterest[];
   };
 }
@@ -141,4 +141,10 @@ export interface IIssue {
   releaseDate: string;
   pitches: string[];
   type: string;
+}
+
+export interface IIssueAggregate extends IIssue {
+  aggregated: {
+    pitches: Partial<IPitch>[];
+  };
 }

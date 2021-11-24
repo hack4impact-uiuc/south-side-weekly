@@ -16,7 +16,13 @@ import FilterDropdown from './Dropdowns/Filter';
 import FieldTag from './FieldTag';
 import UserPicture from './UserPicture';
 import UserCard from './UserCard';
-import { UserInterests, UserTeams, PitchInterests, PitchTeams } from './Lists';
+import {
+  UserInterests,
+  UserTeams,
+  PitchInterests,
+  PitchTeams,
+  IssueInterests,
+} from './Lists';
 import Navbar from './Navbar';
 import SubmitButton from './Wizard/SubmitButton';
 import PrevButton from './Wizard/PrevButton';
@@ -61,6 +67,7 @@ export {
   UserTeams,
   PitchInterests,
   PitchTeams,
+  IssueInterests,
   Navbar,
   SubmitButton,
   PrevButton,

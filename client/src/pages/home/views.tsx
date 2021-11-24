@@ -1,7 +1,12 @@
 import React from 'react';
-import { IIssue, IPitch, IUser } from 'ssw-common';
+import { IIssueAggregate, IPitch, IUser } from 'ssw-common';
 
-import { FieldTag, PitchInterests, PitchTeams } from '../../components';
+import {
+  FieldTag,
+  PitchInterests,
+  PitchTeams,
+  IssueInterests,
+} from '../../components';
 import { ColumnType } from '../../components/Tables/DynamicTable/types';
 import { buildColumn } from '../../components/Tables/DynamicTable/util';
 
@@ -81,8 +86,14 @@ const getSubmittedPitchesView = (): ColumnType<IPitch>[] => [
 ];
 
 const getSubmittedClaimsView = (user: IUser): ColumnType<IPitch>[] => [
-  titleColumn,
-  associatedTopicsColumn,
+  {
+    ...titleColumn,
+    width: '4',
+  },
+  {
+    ...associatedTopicsColumn,
+    width: '2',
+  },
   {
     title: 'Team(s) Requested to Claim',
     width: '2',
@@ -129,12 +140,28 @@ const getSubmittedClaimsView = (user: IUser): ColumnType<IPitch>[] => [
   },
 ];
 
-const getSubmittedPublicationsView = (): ColumnType<IIssue>[] => [
+const getSubmittedPublicationsView = (): ColumnType<IIssueAggregate>[] => [
   {
     title: 'Title',
-    width: '2',
+    width: '3',
     sorter: (i1, i2) => i1.name.localeCompare(i2.name),
     extractor: 'name',
+  },
+  {
+    title: 'Associated Topics',
+    width: '1',
+    sorter: (i1, i2) =>
+      stringArraySorter(
+        i1.aggregated.pitches.map((pitch) => pitch.topics),
+        i2.aggregated.pitches.map((pitch) => pitch.topics),
+      ),
+    extractor: function InterestsCell(issue) {
+      return (
+        <div className="flex-cell">
+          <IssueInterests issue={issue} />
+        </div>
+      );
+    },
   },
   {
     title: 'Publish Date',
@@ -142,6 +169,7 @@ const getSubmittedPublicationsView = (): ColumnType<IIssue>[] => [
     sorter: (i1, i2) =>
       new Date(i1.releaseDate).getTime() - new Date(i2.releaseDate).getTime(),
     extractor: function DateCell(issue) {
+      console.log(issue);
       return new Date(issue.releaseDate).toLocaleDateString();
     },
   },

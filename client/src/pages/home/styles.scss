@@ -16,8 +16,7 @@
   .ui {
     &.menu {
       margin-bottom: 2px;
-      padding-inline-start: 4em;
-      padding-inline-end: 4em;
+      padding-inline: 0px;
     }
 
     &.secondary.pointing.menu {
@@ -29,8 +28,11 @@
       }
       .item {
         border-bottom-width: auto;
-        padding-left: 3em;
-        padding-right: 3em;
+        padding-inline: 3em;
+
+        &.right {
+          padding-inline: 0px;
+        }
       }
     }
     &.segment {
