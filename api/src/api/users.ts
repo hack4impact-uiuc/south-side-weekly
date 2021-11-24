@@ -220,27 +220,30 @@ router.get(
     });
 
     type valueType = typeof req.query.page;
-    type queryFilter = Record<string, Record<string, valueType>>;
+    type queryFilter = Record<string, valueType | Record<string, valueType>>;
 
     const filters: queryFilter = {};
-    for (const key in req.body) {
-      if (req.body[key] instanceof Array) {
-        filters[key] = { $all: req.body[key] };
+    for (const key in req.query) {
+      if (key === 'page' || key === 'limit') {
+        continue;
+      }
+      if (req.query[key] instanceof Array) {
+        filters[key] = { $all: req.query[key] };
       } else {
-        filters[key] = req.body[key];
+        filters[key] = req.query[key];
       }
     }
     if (Object.keys(filters).length) {
       query = query.find(filters);
-      console.log(query.getFilter());
     }
     let totalPages = 1;
     if (req.query.page && req.query.limit) {
       const page = parseInt(req.query.page as string);
       const limit = parseInt(req.query.limit as string);
       const skipIndex = (page - 1) * limit;
-
       const totalDocs = await User.countDocuments();
+      // This isn't correct since we want to get the pages after we filter
+      // const totalDocs = await query.clone().countDocuments();
       totalPages = Math.ceil(totalDocs / limit);
       query = query.limit(limit).skip(skipIndex);
     }
