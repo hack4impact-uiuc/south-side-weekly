@@ -1,8 +1,9 @@
 import { IUser } from 'ssw-common';
 import { difference } from 'lodash';
-
+import { Request } from 'express';
 import { isAdmin } from './auth-utils';
-import User from '../models/user';
+import User, { UserSchema } from '../models/user';
+import { Query } from 'mongoose';
 
 type UserKeys = (keyof IUser)[];
 
@@ -54,4 +55,17 @@ const getEditableFields = (currentUser: IUser, userId: string): UserKeys => {
   return [];
 };
 
-export { allFields, getEditableFields, getViewableFields };
+const processPaignation = (
+  req: Request,
+  query: Query<UserSchema[], UserSchema, Record<string, unknown>>,
+): Query<UserSchema[], UserSchema, Record<string, unknown>> => {
+  if (req.query.page && req.query.limit) {
+    const page = parseInt(req.query.page as string);
+    const limit = parseInt(req.query.limit as string);
+    const skipIndex = (page - 1) * limit;
+    return query.limit(limit).skip(skipIndex);
+  }
+  return query;
+};
+
+export { allFields, getEditableFields, getViewableFields, processPaignation };

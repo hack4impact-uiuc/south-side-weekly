@@ -4,7 +4,11 @@ import { errorWrap } from '../middleware';
 import User from '../models/user';
 import Pitch from '../models/pitch';
 import Team from '../models/team';
-import { getEditableFields, getViewableFields } from '../utils/user-utils';
+import {
+  getEditableFields,
+  getViewableFields,
+  processPaignation,
+} from '../utils/user-utils';
 import {
   requireAdmin,
   requireRegistered,
@@ -195,7 +199,7 @@ router.put(
 router.get(
   '/all/pending',
   errorWrap(async (req: Request, res: Response) => {
-    const users = await User.find({
+    let query = User.find({
       onboardingStatus: {
         $in: [
           onboardingStatusEnum.ONBOARDING_SCHEDULED,
@@ -203,6 +207,8 @@ router.get(
         ],
       },
     });
+    query = processPaignation(req, query);
+    const users = await query.exec();
     res.status(200).json({
       message: `Successfully retrieved all pending users.`,
       success: true,
@@ -236,24 +242,13 @@ router.get(
     if (Object.keys(filters).length) {
       query = query.find(filters);
     }
-    let totalPages = 1;
-    if (req.query.page && req.query.limit) {
-      const page = parseInt(req.query.page as string);
-      const limit = parseInt(req.query.limit as string);
-      const skipIndex = (page - 1) * limit;
-      const totalDocs = await User.countDocuments();
-      // This isn't correct since we want to get the pages after we filter
-      // const totalDocs = await query.clone().countDocuments();
-      totalPages = Math.ceil(totalDocs / limit);
-      query = query.limit(limit).skip(skipIndex);
-    }
+    query = processPaignation(req, query);
     const users = await query.exec();
 
     res.status(200).json({
       message: `Successfully retrieved all approved users.`,
       success: true,
       result: users,
-      totalPages: totalPages,
     });
   }),
 );
