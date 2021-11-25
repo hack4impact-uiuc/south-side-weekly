@@ -7,6 +7,7 @@ import Team from '../models/team';
 import {
   getEditableFields,
   getViewableFields,
+  processFilters,
   processPaignation,
 } from '../utils/user-utils';
 import {
@@ -207,8 +208,10 @@ router.get(
         ],
       },
     });
+
     query = processPaignation(req, query);
     const users = await query.exec();
+
     res.status(200).json({
       message: `Successfully retrieved all pending users.`,
       success: true,
@@ -225,23 +228,7 @@ router.get(
       onboardingStatus: onboardingStatusEnum.ONBOARDED,
     });
 
-    type valueType = typeof req.query.page;
-    type queryFilter = Record<string, valueType | Record<string, valueType>>;
-
-    const filters: queryFilter = {};
-    for (const key in req.query) {
-      if (key === 'page' || key === 'limit') {
-        continue;
-      }
-      if (req.query[key] instanceof Array) {
-        filters[key] = { $all: req.query[key] };
-      } else {
-        filters[key] = req.query[key];
-      }
-    }
-    if (Object.keys(filters).length) {
-      query = query.find(filters);
-    }
+    query = processFilters(req, query);
     query = processPaignation(req, query);
     const users = await query.exec();
 

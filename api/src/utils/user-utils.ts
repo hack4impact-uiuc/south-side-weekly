@@ -55,6 +55,30 @@ const getEditableFields = (currentUser: IUser, userId: string): UserKeys => {
   return [];
 };
 
+const processFilters = (
+  req: Request,
+  query: Query<UserSchema[], UserSchema, Record<string, unknown>>,
+): Query<UserSchema[], UserSchema, Record<string, unknown>> => {
+  type valueType = typeof req.query.page;
+  type queryFilter = Record<string, valueType | Record<string, valueType>>;
+
+  const filters: queryFilter = {};
+  for (const key in req.query) {
+    if (key === 'page' || key === 'limit') {
+      continue;
+    }
+    if (req.query[key] instanceof Array) {
+      filters[key] = { $all: req.query[key] };
+    } else {
+      filters[key] = req.query[key];
+    }
+  }
+  if (Object.keys(filters).length) {
+    return query.find(filters);
+  }
+  return query;
+};
+
 const processPaignation = (
   req: Request,
   query: Query<UserSchema[], UserSchema, Record<string, unknown>>,
@@ -68,4 +92,10 @@ const processPaignation = (
   return query;
 };
 
-export { allFields, getEditableFields, getViewableFields, processPaignation };
+export {
+  allFields,
+  getEditableFields,
+  getViewableFields,
+  processPaignation,
+  processFilters,
+};
