@@ -5,7 +5,7 @@ import PitchFeedback from '../models/pitchFeedback';
 
 const router = express.Router();
 
-// Gets all of the anonomous feedback
+// Gets all of the anonymous feedback
 router.get(
   '/',
   errorWrap(async (req: Request, res: Response) => {
@@ -24,6 +24,8 @@ router.post(
   '/',
   errorWrap(async (req: Request, res: Response) => {
     const createFeedback = await PitchFeedback.create({ ...req.body });
+
+    // Avoids returning the userId on the response
     const feedback = await PitchFeedback.findById(createFeedback._id);
 
     res.status(200).json({

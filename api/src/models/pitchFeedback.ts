@@ -16,18 +16,9 @@ const PitchFeedback = new mongoose.Schema(
       ref: 'Pitch',
       required: true,
     },
-    firstQuestion: {
-      type: String,
-      required: true,
-    },
-    secondQuestion: {
-      type: String,
-      required: true,
-    },
-    thirdQuestion: {
-      type: String,
-      required: true,
-    },
+    firstQuestion: { type: String, default: null },
+    secondQuestion: { type: String, default: null },
+    thirdQuestion: { type: String, default: null },
   },
   { timestamps: true },
 );
