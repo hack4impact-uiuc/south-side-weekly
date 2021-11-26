@@ -1,7 +1,5 @@
 import React, { ReactNode } from 'react';
-import { Button } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
-import Swal from 'sweetalert2';
 
 import {
   EditTeams,
@@ -14,8 +12,6 @@ import {
 import { getUserFullName } from '../../../utils/helpers';
 import { buildColumn } from '../DyanmicTable/util';
 import { fullNameSort, joinedSort, roleSort } from '../Util/TableUtil';
-import { isError, updateUser } from '../../../api';
-import { onboardingStatusEnum } from '../../../utils/enums';
 
 const nameColumn = buildColumn<IUser>({
   title: 'Name',
@@ -95,44 +91,6 @@ const viewDateColumn = buildColumn<IUser>({
   },
 });
 
-const updateUserStatus = async (user: IUser, status: string): Promise<void> => {
-  const res = await updateUser({ onboardingStatus: status }, user._id);
-  if (!isError(res)) {
-    Swal.fire({
-      title: 'Updated User Status!',
-      icon: 'success',
-    });
-  }
-};
-
-const onboardActionColumn = buildColumn<IUser>({
-  title: '',
-  extractor: function getActions(user: IUser): ReactNode {
-    return (
-      <div className="actions">
-        <Button
-          id="decline"
-          className="edit-button"
-          size="small"
-          onClick={() => updateUserStatus(user, onboardingStatusEnum.DENIED)}
-          basic
-          compact
-        >
-          Decline
-        </Button>
-        <Button
-          id="approve"
-          className="edit-button"
-          size="small"
-          onClick={() => updateUserStatus(user, onboardingStatusEnum.ONBOARDED)}
-        >
-          Approve
-        </Button>
-      </div>
-    );
-  },
-});
-
 const viewUserColumn = buildColumn<IUser>({
   title: '',
   width: 1,
@@ -161,7 +119,6 @@ export {
   teamsColumnNoModal,
   interestsColumnModal,
   interestsColumnNoModal,
-  onboardActionColumn,
   viewUserColumn,
   viewDateColumn,
   onboardDateColumn,

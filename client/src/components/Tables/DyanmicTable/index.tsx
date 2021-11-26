@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Modal, Table } from 'semantic-ui-react';
+import { Table } from 'semantic-ui-react';
 
 import TableHeader from './TableHeader';
 import TableRow from './TableRow';
@@ -13,7 +13,11 @@ interface TableProps<RecordType> {
   initialSortColumn?: ColumnType<RecordType>;
   initialSortDirection?: SortDirection;
   singleLine?: boolean;
-  getModalContent?: (record: RecordType) => ReactElement;
+  getModal?: (
+    record: RecordType,
+    open: boolean,
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  ) => ReactElement;
   onRecordClick?: (record: RecordType) => void;
 }
 
@@ -23,7 +27,7 @@ const DynamicTable = <RecordType,>({
   initialSortColumn,
   initialSortDirection,
   singleLine,
-  getModalContent,
+  getModal,
   onRecordClick,
 }: TableProps<RecordType>): ReactElement => {
   type Column = ColumnType<RecordType>;
@@ -79,7 +83,7 @@ const DynamicTable = <RecordType,>({
       size="small"
       sortable
       compact
-      selectable
+      selectable={onRecordClick !== undefined || getModal !== undefined}
       celled
       fixed
       singleLine={singleLine}
@@ -98,25 +102,16 @@ const DynamicTable = <RecordType,>({
             columns={columns}
             key={i}
             onClick={() =>
-              getModalContent
+              getModal
                 ? openModal(record)
                 : onRecordClick && onRecordClick(record)
             }
           />
         ))}
 
-        {getModalContent ? (
-          <Modal
-            size="large"
-            open={isOpen}
-            onClose={() => setIsOpen(false)}
-            className="review-user-modal"
-          >
-            {currentRecord ? getModalContent(currentRecord) : ''}
-          </Modal>
-        ) : (
-          ''
-        )}
+        {getModal &&
+          currentRecord &&
+          getModal(currentRecord, isOpen, setIsOpen)}
       </Table.Body>
     </Table>
   );

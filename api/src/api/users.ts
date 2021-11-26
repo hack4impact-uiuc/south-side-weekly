@@ -196,9 +196,12 @@ router.get(
   '/all/pending',
   errorWrap(async (req: Request, res: Response) => {
     const users = await User.find({
-      onboardingStatus:
-        onboardingStatusEnum.ONBOARDING_SCHEDULED ||
-        onboardingStatusEnum.STALLED,
+      onboardingStatus: {
+        $in: [
+          onboardingStatusEnum.ONBOARDING_SCHEDULED,
+          onboardingStatusEnum.STALLED,
+        ],
+      },
     });
     res.status(200).json({
       message: `Successfully retrieved all pending users.`,
@@ -245,9 +248,12 @@ router.get(
   errorWrap(async (req: Request, res: Response) => {
     const users = await User.find({
       role: rolesEnum.CONTRIBUTOR,
-      onboardingStatus:
-        onboardingStatusEnum.ONBOARDING_SCHEDULED ||
-        onboardingStatusEnum.STALLED,
+      onboardingStatus: {
+        $in: [
+          onboardingStatusEnum.ONBOARDING_SCHEDULED,
+          onboardingStatusEnum.STALLED,
+        ],
+      },
     });
     res.status(200).json({
       message: `Successfully retrieved all pending contributors.`,
@@ -264,9 +270,12 @@ router.get(
   errorWrap(async (req: Request, res: Response) => {
     const users = await User.find({
       role: rolesEnum.STAFF,
-      onboardingStatus:
-        onboardingStatusEnum.ONBOARDING_SCHEDULED ||
-        onboardingStatusEnum.STALLED,
+      onboardingStatus: {
+        $in: [
+          onboardingStatusEnum.ONBOARDING_SCHEDULED,
+          onboardingStatusEnum.STALLED,
+        ],
+      },
     });
     res.status(200).json({
       message: `Successfully retrieved all pending staff.`,
