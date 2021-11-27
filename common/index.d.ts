@@ -23,7 +23,6 @@ export interface IUser {
   claimedPitches: string[];
   submittedPitches: string[];
   submittedClaims: string[];
-  publications: string[];
   teams: string[];
   role: string;
   races: string[];
@@ -33,10 +32,9 @@ export interface IUser {
 
 export interface IUserAggregate extends IUser {
   aggregated: {
-    claimedPitches: Partial<IPitch>[];
+    claimedPitches: Partial<IPitchAggregate>[];
     submittedPitches: Partial<IPitch>[];
     submittedClaims: Partial<IPitch>[];
-    publications: IIssueAggregate[];
     interests: IInterest[];
   };
 }
@@ -47,7 +45,7 @@ export interface IUserAggregate extends IUser {
 export interface IPitch {
   _id: string;
   title: string;
-  issues: { format: string; publicationDate: Date }[];
+  issues: string[];
   author: string;
   writer: string;
   primaryEditor: string;
@@ -96,6 +94,7 @@ export interface IPitchAggregate extends IPitch {
     reviewedBy: Partial<IUser>;
     teams: Array<ITeam & { target: number }>;
     interests: IInterest[];
+    issues: IIssue[];
   };
 }
 
@@ -141,10 +140,4 @@ export interface IIssue {
   releaseDate: string;
   pitches: string[];
   type: string;
-}
-
-export interface IIssueAggregate extends IIssue {
-  aggregated: {
-    pitches: Partial<IPitch>[];
-  };
 }

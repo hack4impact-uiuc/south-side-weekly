@@ -18,4 +18,5 @@ export type Sort<RecordType> = {
 export type View<RecordType> = {
   records: RecordType[];
   columns: ColumnType<RecordType>[];
+  initialSort?: Sort<RecordType>;
 };

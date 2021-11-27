@@ -149,21 +149,19 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   };
 
   const changeIssue = (
-    issueType: string,
+    issueId: string,
     date: Date,
     checkBox = true,
   ): IPitch['issues'] => {
     const issues = formData.issues;
-    const indexOfIssue = issues.findIndex(
-      (issue) => issue.format === issueType,
-    );
+    const indexOfIssue = issues.findIndex((issue) => issue === issueId);
     const notFoundIndex = -1;
     if (indexOfIssue === notFoundIndex) {
-      issues.push({ format: issueType, publicationDate: date });
+      issues.push(issueId);
     } else if (checkBox) {
       issues.splice(indexOfIssue, 1);
     } else {
-      issues[indexOfIssue].publicationDate = date;
+      // issues[indexOfIssue].publicationDate = date;
     }
     const issuesCopy = [...issues];
     return issuesCopy;
@@ -271,17 +269,14 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
         !formData.secondEditors.includes(user._id),
     );
 
-  const isChecked = (issueFormat: string): boolean =>
-    formData.issues.some(({ format }) => format === issueFormat);
+  const isChecked = (issueId: string): boolean =>
+    formData.issues.some((id) => id === issueId);
 
   const formatDate = (date: Date | undefined): string =>
     new Date(date || new Date()).toISOString().split('T')[0];
 
-  const findIssueDate = (issueFormat: string): string | undefined =>
-    formatDate(
-      formData.issues.find((issue) => issue.format === issueFormat)
-        ?.publicationDate,
-    );
+  const findIssueDate = (issueId: string): string | undefined => undefined;
+  // formatDate(formData.issues.find((id) => id === issueId)?.publicationDate ?? undefined);
   const filterTeams = (): ITeam[] =>
     teams.filter((team) => team.name !== 'Writing' && team.name !== 'Editing');
 

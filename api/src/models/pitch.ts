@@ -34,26 +34,13 @@ const team = new mongoose.Schema(
   { _id: false },
 );
 
-const issue = new mongoose.Schema(
-  {
-    format: {
-      type: String,
-      enum: Object.values(issueTypeEnum),
-      default: null,
-      required: true,
-    },
-    publicationDate: { type: Date, default: null },
-  },
-  { _id: false },
-);
-
 /**
  * Mongoose Schema to represent a Pitch at South Side Weekly
  */
 const Pitch = new mongoose.Schema(
   {
     title: { type: String, default: null, required: true },
-    issues: [issue],
+    issues: [{ type: Schema.Types.ObjectId, ref: 'Issue', required: true }],
     author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     primaryEditor: {
       type: Schema.Types.ObjectId,

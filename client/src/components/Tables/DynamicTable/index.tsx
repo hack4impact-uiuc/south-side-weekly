@@ -15,7 +15,6 @@ import './styles.scss';
 
 interface TableProps<RecordType> {
   view: View<RecordType>;
-  sort?: Sort<RecordType>;
   singleLine?: boolean;
   getModal?: (
     record: RecordType,
@@ -28,7 +27,6 @@ interface TableProps<RecordType> {
 
 const DynamicTable = <RecordType,>({
   view: viewProp,
-  sort: sortProp,
   singleLine,
   getModal,
   emptyMessage,
@@ -37,7 +35,9 @@ const DynamicTable = <RecordType,>({
   type Column = ColumnType<RecordType>;
 
   const [view, setView] = useState<View<RecordType>>(viewProp);
-  const [sort, setSort] = useState<Sort<RecordType> | undefined>(sortProp);
+  const [sort, setSort] = useState<Sort<RecordType> | undefined>(
+    viewProp.initialSort,
+  );
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [currentRecord, setCurrentRecord] = useState<RecordType>();
 
@@ -71,13 +71,9 @@ const DynamicTable = <RecordType,>({
 
   useEffect(() => {
     setView(viewProp);
-    sortView();
+    setSort(viewProp.initialSort);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewProp]);
-
-  useEffect(() => {
-    setSort(sortProp);
-  }, [sortProp]);
 
   const handleColumnClick = useCallback(
     (column: Column): void => {

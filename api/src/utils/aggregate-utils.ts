@@ -4,7 +4,6 @@ import {
   IUserAggregate,
   IPitchAggregate,
   IIssue,
-  IIssueAggregate,
 } from 'ssw-common';
 
 import Pitch from '../models/pitch';
@@ -25,6 +24,21 @@ const simplifyUser = (user: IUser | null): Partial<IUser> => {
     email: user.email,
     profilePic: user.profilePic,
     _id: user._id,
+  };
+};
+
+const simplifyIssue = (issue: IIssue | null): IIssue => {
+  if (issue === null) {
+    return null;
+  }
+
+  return {
+    _id: issue._id,
+    name: issue.name,
+    deadlineDate: issue.deadlineDate,
+    releaseDate: issue.releaseDate,
+    pitches: issue.pitches,
+    type: issue.type,
   };
 };
 
@@ -54,7 +68,7 @@ const aggregatePitch = async (rawPitch: IPitch): Promise<IPitchAggregate> => {
   );
 
   const pendingContributors = await Promise.all(
-    rawPitch.pendingContributors.map(async (contributor) => ({
+    (rawPitch.pendingContributors || []).map(async (contributor) => ({
       user: simplifyUser(await User.findById(contributor.userId)),
       teams: contributor.teams,
     })),
@@ -72,6 +86,12 @@ const aggregatePitch = async (rawPitch: IPitch): Promise<IPitchAggregate> => {
     ),
   );
 
+  const issues = await Promise.all(
+    rawPitch.issues.map(async (issueId) =>
+      simplifyIssue(await Issue.findById(issueId)),
+    ),
+  );
+
   const aggregatedPitch = {
     ...rawPitch,
     aggregated: {
@@ -85,6 +105,7 @@ const aggregatePitch = async (rawPitch: IPitch): Promise<IPitchAggregate> => {
       primaryEditor: primaryEditor,
       secondaryEditors: secondEditors,
       thirdEditors: thirdEditors,
+      issues: issues,
     },
   };
 
@@ -97,6 +118,7 @@ const simplifyPitch = (pitch: IPitch | null): Partial<IPitch> => {
   }
 
   return {
+    _id: pitch._id,
     title: pitch.title,
     description: pitch.description,
     author: pitch.author,
@@ -110,40 +132,11 @@ const simplifyPitch = (pitch: IPitch | null): Partial<IPitch> => {
   };
 };
 
-const aggregateIssue = async (rawIssue: IIssue): Promise<IIssueAggregate> => {
-  const pitches = await Promise.all(
-    rawIssue.pitches.map(async (id) => simplifyPitch(await Pitch.findById(id))),
-  );
-
-  const aggregatedIssue = {
-    ...rawIssue,
-    aggregated: {
-      pitches,
-    },
-  };
-
-  return aggregatedIssue;
-};
-
-const simplifyIssue = (issue: IIssue | null): IIssue => {
-  if (issue === null) {
-    return null;
-  }
-
-  return {
-    _id: issue._id,
-    name: issue.name,
-    deadlineDate: issue.deadlineDate,
-    releaseDate: issue.releaseDate,
-    pitches: issue.pitches,
-    type: issue.type,
-  };
-};
-
 const aggregateUser = async (rawUser: IUser): Promise<IUserAggregate> => {
   const claimedPitches = await Promise.all(
-    rawUser.claimedPitches.map(async (id) =>
-      simplifyPitch(await Pitch.findById(id)),
+    (rawUser.claimedPitches || []).map(
+      async (id) =>
+        await aggregatePitch((await Pitch.findById(id).lean()) as IPitch),
     ),
   );
 
@@ -159,13 +152,6 @@ const aggregateUser = async (rawUser: IUser): Promise<IUserAggregate> => {
     ),
   );
 
-  const publications = await Promise.all(
-    rawUser.publications.map(
-      async (id) =>
-        await aggregateIssue(simplifyIssue(await Issue.findById(id))),
-    ),
-  );
-
   const interests = await Promise.all(
     rawUser.interests.map((interestId) => Interest.findById(interestId).lean()),
   );
@@ -176,7 +162,6 @@ const aggregateUser = async (rawUser: IUser): Promise<IUserAggregate> => {
       claimedPitches: claimedPitches,
       submittedPitches: submittedPitches,
       submittedClaims: submittedClaims,
-      publications: publications,
       interests: interests,
     },
   };

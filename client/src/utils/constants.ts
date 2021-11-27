@@ -59,7 +59,6 @@ const emptyUser: IUser = {
   claimedPitches: [],
   submittedPitches: [],
   submittedClaims: [],
-  publications: [],
   teams: [],
   role: '',
   races: [],
@@ -105,6 +104,7 @@ const emptyAggregatePitch: IPitchAggregate = {
     reviewedBy: emptyUser,
     teams: [],
     interests: [],
+    issues: [],
   },
   ...emptyPitch,
 };

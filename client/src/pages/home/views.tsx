@@ -1,18 +1,13 @@
 import React from 'react';
-import { IIssueAggregate, IPitch, IUser } from 'ssw-common';
+import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
 
-import {
-  FieldTag,
-  PitchInterests,
-  PitchTeams,
-  IssueInterests,
-} from '../../components';
+import { FieldTag, PitchInterests, PitchTeams } from '../../components';
 import { ColumnType } from '../../components/Tables/DynamicTable/types';
 import { buildColumn } from '../../components/Tables/DynamicTable/util';
 
 import { Tab, TABS } from './helpers';
 
-const getColumnsForTab = (user: IUser, tab: Tab): ColumnType<any>[] => {
+const getColumnsForTab = (user: IUser, tab: Tab): ColumnType<IPitch>[] => {
   switch (tab) {
     case TABS.MEMBER_PITCHES:
       return getMemberPitchesView(user);
@@ -21,7 +16,7 @@ const getColumnsForTab = (user: IUser, tab: Tab): ColumnType<any>[] => {
     case TABS.SUBMITTED_PITCHES:
       return getSubmittedPitchesView();
     case TABS.SUBMITTED_PUBLICATIONS:
-      return getSubmittedPublicationsView();
+      return getSubmittedPublicationsView(user) as ColumnType<IPitch>[];
     default:
       return [];
   }
@@ -140,37 +135,42 @@ const getSubmittedClaimsView = (user: IUser): ColumnType<IPitch>[] => [
   },
 ];
 
-const getSubmittedPublicationsView = (): ColumnType<IIssueAggregate>[] => [
+const getSubmittedPublicationsView = (
+  user: IUser,
+): ColumnType<IPitchAggregate>[] => [
   {
-    title: 'Title',
+    ...titleColumn,
     width: '3',
-    sorter: (i1, i2) => i1.name.localeCompare(i2.name),
-    extractor: 'name',
   },
+  associatedTopicsColumn,
   {
-    title: 'Associated Topics',
+    title: "Team(s) You're On",
     width: '1',
-    sorter: (i1, i2) =>
+    sorter: (p1, p2) =>
       stringArraySorter(
-        i1.aggregated.pitches.map((pitch) => pitch.topics),
-        i2.aggregated.pitches.map((pitch) => pitch.topics),
+        p1.pendingContributors.find((request) => request.userId === user._id)
+          ?.teams ?? [],
+        p2.pendingContributors.find((request) => request.userId === user._id)
+          ?.teams ?? [],
       ),
-    extractor: function InterestsCell(issue) {
-      return (
-        <div className="flex-cell">
-          <IssueInterests issue={issue} />
-        </div>
-      );
+    extractor: function TeamsCell(pitch) {
+      return <PitchTeams pitch={pitch} user={user} />;
     },
   },
   {
     title: 'Publish Date',
     width: '1',
-    sorter: (i1, i2) =>
-      new Date(i1.releaseDate).getTime() - new Date(i2.releaseDate).getTime(),
-    extractor: function DateCell(issue) {
-      console.log(issue);
-      return new Date(issue.releaseDate).toLocaleDateString();
+    sorter: (p1, p2) => {
+      console.log(p1, p2);
+      return (
+        new Date(p1.aggregated.issues![0].releaseDate).getTime() -
+        new Date(p2.aggregated.issues![0].releaseDate).getTime()
+      );
+    },
+    extractor: function DateCell(pitch) {
+      return new Date(
+        pitch.aggregated.issues![0].releaseDate,
+      ).toLocaleDateString();
     },
   },
 ];

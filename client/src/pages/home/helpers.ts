@@ -1,6 +1,14 @@
-import { IIssue, IPitch, IUser, IUserAggregate } from 'ssw-common';
+import {
+  IIssue,
+  IPitch,
+  IPitchAggregate,
+  IUser,
+  IUserAggregate,
+} from 'ssw-common';
+import { Sort } from '../../components/Tables/DynamicTable/types';
 
 import { pitchStatusEnum } from '../../utils/enums';
+import { getColumnsForTab } from './views';
 
 const sswEstablishedYear = 1995;
 
@@ -45,41 +53,70 @@ const filterStatus = (
   status?: keyof typeof pitchStatusEnum,
 ): IPitch[] => pitches.filter((pitch) => pitch.status === status);
 
-type RecordType = IPitch | IIssue;
+const isPitchPublished = (pitch: IPitchAggregate): boolean =>
+  pitch.aggregated.issues.length > 0;
 
-const getSearchFields = (records: RecordType[]): string[] => {
-  if (isPitchArray(records)) {
-    return ['title'];
-  }
-  return ['name'];
-};
+const getPublishedPitches = (pitches: IPitchAggregate[]): IPitchAggregate[] =>
+  pitches.filter(isPitchPublished);
+
+const getUnpublishedPitches = (pitches: IPitchAggregate[]): IPitchAggregate[] =>
+  pitches.filter((pitch) => !isPitchPublished(pitch));
 
 const getRecordsForTab = (
   { aggregated }: IUserAggregate,
   tab: Tab,
-): RecordType[] => {
+): IPitch[] => {
   switch (tab) {
     case TABS.MEMBER_PITCHES:
-      return aggregated.claimedPitches as IPitch[];
+      return getUnpublishedPitches(
+        aggregated.claimedPitches as IPitchAggregate[],
+      );
     case TABS.SUBMITTED_CLAIMS:
       return aggregated.submittedClaims as IPitch[];
     case TABS.SUBMITTED_PITCHES:
       return aggregated.submittedPitches as IPitch[];
     case TABS.SUBMITTED_PUBLICATIONS:
-      return aggregated.publications as IIssue[];
+      return getPublishedPitches(
+        aggregated.claimedPitches as IPitchAggregate[],
+      );
     default:
       return [];
   }
 };
 
-const isPitchArray = (
-  array: Array<IPitch | IIssue>,
-): array is Array<IPitch> => {
-  if (array.length === 0) {
-    return true;
+const getInitialSort = (user: IUser, tab: Tab): Sort<IPitch> | undefined => {
+  switch (tab) {
+    case TABS.MEMBER_PITCHES:
+      return {
+        column: getColumnsForTab(user, tab).find(
+          (column) => column.title === 'Deadline',
+        )!,
+        direction: 'descending',
+      };
+    case TABS.SUBMITTED_PITCHES:
+      return {
+        column: getColumnsForTab(user, tab).find(
+          (column) => column.title === 'Date Submitted',
+        )!,
+        direction: 'descending',
+      };
+    case TABS.SUBMITTED_CLAIMS:
+      return {
+        column: getColumnsForTab(user, tab).find(
+          (column) => column.title === 'Date Submitted',
+        )!,
+        direction: 'descending',
+      };
+    case TABS.SUBMITTED_PUBLICATIONS:
+      return {
+        column: getColumnsForTab(user, tab).find(
+          (column) => column.title === 'Publish Date',
+        )!,
+        direction: 'descending',
+      };
+    default:
+      return;
   }
-
-  return 'title' in array[0];
 };
 
 export {
@@ -87,9 +124,8 @@ export {
   filterCreatedYear,
   filterRequestClaimYear,
   filterStatus,
-  isPitchArray,
-  getSearchFields,
   getRecordsForTab,
+  getInitialSort,
   TABS,
 };
-export type { Tab, RecordType };
+export type { Tab };
