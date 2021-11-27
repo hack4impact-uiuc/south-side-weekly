@@ -7,7 +7,7 @@ import {
   Segment,
   Select,
 } from 'semantic-ui-react';
-import { IIssue, IPitch, IUserAggregate } from 'ssw-common';
+import { IPitch, IUserAggregate } from 'ssw-common';
 
 import { getAggregatedUser, isError } from '../../api';
 import {
@@ -16,7 +16,7 @@ import {
   Walkthrough,
 } from '../../components';
 import DynamicTable from '../../components/Tables/DynamicTable';
-import { Sort, View } from '../../components/Tables/DynamicTable/types';
+import { View } from '../../components/Tables/DynamicTable/types';
 import { useAuth } from '../../contexts';
 import { pagesEnum, pitchStatusEnum } from '../../utils/enums';
 import { filterPitchesByInterests, titleCase } from '../../utils/helpers';

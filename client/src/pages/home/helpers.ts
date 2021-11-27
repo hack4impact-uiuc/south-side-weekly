@@ -1,13 +1,8 @@
-import {
-  IIssue,
-  IPitch,
-  IPitchAggregate,
-  IUser,
-  IUserAggregate,
-} from 'ssw-common';
-import { Sort } from '../../components/Tables/DynamicTable/types';
+import { IPitch, IPitchAggregate, IUser, IUserAggregate } from 'ssw-common';
 
+import { Sort } from '../../components/Tables/DynamicTable/types';
 import { pitchStatusEnum } from '../../utils/enums';
+
 import { getColumnsForTab } from './views';
 
 const sswEstablishedYear = 1995;
