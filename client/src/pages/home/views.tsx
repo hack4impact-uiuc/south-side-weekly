@@ -64,7 +64,7 @@ const getSubmittedPitchesView = (): ColumnType<IPitch>[] => [
     width: '1',
     sorter: (p1, p2) => p1.status.localeCompare(p2.status),
     extractor: function StatusCell({ status }) {
-      return <FieldTag content={status} />;
+      return <FieldTag content={status} size={'small'} />;
     },
   },
   {
@@ -101,7 +101,12 @@ const getSubmittedClaimsView = (user: IUser): ColumnType<IPitch>[] => [
     width: '1',
     sorter: (p1, p2) => p1.status.localeCompare(p2.status),
     extractor: function StatusCell(pitch) {
-      return <FieldTag content={getUserClaimStatusForPitch(pitch, user)} />;
+      return (
+        <FieldTag
+          content={getUserClaimStatusForPitch(pitch, user)}
+          size={'small'}
+        />
+      );
     },
   },
   {
