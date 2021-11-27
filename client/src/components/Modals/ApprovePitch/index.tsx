@@ -173,7 +173,6 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   ): void => {
     const data = { ...formData };
     data[key] = value;
-    console.log(data);
     setFormData(data);
   };
 
