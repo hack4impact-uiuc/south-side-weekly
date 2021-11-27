@@ -61,3 +61,9 @@ export const visibilityEnum = {
   PUBLIC: 'PUBLIC',
   PRIVATE: 'PRIVATE',
 };
+
+export const statusEnum = {
+  ACTIVE: 'Active',
+  RECENTLY_ACTIVE: 'Recently Active',
+  INACTIVE: 'Inactive',
+};
