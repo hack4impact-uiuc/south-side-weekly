@@ -1,6 +1,4 @@
-import UserInterests from './UserInterests';
-import UserTeams from './UserTeams';
-import PitchInterests from './PitchInterests';
-import PitchTeams from './PitchTeams';
+import InterestList from './InterestList';
+import TeamList from './TeamList';
 
-export { UserInterests, UserTeams, PitchInterests, PitchTeams };
+export { InterestList, TeamList };

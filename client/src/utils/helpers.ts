@@ -20,6 +20,27 @@ const getPitchTeams = (pitch: IPitch): string[] => {
 };
 
 /**
+ * Gets all of the teams a user is on for a given pitch
+ *
+ * @param pitch the pitch to check
+ * @param user the user to look at teams for
+ * @returns an array of all the team IDs belonging to the user or undefined if the user isn't on the pitch
+ */
+const getPitchTeamsForContributor = (
+  pitch: IPitch,
+  user: IUser,
+): string[] | undefined => {
+  type Contributor = IPitch['assignmentContributors'][0];
+  const isUser = (contributor: Contributor) => contributor.userId === user._id;
+
+  const contributor =
+    pitch.assignmentContributors.find(isUser) ||
+    pitch.pendingContributors.find(isUser);
+
+  return contributor?.teams;
+};
+
+/**
  * Filters a list of pitches by a list of interests
  *
  * Returns the pitches in the pitches list which have all of the interests contained in interests
@@ -239,6 +260,7 @@ const pluralize = (word: string, numberOf: number): string =>
 
 export {
   getPitchTeams,
+  getPitchTeamsForContributor,
   filterPitchesByInterests,
   sortPitches,
   updateUserField,

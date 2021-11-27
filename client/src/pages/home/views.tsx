@@ -1,9 +1,10 @@
 import React from 'react';
 import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
 
-import { FieldTag, PitchInterests, PitchTeams } from '../../components';
+import { FieldTag, InterestList, TeamList } from '../../components';
 import { ColumnType } from '../../components/Tables/DynamicTable/types';
 import { buildColumn } from '../../components/Tables/DynamicTable/util';
+import { getPitchTeamsForContributor } from '../../utils/helpers';
 
 import { Tab, TABS } from './helpers';
 
@@ -26,6 +27,15 @@ const stringArraySorter = <T extends Array<any>>(a1: T, a2: T): number =>
   a1.length - a2.length ||
   a1.reduce((sum, e, i) => sum + e.localeCompare(a2[i]), 0);
 
+type PendingContributor = IPitch['pendingContributors'][0];
+const findPendingContributor = (
+  pitch: IPitch,
+  user: IUser,
+): PendingContributor | undefined =>
+  pitch.pendingContributors.find(
+    (contributor) => contributor.userId === user._id,
+  );
+
 const getMemberPitchesView = (user: IUser): ColumnType<IPitch>[] => [
   titleColumn,
   associatedTopicsColumn,
@@ -34,15 +44,13 @@ const getMemberPitchesView = (user: IUser): ColumnType<IPitch>[] => [
     width: '1',
     sorter: (p1, p2) =>
       stringArraySorter(
-        p1.assignmentContributors.find(
-          (contributor) => contributor.userId === user._id,
-        )?.teams ?? [],
-        p2.assignmentContributors.find(
-          (contributor) => contributor.userId === user._id,
-        )?.teams ?? [],
+        getPitchTeamsForContributor(p1, user) ?? [],
+        getPitchTeamsForContributor(p2, user) ?? [],
       ),
     extractor: function TeamsCell(pitch) {
-      return <PitchTeams pitch={pitch} user={user} assignmentContributors />;
+      return (
+        <TeamList teamIds={getPitchTeamsForContributor(pitch, user) ?? []} />
+      );
     },
   },
   {
@@ -94,13 +102,13 @@ const getSubmittedClaimsView = (user: IUser): ColumnType<IPitch>[] => [
     width: '2',
     sorter: (p1, p2) =>
       stringArraySorter(
-        p1.pendingContributors.find((request) => request.userId === user._id)
-          ?.teams ?? [],
-        p2.pendingContributors.find((request) => request.userId === user._id)
-          ?.teams ?? [],
+        getPitchTeamsForContributor(p1, user) ?? [],
+        getPitchTeamsForContributor(p2, user) ?? [],
       ),
     extractor: function TeamsCell(pitch) {
-      return <PitchTeams pitch={pitch} user={user} />;
+      return (
+        <TeamList teamIds={getPitchTeamsForContributor(pitch, user) ?? []} />
+      );
     },
   },
   {
@@ -116,20 +124,14 @@ const getSubmittedClaimsView = (user: IUser): ColumnType<IPitch>[] => [
     width: '1',
     sorter: (p1, p2) =>
       new Date(
-        p1.pendingContributors.find(
-          (contributor) => contributor.userId === user._id,
-        )?.dateSubmitted ?? Date.now(),
+        findPendingContributor(p1, user)?.dateSubmitted ?? Date.now(),
       ).getTime() -
       new Date(
-        p2.pendingContributors.find(
-          (contributor) => contributor.userId === user._id,
-        )?.dateSubmitted ?? Date.now(),
+        findPendingContributor(p2, user)?.dateSubmitted ?? Date.now(),
       ).getTime(),
     extractor: function DateCell(pitch) {
       return new Date(
-        pitch.pendingContributors.find(
-          (contributor) => contributor.userId === user._id,
-        )?.dateSubmitted ?? Date.now(),
+        findPendingContributor(pitch, user)?.dateSubmitted ?? Date.now(),
       ).toLocaleDateString();
     },
   },
@@ -148,13 +150,13 @@ const getSubmittedPublicationsView = (
     width: '1',
     sorter: (p1, p2) =>
       stringArraySorter(
-        p1.pendingContributors.find((request) => request.userId === user._id)
-          ?.teams ?? [],
-        p2.pendingContributors.find((request) => request.userId === user._id)
-          ?.teams ?? [],
+        getPitchTeamsForContributor(p1, user) ?? [],
+        getPitchTeamsForContributor(p2, user) ?? [],
       ),
     extractor: function TeamsCell(pitch) {
-      return <PitchTeams pitch={pitch} user={user} />;
+      return (
+        <TeamList teamIds={getPitchTeamsForContributor(pitch, user) ?? []} />
+      );
     },
   },
   {
@@ -193,10 +195,10 @@ const associatedTopicsColumn = buildColumn<IPitch>({
   title: 'Associated Topics',
   width: '1',
   sorter: (p1, p2) => stringArraySorter(p1.topics, p2.topics),
-  extractor: function InterestsCell(pitch) {
+  extractor: function InterestsCell({ topics }) {
     return (
       <div className="flex-cell">
-        <PitchInterests pitch={pitch} />
+        <InterestList interestIds={topics} />
       </div>
     );
   },
