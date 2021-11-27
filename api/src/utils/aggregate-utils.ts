@@ -68,7 +68,7 @@ const aggregatePitch = async (rawPitch: IPitch): Promise<IPitchAggregate> => {
   );
 
   const pendingContributors = await Promise.all(
-    (rawPitch.pendingContributors || []).map(async (contributor) => ({
+    rawPitch.pendingContributors.map(async (contributor) => ({
       user: simplifyUser(await User.findById(contributor.userId)),
       teams: contributor.teams,
     })),
@@ -134,7 +134,7 @@ const simplifyPitch = (pitch: IPitch | null): Partial<IPitch> => {
 
 const aggregateUser = async (rawUser: IUser): Promise<IUserAggregate> => {
   const claimedPitches = await Promise.all(
-    (rawUser.claimedPitches || []).map(
+    rawUser.claimedPitches.map(
       async (id) =>
         await aggregatePitch((await Pitch.findById(id).lean()) as IPitch),
     ),
