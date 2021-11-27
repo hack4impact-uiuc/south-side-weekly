@@ -12,7 +12,7 @@ const UserFeedback = new mongoose.Schema(
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     pitchId: { type: Schema.Types.ObjectId, ref: 'Pitch', required: true },
     stars: { type: Number, default: null },
-    reasnoning: { type: String, default: null },
+    reasoning: { type: String, default: null },
   },
   { timestamps: true },
 );

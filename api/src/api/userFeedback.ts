@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
-import { errorWrap } from '../middleware';
 
+import { errorWrap } from '../middleware';
 import { requireAdmin } from '../middleware/auth';
 
 import UserFeedback from '../models/userFeedback';
