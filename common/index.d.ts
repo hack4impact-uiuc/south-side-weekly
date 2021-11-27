@@ -148,3 +148,12 @@ export interface IUserFeedback {
   createdAt: Date;
   updatedAt: Date;
 }
+// The model has userId but will not be returned in any response for anonomous functionality
+export interface IPitchFeedback {
+  pitchId: string;
+  firstQuestion: string;
+  secondQuestion: string;
+  thirdQuestion: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

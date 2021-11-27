@@ -9,6 +9,7 @@ import PageCounter from './Wizard/PageCounter';
 import WizardSvg from './Wizard/Svg';
 import PrivateRoute from './PrivateRoute';
 import AdminView from './Auth/AdminView';
+import ContributorView from './Auth/ContributorView';
 import StaffView from './Auth/StaffView';
 import ApprovedView from './Auth/ApprovedView';
 import FilterDropdown from './Dropdowns/Filter';
@@ -50,6 +51,7 @@ export {
   WizardSvg,
   PrivateRoute,
   AdminView,
+  ContributorView,
   StaffView,
   FilterDropdown,
   FieldTag,
