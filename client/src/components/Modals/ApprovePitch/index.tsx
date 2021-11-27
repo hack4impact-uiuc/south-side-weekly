@@ -276,7 +276,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
     new Date(date || new Date()).toISOString().split('T')[0];
 
   // TODO: Implement this for the new issue schema
-  const findIssueDate = (_issueId: string): string | undefined => undefined;
+  const findIssueDate = (issueId: string): string | undefined => void issueId;
   const filterTeams = (): ITeam[] =>
     teams.filter((team) => team.name !== 'Writing' && team.name !== 'Editing');
 
