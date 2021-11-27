@@ -14,12 +14,13 @@ import {
 } from '../../components';
 import { useAuth } from '../../contexts';
 import { pagesEnum, pitchStatusEnum } from '../../utils/enums';
-import { filterPitchesByInterests } from '../../utils/helpers';
+import { filterPitchesByInterests, titleCase } from '../../utils/helpers';
 
 import {
   filterCreatedYear,
+  filterPitchClaimStatus,
+  filterPitchStatus,
   filterRequestClaimYear,
-  filterStatus,
   getInitialSort,
   getRecordsForTab,
   getYearsSinceSSWEstablished,
@@ -42,9 +43,8 @@ const Homepage: FC = () => {
   const [searchInput, setSearchInput] = useState('');
   const [filteredInterests, setFilteredInterests] = useState<string[]>([]);
   const [filteredYear, setFilteredYear] = useState<number>();
-  const [filteredStatus, setFilteredStatus] = useState<
-    keyof typeof pitchStatusEnum | null
-  >(null);
+  const [filteredStatus, setFilteredStatus] =
+    useState<keyof typeof pitchStatusEnum>();
 
   const [filteredView, setFilteredView] = useState<View<IPitch>>({
     records: [],
@@ -54,7 +54,7 @@ const Homepage: FC = () => {
   const canFilterInterests =
     currentTab !== TABS.MEMBER_PITCHES &&
     currentTab !== TABS.SUBMITTED_PUBLICATIONS;
-  const canFilterStatuses = currentTab === TABS.SUBMITTED_PITCHES;
+  const canFilterStatuses = canFilterInterests;
   const canFilterYear = canFilterInterests;
 
   useEffect(() => {
@@ -85,7 +85,10 @@ const Homepage: FC = () => {
       }
 
       if (canFilterStatuses && filteredStatus) {
-        pitches = filterStatus(pitches, filteredStatus);
+        pitches =
+          currentTab === TABS.SUBMITTED_PITCHES
+            ? filterPitchStatus(pitches, filteredStatus)
+            : filterPitchClaimStatus(pitches, user, filteredStatus);
       }
 
       if (canFilterYear && filteredYear) {
@@ -193,11 +196,23 @@ const Homepage: FC = () => {
               isClearable
               placeholder="Status"
               className="filter-dropdown"
-              value={filteredStatus}
-              options={
-                Object.keys(pitchStatusEnum) as (keyof typeof pitchStatusEnum)[]
+              value={
+                filteredStatus
+                  ? {
+                      value: filteredStatus,
+                      label: titleCase(filteredStatus || ''),
+                    }
+                  : undefined
               }
-              onChange={setFilteredStatus}
+              options={
+                Object.keys(pitchStatusEnum).map((status) => ({
+                  value: status,
+                  label: titleCase(status),
+                })) as any
+              }
+              onChange={(value) =>
+                setFilteredStatus(value?.value as keyof typeof pitchStatusEnum)
+              }
             />
           )}
           {canFilterInterests && (
@@ -218,9 +233,18 @@ const Homepage: FC = () => {
               isSearchable
               placeholder="Year"
               className="filter-dropdown"
-              value={filteredYear}
-              options={getYearsSinceSSWEstablished()}
-              onChange={(value) => setFilteredYear(value as number | undefined)}
+              value={
+                filteredYear
+                  ? { value: filteredYear, label: filteredYear }
+                  : undefined
+              }
+              options={getYearsSinceSSWEstablished().map((year) => ({
+                value: year,
+                label: year,
+              }))}
+              onChange={(value) =>
+                setFilteredYear(value?.value as number | undefined)
+              }
             />
           )}
         </div>

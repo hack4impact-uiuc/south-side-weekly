@@ -2,7 +2,10 @@ import { IPitch, IPitchAggregate, IUser, IUserAggregate } from 'ssw-common';
 
 import { Sort } from '../../components/Tables/DynamicTable/types';
 import { pitchStatusEnum } from '../../utils/enums';
-import { findPendingContributor } from '../../utils/helpers';
+import {
+  findPendingContributor,
+  getUserClaimStatusForPitch,
+} from '../../utils/helpers';
 
 import { getColumnsForTab } from './views';
 
@@ -38,10 +41,17 @@ const filterRequestClaimYear = (
       ).getFullYear() === year,
   );
 
-const filterStatus = (
+const filterPitchStatus = (
   pitches: IPitch[],
   status?: keyof typeof pitchStatusEnum,
 ): IPitch[] => pitches.filter((pitch) => pitch.status === status);
+
+const filterPitchClaimStatus = (
+  pitches: IPitch[],
+  user: IUser,
+  status?: keyof typeof pitchStatusEnum,
+): IPitch[] =>
+  pitches.filter((pitch) => getUserClaimStatusForPitch(pitch, user) === status);
 
 const isPitchPublished = (pitch: IPitchAggregate): boolean =>
   pitch.aggregated.issues.length > 0;
@@ -113,7 +123,8 @@ export {
   getYearsSinceSSWEstablished,
   filterCreatedYear,
   filterRequestClaimYear,
-  filterStatus,
+  filterPitchStatus,
+  filterPitchClaimStatus,
   getRecordsForTab,
   getInitialSort,
   TABS,
