@@ -2,6 +2,7 @@ import { IPitch, IPitchAggregate, IUser, IUserAggregate } from 'ssw-common';
 
 import { Sort } from '../../components/Tables/DynamicTable/types';
 import { pitchStatusEnum } from '../../utils/enums';
+import { findPendingContributor } from '../../utils/helpers';
 
 import { getColumnsForTab } from './views';
 
@@ -21,15 +22,6 @@ const TABS = {
   SUBMITTED_PUBLICATIONS: 'Your Publications',
 } as const; // As const prevents modification of this object
 type Tab = typeof TABS[keyof typeof TABS];
-
-type PendingContributor = IPitch['pendingContributors'][0];
-const findPendingContributor = (
-  pitch: IPitch,
-  user: IUser,
-): PendingContributor | undefined =>
-  pitch.pendingContributors.find(
-    (contributor) => contributor.userId === user._id,
-  );
 
 const filterCreatedYear = (pitches: IPitch[], year?: number): IPitch[] =>
   pitches.filter((pitch) => new Date(pitch.createdAt).getFullYear() === year);
@@ -119,7 +111,6 @@ const getInitialSort = (user: IUser, tab: Tab): Sort<IPitch> | undefined => {
 
 export {
   getYearsSinceSSWEstablished,
-  findPendingContributor,
   filterCreatedYear,
   filterRequestClaimYear,
   filterStatus,

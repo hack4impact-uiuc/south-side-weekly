@@ -191,8 +191,8 @@ const Homepage: FC = () => {
           {canFilterStatuses && (
             <Select
               isClearable
-              isSearchable
               placeholder="Status"
+              className="filter-dropdown"
               value={filteredStatus}
               options={
                 Object.keys(pitchStatusEnum) as (keyof typeof pitchStatusEnum)[]
@@ -217,6 +217,7 @@ const Homepage: FC = () => {
               isClearable
               isSearchable
               placeholder="Year"
+              className="filter-dropdown"
               value={filteredYear}
               options={getYearsSinceSSWEstablished()}
               onChange={(value) => setFilteredYear(value as number | undefined)}

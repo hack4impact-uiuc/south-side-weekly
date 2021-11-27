@@ -8,9 +8,13 @@ import {
   InterestList,
   TeamList,
 } from '../../components';
-import { getPitchTeamsForContributor } from '../../utils/helpers';
+import {
+  findPendingContributor,
+  getPitchTeamsForContributor,
+  getUserClaimStatusForPitch,
+} from '../../utils/helpers';
 
-import { findPendingContributor, Tab, TABS } from './helpers';
+import { Tab, TABS } from './helpers';
 
 const getColumnsForTab = (user: IUser, tab: Tab): ColumnType<IPitch>[] => {
   switch (tab) {
@@ -96,8 +100,8 @@ const getSubmittedClaimsView = (user: IUser): ColumnType<IPitch>[] => [
     title: 'Status',
     width: '1',
     sorter: (p1, p2) => p1.status.localeCompare(p2.status),
-    extractor: function StatusCell() {
-      return <FieldTag content={'Pending'} />;
+    extractor: function StatusCell(pitch) {
+      return <FieldTag content={getUserClaimStatusForPitch(pitch, user)} />;
     },
   },
   {

@@ -2,6 +2,7 @@ import { AsYouType } from 'libphonenumber-js';
 import { camelCase, isUndefined, reject, startCase } from 'lodash';
 import { DropdownItemProps } from 'semantic-ui-react';
 import { IUser, IPitch } from 'ssw-common';
+import { pitchStatusEnum } from './enums';
 
 /**
  * Gets all of the teams associated with a pitch
@@ -41,6 +42,60 @@ const getPitchTeamsForContributor = (
   return contributor?.teams;
 };
 
+type PendingContributor = IPitch['pendingContributors'][0];
+/**
+ * Find a pending contributor on a pitch that matches a given user
+ *
+ * @param pitch the pitch to check
+ * @param user the user to match
+ * @returns the pending contributor object
+ */
+const findPendingContributor = (
+  pitch: IPitch,
+  user: IUser,
+): PendingContributor | undefined =>
+  pitch.pendingContributors.find(
+    (contributor) => contributor.userId === user._id,
+  );
+
+type AssignmentContributor = IPitch['assignmentContributors'][0];
+/**
+ * Find an assignment contributor on a pitch that matches a given user
+ *
+ * @param pitch the pitch to check
+ * @param user the user to match
+ * @returns the assignment contributor object
+ */
+const findAssignmentContributor = (
+  pitch: IPitch,
+  user: IUser,
+): AssignmentContributor | undefined =>
+  pitch.assignmentContributors.find(
+    (contributor) => contributor.userId === user._id,
+  );
+
+type PitchClaimStatus = typeof pitchStatusEnum[keyof typeof pitchStatusEnum];
+/**
+ * Gets a user's claim status for a pitch
+ *
+ * @param pitch the pitch
+ * @param user the user
+ * @returns the user's pitch claim status
+ */
+const getUserClaimStatusForPitch = (
+  pitch: IPitch,
+  user: IUser,
+): PitchClaimStatus => {
+  if (findAssignmentContributor(pitch, user)) {
+    return pitchStatusEnum.APPROVED;
+  }
+
+  if (findPendingContributor(pitch, user)) {
+    return pitchStatusEnum.PENDING;
+  }
+
+  return pitchStatusEnum.DECLINED;
+};
 /**
  * Filters a list of pitches by a list of interests
  *
@@ -262,6 +317,9 @@ const pluralize = (word: string, numberOf: number): string =>
 export {
   getPitchTeams,
   getPitchTeamsForContributor,
+  findPendingContributor,
+  findAssignmentContributor,
+  getUserClaimStatusForPitch,
   filterPitchesByInterests,
   sortPitches,
   updateUserField,

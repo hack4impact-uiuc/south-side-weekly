@@ -263,7 +263,7 @@ router.put(
   errorWrap(async (req: Request, res: Response) => {
     const pitch = await Pitch.findByIdAndUpdate(req.params.pitchId, {
       $set: {
-        status: pitchStatusEnum.REJECTED,
+        status: pitchStatusEnum.DECLINED,
         reviewedBy: req.user._id,
       },
     }).lean();

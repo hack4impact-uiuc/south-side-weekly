@@ -38,7 +38,7 @@ export const racesEnum = {
 export const pitchStatusEnum = {
   APPROVED: 'APPROVED',
   PENDING: 'PENDING',
-  REJECTED: 'REJECTED',
+  DECLINED: 'DECLINED',
   NONE: 'NONE',
 };
 
