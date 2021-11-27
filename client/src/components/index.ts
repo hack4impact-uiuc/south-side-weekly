@@ -31,6 +31,9 @@ import LinkDisplay from './LinkDisplay';
 import InterestsSelect from './Dropdowns/InterestsSelect';
 import ProviderWrapper from './ProviderWrapper';
 import TeamsSelect from './Dropdowns/TeamsSelect';
+import DynamicTable from './Tables/DynamicTable';
+import { ColumnType, View } from './Tables/DynamicTable/types';
+import { buildColumn } from './Tables/DynamicTable/util';
 import {
   EditableTagModal,
   EditInterests,
@@ -82,4 +85,8 @@ export {
   ApprovedUsers,
   PendingUsers,
   ApprovedView,
+  DynamicTable,
+  buildColumn,
 };
+
+export type { View, ColumnType };

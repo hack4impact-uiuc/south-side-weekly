@@ -31,7 +31,8 @@ const getPitchTeamsForContributor = (
   user: IUser,
 ): string[] | undefined => {
   type Contributor = IPitch['assignmentContributors'][0];
-  const isUser = (contributor: Contributor) => contributor.userId === user._id;
+  const isUser = (contributor: Contributor): boolean =>
+    contributor.userId === user._id;
 
   const contributor =
     pitch.assignmentContributors.find(isUser) ||

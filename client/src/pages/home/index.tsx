@@ -1,25 +1,20 @@
 import { startsWith, toLower, toString } from 'lodash';
 import React, { FC, useEffect, useState } from 'react';
-import {
-  DropdownItemProps,
-  Input,
-  Menu,
-  Segment,
-  Select,
-} from 'semantic-ui-react';
+import { Input, Menu, Segment } from 'semantic-ui-react';
+import Select from 'react-select';
 import { IPitch, IUserAggregate } from 'ssw-common';
 
 import { getAggregatedUser, isError } from '../../api';
 import {
+  DynamicTable,
   InterestsSelect,
   SubmitPitchModal,
+  View,
   Walkthrough,
 } from '../../components';
-import DynamicTable from '../../components/Tables/DynamicTable';
-import { View } from '../../components/Tables/DynamicTable/types';
 import { useAuth } from '../../contexts';
 import { pagesEnum, pitchStatusEnum } from '../../utils/enums';
-import { filterPitchesByInterests, titleCase } from '../../utils/helpers';
+import { filterPitchesByInterests } from '../../utils/helpers';
 
 import {
   filterCreatedYear,
@@ -31,24 +26,25 @@ import {
   Tab,
   TABS,
 } from './helpers';
-import './styles.scss';
 import { getColumnsForTab } from './views';
+import './styles.scss';
 
 const searchFields: (keyof IPitch)[] = ['title'];
 
 const Homepage: FC = () => {
   const { user } = useAuth();
 
-  const [refreshRecords, setRefreshRecords] = useState<boolean>(false);
+  const [refreshRecords, setRefreshRecords] = useState(false);
   const [aggregatedUser, setAggregatedUser] = useState<IUserAggregate>();
 
   const [currentTab, setCurrentTab] = useState<Tab>(TABS.MEMBER_PITCHES);
 
-  const [searchInput, setSearchInput] = useState<string>('');
+  const [searchInput, setSearchInput] = useState('');
   const [filteredInterests, setFilteredInterests] = useState<string[]>([]);
-  const [filteredYear, setFilteredYear] = useState<string>();
-  const [filteredStatus, setFilteredStatus] =
-    useState<keyof typeof pitchStatusEnum>();
+  const [filteredYear, setFilteredYear] = useState<number>();
+  const [filteredStatus, setFilteredStatus] = useState<
+    keyof typeof pitchStatusEnum | null
+  >(null);
 
   const [filteredView, setFilteredView] = useState<View<IPitch>>({
     records: [],
@@ -140,9 +136,6 @@ const Homepage: FC = () => {
     setRefreshRecords((refresh) => !refresh);
   };
 
-  const yearSelectOptions: DropdownItemProps[] =
-    getYearsSinceSSWEstablished().map((year) => ({ text: year, value: year }));
-
   return (
     <div className="homepage-wrapper">
       <Walkthrough
@@ -180,7 +173,7 @@ const Homepage: FC = () => {
           position="right"
         />
       </Menu>
-      <Segment loading={aggregatedUser === undefined}>
+      <Segment loading={!aggregatedUser}>
         <div className="filters-wrapper">
           <Input
             value={searchInput}
@@ -197,16 +190,14 @@ const Homepage: FC = () => {
           />
           {canFilterStatuses && (
             <Select
-              clearable
+              isClearable
+              isSearchable
               placeholder="Status"
               value={filteredStatus}
-              options={Object.keys(pitchStatusEnum).map((id) => ({
-                text: titleCase(id),
-                value: id,
-              }))}
-              onChange={(_, data) =>
-                setFilteredStatus(data.value as keyof typeof pitchStatusEnum)
+              options={
+                Object.keys(pitchStatusEnum) as (keyof typeof pitchStatusEnum)[]
               }
+              onChange={setFilteredStatus}
             />
           )}
           {canFilterInterests && (
@@ -223,13 +214,12 @@ const Homepage: FC = () => {
           )}
           {canFilterYear && (
             <Select
-              clearable
-              search
+              isClearable
+              isSearchable
               placeholder="Year"
-              options={yearSelectOptions}
               value={filteredYear}
-              onChange={(_, data) => setFilteredYear(data.value?.toString())}
-              defaultUpward={false}
+              options={getYearsSinceSSWEstablished()}
+              onChange={(value) => setFilteredYear(value as number | undefined)}
             />
           )}
         </div>

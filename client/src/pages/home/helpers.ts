@@ -7,11 +7,11 @@ import { getColumnsForTab } from './views';
 
 const sswEstablishedYear = 1995;
 
-const getYearsSinceSSWEstablished = (): string[] => {
+const getYearsSinceSSWEstablished = (): number[] => {
   const currentYear = new Date().getFullYear();
   return new Array(currentYear - sswEstablishedYear + 1)
     .fill(null)
-    .map((_, i) => (currentYear - i).toString());
+    .map((_, i) => currentYear - i);
 };
 
 const TABS = {
@@ -19,28 +19,31 @@ const TABS = {
   SUBMITTED_PITCHES: 'Pitches You Submitted',
   SUBMITTED_CLAIMS: 'Your Claim Requests',
   SUBMITTED_PUBLICATIONS: 'Your Publications',
-} as const;
+} as const; // As const prevents modification of this object
 type Tab = typeof TABS[keyof typeof TABS];
 
-const filterCreatedYear = (pitches: IPitch[], year?: string): IPitch[] =>
-  pitches.filter(
-    (pitch) => new Date(pitch.createdAt).getFullYear().toString() === year,
+type PendingContributor = IPitch['pendingContributors'][0];
+const findPendingContributor = (
+  pitch: IPitch,
+  user: IUser,
+): PendingContributor | undefined =>
+  pitch.pendingContributors.find(
+    (contributor) => contributor.userId === user._id,
   );
+
+const filterCreatedYear = (pitches: IPitch[], year?: number): IPitch[] =>
+  pitches.filter((pitch) => new Date(pitch.createdAt).getFullYear() === year);
 
 const filterRequestClaimYear = (
   pitches: IPitch[],
   user: IUser,
-  year?: string,
+  year?: number,
 ): IPitch[] =>
   pitches.filter(
     (pitch) =>
       new Date(
-        pitch.pendingContributors.find(
-          (contributor) => contributor.userId === user._id,
-        )?.dateSubmitted ?? new Date(),
-      )
-        .getFullYear()
-        .toString() === year,
+        findPendingContributor(pitch, user)?.dateSubmitted ?? new Date(),
+      ).getFullYear() === year,
   );
 
 const filterStatus = (
@@ -116,6 +119,7 @@ const getInitialSort = (user: IUser, tab: Tab): Sort<IPitch> | undefined => {
 
 export {
   getYearsSinceSSWEstablished,
+  findPendingContributor,
   filterCreatedYear,
   filterRequestClaimYear,
   filterStatus,
