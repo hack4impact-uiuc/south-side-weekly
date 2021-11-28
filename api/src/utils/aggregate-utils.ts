@@ -93,7 +93,7 @@ const simplifyPitch = (pitch: IPitch | null): Partial<IPitch> => {
     author: pitch.author,
     deadline: pitch.deadline,
     topics: pitch.topics,
-    assignmentContributors: pitch.assignmentContributors
+    assignmentContributors: pitch.assignmentContributors,
   };
 };
 

@@ -38,8 +38,8 @@ const User = new mongoose.Schema({
   submittedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
   teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
   involvementResponse: { type: String, default: null },
-  journalismResponse: {type: String, default: null},
-  neighborhood: {type: String, required: true},
+  journalismResponse: { type: String, default: null },
+  neighborhood: { type: String, required: true },
   onboardReasoning: { type: String, default: null },
 
   role: {
