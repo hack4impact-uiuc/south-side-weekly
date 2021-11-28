@@ -141,18 +141,8 @@ const formatNumber = (value: string): string => {
   return new AsYouType('US').input(value);
 };
 
-/**
- * Gets a list of team ids the user is on for the pitch
- * @param pitch 
- * @param user 
- * @returns list of team ids representing the teams the user is on for a pitch
- */
-const getUserTeamsForPitch = (pitch: Partial<IPitch>, user: IUser): string[] => {
-  const contributor = pitch.assignmentContributors?.find((contributor) => contributor.userId === user._id);
-  return contributor ? contributor?.teams : [];
-}
-
-const getFormattedDate = (date: Date): string => `${date.getMonth() + 1 }/${ date.getDay() + 1}/${ date.getFullYear()}`
+const getFormattedDate = (date: Date): string =>
+  `${date.getMonth() + 1}/${date.getDay() + 1}/${date.getFullYear()}`;
 
 /**
  * Converts an array of arguments into a single className
@@ -216,6 +206,5 @@ export {
   classNames,
   openProfile,
   pluralize,
-  getUserTeamsForPitch,
-  getFormattedDate
+  getFormattedDate,
 };

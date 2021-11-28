@@ -1,4 +1,4 @@
-import { IInterest, IPitch, IUser, IUserAggregate } from 'ssw-common';
+import { IUser, IUserAggregate } from 'ssw-common';
 
 import { ApiResponseBase } from '../types';
 export interface UsersResponse extends ApiResponseBase {

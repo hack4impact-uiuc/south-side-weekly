@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { IPitch, IUser} from 'ssw-common';
+import { IPitch, IUser } from 'ssw-common';
 import {
   Button,
   Divider,
@@ -8,19 +8,17 @@ import {
   GridColumn,
   Image,
   Rating,
-  Container,
 } from 'semantic-ui-react';
 
 import { FieldTag, UserPicture } from '../../components';
-import {
-  isError,
-  getUser,
-  getUserPermissionsByID,
-  getAggregatedUser,
-} from '../../api';
+import { isError, getUser, getAggregatedUser } from '../../api';
 import Masthead from '../../assets/masthead.svg';
 import { emptyPitch, emptyUser } from '../../utils/constants';
-import { getFormattedDate, getUserFullName } from '../../utils/helpers';
+import {
+  getFormattedDate,
+  getUserFullName,
+  titleCase,
+} from '../../utils/helpers';
 import { useAuth, useInterests, useTeams } from '../../contexts';
 import Contributions from '../../components/Tables/Contributions';
 
@@ -35,7 +33,7 @@ const Profile = (): ReactElement => {
   const auth = useAuth();
   const { teams } = useTeams();
   const { getInterestById } = useInterests();
- 
+
   useEffect(() => {
     const loadUser = async (): Promise<void> => {
       const res = await getUser(userId);
@@ -47,10 +45,20 @@ const Profile = (): ReactElement => {
 
     const getPitches = async (): Promise<void> => {
       const res = await getAggregatedUser(userId);
+
       if (!isError(res)) {
-        console.log(res.data.result.aggregated.claimedPitches);
+        // pitches the user created
         const submittedPitches = res.data.result.aggregated.submittedPitches;
+
+        // pitches the user claimed a team for
         const claimedPitches = res.data.result.aggregated.claimedPitches;
+
+        // filter assignment contributors to get teams claimed by user for pitch
+        claimedPitches.forEach((pitch) => {
+          pitch.assignmentContributors = pitch.assignmentContributors?.filter(
+            (contributor) => contributor.userId === userId,
+          );
+        });
         const pitches = submittedPitches
           .concat(claimedPitches)
           .filter((pitch) => pitch !== null);
@@ -63,7 +71,6 @@ const Profile = (): ReactElement => {
 
     return () => {
       setUser(emptyUser);
-    
     };
   }, [userId]);
 
@@ -77,9 +84,13 @@ const Profile = (): ReactElement => {
               <UserPicture size="tiny" user={user} />
             </div>
             <div className="name-pronouns">
-              <h2 className="name">{`${user.preferredName} (${getUserFullName(
-                user,
-              )})`}</h2>
+              {user.preferredName !== '' ? (
+                <h2 className="name">{`${titleCase(
+                  user.preferredName,
+                )} (${titleCase(getUserFullName(user))})`}</h2>
+              ) : (
+                <h2>{titleCase(getUserFullName(user))}</h2>
+              )}
               {user.pronouns.map((pronoun, index) => (
                 <FieldTag
                   key={index}
@@ -88,7 +99,7 @@ const Profile = (): ReactElement => {
                 />
               ))}
               <div className="user-role">
-                <FieldTag content={auth.user.role} />
+                <FieldTag content={user.role} />
               </div>
               <div className="rating">
                 {/* TODO: update when rating is added to model*/}
@@ -187,49 +198,30 @@ const Profile = (): ReactElement => {
         </Grid.Row>
       </Grid>
       <Divider />
-      <h2>Your Contributions</h2>
+      {userId === auth.user._id ? (
+        <h2>Your Contributions</h2>
+      ) : (
+        <h2>
+          {`${
+            user.preferredName !== ''
+              ? titleCase(user.preferredName)
+              : titleCase(user.firstName)
+          }'s` + ` Contributions`}
+        </h2>
+      )}
       <Contributions pitches={pitches} />
-      <Grid columns={2} className="experience">
-        <GridColumn>
-          <h4>How and why user wants to get involved</h4>
-          <p>{user.involvementResponse}</p>
-        </GridColumn>
-        <GridColumn>
-          <h4>User's past experience</h4>
-          <p>{user.journalismResponse}</p>
-        </GridColumn>
-      </Grid>
-      <div>
-        <h2 className="feedback-header">Feedback on You</h2>
-        {/* TODO: fix once rating is added to model */}
-        <Container className="feedback-container">
-          <Grid>
-            <GridColumn width={5}>
-              <h4>Jason Schumer left feedback</h4>
-              <p>11/2/2021</p>
-            </GridColumn>
-            <GridColumn width={10}>
-              <Rating size="huge" icon="star" defaultRating={3} maxRating={5} />
-              <p>
-                Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean
-                commodo ligula eget dolor. Aenean massa strong. Cum sociis
-                natoque penatibus et magnis dis parturient montes, nascetur
-                ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu,
-                pretium quis, sem. Nulla consequat massa quis enim. Donec pede
-                justo, fringilla vel, aliquet nec, vulputate eget, arcu. In enim
-                justo, rhoncus ut, imperdiet a, venenatis vitae, justo. Nullam
-                dictum felis eu pede link mollis pretium. Integer tincidunt.
-                Cras dapibus. Vivamus elementum semper nisi. Aenean vulputate
-                eleifend tellus. Aenean leo ligula, porttitor eu, consequat
-                vitae, eleifend ac, enim. Aliquam lorem ante, dapibus in,
-                viverra quis, feugiat a, tellus. Phasellus viverra nulla ut
-                metus varius laoreet. Quisque rutrum. Aenean imperdiet. Etiam
-                ultricies nisi vel augue. Curabitur ullamcorper ultricies nisi.
-              </p>
-            </GridColumn>
-          </Grid>
-        </Container>
-      </div>
+      {(auth.isAdmin || auth.isStaff || userId === auth.user._id) && (
+        <Grid columns={2} className="experience">
+          <GridColumn>
+            <h4>How and why user wants to get involved</h4>
+            <p>{user.involvementResponse}</p>
+          </GridColumn>
+          <GridColumn>
+            <h4>User's past experience</h4>
+            <p>{user.journalismResponse}</p>
+          </GridColumn>
+        </Grid>
+      )}
     </div>
   );
 };
