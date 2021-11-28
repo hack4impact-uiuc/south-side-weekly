@@ -11,6 +11,7 @@ import {
 } from '../../api/user';
 import {
   AdminView,
+  ContributorView,
   ApprovedUsers,
   InterestsSelect,
   PendingUsers,
@@ -18,9 +19,8 @@ import {
   TeamsSelect,
   Walkthrough,
 } from '../../components';
-import ContributorView from '../../components/Auth/ContributorView';
 import { allRoles } from '../../utils/constants';
-import { pagesEnum, rolesEnum } from '../../utils/enums';
+import { pagesEnum } from '../../utils/enums';
 import { parseOptionsSelect } from '../../utils/helpers';
 
 import { filterInterests, filterRole, filterTeams } from './helpers';
@@ -36,13 +36,9 @@ const searchFields: (keyof IUser)[] = [
 
 interface PaneWrapperProps {
   status: 'approved' | 'pending';
-  user_auth?: keyof typeof rolesEnum;
 }
 
-const PaneWrapper: FC<PaneWrapperProps> = ({
-  status,
-  user_auth,
-}): ReactElement => {
+const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
   const [directory, setDirectory] = useState<IUser[]>([]);
   const [filteredDirectory, setFilteredDirectory] = useState<IUser[]>([]);
   const [role, setRole] = useState<string>('');
@@ -61,18 +57,14 @@ const PaneWrapper: FC<PaneWrapperProps> = ({
       } else {
         res = await getDeniedUsers();
       }
-      //This gets all users regardless of their approval status
       if (!isError(res)) {
         setDirectory(res.data.result);
-        setFilteredDirectory(res.data.result);
       }
     };
 
     getAllUsers();
-
     return () => {
       setDirectory([]);
-      setFilteredDirectory([]);
     };
   }, [status]);
 
@@ -103,7 +95,6 @@ const PaneWrapper: FC<PaneWrapperProps> = ({
 
       return filtered;
     };
-
     setFilteredDirectory([...search(filter(directory))]);
   }, [directory, query, interests, teams, role]);
 
@@ -117,7 +108,7 @@ const PaneWrapper: FC<PaneWrapperProps> = ({
         icon="search"
         iconPosition="left"
       />
-      {status === 'approved' ? (
+      {status === 'approved' && (
         <div className="filters">
           <div>
             <h3>Filters: </h3>
@@ -145,11 +136,9 @@ const PaneWrapper: FC<PaneWrapperProps> = ({
             />
           </div>
         </div>
-      ) : (
-        ''
       )}
       {status === 'approved' ? (
-        <ApprovedUsers users={filteredDirectory} auth={user_auth} />
+        <ApprovedUsers users={filteredDirectory} />
       ) : (
         <PendingUsers users={filteredDirectory} />
       )}
@@ -163,7 +152,7 @@ const panes = [
     render: function show() {
       return (
         <Tab.Pane>
-          <PaneWrapper status="approved" user_auth={'ADMIN'} />
+          <PaneWrapper status="approved" />
         </Tab.Pane>
       );
     },
@@ -194,7 +183,7 @@ const Directory = (): ReactElement => (
       />
     </AdminView>
     <ContributorView>
-      <PaneWrapper status="approved" user_auth={'CONTRIBUTOR'} />
+      <PaneWrapper status="approved" />
     </ContributorView>
   </div>
 );

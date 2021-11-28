@@ -133,3 +133,13 @@ export interface IIssue {
   pitches: string[];
   type: string;
 }
+
+// The model has userId but will not be returned in any response for anonomous functionality
+export interface IPitchFeedback {
+  pitchId: string;
+  firstQuestion: string;
+  secondQuestion: string;
+  thirdQuestion: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
