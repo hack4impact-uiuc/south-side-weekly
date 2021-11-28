@@ -1,25 +1,28 @@
 import React, { FC, ReactElement } from 'react';
 import { IPitch } from 'ssw-common';
 
-
 import DynamicTable from '../DyanmicTable';
 
-
 import './styles.scss';
-import { dateColumn, teamsColumn, titleColumn, topicsColumn, statusColumn} from './utils';
+import {
+  dateColumn,
+  teamsColumn,
+  titleColumn,
+  topicsColumn,
+  statusColumn,
+} from './utils';
 
 interface ContributionsProps {
   pitches: Partial<IPitch>[];
 }
 
-const Contributions: FC<ContributionsProps> = ({ pitches}): ReactElement => {
-  
+const Contributions: FC<ContributionsProps> = ({ pitches }): ReactElement => {
   const columns = [
     titleColumn,
     topicsColumn,
     teamsColumn,
     dateColumn,
-    statusColumn
+    statusColumn,
   ];
 
   return (

@@ -84,7 +84,7 @@ const Profile = (): ReactElement => {
               <UserPicture size="tiny" user={user} />
             </div>
             <div className="name-pronouns">
-              {user.preferredName !== '' ? (
+              {user.preferredName !== '' && user.preferredName ? (
                 <h2 className="name">{`${titleCase(
                   user.preferredName,
                 )} (${titleCase(getUserFullName(user))})`}</h2>
@@ -203,7 +203,7 @@ const Profile = (): ReactElement => {
       ) : (
         <h2>
           {`${
-            user.preferredName !== ''
+            user.preferredName !== '' && user.preferredName
               ? titleCase(user.preferredName)
               : titleCase(user.firstName)
           }'s` + ` Contributions`}

@@ -10,10 +10,10 @@ const fullNameSort = (a: IUser, b: IUser): number => {
 };
 
 const titleSort = (a: Partial<IPitch>, b: Partial<IPitch>): number => {
-  const aName = a.title? a.title : '';
-  const bName = b.title? b.title : '';
+  const aName = a.title ? a.title : '';
+  const bName = b.title ? b.title : '';
   return aName.localeCompare(bName);
-}
+};
 
 const roleSort = (a: IUser, b: IUser): number => a.role.localeCompare(b.role);
 
@@ -35,6 +35,14 @@ const deadlineSort = (a: Partial<IPitch>, b: Partial<IPitch>): number => {
   const second = b.deadline ? new Date(b.deadline) : new Date();
 
   return first.getTime() - second.getTime();
-}
+};
 
-export { fullNameSort, roleSort, onboardingSort, activitySort, joinedSort, titleSort, deadlineSort};
+export {
+  fullNameSort,
+  roleSort,
+  onboardingSort,
+  activitySort,
+  joinedSort,
+  titleSort,
+  deadlineSort,
+};

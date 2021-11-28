@@ -20,10 +20,6 @@ const FieldTag: FC<FieldTagProps> = ({
   ...rest
 }): ReactElement => {
   const toClassName = (str: string): string => {
-    // if (name !== '') {
-    //   return '';
-    // }
-
     str = toLower(str);
 
     let split = str.split(' ');
