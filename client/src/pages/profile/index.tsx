@@ -44,6 +44,8 @@ import {
   MultiDropdowns,
 } from './types';
 
+import EditProfileModal from '../../components/Modals/EditProfile';
+
 const stringAttributes: (keyof IUser)[] = [
   'firstName',
   'lastName',
@@ -247,6 +249,7 @@ const Profile = (): ReactElement => {
 
   return (
     <div>
+      <EditProfileModal user = {user}/>
       <Grid padded stackable>
         <Grid.Row columns={4}>
           <Grid.Column className="profile-pic-col">
