@@ -1,0 +1,20 @@
+@import '../../../styles/colors.scss';
+
+.claim-modal {
+  .header {
+    background-color: $primary !important;
+    color: white !important;
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      i {
+        cursor: pointer;
+      }
+    }
+  }
+
+ 
+}
