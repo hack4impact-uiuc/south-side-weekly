@@ -102,7 +102,15 @@ router.delete(
   '/:id',
   requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
-    await UserFeedback.findByIdAndDelete(req.params.id);
+    const feedbackToDelete = await UserFeedback.findByIdAndDelete(
+      req.params.id,
+    );
+
+    await User.findByIdAndUpdate(feedbackToDelete.userId, {
+      $pull: {
+        feedback: feedbackToDelete._id,
+      },
+    });
 
     res.status(200).json({
       success: true,
