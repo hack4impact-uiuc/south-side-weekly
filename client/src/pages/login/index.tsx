@@ -3,6 +3,7 @@ import { useLocation, Redirect } from 'react-router-dom';
 import { Card } from 'semantic-ui-react';
 
 import { buildLoginEndpoint } from '../../api';
+import { Kanban } from '../../components';
 import { useAuth } from '../../contexts';
 import './styles.scss';
 
@@ -39,6 +40,7 @@ const Login = (): ReactElement => {
         </Card>
       </div>
       {loginFailed && <p>Login failed!</p>}
+      <Kanban />
     </div>
   );
 };

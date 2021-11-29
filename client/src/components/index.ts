@@ -38,6 +38,7 @@ import {
 } from './Modals/EditableTags';
 import ReviewUserModal from './Modals/ReviewUser';
 import { ApprovedUsers, PendingUsers } from './Tables';
+import Kanban from './Kanban';
 
 export {
   Header,
@@ -82,4 +83,5 @@ export {
   ApprovedUsers,
   PendingUsers,
   ApprovedView,
+  Kanban
 };
