@@ -2,7 +2,10 @@
   "extends": [
     "plugin:@hack4impact-uiuc/base",
     "plugin:@hack4impact-uiuc/react",
-    "plugin:@hack4impact-uiuc/typescript"
+    "plugin:@hack4impact-uiuc/typescript",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript"
   ],
   "plugins": ["@hack4impact-uiuc"],
   "rules": {

@@ -1,11 +1,19 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState, ReactNode } from 'react';
 import { openPopupWidget } from 'react-calendly';
 import { Button, Card, Icon, Menu } from 'semantic-ui-react';
 import { IResource, ITeam } from 'ssw-common';
 
 import { getAllResources, isError } from '../../api';
 import { useAuth, useTeams } from '../../contexts';
-import { ResourceModal, Walkthrough, ApprovedView } from '../../components';
+import {
+  ResourceModal,
+  Walkthrough,
+  ApprovedView,
+  FieldTag,
+  TableTool,
+} from '../../components';
+import DynamicTable from '../../components/Tables/DyanmicTable';
+import { buildColumn } from '../../components/Tables/DyanmicTable/util';
 import { pagesEnum } from '../../utils/enums';
 
 import './styles.scss';
@@ -81,6 +89,22 @@ const Resources = (): ReactElement => {
     }
   };
 
+  const titleColumn = buildColumn<IResource>({
+    title: 'Title',
+    width: 2,
+    extractor: function getTitle(resource: IResource): ReactNode {
+      return resource.name;
+    },
+  });
+
+  const visibilityColumn = buildColumn<IResource>({
+    title: 'Visibility',
+    width: 1,
+    extractor: function getVisibility(resource: IResource): ReactNode {
+      return <FieldTag size="small" content={resource.visibility} />;
+    },
+  });
+
   return (
     <>
       <ResourceModal
@@ -133,18 +157,17 @@ const Resources = (): ReactElement => {
             />
           ))}
         </Menu>
-
-        <div className="resource-group">
-          {filterResources(selectedTab).map((resource, index) => (
-            <Card
-              className="resource"
-              onClick={() => handleResourceAction(resource)}
-              key={index}
-            >
-              <p>{resource.name}</p>
-            </Card>
-          ))}
-        </div>
+        <DynamicTable
+          records={resources}
+          columns={[titleColumn, visibilityColumn]}
+        />
+        {/* <TableTool
+          tableHeader={
+            <DirectoryHeader users={users} data={data} setData={setData} />
+          }
+          tableBody={<DirectoryBody data={data} />}
+          singleLine={users.length > 0}
+        /> */}
       </div>
     </>
   );
