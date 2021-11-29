@@ -1,5 +1,6 @@
 import { buildEndpoint, get } from '../builders';
 import { Response } from '../types';
+
 import { IssuesResponse } from './types';
 
 const ISSUE_ENDPOINT = '/issues';
