@@ -5,6 +5,7 @@ import { pitchStatusEnum } from '../../utils/enums';
 import {
   findPendingContributor,
   getUserClaimStatusForPitch,
+  isPast,
 } from '../../utils/helpers';
 
 import { getColumnsForTab } from './views';
@@ -54,7 +55,10 @@ const filterPitchClaimStatus = (
   pitches.filter((pitch) => getUserClaimStatusForPitch(pitch, user) === status);
 
 const isPitchPublished = (pitch: IPitchAggregate): boolean =>
-  pitch.aggregated.issues.length > 0;
+  pitch.aggregated.issues.length > 0 &&
+  pitch.aggregated.issues
+    .map((issue) => new Date(issue.releaseDate))
+    .some(isPast);
 
 const getPublishedPitches = (pitches: IPitchAggregate[]): IPitchAggregate[] =>
   pitches.filter(isPitchPublished);

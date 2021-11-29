@@ -315,6 +315,14 @@ const parseOptionsSelect = (options: string[]): SelectOption[] =>
 const pluralize = (word: string, numberOf: number): string =>
   word + (numberOf !== 1 ? 's' : '');
 
+/**
+ * Tests whether a date occurs in the past
+ *
+ * @param date the date to check
+ * @returns true if the date is in the past false if not
+ */
+const isPast = (date: Date): boolean => Date.now() - date.getTime() > 0;
+
 export {
   getPitchTeams,
   getPitchTeamsForContributor,
@@ -337,4 +345,5 @@ export {
   classNames,
   openProfile,
   pluralize,
+  isPast,
 };
