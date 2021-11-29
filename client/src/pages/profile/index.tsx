@@ -101,11 +101,11 @@ const Profile = (): ReactElement => {
               <div className="user-role">
                 <FieldTag content={user.role} />
               </div>
-              <div className="rating">
-                {/* TODO: update when rating is added to model*/}
+              {/* <div className="rating">
+                
                 <Rating icon="star" defaultRating={3} maxRating={5} />
                 <p className="number-ratings">(16)</p>
-              </div>
+              </div> */}
               <div>
                 {(userId === auth.user._id || auth.isAdmin) && (
                   <Button
@@ -126,32 +126,32 @@ const Profile = (): ReactElement => {
               disabled={user.email !== null}
               icon="mail"
               value={user.email}
-              viewable={user.email !== null}
+              viewable={user.email !== ''}
             />
             <div className="social-input">
               <SocialsInput
                 disabled={user.phone !== null}
                 icon="phone"
                 value={user.phone}
-                viewable={user.phone !== null}
+                viewable={user.phone !== ''}
               />
               <SocialsInput
                 icon="linkedin"
                 value={user.linkedIn}
                 disabled={user.linkedIn !== null}
-                viewable={user.linkedIn !== null}
+                viewable={!!user.linkedIn && user.linkedIn !== ''}
               />
               <SocialsInput
                 icon="globe"
                 value={user.portfolio}
                 disabled={user.portfolio !== null}
-                viewable={user.portfolio !== null}
+                viewable={!!user.portfolio && user.portfolio !== ''}
               />
               <SocialsInput
                 icon="twitter"
                 value={user.twitter}
                 disabled={user.twitter !== null}
-                viewable={user.twitter !== null}
+                viewable={!!user.twitter && user.twitter !== ''}
               />
               <p className="registration">
                 Registered on {getFormattedDate(new Date(user.dateJoined))}
