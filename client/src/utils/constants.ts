@@ -64,6 +64,7 @@ const emptyUser: IUser = {
   races: [],
   interests: [],
   onboardReasoning: '',
+  lastActive: new Date(),
 };
 
 const emptyPitch: IPitch = {

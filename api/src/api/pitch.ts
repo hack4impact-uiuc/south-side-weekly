@@ -182,6 +182,7 @@ router.post(
       $addToSet: {
         submittedPitches: newPitch._id,
       },
+      lastActive: new Date(),
     });
 
     if (newPitch) {

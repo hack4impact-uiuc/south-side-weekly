@@ -28,6 +28,7 @@ export interface IUser {
   races: string[];
   interests: string[];
   onboardReasoning: string;
+  lastActive: Date;
 }
 
 export interface IUserAggregate extends IUser {

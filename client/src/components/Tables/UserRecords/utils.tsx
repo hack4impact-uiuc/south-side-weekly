@@ -10,6 +10,7 @@ import {
   UserPicture,
 } from '../..';
 import { getUserFullName } from '../../../utils/helpers';
+import StatusTag from '../../StatusTag';
 import { buildColumn } from '../DynamicTable/util';
 import { fullNameSort, joinedSort, roleSort } from '../Util/TableUtil';
 
@@ -105,9 +106,9 @@ const viewUserColumn = buildColumn<IUser>({
 
 const activityColumn = buildColumn<IUser>({
   title: 'Active',
-  width: 1,
-  extractor: function getActivity(): ReactNode {
-    return <FieldTag size="tiny" content="Active" />;
+  width: 2,
+  extractor: function getActivity(user: IUser): ReactNode {
+    return <StatusTag user={user} size="tiny" />;
   },
 });
 
