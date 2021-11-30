@@ -91,8 +91,9 @@ const getUserClaimStatusForPitch = (
     return pitchStatusEnum.APPROVED;
   }
 
-  if (findPendingContributor(pitch, user)) {
-    return pitchStatusEnum.PENDING;
+  const pendingContributor = findPendingContributor(pitch, user);
+  if (pendingContributor) {
+    return pendingContributor.status;
   }
 
   return pitchStatusEnum.DECLINED;

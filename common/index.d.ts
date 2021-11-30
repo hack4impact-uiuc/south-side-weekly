@@ -61,6 +61,7 @@ export interface IPitch {
     teams: string[];
     message: string;
     dateSubmitted: Date;
+    status: string;
   }[];
   topics: string[];
   teams: {

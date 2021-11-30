@@ -310,6 +310,7 @@ router.put(
             teams: req.body.teams,
             message: req.body.message,
             dateSubmitted: new Date(),
+            status: pitchStatusEnum.PENDING,
           },
         },
       },
@@ -412,12 +413,11 @@ router.put(
       return;
     }
 
-    const pitch = await Pitch.findByIdAndUpdate(
-      req.params.pitchId,
+    const pitch = await Pitch.findOneAndUpdate(
+      { _id: req.params.pitchId, 'pendingContributors.userId': userId },
       {
-        $pull: {
-          pendingContributors: { userId: userId },
-          submittedClaims: req.params.pitchId,
+        $set: {
+          'pendingContributors.$.status': pitchStatusEnum.DECLINED,
         },
       },
       { new: true, runValidators: true },

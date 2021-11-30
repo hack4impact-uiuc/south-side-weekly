@@ -1,6 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { IPitch } from 'ssw-common';
 
+import User from './user';
 import { pitchStatusEnum, assignmentStatusEnum } from '../utils/enums';
 
 export type PitchSchema = IPitch & Document<any>;
@@ -17,7 +18,12 @@ const pendingContributor = new mongoose.Schema(
   {
     ...contributor.obj,
     message: { type: String },
-    dateSubmitted: { type: Date },
+    dateSubmitted: { type: Date, required: true },
+    status: {
+      type: String,
+      enum: Object.values(pitchStatusEnum),
+      default: pitchStatusEnum.PENDING,
+    },
   },
   { _id: false },
 );
