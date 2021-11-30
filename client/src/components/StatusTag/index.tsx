@@ -29,7 +29,7 @@ const StatusTag: FC<StatusTagProps> = ({ user, ...rest }) => {
 
     if (lastActive >= threeMonthsAgo) {
       return statusEnum.ACTIVE;
-    } else if (lastActive >= oneYearAgo) {
+    } else if (lastActive > oneYearAgo) {
       return statusEnum.RECENTLY_ACTIVE;
     }
 
