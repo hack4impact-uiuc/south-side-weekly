@@ -1,6 +1,6 @@
-import React, { ReactElement, useEffect, useState, ReactNode } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { openPopupWidget } from 'react-calendly';
-import { Button, Card, Icon, Menu } from 'semantic-ui-react';
+import { Button, Icon, Menu } from 'semantic-ui-react';
 import { IResource, ITeam } from 'ssw-common';
 
 import { getAllResources, isError } from '../../api';
@@ -63,10 +63,7 @@ const Resources = (): ReactElement => {
   }, [modal.isOpen]);
 
   const closeModal = (): void => {
-    console.log(modal);
-    console.log(modal.isOpen);
     modal.isOpen = false;
-    console.log(modal.isOpen);
     setModal({ ...modal });
   };
 
@@ -142,22 +139,9 @@ const Resources = (): ReactElement => {
           ))}
         </Menu>
 
-        {/* <div className="resource-group">
-          {filterResources(selectedTab).map((resource, index) => (
-            <Card
-              className="resource"
-              onClick={() => handleResourceAction(resource)}
-              key={index}
-            >
-              <p>{resource.name}</p>
-            </Card>
-          ))}
-        </div> */}
         <ResourceTable
           resource={filterResources(selectedTab)}
-          closeModalAction={closeModal}
-          openModalAction={() => openModal(modal.action)}
-          isOpen={modal.isOpen}
+          handleOpen={handleResourceAction}
         />
       </div>
     </>
