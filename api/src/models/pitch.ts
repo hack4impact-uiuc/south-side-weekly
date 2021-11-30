@@ -5,6 +5,7 @@ import {
   pitchStatusEnum,
   assignmentStatusEnum,
   issueTypeEnum,
+  issueStatusEnum,
 } from '../utils/enums';
 
 export type PitchSchema = IPitch & Document<any>;
@@ -83,6 +84,7 @@ const Pitch = new mongoose.Schema({
   similarStories: [{ type: String, default: null }],
   deadline: { type: Date, default: null },
   neighborhoods: [{ type: String, default: null }],
+  issueStatus: {type: String, enum: Object.values(issueStatusEnum), default: issueStatusEnum.DEFINITELY_IN},
 });
 
 export default mongoose.model<PitchSchema>('Pitch', Pitch);

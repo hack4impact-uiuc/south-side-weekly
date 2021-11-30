@@ -44,6 +44,13 @@ const assignmentStatusEnum = {
   NONE: 'NONE',
 };
 
+const issueStatusEnum = {
+  DEFINITELY_IN: 'DEFINITELY_IN',
+  MAYBE_IN: 'MAYBE_IN',
+  COMING_LATE: 'COMING_LATE',
+  PUSH: 'PUSH',
+}
+
 const issueTypeEnum = {
   PRINT: 'PRINT',
   ONLINE: 'ONLINE',
@@ -63,4 +70,5 @@ export {
   pitchStatusEnum,
   assignmentStatusEnum,
   visibilityEnum,
+  issueStatusEnum,
 };
