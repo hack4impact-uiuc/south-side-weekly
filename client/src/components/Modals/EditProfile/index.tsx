@@ -1,22 +1,25 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Button, Form, Icon, Modal, ModalProps } from 'semantic-ui-react';
+import { Button, Form, Grid, Icon, Modal, ModalProps } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
 import * as yup from 'yup';
 import { Formik, Form as FormikForm } from 'formik';
 
-import { InterestsSelect, MultiSelect, PitchRow } from '../..';
+import { InterestsSelect, MultiSelect } from '../..';
 import { isError, updateUser } from '../../../api';
-
 import './styles.scss';
-import { values } from 'lodash';
+import { IPermissions } from '../../../pages/profile/types';
 
 interface EditProfileProps extends ModalProps {
   user: IUser;
+  permissions: IPermissions;
+  callback(): void;
 }
 
 const EditProfileModal: FC<EditProfileProps> = ({
   user,
+  permissions,
+  callback,
   ...rest
 }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,8 +40,25 @@ const EditProfileModal: FC<EditProfileProps> = ({
     portfolio: yup.string(),
   });
 
-  type userProfile = yup.InferType<typeof userProfileSchema>;
+  /**
+   * Determines if a field is viewable to current user
+   *
+   * @param field the field to check
+   * @returns true if field is viewable, else false
+   */
+  const isViewable = (field: keyof IUser): boolean =>
+    permissions.view.includes(field);
 
+  /**
+   * Determines if a field is editable to the current user
+   *
+   * @param field the field to check
+   * @returns true if field is editable, else false
+   */
+  const isEditable = (field: keyof IUser): boolean =>
+    permissions.edit.includes(field);
+
+  type userProfile = yup.InferType<typeof userProfileSchema>;
 
   useEffect(() => {
     if (!isOpen) {
@@ -65,8 +85,9 @@ const EditProfileModal: FC<EditProfileProps> = ({
     );
 
     if (!isError(userRes)) {
+      callback();
       Swal.fire({
-        title: 'Successfully submitted claim for pitch!',
+        title: 'Successfully updated profile!',
         icon: 'success',
       });
       setIsOpen(false);
@@ -99,89 +120,168 @@ const EditProfileModal: FC<EditProfileProps> = ({
             interests: user.interests,
             email: user.email,
             phone: user.phone,
-            twitter: '',
-            linkedIn: '',
-            portfolio: '',
+            twitter: user.twitter,
+            linkedIn: user.linkedIn,
+            portfolio: user.portfolio,
           }}
           onSubmit={updateProfile}
           validationSchema={userProfileSchema}
         >
-          {props => (
+          {(props) => (
             <FormikForm id="formik-form">
-              <Form.Group>
-              <h5>First Name</h5>
-                <Form.Input
-                  value={props.values.firstName}
-                  onChange={props.handleChange}
-                  name = "firstName"
-                />
-                <h5>Last Name</h5>
-                <Form.Input
-                  value={props.values.lastName}
-                  onChange={props.handleChange}
-                  name = "lastName"
-                />
-          
-                <h5>Preferred Name</h5>
-                <Form.Input
-                  name = "preferredName"
-                  value = {props.values.preferredName}
-                  onChange = {props.handleChange}
-                />
-       
-              <h5>Genders</h5>
-              <MultiSelect
-                options={allGenders.map((gender) => ({
-                  value: gender,
-                  label: gender,
-                }))}
-                onChange={(values) => props.setFieldValue("genders", values.map((item) => item.value))}
-                value={props.values.genders}
-              ></MultiSelect>
-              <h5>Pronouns</h5>
-              <MultiSelect
-                options={allPronouns.map((pronoun) => ({
-                  value: pronoun,
-                  label: pronoun,
-                }))}
-                onChange={(values) => props.setFieldValue("pronouns", values.map((item) => item.value))}
-                value={props.values.pronouns}
-                
-              ></MultiSelect>
-              <h4>Topic Interests</h4>
-              <InterestsSelect 
-                onChange={(values) => props.setFieldValue("interests", values.map((item) => item.value))}
-                values={props.values.interests}/>
-              <h4>Email</h4>
-              <Form.Input
-                 name = "email"
-                 value={props.values.email}
-               />
-               <h4>Phone Number</h4>
-              <Form.Input
-                 onChange={props.handleChange}
-                 value={props.values.phone}
-                 name = "phone"
-               />
-               <h4>Twitter - optional</h4>
-              <Form.Input
-                 onChange={props.handleChange}
-                 value={props.values.twitter}
-                 name = "twitter"
-               />
-               <h4>LinkedIn - optional</h4>
-              <Form.Input
-                 onChange={props.handleChange}
-                 value={props.values.linkedIn}
-                 name = "linkedIn"
-               />
-               <h4>Website - optional</h4>
-              <Form.Input
-                 onChange={props.handleChange}
-                 value={props.values.portfolio}
-                 name = "portfolio"
-               />
-              </Form.Group>
+              <Grid columns={2}>
+                <Grid.Column>
+                  <h5>First Name</h5>
+                  <Form.Input
+                    value={props.values.firstName}
+                    onChange={props.handleChange}
+                    name="firstName"
+                    fluid
+                    disabled={!isEditable('firstName')}
+                    viewable={isViewable('firstName')}
+                  />
+
+                  <h5>Preferred Name</h5>
+                  <Form.Input
+                    name="preferredName"
+                    value={props.values.preferredName}
+                    onChange={props.handleChange}
+                    disabled={!isEditable('preferredName')}
+                    viewable={isViewable('preferredName')}
+                    fluid
+                  />
+                </Grid.Column>
+
+                <Grid.Column>
+                  <h5>Last Name</h5>
+                  <Form.Input
+                    value={props.values.lastName}
+                    onChange={props.handleChange}
+                    fluid
+                    name="lastName"
+                    disabled={!isEditable('lastName')}
+                    viewable={isViewable('lastName')}
+                  />
+                </Grid.Column>
+              </Grid>
+
+              <Grid columns={2}>
+                <Grid.Column>
+                  {isEditable('genders') && (
+                    <>
+                      <h5>Genders</h5>
+                      <MultiSelect
+                        options={allGenders.map((gender) => ({
+                          value: gender,
+                          label: gender,
+                        }))}
+                        onChange={(values) =>
+                          props.setFieldValue(
+                            'genders',
+                            values.map((item) => item.value),
+                          )
+                        }
+                        value={props.values.genders}
+                      ></MultiSelect>{' '}
+                    </>
+                  )}
+
+                  {isEditable('interests') && (
+                    <>
+                      <h4>Topic Interests</h4>
+                      <InterestsSelect
+                        onChange={(values) =>
+                          props.setFieldValue(
+                            'interests',
+                            values.map((item) => item.value),
+                          )
+                        }
+                        values={props.values.interests}
+                      />
+                    </>
+                  )}
+
+                  <h4>Email</h4>
+                  <Form.Input
+                    onChange={props.handleChange}
+                    name="email"
+                    value={props.values.email}
+                    disabled={!isEditable('email')}
+                    viewable={isViewable('email')}
+                    fluid
+                  />
+
+                  <h4>Phone Number</h4>
+                  <Form.Input
+                    onChange={props.handleChange}
+                    value={props.values.phone}
+                    name="phone"
+                    disabled={!isEditable('phone')}
+                    viewable={isViewable('phone')}
+                    fluid
+                  />
+
+                  <h4>
+                    <span>Twitter</span>
+                    <span className="grey-text"> - Optional</span>
+                  </h4>
+                  <Form.Input
+                    onChange={props.handleChange}
+                    value={props.values.twitter}
+                    name="twitter"
+                    disabled={!isEditable('twitter')}
+                    viewable={isViewable('twitter')}
+                    placeholder={'https://twitter.com/username'}
+                    fluid
+                  />
+
+                  <h4>
+                    <span>LinkedIn</span>
+                    <span className="grey-text"> - Optional</span>
+                  </h4>
+                  <Form.Input
+                    onChange={props.handleChange}
+                    value={props.values.linkedIn}
+                    name="linkedIn"
+                    disabled={!isEditable('linkedIn')}
+                    viewable={isViewable('linkedIn')}
+                    placeholder={'https://linkedin.com/in/username'}
+                    fluid
+                  />
+
+                  <h4>
+                    <span>Website</span>
+                    <span className="grey-text"> - Optional</span>
+                  </h4>
+                  <Form.Input
+                    onChange={props.handleChange}
+                    value={props.values.portfolio}
+                    name="portfolio"
+                    disabled={!isEditable('portfolio')}
+                    viewable={isViewable('portfolio')}
+                    placeholder={'https://website.com'}
+                    fluid
+                  />
+                </Grid.Column>
+                {isEditable('pronouns') && (
+                  <Grid.Column>
+                    <h5>Pronouns</h5>
+                    <MultiSelect
+                      options={allPronouns.map((pronoun) => ({
+                        value: pronoun,
+                        label: pronoun,
+                      }))}
+                      onChange={(values) =>
+                        props.setFieldValue(
+                          'pronouns',
+                          values.map((item) => item.value),
+                        )
+                      }
+                      value={props.values.pronouns}
+                    ></MultiSelect>
+                  </Grid.Column>
+                )}
+              </Grid>
             </FormikForm>
           )}
         </Formik>
