@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState, ReactNode } from 'react';
 import { openPopupWidget } from 'react-calendly';
 import { Button, Card, Icon, Menu } from 'semantic-ui-react';
 import { IResource, ITeam } from 'ssw-common';
