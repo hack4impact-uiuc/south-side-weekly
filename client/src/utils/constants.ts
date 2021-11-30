@@ -87,6 +87,7 @@ const emptyPitch: IPitch = {
   similarStories: [],
   deadline: new Date(),
   neighborhoods: [],
+  issueStatus: '',
 };
 
 const emptyAggregatePitch: IPitchAggregate = {
