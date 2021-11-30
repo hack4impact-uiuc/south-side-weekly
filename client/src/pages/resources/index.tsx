@@ -142,6 +142,7 @@ const Resources = (): ReactElement => {
         <ResourceTable
           resource={filterResources(selectedTab)}
           handleOpen={handleResourceAction}
+          isAdmin={isAdmin}
         />
       </div>
     </>

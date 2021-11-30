@@ -9,11 +9,13 @@ import { buildColumn } from '../DyanmicTable/util';
 interface ResourceTableProps {
   resource: IResource[];
   handleOpen: (selected: IResource) => void;
+  isAdmin: boolean;
 }
 
 const ResourceTable: FC<ResourceTableProps> = ({
   resource,
   handleOpen,
+  isAdmin,
 }): ReactElement => {
   const titleColumn = buildColumn<IResource>({
     title: 'Title',
@@ -39,12 +41,22 @@ const ResourceTable: FC<ResourceTableProps> = ({
     },
   });
 
-  const columns = [titleColumn, visibilityColumn, editResourceColumn];
+  const directToSite = (resource: IResource): void => {
+    const newSite = window.open(resource.link, '_target');
+    newSite?.focus();
+  };
+
+  const adminColumns = [titleColumn, visibilityColumn, editResourceColumn];
+  const contributorColumns = [titleColumn];
 
   return (
     <div className="table">
       <div className="directory">
-        <DynamicTable records={resource} columns={columns} />
+        <DynamicTable
+          records={resource}
+          columns={isAdmin ? adminColumns : contributorColumns}
+          onRecordClick={isAdmin ? void 0 : directToSite}
+        />
       </div>
     </div>
   );
