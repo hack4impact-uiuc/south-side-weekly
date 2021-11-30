@@ -49,7 +49,7 @@ const issueStatusEnum = {
   MAYBE_IN: 'MAYBE_IN',
   COMING_LATE: 'COMING_LATE',
   PUSH: 'PUSH',
-}
+};
 
 const issueTypeEnum = {
   PRINT: 'PRINT',
