@@ -1,18 +1,32 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { IPitch } from 'ssw-common';
 
-const itemsFromBackend = [
-  { id: '1', content: 'First task' },
-  { id: '2', content: 'Second task' },
-  { id: '3', content: 'Third task' },
-  { id: '4', content: 'Fourth task' },
-  { id: '5', content: 'Fifth task' },
-];
+import { getNearestIssue, getPitchById, isError } from '../../api';
 
-const columnsFromBackend = {
+import Pitch from './Pitch/Pitch';
+
+import './styles.scss';
+
+// const itemsFromBackend = [
+//   { id: '1', content: 'First task' },
+//   { id: '2', content: 'Second task' },
+//   { id: '3', content: 'Third task' },
+//   { id: '4', content: 'Fourth task' },
+//   { id: '5', content: 'Fifth task' },
+// ];
+
+interface ColumnProps {
+  [key: number]: {
+    name: string;
+    items: IPitch[];
+  };
+}
+
+const columnsFromBackend: ColumnProps = {
   ['1']: {
     name: 'Requested',
-    items: itemsFromBackend,
+    items: [],
   },
   ['2']: {
     name: 'To do',
@@ -29,7 +43,9 @@ const columnsFromBackend = {
 };
 
 const onDragEnd = (result: any, columns: any, setColumns: any): void => {
-  if (!result.destination) {return;}
+  if (!result.destination) {
+    return;
+  }
   const { source, destination } = result;
 
   if (source.droppableId !== destination.droppableId) {
@@ -67,74 +83,112 @@ const onDragEnd = (result: any, columns: any, setColumns: any): void => {
 
 const Kanban = (): ReactElement => {
   const [columns, setColumns] = useState(columnsFromBackend);
+  // const [pitches, setPitches] = useState<IPitch[]>([]);
+
+  useEffect(() => {
+    const fetchData = async (): Promise<void> => {
+      const res = await getNearestIssue();
+
+      if (!isError(res)) {
+        const pitchResponses = await Promise.all(
+          res.data.result.pitches.map((pitchId: string) =>
+            getPitchById(pitchId),
+          ),
+        );
+        const tempPitches = pitchResponses.map((res) =>
+          !isError(res) ? res.data.result : null,
+        );
+        const nonNullPitches = tempPitches.filter((pitch) => pitch !== null);
+        columnsFromBackend[1].items = nonNullPitches as IPitch[];
+        setColumns({ ...columnsFromBackend });
+      }
+    };
+
+    fetchData();
+  }, []);
+
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', height: '100%' }}>
+    <div className="kanban-wrapper">
       <DragDropContext
         onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
       >
-        {Object.entries(columns).map(([columnId, column], index) => (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                alignItems: 'center',
-              }}
-              key={columnId}
-            >
-              <h2>{column.name}</h2>
-              <div style={{ margin: 8 }}>
-                <Droppable droppableId={columnId} key={columnId}>
-                  {(provided, snapshot) => (
-                      <div
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                        style={{
-                          background: snapshot.isDraggingOver
-                            ? 'lightblue'
-                            : 'lightgrey',
-                          padding: 4,
-                          width: 250,
-                          minHeight: 500,
-                        }}
+        {Object.entries(columns).map(([columnId, column]) => (
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+            }}
+            key={columnId}
+          >
+            <h2>{column.name}</h2>
+            <div style={{ margin: 8 }}>
+              <Droppable droppableId={columnId} key={columnId}>
+                {(provided, snapshot) => (
+                  <div
+                    {...provided.droppableProps}
+                    ref={provided.innerRef}
+                    // style={{
+                    //   background: snapshot.isDraggingOver
+                    //     ? 'lightblue'
+                    //     : 'white',
+                    //   padding: 4,
+                    //   width: 250,
+                    //   minHeight: 500,
+                    // }}
+                    className={`kanban-column ${
+                      snapshot.isDraggingOver && 'dragging'
+                    }`}
+                  >
+                    {column.items.map((item: IPitch, index: number) => (
+                      <Draggable
+                        key={item._id}
+                        draggableId={item._id}
+                        index={index}
                       >
-                        {column.items.map((item, index) => (
-                          <Draggable
-                            key={item.id}
-                            draggableId={item.id}
-                            index={index}
+                        {(provided, snapshot) => (
+                          <div
+                            ref={provided.innerRef}
+                            {...provided.dragHandleProps}
+                            {...provided.draggableProps}
                           >
-                            {(provided, snapshot) => (
-                              <div
-                                ref={provided.innerRef}
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                style={{
-                                  userSelect: 'none',
-                                  padding: 16,
-                                  margin: '0 0 8px 0',
-                                  minHeight: '50px',
-                                  backgroundColor: snapshot.isDragging
-                                    ? '#263B4A'
-                                    : '#456C86',
-                                  color: 'white',
-                                  ...provided.draggableProps.style,
-                                }}
-                              >
-                                {item.content}
-                              </div>
-                            )}
-                          </Draggable>
-                        ))}
-                        {provided.placeholder}
-                      </div>
-                    )}
-                </Droppable>
-              </div>
+                            <Pitch
+                              className={`${snapshot.isDragging && 'dragging'}`}
+                              pitchId={item._id}
+                            />
+                          </div>
+
+                          // <div
+                          //   ref={provided.innerRef}
+                          //   {...provided.draggableProps}
+                          //   {...provided.dragHandleProps}
+                          //   style={{
+                          //     userSelect: 'none',
+                          //     padding: 16,
+                          //     margin: '0 0 8px 0',
+                          //     minHeight: '50px',
+                          //     backgroundColor: snapshot.isDragging
+                          //       ? '#263B4A'
+                          //       : '#456C86',
+                          //     color: 'white',
+                          //     ...provided.draggableProps.style,
+                          //   }}
+                          // >
+                          //   {item.content}
+                          // </div>
+                        )}
+                      </Draggable>
+                    ))}
+                    {provided.placeholder}
+                  </div>
+                )}
+              </Droppable>
             </div>
-          ))}
+          </div>
+        ))}
       </DragDropContext>
     </div>
   );
-}
+};
 
 export default Kanban;

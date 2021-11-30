@@ -83,5 +83,5 @@ export {
   ApprovedUsers,
   PendingUsers,
   ApprovedView,
-  Kanban
+  Kanban,
 };

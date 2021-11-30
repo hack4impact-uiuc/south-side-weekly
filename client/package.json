@@ -10,6 +10,7 @@
     "@types/react-router-dom": "^5.1.7",
     "@types/react-select": "^5.0.1",
     "axios": "^0.21.1",
+    "classnames": "^2.3.1",
     "formik": "^2.2.9",
     "libphonenumber-js": "^1.9.22",
     "lodash": "^4.17.21",

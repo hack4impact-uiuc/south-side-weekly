@@ -21,6 +21,7 @@ export {
   createPitch,
   approvePitch,
   declinePitch,
+  getPitchById,
 } from './pitch';
 export {
   createResource,
@@ -37,5 +38,6 @@ export {
   createManyInterests,
   updateManyInterests,
 } from './interest';
+export { getIssues, createIssue, updateIssue, getNearestIssue } from './issues';
 export { getTeams, createManyTeams, updateManyTeams } from './teams';
 export { isError, buildLoginEndpoint, buildEndpoint } from './builders';

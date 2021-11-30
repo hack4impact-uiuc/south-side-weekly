@@ -5,6 +5,7 @@ import { Menu } from 'semantic-ui-react';
 import ProfileDropdown from '../Dropdowns/Profile';
 import ApprovedView from '../Auth/ApprovedView';
 import { useAuth } from '../../contexts';
+import { AdminView } from '..';
 
 import './styles.scss';
 
@@ -19,6 +20,9 @@ const Navbar = (): ReactElement => {
       <Menu.Menu position="right">
         <ApprovedView>
           <Menu.Item as={NavLink} to="/pitches" name="Pitch Doc" />
+          <AdminView>
+            <Menu.Item as={NavLink} to="/issues" name="Issues" />
+          </AdminView>
           <Menu.Item as={NavLink} to="/users" name="Directory" />
         </ApprovedView>
         <Menu.Item as={NavLink} to="/resources" name="Resources" />
