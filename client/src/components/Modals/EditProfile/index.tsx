@@ -100,7 +100,7 @@ const EditProfileModal: FC<EditProfileProps> = ({
       onClose={() => setIsOpen(false)}
       onOpen={() => setIsOpen(true)}
       trigger={<Button>Edit Profile</Button>}
-      className="claim-modal"
+      className="edit-modal"
       {...rest}
     >
       <Modal.Header>
