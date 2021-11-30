@@ -38,6 +38,7 @@ import {
 } from './Modals/EditableTags';
 import ReviewUserModal from './Modals/ReviewUser';
 import { ApprovedUsers, PendingUsers } from './Tables';
+import ResourceTable from './Tables/Resource';
 
 export {
   Header,
@@ -67,6 +68,7 @@ export {
   MultiSelect,
   Select,
   // DirectoryTable,
+  ResourceTable,
   PitchTable,
   PitchRow,
   TableTool,

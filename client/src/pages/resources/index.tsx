@@ -5,7 +5,12 @@ import { IResource, ITeam } from 'ssw-common';
 
 import { getAllResources, isError } from '../../api';
 import { useAuth, useTeams } from '../../contexts';
-import { ResourceModal, Walkthrough, ApprovedView } from '../../components';
+import {
+  ResourceModal,
+  Walkthrough,
+  ApprovedView,
+  ResourceTable,
+} from '../../components';
 import { pagesEnum } from '../../utils/enums';
 
 import './styles.scss';
@@ -58,7 +63,10 @@ const Resources = (): ReactElement => {
   }, [modal.isOpen]);
 
   const closeModal = (): void => {
+    console.log(modal);
+    console.log(modal.isOpen);
     modal.isOpen = false;
+    console.log(modal.isOpen);
     setModal({ ...modal });
   };
 
@@ -134,7 +142,7 @@ const Resources = (): ReactElement => {
           ))}
         </Menu>
 
-        <div className="resource-group">
+        {/* <div className="resource-group">
           {filterResources(selectedTab).map((resource, index) => (
             <Card
               className="resource"
@@ -144,7 +152,13 @@ const Resources = (): ReactElement => {
               <p>{resource.name}</p>
             </Card>
           ))}
-        </div>
+        </div> */}
+        <ResourceTable
+          resource={filterResources(selectedTab)}
+          closeModalAction={closeModal}
+          openModalAction={() => openModal(modal.action)}
+          isOpen={modal.isOpen}
+        />
       </div>
     </>
   );
