@@ -5,7 +5,12 @@ import { buildEndpoint, get, post, put } from '../builders';
 import { PitchesResponse } from '../pitch/types';
 import { onboardingStatusEnum } from '../../utils/enums';
 
-import { UsersResponse, UserResponse, UserPermissions } from './types';
+import {
+  UsersResponse,
+  UserResponse,
+  UserPermissions,
+  AggregatedUserResponse,
+} from './types';
 
 const USER_ENDPOINT = '/users';
 
@@ -149,6 +154,15 @@ const declineUser = async (
   return await put(url, onboardingStatusEnum.DENIED, failureMessage);
 };
 
+const getAggregatedUser = async (
+  userId: string,
+): Promise<Response<AggregatedUserResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, userId, 'aggregate');
+  const failureMessage = 'GET_AGGREGATE_FAIL';
+
+  return await get(url, failureMessage);
+};
+
 export {
   getUsers,
   getPendingUsers,
@@ -164,4 +178,5 @@ export {
   getUsersByTeam,
   approveUser,
   declineUser,
+  getAggregatedUser,
 };

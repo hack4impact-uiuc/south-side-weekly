@@ -68,6 +68,21 @@ body {
   background-color: $inactive !important;
 }
 
+.pending-tag-color,
+.pending-review-tag-color {
+  background-color: $pending !important;
+}
+
+.approved-tag-color,
+.approved-review-tag-color {
+  background-color: $approved !important;
+}
+
+.declined-tag-color,
+.declined-review-tag-color {
+  background-color: $declined !important;
+}
+
 .default-btn {
   background-color: $secondaryColor !important;
   color: white !important;

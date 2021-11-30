@@ -108,9 +108,11 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
   ): JSX.Element => (
     <>
       <span style={{ fontWeight: 'bold' }}>{title}:</span>
-      {users.length === 0 || users.every((user) => !user)
-        ? 'None'
-        : users.map((user) => <UserChip user={user} key={user._id} />)}
+      <span className="contributor-chip-list">
+        {users.length === 0
+          ? 'None'
+          : users.map((user) => <UserChip user={user} key={user._id} />)}
+      </span>
     </>
   );
 
