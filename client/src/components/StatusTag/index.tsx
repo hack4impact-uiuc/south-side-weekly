@@ -10,27 +10,26 @@ interface StatusTagProps extends LabelProps {
 }
 
 const ACTIVE_PERIOD = 3;
-const RECENTLY_ACTIVE_PERIOD = 12;
 
 const StatusTag: FC<StatusTagProps> = ({ user, ...rest }) => {
   const getStatus = (): string => {
     const lastActive = new Date(user.lastActive);
     const now = new Date();
 
-    const latestActiveStartPeriod = new Date(
+    const threeMonthsAgo = new Date(
       now.getUTCFullYear(),
       now.getUTCMonth() - ACTIVE_PERIOD,
       now.getUTCDate(),
     );
-    const latestRecentlyActiveStartPeriod = new Date(
-      now.getUTCFullYear(),
-      now.getUTCMonth() - RECENTLY_ACTIVE_PERIOD,
+    const oneYearAgo = new Date(
+      now.getUTCFullYear() - 1,
+      now.getUTCMonth(),
       now.getUTCDate(),
     );
 
-    if (lastActive >= latestActiveStartPeriod) {
+    if (lastActive >= threeMonthsAgo) {
       return statusEnum.ACTIVE;
-    } else if (lastActive >= latestRecentlyActiveStartPeriod) {
+    } else if (lastActive >= oneYearAgo) {
       return statusEnum.RECENTLY_ACTIVE;
     }
 
