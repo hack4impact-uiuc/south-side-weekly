@@ -1,5 +1,11 @@
 import { startsWith, toLower, toString } from 'lodash';
-import React, { FC, ReactElement, useEffect, useState } from 'react';
+import React, {
+  FC,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { Input, Tab } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
@@ -23,8 +29,6 @@ import { allRoles } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
 import { parseOptionsSelect } from '../../utils/helpers';
 
-import { filterInterests, filterRole, filterTeams } from './helpers';
-
 import './styles.scss';
 
 const searchFields: (keyof IUser)[] = [
@@ -40,63 +44,46 @@ interface PaneWrapperProps {
 
 const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
   const [directory, setDirectory] = useState<IUser[]>([]);
-  const [filteredDirectory, setFilteredDirectory] = useState<IUser[]>([]);
   const [role, setRole] = useState<string>('');
   const [interests, setInterests] = useState<string[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
   const [query, setQuery] = useState<string>('');
+  const [page, setPage] = useState<number>(1);
+  const [pageLimit, setPageLimit] = useState<number>(10);
+  const [params, setParams] = useState<Record<string, string[]>>({});
+
+  const getCurrUsers = useCallback(async (): Promise<void> => {
+    let res;
+    console.log(params);
+    if (status === 'approved') {
+      res = await getApprovedUsers(params);
+    } else if (status === 'pending') {
+      res = await getPendingUsers(params);
+    } else {
+      res = await getDeniedUsers(params);
+    }
+    if (!isError(res)) {
+      setDirectory(res.data.result);
+    }
+  }, [params, status]);
 
   useEffect(() => {
-    const getAllUsers = async (): Promise<void> => {
-      let res;
-
-      if (status === 'approved') {
-        res = await getApprovedUsers();
-      } else if (status === 'pending') {
-        res = await getPendingUsers();
-      } else {
-        res = await getDeniedUsers();
-      }
-      if (!isError(res)) {
-        setDirectory(res.data.result);
-      }
-    };
-
-    getAllUsers();
+    getCurrUsers();
     return () => {
       setDirectory([]);
     };
-  }, [status]);
+  }, [getCurrUsers]);
 
   useEffect(() => {
-    const search = (users: IUser[]): IUser[] => {
-      if (query.length === 0) {
-        return users;
-      }
+    const newParams: Record<string, string[]> = {};
+    newParams['interests'] = interests;
+    newParams['teams'] = teams;
+    newParams['role'] = role === '' ? [] : [role];
 
-      const searchTerm = toLower(query.trim());
-      const queryParts = searchTerm.split(' ');
-
-      return users.filter((user) =>
-        queryParts.every((part) =>
-          searchFields.some(
-            (field) =>
-              startsWith(toLower(toString(user[field])), part) ||
-              startsWith(toLower(toString(user[field])), searchTerm),
-          ),
-        ),
-      );
-    };
-
-    const filter = (users: IUser[]): IUser[] => {
-      let filtered = filterInterests(users, interests);
-      filtered = filterRole(filtered, role);
-      filtered = filterTeams(filtered, teams);
-
-      return filtered;
-    };
-    setFilteredDirectory([...search(filter(directory))]);
-  }, [directory, query, interests, teams, role]);
+    newParams['page'] = [`${page}`];
+    newParams['limit'] = [`${pageLimit}`];
+    setParams(newParams);
+  }, [query, interests, teams, role, page, pageLimit]);
 
   return (
     <>
@@ -109,9 +96,9 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
         iconPosition="left"
       />
       {status === 'approved' && (
-        <div className="filters">
+        <div className="params">
           <div>
-            <h3>Filters: </h3>
+            <h3>params: </h3>
           </div>
           <div className="wrapper">
             <Select
@@ -138,9 +125,9 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
         </div>
       )}
       {status === 'approved' ? (
-        <ApprovedUsers users={filteredDirectory} />
+        <ApprovedUsers users={directory} />
       ) : (
-        <PendingUsers users={filteredDirectory} />
+        <PendingUsers users={directory} />
       )}
     </>
   );
