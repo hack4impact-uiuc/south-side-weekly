@@ -1,18 +1,23 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Dropdown , Button, Form, Grid, Icon, Modal, ModalProps } from 'semantic-ui-react';
+import { Button, Form, Grid, Icon, Modal, ModalProps } from 'semantic-ui-react';
 import toast from 'react-hot-toast';
 import { IUser } from 'ssw-common';
 import * as yup from 'yup';
 import { Formik, Form as FormikForm } from 'formik';
 
-
-import { InterestsSelect, MultiSelect } from '../..';
+import {
+  InterestsSelect,
+  MultiSelect,
+  TeamsSelect,
+  Select,
+  AdminView,
+} from '../..';
 import { isError, updateUser } from '../../../api';
 import { IPermissions } from '../../../pages/profile/types';
-import { allGenders, allPronouns } from '../../../utils/constants';
-
+import { allGenders, allPronouns, allRoles } from '../../../utils/constants';
 import './styles.scss';
-
+import { titleCase } from '../../../utils/helpers';
+import { useAuth } from '../../../contexts';
 
 interface EditProfileProps extends ModalProps {
   user: IUser;
@@ -27,7 +32,7 @@ const EditProfileModal: FC<EditProfileProps> = ({
   ...rest
 }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
-
+  const { register } = useAuth();
   const phoneRegExp =
     /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
@@ -92,8 +97,8 @@ const EditProfileModal: FC<EditProfileProps> = ({
       },
       user._id,
     );
-
     if (!isError(userRes)) {
+      register();
       callback();
       toast.success('Profile updated successfully!');
       setIsOpen(false);
@@ -117,21 +122,6 @@ const EditProfileModal: FC<EditProfileProps> = ({
       </Modal.Header>
       <Modal.Content scrolling>
         <Formik
-          initialValues={{
-            firstName: user.firstName,
-            lastName: user.lastName,
-            preferredName: user.preferredName,
-            genders: user.genders,
-            pronouns: user.pronouns,
-            interests: user.interests,
-            email: user.email,
-            phone: user.phone,
-            twitter: user.twitter,
-            linkedIn: user.linkedIn,
-            portfolio: user.portfolio,
-            role: user.role,
-            teams: user.teams,
-          }}
           initialValues={user}
           onSubmit={updateProfile}
           validationSchema={userProfileSchema}
@@ -149,7 +139,6 @@ const EditProfileModal: FC<EditProfileProps> = ({
                     disabled={!isEditable('firstName')}
                     viewable={isViewable('firstName')}
                   />
-
                   <h5>Preferred Name</h5>
                   <Form.Input
                     name="preferredName"
@@ -160,7 +149,6 @@ const EditProfileModal: FC<EditProfileProps> = ({
                     fluid
                   />
                 </Grid.Column>
-
                 <Grid.Column>
                   <h5>Last Name</h5>
                   <Form.Input
@@ -194,9 +182,22 @@ const EditProfileModal: FC<EditProfileProps> = ({
                       ></MultiSelect>{' '}
                     </>
                   )}
-                  <h5>Role</h5>
-                  </Grid.Column>
-                  {isEditable('pronouns') && (
+                  <AdminView>
+                    <h5>Role</h5>
+                    <Select
+                      options={allRoles.map((role) => ({
+                        value: role,
+                        label: titleCase(role.toLowerCase()),
+                      }))}
+                      onChange={(value) =>
+                        props.setFieldValue('role', value?.value)
+                      }
+                      value={props.values.role}
+                    />
+                  </AdminView>
+                </Grid.Column>
+
+                {isEditable('pronouns') && (
                   <Grid.Column>
                     <h5>Pronouns</h5>
                     <MultiSelect
@@ -214,10 +215,10 @@ const EditProfileModal: FC<EditProfileProps> = ({
                     ></MultiSelect>
                   </Grid.Column>
                 )}
-                </Grid>
-                <Grid columns = {2}>
-                  <Grid.Column>
+              </Grid>
 
+              <Grid columns={2}>
+                <Grid.Column>
                   {isEditable('interests') && (
                     <>
                       <h4>Topic Interests</h4>
@@ -280,7 +281,6 @@ const EditProfileModal: FC<EditProfileProps> = ({
                     placeholder={'https://linkedin.com/in/username'}
                     fluid
                   />
-
                   <h4>
                     <span>Website</span>
                     <span className="grey-text"> - Optional</span>
@@ -294,32 +294,23 @@ const EditProfileModal: FC<EditProfileProps> = ({
                     placeholder={'https://website.com'}
                     fluid
                   />
-           
-                {isEditable('pronouns') && (
-                  <>
-                    <h5>Pronouns</h5>
-                    <MultiSelect
-                      options={allPronouns.map((pronoun) => ({
-                        value: pronoun,
-                        label: pronoun,
-                      }))}
+                </Grid.Column>
+
+                <Grid.Column>
+                  <AdminView>
+                    <h5>Teams</h5>
+                    <TeamsSelect
                       onChange={(values) =>
                         props.setFieldValue(
-                          'pronouns',
+                          'teams',
                           values.map((item) => item.value),
                         )
                       }
-                      value={props.values.pronouns}
-                    ></MultiSelect>
-                    </>
-                )}
+                      values={props.values.teams}
+                    />
+                  </AdminView>
                 </Grid.Column>
-                <Grid.Column>
-                  <h5>Teams</h5>
-                 
-                </Grid.Column>
-                </Grid>
-      
+              </Grid>
             </FormikForm>
           )}
         </Formik>
