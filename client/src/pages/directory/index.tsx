@@ -18,6 +18,7 @@ import {
   Select,
   TeamsSelect,
   Walkthrough,
+  DeniedUsers,
 } from '../../components';
 import { allRoles } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
@@ -35,7 +36,7 @@ const searchFields: (keyof IUser)[] = [
 ];
 
 interface PaneWrapperProps {
-  status: 'approved' | 'pending';
+  status: 'approved' | 'pending' | 'denied';
 }
 
 const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
@@ -137,11 +138,9 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
           </div>
         </div>
       )}
-      {status === 'approved' ? (
-        <ApprovedUsers users={filteredDirectory} />
-      ) : (
-        <PendingUsers users={filteredDirectory} />
-      )}
+      {status === 'approved' && <ApprovedUsers users={filteredDirectory} />}
+      {status === 'pending' && <PendingUsers users={filteredDirectory} />}
+      {status === 'denied' && <DeniedUsers users={filteredDirectory} />}
     </>
   );
 };
@@ -163,6 +162,16 @@ const panes = [
       return (
         <Tab.Pane>
           <PaneWrapper status="pending" />
+        </Tab.Pane>
+      );
+    },
+  },
+  {
+    menuItem: 'Rejected Users',
+    render: function show() {
+      return (
+        <Tab.Pane>
+          <PaneWrapper status="denied" />
         </Tab.Pane>
       );
     },

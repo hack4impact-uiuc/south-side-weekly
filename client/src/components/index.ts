@@ -40,7 +40,7 @@ import {
   EditTeams,
 } from './Modals/EditableTags';
 import ReviewUserModal from './Modals/ReviewUser';
-import { ApprovedUsers, PendingUsers } from './Tables';
+import { ApprovedUsers, PendingUsers, DeniedUsers } from './Tables';
 
 export {
   Header,
@@ -85,6 +85,7 @@ export {
   ApprovedUsers,
   PendingUsers,
   ApprovedView,
+  DeniedUsers,
   DynamicTable,
   buildColumn,
 };
