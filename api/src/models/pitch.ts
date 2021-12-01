@@ -88,7 +88,7 @@ const Pitch = new mongoose.Schema(
     similarStories: [{ type: String, default: null }],
     deadline: { type: Date, default: null },
     neighborhoods: [{ type: String, default: null }],
-    issuesStatuses: [issueStatus],
+    issueStatuses: [issueStatus],
   },
   { timestamps: true },
 );
