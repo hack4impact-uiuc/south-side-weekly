@@ -253,7 +253,7 @@ router.get(
 
     processPaignation(req, query);
     const users = await query.exec();
-    
+
     res.status(200).json({
       message: `Successfully retrieved all denied users.`,
       success: true,

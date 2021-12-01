@@ -81,7 +81,7 @@ const processFilters = (
 const processPaignation = (
   req: Request,
   query: Query<UserSchema[], UserSchema, Record<string, unknown>>,
-) : void => {
+): void => {
   if (req.query.page && req.query.limit) {
     const page = parseInt(req.query.page as string);
     const limit = parseInt(req.query.limit as string);
