@@ -3,8 +3,8 @@ import { Icon } from 'semantic-ui-react';
 import { IResource } from 'ssw-common';
 
 import { FieldTag } from '../..';
-import DynamicTable from '../DyanmicTable';
-import { buildColumn } from '../DyanmicTable/util';
+import DynamicTable from '../DynamicTable';
+import { buildColumn } from '../DynamicTable/util';
 
 interface ResourceTableProps {
   resource: IResource[];
@@ -58,8 +58,10 @@ const ResourceTable: FC<ResourceTableProps> = ({
     <div className="table">
       <div className="directory">
         <DynamicTable
-          records={resource}
-          columns={isAdmin ? adminColumns : contributorColumns}
+          view={{
+            records: resource,
+            columns: isAdmin ? adminColumns : contributorColumns,
+          }}
           onRecordClick={isAdmin ? void 0 : directToSite}
         />
       </div>
