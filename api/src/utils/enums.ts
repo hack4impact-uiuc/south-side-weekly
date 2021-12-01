@@ -33,7 +33,7 @@ const pagesEnum = {
 const pitchStatusEnum = {
   APPROVED: 'APPROVED',
   PENDING: 'PENDING',
-  REJECTED: 'REJECTED',
+  DECLINED: 'DECLINED',
   NONE: 'NONE',
 };
 

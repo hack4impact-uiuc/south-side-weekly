@@ -63,15 +63,6 @@ const declinePitch = async (
   return await put(url, {}, failureMessage);
 };
 
-const aggregatePitch = async (
-  pitchId: string,
-): Promise<Response<AggregatedPitchResponse>> => {
-  const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'aggregate');
-  const failureMessage = 'GET_AGGREGATE_FAIL';
-
-  return await get(url, failureMessage);
-};
-
 // Updates the information on a pitch
 const updatePitch = async (
   pitchData: Partial<IPitch>,
@@ -126,5 +117,4 @@ export {
   getUnclaimedPitches,
   approvePitch,
   declinePitch,
-  aggregatePitch,
 };
