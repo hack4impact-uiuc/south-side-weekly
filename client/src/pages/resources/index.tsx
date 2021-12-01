@@ -79,16 +79,11 @@ const Resources = (): ReactElement => {
   };
 
   const handleResourceAction = (selected: IResource): void => {
-    if (isAdmin) {
-      setModal({
-        action: 'edit',
-        isOpen: true,
-        resource: selected,
-      });
-    } else {
-      const newSite = window.open(selected.link, '_target');
-      newSite?.focus();
-    }
+    setModal({
+      action: 'edit',
+      isOpen: true,
+      resource: selected,
+    });
   };
 
   return (
