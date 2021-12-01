@@ -64,6 +64,7 @@ const emptyUser: IUser = {
   races: [],
   interests: [],
   onboardReasoning: '',
+  feedback: [],
   lastActive: new Date(),
 };
 
