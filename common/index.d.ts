@@ -1,3 +1,5 @@
+import internal from "node:stream";
+
 /**
  * Interface for a User Schema.
  */
@@ -98,6 +100,8 @@ export interface IResource {
   teams: string[];
   isGeneral: boolean;
   visibility: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 /**

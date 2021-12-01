@@ -68,6 +68,14 @@ body {
   background-color: $inactive !important;
 }
 
+.public-tag-color {
+  background-color: $public !important;
+}
+
+.private-tag-color {
+  background-color: $private !important;
+}
+
 .default-btn {
   background-color: $secondaryColor !important;
   color: white !important;

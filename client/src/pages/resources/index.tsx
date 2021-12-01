@@ -52,7 +52,12 @@ const Resources = (): ReactElement => {
     const res = await getAllResources();
 
     if (!isError(res)) {
-      setResources(res.data.result);
+      setResources(
+        res.data.result.sort(
+          (a: IResource, b: IResource) =>
+            +new Date(b.updatedAt) - +new Date(a.updatedAt),
+        ),
+      );
     }
   };
 
