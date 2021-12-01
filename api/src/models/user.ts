@@ -36,9 +36,11 @@ const User = new mongoose.Schema({
   twitter: { type: String, default: null },
   claimedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
   submittedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
+  submittedClaims: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
   teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
   involvementResponse: { type: String, default: null },
   onboardReasoning: { type: String, default: null },
+  lastActive: { type: Date, default: Date.now },
 
   role: {
     type: String,

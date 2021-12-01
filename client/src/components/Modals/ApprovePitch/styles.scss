@@ -96,27 +96,15 @@
     .writer-editors-section {
       width: 80% !important;
 
-      .issue-format-column {
+      .issue-column {
         align-items: flex-start !important;
         flex-direction: column !important;
         display: flex !important;
         margin-left: 0 !important;
 
-        .issue-format-date-row {
-          flex-direction: row !important;
-          display: flex !important;
-          align-items: center !important;
+        .issue-select-wrapper {
           width: 100% !important;
-          justify-content: space-between;
           margin-bottom: 5px;
-
-          .format-checkbox {
-            margin-bottom: 0 !important;
-          }
-
-          .publication-date {
-            margin-right: 25px !important;
-          }
         }
       }
     }

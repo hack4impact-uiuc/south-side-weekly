@@ -23,9 +23,13 @@ import {
 import { useAuth } from '../../contexts';
 import { pitchDocTabs } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
-import { getClaimableTeams, parseOptionsSelect } from '../../utils/helpers';
+import {
+  getClaimableTeams,
+  parseOptionsSelect,
+  filterPitchesByInterests,
+} from '../../utils/helpers';
 
-import { filterInterests, filterClaimStatus, filterTeams } from './helpers';
+import { filterClaimStatus, filterTeams } from './helpers';
 
 import './styles.scss';
 
@@ -50,7 +54,6 @@ const PitchDoc = (): ReactElement => {
 
   const getApproved = async (): Promise<void> => {
     const res = await getApprovedPitches();
-    console.log(res);
     if (!isError(res)) {
       setApproved(res.data.result);
     }
@@ -126,7 +129,7 @@ const PitchDoc = (): ReactElement => {
     };
 
     const filter = (pitches: IPitch[]): IPitch[] => {
-      let filtered = filterInterests(pitches, interests);
+      let filtered = filterPitchesByInterests(pitches, interests);
       filtered = filterClaimStatus(filtered, claimStatus);
       filtered = filterTeams(filtered, teams);
 

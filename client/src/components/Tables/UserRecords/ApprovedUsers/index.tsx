@@ -2,7 +2,7 @@ import React, { FC, ReactElement } from 'react';
 import { IUser } from 'ssw-common';
 
 import { useAuth } from '../../../../contexts';
-import DynamicTable from '../../DyanmicTable';
+import DynamicTable from '../../DynamicTable';
 import {
   nameColumn,
   roleColumn,
@@ -34,14 +34,12 @@ const ApprovedUsers: FC<ApprovedUserProps> = ({ users }): ReactElement => {
     ...(isContributor ? [] : [viewUserColumn]),
   ];
 
+  const view = { records: users, columns };
+
   return (
     <div className="table">
       <div className="directory">
-        <DynamicTable
-          records={users}
-          columns={columns}
-          singleLine={users.length > 0}
-        />
+        <DynamicTable view={view} singleLine={users.length > 0} />
       </div>
     </div>
   );
