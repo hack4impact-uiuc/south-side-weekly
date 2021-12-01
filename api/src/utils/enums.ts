@@ -54,6 +54,13 @@ const visibilityEnum = {
   PRIVATE: 'PRIVATE',
 };
 
+const issueStatusEnum = {
+  DEFINITELY_IN: 'DEFINITELY_IN',
+  MAYBE_IN: 'MAYBE_IN',
+  COMING_LATE: 'COMING_LATE',
+  PUSH: 'PUSH',
+}
+
 export {
   issueTypeEnum,
   rolesEnum,
@@ -63,4 +70,5 @@ export {
   pitchStatusEnum,
   assignmentStatusEnum,
   visibilityEnum,
+  issueStatusEnum,
 };

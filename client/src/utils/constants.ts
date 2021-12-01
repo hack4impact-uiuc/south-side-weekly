@@ -91,6 +91,7 @@ const emptyPitch: IPitch = {
   neighborhoods: [],
   createdAt: new Date(),
   updatedAt: new Date(),
+  issueStatuses: [],
 };
 
 const emptyAggregatePitch: IPitchAggregate = {
