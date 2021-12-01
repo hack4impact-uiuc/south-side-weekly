@@ -29,6 +29,8 @@ const ResourceTable: FC<ResourceTableProps> = ({
   const visibilityColumn = buildColumn<IResource>({
     title: 'Visibility',
     width: 2,
+    sorter: (a: IResource, b: IResource) =>
+      a.visibility.localeCompare(b.visibility),
     extractor: function getVisibility(resource: IResource): ReactNode {
       return (
         <FieldTag size="small" content={resource.visibility} hexcode={'#fff'} />
