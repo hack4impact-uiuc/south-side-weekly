@@ -58,7 +58,7 @@ const getEditableFields = (currentUser: IUser, userId: string): UserKeys => {
 const processFilters = (
   req: Request,
   query: Query<UserSchema[], UserSchema, Record<string, unknown>>,
-): Query<UserSchema[], UserSchema, Record<string, unknown>> => {
+): void => {
   type valueType = typeof req.query.page;
   type queryFilter = Record<string, valueType | Record<string, valueType>>;
 
@@ -74,22 +74,20 @@ const processFilters = (
     }
   }
   if (Object.keys(filters).length) {
-    return query.find(filters);
+    query.find(filters);
   }
-  return query;
 };
 
 const processPaignation = (
   req: Request,
   query: Query<UserSchema[], UserSchema, Record<string, unknown>>,
-): Query<UserSchema[], UserSchema, Record<string, unknown>> => {
+) : void => {
   if (req.query.page && req.query.limit) {
     const page = parseInt(req.query.page as string);
     const limit = parseInt(req.query.limit as string);
     const skipIndex = (page - 1) * limit;
-    return query.limit(limit).skip(skipIndex);
+    query.limit(limit).skip(skipIndex);
   }
-  return query;
 };
 
 export {

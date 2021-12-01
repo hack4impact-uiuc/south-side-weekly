@@ -203,7 +203,7 @@ router.put(
 router.get(
   '/all/pending',
   errorWrap(async (req: Request, res: Response) => {
-    let query = User.find({
+    const query = User.find({
       onboardingStatus: {
         $in: [
           onboardingStatusEnum.ONBOARDING_SCHEDULED,
@@ -212,7 +212,7 @@ router.get(
       },
     });
 
-    query = processPaignation(req, query);
+    processPaignation(req, query);
     const users = await query.exec();
 
     res.status(200).json({
@@ -227,12 +227,12 @@ router.get(
 router.get(
   '/all/approved',
   errorWrap(async (req: Request, res: Response) => {
-    let query = User.find({
+    const query = User.find({
       onboardingStatus: onboardingStatusEnum.ONBOARDED,
     });
 
-    query = processFilters(req, query);
-    query = processPaignation(req, query);
+    processFilters(req, query);
+    processPaignation(req, query);
     const users = await query.exec();
 
     res.status(200).json({
@@ -247,9 +247,13 @@ router.get(
 router.get(
   '/all/denied',
   errorWrap(async (req: Request, res: Response) => {
-    const users = await User.find({
+    const query = User.find({
       onboardingStatus: onboardingStatusEnum.DENIED,
     });
+
+    processPaignation(req, query);
+    const users = await query.exec();
+    
     res.status(200).json({
       message: `Successfully retrieved all denied users.`,
       success: true,
