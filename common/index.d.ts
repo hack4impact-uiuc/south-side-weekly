@@ -1,3 +1,5 @@
+import internal from "node:stream";
+
 /**
  * Interface for a User Schema.
  */
@@ -24,17 +26,21 @@ export interface IUser {
   neighborhood: string;
   claimedPitches: string[];
   submittedPitches: string[];
+  submittedClaims: string[];
   teams: string[];
   role: string;
   races: string[];
   interests: string[];
   onboardReasoning: string;
+  feedback: string[];
+  lastActive: Date;
 }
 
 export interface IUserAggregate extends IUser {
   aggregated: {
-    claimedPitches: Partial<IPitch>[];
+    claimedPitches: Partial<IPitchAggregate>[];
     submittedPitches: Partial<IPitch>[];
+    submittedClaims: Partial<IPitch>[];
     interests: IInterest[];
   };
 }
@@ -45,7 +51,7 @@ export interface IUserAggregate extends IUser {
 export interface IPitch {
   _id: string;
   title: string;
-  issues: { format: string; publicationDate: Date }[];
+  issues: string[];
   author: string;
   writer: string;
   primaryEditor: string;
@@ -56,7 +62,13 @@ export interface IPitch {
   assignmentStatus: string;
   assignmentGoogleDocLink: string;
   assignmentContributors: { userId: string; teams: string[] }[];
-  pendingContributors: { userId: string; teams: string[]; message: string }[];
+  pendingContributors: {
+    userId: string;
+    teams: string[];
+    message: string;
+    dateSubmitted: Date;
+    status: string;
+  }[];
   topics: string[];
   teams: {
     teamId: string;
@@ -67,6 +79,8 @@ export interface IPitch {
   deadline: Date;
   conflictOfInterest: boolean;
   neighborhoods: string[];
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 export interface IPitchAggregate extends IPitch {
@@ -87,6 +101,7 @@ export interface IPitchAggregate extends IPitch {
     reviewedBy: Partial<IUser>;
     teams: Array<ITeam & { target: number }>;
     interests: IInterest[];
+    issues: IIssue[];
   };
 }
 
@@ -134,6 +149,19 @@ export interface IIssue {
   type: string;
 }
 
+/**
+ * Interface for UserFeedback Schedma.
+ */
+export interface IUserFeedback {
+  _id: string;
+  staffId: string;
+  userId: string;
+  pitchId: string;
+  stars: number;
+  reasnoning: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 // The model has userId but will not be returned in any response for anonomous functionality
 export interface IPitchFeedback {
   pitchId: string;

@@ -14,6 +14,7 @@ export interface UserPermissions extends ApiResponseBase {
     edit: (keyof IUser)[];
   };
 }
-export interface AggregateUserResponse extends ApiResponseBase {
+
+export interface AggregatedUserResponse extends ApiResponseBase {
   result: IUserAggregate;
 }

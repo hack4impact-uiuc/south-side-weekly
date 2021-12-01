@@ -36,11 +36,14 @@ const User = new mongoose.Schema({
   twitter: { type: String, default: null },
   claimedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
   submittedPitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
+  submittedClaims: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
   teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
   involvementResponse: { type: String, default: null },
   journalismResponse: { type: String, default: null },
   neighborhood: { type: String, required: true },
   onboardReasoning: { type: String, default: null },
+  feedback: [{ type: Schema.Types.ObjectId, ref: 'UserFeedback' }],
+  lastActive: { type: Date, default: Date.now },
 
   role: {
     type: String,

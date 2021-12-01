@@ -9,7 +9,7 @@ import {
   UsersResponse,
   UserResponse,
   UserPermissions,
-  AggregateUserResponse,
+  AggregatedUserResponse,
 } from './types';
 
 const USER_ENDPOINT = '/users';
@@ -71,14 +71,14 @@ const getUser = async (userId: string): Promise<Response<UserResponse>> => {
 };
 
 // get user with submitted and claimed partial pitches
-const getAggregatedUser = async (
-  userId: string,
-): Promise<Response<AggregateUserResponse>> => {
-  const url = buildEndpoint(USER_ENDPOINT, userId, 'aggregate');
-  const failureMessage = 'GET_USER_FAIL';
+// const getAggregatedUser = async (
+//   userId: string,
+// ): Promise<Response<AggregateUserResponse>> => {
+//   const url = buildEndpoint(USER_ENDPOINT, userId, 'aggregate');
+//   const failureMessage = 'GET_USER_FAIL';
 
-  return await get(url, failureMessage);
-};
+//   return await get(url, failureMessage);
+// };
 
 // Adds a pitch to a user's claimed pitches
 const updateUserClaimedPitches = async (
@@ -162,6 +162,15 @@ const declineUser = async (
   const url = buildEndpoint(USER_ENDPOINT, userId, 'denied');
   const failureMessage = 'DECLINE_USER_FAIL';
   return await put(url, onboardingStatusEnum.DENIED, failureMessage);
+};
+
+const getAggregatedUser = async (
+  userId: string,
+): Promise<Response<AggregatedUserResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, userId, 'aggregate');
+  const failureMessage = 'GET_AGGREGATE_FAIL';
+
+  return await get(url, failureMessage);
 };
 
 export {

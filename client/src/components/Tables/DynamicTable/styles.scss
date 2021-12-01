@@ -5,6 +5,14 @@
     display: none;
   }
 
+  &.no-results-found > tbody {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 50px;
+    font-size: 14px;
+  }
+
   td,
   th {
     border-left: none !important;
