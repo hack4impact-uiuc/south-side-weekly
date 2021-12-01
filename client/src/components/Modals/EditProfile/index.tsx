@@ -1,14 +1,17 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Button, Dropdown, Form, Grid, Icon, Modal, ModalProps } from 'semantic-ui-react';
+import { Dropdown , Button, Form, Grid, Icon, Modal, ModalProps } from 'semantic-ui-react';
+import toast from 'react-hot-toast';
 import { IUser } from 'ssw-common';
-import Swal from 'sweetalert2';
 import * as yup from 'yup';
 import { Formik, Form as FormikForm } from 'formik';
 
+
 import { InterestsSelect, MultiSelect } from '../..';
 import { isError, updateUser } from '../../../api';
-import './styles.scss';
 import { IPermissions } from '../../../pages/profile/types';
+import { allGenders, allPronouns } from '../../../utils/constants';
+
+import './styles.scss';
 
 
 interface EditProfileProps extends ModalProps {
@@ -24,8 +27,9 @@ const EditProfileModal: FC<EditProfileProps> = ({
   ...rest
 }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
-  const allGenders = ['Man', 'Woman', 'Nonbinary', 'Other'];
-  const allPronouns = ['He/his', 'She/her', 'They/them', 'Ze/hir', 'Other'];
+
+  const phoneRegExp =
+    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
   const userProfileSchema = yup.object({
     firstName: yup.string().required(),
@@ -35,12 +39,12 @@ const EditProfileModal: FC<EditProfileProps> = ({
     pronouns: yup.array().of(yup.string().required()).required().min(1),
     interests: yup.array().of(yup.string().required()).required().min(1),
     email: yup.string().required(),
-    phone: yup.string().required(),
-    twitter: yup.string(),
-    linkedIn: yup.string(),
-    portfolio: yup.string(),
     role: yup.string().required(),
-    teams: yup.array().of(yup.string().required()).required().min(1)
+    teams: yup.array().of(yup.string().required()).required().min(1),
+    phone: yup.string().matches(phoneRegExp).required(),
+    twitter: yup.string().nullable().notRequired(),
+    linkedIn: yup.string().nullable(),
+    portfolio: yup.string().nullable(),
   });
 
   /**
@@ -80,21 +84,18 @@ const EditProfileModal: FC<EditProfileProps> = ({
         interests: values.interests,
         email: values.email,
         phone: values.phone,
-        twitter: values.twitter,
-        linkedIn: values.linkedIn,
-        portfolio: values.portfolio,
         role: values.role,
         teams: values.teams,
+        twitter: values.twitter ?? undefined,
+        linkedIn: values.linkedIn ?? undefined,
+        portfolio: values.portfolio ?? undefined,
       },
       user._id,
     );
 
     if (!isError(userRes)) {
       callback();
-      Swal.fire({
-        title: 'Successfully updated profile!',
-        icon: 'success',
-      });
+      toast.success('Profile updated successfully!');
       setIsOpen(false);
     }
   };
@@ -131,6 +132,7 @@ const EditProfileModal: FC<EditProfileProps> = ({
             role: user.role,
             teams: user.teams,
           }}
+          initialValues={user}
           onSubmit={updateProfile}
           validationSchema={userProfileSchema}
         >
