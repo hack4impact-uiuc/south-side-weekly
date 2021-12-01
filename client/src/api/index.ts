@@ -9,7 +9,6 @@ export {
   updateOnboardingStatus,
   approveUser,
   declineUser,
-  getAggregatedUser,
 } from './user';
 export {
   getApprovedPitches,

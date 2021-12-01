@@ -1,16 +1,15 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { IPitch, IUser } from 'ssw-common';
-import {
-  Button,
-  Divider,
-  Grid,
-  GridColumn,
-  Image,
-} from 'semantic-ui-react';
+import { Button, Divider, Grid, GridColumn, Image } from 'semantic-ui-react';
 
 import { FieldTag, UserPicture } from '../../components';
-import { isError, getUser, getAggregatedUser } from '../../api';
+import {
+  isError,
+  getUser,
+  getAggregatedUser,
+  getUserPermissionsByID,
+} from '../../api';
 import Masthead from '../../assets/masthead.svg';
 import { emptyPitch, emptyUser } from '../../utils/constants';
 import {
@@ -23,7 +22,7 @@ import Contributions from '../../components/Tables/Contributions';
 
 import SocialsInput from './SocialsInput';
 import './styles.scss';
-import { ParamTypes } from './types';
+import { IPermissions, ParamTypes } from './types';
 
 const Profile = (): ReactElement => {
   const { userId } = useParams<ParamTypes>();
@@ -32,7 +31,10 @@ const Profile = (): ReactElement => {
   const auth = useAuth();
   const { teams } = useTeams();
   const { getInterestById } = useInterests();
-
+  const [permissions, setPermissions] = useState<IPermissions>({
+    view: [],
+    edit: [],
+  });
   useEffect(() => {
     const loadUser = async (): Promise<void> => {
       const res = await getUser(userId);
@@ -42,6 +44,13 @@ const Profile = (): ReactElement => {
       }
     };
 
+    const loadCurrentUserPermissions = async (): Promise<void> => {
+      const res = await getUserPermissionsByID(userId);
+
+      if (!isError(res)) {
+        setPermissions(res.data.result);
+      }
+    };
     const getPitches = async (): Promise<void> => {
       const res = await getAggregatedUser(userId);
 
@@ -51,7 +60,7 @@ const Profile = (): ReactElement => {
 
         // pitches the user claimed a team for
         const claimedPitches = res.data.result.aggregated.claimedPitches;
-        
+
         const pitches = submittedPitches
           .concat(claimedPitches)
           .filter((pitch) => pitch !== null);
@@ -59,13 +68,29 @@ const Profile = (): ReactElement => {
       }
     };
 
-    getPitches();
     loadUser();
+    loadCurrentUserPermissions();
+    getPitches();
 
     return () => {
       setUser(emptyUser);
+      setPermissions({
+        view: [],
+        edit: [],
+      });
     };
   }, [userId]);
+
+  /**
+   * Determines if a field is viewable to current user
+   *
+   * @param field the field to check
+   * @returns true if field is viewable, else false
+   */
+  const isViewable = (field: keyof IUser, value: string): boolean =>
+    includesPermission(field) && value !== null && value !== '';
+  const includesPermission = (field: keyof IUser): boolean =>
+    permissions.view.includes(field);
 
   return (
     <div className="profile-page">
@@ -73,7 +98,6 @@ const Profile = (): ReactElement => {
         <Grid.Row columns={5}>
           <Grid.Column className="profile-pic-col" text-align="left" width={4}>
             <div className="user-pic">
-              {' '}
               <UserPicture size="tiny" user={user} />
             </div>
             <div className="name-pronouns">
@@ -116,35 +140,35 @@ const Profile = (): ReactElement => {
           </Grid.Column>
           <Grid.Column width={3}>
             <SocialsInput
-              disabled={user.email !== null}
+              disabled={!user.email}
               icon="mail"
               value={user.email}
-              viewable={user.email !== ''}
+              viewable={isViewable('email', user.email)}
             />
             <div className="social-input">
               <SocialsInput
-                disabled={user.phone !== null}
+                disabled={!user.phone}
                 icon="phone"
                 value={user.phone}
-                viewable={user.phone !== ''}
+                viewable={isViewable('phone', user.phone)}
               />
               <SocialsInput
                 icon="linkedin"
                 value={user.linkedIn}
-                disabled={user.linkedIn !== null}
-                viewable={!!user.linkedIn && user.linkedIn !== ''}
+                disabled={!user.linkedIn}
+                viewable={isViewable('linkedIn', user.linkedIn)}
               />
               <SocialsInput
                 icon="globe"
                 value={user.portfolio}
                 disabled={user.portfolio !== null}
-                viewable={!!user.portfolio && user.portfolio !== ''}
+                viewable={isViewable('portfolio', user.portfolio)}
               />
               <SocialsInput
                 icon="twitter"
                 value={user.twitter}
                 disabled={user.twitter !== null}
-                viewable={!!user.twitter && user.twitter !== ''}
+                viewable={isViewable('twitter', user.twitter)}
               />
               <p className="registration">
                 Registered on {getFormattedDate(new Date(user.dateJoined))}
@@ -152,42 +176,48 @@ const Profile = (): ReactElement => {
             </div>
           </Grid.Column>
 
-          <Grid.Column textAlign="left" width={2}>
-            <div>
-              <h4>Teams</h4>
-            </div>
-            {user.teams.sort().map((teamId, index) => (
-              <div key={index} className="tag-spacing">
-                <FieldTag
-                  size="medium"
-                  name={teams.find((team) => team._id === teamId)?.name}
-                  hexcode={teams.find((team) => team._id === teamId)?.color}
-                />
+          {includesPermission('teams') && (
+            <Grid.Column textAlign="left" width={2}>
+              <div>
+                <h4>Teams</h4>
               </div>
-            ))}
-          </Grid.Column>
-
-          <Grid.Column textAlign="left" width={2}>
-            <div>
-              <h4>Topic Interests</h4>
-            </div>
-            {user.interests.sort().map((interest, index) => {
-              const fullInterst = getInterestById(interest);
-              return (
+              {user.teams.sort().map((teamId, index) => (
                 <div key={index} className="tag-spacing">
                   <FieldTag
                     size="medium"
-                    name={fullInterst?.name}
-                    hexcode={fullInterst?.color}
+                    name={teams.find((team) => team._id === teamId)?.name}
+                    hexcode={teams.find((team) => team._id === teamId)?.color}
                   />
                 </div>
-              );
-            })}
-          </Grid.Column>
-          <Grid.Column width={2}>
-            <h4>Neighborhood</h4>
-            <p>{user.neighborhood}</p>
-          </Grid.Column>
+              ))}
+            </Grid.Column>
+          )}
+
+          {includesPermission('interests') && (
+            <Grid.Column textAlign="left" width={2}>
+              <div>
+                <h4>Topic Interests</h4>
+              </div>
+              {user.interests.sort().map((interest, index) => {
+                const fullInterst = getInterestById(interest);
+                return (
+                  <div key={index} className="tag-spacing">
+                    <FieldTag
+                      size="medium"
+                      name={fullInterst?.name}
+                      hexcode={fullInterst?.color}
+                    />
+                  </div>
+                );
+              })}
+            </Grid.Column>
+          )}
+          {includesPermission('neighborhood') && (
+            <Grid.Column width={2}>
+              <h4>Neighborhood</h4>
+              <p>{user.neighborhood}</p>
+            </Grid.Column>
+          )}
         </Grid.Row>
       </Grid>
       <Divider />
@@ -202,19 +232,22 @@ const Profile = (): ReactElement => {
           }'s` + ` Contributions`}
         </h2>
       )}
-      <Contributions pitches={pitches} />
-      {(auth.isAdmin || auth.isStaff || userId === auth.user._id) && (
-        <Grid columns={2} className="experience">
+      <Contributions pitches={pitches} user={user} />
+
+      <Grid columns={2} className="experience">
+        {includesPermission('involvementResponse') && (
           <GridColumn>
             <h4>How and why user wants to get involved</h4>
             <p>{user.involvementResponse}</p>
           </GridColumn>
+        )}
+        {includesPermission('journalismResponse') && (
           <GridColumn>
             <h4>User's past experience</h4>
             <p>{user.journalismResponse}</p>
           </GridColumn>
-        </Grid>
-      )}
+        )}
+      </Grid>
     </div>
   );
 };

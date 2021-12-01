@@ -21,6 +21,10 @@ const getPitchTeams = (pitch: IPitch): string[] => {
   return teams;
 };
 
+const getUserTeamsForPitch = (pitch: Partial<IPitch>, user: IUser): string[] => {
+  const contributor = pitch.assignmentContributors?.find((contributor) => (contributor.userId === user._id));
+  return contributor ? contributor.teams : [];
+}
 /**
  * Gets all of the teams a user is on for a given pitch
  *
@@ -330,6 +334,7 @@ const isPast = (date: Date): boolean => Date.now() - date.getTime() > 0;
 export {
   getPitchTeams,
   getPitchTeamsForContributor,
+  getUserTeamsForPitch,
   findPendingContributor,
   findAssignmentContributor,
   getUserClaimStatusForPitch,

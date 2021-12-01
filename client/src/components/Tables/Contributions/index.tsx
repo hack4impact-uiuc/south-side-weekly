@@ -1,41 +1,35 @@
 import React, { FC, ReactElement } from 'react';
-import { IPitch } from 'ssw-common';
+import { IPitch, IUser } from 'ssw-common';
 
-import DynamicTable from '../DyanmicTable';
+import { ColumnType } from '../..';
+import DynamicTable from '../DynamicTable';
+
+
 
 import './styles.scss';
-import {
-  dateColumn,
-  teamsColumn,
-  titleColumn,
-  topicsColumn,
-  statusColumn,
-} from './utils';
-
+import { contributionColumns } from './utils';
 interface ContributionsProps {
   pitches: Partial<IPitch>[];
+  user: IUser;
 }
 
-const Contributions: FC<ContributionsProps> = ({ pitches }): ReactElement => {
-  const columns = [
-    titleColumn,
-    topicsColumn,
-    teamsColumn,
-    dateColumn,
-    statusColumn,
-  ];
-
+const Contributions: FC<ContributionsProps> = ({ pitches, user }): ReactElement => {
+  const columns: ColumnType<Partial<IPitch>>[] = contributionColumns(user);
+  const view = {records: pitches, columns};
   return (
-    <div className="table">
-      <div className="directory">
-        <DynamicTable
-          records={pitches}
-          columns={columns}
+
+      <div>
+        <DynamicTable<Partial<IPitch>>
+          view = {view}
           singleLine={pitches.length > 0}
         />
       </div>
-    </div>
+  
+
   );
-};
+}
+  
+     
+  
 
 export default Contributions;
