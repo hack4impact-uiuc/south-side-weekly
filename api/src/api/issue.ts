@@ -32,7 +32,27 @@ router.get(
   '/',
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
+    const { current, offset } = req.query;
+
+    if (current) {
+      const issues = await Issue.find({
+        releaseDate: {
+          $gte: new Date().toISOString(),
+        },
+      })
+        .sort({ releaseDate: 1 })
+        .limit(1)
+        .lean();
+
+      res.status(200).json({
+        success: true,
+        result: issues.length > 0 ? issues[0] : null,
+        message: 'Successfully retrieved nearest issue',
+      });
+    }
+
     const issues = await Issue.find({});
+
     res.status(200).json({
       message: 'Successfully retrieved all issues.',
       success: true,

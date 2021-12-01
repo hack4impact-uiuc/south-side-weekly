@@ -41,6 +41,7 @@ import {
 } from './Modals/EditableTags';
 import ReviewUserModal from './Modals/ReviewUser';
 import { ApprovedUsers, PendingUsers } from './Tables';
+import Kanban from './Kanban';
 
 export {
   Header,
@@ -87,6 +88,7 @@ export {
   ApprovedView,
   DynamicTable,
   buildColumn,
+  Kanban
 };
 
 export type { View, ColumnType };

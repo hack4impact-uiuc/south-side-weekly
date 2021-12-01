@@ -6,6 +6,7 @@ import NotFound from './invalid';
 import Profile from './profile';
 import Resources from './resources';
 import Login from './login';
+import Issues from './issues';
 
 export {
   Directory,
@@ -15,4 +16,5 @@ export {
   WizardWrapper,
   Resources,
   Login,
+  Issues,
 };
