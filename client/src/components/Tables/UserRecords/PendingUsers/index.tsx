@@ -107,6 +107,7 @@ const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
               open={isOpen}
               setOpen={setIsOpen}
               actionUpdate={updateUserStatus}
+              type="review"
             />
           )}
         />

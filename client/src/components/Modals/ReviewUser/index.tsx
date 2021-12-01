@@ -7,15 +7,18 @@ import {
   Icon,
   Form,
   Input,
+  Message,
 } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { useInterests, useTeams } from '../../../contexts';
 import { UserPicture, FieldTag } from '../..';
 import { getUserFullName, titleCase } from '../../../utils/helpers';
-import './styles.scss';
 import { onboardingStatusEnum } from '../../../utils/enums';
 import { updateUser } from '../../../api';
+
+import './styles.scss';
+
 interface ReviewUserProps extends ModalProps {
   user: IUser;
   actionUpdate: (
@@ -24,6 +27,7 @@ interface ReviewUserProps extends ModalProps {
   ) => Promise<void>;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  type: 'reject' | 'review';
 }
 
 const ReviewUserModal: FC<ReviewUserProps> = ({
@@ -31,6 +35,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
   actionUpdate,
   open,
   setOpen,
+  type,
 }): ReactElement => {
   const [formValue, setFormValue] = useState('');
 
@@ -53,7 +58,9 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
       onClose={() => setOpen(false)}
       className="review-user-modal"
     >
-      <Modal.Header>Review User</Modal.Header>
+      <Modal.Header className="review-user-header">
+        {type === 'reject' ? 'View Rejected User' : 'Review User'}
+      </Modal.Header>
       <Modal.Content>
         <Grid divided="vertically">
           <Grid.Row columns={2}>
@@ -138,6 +145,24 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
           </Grid.Row>
           <Grid.Row columns={1}>
             <Grid.Column>
+              {type === 'reject' && (
+                <Message
+                  size="small"
+                  className="reject-message"
+                  header="Rejection Reasoning"
+                  warning
+                  content={user.onboardReasoning}
+                />
+              )}
+              <span style={{ color: 'gray' }}>
+                {type === 'reject' ? 'Applied' : 'Registered'} on{' '}
+                {formatDate(user.dateJoined)}
+              </span>
+            </Grid.Column>
+          </Grid.Row>
+
+          <Grid.Row columns={1}>
+            <Grid.Column>
               <div className="paragraph">
                 <b>How and why user wants to get involved</b>
                 <br />
@@ -150,43 +175,47 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
                 Place Holder, update when past experience field is added to the
                 user model
               </div>
-              <span style={{ color: 'gray' }}>
-                Registered on {formatDate(user.dateJoined)}
-              </span>
-              <h5>
-                Reasoning <span style={{ color: 'gray' }}>- Optional</span>
-              </h5>
-              <Form>
-                <Input
-                  type="text"
-                  onChange={(e) => setFormValue(e.currentTarget.value)}
-                ></Input>
-              </Form>
+
+              {type === 'review' && (
+                <>
+                  <h5>
+                    Reasoning <span style={{ color: 'gray' }}>- Optional</span>
+                  </h5>
+                  <Form>
+                    <Input
+                      type="text"
+                      onChange={(e) => setFormValue(e.currentTarget.value)}
+                    ></Input>
+                  </Form>
+                </>
+              )}
             </Grid.Column>
           </Grid.Row>
         </Grid>
-        <Modal.Actions className="review-user-actions">
-          <Button
-            className="approve-button"
-            onClick={() => {
-              updateUser({ onboardReasoning: formValue }, user._id);
-              actionUpdate(user, 'ONBOARDED');
-              setOpen(false);
-            }}
-          >
-            Approve
-          </Button>
-          <Button
-            className="decline-button"
-            onClick={() => {
-              updateUser({ onboardReasoning: formValue }, user._id);
-              actionUpdate(user, 'DENIED');
-              setOpen(false);
-            }}
-          >
-            Decline
-          </Button>
-        </Modal.Actions>
+        {type === 'review' && (
+          <Modal.Actions className="review-user-actions">
+            <Button
+              className="approve-button"
+              onClick={() => {
+                updateUser({ onboardReasoning: formValue }, user._id);
+                actionUpdate(user, 'ONBOARDED');
+                setOpen(false);
+              }}
+            >
+              Approve
+            </Button>
+            <Button
+              className="decline-button"
+              onClick={() => {
+                updateUser({ onboardReasoning: formValue }, user._id);
+                actionUpdate(user, 'DENIED');
+                setOpen(false);
+              }}
+            >
+              Decline
+            </Button>
+          </Modal.Actions>
+        )}
       </Modal.Content>
     </Modal>
   );
