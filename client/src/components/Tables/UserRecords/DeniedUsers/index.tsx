@@ -2,12 +2,12 @@ import React, { FC, ReactElement, ReactNode, useEffect, useState } from 'react';
 import { IUser } from 'ssw-common';
 import toast from 'react-hot-toast';
 
-import DynamicTable from '../../DyanmicTable';
+import DynamicTable from '../../DynamicTable';
 import ReviewUserModal from '../../../Modals/ReviewUser';
 import { nameColumn, roleColumn, userColumn, teamsColumnModal } from '../utils';
 import { isError, updateOnboardingStatus } from '../../../../api';
 import { onboardingStatusEnum } from '../../../../utils/enums';
-import { buildColumn } from '../../DyanmicTable/util';
+import { buildColumn } from '../../DynamicTable/util';
 
 interface DeniedUserProps {
   users: IUser[];
@@ -72,8 +72,7 @@ const DeniedUsers: FC<DeniedUserProps> = ({ users }): ReactElement => {
     <div className="table">
       <div className="directory">
         <DynamicTable<IUser>
-          records={data}
-          columns={columns}
+          view={{ records: data, columns: columns }}
           singleLine={users.length > 0}
           getModal={(user, isOpen, setIsOpen) => (
             <ReviewUserModal

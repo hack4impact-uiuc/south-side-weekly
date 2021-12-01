@@ -85,7 +85,7 @@ export {
   ApprovedUsers,
   PendingUsers,
   ApprovedView,
-  DeniedUsers
+  DeniedUsers,
   DynamicTable,
   buildColumn,
 };
