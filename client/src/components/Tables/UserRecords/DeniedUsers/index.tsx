@@ -51,6 +51,8 @@ const DeniedUsers: FC<DeniedUserProps> = ({ users }): ReactElement => {
   const appliedDateColumn = buildColumn<IUser>({
     title: 'Applied Date',
     width: 2,
+    sorter: (a: IUser, b: IUser): number =>
+      a.dateJoined.getTime() - b.dateJoined.getTime(),
     extractor: function AppliedDate(user: IUser): ReactNode {
       return formatDate(new Date(user.dateJoined));
     },
