@@ -7,7 +7,6 @@ import {
   Grid,
   GridColumn,
   Image,
-  Rating,
 } from 'semantic-ui-react';
 
 import { FieldTag, UserPicture } from '../../components';
@@ -52,13 +51,7 @@ const Profile = (): ReactElement => {
 
         // pitches the user claimed a team for
         const claimedPitches = res.data.result.aggregated.claimedPitches;
-
-        // filter assignment contributors to get teams claimed by user for pitch
-        claimedPitches.forEach((pitch) => {
-          pitch.assignmentContributors = pitch.assignmentContributors?.filter(
-            (contributor) => contributor.userId === userId,
-          );
-        });
+        
         const pitches = submittedPitches
           .concat(claimedPitches)
           .filter((pitch) => pitch !== null);
