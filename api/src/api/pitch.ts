@@ -264,7 +264,7 @@ router.put(
   errorWrap(async (req: Request, res: Response) => {
     const pitch = await Pitch.findByIdAndUpdate(req.params.pitchId, {
       $set: {
-        status: pitchStatusEnum.REJECTED,
+        status: pitchStatusEnum.DECLINED,
         reviewedBy: req.user._id,
       },
     }).lean();
@@ -310,11 +310,19 @@ router.put(
             userId: req.body.userId,
             teams: req.body.teams,
             message: req.body.message,
+            dateSubmitted: new Date(),
+            status: pitchStatusEnum.PENDING,
           },
         },
       },
       { new: true, runValidators: true },
     );
+
+    await User.findByIdAndUpdate(user._id, {
+      $addToSet: {
+        submittedClaims: updatedPitch._id,
+      },
+    });
 
     if (!updatedPitch) {
       res.status(404).json({
@@ -360,6 +368,9 @@ router.put(
         $addToSet: {
           claimedPitches: req.params.pitchId,
         },
+        $pull: {
+          submittedClaims: req.params.pitchId,
+        },
       },
       { returnOriginal: false },
     );
@@ -403,11 +414,11 @@ router.put(
       return;
     }
 
-    const pitch = await Pitch.findByIdAndUpdate(
-      req.params.pitchId,
+    const pitch = await Pitch.findOneAndUpdate(
+      { _id: req.params.pitchId, 'pendingContributors.userId': userId },
       {
-        $pull: {
-          pendingContributors: { userId: userId },
+        $set: {
+          'pendingContributors.$.status': pitchStatusEnum.DECLINED,
         },
       },
       { new: true, runValidators: true },

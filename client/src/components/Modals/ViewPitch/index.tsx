@@ -9,7 +9,7 @@ import {
 import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
 
 import { FieldTag, PitchRow } from '../..';
-import { aggregatePitch, isError } from '../../../api';
+import { getAggregatedPitch, isError } from '../../../api';
 import { useTeams } from '../../../contexts';
 import { emptyAggregatePitch } from '../../../utils/constants';
 import RoleRow from '../RoleRow';
@@ -44,7 +44,7 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
     }
 
     const getAggregate = async (): Promise<void> => {
-      const res = await aggregatePitch(pitchId);
+      const res = await getAggregatedPitch(pitchId);
 
       if (!isError(res)) {
         const aggregatedPitch = res.data.result;

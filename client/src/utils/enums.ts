@@ -35,7 +35,15 @@ export const racesEnum = {
   NONE: 'NONE',
 };
 
+export const pitchStatusEnum = {
+  APPROVED: 'APPROVED',
+  PENDING: 'PENDING',
+  DECLINED: 'DECLINED',
+  NONE: 'NONE',
+};
+
 export const pagesEnum = {
+  HOMEPAGE: 'HOMEPAGE',
   PITCHDOC: 'PITCHDOC',
   DIRECTORY: 'DIRECTORY',
   RESOURCES: 'RESOURCES',
