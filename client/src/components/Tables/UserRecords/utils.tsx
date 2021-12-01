@@ -4,13 +4,14 @@ import { IUser } from 'ssw-common';
 import {
   EditTeams,
   FieldTag,
-  UserInterests,
+  InterestList,
+  TeamList,
   UserModal,
   UserPicture,
-  UserTeams,
 } from '../..';
 import { getUserFullName } from '../../../utils/helpers';
-import { buildColumn } from '../DyanmicTable/util';
+import StatusTag from '../../StatusTag';
+import { buildColumn } from '../DynamicTable/util';
 import { fullNameSort, joinedSort, roleSort } from '../Util/TableUtil';
 
 const nameColumn = buildColumn<IUser>({
@@ -44,21 +45,21 @@ const teamsColumnModal = buildColumn<IUser>({
     </>
   ),
   extractor: function getTeams(user: IUser): ReactNode {
-    return <UserTeams user={user} />;
+    return <TeamList teamIds={user.teams} />;
   },
 });
 
 const teamsColumnNoModal = buildColumn<IUser>({
   title: 'Teams',
   extractor: function getInterests(user: IUser): ReactNode {
-    return <UserTeams user={user} />;
+    return <TeamList teamIds={user.teams} />;
   },
 });
 
 const interestsColumnNoModal = buildColumn<IUser>({
   title: 'Interests',
   extractor: function getInterests(user: IUser): ReactNode {
-    return <UserInterests user={user} />;
+    return <InterestList interestIds={user.interests} />;
   },
 });
 
@@ -69,7 +70,7 @@ const interestsColumnModal = buildColumn<IUser>({
     </>
   ),
   extractor: function getInterests(user: IUser): ReactNode {
-    return <UserInterests user={user} />;
+    return <InterestList interestIds={user.interests} />;
   },
 });
 
@@ -105,9 +106,9 @@ const viewUserColumn = buildColumn<IUser>({
 
 const activityColumn = buildColumn<IUser>({
   title: 'Active',
-  width: 1,
-  extractor: function getActivity(): ReactNode {
-    return <FieldTag size="tiny" content="Active" />;
+  width: 2,
+  extractor: function getActivity(user: IUser): ReactNode {
+    return <StatusTag user={user} size="tiny" />;
   },
 });
 

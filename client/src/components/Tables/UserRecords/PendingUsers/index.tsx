@@ -3,7 +3,7 @@ import { IUser } from 'ssw-common';
 import { Button } from 'semantic-ui-react';
 import toast from 'react-hot-toast';
 
-import DynamicTable from '../../DyanmicTable';
+import DynamicTable from '../../DynamicTable';
 import ReviewUserModal from '../../../Modals/ReviewUser';
 import {
   nameColumn,
@@ -15,9 +15,8 @@ import {
 } from '../utils';
 import { isError, updateOnboardingStatus } from '../../../../api';
 import { onboardingStatusEnum } from '../../../../utils/enums';
-import { buildColumn } from '../../DyanmicTable/util';
-
 import './styles.scss';
+import { buildColumn } from '../../DynamicTable/util';
 
 interface PendingUserProps {
   users: IUser[];
@@ -94,12 +93,12 @@ const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
     onboardActionColumn,
   ];
 
+  const view = { records: users, columns };
   return (
     <div className="table">
       <div className="directory">
         <DynamicTable<IUser>
-          records={data}
-          columns={columns}
+          view={view}
           singleLine={users.length > 0}
           getModal={(user, isOpen, setIsOpen) => (
             <ReviewUserModal
@@ -107,6 +106,7 @@ const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
               open={isOpen}
               setOpen={setIsOpen}
               actionUpdate={updateUserStatus}
+              type="review"
             />
           )}
         />

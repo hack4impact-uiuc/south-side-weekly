@@ -9,3 +9,14 @@ export interface ColumnType<RecordType> {
 }
 
 export type SortDirection = 'ascending' | 'descending';
+
+export type Sort<RecordType> = {
+  column: ColumnType<RecordType>;
+  direction: SortDirection;
+};
+
+export type View<RecordType> = {
+  records: RecordType[];
+  columns: ColumnType<RecordType>[];
+  initialSort?: Sort<RecordType>;
+};
