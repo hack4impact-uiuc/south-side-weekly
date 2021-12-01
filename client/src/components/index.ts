@@ -16,7 +16,7 @@ import FilterDropdown from './Dropdowns/Filter';
 import FieldTag from './FieldTag';
 import UserPicture from './UserPicture';
 import UserCard from './UserCard';
-import { UserInterests, UserTeams } from './Lists';
+import { InterestList, TeamList } from './Lists';
 import Navbar from './Navbar';
 import SubmitButton from './Wizard/SubmitButton';
 import PrevButton from './Wizard/PrevButton';
@@ -31,13 +31,16 @@ import LinkDisplay from './LinkDisplay';
 import InterestsSelect from './Dropdowns/InterestsSelect';
 import ProviderWrapper from './ProviderWrapper';
 import TeamsSelect from './Dropdowns/TeamsSelect';
+import DynamicTable from './Tables/DynamicTable';
+import { ColumnType, View } from './Tables/DynamicTable/types';
+import { buildColumn } from './Tables/DynamicTable/util';
 import {
   EditableTagModal,
   EditInterests,
   EditTeams,
 } from './Modals/EditableTags';
 import ReviewUserModal from './Modals/ReviewUser';
-import { ApprovedUsers, PendingUsers } from './Tables';
+import { ApprovedUsers, PendingUsers, DeniedUsers } from './Tables';
 import ResourceTable from './Tables/Resource';
 
 export {
@@ -58,8 +61,8 @@ export {
   FieldTag,
   UserPicture,
   UserCard,
-  UserInterests,
-  UserTeams,
+  InterestList,
+  TeamList,
   Navbar,
   SubmitButton,
   PrevButton,
@@ -84,4 +87,9 @@ export {
   ApprovedUsers,
   PendingUsers,
   ApprovedView,
+  DeniedUsers,
+  DynamicTable,
+  buildColumn,
 };
+
+export type { View, ColumnType };
