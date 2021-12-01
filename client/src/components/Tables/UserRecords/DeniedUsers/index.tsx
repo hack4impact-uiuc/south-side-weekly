@@ -1,12 +1,9 @@
 import React, { FC, ReactElement, ReactNode, useEffect, useState } from 'react';
 import { IUser } from 'ssw-common';
-import toast from 'react-hot-toast';
 
 import DynamicTable from '../../DynamicTable';
 import ReviewUserModal from '../../../Modals/ReviewUser';
 import { nameColumn, roleColumn, userColumn, teamsColumnModal } from '../utils';
-import { isError, updateOnboardingStatus } from '../../../../api';
-import { onboardingStatusEnum } from '../../../../utils/enums';
 import { buildColumn } from '../../DynamicTable/util';
 
 interface DeniedUserProps {
@@ -15,19 +12,6 @@ interface DeniedUserProps {
 
 const DeniedUsers: FC<DeniedUserProps> = ({ users }): ReactElement => {
   const [data, setData] = useState<IUser[]>(users);
-
-  const updateUserStatus = async (
-    user: IUser,
-    status: keyof typeof onboardingStatusEnum,
-  ): Promise<void> => {
-    const res = await updateOnboardingStatus(user._id, status);
-    if (!isError(res)) {
-      setData(data.filter((d) => d !== user));
-      toast.success('Updated User Status!', {
-        position: 'bottom-right',
-      });
-    }
-  };
 
   useEffect(() => {
     setData(users);
@@ -81,7 +65,6 @@ const DeniedUsers: FC<DeniedUserProps> = ({ users }): ReactElement => {
               user={user}
               open={isOpen}
               setOpen={setIsOpen}
-              actionUpdate={updateUserStatus}
               type="reject"
             />
           )}

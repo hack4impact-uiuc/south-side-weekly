@@ -21,7 +21,7 @@ import './styles.scss';
 
 interface ReviewUserProps extends ModalProps {
   user: IUser;
-  actionUpdate: (
+  actionUpdate?: (
     user: IUser,
     status: keyof typeof onboardingStatusEnum,
   ) => Promise<void>;
@@ -198,7 +198,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
               className="approve-button"
               onClick={() => {
                 updateUser({ onboardReasoning: formValue }, user._id);
-                actionUpdate(user, 'ONBOARDED');
+                actionUpdate?.(user, 'ONBOARDED');
                 setOpen(false);
               }}
             >
@@ -208,7 +208,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
               className="decline-button"
               onClick={() => {
                 updateUser({ onboardReasoning: formValue }, user._id);
-                actionUpdate(user, 'DENIED');
+                actionUpdate?.(user, 'DENIED');
                 setOpen(false);
               }}
             >
