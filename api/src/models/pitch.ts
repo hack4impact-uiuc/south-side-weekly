@@ -23,6 +23,18 @@ const pendingContributor = new mongoose.Schema(
   { _id: false },
 );
 
+const issueStatus = new mongoose.Schema(
+  {
+    issueID: { type: Schema.Types.ObjectId, ref: 'Issue' },
+    issueStatus: {
+      type: String,
+      enum: Object.values(issueStatusEnum),
+      default: issueStatusEnum.DEFINITELY_IN,
+    },
+  },
+  { _id: false },
+);
+
 const team = new mongoose.Schema(
   {
     teamId: { type: Schema.Types.ObjectId, ref: 'Team' },
@@ -84,11 +96,7 @@ const Pitch = new mongoose.Schema({
   similarStories: [{ type: String, default: null }],
   deadline: { type: Date, default: null },
   neighborhoods: [{ type: String, default: null }],
-  issueStatus: {
-    type: String,
-    enum: Object.values(issueStatusEnum),
-    default: issueStatusEnum.DEFINITELY_IN,
-  },
+  issueStatuses: [issueStatus],
 });
 
 export default mongoose.model<PitchSchema>('Pitch', Pitch);

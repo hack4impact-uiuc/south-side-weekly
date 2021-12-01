@@ -65,7 +65,7 @@ export interface IPitch {
   deadline: Date;
   conflictOfInterest: boolean;
   neighborhoods: string[];
-  issueStatus: string;
+  issueStatus: { issueId: string; issueStatus: string }[];
 }
 
 export interface IPitchAggregate extends IPitch {
