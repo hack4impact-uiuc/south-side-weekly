@@ -1,5 +1,5 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Button, Form, Grid, Icon, Modal, ModalProps } from 'semantic-ui-react';
+import { Button, Dropdown, Form, Grid, Icon, Modal, ModalProps } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
 import * as yup from 'yup';
@@ -9,6 +9,7 @@ import { InterestsSelect, MultiSelect } from '../..';
 import { isError, updateUser } from '../../../api';
 import './styles.scss';
 import { IPermissions } from '../../../pages/profile/types';
+
 
 interface EditProfileProps extends ModalProps {
   user: IUser;
@@ -38,6 +39,8 @@ const EditProfileModal: FC<EditProfileProps> = ({
     twitter: yup.string(),
     linkedIn: yup.string(),
     portfolio: yup.string(),
+    role: yup.string().required(),
+    teams: yup.array().of(yup.string().required()).required().min(1)
   });
 
   /**
@@ -80,6 +83,8 @@ const EditProfileModal: FC<EditProfileProps> = ({
         twitter: values.twitter,
         linkedIn: values.linkedIn,
         portfolio: values.portfolio,
+        role: values.role,
+        teams: values.teams,
       },
       user._id,
     );
@@ -123,6 +128,8 @@ const EditProfileModal: FC<EditProfileProps> = ({
             twitter: user.twitter,
             linkedIn: user.linkedIn,
             portfolio: user.portfolio,
+            role: user.role,
+            teams: user.teams,
           }}
           onSubmit={updateProfile}
           validationSchema={userProfileSchema}
@@ -185,6 +192,29 @@ const EditProfileModal: FC<EditProfileProps> = ({
                       ></MultiSelect>{' '}
                     </>
                   )}
+                  <h5>Role</h5>
+                  </Grid.Column>
+                  {isEditable('pronouns') && (
+                  <Grid.Column>
+                    <h5>Pronouns</h5>
+                    <MultiSelect
+                      options={allPronouns.map((pronoun) => ({
+                        value: pronoun,
+                        label: pronoun,
+                      }))}
+                      onChange={(values) =>
+                        props.setFieldValue(
+                          'pronouns',
+                          values.map((item) => item.value),
+                        )
+                      }
+                      value={props.values.pronouns}
+                    ></MultiSelect>
+                  </Grid.Column>
+                )}
+                </Grid>
+                <Grid columns = {2}>
+                  <Grid.Column>
 
                   {isEditable('interests') && (
                     <>
@@ -262,9 +292,9 @@ const EditProfileModal: FC<EditProfileProps> = ({
                     placeholder={'https://website.com'}
                     fluid
                   />
-                </Grid.Column>
+           
                 {isEditable('pronouns') && (
-                  <Grid.Column>
+                  <>
                     <h5>Pronouns</h5>
                     <MultiSelect
                       options={allPronouns.map((pronoun) => ({
@@ -279,9 +309,15 @@ const EditProfileModal: FC<EditProfileProps> = ({
                       }
                       value={props.values.pronouns}
                     ></MultiSelect>
-                  </Grid.Column>
+                    </>
                 )}
-              </Grid>
+                </Grid.Column>
+                <Grid.Column>
+                  <h5>Teams</h5>
+                 
+                </Grid.Column>
+                </Grid>
+      
             </FormikForm>
           )}
         </Formik>

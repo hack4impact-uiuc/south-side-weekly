@@ -44,6 +44,8 @@ import {
   MultiDropdowns,
 } from './types';
 
+import EditProfileModal from '../../components/Modals/EditProfile';
+
 const stringAttributes: (keyof IUser)[] = [
   'firstName',
   'lastName',
@@ -99,6 +101,29 @@ const Profile = (): ReactElement => {
       });
     };
   }, [userId]);
+
+  const loadUser = async (): Promise<void> => {
+    const res = await getUser(userId);
+    if (!isError(res)) {
+      const user = res.data.result;
+      setUser(user);
+    }
+  };
+
+  const loadCurrentUserPermissions = async (): Promise<void> => {
+    const res = await getUserPermissionsByID(userId);
+
+    if (!isError(res)) {
+      setPermissions(res.data.result);
+    }
+  };
+
+  const loadProfile = (): void => {
+    loadUser();
+    loadCurrentUserPermissions();
+  }
+
+
 
   /**
    * Adds a dropdown option that was input by the user.
@@ -264,6 +289,8 @@ const Profile = (): ReactElement => {
             {user.masthead && (
               <Image className="masthead" size="small" src={Masthead} />
             )}
+
+            <EditProfileModal callback={loadProfile} user = {user} permissions = {permissions}/>
 
             {isEditMode && (
               <div style={{ display: 'inline-block', textAlign: 'center' }}>
