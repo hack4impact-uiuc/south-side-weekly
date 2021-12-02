@@ -23,22 +23,19 @@ const topicsColumn = buildColumn<Partial<IPitch>>({
   },
 });
 
-const contributionColumns = (user: IUser) : ColumnType<Partial<IPitch>>[] => [
+const contributionColumns = (user: IUser): ColumnType<Partial<IPitch>>[] => [
   titleColumn,
   topicsColumn,
   {
     title: "Team(s) You're On",
     width: 2,
     extractor: function TeamsCell(pitch: Partial<IPitch>) {
-      return (
-        <TeamList teamIds={getUserTeamsForPitch(pitch, user)} />
-      );
+      return <TeamList teamIds={getUserTeamsForPitch(pitch, user)} />;
     },
   },
   dateColumn,
-  statusColumn
+  statusColumn,
 ];
-
 
 const dateColumn = buildColumn<Partial<IPitch>>({
   title: 'Publish Date',
