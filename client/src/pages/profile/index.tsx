@@ -1,7 +1,7 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { IPitch, IUser } from 'ssw-common';
-import { Button, Divider, Grid, GridColumn, Image } from 'semantic-ui-react';
+import { Divider, Grid, GridColumn, Image } from 'semantic-ui-react';
 
 import { FieldTag, UserPicture } from '../../components';
 import {
@@ -19,6 +19,7 @@ import {
 } from '../../utils/helpers';
 import { useAuth, useInterests, useTeams } from '../../contexts';
 import Contributions from '../../components/Tables/Contributions';
+import EditProfileModal from '../../components/Modals/EditProfile';
 
 import SocialsInput from './SocialsInput';
 import './styles.scss';
@@ -35,39 +36,41 @@ const Profile = (): ReactElement => {
     view: [],
     edit: [],
   });
+
+  const loadUser = useCallback(async (): Promise<void> => {
+    const res = await getUser(userId);
+    if (!isError(res)) {
+      const user = res.data.result;
+      setUser(user);
+    }
+  }, [userId]);
+
+  const loadCurrentUserPermissions = useCallback(async (): Promise<void> => {
+    const res = await getUserPermissionsByID(userId);
+
+    if (!isError(res)) {
+      setPermissions(res.data.result);
+    }
+  }, [userId]);
+
+  const getPitches = useCallback(async (): Promise<void> => {
+    const res = await getAggregatedUser(userId);
+
+    if (!isError(res)) {
+      // pitches the user created
+      const submittedPitches = res.data.result.aggregated.submittedPitches;
+
+      // pitches the user claimed a team for
+      const claimedPitches = res.data.result.aggregated.claimedPitches;
+
+      const pitches = submittedPitches
+        .concat(claimedPitches)
+        .filter((pitch) => pitch !== null);
+      setPitches(pitches);
+    }
+  }, [userId]);
+
   useEffect(() => {
-    const loadUser = async (): Promise<void> => {
-      const res = await getUser(userId);
-      if (!isError(res)) {
-        const user = res.data.result;
-        setUser(user);
-      }
-    };
-
-    const loadCurrentUserPermissions = async (): Promise<void> => {
-      const res = await getUserPermissionsByID(userId);
-
-      if (!isError(res)) {
-        setPermissions(res.data.result);
-      }
-    };
-    const getPitches = async (): Promise<void> => {
-      const res = await getAggregatedUser(userId);
-
-      if (!isError(res)) {
-        // pitches the user created
-        const submittedPitches = res.data.result.aggregated.submittedPitches;
-
-        // pitches the user claimed a team for
-        const claimedPitches = res.data.result.aggregated.claimedPitches;
-
-        const pitches = submittedPitches
-          .concat(claimedPitches)
-          .filter((pitch) => pitch !== null);
-        setPitches(pitches);
-      }
-    };
-
     loadUser();
     loadCurrentUserPermissions();
     getPitches();
@@ -79,7 +82,13 @@ const Profile = (): ReactElement => {
         edit: [],
       });
     };
-  }, [userId]);
+  }, [loadCurrentUserPermissions, getPitches, loadUser, userId]);
+
+  const loadProfile = (): void => {
+    loadUser();
+    loadCurrentUserPermissions();
+    getPitches();
+  };
 
   /**
    * Determines if a field is viewable to current user
@@ -89,6 +98,13 @@ const Profile = (): ReactElement => {
    */
   const isViewable = (field: keyof IUser, value: string): boolean =>
     includesPermission(field) && value !== null && value !== '';
+
+  /**
+   * Determines if user has permission to view field
+   *
+   * @param field the field to check
+   * @returns true if user has permission to field
+   */
   const includesPermission = (field: keyof IUser): boolean =>
     permissions.view.includes(field);
 
@@ -118,17 +134,13 @@ const Profile = (): ReactElement => {
               <div className="user-role">
                 <FieldTag content={user.role} />
               </div>
-              {/* <div className="rating">
-                
-                <Rating icon="star" defaultRating={3} maxRating={5} />
-                <p className="number-ratings">(16)</p>
-              </div> */}
+
               <div>
                 {(userId === auth.user._id || auth.isAdmin) && (
-                  <Button
-                    size="medium"
-                    className="edit-profile-btn"
-                    content="Edit Profile"
+                  <EditProfileModal
+                    user={user}
+                    callback={loadProfile}
+                    permissions={permissions}
                   />
                 )}
               </div>

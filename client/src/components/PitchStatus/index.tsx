@@ -10,13 +10,13 @@ const PitchStatus: FC<PitchStatusProps> = ({ date }): ReactElement => {
   if (new Date(date) < new Date()) {
     return (
       <>
-        <FieldTag name="Published" hexcode="#E9F4E7" />
+        <FieldTag name="Published" content="published" />
       </>
     );
   }
   return (
     <>
-      <FieldTag name="In Progress" hexcode="#FEF0DB" />
+      <FieldTag name="In Progress" hexcode="inprogress" />
     </>
   );
 };

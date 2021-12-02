@@ -63,7 +63,7 @@ const Onboard2 = (): ReactElement => {
               search
               selection
               required
-              label={<h3 className="neighborhood-title">Neighborhood</h3>}
+              label="Neighborhood"
               options={neighborhoods.map((neighborhood) => ({
                 value: neighborhood,
                 key: neighborhood,

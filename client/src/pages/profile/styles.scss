@@ -1,9 +1,4 @@
 .profile-page {
-  .edit-profile-btn {
-    color: white !important;
-    background-color: black !important;
-    margin-top: 5% !important;
-  }
 
   .tag-spacing {
     margin-top: 2%;
@@ -11,10 +6,6 @@
 
   .user-role {
     margin-top: 3%;
-  }
-
-  .edit-mode-btn {
-    margin: 10px 5px 10px 5px !important;
   }
 
   .field-label {
@@ -45,16 +36,6 @@
   .registration {
     margin-top: 10% !important;
     color: #575757;
-  }
-
-  .rating {
-    display: flex;
-    margin-top: 3%;
-    .number-ratings {
-      margin-top: 2%;
-      margin-left: 2%;
-      font-size: 12px;
-    }
   }
 
   .experience {
