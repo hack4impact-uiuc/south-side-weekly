@@ -57,13 +57,13 @@ const Onboard2 = (): ReactElement => {
       <Form id="onboard-2" onSubmit={onSubmit}>
         <Grid columns={4}>
           <Grid.Column width={6}>
+            <WizardListTitle value="Neighborhood" />
             <Form.Dropdown
               placeholder="select"
               fluid
               search
               selection
               required
-              label={<h4 className="label-header">Neighborhood</h4>}
               options={neighborhoods.map((neighborhood) => ({
                 value: neighborhood,
                 key: neighborhood,
@@ -84,7 +84,7 @@ const Onboard2 = (): ReactElement => {
                 <Form.Checkbox
                   value={gender}
                   defaultChecked={data.genders.includes(gender)}
-                  label={<h4 className="label-header">{titleCase(gender)}</h4>}
+                  label={titleCase(gender)}
                   onClick={() => handleGender(gender)}
                 />
               </div>
@@ -97,7 +97,7 @@ const Onboard2 = (): ReactElement => {
                 <Form.Checkbox
                   value={pronoun}
                   defaultChecked={data.pronouns.includes(pronoun)}
-                  label={<h4 className="label-header">{titleCase(pronoun)}</h4>}
+                  label={titleCase(pronoun)}
                   onClick={() => handlePronoun(pronoun)}
                 />
               </div>
@@ -110,7 +110,7 @@ const Onboard2 = (): ReactElement => {
                 <Form.Checkbox
                   value={race}
                   defaultChecked={data.races.includes(race)}
-                  label={<h4 className="label-header">{titleCase(race)}</h4>}
+                  label={titleCase(race)}
                   onClick={() => handleRace(race)}
                 />
               </div>
