@@ -57,24 +57,26 @@ const Onboard2 = (): ReactElement => {
       <Form id="onboard-2" onSubmit={onSubmit}>
         <Grid columns={4}>
           <Grid.Column width={6}>
-            <WizardListTitle value="Neighborhood" />
-            <Form.Dropdown
-              placeholder="select"
-              fluid
-              search
-              selection
-              required
-              options={neighborhoods.map((neighborhood) => ({
-                value: neighborhood,
-                key: neighborhood,
-                text: neighborhood,
-              }))}
-              value={neighborhood}
-              onChange={(event, data) => {
-                setNeighborhood(data.value ? data.value?.toString() : '');
-              }}
-              className="neighborhood-drop"
-            />
+            <div className="neighborhood">
+              <WizardListTitle value="Neighborhood" />
+              <Form.Dropdown
+                placeholder="select"
+                fluid
+                search
+                selection
+                required
+                options={neighborhoods.map((neighborhood) => ({
+                  value: neighborhood,
+                  key: neighborhood,
+                  text: neighborhood,
+                }))}
+                value={neighborhood}
+                onChange={(event, data) => {
+                  setNeighborhood(data.value ? data.value?.toString() : '');
+                }}
+                className="neighborhood-drop"
+              />
+            </div>
             <WizardSvg className="image" page={wizardPages.ONBOARD_2} />
           </Grid.Column>
           <Grid.Column width={3}>
