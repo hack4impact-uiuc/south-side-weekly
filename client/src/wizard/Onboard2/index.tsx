@@ -63,7 +63,7 @@ const Onboard2 = (): ReactElement => {
               search
               selection
               required
-              label="Neighborhood"
+              label={<h4 className="label-header">Neighborhood</h4>}
               options={neighborhoods.map((neighborhood) => ({
                 value: neighborhood,
                 key: neighborhood,
@@ -84,7 +84,7 @@ const Onboard2 = (): ReactElement => {
                 <Form.Checkbox
                   value={gender}
                   defaultChecked={data.genders.includes(gender)}
-                  label={titleCase(gender)}
+                  label={<h4 className="label-header">{titleCase(gender)}</h4>}
                   onClick={() => handleGender(gender)}
                 />
               </div>
@@ -97,7 +97,7 @@ const Onboard2 = (): ReactElement => {
                 <Form.Checkbox
                   value={pronoun}
                   defaultChecked={data.pronouns.includes(pronoun)}
-                  label={titleCase(pronoun)}
+                  label={<h4 className="label-header">{titleCase(pronoun)}</h4>}
                   onClick={() => handlePronoun(pronoun)}
                 />
               </div>
@@ -110,7 +110,7 @@ const Onboard2 = (): ReactElement => {
                 <Form.Checkbox
                   value={race}
                   defaultChecked={data.races.includes(race)}
-                  label={titleCase(race)}
+                  label={<h4 className="label-header">{titleCase(race)}</h4>}
                   onClick={() => handleRace(race)}
                 />
               </div>
