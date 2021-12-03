@@ -41,6 +41,7 @@ import {
 } from './Modals/EditableTags';
 import ReviewUserModal from './Modals/ReviewUser';
 import { ApprovedUsers, PendingUsers, DeniedUsers } from './Tables';
+import UserFeedbackModal from './Modals/UserFeedback';
 
 export {
   Header,
@@ -88,6 +89,7 @@ export {
   DeniedUsers,
   DynamicTable,
   buildColumn,
+  UserFeedbackModal
 };
 
 export type { View, ColumnType };

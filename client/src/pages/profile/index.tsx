@@ -12,6 +12,7 @@ import {
   DropdownItemProps,
 } from 'semantic-ui-react';
 import { startCase } from 'lodash';
+import { UserFeedbackModal } from '../../components';
 
 import { FieldTag, UserPicture } from '../../components';
 import {
@@ -258,7 +259,7 @@ const Profile = (): ReactElement => {
                 content="Edit Profile"
               />
             )}
-
+            <UserFeedbackModal user={user} />
             <UserPicture size="small" user={user} />
 
             {user.masthead && (
