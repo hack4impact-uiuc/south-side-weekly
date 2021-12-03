@@ -15,7 +15,7 @@ import {
   Login,
   PitchDoc,
   Resources,
-  Issues
+  Issues,
 } from './pages';
 import Wizard from './wizard';
 import { PrivateRoute, ProviderWrapper } from './components';

@@ -1,4 +1,4 @@
-import { IIssue } from 'ssw-common';
+import { IIssue, IPitch } from 'ssw-common';
 
 import { ApiResponseBase, Response } from '../types';
 import { buildEndpoint, get, post, put } from '../builders';
@@ -11,6 +11,10 @@ interface IssueReponse extends ApiResponseBase {
 
 interface IssuesResponse extends ApiResponseBase {
   result: IIssue[];
+}
+
+interface PitchBucketsResponse extends ApiResponseBase {
+  result: { status: string; pitches: IPitch[] }[];
 }
 
 const getIssues = async (): Promise<Response<IssuesResponse>> => {
@@ -46,4 +50,19 @@ const updateIssue = async (
   return await put(url, { issue }, failureMessage);
 };
 
-export { getIssues, createIssue, updateIssue, getNearestIssue };
+const getPitchBuckets = async (
+  issueId: string,
+): Promise<Response<PitchBucketsResponse>> => {
+  const url = buildEndpoint(ISSUE_ENDPOINT, 'pitchBuckets', issueId);
+  const failureMessage = 'Failed to get pitch buckets';
+
+  return await get(url, failureMessage);
+};
+
+export {
+  getIssues,
+  createIssue,
+  updateIssue,
+  getNearestIssue,
+  getPitchBuckets,
+};

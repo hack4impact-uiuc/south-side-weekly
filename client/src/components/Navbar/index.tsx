@@ -18,8 +18,8 @@ const Navbar = (): ReactElement => (
         <Menu.Item as={NavLink} to="/home" name="Home" />
         <Menu.Item as={NavLink} to="/pitches" name="Pitch Doc" />
         <AdminView>
-            <Menu.Item as={NavLink} to="/issues" name="Issues" />
-          </AdminView>
+          <Menu.Item as={NavLink} to="/issues" name="Issues" />
+        </AdminView>
         <Menu.Item as={NavLink} to="/users" name="Directory" />
       </ApprovedView>
       <Menu.Item as={NavLink} to="/resources" name="Resources" />

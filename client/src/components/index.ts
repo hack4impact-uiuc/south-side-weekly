@@ -88,7 +88,7 @@ export {
   ApprovedView,
   DynamicTable,
   buildColumn,
-  Kanban
+  Kanban,
 };
 
 export type { View, ColumnType };

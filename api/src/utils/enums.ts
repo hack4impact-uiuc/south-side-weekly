@@ -55,11 +55,12 @@ const visibilityEnum = {
 };
 
 const issueStatusEnum = {
-  DEFINITELY_IN: 'DEFINITELY_IN',
   MAYBE_IN: 'MAYBE_IN',
+  DEFINITELY_IN: 'DEFINITELY_IN',
+  READY_TO_PUBLISH: 'READY_TO_PUBLISH',
   COMING_LATE: 'COMING_LATE',
   PUSH: 'PUSH',
-}
+};
 
 export {
   issueTypeEnum,

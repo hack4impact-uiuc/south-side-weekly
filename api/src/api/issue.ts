@@ -5,6 +5,7 @@ import Issue from '../models/issue';
 import Pitch from '../models/pitch';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
 import { issueStatusEnum } from '../utils/enums';
+import { IPitch } from '../../../common';
 
 const router = express.Router();
 
@@ -67,6 +68,12 @@ router.get(
 router.get(
   '/pitchBuckets/:issueId',
   errorWrap(async (req: Request, res: Response) => {
+    const bucketPitch = (pitch: IPitch, status: string): boolean =>
+      pitch.issueStatuses.some(
+        ({ issueId, issueStatus }) =>
+          issueId.toString() === issue._id.toString() && issueStatus === status,
+      );
+
     const issue = await Issue.findById(req.params.issueId);
     if (!issue) {
       res.status(404).json({
@@ -78,14 +85,7 @@ router.get(
       const buckets = [];
 
       for (const status in issueStatusEnum) {
-        const bucket = [];
-        for (const pitch of pitches) {
-          if (
-            pitch.issueStatuses.some(({ issueId, issueStatus }) => issueId.toString() === issue._id.toString() && issueStatus === status)
-          ) {
-            bucket.push(pitch);
-          }
-        }
+        const bucket = pitches.filter((pitch) => bucketPitch(pitch, status));
         buckets.push({ status: status, pitches: bucket });
       }
 

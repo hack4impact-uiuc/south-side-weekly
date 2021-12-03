@@ -40,10 +40,9 @@ router.put(
     res.status(200).json({
       success: true,
       message: 'Feedback created successfully',
-      result: "feedback",
+      result: 'feedback',
     });
   }),
-  
 );
 
 // Creates a new feedback
