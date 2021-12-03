@@ -27,8 +27,9 @@
 
   .ui {
     &.menu {
-      margin-bottom: 2px;
+      margin-bottom: 20px;
       padding-inline: 0px;
+      border-bottom: 1px solid #a3a3a3 !important;
     }
 
     &.secondary.pointing.menu {
