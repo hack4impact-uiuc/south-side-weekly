@@ -1,5 +1,5 @@
 import { IUser } from 'ssw-common';
-import { difference } from 'lodash';
+import { difference, isArray } from 'lodash';
 import { Request } from 'express';
 import { isAdmin } from './auth-utils';
 import User from '../models/user';
@@ -63,13 +63,16 @@ const processFilters = <T extends Document<any>>(
   type queryFilter = Record<string, valueType | Record<string, valueType>>;
   const filters: queryFilter = {};
 
-  Object.keys(req.query).forEach((key) => {
-    if (allFields.includes(key)) {
-      if (req.query[key] instanceof Array) {
-        filters[key] = { $all: req.query[key] };
-      } else {
-        filters[key] = req.query[key];
-      }
+  const queryParams = Object.keys(req.query).filter((key) =>
+    allFields.includes(key),
+  );
+
+  queryParams.forEach((key) => {
+    const query = req.query[key];
+    if (isArray(query)) {
+      filters[key] = { $all: query };
+    } else {
+      filters[key] = query;
     }
   });
 
@@ -79,7 +82,7 @@ const processFilters = <T extends Document<any>>(
   }
 };
 
-const processPaignation = <T extends Document<any>>(
+const processPagination = <T extends Document<any>>(
   req: Request,
   query: Query<T[], T, Record<string, unknown>>,
 ): void => {
@@ -102,6 +105,6 @@ export {
   allFields,
   getEditableFields,
   getViewableFields,
-  processPaignation,
+  processPagination,
   processFilters,
 };

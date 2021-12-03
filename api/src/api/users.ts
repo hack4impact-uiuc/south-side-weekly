@@ -8,7 +8,7 @@ import {
   getEditableFields,
   getViewableFields,
   processFilters,
-  processPaignation,
+  processPagination,
 } from '../utils/user-utils';
 import {
   requireAdmin,
@@ -212,7 +212,7 @@ router.get(
       },
     });
 
-    processPaignation(req, query);
+    processPagination(req, query);
     const users = await query.exec();
 
     res.status(200).json({
@@ -232,7 +232,7 @@ router.get(
     });
 
     processFilters(req, query);
-    processPaignation(req, query);
+    processPagination(req, query);
     const users = await query.exec();
     //TODO: get total pages
 
@@ -252,7 +252,7 @@ router.get(
       onboardingStatus: onboardingStatusEnum.DENIED,
     });
 
-    processPaignation(req, query);
+    processPagination(req, query);
     const users = await query.exec();
 
     res.status(200).json({

@@ -18,7 +18,7 @@ import {
   approveClaim,
   declineClaim,
 } from '../utils/mailer-templates';
-import { processFilters, processPaignation } from '../utils/user-utils';
+import { processFilters, processPagination } from '../utils/user-utils';
 
 const router = express.Router();
 
@@ -46,7 +46,7 @@ router.get(
     });
 
     processFilters(req, query);
-    processPaignation(req, query);
+    processPagination(req, query);
 
     const pitches = await query.exec();
 
@@ -69,7 +69,7 @@ router.get(
       status: pitchStatusEnum.APPROVED,
     });
 
-    processPaignation(req, query);
+    processPagination(req, query);
     processFilters(req, query);
     let pitches = await query.exec();
 
@@ -97,7 +97,7 @@ router.get(
     });
 
     processFilters(req, query);
-    processPaignation(req, query);
+    processPagination(req, query);
 
     const pitches = await query.exec();
 
