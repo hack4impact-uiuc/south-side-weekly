@@ -3,7 +3,8 @@ import { difference } from 'lodash';
 import { Request } from 'express';
 import { isAdmin } from './auth-utils';
 import User, { UserSchema } from '../models/user';
-import { Query } from 'mongoose';
+import mongoose, { Document, FilterQuery, Query } from 'mongoose';
+import { PitchSchema } from '../models/pitch';
 
 type UserKeys = (keyof IUser)[];
 
@@ -55,9 +56,9 @@ const getEditableFields = (currentUser: IUser, userId: string): UserKeys => {
   return [];
 };
 
-const processFilters = (
+const processFilters = <T extends Document<any>>(
   req: Request,
-  query: Query<UserSchema[], UserSchema, Record<string, unknown>>,
+  query: Query<T[], T, Record<string, unknown>>,
 ): void => {
   type valueType = typeof req.query.page;
   type queryFilter = Record<string, valueType | Record<string, valueType>>;
@@ -74,13 +75,14 @@ const processFilters = (
     }
   }
   if (Object.keys(filters).length) {
-    query.find(filters);
+    //TODO: type should be more specific than 'any'
+    query.find(filters as any);
   }
 };
 
-const processPaignation = (
+const processPaignation = <T extends Document<any>>(
   req: Request,
-  query: Query<UserSchema[], UserSchema, Record<string, unknown>>,
+  query: Query<T[], T, Record<string, unknown>>,
 ): void => {
   if (req.query.page && req.query.limit) {
     const page = parseInt(req.query.page as string);
