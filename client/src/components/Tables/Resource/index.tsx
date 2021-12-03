@@ -21,9 +21,7 @@ const ResourceTable: FC<ResourceTableProps> = ({
     title: 'Title',
     width: 16,
     sorter: (a: IResource, b: IResource) => a.name.localeCompare(b.name),
-    extractor: function getTitle(resource: IResource): ReactNode {
-      return resource.name;
-    },
+    extractor: 'name',
   });
 
   const visibilityColumn = buildColumn<IResource>({
@@ -32,9 +30,7 @@ const ResourceTable: FC<ResourceTableProps> = ({
     sorter: (a: IResource, b: IResource) =>
       a.visibility.localeCompare(b.visibility),
     extractor: function getVisibility(resource: IResource): ReactNode {
-      return (
-        <FieldTag size="small" content={resource.visibility} hexcode={'#fff'} />
-      );
+      return <FieldTag size="small" content={resource.visibility} />;
     },
   });
 
