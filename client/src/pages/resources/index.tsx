@@ -1,11 +1,16 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { openPopupWidget } from 'react-calendly';
-import { Button, Card, Icon, Menu } from 'semantic-ui-react';
+import { Button, Icon, Menu } from 'semantic-ui-react';
 import { IResource, ITeam } from 'ssw-common';
 
 import { getAllResources, isError } from '../../api';
 import { useAuth, useTeams } from '../../contexts';
-import { ResourceModal, Walkthrough, ApprovedView } from '../../components';
+import {
+  ResourceModal,
+  Walkthrough,
+  ApprovedView,
+  ResourceTable,
+} from '../../components';
 import { pagesEnum } from '../../utils/enums';
 
 import './styles.scss';
@@ -47,7 +52,12 @@ const Resources = (): ReactElement => {
     const res = await getAllResources();
 
     if (!isError(res)) {
-      setResources(res.data.result);
+      setResources(
+        res.data.result.sort(
+          (a: IResource, b: IResource) =>
+            +new Date(b.updatedAt) - +new Date(a.updatedAt),
+        ),
+      );
     }
   };
 
@@ -69,16 +79,11 @@ const Resources = (): ReactElement => {
   };
 
   const handleResourceAction = (selected: IResource): void => {
-    if (isAdmin) {
-      setModal({
-        action: 'edit',
-        isOpen: true,
-        resource: selected,
-      });
-    } else {
-      const newSite = window.open(selected.link, '_target');
-      newSite?.focus();
-    }
+    setModal({
+      action: 'edit',
+      isOpen: true,
+      resource: selected,
+    });
   };
 
   return (
@@ -122,7 +127,7 @@ const Resources = (): ReactElement => {
           </ApprovedView>
         </div>
 
-        <Menu tabular size="large">
+        <Menu className="tab-menu" tabular secondary pointing size="large">
           {tabs.map((tab, index) => (
             <Menu.Item
               key={index}
@@ -134,17 +139,11 @@ const Resources = (): ReactElement => {
           ))}
         </Menu>
 
-        <div className="resource-group">
-          {filterResources(selectedTab).map((resource, index) => (
-            <Card
-              className="resource"
-              onClick={() => handleResourceAction(resource)}
-              key={index}
-            >
-              <p>{resource.name}</p>
-            </Card>
-          ))}
-        </div>
+        <ResourceTable
+          resource={filterResources(selectedTab)}
+          handleOpen={handleResourceAction}
+          isAdmin={isAdmin}
+        />
       </div>
     </>
   );
