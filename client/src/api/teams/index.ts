@@ -15,6 +15,13 @@ const getTeams = async (): Promise<Response<TeamsResponse>> => {
   return await get(url, failureMessage);
 };
 
+const getTeamById = async (): Promise<Response<TeamsResponse>> => {
+  const url = buildEndpoint(TEAMS_ENDPOINT);
+  const failureMessage = 'GET_TEAM_BY_ID_FAIL';
+
+  return await get(url, failureMessage);
+};
+
 const createManyTeams = async (
   teams: Partial<ITeam>[],
 ): Promise<Response<ApiResponseBase>> => {

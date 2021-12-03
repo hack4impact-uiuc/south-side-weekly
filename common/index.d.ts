@@ -158,7 +158,7 @@ export interface IUserFeedback {
   userId: string;
   pitchId: string;
   stars: number;
-  reasnoning: string;
+  reasoning: string;
   createdAt: Date;
   updatedAt: Date;
 }

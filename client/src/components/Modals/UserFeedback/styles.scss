@@ -1,0 +1,25 @@
+@import '../../../styles/colors.scss';
+
+.feedback-modal {
+  .header {
+    background-color: $primary !important;
+    color: white !important;
+  }
+  .content {
+    .line {
+      margin-bottom: 10px;
+    }
+    .input-feedback {
+      width: 100%;
+    }
+    .actions {
+      margin-bottom: 20px;
+      .button {
+        background-color: $secondaryColor !important;
+        color: white !important;
+        float: right;
+        margin-bottom: 10px;
+      }
+    }
+  }
+}

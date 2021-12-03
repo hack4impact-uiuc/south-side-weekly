@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { IUser } from 'ssw-common';
+import { IUser, IPitch } from 'ssw-common';
 import {
   Button,
   Container,
@@ -259,7 +259,7 @@ const Profile = (): ReactElement => {
                 content="Edit Profile"
               />
             )}
-            <UserFeedbackModal user={user} />
+            <UserFeedbackModal contributor={user} pitchId="6181f343c6cf988c1a05b941"/>
             <UserPicture size="small" user={user} />
 
             {user.masthead && (
