@@ -19,6 +19,7 @@ const PitchFeedback = new mongoose.Schema(
     firstQuestion: { type: String, default: null },
     secondQuestion: { type: String, default: null },
     thirdQuestion: { type: String, default: null },
+    fourthQuestion: { type: String, default: null },
   },
   { timestamps: true },
 );

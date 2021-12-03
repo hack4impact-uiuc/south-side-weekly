@@ -113,6 +113,8 @@ export interface IResource {
   teams: string[];
   isGeneral: boolean;
   visibility: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 /**
