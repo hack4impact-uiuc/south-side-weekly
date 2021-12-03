@@ -127,7 +127,7 @@ const Resources = (): ReactElement => {
           </ApprovedView>
         </div>
 
-        <Menu tabular size="large">
+        <Menu className="tab-menu" tabular secondary pointing size="large">
           {tabs.map((tab, index) => (
             <Menu.Item
               key={index}
