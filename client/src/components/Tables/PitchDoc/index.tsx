@@ -136,7 +136,7 @@ const PitchBody: FC<PitchBodyProps> = ({
 );
 
 const getClaimableTeams = (pitch: IPitch, user: IUser): string[] =>
-  pitch.writer
+  pitch.writer && pitch.primaryEditor
     ? pitch.teams
         .filter((team) => team.target > 0 && user.teams.includes(team.teamId))
         .map((team) => team.teamId)

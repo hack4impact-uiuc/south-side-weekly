@@ -1,0 +1,108 @@
+@import '../../styles/colors.scss';
+
+.review-claim-form-content {
+  width: 57%;
+  display: flex;
+  flex-direction: column;
+  row-gap: 1.5rem;
+  background-color: white;
+  padding: 20px 20px 20px 15px;
+  height: fit-content;
+  border-radius: 5px;
+  position: relative;
+
+  .edit-button {
+    color: $secondaryColor !important;
+    margin: 0 !important;
+    align-items: center !important;
+    background-color: transparent !important;
+    position: absolute;
+    right: 0px;
+    padding-right: inherit;
+  }
+
+  .form-label {
+    font-weight: bold !important;
+    font-size: 0.92857143em !important;
+    margin-right: 1rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .form-label-section {
+    flex-direction: row;
+    display: flex;
+    align-items: center;
+
+    i {
+      margin-bottom: 0 !important;
+      margin-top: 0 !important;
+    }
+  }
+
+  .form-item {
+    display: flex;
+    flex-direction: column;
+    //justify-content: center;
+  }
+
+  .row {
+    margin-bottom: 0 !important;
+  }
+
+  .description-text {
+    margin: 0 !important;
+    font-family: inherit !important;
+    font-size: inherit !important;
+  }
+
+  .format-deadline-section {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+
+    .issue-format-section {
+      flex-direction: column;
+    }
+
+    .prints-input {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+
+  .writer-editors-section {
+    width: 100% !important;
+
+    .issue-format-column {
+      align-items: flex-start !important;
+      flex-direction: column !important;
+      display: flex !important;
+      margin-left: 0 !important;
+
+      .issue-format-date-row {
+        flex-direction: row !important;
+        display: flex !important;
+        align-items: center !important;
+        width: 100% !important;
+        justify-content: space-between;
+        margin-bottom: 5px;
+
+        .format-checkbox {
+          margin-bottom: 0 !important;
+        }
+
+        .publication-date {
+          margin-right: 25px !important;
+        }
+      }
+    }
+  }
+
+  .issue-format-text {
+    width: '60%';
+  }
+
+  .action-buttons {
+    align-self: flex-end;
+  }
+}

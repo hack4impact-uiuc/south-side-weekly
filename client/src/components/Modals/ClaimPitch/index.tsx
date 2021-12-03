@@ -202,27 +202,20 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
       <>
         {teams.map((team, i) => (
           <div className="checkbox-wrapper" key={i}>
-            {teams.length === 1 ? (
-              <Form.Radio
-                disabled={team.target <= 0 || disableCheckbox(team._id)}
-                checked={checkboxes.get(team._id)}
-                onClick={() => {
-                  updateCheckboxes(team._id);
-                  setDidSubmit(false);
-                }}
-                error={isCheckboxError}
-              />
-            ) : (
-              <Form.Checkbox
-                disabled={team.target <= 0 || disableCheckbox(team._id)}
-                checked={checkboxes.get(team._id)}
-                onClick={() => {
-                  updateCheckboxes(team._id);
-                  setDidSubmit(false);
-                }}
-                error={isCheckboxError}
-              />
-            )}
+            <Form.Checkbox
+              disabled={
+                team.target <= 0 ||
+                disableCheckbox(team._id) ||
+                (!pitch.writer && team.name !== 'Writing')
+              }
+              checked={checkboxes.get(team._id)}
+              onClick={() => {
+                updateCheckboxes(team._id);
+                setDidSubmit(false);
+              }}
+              error={isCheckboxError}
+            />
+
             <p>
               <span style={{ fontWeight: 'bold' }}>{team.name}</span> -{' '}
               {team.target} {pluralize('spot', team.target)} left

@@ -34,6 +34,13 @@ export const racesEnum = {
   NONE: 'NONE',
 };
 
+export const assignmentStatusEnum = {
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  ABANDONED: 'ABANDONED',
+  NONE: 'NONE',
+};
+
 export const pagesEnum = {
   PITCHDOC: 'PITCHDOC',
   DIRECTORY: 'DIRECTORY',

@@ -1,41 +1,43 @@
-import Header from './Header';
-import ClaimPitchModal from './Modals/ClaimPitch';
-import ResourceModal from './Modals/Resource';
-import SubmitPitchModal from './Modals/SubmitPitch';
-import UserModal from './Modals/User';
-import PitchCard from './PitchCard';
-import WizardListTitle from './Wizard/ListTitle';
-import PageCounter from './Wizard/PageCounter';
-import WizardSvg from './Wizard/Svg';
-import PrivateRoute from './PrivateRoute';
 import AdminView from './Auth/AdminView';
 import StaffView from './Auth/StaffView';
+import BackButton from './BackButton';
 import FilterDropdown from './Dropdowns/Filter';
-import FieldTag from './FieldTag';
-import UserPicture from './UserPicture';
-import UserCard from './UserCard';
-import Navbar from './Navbar';
-import SubmitButton from './Wizard/SubmitButton';
-import PrevButton from './Wizard/PrevButton';
-import ApprovePitchModal from './Modals/ApprovePitch';
-import ViewPitchModal from './Modals/ViewPitch';
+import InterestsSelect from './Dropdowns/InterestsSelect';
 import MultiSelect from './Dropdowns/MultiSelect';
 import Select from './Dropdowns/Select';
-import DirectoryTable from './Tables/Directory';
-import { PitchTable, PitchRow } from './Tables/PitchDoc';
-import TableTool from './Tables/TableTool';
-import Walkthrough from './Walkthrough';
-import LinkDisplay from './LinkDisplay';
-import InterestsSelect from './Dropdowns/InterestsSelect';
-import ProviderWrapper from './ProviderWrapper';
 import TeamsSelect from './Dropdowns/TeamsSelect';
+import FieldTag from './FieldTag';
+import Header from './Header';
+import LinkDisplay from './LinkDisplay';
+import ApprovePitchModal from './Modals/ApprovePitch';
+import ClaimPitchModal from './Modals/ClaimPitch';
 import {
   EditableTagModal,
   EditInterests,
   EditTeams,
 } from './Modals/EditableTags';
-import BackButton from './BackButton';
+import ResourceModal from './Modals/Resource';
+import SubmitPitchModal from './Modals/SubmitPitch';
+import UserModal from './Modals/User';
+import ViewPitchModal from './Modals/ViewPitch';
+import Navbar from './Navbar';
+import PitchCard from './PitchCard';
+import PrivateRoute from './PrivateRoute';
+import ProviderWrapper from './ProviderWrapper';
+import ReviewClaimForm from './reviewClaimForm';
+import DirectoryTable from './Tables/Directory';
+import { PitchRow, PitchTable } from './Tables/PitchDoc';
+import TableTool from './Tables/TableTool';
+import UserCard from './UserCard';
 import UserChip from './UserChip';
+import UserPicture from './UserPicture';
+import Walkthrough from './Walkthrough';
+import WizardListTitle from './Wizard/ListTitle';
+import PageCounter from './Wizard/PageCounter';
+import PrevButton from './Wizard/PrevButton';
+import SubmitButton from './Wizard/SubmitButton';
+import WizardSvg from './Wizard/Svg';
+import ContributorFeedback from './Modals/ContributorFeedback';
 
 export {
   Header,
@@ -75,4 +77,6 @@ export {
   EditableTagModal,
   BackButton,
   UserChip,
+  ReviewClaimForm,
+  ContributorFeedback,
 };

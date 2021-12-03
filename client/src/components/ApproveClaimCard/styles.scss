@@ -12,9 +12,7 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    //column-gap: 7px;
-    width: 65%;
-    justify-content: space-between;
+    column-gap: 7px;
 
     p {
       margin-bottom: 0 !important;
@@ -25,32 +23,104 @@
       margin-bottom: 0 !important;
       margin-top: 0 !important;
     }
+
+    .target-row {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      align-items: center !important;
+      .target-text {
+        display: flex;
+        flex-direction: row;
+        align-items: center !important;
+        //justify-self: stretch !important;
+
+        .target-input {
+          //display: inline !important;
+          width: 40px !important;
+          //width: fit-content !important;
+          margin: 0 5px 0 5px;
+          display: flex !important;
+          justify-content: center !important;
+          align-items: center !important;
+          //padding: 0 !important;
+
+          input {
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center;
+          }
+        }
+      }
+    }
   }
 
   .header-divider {
     margin-top: 12px;
-    margin-bottom: 10px;
     color: black;
     width: 100%;
     //border: 9px;
   }
 
+  .select-contributor-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center !important;
+
+    .select-contributor {
+      width: auto !important;
+    }
+  }
+
+  .add-contributor {
+    color: $secondaryColor;
+    background-color: transparent !important;
+    margin: 0 !important;
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    padding-left: 0 !important;
+    margin-bottom: 1rem !important;
+  }
+
   .claim-section {
     display: flex;
     flex-direction: column;
-    row-gap: 15px;
+    row-gap: 10px;
 
     .claim-row {
       display: flex;
       flex-direction: row;
       justify-content: space-between;
-      align-items: center;
+      align-items: center !important;
 
-      .radio-group {
+      .feedback-button {
+        background-color: transparent !important;
+        font-weight: 600 !important;
+        color: $secondaryColor !important;
+      }
+
+      .button-group {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
-        width: 45%;
+
+        .button {
+          margin: 0px 0px 0px 20px !important;
+        }
+
+        .positive {
+          background-color: $secondaryColor !important;
+        }
+
+        .negative {
+          background-color: transparent !important;
+          border: 1px solid $secondaryColor !important;
+          color: $secondaryColor !important;
+        }
       }
     }
   }

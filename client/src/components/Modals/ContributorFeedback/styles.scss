@@ -1,0 +1,46 @@
+@import '../../../styles/colors.scss';
+
+.contributor-feedback-modal {
+  .header {
+    background-color: $primary !important;
+    color: white !important;
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      i {
+        cursor: pointer;
+      }
+    }
+  }
+
+  .content {
+    background-color: $mainBackground !important;
+
+    .modal-content {
+      //display: flex;
+      flex-direction: column;
+      row-gap: 1em;
+      display: flex;
+
+      .user-team {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
+        column-gap: 5px;
+      }
+
+      .rating {
+        width: fit-content;
+      }
+    }
+  }
+
+  .actions {
+    background-color: $mainBackground !important;
+    border-top: none !important;
+  }
+}

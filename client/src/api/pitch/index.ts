@@ -72,6 +72,62 @@ const aggregatePitch = async (
   return await get(url, failureMessage);
 };
 
+const addContributorToPitch = async (
+  pitchId: string,
+  userId: string,
+  team: string,
+): Promise<Response<PitchResponse>> => {
+  const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'addContributor');
+  const failureMessage = 'ADD_CONTRIBUTOR_FAIL';
+
+  return await put(url, { userId, team }, failureMessage);
+};
+
+const removeContributorFromPitch = async (
+  pitchId: string,
+  userId: string,
+  team: string,
+): Promise<Response<PitchResponse>> => {
+  const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'removeContributor');
+  const failureMessage = 'REMOVE_CONTRIBUTOR_FAIL';
+
+  return await put(url, { userId, team }, failureMessage);
+};
+
+const approvePitchClaim = async (
+  pitchId: string,
+  userId: string,
+  teamId: string,
+  teams: string[],
+): Promise<Response<PitchResponse>> => {
+  const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'approveClaim');
+  const failureMessage = 'APPROVE_PITCH_CLAIM_FAIL';
+
+  return await put(url, { userId, teamId, teams }, failureMessage);
+};
+
+const declinePitchClaim = async (
+  pitchId: string,
+  userId: string,
+  teamId: string,
+): Promise<Response<PitchResponse>> => {
+  const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'declineClaim');
+  const failureMessage = 'DECLINE_PITCH_CLAIM_FAIL';
+
+  return await put(url, { userId, teamId }, failureMessage);
+};
+
+const updatePitchTeamTarget = async (
+  pitchId: string,
+  teamId: string,
+  target: number,
+): Promise<Pitches> => {
+  const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'teamTarget');
+  const failureMessage = 'UPDATE_PITCH_TEAM_TARGET_FAIL';
+
+  return await put(url, { teamId, target }, failureMessage);
+};
+
 // Updates the information on a pitch
 const updatePitch = async (
   pitchData: Partial<IPitch>,
@@ -127,4 +183,9 @@ export {
   approvePitch,
   declinePitch,
   aggregatePitch,
+  addContributorToPitch,
+  removeContributorFromPitch,
+  updatePitchTeamTarget,
+  approvePitchClaim,
+  declinePitchClaim,
 };

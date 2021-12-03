@@ -8,9 +8,14 @@ import {
 
 import Pitch from '../models/pitch';
 import User from '../models/user';
+import Team from '../models/user';
 import { aggregatePitch } from '../utils/aggregate-utils';
 import { pitchStatusEnum } from '../utils/enums';
-import { isPitchClaimed } from '../utils/helpers';
+import {
+  addContributorToAssignmentContributors,
+  isPitchClaimed,
+  updateTeamTarget,
+} from '../utils/helpers';
 import { sendMail } from '../utils/mailer';
 import {
   approvedMessage,
@@ -221,6 +226,35 @@ router.put(
   }),
 );
 
+// Updates a pitch team target
+router.put(
+  '/:pitchId/teamTarget',
+  requireRegistered,
+  errorWrap(async (req: Request, res: Response) => {
+    const { teamId, target } = req.body;
+
+    let updatedPitch = await Pitch.findOneAndUpdate(
+      { _id: req.params.pitchId, 'teams.teamId': teamId },
+      { 'teams.$.target': target },
+      { new: true, runValidators: true },
+    );
+
+    if (!updatedPitch) {
+      updatedPitch = await Pitch.findOneAndUpdate(
+        { _id: req.params.pitchId },
+        { $addToSet: { teams: { teamId: teamId, target: target } } },
+        { new: true, runValidators: true },
+      );
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully updated pitch team target',
+      result: updatedPitch,
+    });
+  }),
+);
+
 // Approve a pitch
 router.put(
   '/:pitchId/approve',
@@ -336,21 +370,27 @@ router.put(
   '/:pitchId/approveClaim',
   requireStaff,
   errorWrap(async (req: Request, res: Response) => {
-    const { userId, teams } = req.body;
+    const { userId, teams, teamId } = req.body;
 
     // Remove the user from the pending contributors and add it to the the assignment contributors
-    const pitch = await Pitch.findByIdAndUpdate(
-      req.params.pitchId,
+
+    let pitch = await Pitch.findOneAndUpdate(
+      { _id: req.params.pitchId, 'pendingContributors.userId': userId },
       {
         $pull: {
-          pendingContributors: { userId: userId, teams: teams },
-        },
-        $addToSet: {
-          assignmentContributors: { userId: userId, teams: teams },
+          'pendingContributors.$.teams': teamId,
         },
       },
       { new: true, runValidators: true },
+    ).lean();
+
+    pitch = await addContributorToAssignmentContributors(
+      req.params.pitchId,
+      userId,
+      teamId,
     );
+
+    pitch = await updateTeamTarget(req.params.pitchId, teamId);
 
     // Add the pitch to the user's claimed Pitches
     const user = await User.findByIdAndUpdate(
@@ -384,10 +424,147 @@ router.put(
       req.user,
       teams,
     );
-    await sendMail(message);
+    sendMail(message);
     res.status(200).json({
       success: true,
       message: 'Successfully approved claim',
+      result: pitch,
+    });
+  }),
+);
+
+// Adds an assignment contributor to a pitch
+router.put(
+  '/:pitchId/addContributor',
+  requireStaff,
+  errorWrap(async (req: Request, res: Response) => {
+    const { userId, team } = req.body;
+
+    // Check if user already exists in assignmentContributors
+
+    let pitch;
+
+    pitch = await addContributorToAssignmentContributors(
+      req.params.pitchId,
+      userId,
+      team,
+    );
+
+    pitch = await updateTeamTarget(req.params.pitchId, team);
+
+    // Add the pitch to the user's claimed Pitches
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {
+        $addToSet: {
+          claimedPitches: req.params.pitchId,
+        },
+      },
+      { returnOriginal: false },
+    );
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found with id',
+      });
+      return;
+    } else if (!pitch) {
+      res.status(404).json({
+        success: false,
+        message: 'Pitch not found with id',
+      });
+      return;
+    }
+
+    //TODO: Add mail for adding contributor
+    /* const claimUser = await User.findById(userId);
+    const aggregatedPitch = await aggregatePitch(pitch);
+    const message = await approveClaim(
+      claimUser,
+      aggregatedPitch,
+      req.user,
+      teams,
+    );
+    await sendMail(message); */
+    res.status(200).json({
+      success: true,
+      message: 'Successfully added contributor',
+      result: pitch,
+    });
+  }),
+);
+
+// Remove an assignment contributor from a pitch
+router.put(
+  '/:pitchId/removeContributor',
+  requireStaff,
+  errorWrap(async (req: Request, res: Response) => {
+    const { userId, team } = req.body;
+
+    let pitch = await Pitch.findOneAndUpdate(
+      { _id: req.params.pitchId, 'assignmentContributors.userId': userId },
+      {
+        $pull: {
+          'assignmentContributors.$.teams': team,
+        },
+      },
+      { new: true, runValidators: true },
+    ).lean();
+
+    console.log(userId, team, pitch);
+
+    // Remove the pitch from the user's claimed Pitches
+    const user = await User.findByIdAndUpdate(
+      userId,
+      {
+        $pull: {
+          claimedPitches: req.params.pitchId,
+        },
+      },
+      { returnOriginal: false },
+    );
+
+    pitch = await Pitch.findOneAndUpdate(
+      {
+        _id: req.params.pitchId,
+        'teams.teamId': team,
+      },
+      {
+        $inc: {
+          'teams.$.target': 1,
+        },
+      },
+      { new: true, runValidators: true },
+    ).lean();
+
+    if (!user) {
+      res.status(404).json({
+        success: false,
+        message: 'User not found with id',
+      });
+      return;
+    } else if (!pitch) {
+      res.status(404).json({
+        success: false,
+        message: 'Pitch not found with id',
+      });
+      return;
+    }
+
+    //TODO: Add mail for adding contributor
+    /* const claimUser = await User.findById(userId);
+    const aggregatedPitch = await aggregatePitch(pitch);
+    const message = await approveClaim(
+      claimUser,
+      aggregatedPitch,
+      req.user,
+      teams,
+    );
+    await sendMail(message); */
+    res.status(200).json({
+      success: true,
+      message: 'Successfully removed contributor',
       result: pitch,
     });
   }),
@@ -397,7 +574,7 @@ router.put(
   '/:pitchId/declineClaim',
   requireStaff,
   errorWrap(async (req: Request, res: Response) => {
-    const { userId } = req.body;
+    const { userId, teamId } = req.body;
 
     if (!userId) {
       res.status(400).json({
@@ -408,15 +585,17 @@ router.put(
       return;
     }
 
-    const pitch = await Pitch.findByIdAndUpdate(
-      req.params.pitchId,
+    console.log(userId, teamId);
+
+    const pitch = await Pitch.findOneAndUpdate(
+      { _id: req.params.pitchId, 'pendingContributors.userId': userId },
       {
         $pull: {
-          pendingContributors: { userId: userId },
+          'pendingContributors.$.teams': teamId,
         },
       },
       { new: true, runValidators: true },
-    );
+    ).lean();
 
     if (!pitch) {
       res.status(404).json({
