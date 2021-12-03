@@ -234,6 +234,7 @@ router.get(
     processFilters(req, query);
     processPaignation(req, query);
     const users = await query.exec();
+    //TODO: get total pages
 
     res.status(200).json({
       message: `Successfully retrieved all approved users.`,
