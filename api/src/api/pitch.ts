@@ -18,6 +18,7 @@ import {
   approveClaim,
   declineClaim,
 } from '../utils/mailer-templates';
+import { processFilters, processPaignation } from '../utils/user-utils';
 
 const router = express.Router();
 
@@ -40,9 +41,14 @@ router.get(
   '/all/pending',
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
-    const pitches = await Pitch.find({
+    const query = Pitch.find({
       status: pitchStatusEnum.PENDING,
     });
+
+    processFilters(req, query);
+    processPaignation(req, query);
+
+    const pitches = await query.exec();
 
     res.status(200).json({
       success: true,
@@ -59,30 +65,26 @@ router.get(
   '/all/approved',
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
-    const pitches = await Pitch.find({
+    const query = Pitch.find({
       status: pitchStatusEnum.APPROVED,
     });
-    const status = req.query.status;
 
+    processPaignation(req, query);
+    processFilters(req, query);
+    let pitches = await query.exec();
+
+    const status = req.query.claimStatus;
     if (status === 'unclaimed') {
-      res.status(200).json({
-        message: 'Successfully retrieved unclaimed pitches',
-        success: true,
-        result: pitches.filter((pitch) => !isPitchClaimed(pitch)),
-      });
+      pitches = pitches.filter((pitch) => !isPitchClaimed(pitch));
     } else if (status === 'claimed') {
-      res.status(200).json({
-        message: 'Successfully retrieved unclaimed pitches',
-        success: true,
-        result: pitches.filter(isPitchClaimed),
-      });
-    } else {
-      res.status(200).json({
-        message: `Successfully retrieved approved pitches.`,
-        success: true,
-        result: pitches,
-      });
+      pitches = pitches.filter(isPitchClaimed);
     }
+
+    res.status(200).json({
+      message: `Successfully retrieved pitches.`,
+      success: true,
+      result: pitches,
+    });
   }),
 );
 
@@ -90,9 +92,14 @@ router.get(
   '/all/pendingClaims',
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
-    const pitches = await Pitch.find({
+    const query = Pitch.find({
       'pendingContributors.0': { $exists: true },
     });
+
+    processFilters(req, query);
+    processPaignation(req, query);
+
+    const pitches = await query.exec();
 
     res.status(200).json({
       success: true,

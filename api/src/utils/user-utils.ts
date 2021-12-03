@@ -59,12 +59,12 @@ const processFilters = <T extends Document<any>>(
   req: Request,
   query: Query<T[], T, Record<string, unknown>>,
 ): void => {
-  type valueType = typeof req.query.page;
+  type valueType = typeof req.query.value;
   type queryFilter = Record<string, valueType | Record<string, valueType>>;
-
+  const excludedFields = ['page', 'sort', 'sortBy', 'claimStatus', 'limit'];
   const filters: queryFilter = {};
   for (const key in req.query) {
-    if (key === 'page' || key === 'limit') {
+    if (!(key in excludedFields)) {
       continue;
     }
     if (req.query[key] instanceof Array) {
@@ -86,6 +86,13 @@ const processPaignation = <T extends Document<any>>(
   if (req.query.page && req.query.limit) {
     const page = parseInt(req.query.page as string);
     const limit = parseInt(req.query.limit as string);
+    const sortBy = req.query.sortBy as string;
+    const sortDirection = req.query.sortDirection as string;
+
+    if (sortBy) {
+      query.sort({ sortBy: sortDirection });
+    }
+
     const skipIndex = (page - 1) * limit;
     query.limit(limit).skip(skipIndex);
   }
