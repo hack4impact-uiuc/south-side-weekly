@@ -63,16 +63,17 @@ const processFilters = <T extends Document<any>>(
   type queryFilter = Record<string, valueType | Record<string, valueType>>;
   const excludedFields = ['page', 'sort', 'sortBy', 'claimStatus', 'limit'];
   const filters: queryFilter = {};
-  for (const key in req.query) {
-    if (excludedFields.includes(key)) {
-      continue;
+
+  Object.keys(req.query).forEach((key) => {
+    if (!excludedFields.includes(key)) {
+      if (req.query[key] instanceof Array) {
+        filters[key] = { $all: req.query[key] };
+      } else {
+        filters[key] = req.query[key];
+      }
     }
-    if (req.query[key] instanceof Array) {
-      filters[key] = { $all: req.query[key] };
-    } else {
-      filters[key] = req.query[key];
-    }
-  }
+  });
+
   if (Object.keys(filters).length) {
     //TODO: type should be more specific than 'any'
     query.find(filters as any);
