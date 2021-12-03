@@ -2,9 +2,8 @@ import { IUser } from 'ssw-common';
 import { difference } from 'lodash';
 import { Request } from 'express';
 import { isAdmin } from './auth-utils';
-import User, { UserSchema } from '../models/user';
-import mongoose, { Document, FilterQuery, Query } from 'mongoose';
-import { PitchSchema } from '../models/pitch';
+import User from '../models/user';
+import { Document, Query } from 'mongoose';
 
 type UserKeys = (keyof IUser)[];
 
