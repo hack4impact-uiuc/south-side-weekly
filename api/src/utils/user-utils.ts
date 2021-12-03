@@ -64,7 +64,7 @@ const processFilters = <T extends Document<any>>(
   const excludedFields = ['page', 'sort', 'sortBy', 'claimStatus', 'limit'];
   const filters: queryFilter = {};
   for (const key in req.query) {
-    if (key in excludedFields) {
+    if (excludedFields.includes(key)) {
       continue;
     }
     if (req.query[key] instanceof Array) {
