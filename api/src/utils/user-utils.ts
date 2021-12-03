@@ -61,11 +61,10 @@ const processFilters = <T extends Document<any>>(
 ): void => {
   type valueType = typeof req.query.value;
   type queryFilter = Record<string, valueType | Record<string, valueType>>;
-  const excludedFields = ['page', 'sort', 'sortBy', 'claimStatus', 'limit'];
   const filters: queryFilter = {};
 
   Object.keys(req.query).forEach((key) => {
-    if (!excludedFields.includes(key)) {
+    if (allFields.includes(key)) {
       if (req.query[key] instanceof Array) {
         filters[key] = { $all: req.query[key] };
       } else {
