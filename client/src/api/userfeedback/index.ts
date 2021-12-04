@@ -1,6 +1,6 @@
 import { IUserFeedback } from 'ssw-common';
 
-import { get, buildEndpoint, post, put } from '../builders';
+import { buildEndpoint, post } from '../builders';
 import { ApiResponseBase, Response } from '../types';
 
 const USER_FEEDBACK_ENDPOINT = '/userFeedback';
@@ -15,4 +15,4 @@ const createUserFeedback = async (
   return await post(url, { ...userFeedback }, failureMessage);
 };
 
-export {createUserFeedback};
+export { createUserFeedback };

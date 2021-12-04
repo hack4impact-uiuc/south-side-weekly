@@ -1,5 +1,3 @@
-import { create } from 'lodash';
-
 export { getCurrentUser, logout } from './auth';
 export {
   getUser,
@@ -41,5 +39,5 @@ export {
 } from './interest';
 export { getIssues } from './issue';
 export { getTeams, createManyTeams, updateManyTeams } from './teams';
-export {createUserFeedback} from './userfeedback';
+export { createUserFeedback } from './userfeedback';
 export { isError, buildLoginEndpoint, buildEndpoint } from './builders';

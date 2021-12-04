@@ -91,7 +91,7 @@ export {
   DeniedUsers,
   DynamicTable,
   buildColumn,
-  UserFeedbackModal
+  UserFeedbackModal,
 };
 
 export type { View, ColumnType };
