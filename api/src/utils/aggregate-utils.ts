@@ -128,6 +128,7 @@ const simplifyPitch = (pitch: IPitch | null): Partial<IPitch> => {
     pendingContributors: pitch.pendingContributors,
     status: pitch.status,
     deadline: pitch.deadline,
+    //issueStatuses: pitch.issueStatuses,
   };
 };
 

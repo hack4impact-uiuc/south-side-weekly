@@ -1,7 +1,14 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { IPitch, IUser, IUserFeedback } from 'ssw-common';
-import { Divider, Grid, GridColumn, Image, Rating } from 'semantic-ui-react';
+import {
+  Divider,
+  Grid,
+  GridColumn,
+  Image,
+  Rating,
+  Segment,
+} from 'semantic-ui-react';
 
 import { FieldTag, UserPicture } from '../../components';
 import {
@@ -282,43 +289,45 @@ const Profile = (): ReactElement => {
         </Grid.Row>
       </Grid>
       <Divider />
-      {userId === auth.user._id ? (
-        <h2>Your Contributions</h2>
-      ) : (
-        <h2>{`${getUserFirstName(user)}'s` + ` Contributions`}</h2>
-      )}
-      <Contributions pitches={pitches} user={user} />
+      <Segment>
+        {userId === auth.user._id ? (
+          <h2>Your Contributions</h2>
+        ) : (
+          <h2>{`${getUserFirstName(user)}'s` + ` Contributions`}</h2>
+        )}
+        <Contributions pitches={pitches} user={user} />
 
-      <Grid columns={2} className="experience">
-        {includesPermission('involvementResponse') && (
-          <GridColumn>
-            <h4>How and why user wants to get involved</h4>
-            <p>{user.involvementResponse}</p>
-          </GridColumn>
-        )}
-        {includesPermission('journalismResponse') && (
-          <GridColumn>
-            <h4>User's past experience</h4>
-            <p>{user.journalismResponse}</p>
-          </GridColumn>
-        )}
-      </Grid>
-      {feedback.length > 0 && (
-        <Grid className="feedback">
-          <Grid.Column width={10}>
-            {userId === auth.user._id ? (
-              <h2>Feedback on You</h2>
-            ) : (
-              <h2>Feedback on {getUserFirstName(user)}</h2>
-            )}
-            {feedback.map((feedback, index) => (
-              <div key={index} className="user-feedback">
-                <UserFeedback feedback={feedback} />
-              </div>
-            ))}
-          </Grid.Column>
+        <Grid columns={2} className="experience">
+          {includesPermission('involvementResponse') && (
+            <GridColumn>
+              <h4>How and why user wants to get involved</h4>
+              <p>{user.involvementResponse}</p>
+            </GridColumn>
+          )}
+          {includesPermission('journalismResponse') && (
+            <GridColumn>
+              <h4>User's past experience</h4>
+              <p>{user.journalismResponse}</p>
+            </GridColumn>
+          )}
         </Grid>
-      )}
+        {feedback.length > 0 && (
+          <Grid className="feedback">
+            <Grid.Column width={10}>
+              {userId === auth.user._id ? (
+                <h2>Feedback on You</h2>
+              ) : (
+                <h2>Feedback on {getUserFirstName(user)}</h2>
+              )}
+              {feedback.map((feedback, index) => (
+                <div key={index} className="user-feedback">
+                  <UserFeedback feedback={feedback} />
+                </div>
+              ))}
+            </Grid.Column>
+          </Grid>
+        )}
+      </Segment>
     </div>
   );
 };
