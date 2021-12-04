@@ -1,4 +1,10 @@
-import React, { ReactElement, useCallback, useEffect, useState } from 'react';
+import React, {
+  ReactElement,
+  ReactNode,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import { useParams } from 'react-router-dom';
 import { IPitch, IUser, IUserFeedback } from 'ssw-common';
 import {
@@ -81,8 +87,6 @@ const Profile = (): ReactElement => {
     const res = await getUserFeedback(userId);
 
     if (!isError(res)) {
-      // setFeedback(res.data.result);
-
       const averageRating =
         res.data.result.reduce((sum, feedback) => sum + feedback.stars, 0) /
         res.data.result.length;
@@ -112,13 +116,6 @@ const Profile = (): ReactElement => {
     loadCurrentUserPermissions();
     getPitches();
   };
-
-  // const getAverageRating = (): number => {
-  //   const averageRating = feedback.reduce(function (sum, feedback) {
-  //     return sum + feedback.stars;
-  //   }, 0) / feedback.length;
-  //   return averageRating;
-  // }
 
   /**
    * Determines if a field is viewable to current user
@@ -151,6 +148,15 @@ const Profile = (): ReactElement => {
       : titleCase(user.firstName);
   };
 
+  const getProfileTitle = (user: IUser): ReactNode =>
+    user.preferredName !== '' && user.preferredName ? (
+      <h2 className="name">{`${titleCase(user.preferredName)} (${titleCase(
+        getUserFullName(user),
+      )})`}</h2>
+    ) : (
+      <h2>{titleCase(getUserFullName(user))}</h2>
+    );
+
   return (
     <div className="profile-page">
       <Grid padded stackable>
@@ -160,13 +166,7 @@ const Profile = (): ReactElement => {
               <UserPicture size="tiny" user={user} />
             </div>
             <div className="name-pronouns">
-              {user.preferredName !== '' && user.preferredName ? (
-                <h2 className="name">{`${titleCase(
-                  user.preferredName,
-                )} (${titleCase(getUserFullName(user))})`}</h2>
-              ) : (
-                <h2>{titleCase(getUserFullName(user))}</h2>
-              )}
+              {getProfileTitle(user)}
               {user.pronouns.map((pronoun, index) => (
                 <FieldTag
                   key={index}
@@ -185,7 +185,7 @@ const Profile = (): ReactElement => {
                     maxRating={5}
                     disabled
                   />
-                  <p className="number-ratings">{feedback.length}</p>
+                  <p className="number-ratings">({feedback.length})</p>
                 </div>
               ) : (
                 <p className="no-ratings"> No ratings </p>
@@ -280,7 +280,7 @@ const Profile = (): ReactElement => {
               })}
             </Grid.Column>
           )}
-          {includesPermission('neighborhood') && (
+          {includesPermission('neighborhood') && user.neighborhood && (
             <Grid.Column width={2}>
               <h4>Neighborhood</h4>
               <p>{user.neighborhood}</p>
@@ -298,13 +298,14 @@ const Profile = (): ReactElement => {
         <Contributions pitches={pitches} user={user} />
 
         <Grid columns={2} className="experience">
-          {includesPermission('involvementResponse') && (
-            <GridColumn>
-              <h4>How and why user wants to get involved</h4>
-              <p>{user.involvementResponse}</p>
-            </GridColumn>
-          )}
-          {includesPermission('journalismResponse') && (
+          {includesPermission('involvementResponse') &&
+            user.involvementResponse && (
+              <GridColumn>
+                <h4>How and why user wants to get involved</h4>
+                <p>{user.involvementResponse}</p>
+              </GridColumn>
+            )}
+          {includesPermission('journalismResponse') && user.journalismResponse && (
             <GridColumn>
               <h4>User's past experience</h4>
               <p>{user.journalismResponse}</p>

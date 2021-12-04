@@ -63,8 +63,7 @@ const UserFeedback: FC<UserFeedbackProps> = ({ feedback }) => {
           <p className="reasoning">{feedback.reasoning}</p>
           <p className="relevant">RELEVANT PITCH</p>
           <p className="pitch">
-            {' '}
-            {aggregate?.title}{' '}
+            {aggregate?.title}
             <Link className="open-link" to={`/pitch/${feedback.pitchId}`}>
               <Icon name="external alternate" />
             </Link>
