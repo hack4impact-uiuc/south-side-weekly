@@ -57,12 +57,12 @@ const Kanban = (): ReactElement => {
         const pitchRes = await getPitchBuckets(res.data.result._id);
         if (!isError(pitchRes)) {
           const pitchBuckets = pitchRes.data.result;
-          console.log(pitchBuckets);
+
           const newColumns: ColumnProps[] = pitchBuckets.map((bucket) => ({
             name: titleCase(bucket.status.split('_').join(' ')),
             items: bucket.pitches,
           }));
-          console.log(newColumns);
+
           setColumns(newColumns);
         }
       }
