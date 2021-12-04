@@ -1,9 +1,9 @@
 import { IUser } from 'ssw-common';
-import { difference } from 'lodash';
+import { difference, isArray } from 'lodash';
 import { Request } from 'express';
 import { isAdmin } from './auth-utils';
-import User, { UserSchema } from '../models/user';
-import { Query } from 'mongoose';
+import User from '../models/user';
+import { Document, Query } from 'mongoose';
 
 type UserKeys = (keyof IUser)[];
 
@@ -55,36 +55,48 @@ const getEditableFields = (currentUser: IUser, userId: string): UserKeys => {
   return [];
 };
 
-const processFilters = (
+const processFilters = <T extends Document<any>>(
   req: Request,
-  query: Query<UserSchema[], UserSchema, Record<string, unknown>>,
+  query: Query<T[], T, Record<string, unknown>>,
 ): void => {
-  type valueType = typeof req.query.page;
+  type valueType = typeof req.query.value;
   type queryFilter = Record<string, valueType | Record<string, valueType>>;
-
   const filters: queryFilter = {};
-  for (const key in req.query) {
-    if (key === 'page' || key === 'limit') {
-      continue;
-    }
-    if (req.query[key] instanceof Array) {
-      filters[key] = { $all: req.query[key] };
+
+  const queryParams = Object.keys(req.query).filter((key) =>
+    allFields.includes(key),
+  );
+
+  queryParams.forEach((key) => {
+    const query = req.query[key];
+    if (isArray(query)) {
+      filters[key] = { $all: query };
     } else {
-      filters[key] = req.query[key];
+      filters[key] = query;
     }
-  }
+  });
+
   if (Object.keys(filters).length) {
-    query.find(filters);
+    //TODO: type should be more specific than 'any'
+    query.find(filters as any);
   }
 };
 
-const processPaignation = (
+const processPagination = <T extends Document<any>>(
   req: Request,
-  query: Query<UserSchema[], UserSchema, Record<string, unknown>>,
+  query: Query<T[], T, Record<string, unknown>>,
 ): void => {
   if (req.query.page && req.query.limit) {
     const page = parseInt(req.query.page as string);
     const limit = parseInt(req.query.limit as string);
+
+    const sortBy = req.query.sortBy as string;
+    const sortDirection = req.query.sortDirection as string;
+
+    if (sortBy) {
+      query.sort({ sortBy: sortDirection });
+    }
+
     const skipIndex = (page - 1) * limit;
     query.limit(limit).skip(skipIndex);
   }
@@ -94,6 +106,6 @@ export {
   allFields,
   getEditableFields,
   getViewableFields,
-  processPaignation,
+  processPagination,
   processFilters,
 };

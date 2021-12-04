@@ -8,7 +8,7 @@ import {
   getEditableFields,
   getViewableFields,
   processFilters,
-  processPaignation,
+  processPagination,
 } from '../utils/user-utils';
 import {
   requireAdmin,
@@ -212,13 +212,21 @@ router.get(
       },
     });
 
-    processPaignation(req, query);
+    let totalPages = 1;
+    processFilters(req, query);
+    if (req.query.page && req.query.limit) {
+      const filteredDocs = await query.exec();
+      const limit = parseInt(req.query.limit as string);
+      totalPages = Math.ceil(filteredDocs.length / limit);
+    }
+    processPagination(req, query);
     const users = await query.exec();
 
     res.status(200).json({
       message: `Successfully retrieved all pending users.`,
       success: true,
       result: users,
+      totalPages: totalPages,
     });
   }),
 );
@@ -231,14 +239,21 @@ router.get(
       onboardingStatus: onboardingStatusEnum.ONBOARDED,
     });
 
+    let totalPages = 1;
     processFilters(req, query);
-    processPaignation(req, query);
+    if (req.query.page && req.query.limit) {
+      const filteredDocs = await query.exec();
+      const limit = parseInt(req.query.limit as string);
+      totalPages = Math.ceil(filteredDocs.length / limit);
+    }
+    processPagination(req, query);
     const users = await query.exec();
 
     res.status(200).json({
       message: `Successfully retrieved all approved users.`,
       success: true,
       result: users,
+      totalPages: totalPages,
     });
   }),
 );
@@ -250,14 +265,21 @@ router.get(
     const query = User.find({
       onboardingStatus: onboardingStatusEnum.DENIED,
     });
-
-    processPaignation(req, query);
+    let totalPages = 1;
+    processFilters(req, query);
+    if (req.query.page && req.query.limit) {
+      const filteredDocs = await query.exec();
+      const limit = parseInt(req.query.limit as string);
+      totalPages = Math.ceil(filteredDocs.length / limit);
+    }
+    processPagination(req, query);
     const users = await query.exec();
 
     res.status(200).json({
       message: `Successfully retrieved all denied users.`,
       success: true,
       result: users,
+      totalPages: totalPages,
     });
   }),
 );
