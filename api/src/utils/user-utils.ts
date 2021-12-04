@@ -89,6 +89,7 @@ const processPagination = <T extends Document<any>>(
   if (req.query.page && req.query.limit) {
     const page = parseInt(req.query.page as string);
     const limit = parseInt(req.query.limit as string);
+
     const sortBy = req.query.sortBy as string;
     const sortDirection = req.query.sortDirection as string;
 

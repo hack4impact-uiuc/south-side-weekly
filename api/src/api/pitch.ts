@@ -45,7 +45,13 @@ router.get(
       status: pitchStatusEnum.PENDING,
     });
 
+    let totalPages = 1;
     processFilters(req, query);
+    if (req.query.page && req.query.limit) {
+      const filteredDocs = await query.exec();
+      const limit = parseInt(req.query.limit as string);
+      totalPages = Math.ceil(filteredDocs.length / limit);
+    }
     processPagination(req, query);
 
     const pitches = await query.exec();
@@ -54,6 +60,7 @@ router.get(
       success: true,
       message: 'Pending pitches successfully retrived',
       result: pitches,
+      totalPages: totalPages,
     });
   }),
 );
@@ -69,8 +76,15 @@ router.get(
       status: pitchStatusEnum.APPROVED,
     });
 
-    processPagination(req, query);
+    let totalPages = 1;
     processFilters(req, query);
+    if (req.query.page && req.query.limit) {
+      const filteredDocs = await query.exec();
+      const limit = parseInt(req.query.limit as string);
+      totalPages = Math.ceil(filteredDocs.length / limit);
+    }
+    processPagination(req, query);
+
     let pitches = await query.exec();
 
     const status = req.query.claimStatus;
@@ -84,6 +98,7 @@ router.get(
       message: `Successfully retrieved pitches.`,
       success: true,
       result: pitches,
+      totalPages: totalPages,
     });
   }),
 );
