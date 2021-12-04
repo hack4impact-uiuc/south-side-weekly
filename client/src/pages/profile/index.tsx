@@ -13,7 +13,7 @@ import {
 } from 'semantic-ui-react';
 import { startCase } from 'lodash';
 
-import { UserFeedbackModal, FieldTag, UserPicture } from '../../components';
+import { FieldTag, UserPicture } from '../../components';
 import {
   isError,
   getUser,
@@ -258,11 +258,6 @@ const Profile = (): ReactElement => {
                 content="Edit Profile"
               />
             )}
-            <UserFeedbackModal
-              contributor={user}
-              pitchId="6181f343c6cf988c1a05b941"
-              trigger={<p>hello</p>}
-            />
             <UserPicture size="small" user={user} />
 
             {user.masthead && (
