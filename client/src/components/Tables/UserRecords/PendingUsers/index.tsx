@@ -1,9 +1,8 @@
-import React, { FC, ReactElement, ReactNode, useEffect, useState } from 'react';
+import React, { FC, ReactElement, ReactNode, useRef } from 'react';
 import { IUser } from 'ssw-common';
 import { Button } from 'semantic-ui-react';
 import toast from 'react-hot-toast';
 
-import DynamicTable from '../../DynamicTable';
 import ReviewUserModal from '../../../Modals/ReviewUser';
 import {
   nameColumn,
@@ -17,13 +16,15 @@ import { isError, updateOnboardingStatus } from '../../../../api';
 import { onboardingStatusEnum } from '../../../../utils/enums';
 import './styles.scss';
 import { buildColumn } from '../../DynamicTable/util';
+import { QueryFunction } from '../../PaginatedTable/types';
+import PaginatedTable from '../../PaginatedTable';
 
 interface PendingUserProps {
-  users: IUser[];
+  query: QueryFunction<IUser>;
 }
 
-const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
-  const [data, setData] = useState<IUser[]>(users);
+const PendingUsers: FC<PendingUserProps> = ({ query }): ReactElement => {
+  const paginatedTable = useRef<typeof PaginatedTable>();
 
   const updateUserStatus = async (
     user: IUser,
@@ -31,7 +32,7 @@ const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
   ): Promise<void> => {
     const res = await updateOnboardingStatus(user._id, status);
     if (!isError(res)) {
-      setData(data.filter((d) => d !== user));
+      // TODO: Refetch all data to remove this user from pending
       toast.success('Updated User Status!', {
         position: 'bottom-right',
       });
@@ -79,10 +80,6 @@ const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
     },
   });
 
-  useEffect(() => {
-    setData(users);
-  }, [users]);
-
   const columns = [
     userColumn,
     nameColumn,
@@ -93,13 +90,13 @@ const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
     onboardActionColumn,
   ];
 
-  const view = { records: users, columns };
   return (
     <div className="table">
       <div className="directory">
-        <DynamicTable<IUser>
-          view={view}
-          singleLine={users.length > 0}
+        <PaginatedTable<IUser>
+          columns={columns}
+          query={query}
+          emptyMessage={'There are no pending users.'}
           getModal={(user, isOpen, setIsOpen) => (
             <ReviewUserModal
               user={user}

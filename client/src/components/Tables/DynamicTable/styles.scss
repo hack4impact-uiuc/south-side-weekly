@@ -1,9 +1,8 @@
-.dynamic-table {
-  position: relative;
+@import '../../../styles/styles.scss';
 
-  ::-webkit-scrollbar {
-    display: none;
-  }
+.dynamic-table {
+  @extend .scrollable;
+  position: relative;
 
   &.no-results-found > tbody {
     display: flex;
@@ -16,6 +15,7 @@
   td,
   th {
     border-left: none !important;
+    overflow: visible !important;
   }
 
   thead,

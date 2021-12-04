@@ -11,17 +11,16 @@ import {
 } from '../..';
 import { getUserFullName } from '../../../utils/helpers';
 import StatusTag from '../../StatusTag';
-import { buildColumn } from '../DynamicTable/util';
-import { fullNameSort, joinedSort, roleSort } from '../Util/TableUtil';
+import { buildPaginatedColumn } from '../PaginatedTable/util';
 
-const nameColumn = buildColumn<IUser>({
+const nameColumn = buildPaginatedColumn<IUser>({
   title: 'Name',
+  key: 'lastName',
   width: 2,
-  sorter: fullNameSort,
   extractor: getUserFullName,
 });
 
-const userColumn = buildColumn<IUser>({
+const userColumn = buildPaginatedColumn<IUser>({
   title: '',
   width: 1,
   extractor: function getPicture(user: IUser): ReactNode {
@@ -29,16 +28,16 @@ const userColumn = buildColumn<IUser>({
   },
 });
 
-const roleColumn = buildColumn<IUser>({
+const roleColumn = buildPaginatedColumn<IUser>({
   title: 'Role',
+  key: 'role',
   width: 2,
-  sorter: roleSort,
   extractor: function getRoles(user: IUser): ReactNode {
     return <FieldTag size="small" content={user.role} />;
   },
 });
 
-const teamsColumnModal = buildColumn<IUser>({
+const teamsColumnModal = buildPaginatedColumn<IUser>({
   title: (
     <>
       Teams <EditTeams />
@@ -49,21 +48,21 @@ const teamsColumnModal = buildColumn<IUser>({
   },
 });
 
-const teamsColumnNoModal = buildColumn<IUser>({
+const teamsColumnNoModal = buildPaginatedColumn<IUser>({
   title: 'Teams',
   extractor: function getInterests(user: IUser): ReactNode {
     return <TeamList teamIds={user.teams} />;
   },
 });
 
-const interestsColumnNoModal = buildColumn<IUser>({
+const interestsColumnNoModal = buildPaginatedColumn<IUser>({
   title: 'Interests',
   extractor: function getInterests(user: IUser): ReactNode {
     return <InterestList interestIds={user.interests} />;
   },
 });
 
-const interestsColumnModal = buildColumn<IUser>({
+const interestsColumnModal = buildPaginatedColumn<IUser>({
   title: (
     <>
       Interests <EditTeams />
@@ -74,25 +73,25 @@ const interestsColumnModal = buildColumn<IUser>({
   },
 });
 
-const onboardDateColumn = buildColumn<IUser>({
+const onboardDateColumn = buildPaginatedColumn<IUser>({
   title: 'Registration Date',
+  key: 'dateJoined',
   width: 2,
-  sorter: joinedSort,
   extractor: function getRegistrationDate(user: IUser): ReactNode {
     return new Date(user.dateJoined).toISOString().split('T')[0];
   },
 });
 
-const viewDateColumn = buildColumn<IUser>({
+const viewDateColumn = buildPaginatedColumn<IUser>({
   title: 'Joined',
+  key: 'dateJoined',
   width: 2,
-  sorter: joinedSort,
   extractor: function getRegistrationDate(user: IUser): ReactNode {
     return new Date(user.dateJoined).getFullYear();
   },
 });
 
-const viewUserColumn = buildColumn<IUser>({
+const viewUserColumn = buildPaginatedColumn<IUser>({
   title: '',
   width: 1,
   extractor: function getUserModal(user: IUser): ReactNode {
@@ -104,7 +103,7 @@ const viewUserColumn = buildColumn<IUser>({
   },
 });
 
-const activityColumn = buildColumn<IUser>({
+const activityColumn = buildPaginatedColumn<IUser>({
   title: 'Active',
   width: 2,
   extractor: function getActivity(user: IUser): ReactNode {

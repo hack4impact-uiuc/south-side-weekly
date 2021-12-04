@@ -4,6 +4,7 @@ import React, {
   ReactElement,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { Input, Tab } from 'semantic-ui-react';
@@ -25,6 +26,7 @@ import {
   TeamsSelect,
   Walkthrough,
 } from '../../components';
+import { PaginationQueryArgs } from '../../components/Tables/PaginatedTable/types';
 import { allRoles } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
 import { parseOptionsSelect } from '../../utils/helpers';
@@ -50,40 +52,36 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
   const [query, setQuery] = useState<string>('');
   const [page, setPage] = useState<number>(1);
   const [pageLimit, setPageLimit] = useState<number>(10);
-  const [params, setParams] = useState<Record<string, string[]>>({});
 
-  const getCurrUsers = useCallback(async (): Promise<void> => {
-    let res;
-    console.log(params);
-    if (status === 'approved') {
-      res = await getApprovedUsers(params);
-    } else if (status === 'pending') {
-      res = await getPendingUsers(params);
-    } else {
-      res = await getDeniedUsers(params);
-    }
-    if (!isError(res)) {
-      setDirectory(res.data.result);
-    }
-  }, [params, status]);
+  const getParams = useCallback(
+    (): Record<string, string[]> => ({
+      interests,
+      teams,
+      role: role === '' ? [] : [role],
+    }),
+    [query, interests, teams, role, page, pageLimit],
+  );
 
-  useEffect(() => {
-    getCurrUsers();
-    return () => {
-      setDirectory([]);
-    };
-  }, [getCurrUsers]);
+  const queryFunction = useCallback(
+    (params: PaginationQueryArgs) => {
+      const fetchResource = () => {
+        let query;
 
-  useEffect(() => {
-    const newParams: Record<string, string[]> = {};
-    newParams['interests'] = interests;
-    newParams['teams'] = teams;
-    newParams['role'] = role === '' ? [] : [role];
+        if (status === 'approved') {
+          query = getApprovedUsers;
+        } else if (status === 'pending') {
+          query = getPendingUsers;
+        } else {
+          query = getDeniedUsers;
+        }
 
-    newParams['page'] = [`${page}`];
-    newParams['limit'] = [`${pageLimit}`];
-    setParams(newParams);
-  }, [query, interests, teams, role, page, pageLimit]);
+        return query({ ...params, ...getParams() });
+      };
+
+      return fetchResource();
+    },
+    [status, getParams],
+  );
 
   return (
     <>
@@ -125,9 +123,9 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
         </div>
       )}
       {status === 'approved' ? (
-        <ApprovedUsers users={directory} />
+        <ApprovedUsers query={queryFunction} />
       ) : (
-        <PendingUsers users={directory} />
+        <PendingUsers query={queryFunction} />
       )}
     </>
   );

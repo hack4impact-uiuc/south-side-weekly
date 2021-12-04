@@ -2,7 +2,8 @@ import React, { FC, ReactElement } from 'react';
 import { IUser } from 'ssw-common';
 
 import { useAuth } from '../../../../contexts';
-import DynamicTable from '../../DynamicTable';
+import PaginatedTable from '../../PaginatedTable';
+import { QueryFunction } from '../../PaginatedTable/types';
 import {
   nameColumn,
   roleColumn,
@@ -17,10 +18,10 @@ import {
 } from '../utils';
 
 interface ApprovedUserProps {
-  users: IUser[];
+  query: QueryFunction<IUser>;
 }
 
-const ApprovedUsers: FC<ApprovedUserProps> = ({ users }): ReactElement => {
+const ApprovedUsers: FC<ApprovedUserProps> = ({ query }): ReactElement => {
   const { isContributor } = useAuth();
 
   const columns = [
@@ -34,12 +35,14 @@ const ApprovedUsers: FC<ApprovedUserProps> = ({ users }): ReactElement => {
     ...(isContributor ? [] : [viewUserColumn]),
   ];
 
-  const view = { records: users, columns };
-
   return (
     <div className="table">
       <div className="directory">
-        <DynamicTable view={view} singleLine={users.length > 0} />
+        <PaginatedTable
+          columns={columns}
+          query={query}
+          emptyMessage={'There are no approved users.'}
+        />
       </div>
     </div>
   );

@@ -32,8 +32,7 @@ import InterestsSelect from './Dropdowns/InterestsSelect';
 import ProviderWrapper from './ProviderWrapper';
 import TeamsSelect from './Dropdowns/TeamsSelect';
 import DynamicTable from './Tables/DynamicTable';
-import { ColumnType, View } from './Tables/DynamicTable/types';
-import { buildColumn } from './Tables/DynamicTable/util';
+import { DynamicColumn, View } from './Tables/DynamicTable/types';
 import {
   EditableTagModal,
   EditInterests,
@@ -41,6 +40,8 @@ import {
 } from './Modals/EditableTags';
 import ReviewUserModal from './Modals/ReviewUser';
 import { ApprovedUsers, PendingUsers } from './Tables';
+import { buildColumn } from './Tables/DynamicTable/util';
+import { buildPaginatedColumn } from './Tables/PaginatedTable/util';
 
 export {
   Header,
@@ -87,6 +88,7 @@ export {
   ApprovedView,
   DynamicTable,
   buildColumn,
+  buildPaginatedColumn,
 };
 
-export type { View, ColumnType };
+export type { View, DynamicColumn };

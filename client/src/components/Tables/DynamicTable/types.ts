@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { SemanticWIDTHS } from 'semantic-ui-react';
 
-export interface ColumnType<RecordType> {
+export interface DynamicColumn<RecordType> {
   title: ReactNode;
   width?: SemanticWIDTHS;
   sorter?: (a: RecordType, b: RecordType) => number;
@@ -10,13 +10,16 @@ export interface ColumnType<RecordType> {
 
 export type SortDirection = 'ascending' | 'descending';
 
-export type Sort<RecordType> = {
-  column: ColumnType<RecordType>;
+export type Sort<Column> = {
+  column: Column;
   direction: SortDirection;
 };
 
-export type View<RecordType> = {
+export type View<
+  RecordType,
+  Column extends DynamicColumn<RecordType> = DynamicColumn<RecordType>,
+> = {
   records: RecordType[];
-  columns: ColumnType<RecordType>[];
-  initialSort?: Sort<RecordType>;
+  columns: Column[];
+  initialSort?: Sort<Column>;
 };

@@ -12,4 +12,8 @@ export interface ApiResponseBase {
   success: boolean;
 }
 
+export interface ApiResponseBaseImpl<T> extends ApiResponseBase {
+  result: T;
+}
+
 export type Response<T> = AxiosResponse<T> | ErrorWrapper;
