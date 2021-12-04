@@ -13,6 +13,28 @@
       color: #5a72e1;
     }
 
+    .inactive {
+      background-color: white;
+      border: $primary;
+      color: black;
+      margin: 0;
+      border-radius: 0;
+      border: solid $primary;
+    }
+
+    .active {
+      border: solid $primary;
+      background-color: $primary;
+      color: white;
+      margin: 0;
+      border-radius: 0;
+
+      &:hover {
+        background-color: $primary;
+        color: white;
+      }
+    }
+
     .add-btn {
       background-color: $primary;
       color: white;
@@ -25,32 +47,26 @@
     }
   }
 
-  .ui {
-    &.menu {
-      margin-bottom: 20px;
-      padding-inline: 0px;
-      border-bottom: 1px solid #a3a3a3 !important;
-    }
+  .resource-group {
+    display: flex;
 
-    &.secondary.pointing.menu {
-      border-bottom: 0px;
+    .resource {
+      height: 200px;
+      width: 200px;
+      justify-content: center;
+      margin: 0px !important;
+      margin-right: 30px !important;
+      background-color: $primary;
+      color: white;
+      text-align: center;
+      border-radius: 1rem;
 
-      .active.item {
-        border-bottom: 4px solid;
-        border-color: $secondaryColor !important;
+      &:hover,
+      &:focus {
+        background-color: $primary;
+        opacity: 0.9;
+        color: white;
       }
-      .item {
-        border-bottom-width: auto;
-        padding-inline: 3em;
-
-        &.right {
-          padding-inline: 0px;
-        }
-      }
-    }
-    &.segment {
-      padding: 1.5em 4em;
-      margin: 0px -6%;
     }
   }
 }

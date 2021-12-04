@@ -80,8 +80,9 @@ const ResourceModal: FC<ResourceProps> = ({
         ...parseFormData(formData),
       });
       closeModal();
-      toast.success('Successfully updated resource', {
-        position: 'bottom-right',
+      Swal.fire({
+        title: 'Successfully updated resource',
+        icon: 'success',
       });
     }
   };
@@ -91,8 +92,9 @@ const ResourceModal: FC<ResourceProps> = ({
 
     if (!isError(res)) {
       closeModal();
-      toast.success('Successfully deleted resource', {
-        position: 'bottom-right',
+      Swal.fire({
+        title: 'Successfully deleted resource',
+        icon: 'success',
       });
     }
   };
@@ -119,8 +121,9 @@ const ResourceModal: FC<ResourceProps> = ({
       });
     } else {
       closeModal();
-      toast.success('Successfully created resource', {
-        position: 'bottom-right',
+      Swal.fire({
+        title: 'Successfully created resource',
+        icon: 'success',
       });
     }
   };
