@@ -5,6 +5,7 @@ import { ColumnType } from '../..';
 import DynamicTable from '../DynamicTable';
 
 import { contributionColumns } from './utils';
+
 import './styles.scss';
 
 interface ContributionsProps {

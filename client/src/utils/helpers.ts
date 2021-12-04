@@ -284,7 +284,13 @@ const formatNumber = (value: string): string => {
  * @param date date to format
  * @returns mm/dd/yyyy version
  */
-const formatDate = (date: Date): string => new Date(date).toLocaleDateString();
+const formatDate = (date: Date | string): string => {
+  const parsed = new Date(date);
+
+  return `${
+    parsed.getUTCMonth() + 1
+  }/${parsed.getUTCDate()}/${parsed.getUTCFullYear()}`;
+};
 
 /**
  * Converts an array of arguments into a single className

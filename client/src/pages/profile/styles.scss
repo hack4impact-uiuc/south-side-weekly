@@ -1,4 +1,9 @@
 .profile-page {
+
+  .profile-header {
+    padding-left: 5% !important;
+  }
+
   .tag-spacing {
     margin-top: 2%;
   }
@@ -16,6 +21,7 @@
   .rating {
     display: flex;
     margin-top: 3%;
+
     .number-ratings {
       margin-top: 2%;
       margin-left: 2%;
@@ -56,12 +62,15 @@
     padding: 5% !important;
   }
 
-  .social-input {
-    margin-top: 2% !important;
+  .social-inputs {
+    display: flex;
+    flex-direction: column;
   }
   .feedback {
-    padding-left: 10% !important;
     padding-bottom: 2% !important;
+    align-items: center !important;
+    justify-items: center !important;
+
     .user-feedback {
       margin-top: 2%;
       margin-left: 0 !important;

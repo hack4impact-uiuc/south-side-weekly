@@ -8,12 +8,9 @@ import React, {
 import { useParams } from 'react-router-dom';
 import { IPitch, IUser, IUserFeedback } from 'ssw-common';
 import {
-  Divider,
   Grid,
   GridColumn,
-  Image,
   Rating,
-  Segment,
 } from 'semantic-ui-react';
 
 import { FieldTag, UserPicture } from '../../components';
@@ -23,7 +20,6 @@ import {
   getAggregatedUser,
   getUserPermissionsByID,
 } from '../../api';
-import Masthead from '../../assets/masthead.svg';
 import { emptyPitch, emptyUser } from '../../utils/constants';
 import { formatDate, getUserFullName, titleCase } from '../../utils/helpers';
 import { useAuth, useInterests, useTeams } from '../../contexts';
@@ -159,137 +155,137 @@ const Profile = (): ReactElement => {
 
   return (
     <div className="profile-page">
-      <Grid padded stackable>
-        <Grid.Row columns={5}>
-          <Grid.Column className="profile-pic-col" text-align="left" width={4}>
-            <div className="user-pic">
-              <UserPicture size="tiny" user={user} />
-            </div>
-            <div className="name-pronouns">
-              {getProfileTitle(user)}
-              {user.pronouns.map((pronoun, index) => (
-                <FieldTag
-                  key={index}
-                  name={pronoun.toLowerCase()}
-                  content="pronouns"
-                />
-              ))}
-              <div className="user-role">
-                <FieldTag content={user.role} />
+      <div className="page-header-content">
+        <Grid className="profile-header" padded stackable>
+          <Grid.Row columns={5}>
+            <Grid.Column
+              className="profile-pic-col"
+              text-align="left"
+              width={5}
+            >
+              <div className="user-pic">
+                <UserPicture size="tiny" user={user} />
               </div>
-              {feedback.length > 0 ? (
-                <div className="rating">
-                  <Rating
-                    icon="star"
-                    defaultRating={rating}
-                    maxRating={5}
-                    disabled
-                  />
-                  <p className="number-ratings">({feedback.length})</p>
-                </div>
-              ) : (
-                <p className="no-ratings"> No ratings </p>
-              )}
-
-              <div>
-                {(userId === auth.user._id || auth.isAdmin) && (
-                  <EditProfileModal
-                    user={user}
-                    callback={loadProfile}
-                    permissions={permissions}
-                  />
-                )}
-              </div>
-            </div>
-
-            {user.masthead && (
-              <Image className="masthead" size="small" src={Masthead} />
-            )}
-          </Grid.Column>
-          <Grid.Column>
-            <SocialsInput
-              disabled={!user.email}
-              icon="mail"
-              value={user.email}
-              viewable={isViewable('email', user.email)}
-            />
-            <div className="social-input">
-              <SocialsInput
-                disabled={!user.phone}
-                icon="phone"
-                value={user.phone}
-                viewable={isViewable('phone', user.phone)}
-              />
-              <SocialsInput
-                icon="linkedin"
-                value={user.linkedIn}
-                disabled={!user.linkedIn}
-                viewable={isViewable('linkedIn', user.linkedIn)}
-              />
-              <SocialsInput
-                icon="globe"
-                value={user.portfolio}
-                disabled={user.portfolio !== null}
-                viewable={isViewable('portfolio', user.portfolio)}
-              />
-              <SocialsInput
-                icon="twitter"
-                value={user.twitter}
-                disabled={user.twitter !== null}
-                viewable={isViewable('twitter', user.twitter)}
-              />
-              <p className="registration">
-                Registered on {formatDate(new Date(user.dateJoined))}.
-              </p>
-            </div>
-          </Grid.Column>
-
-          {includesPermission('teams') && (
-            <Grid.Column textAlign="left" width={2}>
-              <div>
-                <h4>Teams</h4>
-              </div>
-              {user.teams.sort().map((teamId, index) => (
-                <div key={index} className="tag-spacing">
+              <div className="name-pronouns">
+                {getProfileTitle(user)}
+                {user.pronouns.map((pronoun, index) => (
                   <FieldTag
-                    size="medium"
-                    name={teams.find((team) => team._id === teamId)?.name}
-                    hexcode={teams.find((team) => team._id === teamId)?.color}
+                    key={index}
+                    name={pronoun.toLowerCase()}
+                    content="pronouns"
                   />
+                ))}
+                <div className="user-role">
+                  <FieldTag content={user.role} />
                 </div>
-              ))}
-            </Grid.Column>
-          )}
+                {feedback.length > 0 ? (
+                  <div className="rating">
+                    <Rating
+                      icon="star"
+                      defaultRating={rating}
+                      maxRating={5}
+                      disabled
+                      className="rating-icon"
+                    />
+                    <p className="number-ratings">({feedback.length})</p>
+                  </div>
+                ) : (
+                  <p className="no-ratings"> No ratings </p>
+                )}
 
-          {includesPermission('interests') && (
-            <Grid.Column textAlign="left" width={2}>
-              <div>
-                <h4>Topic Interests</h4>
+                <div>
+                  {(userId === auth.user._id || auth.isAdmin) && (
+                    <EditProfileModal
+                      user={user}
+                      callback={loadProfile}
+                      permissions={permissions}
+                    />
+                  )}
+                </div>
               </div>
-              {user.interests.sort().map((interest, index) => {
-                const fullInterst = getInterestById(interest);
-                return (
+            </Grid.Column>
+            <Grid.Column>
+              <div className="social-inputs">
+                <SocialsInput
+                  disabled={!user.email}
+                  icon="mail"
+                  value={user.email}
+                  viewable={isViewable('email', user.email)}
+                />
+                <SocialsInput
+                  disabled={!user.phone}
+                  icon="phone"
+                  value={user.phone}
+                  viewable={isViewable('phone', user.phone)}
+                />
+                <SocialsInput
+                  icon="linkedin"
+                  value={user.linkedIn}
+                  disabled={!user.linkedIn}
+                  viewable={isViewable('linkedIn', user.linkedIn)}
+                />
+                <SocialsInput
+                  icon="globe"
+                  value={user.portfolio}
+                  disabled={user.portfolio !== null}
+                  viewable={isViewable('portfolio', user.portfolio)}
+                />
+                <SocialsInput
+                  icon="twitter"
+                  value={user.twitter}
+                  disabled={user.twitter !== null}
+                  viewable={isViewable('twitter', user.twitter)}
+                />
+                <p className="registration">
+                  Registered on {formatDate(new Date(user.dateJoined))}.
+                </p>
+              </div>
+            </Grid.Column>
+
+            {includesPermission('teams') && (
+              <Grid.Column textAlign="left" width={2}>
+                <h4>Teams</h4>
+                {user.teams.sort().map((teamId, index) => (
                   <div key={index} className="tag-spacing">
                     <FieldTag
                       size="medium"
-                      name={fullInterst?.name}
-                      hexcode={fullInterst?.color}
+                      name={teams.find((team) => team._id === teamId)?.name}
+                      hexcode={teams.find((team) => team._id === teamId)?.color}
                     />
                   </div>
-                );
-              })}
-            </Grid.Column>
-          )}
-          {includesPermission('neighborhood') && user.neighborhood && (
-            <Grid.Column width={2}>
-              <h4>Neighborhood</h4>
-              <p>{user.neighborhood}</p>
-            </Grid.Column>
-          )}
-        </Grid.Row>
-      </Grid>
-      <Divider />
-      <Segment>
+                ))}
+              </Grid.Column>
+            )}
+
+            {includesPermission('interests') && (
+              <Grid.Column textAlign="left" width={2}>
+                <div>
+                  <h4>Topic Interests</h4>
+                </div>
+                {user.interests.sort().map((interest, index) => {
+                  const fullInterst = getInterestById(interest);
+                  return (
+                    <div key={index} className="tag-spacing">
+                      <FieldTag
+                        size="medium"
+                        name={fullInterst?.name}
+                        hexcode={fullInterst?.color}
+                      />
+                    </div>
+                  );
+                })}
+              </Grid.Column>
+            )}
+            {includesPermission('neighborhood') && user.neighborhood && (
+              <Grid.Column width={2}>
+                <h4>Neighborhood</h4>
+                <p>{user.neighborhood}</p>
+              </Grid.Column>
+            )}
+          </Grid.Row>
+        </Grid>
+      </div>
+      <div className="page-inner-content">
         {userId === auth.user._id ? (
           <h2>Your Contributions</h2>
         ) : (
@@ -313,13 +309,14 @@ const Profile = (): ReactElement => {
           )}
         </Grid>
         {feedback.length > 0 && (
-          <Grid className="feedback">
+          <Grid centered className="feedback">
             <Grid.Column width={10}>
-              {userId === auth.user._id ? (
-                <h2>Feedback on You</h2>
-              ) : (
-                <h2>Feedback on {getUserFirstName(user)}</h2>
-              )}
+              <h2 className="title">
+                {userId === auth.user._id
+                  ? 'Feedback on You'
+                  : `Feedback on ${getUserFirstName(user)}`}
+              </h2>
+
               {feedback.map((feedback, index) => (
                 <div key={index} className="user-feedback">
                   <UserFeedback feedback={feedback} />
@@ -328,7 +325,7 @@ const Profile = (): ReactElement => {
             </Grid.Column>
           </Grid>
         )}
-      </Segment>
+      </div>
     </div>
   );
 };
