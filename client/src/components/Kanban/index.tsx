@@ -1,5 +1,6 @@
 import React, {
   Dispatch,
+  FC,
   ReactElement,
   SetStateAction,
   useEffect,
@@ -14,7 +15,7 @@ import {
 import { Segment } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
 
-import { getNearestIssue, isError } from '../../api';
+import { isError } from '../../api';
 import { getPitchBuckets, updateIssueStatus } from '../../api/issue';
 import { issueStatusEnum } from '../../utils/enums';
 import { titleCase } from '../../utils/helpers';
@@ -76,32 +77,32 @@ const onDragEnd = (
   setColumns([...columns]);
 };
 
-const Kanban = (): ReactElement => {
+interface KanbanProps {
+  issueId: string;
+}
+
+const Kanban: FC<KanbanProps> = ({ issueId }): ReactElement => {
   const [columns, setColumns] = useState<ColumnProps[]>([]);
 
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
-      const res = await getNearestIssue();
+      const res = await getPitchBuckets(issueId);
 
       if (!isError(res)) {
-        const issueId = res.data.result._id;
-        const pitchRes = await getPitchBuckets(issueId);
-        if (!isError(pitchRes)) {
-          const pitchBuckets = pitchRes.data.result;
+        const pitchBuckets = res.data.result;
 
-          const newColumns: ColumnProps[] = pitchBuckets.map((bucket) => ({
-            name: titleCase(bucket.status.split('_').join(' ')),
-            items: bucket.pitches,
-            issueId: issueId,
-          }));
+        const newColumns: ColumnProps[] = pitchBuckets.map((bucket) => ({
+          name: titleCase(bucket.status.split('_').join(' ')),
+          items: bucket.pitches,
+          issueId: issueId,
+        }));
 
-          setColumns(newColumns);
-        }
+        setColumns(newColumns);
       }
     };
 
     fetchData();
-  }, []);
+  }, [issueId]);
 
   return (
     <Segment className="kanban-wrapper">
