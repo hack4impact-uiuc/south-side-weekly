@@ -40,8 +40,9 @@ import {
   EditTeams,
 } from './Modals/EditableTags';
 import ReviewUserModal from './Modals/ReviewUser';
-import { ApprovedUsers, PendingUsers } from './Tables';
 import Kanban from './Kanban';
+import { ApprovedUsers, PendingUsers, DeniedUsers } from './Tables';
+import ResourceTable from './Tables/Resource';
 
 export {
   Header,
@@ -71,6 +72,7 @@ export {
   MultiSelect,
   Select,
   // DirectoryTable,
+  ResourceTable,
   PitchTable,
   PitchRow,
   TableTool,
@@ -86,6 +88,7 @@ export {
   ApprovedUsers,
   PendingUsers,
   ApprovedView,
+  DeniedUsers,
   DynamicTable,
   buildColumn,
   Kanban,

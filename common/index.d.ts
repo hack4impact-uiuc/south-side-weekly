@@ -1,3 +1,5 @@
+import internal from "node:stream";
+
 /**
  * Interface for a User Schema.
  */
@@ -28,6 +30,7 @@ export interface IUser {
   races: string[];
   interests: string[];
   onboardReasoning: string;
+  feedback: string[];
   lastActive: Date;
 }
 
@@ -77,6 +80,7 @@ export interface IPitch {
   createdAt: Date;
   updatedAt: Date;
   issueStatuses: { issueId: string; issueStatus: string }[];
+  editStatus: string;
 }
 
 export interface IPitchAggregate extends IPitch {
@@ -111,6 +115,8 @@ export interface IResource {
   teams: string[];
   isGeneral: boolean;
   visibility: string;
+  createdAt: Date;
+  updatedAt: Date;
 }
 
 /**
@@ -145,6 +151,19 @@ export interface IIssue {
   type: string;
 }
 
+/**
+ * Interface for UserFeedback Schedma.
+ */
+export interface IUserFeedback {
+  _id: string;
+  staffId: string;
+  userId: string;
+  pitchId: string;
+  stars: number;
+  reasnoning: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
 // The model has userId but will not be returned in any response for anonomous functionality
 export interface IPitchFeedback {
   pitchId: string;
