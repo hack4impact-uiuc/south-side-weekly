@@ -6,6 +6,7 @@ import Pitch from '../models/pitch';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
 import { issueStatusEnum } from '../utils/enums';
 import { IPitch } from '../../../common';
+import { ObjectID } from 'mongodb';
 
 const router = express.Router();
 
@@ -64,40 +65,6 @@ router.get(
   }),
 );
 
-//Gets all issues
-router.get(
-  '/pitchBuckets/:issueId',
-  errorWrap(async (req: Request, res: Response) => {
-    const bucketPitch = (pitch: IPitch, status: string): boolean =>
-      pitch.issueStatuses.some(
-        ({ issueId, issueStatus }) =>
-          issueId.toString() === issue._id.toString() && issueStatus === status,
-      );
-
-    const issue = await Issue.findById(req.params.issueId);
-    if (!issue) {
-      res.status(404).json({
-        success: false,
-        message: 'Issue not found with id',
-      });
-    } else {
-      const pitches = await Pitch.find({ _id: { $in: issue.pitches } });
-      const buckets = [];
-
-      for (const status in issueStatusEnum) {
-        const bucket = pitches.filter((pitch) => bucketPitch(pitch, status));
-        buckets.push({ status: status, pitches: bucket });
-      }
-
-      res.status(200).json({
-        success: true,
-        result: buckets,
-        message: 'Successfully bucketed issues',
-      });
-    }
-  }),
-);
-
 // Create a new issue
 router.post(
   '/',
@@ -137,6 +104,73 @@ router.put(
       success: true,
       message: 'Successfully updated issue',
       result: updatedIssue,
+    });
+  }),
+);
+
+//Gets pitches bucketted by status for a specific issue
+router.get(
+  '/pitchBuckets/:issueId',
+  errorWrap(async (req: Request, res: Response) => {
+    const bucketPitch = (pitch: IPitch, status: string): boolean =>
+      pitch.issueStatuses.some(
+        ({ issueId, issueStatus }) =>
+          issueId.toString() === issue._id.toString() && issueStatus === status,
+      );
+
+    const issue = await Issue.findById(req.params.issueId);
+    if (!issue) {
+      res.status(404).json({
+        success: false,
+        message: 'Issue not found with id',
+      });
+    } else {
+      const pitches = await Pitch.find({ _id: { $in: issue.pitches } });
+      const buckets = [];
+
+      for (const status in issueStatusEnum) {
+        const bucket = pitches.filter((pitch) => bucketPitch(pitch, status));
+        buckets.push({ status: status, pitches: bucket });
+      }
+
+      res.status(200).json({
+        success: true,
+        result: buckets,
+        message: 'Successfully bucketed issues',
+      });
+    }
+  }),
+);
+
+router.put(
+  '/updateIssueStatus/:pitchId',
+  requireAdmin,
+  errorWrap(async (req: Request, res: Response) => {
+    const { issueId, issueStatus } = req.body;
+    await Pitch.findByIdAndUpdate(req.params.pitchId, {
+      $pull: {
+        issueStatuses: { issueId: issueId },
+      },
+    });
+
+    const updatePitch = await Pitch.findByIdAndUpdate(req.params.pitchId, {
+      $addToSet: {
+        issueStatuses: { issueId, issueStatus },
+      },
+    });
+
+    if (!updatePitch) {
+      res.status(404).json({
+        success: false,
+        message: 'Pitch not found with id',
+      });
+      return;
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully updated pitch',
+      result: updatePitch,
     });
   }),
 );

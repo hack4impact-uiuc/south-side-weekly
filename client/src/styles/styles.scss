@@ -83,6 +83,26 @@ body {
   background-color: $declined !important;
 }
 
+.maybe-in-tag-color {
+  background-color: $maybeIn !important;
+}
+
+.definitely-in-tag-color {
+  background-color: $definitelyIn !important;
+}
+
+.in-edits-tag-color {
+  background-color: $inEdits !important;
+}
+
+.ready-to-publish-tag-color {
+  background-color: $readyToPublish !important;
+}
+
+.push-tag-color {
+  background-color: $push !important;
+}
+
 .default-btn {
   background-color: $secondaryColor !important;
   color: white !important;

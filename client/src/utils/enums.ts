@@ -75,3 +75,11 @@ export const statusEnum = {
   RECENTLY_ACTIVE: 'Recently Active',
   INACTIVE: 'Inactive',
 };
+
+export const issueStatusEnum = {
+  MAYBE_IN: 'MAYBE_IN',
+  DEFINITELY_IN: 'DEFINITELY_IN',
+  IN_EDITS: 'IN_EDITS',
+  READY_TO_PUBLISH: 'READY_TO_PUBLISH',
+  PUSH: 'PUSH',
+};

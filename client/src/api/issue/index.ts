@@ -59,10 +59,22 @@ const getPitchBuckets = async (
   return await get(url, failureMessage);
 };
 
+const updateIssueStatus = async (
+  pitchId: string,
+  issueId: string,
+  issueStatus: string,
+): Promise<Response<IPitch>> => {
+  const url = buildEndpoint(ISSUE_ENDPOINT, 'updateIssueStatus', pitchId);
+  const failureMessage = 'Failed to get pitch buckets';
+
+  return await put(url, { issueId, issueStatus }, failureMessage);
+};
+
 export {
   getIssues,
   createIssue,
   updateIssue,
   getNearestIssue,
   getPitchBuckets,
+  updateIssueStatus,
 };
