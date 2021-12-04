@@ -39,7 +39,7 @@ import {
   EditTeams,
 } from './Modals/EditableTags';
 import ReviewUserModal from './Modals/ReviewUser';
-import { ApprovedUsers, PendingUsers } from './Tables';
+import { ApprovedUsers, DeniedUsers, PendingUsers } from './Tables';
 import { buildColumn } from './Tables/DynamicTable/util';
 import { buildPaginatedColumn } from './Tables/PaginatedTable/util';
 import ResourceTable from './Tables/Resource';

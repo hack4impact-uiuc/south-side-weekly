@@ -25,7 +25,6 @@ import {
   Select,
   TeamsSelect,
   Walkthrough,
-  DeniedUsers,
 } from '../../components';
 import { PaginationQueryArgs } from '../../components/Tables/PaginatedTable/types';
 import { allRoles } from '../../utils/constants';
