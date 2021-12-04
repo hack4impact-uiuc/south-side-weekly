@@ -103,11 +103,14 @@ body {
   background-color: $inEdits !important;
 }
 
-.ready-to-publish-tag-color {
+.ready-to-publish-tag-color,
+.writer-on-story-tag-color {
   background-color: $readyToPublish !important;
 }
 
-.push-tag-color {
+.push-tag-color,
+.writer-needed-tag-color,
+.primary-editor-needed-tag-color {
   background-color: $push !important;
 }
 

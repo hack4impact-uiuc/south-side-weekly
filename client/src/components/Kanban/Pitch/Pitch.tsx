@@ -15,7 +15,12 @@ const Pitch: FC<PitchProps> = ({ pitch, ...rest }): ReactElement => (
     <p className="pitch-title">{pitch.title}</p>
     <div className="pitch-info">
       <FieldTag size="small" content={pitch.editStatus} />
-      <p>Due {pitch.deadline || '01/01/2022'}</p>
+      <p className="pitch-text">
+        Due{' '}
+        {pitch.deadline
+          ? new Date(pitch.deadline).toLocaleDateString()
+          : new Date().toLocaleDateString()}
+      </p>
     </div>
   </div>
 );
