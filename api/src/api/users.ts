@@ -7,6 +7,7 @@ import Team from '../models/team';
 import {
   getEditableFields,
   getViewableFields,
+  searchUsers,
   processFilters,
   processPagination,
 } from '../utils/user-utils';
@@ -213,7 +214,8 @@ router.get(
     });
 
     let totalPages = 1;
-    processFilters(req, query);
+    processFilters(req, query);    
+    searchUsers(req, query);
     if (req.query.page && req.query.limit) {
       const filteredDocs = await query.exec();
       const limit = parseInt(req.query.limit as string);
@@ -241,6 +243,7 @@ router.get(
 
     let totalPages = 1;
     processFilters(req, query);
+    searchUsers(req, query);
     if (req.query.page && req.query.limit) {
       const filteredDocs = await query.exec();
       const limit = parseInt(req.query.limit as string);
@@ -267,6 +270,7 @@ router.get(
     });
     let totalPages = 1;
     processFilters(req, query);
+    searchUsers(req, query);
     if (req.query.page && req.query.limit) {
       const filteredDocs = await query.exec();
       const limit = parseInt(req.query.limit as string);
