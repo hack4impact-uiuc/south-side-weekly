@@ -79,6 +79,7 @@ export interface IPitch {
   neighborhoods: string[];
   createdAt: Date;
   updatedAt: Date;
+  issueStatuses: { issueId: string; issueStatus: string }[];
   editStatus: string;
 }
 

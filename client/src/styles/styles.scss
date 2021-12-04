@@ -91,6 +91,29 @@ body {
   background-color: $declined !important;
 }
 
+.maybe-in-tag-color {
+  background-color: $maybeIn !important;
+}
+
+.definitely-in-tag-color {
+  background-color: $definitelyIn !important;
+}
+
+.in-edits-tag-color {
+  background-color: $inEdits !important;
+}
+
+.ready-to-publish-tag-color,
+.writer-on-story-tag-color {
+  background-color: $readyToPublish !important;
+}
+
+.push-tag-color,
+.writer-needed-tag-color,
+.primary-editor-needed-tag-color {
+  background-color: $push !important;
+}
+
 .default-btn {
   background-color: $secondaryColor !important;
   color: white !important;

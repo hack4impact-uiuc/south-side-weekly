@@ -92,6 +92,7 @@ const emptyPitch: IPitch = {
   neighborhoods: [],
   createdAt: new Date(),
   updatedAt: new Date(),
+  issueStatuses: [],
   editStatus: editStatusEnum.WRITER_NEEDED,
 };
 

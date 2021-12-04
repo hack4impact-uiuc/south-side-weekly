@@ -15,6 +15,7 @@ import {
   Login,
   PitchDoc,
   Resources,
+  Issues,
 } from './pages';
 import Wizard from './wizard';
 import { PrivateRoute, ProviderWrapper } from './components';
@@ -42,6 +43,10 @@ const routes = [
   {
     path: '/pitches',
     component: PitchDoc,
+  },
+  {
+    path: '/issues',
+    component: Issues,
   },
   {
     path: '/resources',

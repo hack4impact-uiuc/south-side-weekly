@@ -40,6 +40,7 @@ import {
   EditTeams,
 } from './Modals/EditableTags';
 import ReviewUserModal from './Modals/ReviewUser';
+import Kanban from './Kanban';
 import { ApprovedUsers, PendingUsers, DeniedUsers } from './Tables';
 import ResourceTable from './Tables/Resource';
 
@@ -90,6 +91,7 @@ export {
   DeniedUsers,
   DynamicTable,
   buildColumn,
+  Kanban,
 };
 
 export type { View, ColumnType };
