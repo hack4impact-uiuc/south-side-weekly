@@ -39,7 +39,7 @@ const PaginatedTable = <RecordType,>({
   const [records, setRecords] = useState<RecordType[]>([]);
 
   useEffect(() => {
-    const queryRecords = async () => {
+    const queryRecords = async (): Promise<void>=> {
       const res = await query(getParams());
 
       if (isError(res)) {

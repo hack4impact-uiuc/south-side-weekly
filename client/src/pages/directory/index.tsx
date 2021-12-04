@@ -49,17 +49,16 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
   const [role, setRole] = useState<string>('');
   const [interests, setInterests] = useState<string[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
-  const [query, setQuery] = useState<string>('');
-  const [page, setPage] = useState<number>(1);
-  const [pageLimit, setPageLimit] = useState<number>(10);
+  const [search, setSearch] = useState<string>('');
 
   const getParams = useCallback(
     (): Record<string, string[]> => ({
+      search: search === '' ? [] : [search],
       interests,
       teams,
       role: role === '' ? [] : [role],
     }),
-    [query, interests, teams, role, page, pageLimit],
+    [search, interests, teams, role],
   );
 
   const queryFunction = useCallback(
@@ -86,8 +85,8 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
   return (
     <>
       <Input
-        value={query}
-        onChange={(e, { value }) => setQuery(value)}
+        value={search}
+        onChange={(e, { value }) => setSearch(value)}
         fluid
         placeholder="Search..."
         icon="search"
