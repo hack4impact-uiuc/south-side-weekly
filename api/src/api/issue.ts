@@ -6,7 +6,6 @@ import Pitch from '../models/pitch';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
 import { issueStatusEnum } from '../utils/enums';
 import { IPitch } from '../../../common';
-import { ObjectID } from 'mongodb';
 
 const router = express.Router();
 
@@ -36,7 +35,7 @@ router.get(
   '/',
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
-    const { current, offset } = req.query;
+    const { current } = req.query;
 
     if (current) {
       const issues = await Issue.find({
