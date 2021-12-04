@@ -91,7 +91,6 @@ const UserFeedbackModal: FC<UserFeedbackModal> = ({
   return (
     <Modal
       className="feedback-modal"
-      closeIcon
       open={isOpen}
       onOpen={() => setIsOpen(true)}
       onClose={() => setIsOpen(false)}
