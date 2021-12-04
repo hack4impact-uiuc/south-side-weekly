@@ -177,7 +177,6 @@ const Profile = (): ReactElement => {
                 {feedback.length > 0 ? (
                   <div className="rating">
                     <Rating
-                      icon="star"
                       defaultRating={rating}
                       maxRating={5}
                       disabled

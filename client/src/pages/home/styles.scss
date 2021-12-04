@@ -1,6 +1,10 @@
 @import '../../styles/colors.scss';
 
 .homepage-wrapper {
+  .homepage-header {
+    padding: 0px 2% 0px 2%;
+  }
+
   .filters-wrapper {
     display: flex;
     flex-flow: row wrap;
@@ -37,7 +41,7 @@
     }
     &.segment {
       padding: 1.5em 4em;
-      margin: 0px -6%;
+      // margin: 0px -6%;
     }
   }
 

@@ -1,6 +1,10 @@
 @import '../../styles/colors.scss';
 
 .directory-page {
+  .directory-page-header {
+    padding: 0px 2% 0px 2%;
+    margin-bottom: 10px;
+  }
   .filters {
     display: flex;
     align-items: center;

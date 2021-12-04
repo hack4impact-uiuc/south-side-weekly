@@ -1,6 +1,6 @@
 import { startsWith, toLower, toString } from 'lodash';
 import React, { FC, useEffect, useState } from 'react';
-import { Input, Menu, Segment } from 'semantic-ui-react';
+import { Input, Menu } from 'semantic-ui-react';
 import Select from 'react-select';
 import { IPitch, IUserAggregate } from 'ssw-common';
 
@@ -141,42 +141,44 @@ const Homepage: FC = () => {
 
   return (
     <div className="homepage-wrapper">
-      <Walkthrough
-        page={pagesEnum.HOMEPAGE}
-        content="The homepage is the main landing point for users to see their pitch history."
-      />
-
-      <Menu className="tab-menu" tabular secondary pointing size="large">
-        <Menu.Item
-          name={TABS.MEMBER_PITCHES}
-          active={TABS.MEMBER_PITCHES === currentTab}
-          onClick={() => setCurrentTab(TABS.MEMBER_PITCHES)}
+      <div className="page-header-content homepage-header">
+        <Walkthrough
+          page={pagesEnum.HOMEPAGE}
+          content="The homepage is the main landing point for users to see their pitch history."
         />
 
-        <Menu.Item
-          name={TABS.SUBMITTED_PITCHES}
-          active={TABS.SUBMITTED_PITCHES === currentTab}
-          onClick={() => setCurrentTab(TABS.SUBMITTED_PITCHES)}
-        />
+        <Menu className="tab-menu" tabular secondary pointing size="large">
+          <Menu.Item
+            name={TABS.MEMBER_PITCHES}
+            active={TABS.MEMBER_PITCHES === currentTab}
+            onClick={() => setCurrentTab(TABS.MEMBER_PITCHES)}
+          />
 
-        <Menu.Item
-          name={TABS.SUBMITTED_CLAIMS}
-          active={TABS.SUBMITTED_CLAIMS === currentTab}
-          onClick={() => setCurrentTab(TABS.SUBMITTED_CLAIMS)}
-        />
+          <Menu.Item
+            name={TABS.SUBMITTED_PITCHES}
+            active={TABS.SUBMITTED_PITCHES === currentTab}
+            onClick={() => setCurrentTab(TABS.SUBMITTED_PITCHES)}
+          />
 
-        <Menu.Item
-          name={TABS.SUBMITTED_PUBLICATIONS}
-          active={TABS.SUBMITTED_PUBLICATIONS === currentTab}
-          onClick={() => setCurrentTab(TABS.SUBMITTED_PUBLICATIONS)}
-        />
+          <Menu.Item
+            name={TABS.SUBMITTED_CLAIMS}
+            active={TABS.SUBMITTED_CLAIMS === currentTab}
+            onClick={() => setCurrentTab(TABS.SUBMITTED_CLAIMS)}
+          />
 
-        <Menu.Item
-          content={<SubmitPitchModal callback={onSubmitPitch} />}
-          position="right"
-        />
-      </Menu>
-      <Segment loading={!aggregatedUser}>
+          <Menu.Item
+            name={TABS.SUBMITTED_PUBLICATIONS}
+            active={TABS.SUBMITTED_PUBLICATIONS === currentTab}
+            onClick={() => setCurrentTab(TABS.SUBMITTED_PUBLICATIONS)}
+          />
+
+          <Menu.Item
+            content={<SubmitPitchModal callback={onSubmitPitch} />}
+            position="right"
+          />
+        </Menu>
+      </div>
+      <div className="page-inner-content">
         <div className="filters-wrapper">
           <Input
             value={searchInput}
@@ -256,7 +258,7 @@ const Homepage: FC = () => {
             emptyMessage="You have no pitches in this category."
           />
         </div>
-      </Segment>
+      </div>
     </div>
   );
 };

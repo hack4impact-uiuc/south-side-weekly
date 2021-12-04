@@ -9,13 +9,14 @@ $innerWidth: 3vw;
 
   .page-content {
     .page-header-content {
-      width: 90%;
+      width: 100%;
     }
 
     .page-inner-content {
       padding-top: 20px;
       padding-left: $innerWidth;
       padding-right: $innerWidth;
+      padding-bottom: 2%;
       background-color: white !important;
     }
 

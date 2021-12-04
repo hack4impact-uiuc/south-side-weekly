@@ -98,52 +98,55 @@ const Resources = (): ReactElement => {
       />
 
       <div className="resources-page">
-        <Walkthrough
-          page={pagesEnum.RESOURCES}
-          content="Check out the members on the SSW team and click their profiles to view more details!"
-        />
-        <div className="controls">
-          <h1>Resource Page</h1>
-          <div className="push" />
-          <ApprovedView>
-            {isAdmin ? (
-              <Button
-                onClick={() => openModal('create')}
-                className="default-btn"
-              >
-                <Icon name="add" /> Add Resource
-              </Button>
-            ) : (
-              <Button
-                onClick={() =>
-                  openPopupWidget({
-                    url: 'https://calendly.com/sawhney4/60min',
-                  })
-                }
-                content="Schedule Office Hour"
-                className="calendly-button"
+        <div className="page-header-content resource-page-header">
+          <Walkthrough
+            page={pagesEnum.RESOURCES}
+            content="Check out the members on the SSW team and click their profiles to view more details!"
+          />
+          <div className="controls">
+            <h1>Resource Page</h1>
+            <div className="push" />
+            <ApprovedView>
+              {isAdmin ? (
+                <Button
+                  onClick={() => openModal('create')}
+                  className="default-btn"
+                >
+                  <Icon name="add" /> Add Resource
+                </Button>
+              ) : (
+                <Button
+                  onClick={() =>
+                    openPopupWidget({
+                      url: 'https://calendly.com/sawhney4/60min',
+                    })
+                  }
+                  content="Schedule Office Hour"
+                  className="calendly-button"
+                />
+              )}
+            </ApprovedView>
+          </div>
+
+          <Menu className="tab-menu" tabular secondary pointing size="large">
+            {tabs.map((tab, index) => (
+              <Menu.Item
+                key={index}
+                name={tab.name}
+                value={tab._id}
+                active={tab._id === selectedTab}
+                onClick={(e, { value }) => setSelectedTab(value)}
               />
-            )}
-          </ApprovedView>
+            ))}
+          </Menu>
         </div>
-
-        <Menu className="tab-menu" tabular secondary pointing size="large">
-          {tabs.map((tab, index) => (
-            <Menu.Item
-              key={index}
-              name={tab.name}
-              value={tab._id}
-              active={tab._id === selectedTab}
-              onClick={(e, { value }) => setSelectedTab(value)}
-            />
-          ))}
-        </Menu>
-
-        <ResourceTable
-          resource={filterResources(selectedTab)}
-          handleOpen={handleResourceAction}
-          isAdmin={isAdmin}
-        />
+        <div className="page-inner-content">
+          <ResourceTable
+            resource={filterResources(selectedTab)}
+            handleOpen={handleResourceAction}
+            isAdmin={isAdmin}
+          />
+        </div>
       </div>
     </>
   );

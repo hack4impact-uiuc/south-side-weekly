@@ -55,7 +55,6 @@ const UserFeedback: FC<UserFeedbackProps> = ({ feedback }) => {
           <Rating
             className="rating"
             size="large"
-            icon="star"
             maxRating={5}
             disabled
             defaultRating={feedback.stars}
