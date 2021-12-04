@@ -12,15 +12,12 @@ import {
 } from '../../api';
 import Masthead from '../../assets/masthead.svg';
 import { emptyPitch, emptyUser } from '../../utils/constants';
-import {
-  getFormattedDate,
-  getUserFullName,
-  titleCase,
-} from '../../utils/helpers';
+import { formatDate, getUserFullName, titleCase } from '../../utils/helpers';
 import { useAuth, useInterests, useTeams } from '../../contexts';
 import Contributions from '../../components/Tables/Contributions';
 import EditProfileModal from '../../components/Modals/EditProfile';
-import { getUserFeedback } from '../../api/user';
+import { getUserFeedback } from '../../api/feedback';
+import UserFeedback from '../../components/UserFeedback';
 
 import SocialsInput from './SocialsInput';
 import './styles.scss';
@@ -75,15 +72,18 @@ const Profile = (): ReactElement => {
 
   const getFeedback = useCallback(async (): Promise<void> => {
     const res = await getUserFeedback(userId);
+
     if (!isError(res)) {
+      // setFeedback(res.data.result);
+
+      const averageRating =
+        res.data.result.reduce((sum, feedback) => sum + feedback.stars, 0) /
+        res.data.result.length;
+
+      setRating(averageRating);
       setFeedback(res.data.result);
     }
-    const averageRating =
-      feedback.reduce(function (sum, feedback) {
-        return sum + feedback.stars;
-      }, 0) / feedback.length;
-    setRating(averageRating);
-  }, [userId, feedback]);
+  }, [userId]);
 
   useEffect(() => {
     loadUser();
@@ -98,20 +98,20 @@ const Profile = (): ReactElement => {
         edit: [],
       });
     };
-  }, [
-    loadCurrentUserPermissions,
-    getPitches,
-    loadUser,
-    setFeedback,
-    userId,
-    getFeedback,
-  ]);
+  }, [getFeedback, getPitches, loadCurrentUserPermissions, loadUser]);
 
   const loadProfile = (): void => {
     loadUser();
     loadCurrentUserPermissions();
     getPitches();
   };
+
+  // const getAverageRating = (): number => {
+  //   const averageRating = feedback.reduce(function (sum, feedback) {
+  //     return sum + feedback.stars;
+  //   }, 0) / feedback.length;
+  //   return averageRating;
+  // }
 
   /**
    * Determines if a field is viewable to current user
@@ -174,9 +174,9 @@ const Profile = (): ReactElement => {
                 <div className="rating">
                   <Rating
                     icon="star"
-                    defaultRating={3}
+                    defaultRating={rating}
                     maxRating={5}
-                    rating={rating}
+                    disabled
                   />
                   <p className="number-ratings">{feedback.length}</p>
                 </div>
@@ -232,7 +232,7 @@ const Profile = (): ReactElement => {
                 viewable={isViewable('twitter', user.twitter)}
               />
               <p className="registration">
-                Registered on {getFormattedDate(new Date(user.dateJoined))}.
+                Registered on {formatDate(new Date(user.dateJoined))}.
               </p>
             </div>
           </Grid.Column>
@@ -303,6 +303,22 @@ const Profile = (): ReactElement => {
           </GridColumn>
         )}
       </Grid>
+      {feedback.length > 0 && (
+        <Grid className="feedback">
+          <Grid.Column width={10}>
+            {userId === auth.user._id ? (
+              <h2>Feedback on You</h2>
+            ) : (
+              <h2>Feedback on {getUserFirstName(user)}</h2>
+            )}
+            {feedback.map((feedback, index) => (
+              <div key={index} className="user-feedback">
+                <UserFeedback feedback={feedback} />
+              </div>
+            ))}
+          </Grid.Column>
+        </Grid>
+      )}
     </div>
   );
 };

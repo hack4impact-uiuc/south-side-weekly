@@ -279,8 +279,12 @@ const formatNumber = (value: string): string => {
   return new AsYouType('US').input(value);
 };
 
-const getFormattedDate = (date: Date): string =>
-  `${date.getMonth() + 1}/${date.getDay() + 1}/${date.getFullYear()}`;
+/**
+ * Formats date to mm/dd/yyyy
+ * @param date date to format
+ * @returns mm/dd/yyyy version
+ */
+const formatDate = (date: Date): string => new Date(date).toLocaleDateString();
 
 /**
  * Converts an array of arguments into a single className
@@ -359,6 +363,6 @@ export {
   classNames,
   openProfile,
   pluralize,
-  getFormattedDate,
+  formatDate,
   isPast,
 };

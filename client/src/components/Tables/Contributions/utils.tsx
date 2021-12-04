@@ -2,7 +2,7 @@ import React, { ReactNode } from 'react';
 import { IPitch, IUser } from 'ssw-common';
 
 import { buildColumn, ColumnType, InterestList, TeamList } from '../..';
-import { getFormattedDate, getUserTeamsForPitch } from '../../../utils/helpers';
+import { formatDate, getUserTeamsForPitch } from '../../../utils/helpers';
 import PitchStatusTag from '../../PitchStatusTag';
 import { deadlineSort, titleSort } from '../Util/TableUtil';
 
@@ -10,9 +10,7 @@ const titleColumn = buildColumn<Partial<IPitch>>({
   title: 'Title',
   width: 2,
   sorter: titleSort,
-  extractor: function getTitle(pitch: Partial<IPitch>): ReactNode {
-    return pitch.title;
-  },
+  extractor: 'title',
 });
 
 const topicsColumn = buildColumn<Partial<IPitch>>({
@@ -58,7 +56,7 @@ const statusColumn = buildColumn<Partial<IPitch>>({
 const formatPitchDate = (pitch: Partial<IPitch>): string => {
   if (pitch.deadline !== undefined) {
     const date = new Date(pitch.deadline);
-    return getFormattedDate(date);
+    return formatDate(date);
   }
   return '';
 };
