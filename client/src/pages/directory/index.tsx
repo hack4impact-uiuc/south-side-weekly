@@ -9,9 +9,9 @@ import React, {
 } from 'react';
 import { Input, Tab } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
-import { Response } from '../../api/types';
+
+import { Response , PaginationResponseBase } from '../../api/types';
 import { isError } from '../../api';
-import { PaginationResponseBase } from '../../api/types';
 import {
   getApprovedUsers,
   getDeniedUsers,

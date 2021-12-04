@@ -214,7 +214,7 @@ router.get(
     });
 
     let totalPages = 1;
-    processFilters(req, query);    
+    processFilters(req, query);
     searchUsers(req, query);
     if (req.query.page && req.query.limit) {
       const filteredDocs = await query.exec();

@@ -1,9 +1,11 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { Pagination, PaginationProps, Table } from 'semantic-ui-react';
+
 import { isError } from '../../../api';
 import Select from '../../Dropdowns/Select';
 import DynamicTable from '../DynamicTable';
 import { Sort } from '../DynamicTable/types';
+
 import {
   PaginatedColumn,
   PaginationQueryArgs,
