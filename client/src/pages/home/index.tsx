@@ -80,6 +80,7 @@ const Homepage: FC = () => {
     };
 
     const filterPitches = (pitches: IPitch[]): IPitch[] => {
+      pitches = pitches.filter((pitch) => pitch !== null);
       if (canFilterInterests) {
         pitches = filterPitchesByInterests(pitches, filteredInterests);
       }
