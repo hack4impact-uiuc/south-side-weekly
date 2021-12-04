@@ -10,7 +10,7 @@ import React, {
 import { Input, Tab } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
-import { Response , PaginationResponseBase } from '../../api/types';
+import { Response, PaginationResponseBase } from '../../api/types';
 import { isError } from '../../api';
 import {
   getApprovedUsers,
@@ -23,12 +23,13 @@ import {
   ApprovedUsers,
   InterestsSelect,
   PendingUsers,
+  DeniedUsers,
   Select,
   TeamsSelect,
   Walkthrough,
 } from '../../components';
 import { PaginationQueryArgs } from '../../components/Tables/PaginatedTable/types';
-import { allRoles } from '../../utils/constants';
+import { allRoles, allActivities } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
 import { parseOptionsSelect } from '../../utils/helpers';
 
@@ -51,16 +52,17 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
   const [interests, setInterests] = useState<string[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
   const [search, setSearch] = useState<string>('');
-
-  const getParams = useCallback(
-    (): Record<string, string[]> => ({
-      search: search === '' ? [] : [search],
-      interests,
-      teams,
-      role: role === '' ? [] : [role],
-    }),
-    [search, interests, teams, role],
-  );
+  const [activity, setActivity] = useState<string>('');
+  const [filterParams, setFilterParams] = useState<Record<string, string[]>>();
+  
+  useEffect(() => {
+    const newParams: Record<string, string[]> = {};
+    newParams['interests'] = interests;
+    newParams['teams'] = teams;
+    newParams['role'] = role === '' ? [] : [role];
+    newParams['activity'] = activity === '' ? [] : [activity];
+    setFilterParams(newParams);
+  }, [search, interests, teams, role]);
 
   const queryFunction = useCallback(
     (
@@ -79,14 +81,13 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
           query = getDeniedUsers;
         }
 
-        return query({ ...params, ...getParams() }) as Promise<
+        return query({ ...params, ...filterParams }) as Promise<
           Response<PaginationResponseBase<IUser[]>>
         >;
       };
-
       return fetchResource();
     },
-    [status, getParams],
+    [status, filterParams]
   );
 
   return (
@@ -113,6 +114,14 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
             />
           </div>
           <div className="wrapper">
+            <Select
+              value={activity}
+              options={parseOptionsSelect(allActivities)}
+              onChange={(e) => setActivity(e ? e.value : '')}
+              placeholder="Activity"
+            />
+          </div>
+          <div className="wrapper">
             <InterestsSelect
               values={interests}
               onChange={(values) =>
@@ -128,11 +137,9 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
           </div>
         </div>
       )}
-      {status === 'approved' ? (
-        <ApprovedUsers query={queryFunction} />
-      ) : (
-        <PendingUsers query={queryFunction} />
-      )}
+      {status === 'approved' && <ApprovedUsers query={queryFunction} />}
+      {status === 'pending' && <PendingUsers query={queryFunction} />}
+      {status === 'denied' && <DeniedUsers query={queryFunction} />}
     </>
   );
 };

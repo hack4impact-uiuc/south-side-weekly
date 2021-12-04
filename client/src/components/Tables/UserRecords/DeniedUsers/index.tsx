@@ -12,7 +12,6 @@ interface DeniedUserProp {
 }
 
 const DeniedUsers: FC<DeniedUserProp> = ({ query }): ReactElement => {
-
   const rejectionReasoningColumn = buildColumn<IUser>({
     title: 'Rejection Reasoning',
     extractor: function RejectionReasoningText(user: IUser): ReactNode {
@@ -64,7 +63,7 @@ const DeniedUsers: FC<DeniedUserProp> = ({ query }): ReactElement => {
               setOpen={setIsOpen}
               type="reject"
             />
-          )}  
+          )}
         />
       </div>
     </div>

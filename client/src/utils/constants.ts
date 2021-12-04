@@ -6,6 +6,7 @@ import neighborhoods from './neighborhoods';
 const allGenders = ['Man', 'Woman', 'Nonbinary', 'Other'];
 const allPronouns = ['He/his', 'She/her', 'They/them', 'Ze/hir', 'Other'];
 const allRoles = ['ADMIN', 'STAFF', 'CONTRIBUTOR'];
+const allActivities = ['Active', 'Recently Active', 'Inactive'];
 const allRaces = [
   'AMERICAN INDIAN OR ALASKAN NATIVE',
   'BLACK OR AFRICAN AMERICAN',
@@ -116,6 +117,7 @@ export {
   allGenders,
   allPronouns,
   allRoles,
+  allActivities,
   allRaces,
   emptyUser,
   emptyPitch,
