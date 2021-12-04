@@ -3,7 +3,7 @@ import { IPitch, IUser } from 'ssw-common';
 
 import { buildColumn, ColumnType, InterestList, TeamList } from '../..';
 import { getFormattedDate, getUserTeamsForPitch } from '../../../utils/helpers';
-import PitchStatus from '../../PitchStatus';
+import PitchStatusTag from '../../PitchStatusTag';
 import { deadlineSort, titleSort } from '../Util/TableUtil';
 
 const titleColumn = buildColumn<Partial<IPitch>>({
@@ -51,7 +51,7 @@ const statusColumn = buildColumn<Partial<IPitch>>({
   width: 2,
   sorter: deadlineSort,
   extractor: function getStatus(pitch: Partial<IPitch>): ReactNode {
-    return pitch.deadline && <PitchStatus date={pitch.deadline} />;
+    return pitch.deadline && <PitchStatusTag date={pitch.deadline} />;
   },
 });
 

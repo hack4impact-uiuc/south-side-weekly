@@ -10,6 +10,7 @@ import {
   UserResponse,
   UserPermissions,
   AggregatedUserResponse,
+  UserFeedbackResponse,
 } from './types';
 
 const USER_ENDPOINT = '/users';
@@ -173,6 +174,15 @@ const getAggregatedUser = async (
   return await get(url, failureMessage);
 };
 
+const getUserFeedback = async (
+  userId: string,
+): Promise<Response<UserFeedbackResponse>> => {
+  const url = buildEndpoint(USER_ENDPOINT, userId, 'userFeedback');
+  const failureMessage = 'GET_FEEDBACK_FAIL';
+
+  return await get(url, failureMessage);
+};
+
 export {
   getUsers,
   getPendingUsers,
@@ -189,4 +199,5 @@ export {
   approveUser,
   declineUser,
   getAggregatedUser,
+  getUserFeedback,
 };

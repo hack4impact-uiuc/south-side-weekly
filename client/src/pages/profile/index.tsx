@@ -1,7 +1,7 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { IPitch, IUser } from 'ssw-common';
-import { Divider, Grid, GridColumn, Image } from 'semantic-ui-react';
+import { IPitch, IUser, IUserFeedback } from 'ssw-common';
+import { Divider, Grid, GridColumn, Image, Rating } from 'semantic-ui-react';
 
 import { FieldTag, UserPicture } from '../../components';
 import {
@@ -20,6 +20,7 @@ import {
 import { useAuth, useInterests, useTeams } from '../../contexts';
 import Contributions from '../../components/Tables/Contributions';
 import EditProfileModal from '../../components/Modals/EditProfile';
+import { getUserFeedback } from '../../api/user';
 
 import SocialsInput from './SocialsInput';
 import './styles.scss';
@@ -29,6 +30,8 @@ const Profile = (): ReactElement => {
   const { userId } = useParams<ParamTypes>();
   const [user, setUser] = useState<IUser>(emptyUser);
   const [pitches, setPitches] = useState<Partial<IPitch>[]>([emptyPitch]);
+  const [feedback, setFeedback] = useState<IUserFeedback[]>([]);
+  const [rating, setRating] = useState<number>(0);
   const auth = useAuth();
   const { teams } = useTeams();
   const { getInterestById } = useInterests();
@@ -70,10 +73,23 @@ const Profile = (): ReactElement => {
     }
   }, [userId]);
 
+  const getFeedback = useCallback(async (): Promise<void> => {
+    const res = await getUserFeedback(userId);
+    if (!isError(res)) {
+      setFeedback(res.data.result);
+    }
+    const averageRating =
+      feedback.reduce(function (sum, feedback) {
+        return sum + feedback.stars;
+      }, 0) / feedback.length;
+    setRating(averageRating);
+  }, [userId, feedback]);
+
   useEffect(() => {
     loadUser();
     loadCurrentUserPermissions();
     getPitches();
+    getFeedback();
 
     return () => {
       setUser(emptyUser);
@@ -82,7 +98,14 @@ const Profile = (): ReactElement => {
         edit: [],
       });
     };
-  }, [loadCurrentUserPermissions, getPitches, loadUser, userId]);
+  }, [
+    loadCurrentUserPermissions,
+    getPitches,
+    loadUser,
+    setFeedback,
+    userId,
+    getFeedback,
+  ]);
 
   const loadProfile = (): void => {
     loadUser();
@@ -107,6 +130,19 @@ const Profile = (): ReactElement => {
    */
   const includesPermission = (field: keyof IUser): boolean =>
     permissions.view.includes(field);
+
+  /**
+   * If user doesn't have preferred name the first name is picked as default
+   * @param preferredName
+   * @param firstName
+   * @returns user name to be used for contributions table name
+   */
+  const getUserFirstName = (user: IUser): string => {
+    const usePreferred = user.preferredName !== '' && user.preferredName;
+    return usePreferred
+      ? titleCase(user.preferredName)
+      : titleCase(user.firstName);
+  };
 
   return (
     <div className="profile-page">
@@ -134,6 +170,19 @@ const Profile = (): ReactElement => {
               <div className="user-role">
                 <FieldTag content={user.role} />
               </div>
+              {feedback.length > 0 ? (
+                <div className="rating">
+                  <Rating
+                    icon="star"
+                    defaultRating={3}
+                    maxRating={5}
+                    rating={rating}
+                  />
+                  <p className="number-ratings">{feedback.length}</p>
+                </div>
+              ) : (
+                <p className="no-ratings"> No ratings </p>
+              )}
 
               <div>
                 {(userId === auth.user._id || auth.isAdmin) && (
@@ -150,7 +199,7 @@ const Profile = (): ReactElement => {
               <Image className="masthead" size="small" src={Masthead} />
             )}
           </Grid.Column>
-          <Grid.Column width={3}>
+          <Grid.Column>
             <SocialsInput
               disabled={!user.email}
               icon="mail"
@@ -183,7 +232,7 @@ const Profile = (): ReactElement => {
                 viewable={isViewable('twitter', user.twitter)}
               />
               <p className="registration">
-                Registered on {getFormattedDate(new Date(user.dateJoined))}
+                Registered on {getFormattedDate(new Date(user.dateJoined))}.
               </p>
             </div>
           </Grid.Column>
@@ -236,13 +285,7 @@ const Profile = (): ReactElement => {
       {userId === auth.user._id ? (
         <h2>Your Contributions</h2>
       ) : (
-        <h2>
-          {`${
-            user.preferredName !== '' && user.preferredName
-              ? titleCase(user.preferredName)
-              : titleCase(user.firstName)
-          }'s` + ` Contributions`}
-        </h2>
+        <h2>{`${getUserFirstName(user)}'s` + ` Contributions`}</h2>
       )}
       <Contributions pitches={pitches} user={user} />
 

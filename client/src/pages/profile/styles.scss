@@ -13,6 +13,21 @@
     width: 65%;
   }
 
+  .rating {
+    display: flex;
+    margin-top: 3%;
+    .number-ratings {
+      margin-top: 2%;
+      margin-left: 2%;
+      font-size: 12px;
+    }
+  }
+
+  .no-ratings {
+    color: #a3a3a3;
+    margin-top: 4%;
+  }
+
   .profile-pic-col {
     display: flex !important;
     text-align: left;
@@ -39,5 +54,9 @@
 
   .experience {
     padding: 5% !important;
+  }
+
+  .social-input {
+    margin-top: 2% !important;
   }
 }

@@ -1,5 +1,11 @@
 @import '../../../styles/colors.scss';
 
+.edit-profile-btn {
+  color: white !important;
+  background-color: black !important;
+  margin-top: 5% !important;
+}
+
 .edit-profile-modal {
   .header {
     background-color: $primary !important;
@@ -17,10 +23,5 @@
   }
   .grey-text {
     color: grey;
-  }
-  .edit-profile-btn {
-    color: white !important;
-    background-color: black !important;
-    margin-top: 5% !important;
   }
 }

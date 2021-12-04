@@ -4,8 +4,9 @@ import { IPitch, IUser } from 'ssw-common';
 import { ColumnType } from '../..';
 import DynamicTable from '../DynamicTable';
 
-import './styles.scss';
 import { contributionColumns } from './utils';
+import './styles.scss';
+
 interface ContributionsProps {
   pitches: Partial<IPitch>[];
   user: IUser;

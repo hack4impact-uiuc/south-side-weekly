@@ -63,6 +63,14 @@ body {
   background-color: $recentlyActive !important;
 }
 
+.published-tag-color {
+  background-color: $published !important;
+}
+
+.in-progress-tag-color {
+  background-color: $inprogress !important;
+}
+
 .active-tag-color {
   background-color: $active !important;
 }
