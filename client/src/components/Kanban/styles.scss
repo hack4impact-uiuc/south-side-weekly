@@ -7,8 +7,6 @@
   font-family: Lato;
   font-style: normal;
   line-height: 25px;
-  height: 600px;
-  overflow-y: auto;
 
   .kanban-header {
     display: flex;
@@ -29,7 +27,8 @@
   .kanban-column {
     padding: 4px;
     width: 225px;
-    min-height: 500px;
+    height: 500px;
+    overflow-y: auto;
 
     &.dragging {
       background-color: lightgray !important;
