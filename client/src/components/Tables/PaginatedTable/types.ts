@@ -1,5 +1,5 @@
 import { DynamicColumn } from '../..';
-import { PaginationResponse, Response } from '../../../api/types';
+import { PaginationResponseBase, Response } from '../../../api/types';
 import { DynamicTableProps } from '../DynamicTable';
 
 type InvalidPaginatedDynamicTableProps = 'footer' | 'view' | 'onHeaderClick';
@@ -26,7 +26,7 @@ interface PaginationQueryArgs {
 
 type QueryFunction<RecordType> = (
   params: PaginationQueryArgs,
-) => Promise<Response<PaginationResponse<RecordType[]>>>;
+) => Promise<Response<PaginationResponseBase<RecordType[]>>>;
 
 export type {
   PaginatedColumn,

@@ -39,31 +39,37 @@ const PaginatedTable = <RecordType,>({
   const [totalPages, setTotalPages] = useState(1);
   const [records, setRecords] = useState<RecordType[]>([]);
 
-  useEffect(() => {
-    const queryRecords = async () => {
-      const res = await query(getParams());
-
-      if (isError(res)) {
-        // TODO: handle request error
-        return;
-      }
-
-      setRecords(res.data.result);
-      setTotalPages(res.data.totalPages);
-    };
-
-    queryRecords();
-  }, [recordsPerPage, sort]);
-
   const getParams = useCallback(
-    (): PaginationQueryArgs => ({
+    (page: number): PaginationQueryArgs => ({
       sortBy: sort ? [sort.column.key as string] : [],
       sortDirection: sort ? [sort.direction] : [],
-      page: [currentPage.toString()],
+      page: [page.toString()],
       limit: [recordsPerPage.toString()],
     }),
-    [currentPage, recordsPerPage, sort],
+    [recordsPerPage, sort],
   );
+
+  const queryRecords = useCallback(
+    (page: number) => {
+      const fetchRecords = async () => {
+        const res = await query(getParams(page));
+        if (isError(res)) {
+          // TODO: handle request error
+          return;
+        }
+
+        setRecords(res.data.result);
+        setTotalPages(res.data.totalPages);
+      };
+
+      return fetchRecords();
+    },
+    [getParams],
+  );
+
+  useEffect(() => {
+    queryRecords(currentPage);
+  }, [recordsPerPage, sort]);
 
   const handleColumnClick = (column: Column): Sort<Column> | undefined => {
     const sort: Sort<Column> = {
@@ -84,7 +90,7 @@ const PaginatedTable = <RecordType,>({
     _: any,
     { activePage }: PaginationProps,
   ): Promise<void> => {
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await queryRecords(activePage as number);
     setCurrentPage(activePage as number);
   };
 

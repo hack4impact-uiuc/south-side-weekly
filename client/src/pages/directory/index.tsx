@@ -9,8 +9,9 @@ import React, {
 } from 'react';
 import { Input, Tab } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
-
+import { Response } from '../../api/types';
 import { isError } from '../../api';
+import { PaginationResponseBase } from '../../api/types';
 import {
   getApprovedUsers,
   getDeniedUsers,
@@ -63,8 +64,12 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
   );
 
   const queryFunction = useCallback(
-    (params: PaginationQueryArgs) => {
-      const fetchResource = () => {
+    (
+      params: PaginationQueryArgs,
+    ): Promise<Response<PaginationResponseBase<IUser[]>>> => {
+      const fetchResource = (): Promise<
+        Response<PaginationResponseBase<IUser[]>>
+      > => {
         let query;
 
         if (status === 'approved') {
@@ -75,7 +80,9 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
           query = getDeniedUsers;
         }
 
-        return query({ ...params, ...getParams() });
+        return query({ ...params, ...getParams() }) as Promise<
+          Response<PaginationResponseBase<IUser[]>>
+        >;
       };
 
       return fetchResource();

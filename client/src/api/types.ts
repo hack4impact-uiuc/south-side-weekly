@@ -12,7 +12,7 @@ export interface ApiResponseBase {
   success: boolean;
 }
 
-export interface PaginationResponse<T> extends ApiResponseBase {
+export interface PaginationResponseBase<T> extends ApiResponseBase {
   result: T;
   totalPages: number;
 }
