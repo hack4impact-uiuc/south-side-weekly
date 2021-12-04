@@ -18,10 +18,20 @@
   font-family: Lato;
   font-style: normal;
   font-weight: normal;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 25px;
 
   .pitch-title {
     font-weight: 600;
+  }
+
+  .pitch-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left !important;
+    width: 100%;
+    position: relative;
+    right: 12px;
   }
 }
