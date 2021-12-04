@@ -15,6 +15,7 @@ interface SelectProps {
   ) => void;
   placeholder?: string;
   className?: string | undefined;
+  isClearable?: boolean;
 }
 
 const Select: FC<SelectProps> = ({
@@ -23,13 +24,14 @@ const Select: FC<SelectProps> = ({
   onChange,
   placeholder = '',
   className = undefined,
+  isClearable = true,
 }): ReactElement => (
   <ReactSelect<SelectOption>
     placeholder={placeholder}
     value={options.find((item) => value === item.value)}
     options={options}
     onChange={onChange}
-    isClearable
+    isClearable={isClearable}
     className={className}
   />
 );

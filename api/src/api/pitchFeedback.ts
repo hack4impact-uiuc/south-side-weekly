@@ -2,6 +2,8 @@ import express, { Request, Response } from 'express';
 import { errorWrap } from '../middleware';
 
 import PitchFeedback from '../models/pitchFeedback';
+import Pitch from '../models/pitch';
+import { issueStatusEnum } from '../utils/enums';
 
 const router = express.Router();
 
@@ -15,6 +17,30 @@ router.get(
       success: true,
       message: 'Feedback retrieved successfully',
       result: feedback,
+    });
+  }),
+);
+
+router.put(
+  '/updateMany',
+  errorWrap(async (req: Request, res: Response) => {
+    await Pitch.updateMany(
+      {},
+      {
+        $set: {
+          issueStatuses: [
+            {
+              issueId: '61994d0c0d49689661aaa182',
+              issueStatus: issueStatusEnum.DEFINITELY_IN,
+            },
+          ],
+        },
+      },
+    );
+    res.status(200).json({
+      success: true,
+      message: 'Feedback created successfully',
+      result: 'feedback',
     });
   }),
 );

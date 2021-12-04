@@ -1,7 +1,12 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { IPitch } from 'ssw-common';
 
-import { pitchStatusEnum, assignmentStatusEnum } from '../utils/enums';
+import {
+  pitchStatusEnum,
+  assignmentStatusEnum,
+  issueStatusEnum,
+  editStatusEnum,
+} from '../utils/enums';
 
 export type PitchSchema = IPitch & Document<any>;
 
@@ -31,6 +36,18 @@ const team = new mongoose.Schema(
   {
     teamId: { type: Schema.Types.ObjectId, ref: 'Team' },
     target: Number,
+  },
+  { _id: false },
+);
+
+const issueStatus = new mongoose.Schema(
+  {
+    issueId: { type: Schema.Types.ObjectId, ref: 'Issue' },
+    issueStatus: {
+      type: String,
+      enum: Object.values(issueStatusEnum),
+      default: issueStatusEnum.DEFINITELY_IN,
+    },
   },
   { _id: false },
 );
@@ -76,6 +93,12 @@ const Pitch = new mongoose.Schema(
     similarStories: [{ type: String, default: null }],
     deadline: { type: Date, default: null },
     neighborhoods: [{ type: String, default: null }],
+    issueStatuses: [issueStatus],
+    editStatus: {
+      type: String,
+      enum: Object.values(editStatusEnum),
+      default: editStatusEnum.WRITER_NEEDED,
+    },
   },
   { timestamps: true },
 );

@@ -80,6 +80,14 @@ body {
   background-color: $inactive !important;
 }
 
+.public-tag-color {
+  background-color: $public !important;
+}
+
+.private-tag-color {
+  background-color: $private !important;
+}
+
 .pending-tag-color,
 .pending-review-tag-color {
   background-color: $pending !important;
@@ -93,6 +101,29 @@ body {
 .declined-tag-color,
 .declined-review-tag-color {
   background-color: $declined !important;
+}
+
+.maybe-in-tag-color {
+  background-color: $maybeIn !important;
+}
+
+.definitely-in-tag-color {
+  background-color: $definitelyIn !important;
+}
+
+.in-edits-tag-color {
+  background-color: $inEdits !important;
+}
+
+.ready-to-publish-tag-color,
+.writer-on-story-tag-color {
+  background-color: $readyToPublish !important;
+}
+
+.push-tag-color,
+.writer-needed-tag-color,
+.primary-editor-needed-tag-color {
+  background-color: $push !important;
 }
 
 .default-btn {

@@ -11,6 +11,7 @@ export {
   declineUser,
 } from './user';
 export {
+  getPitchById,
   getApprovedPitches,
   updatePitch,
   submitPitchClaim,
@@ -37,6 +38,6 @@ export {
   createManyInterests,
   updateManyInterests,
 } from './interest';
-export { getIssues } from './issue';
+export { getIssues, createIssue, updateIssue, getNearestIssue } from './issue';
 export { getTeams, createManyTeams, updateManyTeams } from './teams';
 export { isError, buildLoginEndpoint, buildEndpoint } from './builders';

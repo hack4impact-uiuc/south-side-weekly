@@ -1,6 +1,6 @@
 import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
 
-import { wizardPages } from './enums';
+import { editStatusEnum, wizardPages } from './enums';
 import neighborhoods from './neighborhoods';
 
 const allGenders = ['Man', 'Woman', 'Nonbinary', 'Other'];
@@ -94,6 +94,8 @@ const emptyPitch: IPitch = {
   neighborhoods: [],
   createdAt: new Date(),
   updatedAt: new Date(),
+  issueStatuses: [],
+  editStatus: editStatusEnum.WRITER_NEEDED,
 };
 
 const emptyAggregatePitch: IPitchAggregate = {

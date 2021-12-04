@@ -54,6 +54,28 @@ const visibilityEnum = {
   PRIVATE: 'PRIVATE',
 };
 
+const issueStatusEnum = {
+  MAYBE_IN: 'MAYBE_IN',
+  DEFINITELY_IN: 'DEFINITELY_IN',
+  IN_EDITS: 'IN_EDITS',
+  READY_TO_PUBLISH: 'READY_TO_PUBLISH',
+  PUSH: 'PUSH',
+};
+
+const editStatusEnum = {
+  WRITER_NEEDED: 'Writer Needed',
+  FIRST_NEEDED: '1st Needed',
+  FIRST_IP: '1st In Progress',
+  SECONDS_NEEDED: '2nds Needed',
+  SECONDS_IP: '2nds In Progress',
+  FC_IP: 'Fact-Checking In Progress',
+  THIRDS_NEEDED: '3rds Needed',
+  THIRDS_IP: '3rds In Progress',
+  READY_TO_PUBLISH: 'Ready to Publish',
+  DROPPED: 'Dropped',
+  TRANSLATION_IP: 'Translation In Progress',
+};
+
 export {
   issueTypeEnum,
   rolesEnum,
@@ -63,4 +85,6 @@ export {
   pitchStatusEnum,
   assignmentStatusEnum,
   visibilityEnum,
+  issueStatusEnum,
+  editStatusEnum,
 };
