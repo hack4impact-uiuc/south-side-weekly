@@ -79,6 +79,7 @@ export interface IPitch {
   neighborhoods: string[];
   createdAt: Date;
   updatedAt: Date;
+  editStatus: string;
 }
 
 export interface IPitchAggregate extends IPitch {
