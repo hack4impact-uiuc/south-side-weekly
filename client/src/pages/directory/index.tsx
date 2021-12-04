@@ -25,6 +25,7 @@ import {
   Select,
   TeamsSelect,
   Walkthrough,
+  DeniedUsers,
 } from '../../components';
 import { PaginationQueryArgs } from '../../components/Tables/PaginatedTable/types';
 import { allRoles } from '../../utils/constants';
@@ -41,7 +42,7 @@ const searchFields: (keyof IUser)[] = [
 ];
 
 interface PaneWrapperProps {
-  status: 'approved' | 'pending';
+  status: 'approved' | 'pending' | 'denied';
 }
 
 const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
@@ -147,6 +148,16 @@ const panes = [
       return (
         <Tab.Pane>
           <PaneWrapper status="pending" />
+        </Tab.Pane>
+      );
+    },
+  },
+  {
+    menuItem: 'Rejected Users',
+    render: function show() {
+      return (
+        <Tab.Pane>
+          <PaneWrapper status="denied" />
         </Tab.Pane>
       );
     },

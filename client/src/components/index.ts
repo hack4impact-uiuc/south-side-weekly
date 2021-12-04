@@ -42,6 +42,7 @@ import ReviewUserModal from './Modals/ReviewUser';
 import { ApprovedUsers, PendingUsers } from './Tables';
 import { buildColumn } from './Tables/DynamicTable/util';
 import { buildPaginatedColumn } from './Tables/PaginatedTable/util';
+import ResourceTable from './Tables/Resource';
 
 export {
   Header,
@@ -71,6 +72,7 @@ export {
   MultiSelect,
   Select,
   // DirectoryTable,
+  ResourceTable,
   PitchTable,
   PitchRow,
   TableTool,
@@ -86,6 +88,7 @@ export {
   ApprovedUsers,
   PendingUsers,
   ApprovedView,
+  DeniedUsers,
   DynamicTable,
   buildColumn,
   buildPaginatedColumn,

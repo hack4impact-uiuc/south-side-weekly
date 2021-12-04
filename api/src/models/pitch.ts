@@ -1,7 +1,11 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { IPitch } from 'ssw-common';
 
-import { pitchStatusEnum, assignmentStatusEnum } from '../utils/enums';
+import {
+  pitchStatusEnum,
+  assignmentStatusEnum,
+  editStatusEnum,
+} from '../utils/enums';
 
 export type PitchSchema = IPitch & Document<any>;
 
@@ -76,6 +80,11 @@ const Pitch = new mongoose.Schema(
     similarStories: [{ type: String, default: null }],
     deadline: { type: Date, default: null },
     neighborhoods: [{ type: String, default: null }],
+    editStatus: {
+      type: String,
+      enum: Object.values(editStatusEnum),
+      default: editStatusEnum.WRITER_NEEDED,
+    },
   },
   { timestamps: true },
 );
