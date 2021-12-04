@@ -7,11 +7,15 @@ import { buildColumn } from '../../DynamicTable/util';
 import PaginatedTable from '../../PaginatedTable';
 import { QueryFunction } from '../../PaginatedTable/types';
 
-interface DeniedUserProp {
-  query: QueryFunction<IUser>;
+interface DeniedUserProps<QueryArgs> {
+  query: QueryFunction<IUser, QueryArgs>;
+  filterParams: QueryArgs;
 }
 
-const DeniedUsers: FC<DeniedUserProp> = ({ query }): ReactElement => {
+const DeniedUsers = <QueryArgs extends Record<string, string[]>>({
+  query,
+  filterParams,
+}: DeniedUserProps<QueryArgs>): ReactElement => {
   const rejectionReasoningColumn = buildColumn<IUser>({
     title: 'Rejection Reasoning',
     extractor: function RejectionReasoningText(user: IUser): ReactNode {
@@ -52,9 +56,10 @@ const DeniedUsers: FC<DeniedUserProp> = ({ query }): ReactElement => {
   return (
     <div className="table">
       <div className="directory">
-        <PaginatedTable
+        <PaginatedTable<IUser, QueryArgs>
           columns={columns}
           query={query}
+          params={filterParams}
           emptyMessage={'There are no denied users.'}
           getModal={(user, isOpen, setIsOpen) => (
             <ReviewUserModal

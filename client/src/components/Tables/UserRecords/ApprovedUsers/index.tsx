@@ -17,11 +17,15 @@ import {
   interestsColumnNoModal,
 } from '../utils';
 
-interface ApprovedUserProps {
-  query: QueryFunction<IUser>;
+interface ApprovedUserProps<QueryArgs> {
+  query: QueryFunction<IUser, QueryArgs>;
+  filterParams: QueryArgs;
 }
 
-const ApprovedUsers: FC<ApprovedUserProps> = ({ query }): ReactElement => {
+const ApprovedUsers = <QueryArgs extends Record<string, string[]>>({
+  query,
+  filterParams,
+}: ApprovedUserProps<QueryArgs>): ReactElement => {
   const { isContributor } = useAuth();
 
   const columns = [
@@ -38,9 +42,10 @@ const ApprovedUsers: FC<ApprovedUserProps> = ({ query }): ReactElement => {
   return (
     <div className="table">
       <div className="directory">
-        <PaginatedTable
+        <PaginatedTable<IUser, QueryArgs>
           columns={columns}
           query={query}
+          params={filterParams}
           emptyMessage={'There are no approved users.'}
         />
       </div>
