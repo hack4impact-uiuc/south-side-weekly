@@ -2,7 +2,7 @@ import { IUser } from 'ssw-common';
 import { difference, isArray } from 'lodash';
 import { Request } from 'express';
 import { isAdmin } from './auth-utils';
-import User from '../models/user';
+import User, { UserSchema } from '../models/user';
 import { Document, Query } from 'mongoose';
 
 type UserKeys = (keyof IUser)[];
@@ -19,6 +19,13 @@ const adminViewableFields: UserKeys = ['phone'];
 
 // Only Admin can edit these fields
 const adminEditableFields: UserKeys = ['teams', 'role', 'email', 'races'];
+
+const userSearchableFields: UserKeys = [
+  'firstName',
+  'preferredName',
+  'lastName',
+  'email',
+];
 
 /**
  * Gets the fields of another user the current user can view
@@ -102,10 +109,30 @@ const processPagination = <T extends Document<any>>(
   }
 };
 
+const searchUsers = (
+  req: Request,
+  query: Query<UserSchema[], UserSchema, Record<string, unknown>>,
+): void => {
+  if (req.query.search) {
+    const searchKey = req.query.search as string;
+    query.find({
+      $or: userSearchableFields.map((field) => {
+        const searchParam: Record<string, Record<string, string>> = {};
+        searchParam[field] = {
+          $regex: searchKey,
+          $options: 'i',
+        };
+        return searchParam;
+      }),
+    });
+  }
+};
+
 export {
   allFields,
   getEditableFields,
   getViewableFields,
   processPagination,
   processFilters,
+  searchUsers,
 };
