@@ -7,11 +7,7 @@ import React, {
 } from 'react';
 import { useParams } from 'react-router-dom';
 import { IPitch, IUser, IUserFeedback } from 'ssw-common';
-import {
-  Grid,
-  GridColumn,
-  Rating,
-} from 'semantic-ui-react';
+import { Grid, GridColumn, Rating } from 'semantic-ui-react';
 
 import { FieldTag, UserPicture } from '../../components';
 import {
