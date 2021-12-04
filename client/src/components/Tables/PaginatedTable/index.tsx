@@ -36,6 +36,7 @@ const PaginatedTable = <RecordType,>({
 
   const [sort, setSort] = useState<Sort<Column> | undefined>(initialSort);
 
+  const [totalPages, setTotalPages] = useState(1);
   const [records, setRecords] = useState<RecordType[]>([]);
 
   useEffect(() => {
@@ -48,6 +49,7 @@ const PaginatedTable = <RecordType,>({
       }
 
       setRecords(res.data.result);
+      setTotalPages(res.data.totalPages);
     };
 
     queryRecords();
@@ -101,7 +103,7 @@ const PaginatedTable = <RecordType,>({
       footer={
         <Table.HeaderCell>
           <Pagination
-            totalPages={1}
+            totalPages={totalPages}
             activePage={currentPage}
             onPageChange={handlePageChange}
           />
