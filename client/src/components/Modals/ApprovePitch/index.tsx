@@ -4,31 +4,34 @@ import {
   Button,
   Form,
   Grid,
+  Icon,
+  Label,
+  Message,
   Modal,
   ModalProps,
-  Message,
 } from 'semantic-ui-react';
-import { IIssue, IPitch, ITeam, IUser } from 'ssw-common';
+import { IPitch, ITeam, IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
 
 import {
   approvePitch,
   declinePitch,
   getAggregatedPitch,
-  getIssues,
   isError,
 } from '../../../api';
 import { getUsersByTeam } from '../../../api/user';
 import { LinkDisplay, MultiSelect, Select } from '../../../components';
 import { useAuth, useInterests, useTeams } from '../../../contexts';
+import { useIssues } from '../../../contexts/issues/context';
 import { neighborhoods } from '../../../utils/constants';
 import { rolesEnum } from '../../../utils/enums';
 import { classNames, getUserFullName } from '../../../utils/helpers';
 import FieldTag from '../../FieldTag';
 import { PitchRow } from '../../Tables/PitchDoc';
 import UserChip from '../../UserChip';
+import AddIssue from '../AddIssue';
 import './styles.scss';
- 
+
 interface ApprovePitchProps extends ModalProps {
   pitch: IPitch;
   callback(): void;
@@ -72,7 +75,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
 }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
   const [author, setAuthor] = useState<Partial<IUser>>({});
-  const [issues, setIssues] = useState<IIssue[]>([]);
+  //const [issues, setIssues] = useState<IIssue[]>([]);
   const [formData, setFormData] = useState<FormData>(defaultData);
   const [editors, setEditors] = useState<IUser[]>([]);
   const [writers, setWriters] = useState<IUser[]>([]);
@@ -81,6 +84,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   const { teams } = useTeams();
   const { getInterestById } = useInterests();
   const { user } = useAuth();
+  const { issues, fetchIssues } = useIssues();
 
   useEffect(() => {
     if (!isOpen) {
@@ -116,18 +120,9 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       }
     };
 
-    const fetchIssues = async (): Promise<void> => {
-      const res = await getIssues();
-
-      if (!isError(res)) {
-        setIssues(res.data.result);
-      }
-    };
-
     getEditors();
     getWriters();
     fetchAggregatedPitch();
-    fetchIssues();
 
     return () => {
       setAuthor({});
@@ -268,6 +263,76 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
 
   const filteredTeams = filterTeams();
 
+  const renderWriterEditorsSection = (): JSX.Element => (
+    <Form.Group inline>
+      <div className="writer-editors-section">
+        <div className="writer-column">
+          <p className="form-label">
+            Writer <mark className="optional">- Optional</mark>
+          </p>
+          <Select
+            value={formData.writer}
+            options={writers.map((writer) => ({
+              value: writer._id,
+              label: getUserFullName(writer),
+            }))}
+            onChange={(e) => changeField('writer', e ? e.value : '')}
+            placeholder="Select"
+          />
+        </div>
+
+        <div className="editors-column">
+          <p className="form-label">Editors</p>
+          <Select
+            value={formData.primaryEditor}
+            options={filterPrimaryEditors(editors).map((editor) => ({
+              value: editor._id,
+              label: getUserFullName(editor),
+            }))}
+            onChange={(e) => changeField('primaryEditor', e ? e.value : '')}
+            placeholder="Select Primary Editor"
+            className="editor-select"
+          />
+          <MultiSelect
+            options={filterSecondaryEditors(editors).map((editor) => ({
+              value: editor._id,
+              label: getUserFullName(editor),
+            }))}
+            placeholder="Select Secondary Editor - Optional"
+            onChange={(values) => {
+              if (values.length > 2) {
+                return;
+              }
+              changeField(
+                'secondEditors',
+                values.map(({ value }) => value),
+              );
+            }}
+            value={formData.secondEditors}
+            className="editor-select"
+          />
+          <MultiSelect
+            options={filterTertiaryEditors(editors).map((editor) => ({
+              value: editor._id,
+              label: getUserFullName(editor),
+            }))}
+            placeholder="Select Tertiary Editor - Optional"
+            onChange={(values) => {
+              if (values.length > 2) {
+                return;
+              }
+              changeField(
+                'thirdEditors',
+                values.map(({ value }) => value),
+              );
+            }}
+            value={formData.thirdEditors}
+          />
+        </div>
+      </div>
+    </Form.Group>
+  );
+
   return (
     <Modal
       {...rest}
@@ -296,34 +361,42 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
                 key={index}
                 name={interest?.name}
                 hexcode={interest?.color}
+                //size="small"
               />
             );
           })}
         </div>
         <p className="description">{pitch.description}</p>
-
-        <div className="pitch-author-section">
-          <span className="form-label">Pitch Creator:</span>
-          <UserChip user={author} />
-        </div>
-
         <Form>
-          <p className="form-label">Associated Neighborhoods</p>
-          <MultiSelect
-            options={neighborhoods.map((neighborhood) => ({
-              value: neighborhood,
-              label: neighborhood,
-            }))}
-            placeholder="Select Neighborhoods"
-            onChange={(values) =>
-              changeField(
-                'neighborhoods',
-                values.map(({ value }) => value),
-              )
-            }
-            value={formData.neighborhoods}
-            className="neighborhood-dropdown"
-          />
+          <Form.Group inline className="pitch-author-section">
+            <span className="form-label" id="row">
+              Pitch Creator:
+            </span>
+            <UserChip user={author} />
+          </Form.Group>
+
+          {renderWriterEditorsSection()}
+          <Form.Group inline>
+            <div style={{ width: '100%' }}>
+              <p className="form-label">Associated Neighborhoods</p>
+              <MultiSelect
+                options={neighborhoods.map((neighborhood) => ({
+                  value: neighborhood,
+                  label: neighborhood,
+                }))}
+                placeholder="Select Neighborhoods"
+                onChange={(values) =>
+                  changeField(
+                    'neighborhoods',
+                    values.map(({ value }) => value),
+                  )
+                }
+                value={formData.neighborhoods}
+                className="neighborhood-dropdown"
+              />
+            </div>
+          </Form.Group>
+
           <p className="form-label">Number of Contributors Needed Per Team </p>
           <Form.Group inline widths="equal" className="team-select-group">
             {filteredTeams.map((team, index) => (
@@ -342,14 +415,30 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
               </div>
             ))}
           </Form.Group>
-          <Grid columns={2} className="writer-editors-section">
-            <Grid.Column className="issue-column">
-              <p className="form-label">Issues</p>
-              <div className="issue-select-wrapper">
+          <Form.Group inline>
+            <div className="issues-section">
+              <div className="deadline-column">
+                <p className="form-label">Pitch Completion Deadline</p>
+                <Form.Input
+                  value={formatDate(formData.deadline)}
+                  className="prints-input"
+                  type="date"
+                  onChange={(e, { value }) =>
+                    changeField('deadline', new Date(value))
+                  }
+                />
+              </div>
+              <div className="issues-column">
+                <AddIssue callback={fetchIssues} />
+                <p className="form-label">
+                  Add Pitch to Issue(s){' '}
+                  <mark className="optional">- Optional</mark>
+                </p>
+
                 <MultiSelect
                   options={issues.map((issue) => ({
                     value: issue._id,
-                    label: issue.name,
+                    label: formatDate(issue.releaseDate),
                   }))}
                   placeholder="Select Issue(s)"
                   onChange={(values) => {
@@ -362,81 +451,8 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
                   className="issue-select"
                 />
               </div>
-            </Grid.Column>
-            <Grid.Column>
-              <p className="form-label">Deadline</p>
-              <Form.Input
-                value={formatDate(formData.deadline)}
-                className="prints-input"
-                type="date"
-                onChange={(e, { value }) =>
-                  changeField('deadline', new Date(value))
-                }
-              />
-            </Grid.Column>
-            <Grid.Column>
-              <p className="form-label">
-                Writer <mark className="optional">- Optional</mark>
-              </p>
-              <Select
-                value={formData.writer}
-                options={writers.map((writer) => ({
-                  value: writer._id,
-                  label: getUserFullName(writer),
-                }))}
-                onChange={(e) => changeField('writer', e ? e.value : '')}
-                placeholder="Select"
-              />
-            </Grid.Column>
-            <Grid.Column>
-              <p className="form-label">Editors</p>
-              <Select
-                value={formData.primaryEditor}
-                options={filterPrimaryEditors(editors).map((editor) => ({
-                  value: editor._id,
-                  label: getUserFullName(editor),
-                }))}
-                onChange={(e) => changeField('primaryEditor', e ? e.value : '')}
-                placeholder="Select Primary Editor"
-                className="editor-select"
-              />
-              <MultiSelect
-                options={filterSecondaryEditors(editors).map((editor) => ({
-                  value: editor._id,
-                  label: getUserFullName(editor),
-                }))}
-                placeholder="Select Secondary Editor - Optional"
-                onChange={(values) => {
-                  if (values.length > 2) {
-                    return;
-                  }
-                  changeField(
-                    'secondEditors',
-                    values.map(({ value }) => value),
-                  );
-                }}
-                value={formData.secondEditors}
-                className="editor-select"
-              />
-              <MultiSelect
-                options={filterTertiaryEditors(editors).map((editor) => ({
-                  value: editor._id,
-                  label: getUserFullName(editor),
-                }))}
-                placeholder="Select Tertiary Editor - Optional"
-                onChange={(values) => {
-                  if (values.length > 2) {
-                    return;
-                  }
-                  changeField(
-                    'thirdEditors',
-                    values.map(({ value }) => value),
-                  );
-                }}
-                value={formData.thirdEditors}
-              />
-            </Grid.Column>
-          </Grid>
+            </div>
+          </Form.Group>
           <p className="form-label">
             Reasoning <mark className="optional">- Optional</mark>
           </p>

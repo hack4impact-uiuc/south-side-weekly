@@ -14,6 +14,11 @@
     font-size: 0.92857143em !important;
     margin: 0 1rem 0.33571429rem 0 !important;
   }
+
+  #row {
+    margin-bottom: 0 !important;
+  }
+
   .title-section {
     display: flex;
     flex-direction: row;
@@ -30,6 +35,9 @@
   }
 
   .content {
+    .ui.form .fields {
+      margin: 0 0 1.5em !important;
+    }
     .pitch-author-section {
       margin-bottom: 1rem;
       flex-direction: row;
@@ -44,9 +52,9 @@
       margin-top: 0.33571429rem !important;
     }
 
-    .neighborhood-dropdown {
+    /* .neighborhood-dropdown {
       margin: 0 0 1em !important;
-    }
+    } */
 
     .team-select-group {
       .input-group {
@@ -78,33 +86,50 @@
         }
       }
     }
-    .format-deadline-section {
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-
-      .issue-format-section {
-        flex-direction: column;
-      }
-
-      .prints-input {
-        display: flex;
-        flex-direction: column;
-      }
-    }
 
     .writer-editors-section {
       width: 80% !important;
+      display: flex;
+      justify-content: row;
+      column-gap: 1em;
 
-      .issue-column {
-        align-items: flex-start !important;
-        flex-direction: column !important;
-        display: flex !important;
-        margin-left: 0 !important;
+      .writer-column {
+        width: 40%;
+      }
 
-        .issue-select-wrapper {
+      .editors-column {
+        width: 60%;
+      }
+    }
+
+    .issues-section {
+      width: 70% !important;
+      display: flex;
+      flex-direction: row;
+      column-gap: 1em;
+      justify-content: flex-start;
+
+      //background-color: red !important;
+
+      .deadline-column {
+        width: 40% !important;
+      }
+
+      .issues-column {
+        width: 60% !important;
+        position: relative;
+
+        .add-issue {
+          position: absolute;
+          right: 0;
+          padding-right: inherit;
+          background-color: transparent;
+          top: -0.33571429rem !important;
+          color: $secondaryColor;
+        }
+
+        .issue-select {
           width: 100% !important;
-          margin-bottom: 5px;
         }
       }
     }

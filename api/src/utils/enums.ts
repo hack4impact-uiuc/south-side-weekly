@@ -41,7 +41,7 @@ const assignmentStatusEnum = {
   IN_PROGRESS: 'IN_PROGRESS',
   COMPLETED: 'COMPLETED',
   ABANDONED: 'ABANDONED',
-  NONE: 'NONE',
+  UNCLAIMED: 'UNCLAIMED',
 };
 
 const issueTypeEnum = {

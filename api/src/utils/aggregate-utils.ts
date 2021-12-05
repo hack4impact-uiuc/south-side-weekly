@@ -34,8 +34,6 @@ const simplifyIssue = (issue: IIssue | null): IIssue => {
 
   return {
     _id: issue._id,
-    name: issue.name,
-    deadlineDate: issue.deadlineDate,
     releaseDate: issue.releaseDate,
     pitches: issue.pitches,
     type: issue.type,

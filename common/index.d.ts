@@ -140,9 +140,7 @@ export interface ITeam {
  */
 export interface IIssue {
   _id: string;
-  name: string;
-  deadlineDate: string;
-  releaseDate: string;
+  releaseDate: Date;
   pitches: string[];
   type: string;
 }

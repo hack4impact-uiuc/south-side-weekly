@@ -174,7 +174,7 @@ const updateUserField = <T extends keyof IUser>(
  */
 const getUserFullName = (user?: Partial<IUser>): string => {
   if (user === null || user === undefined) {
-    return '';
+    return 'null';
   }
 
   const firstName = user.preferredName ? user.preferredName : user.firstName;
@@ -189,9 +189,16 @@ const getUserFullName = (user?: Partial<IUser>): string => {
  * @param user the user to get the short name of
  * @returns the shortname of the user
  */
-const getUserShortName = (user: Partial<IUser>): string =>
-  `${user.preferredName || user.firstName} ${user.lastName?.slice(0, 1)}.`;
+const getUserShortName = (user?: Partial<IUser>): string => {
+  if (user === null || user === undefined) {
+    return 'null';
+  }
 
+  return `${user.preferredName || user.firstName} ${user.lastName?.slice(
+    0,
+    1,
+  )}.`;
+};
 /**
  * Gets the teams on a pitch that a user can claimed
  *
@@ -256,6 +263,11 @@ const titleCase = (str: string): string => startCase(camelCase(str));
  * A default void function to use as an initial function for contexts
  */
 const defaultFunc = (): void => void 0;
+
+/**
+ * A default async void function to use as an initial function for contexts
+ */
+const defaultAsyncFunc = (): Promise<void> => Promise.resolve();
 
 /**
  * Formats a number using libphonenumber-js into a US phone number
@@ -347,4 +359,5 @@ export {
   openProfile,
   pluralize,
   isPast,
+  defaultAsyncFunc,
 };

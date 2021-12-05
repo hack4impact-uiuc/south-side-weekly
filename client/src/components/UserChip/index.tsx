@@ -9,12 +9,12 @@ interface UserChipProps {
   user: Partial<IUser>;
 }
 
-const UserChip: FC<UserChipProps> = ({ user }) => {
-  const userProfileUrl = `/profile/${user._id}`;
+const UserChip: FC<UserChipProps> = ({ user = undefined }) => {
+  const userProfileUrl = `/profile/${user?._id}`;
   return (
     <a href={userProfileUrl}>
       <span className="user-chip-wrapper">
-        <img src={user.profilePic} alt={getUserFullName(user)} />
+        <img src={user?.profilePic} alt={getUserFullName(user)} />
         {getUserShortName(user)}
       </span>
     </a>

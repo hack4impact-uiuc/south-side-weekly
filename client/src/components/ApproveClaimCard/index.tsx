@@ -1,17 +1,9 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { NavLink } from 'react-router-dom';
-import {
-  Button,
-  Divider,
-  Form,
-  Header,
-  Icon,
-  Input,
-  Label,
-} from 'semantic-ui-react';
+import { Button, Divider, Icon, Input, Label } from 'semantic-ui-react';
 import { IPitchAggregate, ITeam, IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
-import { FieldTag, UserChip, Select, ContributorFeedback } from '..';
+
+import { ContributorFeedback, FieldTag, Select, UserChip } from '..';
 import { isError } from '../../api';
 import {
   addContributorToPitch,
@@ -22,10 +14,7 @@ import {
 } from '../../api/pitch';
 import { getUsersByTeam } from '../../api/user';
 import { useTeams } from '../../contexts';
-
-import { emptyUser, staffPages } from '../../utils/constants';
 import { getUserFullName, pluralize } from '../../utils/helpers';
-
 import './styles.scss';
 
 interface ApproveClaimCardProps {

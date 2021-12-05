@@ -1,20 +1,12 @@
-import { capitalize, lowerCase, pick, startCase, upperCase } from 'lodash';
+import { lowerCase, pick, startCase } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import {
-  Button,
-  Container,
-  Form,
-  Grid,
-  Icon,
-  Input,
-  Label,
-  TextArea,
-} from 'semantic-ui-react';
+import { Button, Form, Grid, Icon, Input, Label } from 'semantic-ui-react';
 import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
 
-import { FieldTag, LinkDisplay, MultiSelect, UserChip, Select } from '..';
+import { FieldTag, LinkDisplay, MultiSelect, Select, UserChip } from '..';
 import { updatePitch } from '../../api';
 import { useInterests } from '../../contexts';
+import { useIssues } from '../../contexts/issues/context';
 import { assignmentStatusEnum } from '../../utils/enums';
 import './styles.scss';
 
@@ -63,6 +55,7 @@ const ReviewClaimForm: FC<ReviewClaimFormProps> = ({
   const [editMode, setEditMode] = useState<boolean>(false);
 
   const { getInterestById, interests } = useInterests();
+  const { getIssueFromId, issues } = useIssues();
 
   useEffect(() => {
     setFormData(pick(aggregatedPitch, Object.keys(defaultData)) as FormData);
@@ -78,38 +71,8 @@ const ReviewClaimForm: FC<ReviewClaimFormProps> = ({
     setFormData(data);
   };
 
-  const isChecked = (issueFormat: string): boolean =>
-    formData.issues.some(({ format }) => format === issueFormat);
-
-  const changeIssue = (
-    issueType: string,
-    date: Date,
-    checkBox = true,
-  ): IPitch['issues'] => {
-    const issues = formData.issues;
-    const indexOfIssue = issues.findIndex(
-      (issue) => issue.format === issueType,
-    );
-    const notFoundIndex = -1;
-    if (indexOfIssue === notFoundIndex) {
-      issues.push({ format: issueType, publicationDate: date });
-    } else if (checkBox) {
-      issues.splice(indexOfIssue, 1);
-    } else {
-      issues[indexOfIssue].publicationDate = date;
-    }
-    const issuesCopy = [...issues];
-    return issuesCopy;
-  };
-
   const formatDate = (date: Date | undefined): string =>
     new Date(date || new Date()).toISOString().split('T')[0];
-
-  const findIssueDate = (issueFormat: string): string | undefined =>
-    formatDate(
-      formData.issues.find((issue) => issue.format === issueFormat)
-        ?.publicationDate,
-    );
 
   const handleSave = async (): Promise<void> => {
     setEditMode(false);
@@ -241,18 +204,17 @@ const ReviewClaimForm: FC<ReviewClaimFormProps> = ({
           </Form>
         )}
       </div>
-
       {!editMode ? (
         <div className="form-item">
           <Grid columns={2} className="writer-editors-section">
             <Grid.Column className="issue-format-column">
               <p className="form-label">Issue Format</p>
-              {formData.issues.map((issue, idx) => {
-                console.log('je');
+              {formData.issues.map((issueId, idx) => {
+                const issue = getIssueFromId(issueId)!;
                 return (
                   <p key={idx}>
-                    {`${startCase(lowerCase(issue.format))} - ${new Date(
-                      issue.publicationDate,
+                    {`${startCase(lowerCase(issue.type))} - ${new Date(
+                      issue.releaseDate,
                     ).toLocaleDateString('en-US')}`}
                   </p>
                 );
@@ -270,61 +232,7 @@ const ReviewClaimForm: FC<ReviewClaimFormProps> = ({
         <Grid columns={2} className="writer-editors-section">
           <Grid.Column className="issue-format-column">
             <p className="form-label">Issue Format</p>
-            <div className="issue-format-date-row">
-              <Form.Checkbox
-                label={'Print'}
-                value={'PRINT'}
-                checked={isChecked('PRINT')}
-                onChange={(_, { value }) =>
-                  changeField(
-                    'issues',
-                    changeIssue(`${value}`, new Date(), true),
-                  )
-                }
-                className="format-checkbox"
-              />
-              {isChecked('PRINT') && (
-                <Form.Input
-                  className="publication-date"
-                  placeholder="Publication Date"
-                  size="small"
-                  type="date"
-                  value={findIssueDate('PRINT')}
-                  onChange={(_, { value }) =>
-                    changeField(
-                      'issues',
-                      changeIssue('PRINT', new Date(value), false),
-                    )
-                  }
-                />
-              )}
-            </div>
-            <div className="issue-format-date-row">
-              <Form.Checkbox
-                label={'Online'}
-                value={'ONLINE'}
-                checked={isChecked('ONLINE')}
-                onChange={(_, { value }) =>
-                  changeField('issues', changeIssue(`${value}`, new Date()))
-                }
-                className="format-checkbox"
-              />
-              {isChecked('PRINT') && (
-                <Form.Input
-                  className="publication-date"
-                  placeholder="Publication Date"
-                  size="small"
-                  type="date"
-                  value={findIssueDate('ONLINE')}
-                  onChange={(_, { value }) =>
-                    changeField(
-                      'issues',
-                      changeIssue('ONLINE', new Date(value), false),
-                    )
-                  }
-                />
-              )}
-            </div>
+            <div className="issue-format-date-row"></div>
           </Grid.Column>
           <Grid.Column>
             <p className="form-label">Deadline</p>

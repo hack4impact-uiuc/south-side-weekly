@@ -65,7 +65,7 @@ const Pitch = new mongoose.Schema(
     assignmentStatus: {
       type: String,
       enum: Object.values(assignmentStatusEnum),
-      default: assignmentStatusEnum.NONE,
+      default: assignmentStatusEnum.UNCLAIMED,
     },
     assignmentGoogleDocLink: { type: String, default: null },
     assignmentContributors: [contributor],

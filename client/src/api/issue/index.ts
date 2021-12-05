@@ -1,7 +1,9 @@
-import { buildEndpoint, get } from '../builders';
+import { IIssue } from 'ssw-common';
+
+import { buildEndpoint, get, post } from '../builders';
 import { Response } from '../types';
 
-import { IssuesResponse } from './types';
+import { IssueResponse, IssuesResponse } from './types';
 
 const ISSUE_ENDPOINT = '/issues';
 
@@ -13,4 +15,13 @@ const getIssues = async (): Promise<Response<IssuesResponse>> => {
   return await get(url, failureMessage);
 };
 
-export { getIssues };
+const createIssue = async (
+  newIssue: Partial<IIssue>,
+): Promise<Response<IssueResponse>> => {
+  const url = buildEndpoint(ISSUE_ENDPOINT);
+  const failureMessage = 'CREATE_ISSUE_FAIL';
+
+  return await post(url, newIssue, failureMessage);
+};
+
+export { getIssues, createIssue };
