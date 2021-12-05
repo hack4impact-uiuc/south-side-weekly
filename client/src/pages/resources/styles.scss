@@ -1,6 +1,10 @@
 @import '../../styles/colors.scss';
 
 .resources-page {
+  .resource-page-header {
+    padding: 0px 2% 0px 2%;
+  }
+
   .controls {
     display: flex;
     align-items: center;

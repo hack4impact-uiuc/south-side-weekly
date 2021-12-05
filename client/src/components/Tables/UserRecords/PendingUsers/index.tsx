@@ -100,6 +100,7 @@ const PendingUsers: FC<PendingUserProps> = ({ users }): ReactElement => {
         <DynamicTable<IUser>
           view={view}
           singleLine={users.length > 0}
+          emptyMessage="No pending users!"
           getModal={(user, isOpen, setIsOpen) => (
             <ReviewUserModal
               user={user}

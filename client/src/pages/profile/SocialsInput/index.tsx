@@ -1,5 +1,5 @@
 import React, { ReactElement, FC } from 'react';
-import { Grid, Icon, Input, SemanticICONS } from 'semantic-ui-react';
+import { Icon, SemanticICONS } from 'semantic-ui-react';
 
 import './styles.scss';
 import { ISocialsInput } from './types';
@@ -7,8 +7,6 @@ import { ISocialsInput } from './types';
 const SocialsInput: FC<ISocialsInput> = ({
   icon,
   value,
-  disabled,
-  onChange,
   viewable,
 }): ReactElement => {
   /**
@@ -33,27 +31,11 @@ const SocialsInput: FC<ISocialsInput> = ({
   return (
     <>
       {viewable && (
-        <Grid className="social-input" columns="equal">
-          <Grid.Column className="col" width={2}>
-            <Icon size="big" name={icon} />
-          </Grid.Column>
-          <Grid.Column className="col">
-            {disabled ? (
-              <Input className="input" fluid transparent>
-                {linkify(icon, value)}
-              </Input>
-            ) : (
-              <Input
-                className="input"
-                fluid
-                disabled={disabled}
-                transparent
-                onChange={onChange}
-                value={value}
-              />
-            )}
-          </Grid.Column>
-        </Grid>
+        <div className="social-input">
+          <Icon size="small" name={icon} />
+
+          {linkify(icon, value)}
+        </div>
       )}
     </>
   );

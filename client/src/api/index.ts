@@ -1,6 +1,7 @@
 export { getCurrentUser, logout } from './auth';
 export {
   getUser,
+  getAggregatedUser,
   getUsers,
   updateUserClaimedPitches,
   updateUser,
@@ -8,7 +9,6 @@ export {
   updateOnboardingStatus,
   approveUser,
   declineUser,
-  getAggregatedUser,
 } from './user';
 export {
   getPitchById,

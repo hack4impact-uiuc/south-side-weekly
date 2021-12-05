@@ -1,6 +1,9 @@
 @import '../../styles/colors.scss';
 
 .pitch-doc-wrapper {
+  .pitch-doc-header {
+    padding: 0px 2% 0px 2%;
+  }
   .search-add-wrapper {
     position: relative;
     display: flex;
@@ -15,9 +18,26 @@
   }
 
   .tab-menu {
-    .active {
-      background-color: $primary !important;
-      color: white !important;
+    &.secondary.pointing.menu {
+      border-bottom: 0px;
+
+      .active.item {
+        border-bottom: 4px solid;
+        border-color: $secondaryColor;
+
+        &:hover {
+          border-bottom: 4px solid;
+          border-color: $secondaryColor;
+        }
+      }
+      .item {
+        border-bottom-width: auto;
+        padding-inline: 3em;
+
+        &.right {
+          padding-inline: 0px;
+        }
+      }
     }
   }
 

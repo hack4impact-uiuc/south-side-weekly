@@ -47,7 +47,7 @@ const Issues = (): ReactElement => {
 
   return (
     <div className="issue-page-wrapper">
-      <div className="header">
+      <div className="page-header-content header">
         <div className="issue-list-selector">
           <Icon
             disabled={viewIssueIndex === 0}

@@ -22,6 +22,8 @@ export interface IUser {
   linkedIn: string;
   twitter: string;
   involvementResponse: string;
+  journalismResponse: string;
+  neighborhood: string;
   claimedPitches: string[];
   submittedPitches: string[];
   submittedClaims: string[];
@@ -160,7 +162,7 @@ export interface IUserFeedback {
   userId: string;
   pitchId: string;
   stars: number;
-  reasnoning: string;
+  reasoning: string;
   createdAt: Date;
   updatedAt: Date;
 }
