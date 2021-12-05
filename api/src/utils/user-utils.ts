@@ -67,9 +67,24 @@ const processFilters = <T extends Document<any>>(
   query: Query<T[], T, Record<string, unknown>>,
 ): void => {
   type valueType = typeof req.query.value;
-  type queryFilter = Record<string, valueType | Record<string, valueType>>;
+  type queryFilter = Record<string, valueType | Record<string, valueType | Date>>;
   const filters: queryFilter = {};
+  if (req.query.activity) {
+    const activity = req.query.activity as string;
+    const now = new Date();
 
+    const ACTIVE_PERIOD = 3;
+    const ActiveCutoff = new Date(now.getUTCFullYear(), now.getUTCMonth() - ACTIVE_PERIOD - 1, now.getUTCDate());
+    const RecentlyActiveCutoff = new Date(now.getUTCFullYear()-1, now.getUTCMonth(), now.getUTCDate());
+    console.log(RecentlyActiveCutoff.toString());
+    if (activity === 'Active') {
+      query.find({lastActive: {$gte: ActiveCutoff}} as any);
+    } else if (activity === 'Recently Active') {
+      query.find({lastActive: {$gte: RecentlyActiveCutoff, $lt: ActiveCutoff}} as any);
+    } else {
+      query.find({lastActive: {$lt: RecentlyActiveCutoff}} as any);
+    }
+  }
   const queryParams = Object.keys(req.query).filter((key) =>
     allFields.includes(key),
   );
