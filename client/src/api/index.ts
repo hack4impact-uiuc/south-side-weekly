@@ -40,3 +40,5 @@ export {
 export { getIssues } from './issue';
 export { getTeams, createManyTeams, updateManyTeams } from './teams';
 export { isError, buildLoginEndpoint, buildEndpoint } from './builders';
+
+export { getPitchFeedback } from './pitchFeedback';

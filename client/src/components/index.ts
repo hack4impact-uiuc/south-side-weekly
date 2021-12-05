@@ -42,6 +42,7 @@ import {
 import ReviewUserModal from './Modals/ReviewUser';
 import { ApprovedUsers, PendingUsers, DeniedUsers } from './Tables';
 import ResourceTable from './Tables/Resource';
+import PitchFeedbackModal from './Modals/PitchFeedback';
 
 export {
   Header,
@@ -90,6 +91,7 @@ export {
   DeniedUsers,
   DynamicTable,
   buildColumn,
+  PitchFeedbackModal,
 };
 
 export type { View, ColumnType };

@@ -28,6 +28,7 @@ import {
   parseOptionsSelect,
   filterPitchesByInterests,
 } from '../../utils/helpers';
+import { PitchFeedbackModal } from '../../components';
 
 import { filterClaimStatus, filterTeams } from './helpers';
 
@@ -169,7 +170,10 @@ const PitchDoc = (): ReactElement => {
         content="The Pitch Doc is where you can claim, submit, and view pitches! Use the filters to find pitches you are interested in."
       />
       <h1>Pitch Doc</h1>
-
+      <PitchFeedbackModal
+        pitchId="618b04d5d5fddf23d0ebf4db"
+        trigger={<p>UWU</p>}
+      />
       <Menu className="tab-menu" tabular size="large">
         <Menu.Item
           name={pitchDocTabs.UNCLAIMED}

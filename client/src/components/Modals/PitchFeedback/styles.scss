@@ -1,0 +1,11 @@
+@import '../../../styles/colors.scss';
+
+.feedback-modal {
+  .header {
+    background-color: $primary !important;
+    color: white !important;
+    .icon {
+      float: right;
+    }
+  }
+}
