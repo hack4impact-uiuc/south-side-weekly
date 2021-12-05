@@ -20,6 +20,12 @@ export const onboardingStatusEnum = {
   ONBOARDING_SCHEDULED: 'ONBOARDING_SCHEDULED',
   STALLED: 'STALLED',
   ONBOARDED: 'ONBOARDED',
+  DENIED: 'DENIED',
+};
+
+export const issueTypeEnum = {
+  PRINT: 'PRINT',
+  ONLINE: 'ONLINE',
 };
 
 export const racesEnum = {
@@ -38,10 +44,18 @@ export const assignmentStatusEnum = {
   IN_PROGRESS: 'IN_PROGRESS',
   COMPLETED: 'COMPLETED',
   ABANDONED: 'ABANDONED',
+  UNCLAIMED: 'UNCLAIMED',
+};
+
+export const pitchStatusEnum = {
+  APPROVED: 'APPROVED',
+  PENDING: 'PENDING',
+  DECLINED: 'DECLINED',
   NONE: 'NONE',
 };
 
 export const pagesEnum = {
+  HOMEPAGE: 'HOMEPAGE',
   PITCHDOC: 'PITCHDOC',
   DIRECTORY: 'DIRECTORY',
   RESOURCES: 'RESOURCES',
@@ -66,4 +80,10 @@ export const wizardPages = {
 export const visibilityEnum = {
   PUBLIC: 'PUBLIC',
   PRIVATE: 'PRIVATE',
+};
+
+export const statusEnum = {
+  ACTIVE: 'Active',
+  RECENTLY_ACTIVE: 'Recently Active',
+  INACTIVE: 'Inactive',
 };

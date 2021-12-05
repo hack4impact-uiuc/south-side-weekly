@@ -3,6 +3,8 @@ import { camelCase, isUndefined, reject, startCase } from 'lodash';
 import { DropdownItemProps } from 'semantic-ui-react';
 import { IUser, IPitch } from 'ssw-common';
 
+import { pitchStatusEnum } from './enums';
+
 /**
  * Gets all of the teams associated with a pitch
  *
@@ -17,6 +19,133 @@ const getPitchTeams = (pitch: IPitch): string[] => {
     .map((team) => team.teamId);
 
   return teams;
+};
+
+/**
+ * Gets all of the teams a user is on for a given pitch
+ *
+ * @param pitch the pitch to check
+ * @param user the user to look at teams for
+ * @returns an array of all the team IDs belonging to the user or undefined if the user isn't on the pitch
+ */
+const getPitchTeamsForContributor = (
+  pitch: IPitch,
+  user: IUser,
+): string[] | undefined => {
+  type Contributor = IPitch['assignmentContributors'][0];
+  const isUser = (contributor: Contributor): boolean =>
+    contributor.userId === user._id;
+
+  const contributor =
+    pitch.assignmentContributors.find(isUser) ||
+    pitch.pendingContributors.find(isUser);
+
+  return contributor?.teams;
+};
+
+type PendingContributor = IPitch['pendingContributors'][0];
+/**
+ * Find a pending contributor on a pitch that matches a given user
+ *
+ * @param pitch the pitch to check
+ * @param user the user to match
+ * @returns the pending contributor object
+ */
+const findPendingContributor = (
+  pitch: IPitch,
+  user: IUser,
+): PendingContributor | undefined =>
+  pitch.pendingContributors.find(
+    (contributor) => contributor.userId === user._id,
+  );
+
+type AssignmentContributor = IPitch['assignmentContributors'][0];
+/**
+ * Find an assignment contributor on a pitch that matches a given user
+ *
+ * @param pitch the pitch to check
+ * @param user the user to match
+ * @returns the assignment contributor object
+ */
+const findAssignmentContributor = (
+  pitch: IPitch,
+  user: IUser,
+): AssignmentContributor | undefined =>
+  pitch.assignmentContributors.find(
+    (contributor) => contributor.userId === user._id,
+  );
+
+type PitchClaimStatus = typeof pitchStatusEnum[keyof typeof pitchStatusEnum];
+/**
+ * Gets a user's claim status for a pitch
+ *
+ * @param pitch the pitch
+ * @param user the user
+ * @returns the user's pitch claim status
+ */
+const getUserClaimStatusForPitch = (
+  pitch: IPitch,
+  user: IUser,
+): PitchClaimStatus => {
+  if (findAssignmentContributor(pitch, user)) {
+    return pitchStatusEnum.APPROVED;
+  }
+
+  const pendingContributor = findPendingContributor(pitch, user);
+  if (pendingContributor) {
+    return pendingContributor.status;
+  }
+
+  return pitchStatusEnum.DECLINED;
+};
+/**
+ * Filters a list of pitches by a list of interests
+ *
+ * Returns the pitches in the pitches list which have all of the interests contained in interests
+ *
+ * @param pitches the pitches to filter
+ * @param interests the interests to filter by
+ * @returns all the pitches which contain all the interests
+ */
+const filterPitchesByInterests = (
+  pitches: IPitch[],
+  interests: string[],
+): IPitch[] => {
+  if (interests.length === 0) {
+    return pitches;
+  }
+
+  return pitches.filter((pitch) =>
+    interests.every((interest) => pitch.topics.includes(interest)),
+  );
+};
+
+/**
+ * Sorts a list of pitches by their deadline
+ *
+ * @param pitches the list of pitches
+ * @param sort the sort direction
+ * @returns the sorted list of pitches
+ */
+const sortPitches = (
+  pitches: IPitch[],
+  sort: 'none' | 'increase' | 'decrease',
+): IPitch[] => {
+  if (sort === 'none') {
+    return pitches;
+  }
+
+  pitches.sort((a, b) => {
+    const first = new Date(a.deadline);
+    const second = new Date(b.deadline);
+    if (sort === 'increase') {
+      return first.getTime() - second.getTime();
+    }
+
+    return second.getTime() - first.getTime();
+  });
+
+  return pitches;
 };
 
 /**
@@ -62,6 +191,20 @@ const getUserFullName = (user?: Partial<IUser>): string => {
  */
 const getUserShortName = (user: Partial<IUser>): string =>
   `${user.preferredName || user.firstName} ${user.lastName?.slice(0, 1)}.`;
+
+/**
+ * Gets the teams on a pitch that a user can claimed
+ *
+ * @param pitch the pitch to check the teams for
+ * @param user the user to check the teams for
+ * @returns the teams that the user can claim
+ */
+const getClaimableTeams = (pitch: IPitch, user: IUser): string[] =>
+  pitch.writer
+    ? pitch.teams
+        .filter((team) => team.target > 0 && user.teams.includes(team.teamId))
+        .map((team) => team.teamId)
+    : [];
 
 /**
  * Parses an array of options into Semantic UI style Dropdown Items objects
@@ -173,11 +316,26 @@ const parseOptionsSelect = (options: string[]): SelectOption[] =>
 const pluralize = (word: string, numberOf: number): string =>
   word + (numberOf !== 1 ? 's' : '');
 
+/**
+ * Tests whether a date occurs in the past
+ *
+ * @param date the date to check
+ * @returns true if the date is in the past false if not
+ */
+const isPast = (date: Date): boolean => Date.now() - date.getTime() > 0;
+
 export {
   getPitchTeams,
+  getPitchTeamsForContributor,
+  findPendingContributor,
+  findAssignmentContributor,
+  getUserClaimStatusForPitch,
+  filterPitchesByInterests,
+  sortPitches,
   updateUserField,
   getUserFullName,
   getUserShortName,
+  getClaimableTeams,
   parseOptions,
   parseOptionsSelect,
   isPitchClaimed,
@@ -188,4 +346,5 @@ export {
   classNames,
   openProfile,
   pluralize,
+  isPast,
 };

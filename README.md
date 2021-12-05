@@ -17,6 +17,7 @@
   <a href="#usage">Usage</a> •
   <a href="#technologies">Technologies</a> •
   <a href="#team">Team</a> •
+  <a href="#setup">Setup</a> • 
   <a href="#license">License</a>
 </p>
 
@@ -30,7 +31,7 @@ The majority of The Weekly's staff are volunteers, with their main contributor b
 
 ## Usage
 
-The latest version of this application can be found at [south-side-weekly.vercel.app](https://south-side-weekly.vercel.app).
+The latest version of this application can be found at [ssw.h4i.app](https://ssw.h4i.app/).
 
 To install and set up locally, follow the instructions in the [`/client`](https://github.com/hack4impact-uiuc/mern_template/tree/main/client) and [`/api`](https://github.com/hack4impact-uiuc/mern_template/tree/main/api) directories.
 
@@ -61,6 +62,74 @@ This application is built with React + Semantic UI, Typescript, Express, MongoDB
     <td align="center"><a href="https://www.linkedin.com/in/ayan-mallik/"><img src="./photos/ayan-mallik.jpg" width="75px;" alt="Ayan Mallik"/><br /><b>Ayan Mallik</b></a><br /><sub>Software Developer</sub></td>
     </tr>
 </table>
+
+## Setup
+
+The following is a guide to run this repository. 
+
+<hr />
+
+### Prerequisites
+
+#### Software 
+
+- [Node.js](https://nodejs.org/en/download/)
+- [Git](https://git-scm.com/downloads)
+
+Install [yarn](https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable) 
+(_Node.js required_)
+
+```bash
+npm install --global yarn
+``` 
+<hr />
+
+### Cloning the repository
+
+Within a local directory of your choosing, please run either
+
+##### HTTP
+```bash
+git clone https://github.com/hack4impact-uiuc/south-side-weekly.git
+```
+##### SSH
+
+```bash
+git clone git@github.com:hack4impact-uiuc/south-side-weekly.git
+```
+_SSH will only work if your SSH keys are properly [setup](https://docs.github.com/en/enterprise-server@3.0/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)_.
+
+<hr />
+
+### Creating the `.env` 
+
+Create a file called `.env` [here](https://github.com/hack4impact-uiuc/south-side-weekly/tree/main/api), in the root of the api directory. 
+
+```
+PROD_MONGO_URL=
+DEV_MONGO_URL=
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_CALLBACK_URL=http://localhost:9000/api/auth/redirectURI
+SESS_SECRET=
+EMAIL_USERNAME=h4i.ssw@gmail.com
+EMAIL_PASS=
+FE_URI=http://localhost:3000
+```
+For any missing fields, please reach out to Amit.
+
+<hr />
+
+### Running the app
+
+#### Client
+
+In the [client](https://github.com/hack4impact-uiuc/south-side-weekly/tree/main/client) directory, follow the [`README.md`](https://github.com/hack4impact-uiuc/south-side-weekly/tree/main/client#readme) in the respective directory. 
+
+#### API
+In the [api](https://github.com/hack4impact-uiuc/south-side-weekly/tree/main/api) directory, follow the [`README.md`](https://github.com/hack4impact-uiuc/south-side-weekly/tree/main/api#readme) in the respective directory.
+
+<hr />
 
 ## License
 

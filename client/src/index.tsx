@@ -7,7 +7,6 @@ import {
   Route,
   Switch,
 } from 'react-router-dom';
-
 import 'semantic-ui-css/semantic.min.css';
 import { PrivateRoute, ProviderWrapper } from './components';
 import {
@@ -18,11 +17,16 @@ import {
   Profile,
   Resources,
 } from './pages';
+import Homepage from './pages/home';
 import ReviewClaim from './pages/reviewClaim';
 import './styles/styles.scss';
 import Wizard from './wizard';
 
 const routes = [
+  {
+    path: '/home',
+    component: Homepage,
+  },
   {
     path: '/users',
     component: Directory,

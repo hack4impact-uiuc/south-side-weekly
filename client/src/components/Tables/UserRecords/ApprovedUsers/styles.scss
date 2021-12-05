@@ -1,0 +1,9 @@
+.approved-users {
+  .open-user-button {
+    background: none !important;
+
+    &:hover {
+      background: none;
+    }
+  }
+}

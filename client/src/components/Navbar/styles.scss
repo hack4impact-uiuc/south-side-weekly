@@ -14,6 +14,11 @@
     margin-left: 20px !important;
   }
 
+  a.item:not(.header) {
+    justify-content: center;
+    width: 109px !important;
+  }
+
   .item {
     color: white !important;
     padding: 10px !important;

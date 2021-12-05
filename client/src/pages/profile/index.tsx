@@ -13,13 +13,13 @@ import {
 } from 'semantic-ui-react';
 import { startCase } from 'lodash';
 
+import { FieldTag, UserPicture } from '../../components';
 import {
   isError,
   getUser,
   updateUser,
   getUserPermissionsByID,
 } from '../../api';
-import { FieldTag, UserPicture } from '../../components';
 import Masthead from '../../assets/masthead.svg';
 import {
   allGenders,
@@ -246,7 +246,7 @@ const Profile = (): ReactElement => {
   };
 
   return (
-    <div className="profile-page">
+    <div>
       <Grid padded stackable>
         <Grid.Row columns={4}>
           <Grid.Column className="profile-pic-col">

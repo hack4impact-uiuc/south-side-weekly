@@ -9,7 +9,7 @@ import {
 import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
 
 import { FieldTag, PitchRow } from '../..';
-import { aggregatePitch, isError } from '../../../api';
+import { getAggregatedPitch, isError } from '../../../api';
 import { useTeams } from '../../../contexts';
 import { emptyAggregatePitch } from '../../../utils/constants';
 import RoleRow from '../RoleRow';
@@ -39,8 +39,12 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
     useState<GroupedContributors[]>();
 
   useEffect(() => {
+    if (!isOpen) {
+      return;
+    }
+
     const getAggregate = async (): Promise<void> => {
-      const res = await aggregatePitch(pitchId);
+      const res = await getAggregatedPitch(pitchId);
 
       if (!isError(res)) {
         const aggregatedPitch = res.data.result;
@@ -53,7 +57,7 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
       }
     };
     getAggregate();
-  }, [pitchId]);
+  }, [isOpen, pitchId]);
 
   function groupContributorsByTeam(
     assignmentContributors: IPitchAggregate['aggregated']['assignmentContributors'],

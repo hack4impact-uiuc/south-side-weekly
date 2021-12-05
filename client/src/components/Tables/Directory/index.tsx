@@ -2,10 +2,17 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Button, Icon, Table } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
-import { AdminView, FieldTag, UserModal, UserPicture, TableTool } from '../..';
+import { AdminView, FieldTag, TableTool, UserModal, UserPicture } from '../..';
 import { useInterests, useTeams } from '../../../contexts';
 import { getUserFullName } from '../../../utils/helpers';
 import { EditInterests, EditTeams } from '../../Modals/EditableTags';
+import {
+  activitySort,
+  fullNameSort,
+  joinedSort,
+  onboardingSort,
+  roleSort,
+} from '../Util/TableUtil';
 
 import './styles.scss';
 
@@ -32,28 +39,6 @@ const ONBOARDING_WIDTH = 2;
 const ACTIVITY_WIDTH = 1;
 const JOINED_WIDTH = 1;
 const EDITED_WIDTH = 1;
-
-const fullNameSort = (a: IUser, b: IUser): number => {
-  const aFullName = getUserFullName(a);
-  const bFullName = getUserFullName(b);
-
-  return aFullName.localeCompare(bFullName);
-};
-
-const roleSort = (a: IUser, b: IUser): number => a.role.localeCompare(b.role);
-
-const onboardingSort = (a: IUser, b: IUser): number =>
-  a.onboardingStatus.localeCompare(b.onboardingStatus);
-
-// @todo - implement acitivty
-const activitySort = (a: IUser, b: IUser): number => roleSort(a, b);
-
-const joinedSort = (a: IUser, b: IUser): number => {
-  const first = new Date(a.dateJoined);
-  const second = new Date(b.dateJoined);
-
-  return first.getTime() - second.getTime();
-};
 
 interface ColumnEnumValue {
   title: string;

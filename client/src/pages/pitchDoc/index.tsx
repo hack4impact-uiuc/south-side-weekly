@@ -1,5 +1,5 @@
 import { isEqual, startsWith, toLower, toString } from 'lodash';
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { Input, Menu } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
 
@@ -23,9 +23,13 @@ import {
 import { useAuth } from '../../contexts';
 import { pitchDocTabs } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
-import { parseOptionsSelect } from '../../utils/helpers';
+import {
+  getClaimableTeams,
+  parseOptionsSelect,
+  filterPitchesByInterests,
+} from '../../utils/helpers';
 
-import { filterInterests, filterClaimStatus, filterTeams } from './helpers';
+import { filterClaimStatus, filterTeams } from './helpers';
 
 import './styles.scss';
 
@@ -46,25 +50,29 @@ const PitchDoc = (): ReactElement => {
   const [teams, setTeams] = useState<string[]>([]);
   const [query, setQuery] = useState('');
 
-  const { isAdmin, isStaff } = useAuth();
+  const { user, isAdmin, isStaff } = useAuth();
 
   const getApproved = async (): Promise<void> => {
     const res = await getApprovedPitches();
-    console.log(res);
     if (!isError(res)) {
       setApproved(res.data.result);
     }
   };
 
-  const getUnclaimed = async (): Promise<void> => {
+  const getUnclaimed = useCallback(async (): Promise<void> => {
     const res = await getUnclaimedPitches();
 
     if (!isError(res)) {
-      setUnclaimed(res.data.result);
-      setCurrentPitches(res.data.result);
-      setFilteredPitches(res.data.result);
+      const unclaimedPitches = res.data.result;
+      const claimablePitches = unclaimedPitches.filter(
+        (pitch: IPitch) => getClaimableTeams(pitch, user).length > 0,
+      );
+
+      setUnclaimed(claimablePitches);
+      setCurrentPitches(claimablePitches);
+      setFilteredPitches(claimablePitches);
     }
-  };
+  }, [user]);
 
   const getPendingApprovals = async (): Promise<void> => {
     const res = await getPitchesPendingApproval();
@@ -103,7 +111,7 @@ const PitchDoc = (): ReactElement => {
       setFilteredPitches([]);
       setCurrentPitches([]);
     };
-  }, [isAdmin, isStaff]);
+  }, [isAdmin, isStaff, getUnclaimed]);
 
   useEffect(() => {
     const search = (pitches: IPitch[]): IPitch[] => {
@@ -121,7 +129,7 @@ const PitchDoc = (): ReactElement => {
     };
 
     const filter = (pitches: IPitch[]): IPitch[] => {
-      let filtered = filterInterests(pitches, interests);
+      let filtered = filterPitchesByInterests(pitches, interests);
       filtered = filterClaimStatus(filtered, claimStatus);
       filtered = filterTeams(filtered, teams);
 
@@ -175,20 +183,20 @@ const PitchDoc = (): ReactElement => {
           onClick={(e, { name }) => setCurrentTab(name!)}
         />
 
-        <StaffView>
+        <AdminView>
           <Menu.Item
             name={pitchDocTabs.PITCH_APPROVAL}
             active={pitchDocTabs.PITCH_APPROVAL === currentTab}
             onClick={(e, { name }) => setCurrentTab(name!)}
           />
-        </StaffView>
-        <AdminView>
+        </AdminView>
+        <StaffView>
           <Menu.Item
             name={pitchDocTabs.CLAIM_APPROVAL}
             active={pitchDocTabs.CLAIM_APPROVAL === currentTab}
             onClick={(e, { name }) => setCurrentTab(name!)}
           />
-        </AdminView>
+        </StaffView>
       </Menu>
       <div className="search-add-wrapper">
         <Input

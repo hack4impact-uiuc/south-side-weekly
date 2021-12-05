@@ -21,6 +21,7 @@ const onboardingStatusEnum = {
   ONBOARDING_SCHEDULED: 'ONBOARDING_SCHEDULED',
   STALLED: 'STALLED',
   ONBOARDED: 'ONBOARDED',
+  DENIED: 'DENIED',
 };
 
 const pagesEnum = {
@@ -32,7 +33,7 @@ const pagesEnum = {
 const pitchStatusEnum = {
   APPROVED: 'APPROVED',
   PENDING: 'PENDING',
-  REJECTED: 'REJECTED',
+  DECLINED: 'DECLINED',
   NONE: 'NONE',
 };
 
@@ -43,7 +44,7 @@ const assignmentStatusEnum = {
   NONE: 'NONE',
 };
 
-const issueFormatEnum = {
+const issueTypeEnum = {
   PRINT: 'PRINT',
   ONLINE: 'ONLINE',
 };
@@ -54,7 +55,7 @@ const visibilityEnum = {
 };
 
 export {
-  issueFormatEnum,
+  issueTypeEnum,
   rolesEnum,
   racesEnum,
   onboardingStatusEnum,

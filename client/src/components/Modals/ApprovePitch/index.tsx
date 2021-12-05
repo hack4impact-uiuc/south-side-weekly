@@ -1,18 +1,26 @@
 import { isEmpty } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Button, Form, Grid, Modal, ModalProps } from 'semantic-ui-react';
-import { IPitch, ITeam, IUser } from 'ssw-common';
+import {
+  Button,
+  Form,
+  Grid,
+  Modal,
+  ModalProps,
+  Message,
+} from 'semantic-ui-react';
+import { IIssue, IPitch, ITeam, IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
 
 import {
   approvePitch,
   declinePitch,
   getAggregatedPitch,
+  getIssues,
   isError,
 } from '../../../api';
 import { getUsersByTeam } from '../../../api/user';
 import { LinkDisplay, MultiSelect, Select } from '../../../components';
-import { useInterests, useTeams } from '../../../contexts';
+import { useAuth, useInterests, useTeams } from '../../../contexts';
 import { neighborhoods } from '../../../utils/constants';
 import { rolesEnum } from '../../../utils/enums';
 import { classNames, getUserFullName } from '../../../utils/helpers';
@@ -64,6 +72,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
 }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
   const [author, setAuthor] = useState<Partial<IUser>>({});
+  const [issues, setIssues] = useState<IIssue[]>([]);
   const [formData, setFormData] = useState<FormData>(defaultData);
   const [editors, setEditors] = useState<IUser[]>([]);
   const [writers, setWriters] = useState<IUser[]>([]);
@@ -71,6 +80,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
 
   const { teams } = useTeams();
   const { getInterestById } = useInterests();
+  const { user } = useAuth();
 
   useEffect(() => {
     if (!isOpen) {
@@ -106,9 +116,18 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       }
     };
 
+    const fetchIssues = async (): Promise<void> => {
+      const res = await getIssues();
+
+      if (!isError(res)) {
+        setIssues(res.data.result);
+      }
+    };
+
     getEditors();
     getWriters();
     fetchAggregatedPitch();
+    fetchIssues();
 
     return () => {
       setAuthor({});
@@ -140,34 +159,12 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
     return teamMapCopy;
   };
 
-  const changeIssue = (
-    issueType: string,
-    date: Date,
-    checkBox = true,
-  ): IPitch['issues'] => {
-    const issues = formData.issues;
-    const indexOfIssue = issues.findIndex(
-      (issue) => issue.format === issueType,
-    );
-    const notFoundIndex = -1;
-    if (indexOfIssue === notFoundIndex) {
-      issues.push({ format: issueType, publicationDate: date });
-    } else if (checkBox) {
-      issues.splice(indexOfIssue, 1);
-    } else {
-      issues[indexOfIssue].publicationDate = date;
-    }
-    const issuesCopy = [...issues];
-    return issuesCopy;
-  };
-
   const changeField = <T extends keyof FormData>(
     key: T,
     value: FormData[T],
   ): void => {
     const data = { ...formData };
     data[key] = value;
-    console.log(data);
     setFormData(data);
   };
 
@@ -182,6 +179,9 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   };
 
   const handleApprove = async (): Promise<void> => {
+    if (user._id === author._id) {
+      return;
+    }
     const validForm = formData.teams.length > 0;
 
     if (!validForm) {
@@ -216,6 +216,9 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   };
 
   const handleDecline = async (): Promise<void> => {
+    if (user._id === author._id) {
+      return;
+    }
     const res = await declinePitch(pitch._id);
 
     if (!isError(res)) {
@@ -257,17 +260,9 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
         !formData.secondEditors.includes(user._id),
     );
 
-  const isChecked = (issueFormat: string): boolean =>
-    formData.issues.some(({ format }) => format === issueFormat);
-
   const formatDate = (date: Date | undefined): string =>
     new Date(date || new Date()).toISOString().split('T')[0];
 
-  const findIssueDate = (issueFormat: string): string | undefined =>
-    formatDate(
-      formData.issues.find((issue) => issue.format === issueFormat)
-        ?.publicationDate,
-    );
   const filterTeams = (): ITeam[] =>
     teams.filter((team) => team.name !== 'Writing' && team.name !== 'Editing');
 
@@ -282,8 +277,12 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       trigger={<PitchRow pitch={pitch} />}
       className={classNames('approve-pitch-modal', rest.className)}
     >
-      <Modal.Header content="Review Pitch" />
-      <Modal.Content scrolling className="content">
+      <Modal.Header className="review-pitch-header" content="Review Pitch" />
+
+      <Modal.Content scrolling className="review-pitch-content">
+        {user._id === author._id && (
+          <Message warning header="You can't approve your own pitch." />
+        )}
         <div className="title-section">
           <h2 className="title">{pitch.title}</h2>
           <LinkDisplay href={pitch.assignmentGoogleDocLink} />
@@ -344,62 +343,24 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
             ))}
           </Form.Group>
           <Grid columns={2} className="writer-editors-section">
-            <Grid.Column className="issue-format-column">
-              <p className="form-label">Issue Format</p>
-              <div className="issue-format-date-row">
-                <Form.Checkbox
-                  label={'Print'}
-                  value={'Print'}
-                  checked={isChecked('Print')}
-                  onChange={(_, { value }) =>
+            <Grid.Column className="issue-column">
+              <p className="form-label">Issues</p>
+              <div className="issue-select-wrapper">
+                <MultiSelect
+                  options={issues.map((issue) => ({
+                    value: issue._id,
+                    label: issue.name,
+                  }))}
+                  placeholder="Select Issue(s)"
+                  onChange={(values) => {
                     changeField(
                       'issues',
-                      changeIssue(`${value}`, new Date(), true),
-                    )
-                  }
-                  className="format-checkbox"
+                      values.map((value) => value.value),
+                    );
+                  }}
+                  value={formData.issues}
+                  className="issue-select"
                 />
-                {isChecked('Print') && (
-                  <Form.Input
-                    className="publication-date"
-                    placeholder="Publication Date"
-                    size="small"
-                    type="date"
-                    value={findIssueDate('Print')}
-                    onChange={(_, { value }) =>
-                      changeField(
-                        'issues',
-                        changeIssue('Print', new Date(value), false),
-                      )
-                    }
-                  />
-                )}
-              </div>
-              <div className="issue-format-date-row">
-                <Form.Checkbox
-                  label={'Online'}
-                  value={'Online'}
-                  checked={isChecked('Online')}
-                  onChange={(_, { value }) =>
-                    changeField('issues', changeIssue(`${value}`, new Date()))
-                  }
-                  className="format-checkbox"
-                />
-                {isChecked('Online') && (
-                  <Form.Input
-                    className="publication-date"
-                    placeholder="Publication Date"
-                    size="small"
-                    type="date"
-                    value={findIssueDate('Online')}
-                    onChange={(_, { value }) =>
-                      changeField(
-                        'issues',
-                        changeIssue('Online', new Date(value), false),
-                      )
-                    }
-                  />
-                )}
               </div>
             </Grid.Column>
             <Grid.Column>
@@ -482,8 +443,18 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
           <Form.Input fluid onChange={(e, { value }) => setReasoning(value)} />
         </Form>
         <Modal.Actions>
-          <Button onClick={handleApprove} content="Approve" positive />
-          <Button onClick={handleDecline} content="Decline" negative />
+          <Button
+            disabled={user._id === author._id}
+            onClick={handleApprove}
+            content="Approve"
+            positive
+          />
+          <Button
+            disabled={user._id === author._id}
+            onClick={handleDecline}
+            content="Decline"
+            negative
+          />
         </Modal.Actions>
       </Modal.Content>
     </Modal>

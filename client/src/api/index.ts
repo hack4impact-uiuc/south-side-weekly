@@ -6,12 +6,14 @@ export {
   updateUser,
   getUserPermissionsByID,
   updateOnboardingStatus,
+  approveUser,
+  declineUser,
+  getAggregatedUser,
 } from './user';
 export {
   getApprovedPitches,
   updatePitch,
   submitPitchClaim,
-  aggregatePitch,
   getPitchesPendingApproval,
   getUnclaimedPitches,
   getPendingContributorPitches,
@@ -35,5 +37,6 @@ export {
   createManyInterests,
   updateManyInterests,
 } from './interest';
+export { getIssues } from './issue';
 export { getTeams, createManyTeams, updateManyTeams } from './teams';
-export { isError, buildURI } from './builders';
+export { isError, buildLoginEndpoint, buildEndpoint } from './builders';

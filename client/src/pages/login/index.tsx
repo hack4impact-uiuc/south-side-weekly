@@ -1,18 +1,13 @@
 import React, { ReactElement } from 'react';
 import { useLocation, Redirect } from 'react-router-dom';
-import { Button, Card } from 'semantic-ui-react';
+import { Card } from 'semantic-ui-react';
 
-import { buildURI } from '../../api';
-import { FRONTEND_BASE_URL } from '../../api/urls';
+import { buildLoginEndpoint } from '../../api';
 import { useAuth } from '../../contexts';
 import './styles.scss';
 
 const LOGIN_FAILURE_QUERY_PARAM = 'failure';
-const LOGIN_URL = buildURI(
-  'auth/login',
-  `${FRONTEND_BASE_URL}/login`,
-  `${FRONTEND_BASE_URL}/login?${LOGIN_FAILURE_QUERY_PARAM}=1`,
-);
+const LOGIN_URL = buildLoginEndpoint('auth/login');
 
 const Login = (): ReactElement => {
   const { isLoading, isAuthenticated, isRegistered } = useAuth();
@@ -20,8 +15,6 @@ const Login = (): ReactElement => {
   const loginFailed = new URLSearchParams(useLocation().search).get(
     LOGIN_FAILURE_QUERY_PARAM,
   );
-
-  const login = (): Window => window.open(LOGIN_URL, '_self')!;
 
   if (!isLoading && isAuthenticated) {
     const path = isRegistered ? '/resources' : '/join';
@@ -39,9 +32,9 @@ const Login = (): ReactElement => {
             </h1>
           </Card.Header>
           <Card.Content>
-            <Button disabled={isLoading} onClick={login} className="btn">
+            <a href={LOGIN_URL} className="btn">
               Continue with Google
-            </Button>
+            </a>
           </Card.Content>
         </Card>
       </div>

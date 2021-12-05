@@ -1,0 +1,49 @@
+@import '../../../../styles/colors.scss';
+
+tbody {
+  display: block;
+  height: max-content;
+  max-height: 60vh;
+  overflow: auto;
+
+  .edit-button {
+    padding: 5px;
+    margin-left: 10px !important;
+    color: white !important;
+    background-color: $secondaryColor !important;
+  }
+
+  .actions {
+    display: flex;
+    float: right;
+  }
+
+  .picture-col {
+    #user-picture {
+      width: 25px;
+      margin: auto;
+    }
+  }
+
+  .name-col {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    #name-text {
+      margin-left: 8px;
+    }
+  }
+
+  .no-results-found {
+    padding: 50px;
+  }
+
+  .open-user-button {
+    background: none !important;
+
+    &:hover {
+      background: none;
+    }
+  }
+}

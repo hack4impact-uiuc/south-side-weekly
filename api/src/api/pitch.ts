@@ -187,6 +187,7 @@ router.post(
       $addToSet: {
         submittedPitches: newPitch._id,
       },
+      lastActive: new Date(),
     });
 
     if (newPitch) {
@@ -279,8 +280,8 @@ router.put(
       return;
     }
 
-    const author = await User.findById(pitch.author);
-    const message = approvedMessage(author, pitch, req.user);
+    const aggregatedPitch = await aggregatePitch(pitch);
+    const message = approvedMessage(aggregatedPitch, req.user);
     await sendMail(message);
     res.status(200).json({
       success: true,
@@ -297,10 +298,10 @@ router.put(
   errorWrap(async (req: Request, res: Response) => {
     const pitch = await Pitch.findByIdAndUpdate(req.params.pitchId, {
       $set: {
-        status: pitchStatusEnum.REJECTED,
+        status: pitchStatusEnum.DECLINED,
         reviewedBy: req.user._id,
       },
-    });
+    }).lean();
 
     if (!pitch) {
       res.status(404).json({
@@ -309,8 +310,8 @@ router.put(
       });
       return;
     }
-    const author = await User.findById(pitch.author);
-    const message = declinedMessage(author, pitch, req.user);
+    const aggregatedPitch = await aggregatePitch(pitch);
+    const message = declinedMessage(aggregatedPitch, req.user);
     await sendMail(message);
     res.status(200).json({
       success: true,
@@ -343,11 +344,19 @@ router.put(
             userId: req.body.userId,
             teams: req.body.teams,
             message: req.body.message,
+            dateSubmitted: new Date(),
+            status: pitchStatusEnum.PENDING,
           },
         },
       },
       { new: true, runValidators: true },
     );
+
+    await User.findByIdAndUpdate(user._id, {
+      $addToSet: {
+        submittedClaims: updatedPitch._id,
+      },
+    });
 
     if (!updatedPitch) {
       res.status(404).json({
@@ -399,6 +408,9 @@ router.put(
         $addToSet: {
           claimedPitches: req.params.pitchId,
         },
+        $pull: {
+          submittedClaims: req.params.pitchId,
+        },
       },
       { returnOriginal: false },
     );
@@ -416,15 +428,11 @@ router.put(
       });
       return;
     }
-    const claimUser = await User.findById(userId);
     const aggregatedPitch = await aggregatePitch(pitch);
-    const message = await approveClaim(
-      claimUser,
-      aggregatedPitch,
-      req.user,
-      teams,
-    );
+
+    const message = await approveClaim(user, aggregatedPitch, req.user);
     sendMail(message);
+
     res.status(200).json({
       success: true,
       message: 'Successfully approved claim',
@@ -592,6 +600,9 @@ router.put(
       {
         $pull: {
           'pendingContributors.$.teams': teamId,
+        },
+        $set: {
+          'pendingContributors.$.status': pitchStatusEnum.DECLINED,
         },
       },
       { new: true, runValidators: true },

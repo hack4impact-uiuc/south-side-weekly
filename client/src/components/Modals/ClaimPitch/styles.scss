@@ -55,6 +55,11 @@
         gap: 10px 50px;
       }
 
+      .contributor-chip-list {
+        display: flex;
+        gap: 10px;
+      }
+
       > *:not(summary) {
         margin-left: 15px;
       }
@@ -94,6 +99,10 @@
         align-items: center;
         gap: 10px;
       }
+    }
+
+    .message-field {
+      width: 100%;
     }
 
     .contributors-section {
