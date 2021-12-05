@@ -8,8 +8,6 @@ import {
   getEditableFields,
   getViewableFields,
   searchUsers,
-  processFilters,
-  processPagination,
 } from '../utils/user-utils';
 import {
   requireAdmin,
@@ -22,6 +20,7 @@ import timezone from '../middleware/timezone';
 
 import { approveUser, declineUser } from '../utils/mailer-templates';
 import { sendMail } from '../utils/mailer';
+import { processFilters, processPagination } from '../utils/pagination';
 
 const router = express.Router();
 

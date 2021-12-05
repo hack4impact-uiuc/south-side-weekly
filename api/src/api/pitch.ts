@@ -18,7 +18,7 @@ import {
   approveClaim,
   declineClaim,
 } from '../utils/mailer-templates';
-import { processFilters, processPagination } from '../utils/user-utils';
+import { processFilters, processPagination } from '../utils/pagination';
 
 const router = express.Router();
 

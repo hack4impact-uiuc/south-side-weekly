@@ -2,7 +2,7 @@ import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { Pagination, PaginationProps, Table } from 'semantic-ui-react';
 
 import { isError } from '../../../api';
-import Select from '../../Dropdowns/Select';
+import TableFooter from './TableFooter';
 import DynamicTable from '../DynamicTable';
 import { Sort } from '../DynamicTable/types';
 
@@ -15,40 +15,52 @@ import {
 
 import './styles.scss';
 
-interface PaginatedTableProps<RecordType>
+interface PaginatedTableProps<RecordType, QueryArgs>
   extends UseableDynamicTableProps<RecordType, PaginatedColumn<RecordType>> {
   columns: PaginatedColumn<RecordType>[];
-  query: QueryFunction<RecordType>;
+  params: QueryArgs;
+  query: QueryFunction<RecordType, QueryArgs>;
   initialSort?: Sort<PaginatedColumn<RecordType>>;
 }
 
-const recordsPerPageOptions = [10, 5 * 5, 50, 100];
+// eslint-disable-next-line @typescript-eslint/no-magic-numbers
+const recordsPerPageOptions = [10, 25, 50, 100];
 const inititalRecordsPerPage = recordsPerPageOptions[1];
+const recordsPerPageSelectOptions = recordsPerPageOptions.map((option) => ({
+  label: option.toString(),
+  value: option,
+}));
 
-const PaginatedTable = <RecordType,>({
+const PaginatedTable = <
+  RecordType,
+  QueryArgs extends Record<string, string[]> = Record<string, string[]>,
+>({
   columns,
+  params,
   query,
   initialSort,
   ...dynamicTableProps
-}: PaginatedTableProps<RecordType>): ReactElement => {
+}: PaginatedTableProps<RecordType, QueryArgs>): ReactElement => {
   type Column = PaginatedColumn<RecordType>;
+  type ResolvedQueryArgs = QueryArgs & PaginationQueryArgs;
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [recordsPerPage, setRecordsPerPage] = useState(inititalRecordsPerPage);
 
   const [sort, setSort] = useState<Sort<Column> | undefined>(initialSort);
 
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const [records, setRecords] = useState<RecordType[]>([]);
 
   const getParams = useCallback(
-    (page: number): PaginationQueryArgs => ({
+    (page: number): ResolvedQueryArgs => ({
       sortBy: sort ? [sort.column.key as string] : [],
       sortDirection: sort ? [sort.direction] : [],
       page: [page.toString()],
       limit: [recordsPerPage.toString()],
+      ...params,
     }),
-    [recordsPerPage, sort],
+    [recordsPerPage, sort, params],
   );
 
   const queryRecords = useCallback(
@@ -60,8 +72,11 @@ const PaginatedTable = <RecordType,>({
           return;
         }
 
-        setRecords(res.data.result);
-        setTotalPages(res.data.totalPages);
+        const { result, totalPages } = res.data;
+
+        setRecords(result);
+        setTotalPages(totalPages);
+        setCurrentPage(page);
       };
 
       return fetchRecords();
@@ -69,9 +84,16 @@ const PaginatedTable = <RecordType,>({
     [getParams],
   );
 
+  const getNewPage = (recordsPerPage: number) => {
+    const pagesWithRecords = records.length / recordsPerPage;
+    return totalPages > pagesWithRecords
+      ? Math.round(pagesWithRecords)
+      : currentPage;
+  };
+
   useEffect(() => {
-    queryRecords(currentPage);
-  }, [recordsPerPage, sort]);
+    queryRecords(getNewPage(recordsPerPage));
+  }, [queryRecords, recordsPerPage]);
 
   const handleColumnClick = (column: Column): Sort<Column> | undefined => {
     const sort: Sort<Column> = {
@@ -88,18 +110,9 @@ const PaginatedTable = <RecordType,>({
     return sort;
   };
 
-  const handlePageChange = async (
-    _: any,
-    { activePage }: PaginationProps,
-  ): Promise<void> => {
-    await queryRecords(activePage as number);
-    setCurrentPage(activePage as number);
+  const handlePageChange = (_: any, { activePage }: PaginationProps): void => {
+    queryRecords((activePage as number) - 1);
   };
-
-  const recordsPerPageSelectOptions = recordsPerPageOptions.map((option) => ({
-    label: option.toString(),
-    value: option,
-  }));
 
   return (
     <DynamicTable<RecordType, Column>
@@ -107,29 +120,18 @@ const PaginatedTable = <RecordType,>({
         records,
         columns,
       }}
-      {...dynamicTableProps}
-      footer={
-        <Table.HeaderCell>
-          <Pagination
-            totalPages={totalPages}
-            activePage={currentPage}
-            onPageChange={handlePageChange}
-          />
-          <span className="records-per-page-wrapper">
-            Rows per page{' '}
-            <Select
-              options={recordsPerPageSelectOptions}
-              value={recordsPerPage}
-              isClearable={false}
-              onChange={(newValue) =>
-                setRecordsPerPage(newValue?.value ?? inititalRecordsPerPage)
-              }
-              className="records-per-page-select"
-            ></Select>
-          </span>
-        </Table.HeaderCell>
-      }
       onHeaderClick={handleColumnClick}
+      footer={
+        <TableFooter
+          totalPages={totalPages}
+          currentPage={currentPage + 1}
+          recordsPerPage={recordsPerPage}
+          recordsPerPageSelectOptions={recordsPerPageSelectOptions}
+          handleRecordsPerPageChange={setRecordsPerPage}
+          handlePageChange={handlePageChange}
+        />
+      }
+      {...dynamicTableProps}
     />
   );
 };

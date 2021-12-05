@@ -24,8 +24,8 @@ interface PaginationQueryArgs {
   limit?: string[];
 }
 
-type QueryFunction<RecordType> = (
-  params: PaginationQueryArgs,
+type QueryFunction<RecordType, QueryArgs> = (
+  params: QueryArgs & PaginationQueryArgs,
 ) => Promise<Response<PaginationResponseBase<RecordType[]>>>;
 
 export type {

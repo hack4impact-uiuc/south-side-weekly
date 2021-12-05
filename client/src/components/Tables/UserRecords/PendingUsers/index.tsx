@@ -19,11 +19,15 @@ import { buildColumn } from '../../DynamicTable/util';
 import { QueryFunction } from '../../PaginatedTable/types';
 import PaginatedTable from '../../PaginatedTable';
 
-interface PendingUserProps {
-  query: QueryFunction<IUser>;
+interface PendingUserProps<QueryArgs> {
+  query: QueryFunction<IUser, QueryArgs>;
+  filterParams: QueryArgs;
 }
 
-const PendingUsers: FC<PendingUserProps> = ({ query }): ReactElement => {
+const PendingUsers = <QueryArgs extends Record<string, string[]>>({
+  query,
+  filterParams,
+}: PendingUserProps<QueryArgs>): ReactElement => {
   const paginatedTable = useRef<typeof PaginatedTable>();
 
   const updateUserStatus = async (
@@ -93,9 +97,10 @@ const PendingUsers: FC<PendingUserProps> = ({ query }): ReactElement => {
   return (
     <div className="table">
       <div className="directory">
-        <PaginatedTable<IUser>
+        <PaginatedTable<IUser, QueryArgs>
           columns={columns}
           query={query}
+          params={filterParams}
           emptyMessage={'There are no pending users.'}
           getModal={(user, isOpen, setIsOpen) => (
             <ReviewUserModal

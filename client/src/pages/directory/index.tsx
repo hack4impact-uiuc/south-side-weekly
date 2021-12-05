@@ -53,15 +53,17 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
   const [teams, setTeams] = useState<string[]>([]);
   const [search, setSearch] = useState<string>('');
   const [activity, setActivity] = useState<string>('');
-  const [filterParams, setFilterParams] = useState<Record<string, string[]>>();
-  
+  const [filterParams, setFilterParams] = useState<Record<string, string[]>>(
+    {},
+  );
+
   useEffect(() => {
-    const newParams: Record<string, string[]> = {};
-    newParams['interests'] = interests;
-    newParams['teams'] = teams;
-    newParams['role'] = role === '' ? [] : [role];
-    newParams['activity'] = activity === '' ? [] : [activity];
-    setFilterParams(newParams);
+    setFilterParams({
+      interests,
+      teams,
+      role: role === '' ? [] : [role],
+      activity: activity === '' ? [] : [activity],
+    });
   }, [search, interests, teams, role]);
 
   const queryFunction = useCallback(
@@ -87,7 +89,7 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
       };
       return fetchResource();
     },
-    [status, filterParams]
+    [status, filterParams],
   );
 
   return (
@@ -137,9 +139,15 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
           </div>
         </div>
       )}
-      {status === 'approved' && <ApprovedUsers query={queryFunction} />}
-      {status === 'pending' && <PendingUsers query={queryFunction} />}
-      {status === 'denied' && <DeniedUsers query={queryFunction} />}
+      {status === 'approved' && (
+        <ApprovedUsers query={queryFunction} filterParams={filterParams} />
+      )}
+      {status === 'pending' && (
+        <PendingUsers query={queryFunction} filterParams={filterParams} />
+      )}
+      {status === 'denied' && (
+        <DeniedUsers query={queryFunction} filterParams={filterParams} />
+      )}
     </>
   );
 };
