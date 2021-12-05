@@ -1,4 +1,4 @@
-import React, { FC, ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 import { IUser } from 'ssw-common';
 
 import { useAuth } from '../../../../contexts';

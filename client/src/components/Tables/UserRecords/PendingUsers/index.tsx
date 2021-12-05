@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, ReactNode, useRef } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 import { IUser } from 'ssw-common';
 import { Button } from 'semantic-ui-react';
 import toast from 'react-hot-toast';
@@ -28,7 +28,7 @@ const PendingUsers = <QueryArgs extends Record<string, string[]>>({
   query,
   filterParams,
 }: PendingUserProps<QueryArgs>): ReactElement => {
-  const paginatedTable = useRef<typeof PaginatedTable>();
+  // const paginatedTable = useRef<typeof PaginatedTable>();
 
   const updateUserStatus = async (
     user: IUser,

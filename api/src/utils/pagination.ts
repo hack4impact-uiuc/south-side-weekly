@@ -1,8 +1,7 @@
 import { Document, Query } from 'mongoose';
 import { Request } from 'express';
 import { isArray } from 'lodash';
-
-const paginationQueryArgs = ['page', 'limit'];
+import { allFields } from './user-utils';
 
 const processFilters = <T extends Document<any>>(
   req: Request,
@@ -17,20 +16,30 @@ const processFilters = <T extends Document<any>>(
     const now = new Date();
 
     const ACTIVE_PERIOD = 3;
-    const ActiveCutoff = new Date(now.getUTCFullYear(), now.getUTCMonth() - ACTIVE_PERIOD - 1, now.getUTCDate());
-    const RecentlyActiveCutoff = new Date(now.getUTCFullYear()-1, now.getUTCMonth(), now.getUTCDate());
-    
+    const ActiveCutoff = new Date(
+      now.getUTCFullYear(),
+      now.getUTCMonth() - ACTIVE_PERIOD - 1,
+      now.getUTCDate(),
+    );
+    const RecentlyActiveCutoff = new Date(
+      now.getUTCFullYear() - 1,
+      now.getUTCMonth(),
+      now.getUTCDate(),
+    );
+
     if (activity === 'Active') {
-      query.find({lastActive: {$gte: ActiveCutoff}} as any);
+      query.find({ lastActive: { $gte: ActiveCutoff } } as any);
     } else if (activity === 'Recently Active') {
-      query.find({lastActive: {$gte: RecentlyActiveCutoff, $lt: ActiveCutoff}} as any);
+      query.find({
+        lastActive: { $gte: RecentlyActiveCutoff, $lt: ActiveCutoff },
+      } as any);
     } else {
-      query.find({lastActive: {$lt: RecentlyActiveCutoff}} as any);
+      query.find({ lastActive: { $lt: RecentlyActiveCutoff } } as any);
     }
   }
 
-  const queryParams = Object.keys(req.query).filter(
-    (key) => !paginationQueryArgs.includes(key),
+  const queryParams = Object.keys(req.query).filter((key) =>
+    allFields.includes(key),
   );
 
   queryParams.forEach((key) => {

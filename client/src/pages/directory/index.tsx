@@ -1,17 +1,14 @@
-import { startsWith, toLower, toString } from 'lodash';
 import React, {
   FC,
   ReactElement,
   useCallback,
   useEffect,
-  useMemo,
   useState,
 } from 'react';
 import { Input, Tab } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { Response, PaginationResponseBase } from '../../api/types';
-import { isError } from '../../api';
 import {
   getApprovedUsers,
   getDeniedUsers,
@@ -35,19 +32,11 @@ import { parseOptionsSelect } from '../../utils/helpers';
 
 import './styles.scss';
 
-const searchFields: (keyof IUser)[] = [
-  'firstName',
-  'preferredName',
-  'lastName',
-  'email',
-];
-
 interface PaneWrapperProps {
   status: 'approved' | 'pending' | 'denied';
 }
 
 const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
-  const [directory, setDirectory] = useState<IUser[]>([]);
   const [role, setRole] = useState<string>('');
   const [interests, setInterests] = useState<string[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
@@ -64,7 +53,7 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
       role: role === '' ? [] : [role],
       activity: activity === '' ? [] : [activity],
     });
-  }, [search, interests, teams, role]);
+  }, [search, interests, teams, role, activity]);
 
   const queryFunction = useCallback(
     (
@@ -94,50 +83,55 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
 
   return (
     <>
-      <Input
-        value={search}
-        onChange={(e, { value }) => setSearch(value)}
-        fluid
-        placeholder="Search..."
-        icon="search"
-        iconPosition="left"
-      />
       {status === 'approved' && (
-        <div className="params">
-          <div>
-            <h3>params: </h3>
+        <>
+          <div className="top-filters">
+            <div className="wrapper input">
+              <Input
+                value={search}
+                onChange={(e, { value }) => setSearch(value)}
+                fluid
+                placeholder="Search..."
+                icon="search"
+                iconPosition="left"
+              />
+            </div>
+            <div className="wrapper">
+              <Select
+                value={activity}
+                options={parseOptionsSelect(allActivities)}
+                onChange={(e) => setActivity(e ? e.value : '')}
+                placeholder="Activity"
+              />
+            </div>
           </div>
-          <div className="wrapper">
-            <Select
-              value={role}
-              options={parseOptionsSelect(allRoles)}
-              onChange={(e) => setRole(e ? e.value : '')}
-              placeholder="Role"
-            />
+          <div className="bottom-filters">
+            <div className="wrapper">
+              <Select
+                value={role}
+                options={parseOptionsSelect(allRoles)}
+                onChange={(e) => setRole(e ? e.value : '')}
+                placeholder="Role"
+              />
+            </div>
+            <div className="wrapper">
+              <InterestsSelect
+                values={interests}
+                onChange={(values) =>
+                  setInterests(values.map((item) => item.value))
+                }
+              />
+            </div>
+            <div className="wrapper">
+              <TeamsSelect
+                values={teams}
+                onChange={(values) =>
+                  setTeams(values.map((item) => item.value))
+                }
+              />
+            </div>
           </div>
-          <div className="wrapper">
-            <Select
-              value={activity}
-              options={parseOptionsSelect(allActivities)}
-              onChange={(e) => setActivity(e ? e.value : '')}
-              placeholder="Activity"
-            />
-          </div>
-          <div className="wrapper">
-            <InterestsSelect
-              values={interests}
-              onChange={(values) =>
-                setInterests(values.map((item) => item.value))
-              }
-            />
-          </div>
-          <div className="wrapper">
-            <TeamsSelect
-              values={teams}
-              onChange={(values) => setTeams(values.map((item) => item.value))}
-            />
-          </div>
-        </div>
+        </>
       )}
       {status === 'approved' && (
         <ApprovedUsers query={queryFunction} filterParams={filterParams} />

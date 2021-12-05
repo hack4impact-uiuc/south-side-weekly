@@ -1,14 +1,28 @@
 @import '../../styles/colors.scss';
 
 .directory-page {
-  .filters {
+  .top-filters {
     display: flex;
-    align-items: center;
+    align-items: left;
     margin-top: 20px;
+    margin-right: 30%;
+    .wrapper {
+      margin: 0px 20px 0px 20px;
+      flex-grow: 1;
+    }
+    .input {
+      flex-grow: 3;
+    }
+  }
+  .bottom-filters {
+    display: flex;
+    align-items: left;
+    margin-top: 20px;
+    margin-right: 10%;
 
     .wrapper {
-      margin: 0px 30px 0px 30px;
-      width: 200px;
+      margin: 0px 20px 0px 20px;
+      flex-grow: 1;
     }
   }
 

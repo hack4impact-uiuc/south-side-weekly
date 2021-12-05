@@ -1,11 +1,11 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
-import { Pagination, PaginationProps, Table } from 'semantic-ui-react';
+import { PaginationProps } from 'semantic-ui-react';
 
 import { isError } from '../../../api';
-import TableFooter from './TableFooter';
 import DynamicTable from '../DynamicTable';
 import { Sort } from '../DynamicTable/types';
 
+import TableFooter from './TableFooter';
 import {
   PaginatedColumn,
   PaginationQueryArgs,
@@ -49,51 +49,42 @@ const PaginatedTable = <
 
   const [sort, setSort] = useState<Sort<Column> | undefined>(initialSort);
 
-  const [totalPages, setTotalPages] = useState(0);
+  const [currTotalPages, setCurrTotalPages] = useState(0);
   const [records, setRecords] = useState<RecordType[]>([]);
 
-  const getParams = useCallback(
-    (page: number): ResolvedQueryArgs => ({
-      sortBy: sort ? [sort.column.key as string] : [],
-      sortDirection: sort ? [sort.direction] : [],
-      page: [page.toString()],
-      limit: [recordsPerPage.toString()],
-      ...params,
-    }),
-    [recordsPerPage, sort, params],
-  );
+  const fetchData = useCallback(
+    async (page: number): Promise<void> => {
+      const getParams = (): ResolvedQueryArgs => ({
+        sortBy: sort ? [sort.column.key as string] : [],
+        sortDirection: sort ? [sort.direction] : [],
+        limit: [recordsPerPage.toString()],
+        ...params,
+      });
+      const res = await query({ page: [page], ...getParams() });
+      if (isError(res)) {
+        // TODO: handle request error
+        return;
+      }
 
-  const queryRecords = useCallback(
-    (page: number) => {
-      const fetchRecords = async () => {
-        const res = await query(getParams(page));
-        if (isError(res)) {
-          // TODO: handle request error
-          return;
-        }
+      const { result, totalPages } = res.data;
 
-        const { result, totalPages } = res.data;
-
-        setRecords(result);
-        setTotalPages(totalPages);
-        setCurrentPage(page);
-      };
-
-      return fetchRecords();
+      setRecords(result);
+      setCurrTotalPages(Math.max(1, totalPages));
     },
-    [getParams],
+    [params, query, recordsPerPage, sort],
   );
-
-  const getNewPage = (recordsPerPage: number) => {
-    const pagesWithRecords = records.length / recordsPerPage;
-    return totalPages > pagesWithRecords
-      ? Math.round(pagesWithRecords)
-      : currentPage;
-  };
 
   useEffect(() => {
-    queryRecords(getNewPage(recordsPerPage));
-  }, [queryRecords, recordsPerPage]);
+    setCurrentPage(0);
+    fetchData(0);
+  }, [fetchData]);
+
+  // const getNewPage = (recordsPerPage: number) => {
+  //   const pagesWithRecords = records.length / recordsPerPage;
+  //   return totalPages > pagesWithRecords
+  //     ? Math.floor(pagesWithRecords)
+  //     : currentPage;
+  // };
 
   const handleColumnClick = (column: Column): Sort<Column> | undefined => {
     const sort: Sort<Column> = {
@@ -111,7 +102,9 @@ const PaginatedTable = <
   };
 
   const handlePageChange = (_: any, { activePage }: PaginationProps): void => {
-    queryRecords((activePage as number) - 1);
+    const newPage = (activePage as number) - 1;
+    setCurrentPage(newPage);
+    fetchData(newPage);
   };
 
   return (
@@ -123,7 +116,7 @@ const PaginatedTable = <
       onHeaderClick={handleColumnClick}
       footer={
         <TableFooter
-          totalPages={totalPages}
+          totalPages={currTotalPages}
           currentPage={currentPage + 1}
           recordsPerPage={recordsPerPage}
           recordsPerPageSelectOptions={recordsPerPageSelectOptions}
