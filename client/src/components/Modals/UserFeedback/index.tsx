@@ -42,7 +42,6 @@ const UserFeedbackModal: FC<UserFeedbackModal> = ({
     }
 
     getContributorTeams();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen]);
 
   const getContributorTeams = async (): Promise<void> => {
