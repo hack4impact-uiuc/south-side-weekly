@@ -21,7 +21,6 @@ import './styles.scss';
 interface UserFeedbackModal extends ModalProps {
   contributor: IUser;
   pitchId: string;
-  trigger: ReactElement;
 }
 
 const UserFeedbackModal: FC<UserFeedbackModal> = ({
@@ -81,7 +80,7 @@ const UserFeedbackModal: FC<UserFeedbackModal> = ({
         });
         setIsOpen(false);
       }
-    } else if (isEmpty()) {
+    } else {
       toast.error('Please fill out all fields', {
         position: 'bottom-right',
       });
