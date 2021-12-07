@@ -9,8 +9,14 @@ const processFilters = <T extends Document<any>>(
   type valueType = typeof req.query.value;
   type queryFilter = Record<string, valueType | Record<string, valueType>>;
   const filters: queryFilter = {};
-  const excludedFields = ['activity', 'limit', 'page', 'sortBy', 'sortDirection']
-  
+  const excludedFields = [
+    'activity',
+    'limit',
+    'page',
+    'sortBy',
+    'sortDirection',
+  ];
+
   if (req.query.activity) {
     const activity = req.query.activity as string;
     const now = new Date();
@@ -38,8 +44,8 @@ const processFilters = <T extends Document<any>>(
     }
   }
 
-  const queryParams = Object.keys(req.query).filter((key) =>
-    !excludedFields.includes(key),
+  const queryParams = Object.keys(req.query).filter(
+    (key) => !excludedFields.includes(key),
   );
 
   queryParams.forEach((key) => {
