@@ -67,8 +67,8 @@ const PaginatedTable = <
       }
 
       const { result, totalPages } = res.data;
-
-      setRecords(result);
+      
+      setRecords(result); 
       setCurrTotalPages(Math.max(1, totalPages));
     },
     [params, query, recordsPerPage, sort],
@@ -87,16 +87,24 @@ const PaginatedTable = <
   // };
 
   const handleColumnClick = (column: Column): Sort<Column> | undefined => {
-    const sort: Sort<Column> = {
+    let newSort: Sort<Column> | undefined = {
       column,
       direction: 'ascending',
     };
 
-    if (!sort.column.key) {
+    if (!newSort?.column.key) {
       return undefined;
     }
 
-    setSort(sort);
+    if(sort && sort.column.title === column.title) {
+      if(sort.direction === 'ascending') {
+        newSort.direction = 'descending';
+      } else if(sort.direction === 'descending') {
+        newSort = undefined;
+      }
+    }
+
+    setSort(newSort);
 
     return sort;
   };

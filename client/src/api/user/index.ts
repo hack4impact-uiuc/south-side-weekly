@@ -39,7 +39,7 @@ const getApprovedUsers = async (
 ): Promise<Response<UsersResponse>> => {
   const url = buildEndpoint(USER_ENDPOINT, 'all', 'approved');
   const uri = buildURI(url, params);
-  console.log(uri);
+  console.log(uri);   
   const failureMessage = 'GET_APPROVED_USERS_FAIL';
 
   return await get(uri, failureMessage);

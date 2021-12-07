@@ -13,7 +13,9 @@ const TableHeader = <RecordType, Column extends DynamicColumn<RecordType>>({
   columns,
   sort,
   onCellClick,
-}: TableHeaderProps<Column>): ReactElement => (
+}: TableHeaderProps<Column>): ReactElement => {
+  console.log(sort);
+  return (
   <Table.Header>
     {columns.map((column, index) => (
       <Table.HeaderCell
@@ -28,6 +30,6 @@ const TableHeader = <RecordType, Column extends DynamicColumn<RecordType>>({
       </Table.HeaderCell>
     ))}
   </Table.Header>
-);
+)};
 
 export default TableHeader;

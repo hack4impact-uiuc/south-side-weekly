@@ -55,14 +55,13 @@ const DynamicTable = <
   };
 
   const sortView = useCallback((): void => {
-    if (!sort) {
+    if (onHeaderClick || !sort) {
       setView(({ columns }) => ({
         records: viewProp.records,
         columns,
       }));
       return;
     }
-
     const { column, direction } = sort;
     setView(({ records, columns }) => {
       records = [...records]; // Copy records so sort isn't done on the records tied to viewProp
@@ -71,51 +70,48 @@ const DynamicTable = <
       }
       return { records: records.sort(column.sorter).reverse(), columns };
     });
-  }, [sort, viewProp]);
+  }, [onHeaderClick, sort, viewProp.records]);
 
   useEffect(() => {
     sortView();
-  }, [sortView, sort]);
-
-  useEffect(() => {
-    setView(viewProp);
-    setSort(viewProp.initialSort);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [viewProp]);
+  }, [sortView]);
 
   const handleColumnClick = useCallback(
     (column: Column): void => {
+      const setNewSort = (sort: Sort<Column> | undefined):void => {
+        const newSortColumn = !sort || (sort && column !== sort.column);
+
+        if (newSortColumn) {
+          setSort({
+            column,
+            direction: 'ascending',
+          });
+          return;
+        }
+
+        const nextSortColumn =
+          sort?.direction !== 'descending' ? column : undefined;
+
+        if (!nextSortColumn) {
+          setSort(undefined);
+          return;
+        }
+
+        setSort({
+          column: nextSortColumn,
+          direction: 'descending',
+        });
+      }
+      if (onHeaderClick) {
+        const newSort = onHeaderClick(column);
+        setNewSort(newSort);
+        return;
+      }
+
       if (!column.sorter) {
         return;
       }
-
-      if (onHeaderClick) {
-        setSort(onHeaderClick(column));
-        return;
-      }
-
-      const newSortColumn = !sort || (sort && column !== sort.column);
-
-      if (newSortColumn) {
-        setSort({
-          column,
-          direction: 'ascending',
-        });
-        return;
-      }
-
-      const nextSortColumn =
-        sort?.direction !== 'descending' ? column : undefined;
-
-      if (!nextSortColumn) {
-        setSort(undefined);
-        return;
-      }
-
-      setSort({
-        column: nextSortColumn,
-        direction: 'descending',
-      });
+      setNewSort(sort);
     },
     [sort, onHeaderClick],
   );
