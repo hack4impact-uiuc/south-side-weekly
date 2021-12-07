@@ -16,20 +16,21 @@ const TableHeader = <RecordType, Column extends DynamicColumn<RecordType>>({
 }: TableHeaderProps<Column>): ReactElement => {
   console.log(sort);
   return (
-  <Table.Header>
-    {columns.map((column, index) => (
-      <Table.HeaderCell
-        width={column.width}
-        onClick={() => onCellClick(column)}
-        sorted={
-          sort?.column?.title === column.title ? sort?.direction : undefined
-        }
-        key={index}
-      >
-        {column.title}
-      </Table.HeaderCell>
-    ))}
-  </Table.Header>
-)};
+    <Table.Header>
+      {columns.map((column, index) => (
+        <Table.HeaderCell
+          width={column.width}
+          onClick={() => onCellClick(column)}
+          sorted={
+            sort?.column?.title === column.title ? sort?.direction : undefined
+          }
+          key={index}
+        >
+          {column.title}
+        </Table.HeaderCell>
+      ))}
+    </Table.Header>
+  );
+};
 
 export default TableHeader;

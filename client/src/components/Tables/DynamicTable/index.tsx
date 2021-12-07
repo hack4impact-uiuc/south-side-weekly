@@ -78,7 +78,7 @@ const DynamicTable = <
 
   const handleColumnClick = useCallback(
     (column: Column): void => {
-      const setNewSort = (sort: Sort<Column> | undefined):void => {
+      const setNewSort = (sort: Sort<Column> | undefined): void => {
         const newSortColumn = !sort || (sort && column !== sort.column);
 
         if (newSortColumn) {
@@ -101,7 +101,7 @@ const DynamicTable = <
           column: nextSortColumn,
           direction: 'descending',
         });
-      }
+      };
       if (onHeaderClick) {
         const newSort = onHeaderClick(column);
         setNewSort(newSort);

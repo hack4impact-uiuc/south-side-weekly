@@ -75,7 +75,7 @@ const processPagination = <T extends Document<any>>(
     const sortDirection = req.query.sortDirection as string;
 
     if (sortBy) {
-      query.sort({[sortBy]: sortDirection});
+      query.sort({ [sortBy]: sortDirection });
     }
 
     const skipIndex = page * limit;

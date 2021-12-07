@@ -67,8 +67,8 @@ const PaginatedTable = <
       }
 
       const { result, totalPages } = res.data;
-      
-      setRecords(result); 
+
+      setRecords(result);
       setCurrTotalPages(Math.max(1, totalPages));
     },
     [params, query, recordsPerPage, sort],
@@ -96,10 +96,10 @@ const PaginatedTable = <
       return undefined;
     }
 
-    if(sort && sort.column.title === column.title) {
-      if(sort.direction === 'ascending') {
+    if (sort && sort.column.title === column.title) {
+      if (sort.direction === 'ascending') {
         newSort.direction = 'descending';
-      } else if(sort.direction === 'descending') {
+      } else if (sort.direction === 'descending') {
         newSort = undefined;
       }
     }
