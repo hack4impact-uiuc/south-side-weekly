@@ -8,4 +8,19 @@
       float: right;
     }
   }
+  .content {
+    .select {
+      width: 100%;
+    }
+  }
+}
+
+.questions-tab {
+  .block {
+    background-color: #f4f4f4;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    padding: 3px 8px;
+    margin: 20px 0px;
+  }
 }
