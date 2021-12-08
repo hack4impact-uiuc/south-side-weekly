@@ -34,7 +34,7 @@ const QuestionsTab: FC<QuestionsTabProps> = ({ feedbacks }): ReactElement => {
   return (
     <div className="questions-tab">
       <Select
-        className="select"
+        className="questions-select"
         options={QuestionOptions}
         value={selectedQuestion}
         onChange={(e, data) => {

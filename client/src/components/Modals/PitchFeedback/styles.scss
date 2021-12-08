@@ -39,8 +39,13 @@
     }
   }
   .content {
-    .select {
+    .questions-select {
       width: 100%;
+    }
+    .individual-select {
+      min-width: 10px !important;
+      width: 20px !important;
+      margin-right: 8px;
     }
   }
 }
