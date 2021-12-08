@@ -56,6 +56,8 @@ const emptyUser: IUser = {
   linkedIn: '',
   twitter: '',
   involvementResponse: '',
+  journalismResponse: '',
+  neighborhood: '',
   claimedPitches: [],
   submittedPitches: [],
   submittedClaims: [],
@@ -92,6 +94,7 @@ const emptyPitch: IPitch = {
   neighborhoods: [],
   createdAt: new Date(),
   updatedAt: new Date(),
+  issueStatuses: [],
   editStatus: editStatusEnum.WRITER_NEEDED,
 };
 

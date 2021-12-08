@@ -165,91 +165,95 @@ const PitchDoc = (): ReactElement => {
 
   return (
     <div className="pitch-doc-wrapper">
-      <Walkthrough
-        page={pagesEnum.PITCHDOC}
-        content="The Pitch Doc is where you can claim, submit, and view pitches! Use the filters to find pitches you are interested in."
-      />
-      <h1>Pitch Doc</h1>
       <PitchFeedbackModal
         pitchId="618b04d5d5fddf23d0ebf4db"
         trigger={<p>UWU</p>}
       />
-      <Menu className="tab-menu" tabular size="large">
-        <Menu.Item
-          name={pitchDocTabs.UNCLAIMED}
-          active={pitchDocTabs.UNCLAIMED === currentTab}
-          onClick={(e, { name }) => setCurrentTab(name!)}
+      <div className="page-header-content pitch-doc-header">
+        <Walkthrough
+          page={pagesEnum.PITCHDOC}
+          content="The Pitch Doc is where you can claim, submit, and view pitches! Use the filters to find pitches you are interested in."
         />
 
-        <Menu.Item
-          name={pitchDocTabs.APPROVED}
-          active={pitchDocTabs.APPROVED === currentTab}
-          onClick={(e, { name }) => setCurrentTab(name!)}
-        />
+        <Menu className="tab-menu" tabular secondary pointing size="large">
+          <Menu.Item
+            name={pitchDocTabs.UNCLAIMED}
+            active={pitchDocTabs.UNCLAIMED === currentTab}
+            onClick={(e, { name }) => setCurrentTab(name!)}
+          />
 
-        <AdminView>
           <Menu.Item
-            name={pitchDocTabs.PITCH_APPROVAL}
-            active={pitchDocTabs.PITCH_APPROVAL === currentTab}
+            name={pitchDocTabs.APPROVED}
+            active={pitchDocTabs.APPROVED === currentTab}
             onClick={(e, { name }) => setCurrentTab(name!)}
           />
-        </AdminView>
-        <StaffView>
-          <Menu.Item
-            name={pitchDocTabs.CLAIM_APPROVAL}
-            active={pitchDocTabs.CLAIM_APPROVAL === currentTab}
-            onClick={(e, { name }) => setCurrentTab(name!)}
-          />
-        </StaffView>
-      </Menu>
-      <div className="search-add-wrapper">
-        <Input
-          value={query}
-          onChange={(e, { value }) => setQuery(value)}
-          fluid
-          placeholder="Search..."
-          icon="search"
-          iconPosition="left"
-          className="search"
-        />
-        <SubmitPitchModal callback={populatePitches} />
+
+          <AdminView>
+            <Menu.Item
+              name={pitchDocTabs.PITCH_APPROVAL}
+              active={pitchDocTabs.PITCH_APPROVAL === currentTab}
+              onClick={(e, { name }) => setCurrentTab(name!)}
+            />
+          </AdminView>
+          <StaffView>
+            <Menu.Item
+              name={pitchDocTabs.CLAIM_APPROVAL}
+              active={pitchDocTabs.CLAIM_APPROVAL === currentTab}
+              onClick={(e, { name }) => setCurrentTab(name!)}
+            />
+          </StaffView>
+        </Menu>
       </div>
+      <div className="page-inner-content">
+        <div className="search-add-wrapper">
+          <Input
+            value={query}
+            onChange={(e, { value }) => setQuery(value)}
+            fluid
+            placeholder="Search..."
+            icon="search"
+            iconPosition="left"
+            className="search"
+          />
+          <SubmitPitchModal callback={populatePitches} />
+        </div>
 
-      <div className="filters">
-        <div>
-          <h3>Filters: </h3>
-        </div>
-        <div className="wrapper">
-          <InterestsSelect
-            values={interests}
-            onChange={(values) =>
-              setInterests(values ? values.map((item) => item.value) : [])
-            }
-          />
-        </div>
-        <div className="wrapper">
-          <TeamsSelect
-            values={teams}
-            onChange={(values) => setTeams(values.map((item) => item.value))}
-          />
-        </div>
-        {isEqual(currentTab, pitchDocTabs.APPROVED) && (
+        <div className="filters">
+          <div>
+            <h3>Filters: </h3>
+          </div>
           <div className="wrapper">
-            <Select
-              value={claimStatus}
-              options={parseOptionsSelect(['Claimed', 'Unclaimed'])}
-              onChange={(e) => setClaimStatus(e ? e.value : '')}
-              placeholder="Claim status"
+            <InterestsSelect
+              values={interests}
+              onChange={(values) =>
+                setInterests(values ? values.map((item) => item.value) : [])
+              }
             />
           </div>
-        )}
-      </div>
-      <div className="pitch-doc">
-        <PitchTable
-          pitches={filteredPitches}
-          callback={populatePitches}
-          currentTab={currentTab}
-        />
+          <div className="wrapper">
+            <TeamsSelect
+              values={teams}
+              onChange={(values) => setTeams(values.map((item) => item.value))}
+            />
+          </div>
+          {isEqual(currentTab, pitchDocTabs.APPROVED) && (
+            <div className="wrapper">
+              <Select
+                value={claimStatus}
+                options={parseOptionsSelect(['Claimed', 'Unclaimed'])}
+                onChange={(e) => setClaimStatus(e ? e.value : '')}
+                placeholder="Claim status"
+              />
+            </div>
+          )}
+        </div>
+        <div className="pitch-doc">
+          <PitchTable
+            pitches={filteredPitches}
+            callback={populatePitches}
+            currentTab={currentTab}
+          />
+        </div>
       </div>
     </div>
   );

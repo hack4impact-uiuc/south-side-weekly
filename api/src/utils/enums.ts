@@ -54,6 +54,14 @@ const visibilityEnum = {
   PRIVATE: 'PRIVATE',
 };
 
+const issueStatusEnum = {
+  MAYBE_IN: 'MAYBE_IN',
+  DEFINITELY_IN: 'DEFINITELY_IN',
+  IN_EDITS: 'IN_EDITS',
+  READY_TO_PUBLISH: 'READY_TO_PUBLISH',
+  PUSH: 'PUSH',
+};
+
 const editStatusEnum = {
   WRITER_NEEDED: 'Writer Needed',
   FIRST_NEEDED: '1st Needed',
@@ -77,5 +85,6 @@ export {
   pitchStatusEnum,
   assignmentStatusEnum,
   visibilityEnum,
+  issueStatusEnum,
   editStatusEnum,
 };

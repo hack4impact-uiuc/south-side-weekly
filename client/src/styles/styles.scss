@@ -31,6 +31,10 @@ body {
   background-color: $admin !important;
 }
 
+.pronouns-tag-color {
+  background-color: $pronouns !important;
+}
+
 .staff-tag-color {
   background-color: $staff !important;
 }
@@ -57,6 +61,14 @@ body {
 
 .recently-active-tag-color {
   background-color: $recentlyActive !important;
+}
+
+.published-tag-color {
+  background-color: $published !important;
+}
+
+.in-progress-tag-color {
+  background-color: $inprogress !important;
 }
 
 .active-tag-color {
@@ -89,6 +101,29 @@ body {
 .declined-tag-color,
 .declined-review-tag-color {
   background-color: $declined !important;
+}
+
+.maybe-in-tag-color {
+  background-color: $maybeIn !important;
+}
+
+.definitely-in-tag-color {
+  background-color: $definitelyIn !important;
+}
+
+.in-edits-tag-color {
+  background-color: $inEdits !important;
+}
+
+.ready-to-publish-tag-color,
+.writer-on-story-tag-color {
+  background-color: $readyToPublish !important;
+}
+
+.push-tag-color,
+.writer-needed-tag-color,
+.primary-editor-needed-tag-color {
+  background-color: $push !important;
 }
 
 .default-btn {

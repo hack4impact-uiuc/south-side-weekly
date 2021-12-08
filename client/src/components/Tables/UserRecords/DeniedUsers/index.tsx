@@ -60,6 +60,7 @@ const DeniedUsers: FC<DeniedUserProps> = ({ users }): ReactElement => {
         <DynamicTable<IUser>
           view={{ records: data, columns: columns }}
           singleLine={users.length > 0}
+          emptyMessage="No rejected users!"
           getModal={(user, isOpen, setIsOpen) => (
             <ReviewUserModal
               user={user}
