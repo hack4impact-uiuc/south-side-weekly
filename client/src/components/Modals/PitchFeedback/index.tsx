@@ -78,7 +78,7 @@ const PitchFeedbackModal: FC<PitchFeedbackModal> = ({
         />
         <Menu.Item
           name={TABS.INDIVIDUAL}
-          active={TABS.QUESTIONS === currentTab}
+          active={TABS.INDIVIDUAL === currentTab}
           onClick={() => setCurrentTab(TABS.INDIVIDUAL)}
         />
       </Menu>

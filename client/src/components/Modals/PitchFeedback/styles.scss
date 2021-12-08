@@ -1,6 +1,36 @@
 @import '../../../styles/colors.scss';
 
 .feedback-modal {
+  .ui {
+    &.menu {
+      margin: 0px;
+      padding-inline: 0px;
+      border-bottom: 1px #a3a3a3 solid !important;
+      background-color: $mainBackground !important;
+      padding-top: 8px;
+    }
+
+    &.secondary.pointing.menu {
+      border-bottom: 0px;
+
+      .active.item {
+        border-bottom: 4px solid;
+        border-color: $secondaryColor !important;
+      }
+      .item {
+        border-bottom-width: auto;
+        padding-inline: 3em;
+
+        &.right {
+          padding-inline: 0px;
+        }
+      }
+    }
+    &.segment {
+      padding: 1.5em 4em;
+      margin: 0px -6%;
+    }
+  }
   .header {
     background-color: $primary !important;
     color: white !important;
