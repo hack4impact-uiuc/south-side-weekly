@@ -13,9 +13,19 @@ interface QuestionsTabProps extends ModalProps {
 const QuestionsTab: FC<QuestionsTabProps> = ({ feedbacks }): ReactElement => {
   const [selectedQuestion, setSelectedQuestion] = useState('firstQuestion');
   const QuestionOptions = [
-    { value: 'firstQuestion', text: 'First Question' },
-    { value: 'secondQuestion', text: 'Second Question' },
-    { value: 'thirdQuestion', text: 'Third Question' },
+    {
+      value: 'firstQuestion',
+      text: 'Is there any way that the Weekly staff could have supported you better during the Weekly’s writing/editing process of the story?',
+    },
+    {
+      value: 'secondQuestion',
+      text: 'Can you share anything about your reporting/writing process that would be useful for other writers to know, or any lessons you learned from the process?',
+    },
+    {
+      value: 'thirdQuestion',
+      text: 'List any new contacts you made that could be useful for future Weekly writers to have (include name, organizational affiliation, contact info):',
+    },
+    { value: 'fourthQuestion', text: 'Any additional feedback? Thank you!' },
   ];
 
   const handleChange = (selected: string): void => {
@@ -32,11 +42,14 @@ const QuestionsTab: FC<QuestionsTabProps> = ({ feedbacks }): ReactElement => {
         }}
       />
       <h5>Contributor Responses</h5>
-      {feedbacks.map((feedback, index) => (
-        <dt className="block" key={index}>
-          {feedback[selectedQuestion as keyof typeof feedback]}
-        </dt>
-      ))}
+      {feedbacks.map(
+        (feedback, index) =>
+          feedback[selectedQuestion as keyof typeof feedback] !== null && (
+            <dt className="block" key={index}>
+              {feedback[selectedQuestion as keyof typeof feedback]}
+            </dt>
+          ),
+      )}
     </div>
   );
 };
