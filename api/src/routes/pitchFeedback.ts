@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { errorWrap } from '../middleware';
-import * as pitchFeedbackController from '../controllers/pitchFeedbackController';
+import * as pitchFeedbackController from '../controllers/pitchFeedback.controller';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
 
 const router = Router();

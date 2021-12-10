@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { errorWrap } from '../middleware';
-import * as issueController from '../controllers/issueController';
+import * as issueController from '../controllers/issue.controller';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
 
 const router = Router();

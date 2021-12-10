@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { errorWrap } from '../middleware';
-import * as userFeedbackController from '../controllers/userFeedbackController';
+import * as userFeedbackController from '../controllers/userFeedback.controller';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
 
 const router = Router();

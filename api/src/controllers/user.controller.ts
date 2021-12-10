@@ -1,11 +1,11 @@
 import { Request, Response } from 'express';
 
-import User from '../models/user';
 import Pitch from '../models/pitch';
 import { onboardingStatusEnum } from '../utils/enums';
 import { sendNotFound, sendSuccess } from '../utils/helpers';
 import { getEditableFields, getViewableFields } from '../utils/user-utils';
 import { sendApproveUserMail, sendRejectUserMail } from '../mail/sender';
+import { UserService } from '../services';
 
 import { populateUser } from './utils';
 
@@ -18,7 +18,7 @@ export const createUser = async (
 ): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const user = await User.create(req.body);
+  const user = await UserService.addUser(req.body);
 
   sendSuccess(
     res,
@@ -37,17 +37,7 @@ export const stallOldScheduledOnboarding = async (
   const twoWeeksAgo = new Date();
   twoWeeksAgo.setDate(twoWeeksAgo.getDate() - TWO_WEEKS_AGO);
 
-  await User.updateMany(
-    {
-      dateJoined: { $lt: twoWeeksAgo },
-      onboardingStatus: onboardingStatusEnum.ONBOARDING_SCHEDULED,
-    },
-    {
-      $set: {
-        onboardingStatus: onboardingStatusEnum.STALLED,
-      },
-    },
-  );
+  await UserService.stallUsers(twoWeeksAgo);
 
   sendSuccess(
     res,
@@ -61,7 +51,7 @@ export const stallOldScheduledOnboarding = async (
 export const getUsers = async (req: Request, res: Response): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const users = await User.find({}).lean();
+  const users = await UserService.getUsers();
 
   sendSuccess(
     res,
@@ -77,9 +67,9 @@ export const getApproved = async (
 ): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const users = await User.find({
-    onboardingStatus: onboardingStatusEnum.ONBOARDED,
-  }).lean();
+  const users = await UserService.getUsersWithOnboardStatus(
+    onboardingStatusEnum.ONBOARDED,
+  );
 
   sendSuccess(
     res,
@@ -95,14 +85,10 @@ export const getPendingUsers = async (
 ): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const users = await User.find({
-    onboardingStatus: {
-      $in: [
-        onboardingStatusEnum.ONBOARDING_SCHEDULED,
-        onboardingStatusEnum.STALLED,
-      ],
-    },
-  }).lean();
+  const users = await UserService.getUsersWithOnboardStatus(
+    onboardingStatusEnum.ONBOARDING_SCHEDULED,
+    onboardingStatusEnum.STALLED,
+  );
 
   sendSuccess(
     res,
@@ -118,9 +104,9 @@ export const getDeniedUsers = async (
 ): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const users = await User.find({
-    onboardingStatus: onboardingStatusEnum.DENIED,
-  }).lean();
+  const users = await UserService.getUsersWithOnboardStatus(
+    onboardingStatusEnum.DENIED,
+  );
 
   sendSuccess(
     res,
@@ -133,7 +119,7 @@ export const getDeniedUsers = async (
 export const getUser = async (req: Request, res: Response): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const user = await User.findById(req.params.id).lean();
+  const user = await UserService.getUserById(req.params.id);
 
   if (!user) {
     sendNotFound(res, 'User not found');
@@ -169,10 +155,7 @@ export const updateUser = async (
 ): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  }).lean();
+  const user = await UserService.updateUser(req.params.id, req.body);
 
   if (!user) {
     sendNotFound(res, `User not found with id ${req.params.id}`);
@@ -189,15 +172,7 @@ export const updateUser = async (
 export const visitPage = async (req: Request, res: Response): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const user = await User.findByIdAndUpdate(
-    req.user._id,
-    {
-      $addToSet: {
-        visitedPages: req.body.page,
-      },
-    },
-    { new: true },
-  ).lean();
+  const user = await UserService.markPageVisited(req.user._id, req.body.page);
 
   sendSuccess(
     res,
@@ -213,15 +188,14 @@ export const approveUser = async (
 ): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const updatedUser = await User.findByIdAndUpdate(
+  const user = await UserService.setUserOnboardingStatus(
     req.params.id,
-    { onboardingStatus: onboardingStatusEnum.ONBOARDED },
-    { new: true, runValidators: true },
-  ).lean();
+    onboardingStatusEnum.ONBOARDED,
+  );
 
-  sendApproveUserMail(updatedUser, req.user);
+  sendApproveUserMail(user, req.user);
 
-  if (!updatedUser) {
+  if (!user) {
     sendNotFound(res, `User not found with id ${req.params.id}`);
     return;
   }
@@ -229,7 +203,7 @@ export const approveUser = async (
   sendSuccess(
     res,
     'User onboarded successfully',
-    await populateUser(updatedUser, populateType),
+    await populateUser(user, populateType),
   );
 };
 
@@ -240,15 +214,14 @@ export const rejectUser = async (
 ): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const updatedUser = await User.findByIdAndUpdate(
+  const user = await UserService.setUserOnboardingStatus(
     req.params.id,
-    { onboardingStatus: onboardingStatusEnum.DENIED },
-    { new: true, runValidators: true },
-  ).lean();
+    onboardingStatusEnum.DENIED,
+  );
 
-  sendRejectUserMail(updatedUser, req.user);
+  sendRejectUserMail(user, req.user);
 
-  if (!updatedUser) {
+  if (!user) {
     sendNotFound(res, `User not found with id ${req.params.id}`);
     return;
   }
@@ -256,7 +229,7 @@ export const rejectUser = async (
   sendSuccess(
     res,
     'User denied successfully',
-    await populateUser(updatedUser, populateType),
+    await populateUser(user, populateType),
   );
 };
 
@@ -272,16 +245,12 @@ export const claimPitch = async (
     return;
   }
 
-  const updatedUser = await User.findByIdAndUpdate(
+  const user = await UserService.addClaimedPitch(
     req.params.id,
-    {
-      $addToSet: { claimedPitches: req.body.pitchId },
-      lastActive: new Date(),
-    },
-    { new: true, runValidators: true },
-  ).lean();
+    req.body.pitchId,
+  );
 
-  if (!updatedUser) {
+  if (!user) {
     sendNotFound(res, `User not found with id ${req.params.id}`);
     return;
   }
@@ -289,7 +258,7 @@ export const claimPitch = async (
   sendSuccess(
     res,
     'User claimed pitch successfully',
-    await populateUser(updatedUser, populateType),
+    await populateUser(user, populateType),
   );
 };
 
@@ -302,7 +271,7 @@ export const deleteUser = async (
 ): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const user = await User.findByIdAndDelete(req.params.id).lean();
+  const user = await UserService.deleteUser(req.params.id);
 
   if (!user) {
     sendNotFound(res, `User not found with id ${req.params.id}`);

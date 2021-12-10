@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { errorWrap } from '../middleware';
-import * as interestController from '../controllers/interestController';
+import * as interestController from '../controllers/interest.controller';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
 
 const router = Router();

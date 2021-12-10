@@ -2,7 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
 import { ParsedQs } from 'qs';
 
-import { sendSuccess } from '../utils/helpers';
+import { sendFail, sendSuccess } from '../utils/helpers';
 
 const sendUnauthorized = (res: Response): void => {
   res.status(401).send({
@@ -82,10 +82,7 @@ export const redirectURI = async (
     // There was no base
     res.redirect(CALLBACK_ROUTE);
   } catch (e) {
-    res.status(400).json({
-      message: 'Something went wrong with redirection',
-      success: false,
-    });
+    sendFail(res, 'There was an issue redirecting');
   }
 };
 

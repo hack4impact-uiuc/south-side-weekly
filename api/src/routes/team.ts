@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { errorWrap } from '../middleware';
-import * as teamController from '../controllers/teamController';
+import * as teamController from '../controllers/team.controller';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
 
 const router = Router();

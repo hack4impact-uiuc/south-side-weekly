@@ -25,33 +25,29 @@ export const updatePitchTeamTargets = (
   });
 };
 
-export const sendSuccess = (
+export const sendResponse = (
   res: Response,
+  status: number,
   message: string,
   result?: unknown,
 ): Response =>
-  res.status(200).json({
-    success: true,
+  res.status(status).json({
+    success: status >= 200 && status < 300,
     message,
     result,
   });
 
-export const sendNotFound = (res: Response, message: string): Response =>
-  res.status(404).json({
-    success: false,
-    message,
-  });
-
-export const sendFail = (
+export const sendSuccess = (
   res: Response,
   message: string,
-  error?: unknown,
-): Response =>
-  res.status(400).json({
-    success: false,
-    message,
-    error,
-  });
+  result?: unknown,
+): Response => sendResponse(res, 200, message, result);
+
+export const sendNotFound = (res: Response, message: string): Response =>
+  sendResponse(res, 404, message);
+
+export const sendFail = (res: Response, message: string): Response =>
+  sendResponse(res, 400, message);
 
 export const getUserFulName = (user: IUser): string =>
   `${user.preferredName || user.firstName} ${user.lastName}`;

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { errorWrap } from '../middleware';
-import * as userController from '../controllers/userController';
+import * as userController from '../controllers/user.controller';
 import {
   requireAdmin,
   requireRegistered,

@@ -27,6 +27,12 @@ type PitchFields = Pick<
 type TeamFields = Pick<ITeam, 'name' | 'color' | 'active'>;
 type InterestFields = Pick<IInterest, 'name' | 'color' | 'active'>;
 
+/**
+ * Populates a user's ref fields
+ *
+ * @param user the user to populate
+ * @param type the type of population to do
+ */
 export const populateUser = async (
   user:
     | UserSchema

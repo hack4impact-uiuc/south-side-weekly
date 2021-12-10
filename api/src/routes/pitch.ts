@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { errorWrap } from '../middleware';
-import * as pitchController from '../controllers/pitchController';
+import * as pitchController from '../controllers/pitch.controller';
 import {
   requireAdmin,
   requireRegistered,

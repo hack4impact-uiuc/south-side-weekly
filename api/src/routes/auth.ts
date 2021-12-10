@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { errorWrap } from '../middleware';
-import * as authController from '../controllers/authController';
+import * as authController from '../controllers/auth.controller';
 
 const router = Router();
 
