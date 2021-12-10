@@ -3,7 +3,7 @@ import { IResource } from 'ssw-common';
 
 import { visibilityEnum } from '../utils/enums';
 
-type ResourceSchema = IResource & Document<any>;
+export type ResourceSchema = IResource & Document<any>;
 
 /**
  * Mongoose Schema to represent a Resource at South Side Weekly.

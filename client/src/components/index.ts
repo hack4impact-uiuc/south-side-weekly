@@ -3,7 +3,6 @@ import ClaimPitchModal from './Modals/ClaimPitch';
 import ResourceModal from './Modals/Resource';
 import SubmitPitchModal from './Modals/SubmitPitch';
 import UserModal from './Modals/User';
-import PitchCard from './PitchCard';
 import WizardListTitle from './Wizard/ListTitle';
 import PageCounter from './Wizard/PageCounter';
 import WizardSvg from './Wizard/Svg';
@@ -50,7 +49,6 @@ export {
   ResourceModal,
   SubmitPitchModal,
   UserModal,
-  PitchCard,
   WizardListTitle,
   PageCounter,
   WizardSvg,
@@ -71,7 +69,6 @@ export {
   ViewPitchModal,
   MultiSelect,
   Select,
-  // DirectoryTable,
   ResourceTable,
   PitchTable,
   PitchRow,

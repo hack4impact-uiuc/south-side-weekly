@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import logger from 'morgan';
 import cookieSession from 'cookie-session';
 import passport from 'passport';
-import apiRoutes from './api';
+import apiRoutes from './routes';
 import { errorHandler } from './middleware';
 
 const app = express();

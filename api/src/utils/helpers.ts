@@ -1,4 +1,5 @@
-import { IPitch } from 'ssw-common';
+import { Response } from 'express';
+import { IPitch, IUser } from 'ssw-common';
 
 export const isPitchClaimed = (pitch: IPitch): boolean =>
   getOpenTeamsForPitch(pitch).length === 0;
@@ -23,3 +24,35 @@ export const updatePitchTeamTargets = (
     team.target--;
   });
 };
+
+export const sendSuccess = (
+  res: Response,
+  message: string,
+  result?: unknown,
+): Response =>
+  res.status(200).json({
+    success: true,
+    message,
+    result,
+  });
+
+export const sendNotFound = (res: Response, message: string): Response =>
+  res.status(404).json({
+    success: false,
+    message,
+  });
+
+export const sendFail = (
+  res: Response,
+  message: string,
+  error?: unknown,
+): Response =>
+  res.status(400).json({
+    success: false,
+    message,
+    error,
+  });
+
+export const getUserFulName = (
+  user: Pick<IUser, 'firstName' | 'preferredName' | 'lastName'>,
+): string => `${user.preferredName ?? user.firstName} ${user.lastName}`;
