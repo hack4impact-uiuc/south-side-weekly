@@ -1,5 +1,4 @@
 import React, { ReactElement, FC, useState } from 'react';
-
 import { ModalProps, Select } from 'semantic-ui-react';
 import { IPitchFeedback } from 'ssw-common';
 import { toString } from 'lodash';

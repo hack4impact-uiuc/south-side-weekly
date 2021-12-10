@@ -43,20 +43,22 @@
       width: 100%;
     }
     .individual-select {
-      min-width: 10px !important;
-      width: 20px !important;
+      min-width: 20px !important;
+      width: 50px !important;
       margin-right: 8px;
     }
   }
 }
 
-.questions-tab {
-  .block {
-    background-color: #f4f4f4;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    padding: 3px 8px;
-    margin: 20px 0px;
-    line-height: 2;
-  }
+.block {
+  background-color: #f4f4f4;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  padding: 3px 8px;
+  margin: 20px 0px;
+  line-height: 2;
+}
+
+.left-right-control {
+  margin-bottom: 20px;
 }

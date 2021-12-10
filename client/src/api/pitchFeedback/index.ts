@@ -1,5 +1,3 @@
-import { IPitchFeedback } from 'ssw-common';
-
 import { Response } from '../types';
 import { buildEndpoint, get } from '../builders';
 

@@ -1,36 +1,20 @@
 import React, { ReactElement, FC, useState, useEffect } from 'react';
-
-import {
-  Button,
-  Modal,
-  ModalProps,
-  Rating,
-  TextArea,
-  Icon,
-  Menu,
-} from 'semantic-ui-react';
-import toast from 'react-hot-toast';
+import { Modal, ModalProps, Icon, Menu } from 'semantic-ui-react';
 import { IPitchFeedback } from 'ssw-common';
-import { toString } from 'lodash';
-import QuestionsTab from './questionsTab';
-import IndividualTab from './individualTab';
 
-import { useAuth, useTeams } from '../../../contexts';
-import { getAggregatedPitch, isError } from '../../../api';
-import { getPitchFeedback } from '../../../api';
-import FieldTag from '../../FieldTag';
-import UserChip from '../../UserChip';
+import { isError, getPitchFeedback } from '../../../api';
+
+import IndividualTab from './individualTab';
+import QuestionsTab from './questionsTab';
 
 import './styles.scss';
 
 interface PitchFeedbackModal extends ModalProps {
   pitchId: string;
-  trigger: ReactElement;
 }
 
 const PitchFeedbackModal: FC<PitchFeedbackModal> = ({
   pitchId,
-  trigger,
 }): ReactElement => {
   const TABS = {
     QUESTIONS: 'Questions',
@@ -64,7 +48,6 @@ const PitchFeedbackModal: FC<PitchFeedbackModal> = ({
       open={isOpen}
       onOpen={() => setIsOpen(true)}
       onClose={() => setIsOpen(false)}
-      trigger={trigger}
     >
       <Modal.Header>
         View Contributor Feedback

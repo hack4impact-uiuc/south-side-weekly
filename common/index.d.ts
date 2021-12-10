@@ -172,6 +172,7 @@ export interface IPitchFeedback {
   firstQuestion: string;
   secondQuestion: string;
   thirdQuestion: string;
+  fourthQuestion: string;
   createdAt: Date;
   updatedAt: Date;
 }
