@@ -78,40 +78,38 @@ const DynamicTable = <
 
   const handleColumnClick = useCallback(
     (column: Column): void => {
-      const setNewSort = (sort: Sort<Column> | undefined): void => {
-        const newSortColumn = !sort || (sort && column !== sort.column);
-
-        if (newSortColumn) {
-          setSort({
-            column,
-            direction: 'ascending',
-          });
-          return;
-        }
-
-        const nextSortColumn =
-          sort?.direction !== 'descending' ? column : undefined;
-
-        if (!nextSortColumn) {
-          setSort(undefined);
-          return;
-        }
-
-        setSort({
-          column: nextSortColumn,
-          direction: 'descending',
-        });
-      };
       if (onHeaderClick) {
         const newSort = onHeaderClick(column);
-        setNewSort(newSort);
+        setSort(newSort);
         return;
       }
 
       if (!column.sorter) {
         return;
       }
-      setNewSort(sort);
+      const newSortColumn = !sort || (sort && column !== sort.column);
+
+      if (newSortColumn) {
+        //This causes even columns with no sorting from onHeaderClick to be set as ascending
+        setSort({
+          column,
+          direction: 'ascending',
+        });
+        return;
+      }
+
+      const nextSortColumn =
+        sort?.direction !== 'descending' ? column : undefined;
+
+      if (!nextSortColumn) {
+        setSort(undefined);
+        return;
+      }
+
+      setSort({
+        column: nextSortColumn,
+        direction: 'descending',
+      });
     },
     [sort, onHeaderClick],
   );

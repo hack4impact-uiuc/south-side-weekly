@@ -91,7 +91,6 @@ const PaginatedTable = <
       column,
       direction: 'ascending',
     };
-
     if (!newSort?.column.key) {
       return undefined;
     }
@@ -103,10 +102,9 @@ const PaginatedTable = <
         newSort = undefined;
       }
     }
-
     setSort(newSort);
 
-    return sort;
+    return newSort;
   };
 
   const handlePageChange = (_: any, { activePage }: PaginationProps): void => {
