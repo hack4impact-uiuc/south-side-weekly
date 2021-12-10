@@ -18,7 +18,7 @@ export const createUser = async (
 ): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const user = await UserService.addUser(req.body);
+  const user = await UserService.add(req.body);
 
   sendSuccess(
     res,
@@ -37,7 +37,7 @@ export const stallOldScheduledOnboarding = async (
   const twoWeeksAgo = new Date();
   twoWeeksAgo.setDate(twoWeeksAgo.getDate() - TWO_WEEKS_AGO);
 
-  await UserService.stallUsers(twoWeeksAgo);
+  await UserService.stall(twoWeeksAgo);
 
   sendSuccess(
     res,
@@ -51,7 +51,7 @@ export const stallOldScheduledOnboarding = async (
 export const getUsers = async (req: Request, res: Response): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const users = await UserService.getUsers();
+  const users = await UserService.getAll();
 
   sendSuccess(
     res,
@@ -67,7 +67,7 @@ export const getApproved = async (
 ): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const users = await UserService.getUsersWithOnboardStatus(
+  const users = await UserService.getWithOnboardStatus(
     onboardingStatusEnum.ONBOARDED,
   );
 
@@ -85,7 +85,7 @@ export const getPendingUsers = async (
 ): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const users = await UserService.getUsersWithOnboardStatus(
+  const users = await UserService.getWithOnboardStatus(
     onboardingStatusEnum.ONBOARDING_SCHEDULED,
     onboardingStatusEnum.STALLED,
   );
@@ -104,7 +104,7 @@ export const getDeniedUsers = async (
 ): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const users = await UserService.getUsersWithOnboardStatus(
+  const users = await UserService.getWithOnboardStatus(
     onboardingStatusEnum.DENIED,
   );
 
@@ -119,7 +119,7 @@ export const getDeniedUsers = async (
 export const getUser = async (req: Request, res: Response): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const user = await UserService.getUserById(req.params.id);
+  const user = await UserService.getOne(req.params.id);
 
   if (!user) {
     sendNotFound(res, 'User not found');
@@ -155,7 +155,7 @@ export const updateUser = async (
 ): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const user = await UserService.updateUser(req.params.id, req.body);
+  const user = await UserService.update(req.params.id, req.body);
 
   if (!user) {
     sendNotFound(res, `User not found with id ${req.params.id}`);
@@ -188,7 +188,7 @@ export const approveUser = async (
 ): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const user = await UserService.setUserOnboardingStatus(
+  const user = await UserService.setOnboardStatus(
     req.params.id,
     onboardingStatusEnum.ONBOARDED,
   );
@@ -214,7 +214,7 @@ export const rejectUser = async (
 ): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const user = await UserService.setUserOnboardingStatus(
+  const user = await UserService.setOnboardStatus(
     req.params.id,
     onboardingStatusEnum.DENIED,
   );
@@ -271,7 +271,7 @@ export const deleteUser = async (
 ): Promise<void> => {
   const populateType = req.query.populate ? 'full' : 'default';
 
-  const user = await UserService.deleteUser(req.params.id);
+  const user = await UserService._delete(req.params.id);
 
   if (!user) {
     sendNotFound(res, `User not found with id ${req.params.id}`);
