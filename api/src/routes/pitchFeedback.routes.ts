@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { errorWrap } from '../middleware';
-import * as pitchFeedbackController from '../controllers/pitchFeedback.controller';
+import { PitchFeedbackController } from '../controllers';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
 
 const router = Router();
@@ -10,42 +10,42 @@ const router = Router();
 router.get(
   '/',
   requireAdmin,
-  errorWrap(pitchFeedbackController.getAllPitchFeedback),
+  errorWrap(PitchFeedbackController.getAllPitchFeedback),
 );
 
 // GET /api/pitchFeedback/:id
 router.get(
   '/:id',
   requireAdmin,
-  errorWrap(pitchFeedbackController.getPitchFeedback),
+  errorWrap(PitchFeedbackController.getPitchFeedback),
 );
 
 // GET /api/pitchFeedback/pitch/:id
 router.get(
   '/pitch/:id',
   requireAdmin,
-  errorWrap(pitchFeedbackController.getFeedbackForPitch),
+  errorWrap(PitchFeedbackController.getFeedbackForPitch),
 );
 
 // POST /api/pitchFeedback
 router.post(
   '/',
   requireRegistered,
-  errorWrap(pitchFeedbackController.createPitchFeedback),
+  errorWrap(PitchFeedbackController.createPitchFeedback),
 );
 
 // PUT /api/pitchFeedback/:id
 router.put(
   '/:id',
   requireRegistered,
-  errorWrap(pitchFeedbackController.updatePitchFeedback),
+  errorWrap(PitchFeedbackController.updatePitchFeedback),
 );
 
 // DELETE /api/pitchFeedback/:id
 router.delete(
   '/:id',
   requireAdmin,
-  errorWrap(pitchFeedbackController.deletePitchFeedback),
+  errorWrap(PitchFeedbackController.deletePitchFeedback),
 );
 
 export default router;

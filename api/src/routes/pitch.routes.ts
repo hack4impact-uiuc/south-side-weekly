@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { errorWrap } from '../middleware';
-import * as pitchController from '../controllers/pitch.controller';
+import { PitchController } from '../controllers';
 import {
   requireAdmin,
   requireRegistered,
@@ -11,64 +11,64 @@ import {
 const router = Router();
 
 // GET /api/pitches
-router.get('/', requireRegistered, errorWrap(pitchController.getPitches));
+router.get('/', requireRegistered, errorWrap(PitchController.getPitches));
 
 // GET /api/pitches/pending
 router.get(
   '/pending',
   requireAdmin,
-  errorWrap(pitchController.getPendingPitches),
+  errorWrap(PitchController.getPendingPitches),
 );
 
 // GET /api/pitches/approved
 router.get(
   '/approved',
   requireRegistered,
-  errorWrap(pitchController.getApprovedPitches),
+  errorWrap(PitchController.getApprovedPitches),
 );
 
 // GET /api/pitches/pendingClaims
 router.get(
   '/pendingClaims',
   requireStaff,
-  errorWrap(pitchController.getPitchesWithPendingClaims),
+  errorWrap(PitchController.getPitchesWithPendingClaims),
 );
 
 // GET /api/pitches/:id
-router.get('/:id', requireRegistered, errorWrap(pitchController.getPitch));
+router.get('/:id', requireRegistered, errorWrap(PitchController.getPitch));
 
 // POST /api/pitches
-router.post('/', requireRegistered, errorWrap(pitchController.createPitch));
+router.post('/', requireRegistered, errorWrap(PitchController.createPitch));
 
 // PUT /api/pitches/:id
-router.put('/:id', requireRegistered, errorWrap(pitchController.updatePitch));
+router.put('/:id', requireRegistered, errorWrap(PitchController.updatePitch));
 
 // PUT /api/pitches/:id/approve
 router.put(
   '/:id/approve',
   requireAdmin,
-  errorWrap(pitchController.approvePitch),
+  errorWrap(PitchController.approvePitch),
 );
 
 // PUT /api/pitches/:id/decline
 router.put(
   '/:id/decline',
   requireAdmin,
-  errorWrap(pitchController.declinePitch),
+  errorWrap(PitchController.declinePitch),
 );
 
 // PUT /api/pitches/:id/submitClaim
 router.put(
   '/:id/submitClaim',
   requireRegistered,
-  errorWrap(pitchController.submitClaim),
+  errorWrap(PitchController.submitClaim),
 );
 
 // DELETE /api/pitches/:id
 router.delete(
   '/:id',
   requireRegistered,
-  errorWrap(pitchController.deletePitch),
+  errorWrap(PitchController.deletePitch),
 );
 
 export default router;

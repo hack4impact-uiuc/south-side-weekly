@@ -1,0 +1,9 @@
+export * as AuthController from './auth.controller';
+export * as InterestController from './interest.controller';
+export * as UserController from './user.controller';
+export * as IssueController from './issue.controller';
+export * as PitchController from './pitch.controller';
+export * as PitchFeedbackController from './pitchFeedback.controller';
+export * as ResourceController from './resource.controller';
+export * as TeamController from './team.controller';
+export * as UserFeedbackController from './userFeedback.controller';

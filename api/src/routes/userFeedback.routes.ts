@@ -1,7 +1,7 @@
 import { Router } from 'express';
 
 import { errorWrap } from '../middleware';
-import * as userFeedbackController from '../controllers/userFeedback.controller';
+import { UserFeedbackController } from '../controllers';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
 
 const router = Router();
@@ -10,42 +10,42 @@ const router = Router();
 router.get(
   '/',
   requireAdmin,
-  errorWrap(userFeedbackController.getAllUserFeedback),
+  errorWrap(UserFeedbackController.getAllUserFeedback),
 );
 
 // GET /api/userFeedback/:id
 router.get(
   '/:id',
   requireRegistered,
-  errorWrap(userFeedbackController.getUserFeedback),
+  errorWrap(UserFeedbackController.getUserFeedback),
 );
 
 // GET /api/userFeedback/user/:id
 router.get(
   '/user/:id',
   requireRegistered,
-  errorWrap(userFeedbackController.getAllFeedbackForUser),
+  errorWrap(UserFeedbackController.getAllFeedbackForUser),
 );
 
 // POST /api/userFeedback
 router.post(
   '/',
   requireRegistered,
-  errorWrap(userFeedbackController.createUserFeedback),
+  errorWrap(UserFeedbackController.createUserFeedback),
 );
 
 // PUT /api/userFeedback/:id
 router.put(
   '/:id',
   requireRegistered,
-  errorWrap(userFeedbackController.updateUserFeedback),
+  errorWrap(UserFeedbackController.updateUserFeedback),
 );
 
 // DELETE /api/userFeedback/:id
 router.delete(
   '/:id',
   requireRegistered,
-  errorWrap(userFeedbackController.deleteUserFeedback),
+  errorWrap(UserFeedbackController.deleteUserFeedback),
 );
 
 export default router;

@@ -1,39 +1,39 @@
 import { Router } from 'express';
 
 import { errorWrap } from '../middleware';
-import * as interestController from '../controllers/interest.controller';
+import { InterestController } from '../controllers';
 import { requireAdmin, requireRegistered } from '../middleware/auth';
 
 const router = Router();
 
 // GET /api/teams
-router.get('/', requireRegistered, errorWrap(interestController.getInterests));
+router.get('/', requireRegistered, errorWrap(InterestController.getInterests));
 
 // GET /api/teams/:id
 router.get(
   '/:id',
   requireRegistered,
-  errorWrap(interestController.getInterest),
+  errorWrap(InterestController.getInterest),
 );
 
 // POST /api/teams
-router.post('/', requireAdmin, errorWrap(interestController.createInterest));
+router.post('/', requireAdmin, errorWrap(InterestController.createInterest));
 
 // POST /api/teams/many
 router.post(
   '/many',
   requireAdmin,
-  errorWrap(interestController.createInterests),
+  errorWrap(InterestController.createInterests),
 );
 
 // PUT /api/teams/many
 router.put(
   '/many',
   requireAdmin,
-  errorWrap(interestController.updateInterests),
+  errorWrap(InterestController.updateInterests),
 );
 
 // PUT /api/teams/:id
-router.put('/:id', requireAdmin, errorWrap(interestController.updatedInterest));
+router.put('/:id', requireAdmin, errorWrap(InterestController.updatedInterest));
 
 export default router;

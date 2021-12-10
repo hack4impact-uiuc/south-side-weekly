@@ -1,14 +1,14 @@
 import { Router } from 'express';
 
-import userRoutes from './user';
-import teamRoutes from './team';
-import interestRoutes from './interest';
-import authRoutes from './auth';
-import resourceRoutes from './resource';
-import issueRoutes from './issue';
-import userFeedbackRoutes from './userFeedback';
-import pitchFeedbackRoutes from './pitchFeedback';
-import pitchRoutes from './pitch';
+import userRoutes from './user.routes';
+import teamRoutes from './team.routes';
+import interestRoutes from './interest.routes';
+import authRoutes from './auth.routes';
+import resourceRoutes from './resource.routes';
+import issueRoutes from './issue.routes';
+import userFeedbackRoutes from './userFeedback.routes';
+import pitchFeedbackRoutes from './pitchFeedback.routes';
+import pitchRoutes from './pitch.routes';
 
 const router = Router();
 
