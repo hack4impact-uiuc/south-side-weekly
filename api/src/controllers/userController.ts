@@ -125,7 +125,7 @@ export const getDeniedUsers = async (
   sendSuccess(
     res,
     'Users retrieved successfully',
-    populateUser(users, populateType),
+    await populateUser(users, populateType),
   );
 };
 
@@ -143,7 +143,7 @@ export const getUser = async (req: Request, res: Response): Promise<void> => {
   sendSuccess(
     res,
     'User retrieved successfully',
-    populateUser(user, populateType),
+    await populateUser(user, populateType),
   );
 };
 
@@ -181,7 +181,7 @@ export const updateUser = async (
   sendSuccess(
     res,
     'User created successfully',
-    populateUser(user, populateType),
+    await populateUser(user, populateType),
   );
 };
 
