@@ -53,6 +53,5 @@ export const sendFail = (
     error,
   });
 
-export const getUserFulName = (
-  user: Pick<IUser, 'firstName' | 'preferredName' | 'lastName'>,
-): string => `${user.preferredName ?? user.firstName} ${user.lastName}`;
+export const getUserFulName = (user: IUser): string =>
+  `${user.preferredName || user.firstName} ${user.lastName}`;
