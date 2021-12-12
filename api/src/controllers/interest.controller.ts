@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { IInterest } from 'ssw-common';
-import Interest from '../models/interest';
-import { sendFail, sendNotFound, sendSuccess } from '../utils/helpers';
+
+import { sendNotFound, sendSuccess } from '../utils/helpers';
+import { InterestService } from '../services';
 
 type IdParam = { id: string };
 
@@ -14,32 +15,21 @@ export const createInterest = async (
   req: CreateReq,
   res: Response,
 ): Promise<void> => {
-  const team = await Interest.create(req.body);
+  const interest = await InterestService.add(req.body);
 
-  sendSuccess(res, 'Interest created', team);
+  sendSuccess(res, 'Interest created', interest);
 };
 
-type CreateManyBodyReq = { teams: Partial<IInterest>[] };
+type CreateManyBodyReq = { interests: Partial<IInterest>[] };
 type CreateManyReq = Request<never, never, CreateManyBodyReq>;
 
 export const createInterests = async (
   req: CreateManyReq,
   res: Response,
 ): Promise<void> => {
-  const createdInterests = await Promise.all(
-    req.body.teams.map(async (team) => Interest.create(team)),
-  );
+  const interests = await InterestService.addMany(req.body.interests);
 
-  const failedInterests = createdInterests.filter((team) => !team);
-
-  if (failedInterests.length > 0) {
-    const failedInterestNames = failedInterests.map((team) => team.name);
-
-    sendFail(res, `Failed to create teams: ${failedInterestNames.join(', ')}`);
-    return;
-  }
-
-  sendSuccess(res, 'Interests created', createdInterests);
+  sendSuccess(res, 'Interests created', interests);
 };
 
 // READ controls
@@ -48,9 +38,9 @@ export const getInterests = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const teams = await Interest.find({});
+  const interests = await InterestService.getAll();
 
-  sendSuccess(res, 'Interests retrieved', teams);
+  sendSuccess(res, 'Interests retrieved', interests);
 };
 
 type GetIdReq = Request<IdParam>;
@@ -59,9 +49,9 @@ export const getInterest = async (
   req: GetIdReq,
   res: Response,
 ): Promise<void> => {
-  const team = await Interest.findById(req.params.id);
+  const interest = await InterestService.getOne(req.params.id);
 
-  sendSuccess(res, 'Interest retrieved', team);
+  sendSuccess(res, 'Interest retrieved', interest);
 };
 
 // UPDATE controls
@@ -72,50 +62,24 @@ export const updatedInterest = async (
   req: UpdateIdReq,
   res: Response,
 ): Promise<void> => {
-  const team = await Interest.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
+  const interest = await InterestService.update(req.params.id, req.body);
 
-  if (!team) {
+  if (!interest) {
     sendNotFound(res, 'Interest not found');
     return;
   }
 
-  sendSuccess(res, 'Interest updated', team);
+  sendSuccess(res, 'Interest updated', interest);
 };
 
-type UpdateManyReqBody = { teams: Partial<IInterest>[] };
+type UpdateManyReqBody = { interests: Partial<IInterest>[] };
 type UpdateManyReq = Request<never, never, UpdateManyReqBody>;
 
 export const updateInterests = async (
   req: UpdateManyReq,
   res: Response,
 ): Promise<void> => {
-  const updatedInterests = await Promise.all(
-    req.body.teams.map(async (team) =>
-      Interest.findByIdAndUpdate(
-        team._id,
-        {
-          name: team.name,
-          color: team.color,
-          active: team.active,
-        },
-        {
-          new: true,
-          runValidators: true,
-        },
-      ),
-    ),
-  );
+  const interests = await InterestService.updateMany(req.body.interests);
 
-  const failedInterests = updatedInterests.filter((team) => !team);
-
-  if (failedInterests.length > 0) {
-    const failedInterestNames = failedInterests.map((team) => team.name);
-
-    sendFail(res, `Failed to update teams: ${failedInterestNames.join(', ')}`);
-    return;
-  }
-
-  sendSuccess(res, 'Interests updated', updatedInterests);
+  sendSuccess(res, 'Interests updated', interests);
 };

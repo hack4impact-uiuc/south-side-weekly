@@ -1,7 +1,7 @@
 import mongoose, { Document } from 'mongoose';
 import { ITeam } from 'ssw-common';
 
-type TeamSchema = ITeam & Document<any>;
+export type TeamSchema = ITeam & Document<any>;
 
 /**
  * Mongoose Schema to represent a Team at South Side Weekly.

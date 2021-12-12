@@ -49,5 +49,8 @@ export const sendNotFound = (res: Response, message: string): Response =>
 export const sendFail = (res: Response, message: string): Response =>
   sendResponse(res, 400, message);
 
+export const sendUnauthorized = (res: Response): Response =>
+  sendResponse(res, 401, 'Unauthorized');
+
 export const getUserFulName = (user: IUser): string =>
   `${user.preferredName || user.firstName} ${user.lastName}`;

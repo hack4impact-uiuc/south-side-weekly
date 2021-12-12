@@ -1,5 +1,3 @@
-import internal from "node:stream";
-
 /**
  * Interface for a User Schema.
  */
@@ -34,6 +32,35 @@ export interface IUser {
   onboardReasoning: string;
   feedback: string[];
   lastActive: Date;
+}
+
+type BaseUserOmitFields = 'teams' | 'interests';
+
+export type DefaultPopulatedUser = Omit<IUser, BaseUserOmitFields> & {
+  teams: Pick<ITeam, 'name' | 'active' | 'color'>;
+  interests: Pick<IInterest, 'name' | 'active' | 'color'>;
+}
+
+export type PitchFields = Pick<
+IPitch,
+| 'title'
+| 'description'
+| 'createdAt'
+| 'topics'
+| 'status'
+| 'editStatus'
+| 'deadline'
+| 'issueStatuses'
+>;
+export type TeamFields = Pick<ITeam, 'name' | 'active' | 'color'>;
+export type InterestFields = Pick<IInterest, 'name' | 'active' | 'color'>;
+
+export type FullPopulatedUser = Omit<IUser, BaseUserOmitFields | 'claimedPitches' | 'submittedPitches' | 'submittedClaims'> & {
+  teams: TeamFields;
+  interests: InterestFields;
+  claimedPitches: PitchFields;
+  submittedPitches: PitchFields;
+  submittedClaims: PitchFields;
 }
 
 export interface IUserAggregate extends IUser {
@@ -151,6 +178,12 @@ export interface IIssue {
   releaseDate: string;
   pitches: string[];
   type: string;
+}
+
+type BaseIssueOmitFields = 'pitches';
+
+export type PopulatedIssue = Omit<IIssue, BaseIssueOmitFields> & {
+  pitches: PitchFields[];
 }
 
 /**

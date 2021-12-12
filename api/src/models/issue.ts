@@ -2,7 +2,7 @@ import mongoose, { Document, Schema } from 'mongoose';
 import { IIssue } from 'ssw-common';
 import { issueTypeEnum } from '../utils/enums';
 
-type IssueSchema = IIssue & Document<any>;
+export type IssueSchema = IIssue & Document<any>;
 /**
  * Mongoose Schema to represent an Issue at South Side Weekly.
  */

@@ -6,8 +6,9 @@ import { sendNotFound, sendSuccess } from '../utils/helpers';
 import { getEditableFields, getViewableFields } from '../utils/user-utils';
 import { sendApproveUserMail, sendRejectUserMail } from '../mail/sender';
 import { UserService } from '../services';
+import { populateUser } from '../populators/user.populate';
 
-import { populateUser } from './utils';
+import { extractPopulateQuery } from './utils';
 
 // CREATE controls
 
@@ -16,7 +17,7 @@ export const createUser = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const populateType = req.query.populate ? 'full' : 'default';
+  const populateType = extractPopulateQuery(req.query);
 
   const user = await UserService.add(req.body);
 
@@ -49,7 +50,7 @@ export const stallOldScheduledOnboarding = async (
 
 // Gets all of the users
 export const getUsers = async (req: Request, res: Response): Promise<void> => {
-  const populateType = req.query.populate ? 'full' : 'default';
+  const populateType = extractPopulateQuery(req.query);
 
   const users = await UserService.getAll();
 
@@ -65,7 +66,7 @@ export const getApproved = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const populateType = req.query.populate ? 'full' : 'default';
+  const populateType = extractPopulateQuery(req.query);
 
   const users = await UserService.getWithOnboardStatus(
     onboardingStatusEnum.ONBOARDED,
@@ -83,7 +84,7 @@ export const getPendingUsers = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const populateType = req.query.populate ? 'full' : 'default';
+  const populateType = extractPopulateQuery(req.query);
 
   const users = await UserService.getWithOnboardStatus(
     onboardingStatusEnum.ONBOARDING_SCHEDULED,
@@ -102,7 +103,7 @@ export const getDeniedUsers = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const populateType = req.query.populate ? 'full' : 'default';
+  const populateType = extractPopulateQuery(req.query);
 
   const users = await UserService.getWithOnboardStatus(
     onboardingStatusEnum.DENIED,
@@ -117,7 +118,7 @@ export const getDeniedUsers = async (
 
 // Gets a user by id
 export const getUser = async (req: Request, res: Response): Promise<void> => {
-  const populateType = req.query.populate ? 'full' : 'default';
+  const populateType = extractPopulateQuery(req.query);
 
   const user = await UserService.getOne(req.params.id);
 
@@ -153,7 +154,7 @@ export const updateUser = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const populateType = req.query.populate ? 'full' : 'default';
+  const populateType = extractPopulateQuery(req.query);
 
   const user = await UserService.update(req.params.id, req.body);
 
@@ -186,7 +187,7 @@ export const approveUser = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const populateType = req.query.populate ? 'full' : 'default';
+  const populateType = extractPopulateQuery(req.query);
 
   const user = await UserService.setOnboardStatus(
     req.params.id,
@@ -212,7 +213,7 @@ export const rejectUser = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const populateType = req.query.populate ? 'full' : 'default';
+  const populateType = extractPopulateQuery(req.query);
 
   const user = await UserService.setOnboardStatus(
     req.params.id,
@@ -238,7 +239,7 @@ export const claimPitch = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const populateType = req.query.populate ? 'full' : 'default';
+  const populateType = extractPopulateQuery(req.query);
 
   if (await Pitch.exists({ _id: req.body.pitchId })) {
     sendNotFound(res, `Pitch not found with id ${req.body.pitchId}`);
@@ -269,9 +270,9 @@ export const deleteUser = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const populateType = req.query.populate ? 'full' : 'default';
+  const populateType = extractPopulateQuery(req.query);
 
-  const user = await UserService._delete(req.params.id);
+  const user = await UserService.remove(req.params.id);
 
   if (!user) {
     sendNotFound(res, `User not found with id ${req.params.id}`);

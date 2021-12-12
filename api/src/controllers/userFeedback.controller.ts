@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
 import { IUserFeedback } from 'ssw-common';
 
-import UserFeedback from '../models/userFeedback';
-import User from '../models/user';
 import { sendNotFound, sendSuccess } from '../utils/helpers';
+import { UserFeedbackService, UserService } from '../services';
 
 type IdParam = { id: string };
 
@@ -16,13 +15,8 @@ export const createUserFeedback = async (
   req: CreateReq,
   res: Response,
 ): Promise<void> => {
-  const newFeedback = await UserFeedback.create(req.body);
-
-  await User.findByIdAndUpdate(newFeedback.userId, {
-    $addToSet: {
-      feedback: newFeedback._id,
-    },
-  });
+  const newFeedback = await UserFeedbackService.add(req.body);
+  await UserService.addFeedback(newFeedback.userId, newFeedback.id);
 
   if (newFeedback) {
     sendSuccess(res, 'Feedback created successfully', newFeedback);
@@ -35,7 +29,7 @@ export const getAllUserFeedback = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const feedback = await UserFeedback.find({});
+  const feedback = await UserFeedbackService.getAll();
 
   sendSuccess(res, 'Feedback retrieved successfully', feedback);
 };
@@ -46,7 +40,7 @@ export const getUserFeedback = async (
   req: GetUserFeedbackReq,
   res: Response,
 ): Promise<void> => {
-  const feedback = await UserFeedback.findById(req.params.id);
+  const feedback = await UserFeedbackService.getOne(req.params.id);
 
   if (!feedback) {
     sendNotFound(res, 'Feedback not found');
@@ -62,7 +56,9 @@ export const getAllFeedbackForUser = async (
   req: GetAllFeedbackForUser,
   res: Response,
 ): Promise<void> => {
-  const feedback = await UserFeedback.find({ userId: req.params.id });
+  const feedback = await UserFeedbackService.getAllFeedbackForUser(
+    req.params.id,
+  );
 
   sendSuccess(res, 'Feedback retrieved successfully', feedback);
 };
@@ -76,11 +72,7 @@ export const updateUserFeedback = async (
   req: UpdateReq,
   res: Response,
 ): Promise<void> => {
-  const feedback = await UserFeedback.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    { new: true },
-  );
+  const feedback = await UserFeedbackService.update(req.params.id, req.body);
 
   if (!feedback) {
     sendNotFound(res, 'Feedback not found');
@@ -98,18 +90,14 @@ export const deleteUserFeedback = async (
   req: DeleteUserFeedback,
   res: Response,
 ): Promise<void> => {
-  const deletedFeedback = await UserFeedback.findByIdAndDelete(req.params.id);
+  const deletedFeedback = await UserFeedbackService.remove(req.params.id);
 
   if (!deletedFeedback) {
     sendNotFound(res, 'Feedback not found');
     return;
   }
 
-  await User.findByIdAndUpdate(deletedFeedback.userId, {
-    $pull: {
-      feedback: deletedFeedback._id,
-    },
-  });
+  await UserService.removeFeedback(deletedFeedback.userId, deletedFeedback.id);
 
   sendSuccess(res, 'Feedback deleted successfully', deletedFeedback);
 };

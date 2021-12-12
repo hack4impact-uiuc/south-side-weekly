@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { IInterest } from 'ssw-common';
 
-type InterestSchema = IInterest & Document;
+export type InterestSchema = IInterest & Document;
 
 /**
  * Mongoose Schema to represent an Interest at South Side Weekly

@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import { ITeam } from 'ssw-common';
-import Team from '../models/team';
-import { sendFail, sendNotFound, sendSuccess } from '../utils/helpers';
+
+import { sendNotFound, sendSuccess } from '../utils/helpers';
+import { TeamService } from '../services';
 
 type IdParam = { id: string };
 
@@ -14,7 +15,7 @@ export const createTeam = async (
   req: CreateReq,
   res: Response,
 ): Promise<void> => {
-  const team = await Team.create(req.body);
+  const team = await TeamService.add(req.body);
 
   sendSuccess(res, 'Team created', team);
 };
@@ -26,26 +27,15 @@ export const createTeams = async (
   req: CreateManyReq,
   res: Response,
 ): Promise<void> => {
-  const createdTeams = await Promise.all(
-    req.body.teams.map(async (team) => Team.create(team)),
-  );
+  const teams = await TeamService.addMany(req.body.teams);
 
-  const failedTeams = createdTeams.filter((team) => !team);
-
-  if (failedTeams.length > 0) {
-    const failedTeamNames = failedTeams.map((team) => team.name);
-
-    sendFail(res, `Failed to create teams: ${failedTeamNames.join(', ')}`);
-    return;
-  }
-
-  sendSuccess(res, 'Teams created', createdTeams);
+  sendSuccess(res, 'Teams created', teams);
 };
 
 // READ controls
 
 export const getTeams = async (req: Request, res: Response): Promise<void> => {
-  const teams = await Team.find({});
+  const teams = await TeamService.getAll();
 
   sendSuccess(res, 'Teams retrieved', teams);
 };
@@ -53,7 +43,7 @@ export const getTeams = async (req: Request, res: Response): Promise<void> => {
 type GetIdReq = Request<IdParam>;
 
 export const getTeam = async (req: GetIdReq, res: Response): Promise<void> => {
-  const team = await Team.findById(req.params.id);
+  const team = await TeamService.getOne(req.params.id);
 
   sendSuccess(res, 'Team retrieved', team);
 };
@@ -66,9 +56,7 @@ export const updateTeam = async (
   req: UpdateIdReq,
   res: Response,
 ): Promise<void> => {
-  const team = await Team.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
+  const team = await TeamService.update(req.params.id, req.body);
 
   if (!team) {
     sendNotFound(res, 'Team not found');
@@ -85,31 +73,7 @@ export const updateTeams = async (
   req: UpdateManyReq,
   res: Response,
 ): Promise<void> => {
-  const updatedTeams = await Promise.all(
-    req.body.teams.map(async (team) =>
-      Team.findByIdAndUpdate(
-        team._id,
-        {
-          name: team.name,
-          color: team.color,
-          active: team.active,
-        },
-        {
-          new: true,
-          runValidators: true,
-        },
-      ),
-    ),
-  );
+  const teams = await TeamService.updateMany(req.body.teams);
 
-  const failedTeams = updatedTeams.filter((team) => !team);
-
-  if (failedTeams.length > 0) {
-    const failedTeamNames = failedTeams.map((team) => team.name);
-
-    sendFail(res, `Failed to update teams: ${failedTeamNames.join(', ')}`);
-    return;
-  }
-
-  sendSuccess(res, 'Teams updated', updatedTeams);
+  sendSuccess(res, 'Teams updated', teams);
 };

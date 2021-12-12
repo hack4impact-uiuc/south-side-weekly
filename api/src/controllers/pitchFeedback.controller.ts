@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 
-import PitchFeedback from '../models/pitchFeedback';
 import { sendNotFound, sendSuccess } from '../utils/helpers';
 import { IPitchFeedback } from 'ssw-common';
+import { PitchFeedbackService } from '../services';
 
 type IdParam = { id: string };
 
@@ -15,10 +15,7 @@ export const createPitchFeedback = async (
   req: CreateReq,
   res: Response,
 ): Promise<void> => {
-  const createFeedback = await PitchFeedback.create(req.body);
-
-  // Avoids returning the userId on the response
-  const feedback = await PitchFeedback.findById(createFeedback._id);
+  const feedback = await PitchFeedbackService.add(req.body);
 
   sendSuccess(res, 'Feedback created', feedback);
 };
@@ -29,7 +26,7 @@ export const getAllPitchFeedback = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const feedback = await PitchFeedback.find({});
+  const feedback = await PitchFeedbackService.getAll();
 
   sendSuccess(
     res,
@@ -44,7 +41,7 @@ export const getPitchFeedback = async (
   req: GetPitchFeedbackReq,
   res: Response,
 ): Promise<void> => {
-  const feedback = await PitchFeedback.findById(req.params.id);
+  const feedback = await PitchFeedbackService.getOne(req.params.id);
 
   if (!feedback) {
     sendNotFound(res, 'Pitch feedback not found');
@@ -60,7 +57,9 @@ export const getFeedbackForPitch = async (
   req: GetFeedbackForPitchReq,
   res: Response,
 ): Promise<void> => {
-  const feedback = await PitchFeedback.find({ pitchId: req.params.id });
+  const feedback = await PitchFeedbackService.getFeedbackForPitch(
+    req.params.id,
+  );
 
   sendSuccess(res, 'Successfully retrieved pitch feedback', feedback);
 };
@@ -74,11 +73,7 @@ export const updatePitchFeedback = async (
   req: UpdateReq,
   res: Response,
 ): Promise<void> => {
-  const feedback = await PitchFeedback.findByIdAndUpdate(
-    req.params.id,
-    req.body,
-    { new: true },
-  );
+  const feedback = await PitchFeedbackService.update(req.params.id, req.body);
 
   if (!feedback) {
     sendNotFound(res, 'Pitch feedback not found');
@@ -94,7 +89,7 @@ export const deletePitchFeedback = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const deletedFeedback = await PitchFeedback.findByIdAndDelete(req.params.id);
+  const deletedFeedback = await PitchFeedbackService.remove(req.params.id);
 
   if (!deletedFeedback) {
     sendNotFound(res, 'Pitch feedback not found');

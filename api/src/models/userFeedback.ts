@@ -1,7 +1,7 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import { IUserFeedback } from 'ssw-common';
 
-type UserFeedbackSchema = IUserFeedback & Document<any>;
+export type UserFeedbackSchema = IUserFeedback & Document<any>;
 
 /**
  * Mongoose Schema to represent Feedback for User at South Side Weekly.

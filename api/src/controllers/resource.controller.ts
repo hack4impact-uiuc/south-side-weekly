@@ -1,42 +1,30 @@
 import { Request, Response } from 'express';
-import { Query } from 'mongoose';
 import { IResource } from 'ssw-common';
 
-import Resource, { ResourceSchema } from '../models/resource';
-import { onboardingStatusEnum, visibilityEnum } from '../utils/enums';
+import { ResourceService } from '../services';
+import { onboardingStatusEnum } from '../utils/enums';
 import { sendNotFound, sendSuccess } from '../utils/helpers';
+import { populateResource } from '../populators/resource.populate';
 
-type ResourceQuery = Query<
-  ResourceSchema | ResourceSchema[],
-  ResourceSchema,
-  unknown
->;
+import { extractPopulateQuery } from './utils';
+
 type IdParam = { id: string };
-
-const populateResourceQuery = async (
-  resource: ResourceQuery,
-): Promise<IResource> => resource.populate('teams').lean();
-
-const populateResourceSchema = async (
-  resource: ResourceSchema,
-): Promise<IResource> => resource.populate('teams');
 
 // CREATE controls
 
-type CreateReqBody = Partial<IResource>;
-type CreateReq = Request<IdParam, never, CreateReqBody, never>;
-
 export const createResource = async (
-  req: CreateReq,
+  req: Request,
   res: Response,
 ): Promise<void> => {
-  if (await Resource.exists({ name: req.body.name })) {
+  if (await ResourceService.isNameTaken(req.body.name)) {
     res.status(409).json({
       message: 'Resource with this name already exists',
       success: false,
     });
     return;
-  } else if (await Resource.exists({ link: req.body.link })) {
+  }
+
+  if (await ResourceService.isLinkTaken(req.body.link)) {
     res.status(409).json({
       message: 'Resource with this link already exists',
       success: false,
@@ -44,11 +32,14 @@ export const createResource = async (
     return;
   }
 
-  const resource = await Resource.create(req.body);
+  const populateType = extractPopulateQuery(req.query);
+  const resource = await ResourceService.add(req.body);
 
-  if (resource) {
-    sendSuccess(res, 'Resource created', resource);
-  }
+  sendSuccess(
+    res,
+    'Resource created',
+    await populateResource(resource, populateType),
+  );
 };
 
 // READ controls
@@ -58,20 +49,14 @@ export const getResources = async (
   res: Response,
 ): Promise<void> => {
   // If user does not have an approved role, only show public resources
-  if (req.user.onboardingStatus !== onboardingStatusEnum.ONBOARDED) {
-    const resources = await populateResourceQuery(
-      Resource.find({
-        visibility: visibilityEnum.PUBLIC,
-      }),
-    );
+  const resources = await ResourceService.getAll(
+    req.user.onboardingStatus === onboardingStatusEnum.ONBOARDED,
+  );
+  const populateType = extractPopulateQuery(req.query);
 
-    sendSuccess(res, 'Resources retrieved successfully', resources);
-    return;
-  }
+  const populated = await populateResource(resources, populateType);
 
-  // If user is onboarded, return all resources
-  const resources = await Resource.find({});
-  sendSuccess(res, 'Resources retrieved successfully', resources);
+  sendSuccess(res, 'Resources retrieved successfully', populated);
 };
 
 type GetByIdReq = Request<IdParam>;
@@ -80,16 +65,20 @@ export const getResource = async (
   req: GetByIdReq,
   res: Response,
 ): Promise<void> => {
-  const resource = await populateResourceQuery(
-    Resource.findById(req.params.id),
-  );
+  const resource = await ResourceService.getOne(req.params.id);
 
   if (!resource) {
     sendNotFound(res, 'Resource not found');
     return;
   }
 
-  sendSuccess(res, 'Resource retrieved successfully', resource);
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Resource retrieved successfully',
+    await populateResource(resource, populateType),
+  );
 };
 
 // UPDATE controls
@@ -101,16 +90,20 @@ export const updateResource = async (
   req: UpdateReq,
   res: Response,
 ): Promise<void> => {
-  const resource = await Resource.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  }).then(populateResourceSchema);
+  const resource = await ResourceService.update(req.params.id, req.body);
 
   if (!resource) {
     sendNotFound(res, 'Resource not found');
     return;
   }
 
-  sendSuccess(res, 'Resource updated successfully', resource);
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Resource updated successfully',
+    await populateResource(resource, populateType),
+  );
 };
 
 // DELETE controls
@@ -121,12 +114,18 @@ export const deleteResource = async (
   req: DeleteReq,
   res: Response,
 ): Promise<void> => {
-  const deletedResource = await Resource.findByIdAndDelete(req.params.id);
+  const deletedResource = await ResourceService.remove(req.params.id);
 
   if (!deletedResource) {
     sendNotFound(res, 'Resource not found');
     return;
   }
 
-  sendSuccess(res, 'Resource deleted successfully', deletedResource);
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Resource deleted successfully',
+    await populateResource(deletedResource, populateType),
+  );
 };

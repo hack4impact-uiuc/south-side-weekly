@@ -2,14 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import passport from 'passport';
 import { ParsedQs } from 'qs';
 
-import { sendFail, sendSuccess } from '../utils/helpers';
-
-const sendUnauthorized = (res: Response): void => {
-  res.status(401).send({
-    message: 'Unauthorized',
-    success: false,
-  });
-};
+import { sendFail, sendSuccess, sendUnauthorized } from '../utils/helpers';
 
 const CALLBACK_ROUTE = '/api/auth/google/callback';
 const LOGIN_SUCCESS_REDIRECT = process.env.FE_URI ? process.env.FE_URI : '/';
