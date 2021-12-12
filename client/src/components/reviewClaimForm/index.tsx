@@ -3,7 +3,14 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Button, Form, Grid, Icon, Input, Label } from 'semantic-ui-react';
 import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
 
-import { FieldTag, LinkDisplay, MultiSelect, Select, UserChip } from '..';
+import {
+  AddIssue,
+  FieldTag,
+  LinkDisplay,
+  MultiSelect,
+  Select,
+  UserChip,
+} from '..';
 import { updatePitch } from '../../api';
 import { useInterests } from '../../contexts';
 import { useIssues } from '../../contexts/issues/context';
@@ -55,7 +62,7 @@ const ReviewClaimForm: FC<ReviewClaimFormProps> = ({
   const [editMode, setEditMode] = useState<boolean>(false);
 
   const { getInterestById, interests } = useInterests();
-  const { getIssueFromId, issues } = useIssues();
+  const { getIssueFromId, issues, fetchIssues } = useIssues();
 
   useEffect(() => {
     setFormData(pick(aggregatedPitch, Object.keys(defaultData)) as FormData);
@@ -112,27 +119,63 @@ const ReviewClaimForm: FC<ReviewClaimFormProps> = ({
       </div>
 
       <div className="form-item">
-        <p className="form-label">Status</p>
+        <Grid columns={2} className="status-grid">
+          <Grid.Column width={editMode ? 7 : 4}>
+            <p className="form-label">Edit Status</p>
 
-        {!editMode ? (
-          <div>
-            <FieldTag name={formData.assignmentStatus} hexcode={'#FEF0DB'} />
-          </div>
-        ) : (
-          <div style={{ width: '40%' }}>
-            <Select
-              value={formData.assignmentStatus}
-              options={Object.values(assignmentStatusEnum).map((status) => ({
-                value: status,
-                label: startCase(lowerCase(status)),
-              }))}
-              onChange={(e) =>
-                changeField('assignmentStatus', e ? e.value : '')
-              }
-              placeholder="Select"
-            />
-          </div>
-        )}
+            {!editMode ? (
+              <div>
+                <FieldTag
+                  name={startCase(lowerCase(formData.assignmentStatus))}
+                  hexcode={'#FEF0DB'}
+                />
+              </div>
+            ) : (
+              <div>
+                <Select
+                  value={formData.assignmentStatus}
+                  options={Object.values(assignmentStatusEnum).map(
+                    (status) => ({
+                      value: status,
+                      label: startCase(lowerCase(status)),
+                    }),
+                  )}
+                  onChange={(e) =>
+                    changeField('assignmentStatus', e ? e.value : '')
+                  }
+                  placeholder="Select"
+                  className="assignment-status-select"
+                />
+              </div>
+            )}
+          </Grid.Column>
+          <Grid.Column width={editMode ? 7 : 8}>
+            <p className="form-label">Issue Assignment Status</p>
+
+            {!editMode ? (
+              <div>
+                <FieldTag name={'Definitely In'} hexcode={'#E7F2FC'} />
+              </div>
+            ) : (
+              <div>
+                <Select
+                  value={'Definitely In'}
+                  options={Object.values(assignmentStatusEnum).map(
+                    (status) => ({
+                      value: 'Definitely In',
+                      label: 'Definitely In',
+                    }),
+                  )}
+                  onChange={(e) =>
+                    changeField('assignmentStatus', e ? e.value : '')
+                  }
+                  placeholder="Select"
+                  className="issue-assignment-status-select"
+                />
+              </div>
+            )}
+          </Grid.Column>
+        </Grid>
       </div>
 
       <div className="form-item">
@@ -204,12 +247,13 @@ const ReviewClaimForm: FC<ReviewClaimFormProps> = ({
           </Form>
         )}
       </div>
-      {!editMode ? (
-        <div className="form-item">
-          <Grid columns={2} className="writer-editors-section">
-            <Grid.Column className="issue-format-column">
-              <p className="form-label">Issue Format</p>
-              {formData.issues.map((issueId, idx) => {
+
+      <div className="form-item">
+        <Grid columns={2} className="issues-deadline-grid">
+          <Grid.Column width={editMode ? 8 : 6}>
+            <p className="form-label">Associated Issue(s)</p>
+            {!editMode ? (
+              formData.issues.map((issueId, idx) => {
                 const issue = getIssueFromId(issueId)!;
                 return (
                   <p key={idx}>
@@ -218,35 +262,49 @@ const ReviewClaimForm: FC<ReviewClaimFormProps> = ({
                     ).toLocaleDateString('en-US')}`}
                   </p>
                 );
-              })}
-            </Grid.Column>
-            <Grid.Column>
-              <div className="deadline-text">
-                <p className="form-label">Deadline</p>
-                <p>{new Date(formData.deadline).toLocaleDateString('en-US')}</p>
-              </div>
-            </Grid.Column>
-          </Grid>
-        </div>
-      ) : (
-        <Grid columns={2} className="writer-editors-section">
-          <Grid.Column className="issue-format-column">
-            <p className="form-label">Issue Format</p>
-            <div className="issue-format-date-row"></div>
+              })
+            ) : (
+              <>
+                <AddIssue callback={fetchIssues} />
+
+                <MultiSelect
+                  options={issues.map((issue) => ({
+                    value: issue._id,
+                    label: `${formatDate(issue.releaseDate)} - ${startCase(
+                      lowerCase(issue.type),
+                    )}`,
+                  }))}
+                  placeholder="Select Issue(s)"
+                  onChange={(values) => {
+                    changeField(
+                      'issues',
+                      values.map((value) => value.value),
+                    );
+                  }}
+                  value={formData.issues}
+                  className="issue-select"
+                />
+              </>
+            )}
           </Grid.Column>
-          <Grid.Column>
-            <p className="form-label">Deadline</p>
-            <Form.Input
-              value={formatDate(formData.deadline)}
-              className="prints-input"
-              type="date"
-              onChange={(e, { value }) =>
-                changeField('deadline', new Date(value))
-              }
-            />
+          <Grid.Column width={editMode ? 8 : 6}>
+            <p className="form-label">Pitch Completion Deadline</p>
+            {!editMode ? (
+              <p>{new Date(formData.deadline).toLocaleDateString('en-US')}</p>
+            ) : (
+              <Form.Input
+                value={formatDate(formData.deadline)}
+                className="prints-input"
+                type="date"
+                onChange={(e, { value }) =>
+                  changeField('deadline', new Date(value))
+                }
+              />
+            )}
           </Grid.Column>
         </Grid>
-      )}
+      </div>
+
       {editMode && (
         <div className="action-buttons">
           <Button
@@ -258,7 +316,7 @@ const ReviewClaimForm: FC<ReviewClaimFormProps> = ({
         </div>
       )}
 
-      <pre>{JSON.stringify(aggregatedPitch, null, 2)}</pre>
+      {/* <pre>{JSON.stringify(aggregatedPitch, null, 2)}</pre> */}
     </div>
   );
 };

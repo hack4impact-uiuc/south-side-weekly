@@ -46,6 +46,7 @@ import PrevButton from './Wizard/PrevButton';
 import SubmitButton from './Wizard/SubmitButton';
 import WizardSvg from './Wizard/Svg';
 import AddIssue from './Modals/AddIssue';
+import EditingClaimCard from './EditingClaimCard';
 
 export {
   Header,
@@ -98,5 +99,6 @@ export {
   DynamicTable,
   buildColumn,
   AddIssue,
+  EditingClaimCard,
 };
 export type { View, ColumnType };

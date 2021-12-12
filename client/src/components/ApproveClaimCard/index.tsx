@@ -1,10 +1,11 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
+import { SelectOptionActionMeta } from 'react-select';
 import { Button, Divider, Icon, Input, Label } from 'semantic-ui-react';
 import { IPitchAggregate, ITeam, IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
 
 import { ContributorFeedback, FieldTag, Select, UserChip } from '..';
-import { isError } from '../../api';
+import { editResource, isError } from '../../api';
 import {
   addContributorToPitch,
   approvePitchClaim,
@@ -14,45 +15,58 @@ import {
 } from '../../api/pitch';
 import { getUsersByTeam } from '../../api/user';
 import { useTeams } from '../../contexts';
+import { editorContributorsType } from '../../pages/reviewClaim/types';
 import { getUserFullName, pluralize } from '../../utils/helpers';
 import './styles.scss';
 
 interface ApproveClaimCardProps {
   pendingContributors: Partial<IUser>[];
   assignmentContributors: Partial<IUser>[];
-  teamId: string;
-  pitchTeams: IPitchAggregate['aggregated']['teams'];
+  team: ITeam & { target: number };
   pitchId: string;
   completed: boolean;
+  editors: editorContributorsType;
+
   callback: () => Promise<void>;
 }
 
+interface SelectOption {
+  value: string;
+  label: string;
+}
+
+const editorTypeDropDownOptions: SelectOption[] = [
+  {
+    value: 'First',
+    label: 'First',
+  },
+  {
+    value: 'Seconds',
+    label: 'Seconds',
+  },
+  {
+    value: 'Thirds',
+    label: 'Thirds',
+  },
+];
+
 const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
-  teamId,
+  team,
   pendingContributors,
   assignmentContributors,
-  pitchTeams,
   pitchId,
   completed,
+  editors,
   callback,
 }): ReactElement => {
-  const { getTeamFromId: getTeamFromProvider } = useTeams();
+  const { getTeamFromId } = useTeams();
   const [selectContributorMode, setSelectContributorMode] = useState(false);
   const [filteredContribtors, setFilteredContributors] = useState<IUser[]>([]);
   const [selectedContributor, setSelectedContributor] = useState('');
   const [editTargetMode, setEditTargetMode] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const getTeamFromId = (teamId: string): ITeam & { target: number } => {
-    let team = pitchTeams.find(({ _id }) => _id === teamId);
-    if (!team) {
-      team = { ...getTeamFromProvider(teamId)!, target: 0 };
-      return team;
-    }
-    return team;
-  };
-
-  const team = getTeamFromId(teamId);
+  //const team = getTeamFromId(teamId);
 
   const [totalPositions, setTotalPositions] = useState(0);
 
@@ -62,7 +76,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
       const res = await addContributorToPitch(
         pitchId,
         selectedContributor,
-        teamId,
+        team._id,
       );
       console.log(res);
     }
@@ -70,7 +84,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
   };
 
   const removeContributor = async (userId: string): Promise<void> => {
-    const res = await removeContributorFromPitch(pitchId, userId, teamId);
+    const res = await removeContributorFromPitch(pitchId, userId, team._id);
     console.log(res);
 
     await callback();
@@ -78,13 +92,13 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
 
   const approveClaim = async (userId: string): Promise<void> => {
     setLoading(true);
-    await approvePitchClaim(pitchId, userId, teamId, [team.name]);
+    await approvePitchClaim(pitchId, userId, team._id, [team.name]);
     await callback();
     setLoading(false);
   };
 
   const declineClaim = async (userId: string): Promise<void> => {
-    await declinePitchClaim(pitchId, userId, teamId);
+    await declinePitchClaim(pitchId, userId, team._id);
     await callback();
   };
 
@@ -101,7 +115,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
     setEditTargetMode(false);
     await updatePitchTeamTarget(
       pitchId,
-      teamId,
+      team._id,
       totalPositions - assignmentContributors.length,
     );
     callback();
@@ -123,7 +137,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
           />
           <div>
             <Button
-              content="Save"
+              content="Add"
               positive
               onClick={addContributor}
               size="small"
@@ -152,23 +166,25 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
 
   useEffect(() => {
     const getContributorsByTeam = async (): Promise<void> => {
-      if (selectContributorMode) {
-        const filterContributors = (contributors: IUser[]): IUser[] =>
-          contributors.filter(
-            ({ _id }) =>
-              !assignmentContributors.map((user) => user._id).includes(_id) &&
-              !pendingContributors.map((user) => user._id).includes(_id),
-          );
+      const filterContributors = (contributors: IUser[]): IUser[] =>
+        contributors.filter(
+          ({ _id }) =>
+            !assignmentContributors.map((user) => user._id).includes(_id) &&
+            !pendingContributors.map((user) => user._id).includes(_id),
+        );
 
-        const res = await getUsersByTeam(team.name);
-        if (!isError(res)) {
-          console.log('FETCHED CONTRIBUTORS');
-          const contributors = res.data.result;
-          setFilteredContributors(filterContributors(contributors));
-        }
+      const res = await getUsersByTeam(team.name);
+      if (!isError(res)) {
+        console.log('FETCHED CONTRIBUTORS');
+        const contributors = res.data.result;
+        setFilteredContributors(filterContributors(contributors));
       }
     };
-    getContributorsByTeam();
+    if (selectContributorMode) {
+      getContributorsByTeam();
+    } else {
+      setSelectedContributor('');
+    }
   }, [
     selectContributorMode,
     team.name,
@@ -176,7 +192,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
     pendingContributors,
   ]);
 
-  const renderCardHeader = () => {
+  const renderCardHeader = (): JSX.Element => {
     void 0;
     if (editTargetMode) {
       return (
@@ -229,7 +245,6 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
       <div className="card-header">
         <FieldTag name={team.name} hexcode={team.color} />
         {renderCardHeader()}
-        {completed ? 'TRUE' : 'FALSE'}
       </div>
       <Divider />
       {!completed && renderAddContributor()}
@@ -259,7 +274,6 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
             </div>
           );
         })}
-
         {assignmentContributors.map((contributor, idx) => {
           console.log(contributor);
           return (
@@ -267,7 +281,11 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
               <UserChip user={contributor} />
 
               {completed ? (
-                <ContributorFeedback user={contributor} team={team} />
+                <ContributorFeedback
+                  user={contributor}
+                  team={team}
+                  pitchId={pitchId}
+                />
               ) : (
                 <Icon
                   name="trash"

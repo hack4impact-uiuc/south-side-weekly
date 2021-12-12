@@ -1,4 +1,4 @@
-import { isEmpty } from 'lodash';
+import { isEmpty, lowerCase, startCase } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import {
   Button,
@@ -85,6 +85,9 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   const { getInterestById } = useInterests();
   const { user } = useAuth();
   const { issues, fetchIssues } = useIssues();
+
+  const getIdFromTeam = (team: string): string | undefined =>
+    teams.find(({ name }) => name === team)?.name;
 
   useEffect(() => {
     if (!isOpen) {
@@ -173,10 +176,13 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
     return formDataCopy;
   };
 
+  const numberOfEditors = (): number =>
+    1 + formData.secondEditors.length + formData.thirdEditors.length;
+
   const handleApprove = async (): Promise<void> => {
-    if (user._id === author._id) {
+    /* if (user._id === author._id) {
       return;
-    }
+    } */
     const validForm = formData.teams.length > 0;
 
     if (!validForm) {
@@ -186,6 +192,11 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       });
       return;
     }
+
+    changeField(
+      'teams',
+      changeTeam(getIdFromTeam('Editing')!, numberOfEditors()),
+    );
 
     const res = await approvePitch(
       pitch._id,
@@ -438,7 +449,9 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
                 <MultiSelect
                   options={issues.map((issue) => ({
                     value: issue._id,
-                    label: formatDate(issue.releaseDate),
+                    label: `${formatDate(issue.releaseDate)} - ${startCase(
+                      lowerCase(issue.type),
+                    )}`,
                   }))}
                   placeholder="Select Issue(s)"
                   onChange={(values) => {
@@ -460,7 +473,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
         </Form>
         <Modal.Actions>
           <Button
-            disabled={user._id === author._id}
+            //disabled={user._id === author._id}
             onClick={handleApprove}
             content="Approve"
             positive

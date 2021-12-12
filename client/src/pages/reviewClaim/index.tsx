@@ -1,3 +1,4 @@
+import { pick } from 'lodash';
 import React, {
   ReactElement,
   useCallback,
@@ -6,19 +7,33 @@ import React, {
   useState,
 } from 'react';
 import { useParams } from 'react-router';
-import { IPitchAggregate } from 'ssw-common';
+import { IPitchAggregate, ITeam } from 'ssw-common';
 
 import { getAggregatedPitch, isError } from '../../api';
-import { BackButton, ReviewClaimForm } from '../../components';
+import {
+  BackButton,
+  EditingClaimCard,
+  ReviewClaimForm,
+} from '../../components';
 import ApproveClaimCard from '../../components/ApproveClaimCard';
 import { useTeams } from '../../contexts';
 import { emptyAggregatePitch } from '../../utils/constants';
 import { assignmentStatusEnum } from '../../utils/enums';
 
 import './styles.scss';
-import { ParamTypes, TeamContributorRecord } from './types';
+import {
+  editorContributorsType,
+  ParamTypes,
+  TeamContributorRecord,
+} from './types';
 
 //interface ReviewClaimProps {}
+
+const defaultEditorContributors: editorContributorsType = {
+  primaryEditor: {},
+  secondaryEditors: [],
+  thirdEditors: [],
+};
 
 const ReviewClaim = (): ReactElement => {
   const { pitchId } = useParams<ParamTypes>();
@@ -32,11 +47,13 @@ const ReviewClaim = (): ReactElement => {
     IPitchAggregate['aggregated']['teams']
   >([]);
   const [statusIsCompleted, setStatusIsCompleted] = useState<boolean>(false);
+  const [editorContributors, setEditorContributors] =
+    useState<editorContributorsType>(defaultEditorContributors);
 
   const [aggregatedPitch, setAggregatedPitch] =
     useState<IPitchAggregate>(emptyAggregatePitch);
 
-  const { teams } = useTeams();
+  const { teams, getTeamFromId } = useTeams();
 
   const fetchAggregatedPitch = useCallback(async (): Promise<void> => {
     const res = await getAggregatedPitch(pitchId);
@@ -50,6 +67,12 @@ const ReviewClaim = (): ReactElement => {
       setPitchTeams(result.aggregated.teams);
       setAssignmentContributors(result.aggregated.assignmentContributors);
       console.log('aggregated', result.aggregated.assignmentContributors);
+      setEditorContributors(
+        pick(
+          result.aggregated,
+          Object.keys(defaultEditorContributors),
+        ) as editorContributorsType,
+      );
       setAggregatedPitch(result);
       setStatusIsCompleted(
         result.assignmentStatus === assignmentStatusEnum.COMPLETED,
@@ -87,6 +110,17 @@ const ReviewClaim = (): ReactElement => {
 
   console.log('ALL', allContributors);
 
+  const getTeamWithTargetFromId = (
+    teamId: string,
+  ): ITeam & { target: number } => {
+    let team = pitchTeams.find(({ _id }) => _id === teamId);
+    if (!team) {
+      team = { ...getTeamFromId(teamId)!, target: 0 };
+      return team;
+    }
+    return team;
+  };
+
   return (
     <div className="review-claim-page">
       <BackButton title="Back to Unclaimed Pitches" linkTo="/pitches" />
@@ -102,22 +136,35 @@ const ReviewClaim = (): ReactElement => {
             ([teamId, { pending, assignment }], idx) => {
               console.log(teamId, pending, assignment);
               console.log('ASIGNMENT: ', assignment);
+
+              if (getTeamFromId(teamId)?.name === 'Editing') {
+                return (
+                  <EditingClaimCard
+                    editors={editorContributors}
+                    pitchId={pitchId}
+                    completed={statusIsCompleted}
+                    callback={fetchAggregatedPitch}
+                    team={getTeamWithTargetFromId(teamId)}
+                  />
+                );
+              }
               return (
                 <ApproveClaimCard
                   key={idx}
-                  teamId={teamId}
                   pendingContributors={pending}
                   assignmentContributors={assignment}
-                  pitchTeams={pitchTeams}
+                  team={getTeamWithTargetFromId(teamId)}
                   pitchId={pitchId}
                   callback={fetchAggregatedPitch}
                   completed={statusIsCompleted}
+                  editors={editorContributors}
                 />
               );
             },
           )}
         </div>
       </div>
+      <pre>{JSON.stringify(editorContributors, null, 2)}</pre>
     </div>
   );
 };

@@ -43,6 +43,36 @@
     display: flex;
     flex-direction: column;
     //justify-content: center;
+
+    .status-grid {
+      //width: 70% !important;
+
+      .assignment-status-select {
+        width: 100% !important;
+      }
+    }
+
+    .issues-deadline-grid {
+      .add-issue {
+        position: absolute;
+        right: 0;
+        top: 0;
+        padding-right: inherit;
+        padding-top: inherit;
+        background-color: transparent;
+        //top: -0.33571429rem !important;
+        color: $secondaryColor;
+        line-height: 1.4285em !important;
+      }
+      .issues-column {
+        //width: 80% !important;
+        position: relative;
+
+        .issue-select {
+          width: 100% !important;
+        }
+      }
+    }
   }
 
   .row {

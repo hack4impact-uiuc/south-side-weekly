@@ -1,4 +1,4 @@
-import { ITeam, IUser } from 'ssw-common';
+import { IPitchAggregate, ITeam, IUser } from 'ssw-common';
 
 export interface ParamTypes {
   pitchId: string;
@@ -12,4 +12,9 @@ type AllContributorsForTeam = {
 export type TeamContributorRecord = Record<
   ITeam['_id'],
   AllContributorsForTeam
+>;
+
+export type editorContributorsType = Pick<
+  IPitchAggregate['aggregated'],
+  'primaryEditor' | 'secondaryEditors' | 'thirdEditors'
 >;

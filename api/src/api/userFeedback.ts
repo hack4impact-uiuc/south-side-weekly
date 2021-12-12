@@ -28,6 +28,31 @@ router.get(
   }),
 );
 
+// Gets feedback for a user on a pitch
+router.get(
+  '/userFeedback',
+  errorWrap(async (req: Request, res: Response) => {
+    const { userId, pitchId } = req.body;
+
+    const feedback = await UserFeedback.findOne({
+      userId: userId,
+      pitchId: pitchId,
+    });
+    if (!feedback) {
+      res.status(404).json({
+        success: false,
+        message: 'User feedback not found for user on pitch',
+      });
+    } else {
+      res.status(200).json({
+        success: true,
+        result: feedback,
+        message: `Successfully retrieved user feedback`,
+      });
+    }
+  }),
+);
+
 // Gets all feedback
 router.get(
   '/',
@@ -60,7 +85,10 @@ router.post(
   '/',
   requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
-    const newFeedback = await UserFeedback.create(req.body);
+    const newFeedback = await UserFeedback.create({
+      ...req.body,
+      staffId: req.user._id,
+    });
 
     await User.findByIdAndUpdate(newFeedback.userId, {
       $addToSet: {
