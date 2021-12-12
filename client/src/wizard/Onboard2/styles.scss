@@ -7,6 +7,13 @@
     margin-top: 50px;
   }
 
+  .neighborhood {
+    margin-left: 50% !important;
+    .neighborhood-drop {
+      width: 100% !important;
+    }
+  }
+
   .form {
     display: flex;
     justify-content: center;

@@ -13,6 +13,15 @@ const PITCH_ENDPOINT = '/pitch';
 
 type Pitches = Response<PitchesResponse>;
 
+const getPitchById = async (
+  pitchId: string,
+): Promise<Response<PitchResponse>> => {
+  const url = buildEndpoint(PITCH_ENDPOINT, pitchId);
+  const failureMessage = 'GET_PITCH_FAIL';
+
+  return await get(url, failureMessage);
+};
+
 // Returns all of the approved pitches
 const getApprovedPitches = async (): Promise<Pitches> => {
   const url = buildEndpoint(PITCH_ENDPOINT, 'all', 'approved');
@@ -172,6 +181,7 @@ const createPitch = async (
 };
 
 export {
+  getPitchById,
   getApprovedPitches,
   getAggregatedPitch,
   submitPitchClaim,

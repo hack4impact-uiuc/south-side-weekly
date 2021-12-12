@@ -16,6 +16,7 @@ import {
   PitchDoc,
   Profile,
   Resources,
+  Issues,
 } from './pages';
 import Homepage from './pages/home';
 import ReviewClaim from './pages/reviewClaim';
@@ -46,6 +47,10 @@ const routes = [
   {
     path: '/pitches/reviewClaim/:pitchId',
     component: ReviewClaim,
+  },
+  {
+    path: '/issues',
+    component: Issues,
   },
   {
     path: '/resources',

@@ -19,7 +19,6 @@ const IssuesProvider: FC = ({ children }): ReactElement => {
 
   const fetchIssues = useCallback(async () => {
     const res = await getIssues();
-    console.log('FETCH ISSUES');
 
     if (!isError(res)) {
       setIssues(res.data.result);

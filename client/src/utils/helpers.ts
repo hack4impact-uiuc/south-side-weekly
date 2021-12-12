@@ -21,6 +21,15 @@ const getPitchTeams = (pitch: IPitch): string[] => {
   return teams;
 };
 
+const getUserTeamsForPitch = (
+  pitch: Partial<IPitch>,
+  user: IUser,
+): string[] => {
+  const contributor = pitch.assignmentContributors?.find(
+    (contributor) => contributor.userId === user._id,
+  );
+  return contributor ? contributor.teams : [];
+};
 /**
  * Gets all of the teams a user is on for a given pitch
  *
@@ -283,6 +292,19 @@ const formatNumber = (value: string): string => {
 };
 
 /**
+ * Formats date to mm/dd/yyyy
+ * @param date date to format
+ * @returns mm/dd/yyyy version
+ */
+const formatDate = (date: Date | string): string => {
+  const parsed = new Date(date);
+
+  return `${
+    parsed.getUTCMonth() + 1
+  }/${parsed.getUTCDate()}/${parsed.getUTCFullYear()}`;
+};
+
+/**
  * Converts an array of arguments into a single className
  *
  * ("first", "second", undefined, "third") -> "first second third"
@@ -339,6 +361,7 @@ const isPast = (date: Date): boolean => Date.now() - date.getTime() > 0;
 export {
   getPitchTeams,
   getPitchTeamsForContributor,
+  getUserTeamsForPitch,
   findPendingContributor,
   findAssignmentContributor,
   getUserClaimStatusForPitch,
@@ -358,6 +381,7 @@ export {
   classNames,
   openProfile,
   pluralize,
+  formatDate,
   isPast,
   defaultAsyncFunc,
 };

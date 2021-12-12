@@ -8,10 +8,13 @@ import InterestsSelect from './Dropdowns/InterestsSelect';
 import MultiSelect from './Dropdowns/MultiSelect';
 import Select from './Dropdowns/Select';
 import TeamsSelect from './Dropdowns/TeamsSelect';
+import EditingClaimCard from './EditingClaimCard';
 import FieldTag from './FieldTag';
 import Header from './Header';
+import Kanban from './Kanban';
 import LinkDisplay from './LinkDisplay';
 import { InterestList, TeamList } from './Lists';
+import AddIssue from './Modals/AddIssue';
 import ApprovePitchModal from './Modals/ApprovePitch';
 import ClaimPitchModal from './Modals/ClaimPitch';
 import ContributorFeedback from './Modals/ContributorFeedback';
@@ -35,6 +38,7 @@ import DynamicTable from './Tables/DynamicTable';
 import { ColumnType, View } from './Tables/DynamicTable/types';
 import { buildColumn } from './Tables/DynamicTable/util';
 import { PitchRow, PitchTable } from './Tables/PitchDoc';
+import ResourceTable from './Tables/Resource';
 import TableTool from './Tables/TableTool';
 import UserCard from './UserCard';
 import UserChip from './UserChip';
@@ -45,8 +49,6 @@ import PageCounter from './Wizard/PageCounter';
 import PrevButton from './Wizard/PrevButton';
 import SubmitButton from './Wizard/SubmitButton';
 import WizardSvg from './Wizard/Svg';
-import AddIssue from './Modals/AddIssue';
-import EditingClaimCard from './EditingClaimCard';
 
 export {
   Header,
@@ -76,6 +78,7 @@ export {
   MultiSelect,
   Select,
   // DirectoryTable,
+  ResourceTable,
   PitchTable,
   PitchRow,
   TableTool,
@@ -100,5 +103,6 @@ export {
   buildColumn,
   AddIssue,
   EditingClaimCard,
+  Kanban,
 };
 export type { View, ColumnType };
