@@ -10,7 +10,9 @@ export const populateIssue = async (
     return;
   }
 
-  const baseOptions = [{ ...getPopulateOptions('pitches', 'Pitch') }];
+  const baseOptions = [
+    { ...getPopulateOptions<IssueSchema>('pitches', 'Pitch') },
+  ];
 
   return await Issue.populate(issue, baseOptions);
 };

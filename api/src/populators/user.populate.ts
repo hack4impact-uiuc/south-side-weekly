@@ -16,8 +16,6 @@ export const populateUser = async (
     return user;
   }
 
-  console.log(type);
-
   const baseOptions = [
     { ...getPopulateOptions('teams', 'Team') },
     {
@@ -31,9 +29,9 @@ export const populateUser = async (
 
   const paths = [
     ...baseOptions,
-    { ...getPopulateOptions('claimedPitches', 'Pitch') },
-    { ...getPopulateOptions('submittedPitches', 'Pitch') },
-    { ...getPopulateOptions('submittedClaims', 'Pitch') },
+    { ...getPopulateOptions<UserSchema>('claimedPitches', 'Pitch') },
+    { ...getPopulateOptions<UserSchema>('submittedPitches', 'Pitch') },
+    { ...getPopulateOptions<UserSchema>('submittedClaims', 'Pitch') },
   ];
 
   return await User.populate(user, paths);
