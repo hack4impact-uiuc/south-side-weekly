@@ -12,6 +12,6 @@ export const extractPopulateQuery = (
     case 'full':
       return populate;
     default:
-      return 'none';
+      return 'default';
   }
 };

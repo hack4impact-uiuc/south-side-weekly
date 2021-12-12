@@ -16,6 +16,8 @@ export const populateUser = async (
     return user;
   }
 
+  console.log(type);
+
   const baseOptions = [
     { ...getPopulateOptions('teams', 'Team') },
     {
@@ -23,7 +25,7 @@ export const populateUser = async (
     },
   ];
 
-  if (type === 'default') {
+  if (type === 'default' || type !== 'full') {
     return await User.populate(user, baseOptions);
   }
 

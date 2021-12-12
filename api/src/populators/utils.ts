@@ -5,6 +5,7 @@ import {
   PitchFields,
   SelectFields,
   TeamFields,
+  UserFields,
 } from './types';
 
 export const getPopulateOptions = <T>(
@@ -42,6 +43,19 @@ const pitchFields = selectModelFields<PitchFields>(
   'issueStatuses',
 );
 
+const userFields = selectModelFields<UserFields>(
+  'role',
+  'firstName',
+  'lastName',
+  'email',
+  'preferredName',
+  'lastActive',
+  'genders',
+  'pronouns',
+  'teams',
+  'interests',
+);
+
 const getModelFields = (
   model: Models,
 ): SelectFields<InterestFields | TeamFields | PitchFields> => {
@@ -52,6 +66,8 @@ const getModelFields = (
       return teamFields;
     case 'Pitch':
       return pitchFields;
+    case 'User':
+      return userFields;
     default:
       return {};
   }

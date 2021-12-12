@@ -1,5 +1,5 @@
 import { LeanDocument } from 'mongoose';
-import { IInterest, IPitch, ITeam } from 'ssw-common';
+import { IInterest, IPitch, ITeam, IUser } from 'ssw-common';
 
 export type PopulateType<T> = T | T[] | LeanDocument<T> | LeanDocument<T>[];
 
@@ -17,7 +17,6 @@ export type Models =
 
 export type SelectFields<T> = Record<keyof T, number>;
 
-export type InterestFields = Pick<IInterest, 'name' | 'color' | 'active'>;
 export type PitchFields = Pick<
   IPitch,
   | 'title'
@@ -29,4 +28,18 @@ export type PitchFields = Pick<
   | 'deadline'
   | 'issueStatuses'
 >;
+export type UserFields = Pick<
+  IUser,
+  | 'role'
+  | 'firstName'
+  | 'lastName'
+  | 'email'
+  | 'preferredName'
+  | 'lastActive'
+  | 'genders'
+  | 'pronouns'
+  | 'teams'
+  | 'interests'
+>;
 export type TeamFields = Pick<ITeam, 'name' | 'color' | 'active'>;
+export type InterestFields = Pick<IInterest, 'name' | 'color' | 'active'>;

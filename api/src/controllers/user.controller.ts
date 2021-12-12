@@ -6,7 +6,7 @@ import { sendNotFound, sendSuccess } from '../utils/helpers';
 import { getEditableFields, getViewableFields } from '../utils/user-utils';
 import { sendApproveUserMail, sendRejectUserMail } from '../mail/sender';
 import { UserService } from '../services';
-import { populateUser } from '../populators/user.populate';
+import { populateUser } from '../populators';
 
 import { extractPopulateQuery } from './utils';
 

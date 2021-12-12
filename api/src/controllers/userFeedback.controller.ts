@@ -3,6 +3,8 @@ import { IUserFeedback } from 'ssw-common';
 
 import { sendNotFound, sendSuccess } from '../utils/helpers';
 import { UserFeedbackService, UserService } from '../services';
+import { extractPopulateQuery } from './utils';
+import { populateUserFeedback } from '../populators';
 
 type IdParam = { id: string };
 
@@ -18,8 +20,14 @@ export const createUserFeedback = async (
   const newFeedback = await UserFeedbackService.add(req.body);
   await UserService.addFeedback(newFeedback.userId, newFeedback.id);
 
+  const populateType = extractPopulateQuery(req.query);
+
   if (newFeedback) {
-    sendSuccess(res, 'Feedback created successfully', newFeedback);
+    sendSuccess(
+      res,
+      'Feedback created successfully',
+      await populateUserFeedback(newFeedback, populateType),
+    );
   }
 };
 
@@ -31,7 +39,13 @@ export const getAllUserFeedback = async (
 ): Promise<void> => {
   const feedback = await UserFeedbackService.getAll();
 
-  sendSuccess(res, 'Feedback retrieved successfully', feedback);
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Feedback retrieved successfully',
+    await populateUserFeedback(feedback, populateType),
+  );
 };
 
 type GetUserFeedbackReq = Request<IdParam>;
@@ -47,7 +61,13 @@ export const getUserFeedback = async (
     return;
   }
 
-  sendSuccess(res, 'User feedback retrieved successfully', feedback);
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'User feedback retrieved successfully',
+    await populateUserFeedback(feedback, populateType),
+  );
 };
 
 type GetAllFeedbackForUser = Request<IdParam>;
@@ -60,7 +80,13 @@ export const getAllFeedbackForUser = async (
     req.params.id,
   );
 
-  sendSuccess(res, 'Feedback retrieved successfully', feedback);
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Feedback retrieved successfully',
+    await populateUserFeedback(feedback, populateType),
+  );
 };
 
 // UPDATE controls
@@ -79,7 +105,13 @@ export const updateUserFeedback = async (
     return;
   }
 
-  sendSuccess(res, 'Feedback updated successfully', feedback);
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Feedback updated successfully',
+    await populateUserFeedback(feedback, populateType),
+  );
 };
 
 // DELETE controls
@@ -96,8 +128,13 @@ export const deleteUserFeedback = async (
     sendNotFound(res, 'Feedback not found');
     return;
   }
+  const populateType = extractPopulateQuery(req.query);
 
   await UserService.removeFeedback(deletedFeedback.userId, deletedFeedback.id);
 
-  sendSuccess(res, 'Feedback deleted successfully', deletedFeedback);
+  sendSuccess(
+    res,
+    'Feedback deleted successfully',
+    await populateUserFeedback(deletedFeedback, populateType),
+  );
 };

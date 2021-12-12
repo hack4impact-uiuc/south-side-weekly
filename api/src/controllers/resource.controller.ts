@@ -4,7 +4,7 @@ import { IResource } from 'ssw-common';
 import { ResourceService } from '../services';
 import { onboardingStatusEnum } from '../utils/enums';
 import { sendNotFound, sendSuccess } from '../utils/helpers';
-import { populateResource } from '../populators/resource.populate';
+import { populateResource } from '../populators';
 
 import { extractPopulateQuery } from './utils';
 
@@ -16,7 +16,12 @@ export const createResource = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  if (await ResourceService.isNameTaken(req.body.name)) {
+  const [isNameTaken, isLinkTaken] = await Promise.all([
+    ResourceService.isNameTaken(req.body.name),
+    ResourceService.isLinkTaken(req.body.link),
+  ]);
+
+  if (isNameTaken) {
     res.status(409).json({
       message: 'Resource with this name already exists',
       success: false,
@@ -24,7 +29,7 @@ export const createResource = async (
     return;
   }
 
-  if (await ResourceService.isLinkTaken(req.body.link)) {
+  if (isLinkTaken) {
     res.status(409).json({
       message: 'Resource with this link already exists',
       success: false,

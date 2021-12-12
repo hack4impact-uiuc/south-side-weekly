@@ -3,6 +3,8 @@ import { Request, Response } from 'express';
 import { sendNotFound, sendSuccess } from '../utils/helpers';
 import { IPitchFeedback } from 'ssw-common';
 import { PitchFeedbackService } from '../services';
+import { extractPopulateQuery } from './utils';
+import { populatePitchFeedback } from '../populators';
 
 type IdParam = { id: string };
 
@@ -17,7 +19,13 @@ export const createPitchFeedback = async (
 ): Promise<void> => {
   const feedback = await PitchFeedbackService.add(req.body);
 
-  sendSuccess(res, 'Feedback created', feedback);
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Feedback created',
+    await populatePitchFeedback(feedback, populateType),
+  );
 };
 
 // READ controls
@@ -28,10 +36,12 @@ export const getAllPitchFeedback = async (
 ): Promise<void> => {
   const feedback = await PitchFeedbackService.getAll();
 
+  const populateType = extractPopulateQuery(req.query);
+
   sendSuccess(
     res,
     'Successfully retrieved pitch feedback for all pitches',
-    feedback,
+    await populatePitchFeedback(feedback, populateType),
   );
 };
 
@@ -48,7 +58,13 @@ export const getPitchFeedback = async (
     return;
   }
 
-  sendSuccess(res, 'Successfully retrieved pitch feedback', feedback);
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Successfully retrieved pitch feedback',
+    await populatePitchFeedback(feedback, populateType),
+  );
 };
 
 type GetFeedbackForPitchReq = Request<IdParam>;
@@ -61,7 +77,13 @@ export const getFeedbackForPitch = async (
     req.params.id,
   );
 
-  sendSuccess(res, 'Successfully retrieved pitch feedback', feedback);
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Successfully retrieved pitch feedback',
+    populatePitchFeedback(feedback, populateType),
+  );
 };
 
 // UPDATE controls
@@ -80,7 +102,13 @@ export const updatePitchFeedback = async (
     return;
   }
 
-  sendSuccess(res, 'Successfully updated pitch feedback', feedback);
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Successfully updated pitch feedback',
+    await populatePitchFeedback(feedback, populateType),
+  );
 };
 
 // DELETE controls
@@ -96,5 +124,11 @@ export const deletePitchFeedback = async (
     return;
   }
 
-  sendSuccess(res, 'Successfully deleted pitch feedback', deletedFeedback);
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Successfully deleted pitch feedback',
+    populatePitchFeedback(deletedFeedback, populateType),
+  );
 };
