@@ -93,6 +93,16 @@ export const receiveClaimRequestApproval = async (
     },
   );
 
+export const removeClaimRequest = async (_id: string, pitchId: string): User =>
+  await updateModel(
+    { _id },
+    {
+      $pull: {
+        submittedClaims: pitchId,
+      },
+    },
+  );
+
 export const remove = async (_id: string): User =>
   await User.findByIdAndDelete({ _id }).lean();
 

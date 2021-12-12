@@ -1,16 +1,16 @@
 import { Request, Response } from 'express';
-import { IPitch } from 'ssw-common';
+import { IPitch, IUser } from 'ssw-common';
 
-import { sendClaimRequestApprovedMail } from '../mail/sender';
-import { PitchService, UserService } from '../services';
-import { aggregatePitch } from '../utils/aggregate-utils';
-import { sendFail, sendNotFound, sendSuccess } from '../utils/helpers';
-import { sendMail } from '../utils/mailer';
 import {
-  approvedMessage,
-  declineClaim,
-  declinedMessage,
-} from '../utils/mailer-templates';
+  sendApprovedPitchMail,
+  sendClaimRequestApprovedMail,
+  sendClaimRequestDeclinedMail,
+  sendDeclinedPitchMail,
+} from '../mail/sender';
+import { populatePitch } from '../populators';
+import { PitchService, UserService } from '../services';
+import { sendFail, sendNotFound, sendSuccess } from '../utils/helpers';
+import { extractPopulateQuery } from './utils';
 
 type IdParam = { id: string };
 
@@ -54,7 +54,13 @@ export const getPitch = async (
     return;
   }
 
-  sendSuccess(res, 'Pitch retrieved successfully', pitch);
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Pitch retrieved successfully',
+    await populatePitch(pitch, populateType),
+  );
 };
 
 export const getPendingPitches = async (
@@ -63,7 +69,13 @@ export const getPendingPitches = async (
 ): Promise<void> => {
   const pitches = await PitchService.getPendingPitches();
 
-  sendSuccess(res, 'Pitches retrieved successfully', pitches);
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Pitches retrieved successfully',
+    await populatePitch(pitches, populateType),
+  );
 };
 
 type GetApprovedPitchesReqQuery = { status: string };
@@ -77,7 +89,13 @@ export const getApprovedPitches = async (
     req.query.status as string | undefined,
   );
 
-  sendSuccess(res, 'Successfully retrieved all approved pitches', pitches);
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Successfully retrieved all approved pitches',
+    await populatePitch(pitches, populateType),
+  );
 };
 
 export const getPitchesWithPendingClaims = async (
@@ -86,7 +104,13 @@ export const getPitchesWithPendingClaims = async (
 ): Promise<void> => {
   const pitches = await PitchService.getPendingClaimPitches();
 
-  sendSuccess(res, 'Pitches retrieved successfully', pitches);
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Pitches retrieved successfully',
+    await populatePitch(pitches, populateType),
+  );
 };
 
 // UPDATE controls
@@ -105,7 +129,13 @@ export const updatePitch = async (
     return;
   }
 
-  sendSuccess(res, 'Pitch updated successfully', updatedPitch);
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Pitch updated successfully',
+    await populatePitch(updatedPitch, populateType),
+  );
 };
 
 export const approvePitch = async (
@@ -123,16 +153,24 @@ export const approvePitch = async (
     return;
   }
 
-  // TODO: remove this and use populate
-  const aggregatedPitch = await aggregatePitch(pitch);
-  const message = approvedMessage(aggregatedPitch, req.user);
+  const populatedPitch = await populatePitch(pitch, 'default');
+  const author = (populatedPitch.author as unknown) as IUser;
+  const reviewer = (populatedPitch.reviewedBy as unknown) as IUser;
 
-  sendMail(message);
+  sendApprovedPitchMail(
+    author,
+    reviewer,
+    populatedPitch,
+    req.body.writer !== null,
+  );
 
   sendSuccess(res, 'Pitch approved successfully', pitch);
 };
 
-type DeclineReq = Request<IdParam>;
+type DeclineReqBody = {
+  reasoning: string;
+};
+type DeclineReq = Request<IdParam, never, DeclineReqBody, never>;
 
 export const declinePitch = async (
   req: DeclineReq,
@@ -144,12 +182,13 @@ export const declinePitch = async (
     sendNotFound(res, `Pitch with id ${req.params.id} not found`);
     return;
   }
-  const aggregatedPitch = await aggregatePitch(pitch);
-  const message = declinedMessage(aggregatedPitch, req.user);
 
-  sendMail(message);
+  const populatedPitch = await populatePitch(pitch, 'default');
+  const author = (populatedPitch.author as unknown) as IUser;
 
-  sendSuccess(res, 'Pitch declined successfully', pitch);
+  sendDeclinedPitchMail(author, req.user, populatedPitch, req.body.reasoning);
+
+  sendSuccess(res, 'Pitch declined successfully', populatedPitch);
 };
 
 type SubmitClaimReqBody = { userId: string; teams: string[]; message: string };
@@ -178,7 +217,13 @@ export const submitClaim = async (
     return;
   }
 
-  sendSuccess(res, 'Claim submitted successfully', updatedPitch);
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Claim submitted successfully',
+    await populatePitch(updatedPitch, populateType),
+  );
 };
 
 type ApproveClaimReqBody = { userId: string; teams: string[] };
@@ -189,7 +234,7 @@ export const approveClaimRequest = async (
   res: Response,
 ): Promise<void> => {
   const { userId, teams } = req.body;
-  // Remove the user from the pending contributors and add it to the the assignment contributors
+
   const pitch = await PitchService.approveClaimRequest(
     req.params.id,
     userId,
@@ -211,7 +256,13 @@ export const approveClaimRequest = async (
 
   sendClaimRequestApprovedMail(user, pitch, req.user);
 
-  sendSuccess(res, 'Claim approved successfully', pitch);
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Claim approved successfully',
+    await populatePitch(pitch, populateType),
+  );
 };
 
 type DeclineClaimReqBody = { userId: string };
@@ -235,13 +286,22 @@ export const declineClaimRequest = async (
     return;
   }
 
-  const claimUser = await UserService.getOne(userId);
-  const aggregatedPitch = await aggregatePitch(pitch);
-  const message = declineClaim(claimUser, aggregatedPitch, req.user);
+  const user = await UserService.removeClaimRequest(userId, req.params.id);
 
-  sendMail(message);
+  if (!user) {
+    sendNotFound(res, `User with id ${userId} not found`);
+    return;
+  }
 
-  sendSuccess(res, 'Claim declined successfully', pitch);
+  sendClaimRequestDeclinedMail(user, req.user, pitch);
+
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Claim declined successfully',
+    await populatePitch(pitch, populateType),
+  );
 };
 
 // DELETE controls
@@ -259,5 +319,11 @@ export const deletePitch = async (
     return;
   }
 
-  sendSuccess(res, 'Pitch deleted successfully', deletedPitch);
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Pitch deleted successfully',
+    await populatePitch(deletedPitch, populateType),
+  );
 };
