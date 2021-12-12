@@ -1,18 +1,10 @@
 import { Request, Response } from 'express';
 import { IPitch } from 'ssw-common';
+
 import { sendClaimRequestApprovedMail } from '../mail/sender';
-
-import Pitch from '../models/pitch';
-import User from '../models/user';
+import { PitchService, UserService } from '../services';
 import { aggregatePitch } from '../utils/aggregate-utils';
-
-import { pitchStatusEnum } from '../utils/enums';
-import {
-  isPitchClaimed,
-  sendFail,
-  sendNotFound,
-  sendSuccess,
-} from '../utils/helpers';
+import { sendFail, sendNotFound, sendSuccess } from '../utils/helpers';
 import { sendMail } from '../utils/mailer';
 import {
   approvedMessage,
@@ -31,14 +23,7 @@ export const createPitch = async (
   req: CreateReq,
   res: Response,
 ): Promise<void> => {
-  const newPitch = await Pitch.create(req.body);
-
-  await User.findByIdAndUpdate(newPitch.author, {
-    $addToSet: {
-      submittedPitches: newPitch._id,
-    },
-    lastActive: new Date(),
-  });
+  const newPitch = await PitchService.add(req.body);
 
   if (newPitch) {
     sendSuccess(res, 'Pitch created successfully', newPitch);
@@ -51,7 +36,7 @@ export const getPitches = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const pitches = await Pitch.find({});
+  const pitches = await PitchService.getAll();
 
   sendSuccess(res, 'Pitches retrieved successfully', pitches);
 };
@@ -62,7 +47,8 @@ export const getPitch = async (
   req: GetPitchesReq,
   res: Response,
 ): Promise<void> => {
-  const pitch = await Pitch.findById(req.params.id);
+  const pitch = await PitchService.getOne(req.params.id);
+
   if (!pitch) {
     sendNotFound(res, `Pitch with id ${req.params.id} not found`);
     return;
@@ -75,9 +61,7 @@ export const getPendingPitches = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const pitches = await Pitch.find({
-    status: pitchStatusEnum.PENDING,
-  });
+  const pitches = await PitchService.getPendingPitches();
 
   sendSuccess(res, 'Pitches retrieved successfully', pitches);
 };
@@ -89,35 +73,18 @@ export const getApprovedPitches = async (
   req: GetApprovedPitchesReq,
   res: Response,
 ): Promise<void> => {
-  const approvedPitches = await Pitch.find({
-    status: pitchStatusEnum.APPROVED,
-  });
+  const pitches = await PitchService.getApprovedPitches(
+    req.query.status as string | undefined,
+  );
 
-  const status = req.query.status;
-
-  let pitches = approvedPitches;
-  let message = '';
-
-  const isPitchUnclaimed = (pitch: IPitch): boolean => !isPitchClaimed(pitch);
-
-  if (status === 'unclaimed') {
-    pitches = approvedPitches.filter(isPitchUnclaimed);
-    message = 'Unclaimed pitches retrieved successfully';
-  } else if (status === 'claimed') {
-    pitches = approvedPitches.filter(isPitchClaimed);
-    message = 'Claimed pitches retrieved successfully';
-  }
-
-  sendSuccess(res, message, pitches);
+  sendSuccess(res, 'Successfully retrieved all approved pitches', pitches);
 };
 
 export const getPitchesWithPendingClaims = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const pitches = await Pitch.find({
-    'pendingContributors.0': { $exists: true },
-  });
+  const pitches = await PitchService.getPendingClaimPitches();
 
   sendSuccess(res, 'Pitches retrieved successfully', pitches);
 };
@@ -131,10 +98,7 @@ export const updatePitch = async (
   req: UpdateReq,
   res: Response,
 ): Promise<void> => {
-  const updatedPitch = await Pitch.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  });
+  const updatedPitch = await PitchService.update(req.params.id, req.body);
 
   if (!updatedPitch) {
     sendNotFound(res, `Pitch with id ${req.params.id} not found`);
@@ -148,15 +112,11 @@ export const approvePitch = async (
   req: UpdateReq,
   res: Response,
 ): Promise<void> => {
-  const pitch = await Pitch.findByIdAndUpdate(
+  const pitch = await PitchService.approvePitch(
     req.params.id,
-    {
-      status: pitchStatusEnum.APPROVED,
-      reviewedBy: req.user._id,
-      ...req.body,
-    },
-    { new: true, runValidators: true },
-  ).lean();
+    req.user._id,
+    req.body,
+  );
 
   if (!pitch) {
     sendNotFound(res, `Pitch with id ${req.params.id} not found`);
@@ -178,12 +138,7 @@ export const declinePitch = async (
   req: DeclineReq,
   res: Response,
 ): Promise<void> => {
-  const pitch = await Pitch.findByIdAndUpdate(req.params.id, {
-    $set: {
-      status: pitchStatusEnum.DECLINED,
-      reviewedBy: req.user._id,
-    },
-  }).lean();
+  const pitch = await PitchService.declinePitch(req.params.id, req.user._id);
 
   if (!pitch) {
     sendNotFound(res, `Pitch with id ${req.params.id} not found`);
@@ -204,33 +159,19 @@ export const submitClaim = async (
   req: SubmitClaimReq,
   res: Response,
 ): Promise<void> => {
-  const user = await User.findById(req.body.userId);
-  if (!user) {
+  if (!UserService.isValidId(req.body.userId)) {
     sendNotFound(res, `User with id ${req.body.userId} not found`);
     return;
   }
 
-  const updatedPitch = await Pitch.findByIdAndUpdate(
+  const updatedPitch = await PitchService.submitClaim(
     req.params.id,
-    {
-      $addToSet: {
-        pendingContributors: {
-          userId: req.body.userId,
-          teams: req.body.teams,
-          message: req.body.message,
-          dateSubmitted: new Date(),
-          status: pitchStatusEnum.PENDING,
-        },
-      },
-    },
-    { new: true, runValidators: true },
+    req.body.userId,
+    req.body.teams,
+    req.body.message,
   );
 
-  await User.findByIdAndUpdate(user._id, {
-    $addToSet: {
-      submittedClaims: updatedPitch._id,
-    },
-  });
+  await UserService.addClaimRequest(req.body.userId, req.params.id);
 
   if (!updatedPitch) {
     sendNotFound(res, `Pitch with id ${req.params.id} not found`);
@@ -249,32 +190,15 @@ export const approveClaimRequest = async (
 ): Promise<void> => {
   const { userId, teams } = req.body;
   // Remove the user from the pending contributors and add it to the the assignment contributors
-  const pitch = await Pitch.findByIdAndUpdate(
+  const pitch = await PitchService.approveClaimRequest(
     req.params.id,
-    {
-      $pull: {
-        pendingContributors: { userId: userId, teams: teams },
-      },
-      //TODO: Target in teams should decrease after
-      $addToSet: {
-        assignmentContributors: { userId: userId, teams: teams },
-      },
-    },
-    { new: true, runValidators: true },
-  ).lean();
-
-  // Add the pitch to the user's claimed Pitches
-  const user = await User.findByIdAndUpdate(
     userId,
-    {
-      $addToSet: {
-        claimedPitches: req.params.id,
-      },
-      $pull: {
-        submittedClaims: req.params.id,
-      },
-    },
-    { new: true, returnOriginal: false },
+    teams,
+  );
+
+  const user = await UserService.receiveClaimRequestApproval(
+    userId,
+    req.params.id,
   );
 
   if (!user) {
@@ -304,22 +228,14 @@ export const declineClaimRequest = async (
     return;
   }
 
-  const pitch = await Pitch.findOneAndUpdate(
-    { _id: req.params.id, 'pendingContributors.userId': userId },
-    {
-      $set: {
-        'pendingContributors.$.status': pitchStatusEnum.DECLINED,
-      },
-    },
-    { new: true, runValidators: true },
-  ).lean();
+  const pitch = await PitchService.declineClaimRequest(req.params.id, userId);
 
   if (!pitch) {
     sendNotFound(res, `Pitch with id ${req.params.id} not found`);
     return;
   }
 
-  const claimUser = await User.findById(userId);
+  const claimUser = await UserService.getOne(userId);
   const aggregatedPitch = await aggregatePitch(pitch);
   const message = declineClaim(claimUser, aggregatedPitch, req.user);
 
@@ -336,7 +252,7 @@ export const deletePitch = async (
   req: DeletePitchReq,
   res: Response,
 ): Promise<void> => {
-  const deletedPitch = await Pitch.findByIdAndDelete(req.params.id);
+  const deletedPitch = await PitchService.remove(req.params.id);
 
   if (!deletedPitch) {
     sendNotFound(res, `Pitch with id ${req.params.id} not found`);

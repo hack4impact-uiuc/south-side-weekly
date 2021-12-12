@@ -16,6 +16,9 @@ const updateModel = async <T>(
     runValidators: true,
   }).lean();
 
+export const isValidId = async (_id: string): Promise<boolean> =>
+  await User.exists({ _id });
+
 export const getAll = async (): Users => await User.find({}).lean();
 
 export const getOne = async (id: string): User =>
@@ -56,6 +59,38 @@ export const addClaimedPitch = async (_id: string, pitchId: string): User =>
   await updateModel(
     { _id },
     { $addToSet: { claimedPitches: pitchId }, lastActive: new Date() },
+  );
+
+export const addSubmittedPitch = async (_id: string, pitchId: string): User =>
+  await updateModel(
+    { _id },
+    { $addToSet: { submittedPitches: pitchId }, lastActive: new Date() },
+  );
+
+export const addClaimRequest = async (_id: string, pitchId: string): User =>
+  await updateModel(
+    { _id },
+    {
+      $addToSet: {
+        submittedClaims: pitchId,
+      },
+    },
+  );
+
+export const receiveClaimRequestApproval = async (
+  _id: string,
+  pitchId: string,
+): User =>
+  await updateModel(
+    { _id },
+    {
+      $addToSet: {
+        claimedPitches: pitchId,
+      },
+      $pull: {
+        submittedClaims: pitchId,
+      },
+    },
   );
 
 export const remove = async (_id: string): User =>
