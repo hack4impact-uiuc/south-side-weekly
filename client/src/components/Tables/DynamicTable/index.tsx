@@ -54,31 +54,39 @@ const DynamicTable = <
     setIsOpen(true);
   };
 
-  const sortView = useCallback((): void => {
-    if (onHeaderClick || !sort) {
-      setView(({ columns }) => ({
-        records: viewProp.records,
-        columns,
-      }));
-      return;
-    }
-    const { column, direction } = sort;
-    setView(({ records, columns }) => {
-      records = [...records]; // Copy records so sort isn't done on the records tied to viewProp
-      if (direction === 'ascending') {
-        return { records: records.sort(column.sorter), columns };
+  const sortView = useCallback(
+    (
+      view: View<RecordType, Column>,
+      sort: Sort<Column> | undefined,
+    ): View<RecordType, Column> => {
+      if (onHeaderClick || !sort) {
+        return view;
       }
-      return { records: records.sort(column.sorter).reverse(), columns };
-    });
-  }, [onHeaderClick, sort, viewProp.records]);
+
+      const { column, direction } = sort;
+      const { records, columns } = view;
+
+      // Copy records so sort isn't done on the records tied to viewProp
+      const recordsCopy = [...records].sort(column.sorter);
+
+      if (direction === 'descending') {
+        recordsCopy.reverse();
+      }
+
+      return {
+        records: recordsCopy,
+        columns,
+      };
+    },
+    [onHeaderClick],
+  );
 
   useEffect(() => {
-    sortView();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sort]);
+    setView((view) => sortView(view, sort));
+  }, [sortView, sort]);
 
   useEffect(() => {
-    setView(viewProp);
+    setView(sortView(viewProp, viewProp.initialSort));
     setSort(viewProp.initialSort);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewProp]);
