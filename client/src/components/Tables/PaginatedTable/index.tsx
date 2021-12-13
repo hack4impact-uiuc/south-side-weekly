@@ -21,6 +21,7 @@ interface PaginatedTableProps<RecordType, QueryArgs>
   params: QueryArgs;
   query: QueryFunction<RecordType, QueryArgs>;
   initialSort?: Sort<PaginatedColumn<RecordType>>;
+  singleLineWhenPopulated?: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-magic-numbers
@@ -39,6 +40,7 @@ const PaginatedTable = <
   params,
   query,
   initialSort,
+  singleLineWhenPopulated = true,
   ...dynamicTableProps
 }: PaginatedTableProps<RecordType, QueryArgs>): ReactElement => {
   type Column = PaginatedColumn<RecordType>;
@@ -119,6 +121,7 @@ const PaginatedTable = <
         columns,
       }}
       onHeaderClick={handleColumnClick}
+      singleLine={singleLineWhenPopulated && records.length > 0}
       footer={
         <TableFooter
           totalPages={currTotalPages}
