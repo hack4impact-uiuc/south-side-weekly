@@ -8,10 +8,7 @@ import { sendApproveUserMail, sendRejectUserMail } from '../mail/sender';
 import { UserService } from '../services';
 
 import { populateUser } from '../populators/user.populate';
-import {
-  extractOptions,
-  extractPopulateQuery,
-} from './utils';
+import { extractOptions, extractPopulateQuery } from './utils';
 
 // CREATE controls
 
@@ -94,11 +91,11 @@ export const getPendingUsers = async (
   res: Response,
 ): Promise<void> => {
   const populateType = extractPopulateQuery(req.query);
- const options = extractOptions(req.query);
+  const options = extractOptions(req.query);
 
   const users = await UserService.getWithOnboardStatus(
     [onboardingStatusEnum.ONBOARDING_SCHEDULED, onboardingStatusEnum.STALLED],
-    options
+    options,
   );
 
   sendSuccess(res, 'Users retrieved successfully', {
@@ -117,7 +114,7 @@ export const getDeniedUsers = async (
 
   const users = await UserService.getWithOnboardStatus(
     [onboardingStatusEnum.DENIED],
-    options
+    options,
   );
 
   sendSuccess(res, 'Users retrieved successfully', {

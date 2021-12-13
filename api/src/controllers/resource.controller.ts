@@ -6,10 +6,7 @@ import { onboardingStatusEnum } from '../utils/enums';
 import { sendNotFound, sendSuccess } from '../utils/helpers';
 import { populateResource } from '../populators';
 
-import {
- extractOptions,
-  extractPopulateQuery,
-} from './utils';
+import { extractOptions, extractPopulateQuery } from './utils';
 
 type IdParam = { id: string };
 

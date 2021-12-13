@@ -35,7 +35,7 @@ export const getAllPitchFeedback = async (
   res: Response,
 ): Promise<void> => {
   const options = extractOptions(req.query);
-  
+
   const feedback = await PitchFeedbackService.getAll(options);
 
   const populateType = extractPopulateQuery(req.query);

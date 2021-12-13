@@ -10,10 +10,7 @@ import {
 import { populatePitch } from '../populators';
 import { PitchService, UserService } from '../services';
 import { sendFail, sendNotFound, sendSuccess } from '../utils/helpers';
-import {
-  extractOptions,
-  extractPopulateQuery,
-} from './utils';
+import { extractOptions, extractPopulateQuery } from './utils';
 
 type IdParam = { id: string };
 
@@ -98,7 +95,8 @@ export const getApprovedPitches = async (
   const options = extractOptions(req.query);
 
   const pitches = await PitchService.getApprovedPitches(
-    req.query.status as string | undefined, options
+    req.query.status as string | undefined,
+    options,
   );
 
   sendSuccess(res, 'Successfully retrieved all approved pitches', {

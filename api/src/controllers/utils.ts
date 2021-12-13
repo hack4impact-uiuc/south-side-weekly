@@ -20,13 +20,14 @@ export const extractPopulateQuery = (
   }
 };
 
-
-export const extractOptions = <T>(query: Record<string, unknown>): PaginateOptions<T>  => ({
+export const extractOptions = <T>(
+  query: Record<string, unknown>,
+): PaginateOptions<T> => ({
   limit: extractLimit(query),
   offset: extractOffset(query),
   sort: extractSortQuery(query),
   filters: extractFilterQuery(query),
-})
+});
 
 const extractLimit = (query: Record<string, unknown>): number => {
   if (!query.limit) {
@@ -68,9 +69,7 @@ const extractSortQuery = (
   return { [sortyBy]: orderBy };
 };
 
-const extractSortBy = (
-  query: Record<string, unknown>,
-): string | null => {
+const extractSortBy = (query: Record<string, unknown>): string | null => {
   if (!query.sortBy) {
     return null;
   }
@@ -89,9 +88,7 @@ const isValidOrderBy = (orderBy: unknown): orderBy is OrderBy =>
   orderBy === 'ascending' ||
   orderBy === 'descending';
 
-const extractOrderBy = (
-  query: Record<string, unknown>,
-): OrderBy | null => {
+const extractOrderBy = (query: Record<string, unknown>): OrderBy | null => {
   if (!isValidOrderBy(query.orderBy)) {
     return null;
   }

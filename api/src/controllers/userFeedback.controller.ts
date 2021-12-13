@@ -3,10 +3,7 @@ import { IUserFeedback } from 'ssw-common';
 
 import { sendNotFound, sendSuccess } from '../utils/helpers';
 import { UserFeedbackService, UserService } from '../services';
-import {
-  extractOptions,
-  extractPopulateQuery,
-} from './utils';
+import { extractOptions, extractPopulateQuery } from './utils';
 import { populateUserFeedback } from '../populators';
 
 type IdParam = { id: string };

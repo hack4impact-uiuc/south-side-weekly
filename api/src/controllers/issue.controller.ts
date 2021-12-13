@@ -4,9 +4,7 @@ import { IIssue } from 'ssw-common';
 import Issue from '../models/issue';
 import { sendNotFound, sendSuccess } from '../utils/helpers';
 import { IssueService, PitchService } from '../services';
-import {
-  extractOptions, extractPopulateQuery
-} from './utils';
+import { extractOptions, extractPopulateQuery } from './utils';
 import { populateIssue, populatePitch } from '../populators';
 
 type IdParam = { id: string };
