@@ -30,7 +30,7 @@ const paginate = async (
   const mergedFilters = _.merge(filters, definedFilters);
 
   const users = await User.find(mergedFilters)
-    .skip(offset)
+    .skip(offset * limit)
     .limit(limit)
     .sort(sort)
     .lean();

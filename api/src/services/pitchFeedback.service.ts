@@ -21,7 +21,7 @@ const paginate = async (
   console.log(sort);
 
   const users = await PitchFeedback.find(mergedFilters)
-    .skip(offset)
+    .skip(offset * limit)
     .limit(limit)
     .sort(sort)
     .lean();

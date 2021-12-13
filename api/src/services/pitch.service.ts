@@ -22,7 +22,7 @@ const paginate = async (
   const mergedFilters = _.merge(filters, definedFilters);
 
   const users = await Pitch.find(mergedFilters)
-    .skip(offset)
+    .skip(offset * limit)
     .limit(limit)
     .sort(sort)
     .lean();
