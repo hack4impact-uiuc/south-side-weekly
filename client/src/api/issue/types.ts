@@ -5,5 +5,5 @@ export interface IssuesResponse extends ApiResponseBase {
   result: {
     data: IIssue[];
     count: number;
-  }
+  };
 }

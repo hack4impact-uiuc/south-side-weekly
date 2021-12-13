@@ -6,7 +6,7 @@ export interface PitchesResponse extends ApiResponseBase {
   result: {
     data: IPitch[];
     count: number;
-  }
+  };
 }
 
 export interface AggregatedPitchResponse extends ApiResponseBase {

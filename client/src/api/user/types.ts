@@ -5,7 +5,7 @@ export interface UsersResponse extends ApiResponseBase {
   result: {
     data: IUser[];
     count: number;
-  }
+  };
 }
 
 export interface UserResponse extends ApiResponseBase {

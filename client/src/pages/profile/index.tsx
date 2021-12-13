@@ -80,8 +80,10 @@ const Profile = (): ReactElement => {
 
     if (!isError(res)) {
       const averageRating =
-        res.data.result.data.reduce((sum, feedback) => sum + feedback.stars, 0) /
-        res.data.result.count;
+        res.data.result.data.reduce(
+          (sum, feedback) => sum + feedback.stars,
+          0,
+        ) / res.data.result.count;
 
       setRating(averageRating);
       setFeedback(res.data.result.data);

@@ -13,7 +13,7 @@ interface IssuesResponse extends ApiResponseBase {
   result: {
     data: IIssue[];
     count: number;
-  }
+  };
 }
 
 interface PitchBucketsResponse extends ApiResponseBase {

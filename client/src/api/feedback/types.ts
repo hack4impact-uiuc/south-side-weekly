@@ -6,5 +6,5 @@ export interface UserFeedbackResponse extends ApiResponseBase {
   result: {
     data: IUserFeedback[];
     count: number;
-  }
+  };
 }
