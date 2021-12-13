@@ -1,9 +1,9 @@
+import _ from 'lodash';
 import { FilterQuery, LeanDocument, UpdateQuery } from 'mongoose';
 import { IUserFeedback } from 'ssw-common';
 
 import UserFeedback, { UserFeedbackSchema } from '../models/userFeedback';
 import { PaginateOptions } from './types';
-import { mergeFilters } from './utils';
 
 type UserFeedback = Promise<LeanDocument<UserFeedbackSchema>>;
 
@@ -11,6 +11,27 @@ interface UserFeedbacksResponse {
   data: LeanDocument<UserFeedbackSchema>[];
   count: number;
 }
+
+const paginate = async (
+  definedFilters: FilterQuery<UserFeedbackSchema>,
+  options?: PaginateOptions<UserFeedbackSchema>,
+): Promise<UserFeedbacksResponse> => {
+  const { offset, limit, sort, filters } = options || {};
+  const mergedFilters = _.merge(filters, definedFilters);
+
+  const users = await UserFeedback.find(mergedFilters)
+    .skip(offset)
+    .limit(limit)
+    .sort(sort)
+    .lean();
+
+  const count = await UserFeedback.countDocuments(mergedFilters);
+
+  return {
+    data: users,
+    count,
+  };
+};
 
 const updateModel = async <T>(
   filters: FilterQuery<T>,
@@ -29,20 +50,7 @@ export const getOne = async (_id: string): UserFeedback =>
 
 export const getAll = async (
   options?: PaginateOptions<UserFeedbackSchema>,
-): Promise<UserFeedbacksResponse> => {
-  const { offset, limit, sort, filters } = options;
-
-  const allFilters = mergeFilters<UserFeedbackSchema>(filters, {});
-  const count = await UserFeedback.countDocuments(allFilters);
-
-  const data = await UserFeedback.find(allFilters)
-    .skip(offset * limit)
-    .limit(limit)
-    .sort(sort)
-    .lean();
-
-  return { data, count };
-};
+): Promise<UserFeedbacksResponse> => paginate({}, options);
 
 export const update = async (
   _id: string,
@@ -55,17 +63,4 @@ export const remove = async (_id: string): UserFeedback =>
 export const getAllFeedbackForUser = async (
   userId: string,
   options?: PaginateOptions<UserFeedbackSchema>,
-): Promise<UserFeedbacksResponse> => {
-  const { offset, limit, sort, filters } = options;
-
-  const allFilters = mergeFilters<UserFeedbackSchema>(filters, { userId });
-  const count = await UserFeedback.countDocuments(allFilters);
-
-  const data = await UserFeedback.find(allFilters)
-    .skip(offset * limit)
-    .limit(limit)
-    .sort(sort)
-    .lean();
-
-  return { data, count };
-};
+): Promise<UserFeedbacksResponse> => paginate({ userId }, options);

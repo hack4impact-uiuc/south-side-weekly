@@ -1,16 +1,37 @@
+import _ from 'lodash';
 import { FilterQuery, LeanDocument, UpdateQuery } from 'mongoose';
 import { IResource } from 'ssw-common';
 
 import Resource, { ResourceSchema } from '../models/resource';
 import { visibilityEnum } from '../utils/enums';
 import { PaginateOptions } from './types';
-import { mergeFilters } from './utils';
 
 interface ResourcesResponse {
   data: LeanDocument<ResourceSchema>[];
   count: number;
 }
 type Resource = Promise<LeanDocument<ResourceSchema>>;
+
+const paginate = async (
+  definedFilters: FilterQuery<ResourceSchema>,
+  options?: PaginateOptions<ResourceSchema>,
+): Promise<ResourcesResponse> => {
+  const { offset, limit, sort, filters } = options || {};
+  const mergedFilters = _.merge(filters, definedFilters);
+
+  const users = await Resource.find(mergedFilters)
+    .skip(offset)
+    .limit(limit)
+    .sort(sort)
+    .lean();
+
+  const count = await Resource.countDocuments(mergedFilters);
+
+  return {
+    data: users,
+    count,
+  };
+};
 
 const updateModel = async <T>(
   filters: FilterQuery<T>,
@@ -36,23 +57,11 @@ export const getOne = async (_id: string): Resource =>
 export const getAll = async (
   isApproved: boolean,
   options?: PaginateOptions<ResourceSchema>,
-): Promise<ResourcesResponse> => {
-  const { offset, limit, sort, filters } = options;
-
-  const visibilityFilter = isApproved
-    ? {}
-    : { visibility: visibilityEnum.PUBLIC };
-  const allFilters = mergeFilters<ResourceSchema>(filters, visibilityFilter);
-  const count = await Resource.countDocuments(allFilters);
-
-  const data = await Resource.find(allFilters)
-    .skip(offset * limit)
-    .limit(limit)
-    .sort(sort)
-    .lean();
-
-  return { data, count };
-};
+): Promise<ResourcesResponse> =>
+  await paginate(
+    !isApproved ? { visibility: visibilityEnum.PUBLIC } : {},
+    options,
+  );
 
 export const update = async (
   _id: string,

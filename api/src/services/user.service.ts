@@ -1,10 +1,10 @@
+import _ from 'lodash';
 import { FilterQuery, LeanDocument } from 'mongoose';
 import { IUser } from 'ssw-common';
 
 import User, { UserSchema } from '../models/user';
 import { onboardingStatusEnum } from '../utils/enums';
 import { PaginateOptions } from './types';
-import { mergeFilters } from './utils';
 
 type User = LeanDocument<UserSchema>;
 
@@ -22,25 +22,33 @@ const updateModel = async <T>(
     runValidators: true,
   }).lean();
 
+const paginate = async (
+  definedFilters: FilterQuery<UserSchema>,
+  options?: PaginateOptions<UserSchema>,
+): Promise<UsersResponse> => {
+  const { offset, limit, sort, filters } = options || {};
+  const mergedFilters = _.merge(filters, definedFilters);
+
+  const users = await User.find(mergedFilters)
+    .skip(offset)
+    .limit(limit)
+    .sort(sort)
+    .lean();
+
+  const count = await User.countDocuments(mergedFilters);
+
+  return {
+    data: users,
+    count,
+  };
+};
+
 export const isValidId = async (_id: string): Promise<boolean> =>
   await User.exists({ _id });
 
 export const getAll = async (
   options?: PaginateOptions<UserSchema>,
-): Promise<UsersResponse> => {
-  const { offset, limit, sort, filters } = options;
-
-  const allFilters = mergeFilters<UserSchema>(filters, {});
-  const count = await User.countDocuments(allFilters);
-
-  const data = await User.find(allFilters)
-    .skip(offset * limit)
-    .limit(limit)
-    .sort(sort)
-    .lean();
-
-  return { data, count };
-};
+): Promise<UsersResponse> => paginate({}, options);
 
 export const getOne = async (id: string): Promise<User> =>
   await User.findById({ _id: id }).lean();
@@ -65,22 +73,8 @@ export const stall = async (stallDate: Date): Promise<void> => {
 export const getWithOnboardStatus = async (
   status: string[],
   options?: PaginateOptions<UserSchema>,
-): Promise<UsersResponse> => {
-  const { offset, limit, sort, filters } = options;
-
-  const allFilters = mergeFilters(filters, {
-    onboardingStatus: { $in: status },
-  });
-  const count = await User.countDocuments(allFilters);
-
-  const data = await User.find(allFilters)
-    .skip(offset * limit)
-    .limit(limit)
-    .sort(sort)
-    .lean();
-
-  return { data, count };
-};
+): Promise<UsersResponse> =>
+  paginate({ onboardingStatus: { $in: status } }, options);
 
 export const update = async (
   _id: string,

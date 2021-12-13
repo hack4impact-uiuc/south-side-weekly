@@ -1,6 +1,5 @@
 import _, { isEmpty } from 'lodash';
 import { FilterQuery } from 'mongoose';
-import user from '../models/user';
 
 export const extractPopulateQuery = (
   query: Record<string, unknown>,
@@ -113,7 +112,7 @@ export const extractFilterQuery = <T>(
     }
   });
 
-  const cleanFilters = Object.keys(query).map(filter => {
+  const cleanFilters = Object.keys(query).map((filter) => {
     const [field, operator] = filter.split('__');
 
     const value = query[filter];
@@ -130,4 +129,4 @@ export const extractFilterQuery = <T>(
   console.log(filters);
 
   return filters;
-}
+};

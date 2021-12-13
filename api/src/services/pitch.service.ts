@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { FilterQuery, LeanDocument, UpdateQuery } from 'mongoose';
 import { IPitch } from 'ssw-common';
 import { UserService } from '.';
@@ -5,7 +6,6 @@ import { UserService } from '.';
 import Pitch, { PitchSchema } from '../models/pitch';
 import { pitchStatusEnum } from '../utils/enums';
 import { PaginateOptions } from './types';
-import { mergeFilters } from './utils';
 
 interface PitchesResponse {
   data: LeanDocument<PitchSchema>[];
@@ -13,6 +13,27 @@ interface PitchesResponse {
 }
 
 type Pitch = Promise<LeanDocument<PitchSchema>>;
+
+const paginate = async (
+  definedFilters: FilterQuery<PitchSchema>,
+  options?: PaginateOptions<PitchSchema>,
+): Promise<PitchesResponse> => {
+  const { offset, limit, sort, filters } = options || {};
+  const mergedFilters = _.merge(filters, definedFilters);
+
+  const users = await Pitch.find(mergedFilters)
+    .skip(offset)
+    .limit(limit)
+    .sort(sort)
+    .lean();
+
+  const count = await Pitch.countDocuments(mergedFilters);
+
+  return {
+    data: users,
+    count,
+  };
+};
 
 const updateModel = async <T>(
   filters: FilterQuery<T>,
@@ -46,111 +67,41 @@ export const getOne = async (_id: string): Pitch =>
 
 export const getAll = async (
   options?: PaginateOptions<PitchSchema>,
-): Promise<PitchesResponse> => {
-  const { offset, limit, sort, filters } = options;
-
-  const allFilters = mergeFilters<PitchSchema>(filters, {});
-  const count = await Pitch.countDocuments(allFilters);
-
-  const data = await Pitch.find(allFilters)
-    .find(allFilters)
-    .skip(offset * limit)
-    .limit(limit)
-    .sort(sort)
-    .lean();
-
-  return { data, count };
-};
+): Promise<PitchesResponse> => await paginate({}, options);
 
 export const getPendingPitches = async (
   options?: PaginateOptions<PitchSchema>,
-): Promise<PitchesResponse> => {
-  const { offset, limit, sort, filters } = options;
-
-  const allFilters = mergeFilters<PitchSchema>(filters, {
-    status: pitchStatusEnum.PENDING,
-  });
-  const count = await Pitch.countDocuments(allFilters);
-
-  const data = await Pitch.find(allFilters)
-    .find(allFilters)
-    .skip(offset * limit)
-    .limit(limit)
-    .sort(sort)
-    .lean();
-
-  return { data, count };
-};
+): Promise<PitchesResponse> =>
+  await paginate({ status: pitchStatusEnum.PENDING }, options);
 
 export const getApprovedPitches = async (
   status?: string,
   options?: PaginateOptions<PitchSchema>,
 ): Promise<PitchesResponse> => {
-  const { offset, limit, sort, filters } = options;
-
-  const allFilters = mergeFilters<PitchSchema>(filters, {
-    status: pitchStatusEnum.APPROVED,
-  });
-  const count = await Pitch.countDocuments(allFilters);
-
-  const data = await Pitch.find(allFilters)
-    .find(allFilters)
-    .skip(offset * limit)
-    .limit(limit)
-    .sort(sort)
-    .lean();
+  const pitches = await paginate({ status: pitchStatusEnum.APPROVED }, options);
 
   if (!status) {
-    return { data, count };
+    return pitches;
   } else if (status === 'unclaimed') {
-    const unclaimedPitches = data.filter((pitch) => !isPitchClaimed(pitch));
+    const unclaimedPitches = pitches.data.filter(
+      (pitch) => !isPitchClaimed(pitch),
+    );
     return { data: unclaimedPitches, count: unclaimedPitches.length };
   }
 
-  const claimedPitches = data.filter(isPitchClaimed);
+  const claimedPitches = pitches.data.filter(isPitchClaimed);
   return { data: claimedPitches, count: claimedPitches.length };
 };
 
 export const getPendingClaimPitches = async (
   options?: PaginateOptions<PitchSchema>,
-): Promise<PitchesResponse> => {
-  const { offset, limit, sort, filters } = options;
-
-  const allFilters = mergeFilters<PitchSchema>(filters, {
-    'pendingContributors.0': { $exists: true },
-  });
-
-  const count = await Pitch.countDocuments(allFilters);
-
-  const data = await Pitch.find(allFilters)
-    .find(allFilters)
-    .skip(offset * limit)
-    .limit(limit)
-    .sort(sort)
-    .lean();
-
-  return { data, count };
-};
+): Promise<PitchesResponse> =>
+  await paginate({ 'pendingContributors.0': { $exists: true } }, options);
 
 export const getFeedbackForPitch = async (
   pitchId: string,
   options?: PaginateOptions<PitchSchema>,
-): Promise<PitchesResponse> => {
-  const { offset, limit, sort, filters } = options;
-
-  const allFilters = mergeFilters<PitchSchema>(filters, { pitchId });
-
-  const count = await Pitch.countDocuments(allFilters);
-
-  const data = await Pitch.find(allFilters)
-    .find(allFilters)
-    .skip(offset * limit)
-    .limit(limit)
-    .sort(sort)
-    .lean();
-
-  return { data, count };
-};
+): Promise<PitchesResponse> => await paginate({ _id: pitchId }, options);
 
 export const update = async (_id: string, payload: Partial<IPitch>): Pitch =>
   await updateModel({ _id }, payload);

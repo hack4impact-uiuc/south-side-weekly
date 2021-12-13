@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { FilterQuery, LeanDocument, UpdateQuery } from 'mongoose';
 import { IIssue, IPitch } from 'ssw-common';
 import { PitchService } from '.';
@@ -6,7 +7,6 @@ import Issue, { IssueSchema } from '../models/issue';
 import { PitchSchema } from '../models/pitch';
 import { issueStatusEnum } from '../utils/enums';
 import { PaginateOptions } from './types';
-import { mergeFilters } from './utils';
 
 interface IssuesResponse {
   data: LeanDocument<IssueSchema>[];
@@ -14,6 +14,27 @@ interface IssuesResponse {
 }
 
 type Issue = Promise<LeanDocument<IssueSchema>>;
+
+const paginate = async (
+  definedFilters: FilterQuery<IssueSchema>,
+  options?: PaginateOptions<IssueSchema>,
+): Promise<IssuesResponse> => {
+  const { offset, limit, sort, filters } = options || {};
+  const mergedFilters = _.merge(filters, definedFilters);
+
+  const users = await Issue.find(mergedFilters)
+    .skip(offset)
+    .limit(limit)
+    .sort(sort)
+    .lean();
+
+  const count = await Issue.countDocuments(mergedFilters);
+
+  return {
+    data: users,
+    count,
+  };
+};
 
 const updateModel = async <T>(
   filters: FilterQuery<T>,
@@ -34,38 +55,12 @@ export const getOne = async (_id: string): Issue =>
 
 export const getAll = async (
   options?: PaginateOptions<IssueSchema>,
-): Promise<IssuesResponse> => {
-  const { offset, limit, sort, filters } = options;
-
-  const allFilters = mergeFilters<IssueSchema>(filters, {});
-  const count = await Issue.countDocuments(allFilters);
-
-  const data = await Issue.find(allFilters)
-    .skip(offset * limit)
-    .limit(limit)
-    .sort(sort)
-    .lean();
-
-  return { data, count };
-};
+): Promise<IssuesResponse> => await paginate({}, options);
 
 export const getFeedbackForPitch = async (
   pitchId: string,
   options: PaginateOptions<IssueSchema>,
-): Promise<IssuesResponse> => {
-  const { offset, limit, sort, filters } = options;
-
-  const allFilters = mergeFilters<IssueSchema>(filters, { pitchId });
-  const count = await Issue.countDocuments(allFilters);
-
-  const data = await Issue.find(allFilters)
-    .skip(offset * limit)
-    .limit(limit)
-    .sort(sort)
-    .lean();
-
-  return { data, count };
-};
+): Promise<IssuesResponse> => await paginate({ pitchId }, options);
 
 export const update = async (_id: string, payload: Partial<IIssue>): Issue =>
   await updateModel({ _id }, payload);

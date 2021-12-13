@@ -1,15 +1,36 @@
+import _ from 'lodash';
 import { FilterQuery, LeanDocument, UpdateQuery } from 'mongoose';
 import { IPitchFeedback } from 'ssw-common';
 
 import PitchFeedback, { PitchFeedbackSchema } from '../models/pitchFeedback';
 import { PaginateOptions } from './types';
-import { mergeFilters } from './utils';
 
 interface PitchFeedbacksResponse {
   data: LeanDocument<PitchFeedbackSchema>[];
   count: number;
 }
 type PitchFeedback = Promise<LeanDocument<PitchFeedbackSchema>>;
+
+const paginate = async (
+  definedFilters: FilterQuery<PitchFeedbackSchema>,
+  options?: PaginateOptions<PitchFeedbackSchema>,
+): Promise<PitchFeedbacksResponse> => {
+  const { offset, limit, sort, filters } = options || {};
+  const mergedFilters = _.merge(filters, definedFilters);
+
+  const users = await PitchFeedback.find(mergedFilters)
+    .skip(offset)
+    .limit(limit)
+    .sort(sort)
+    .lean();
+
+  const count = await PitchFeedback.countDocuments(mergedFilters);
+
+  return {
+    data: users,
+    count,
+  };
+};
 
 const updateModel = async <T>(
   filters: FilterQuery<T>,
@@ -30,40 +51,12 @@ export const getOne = async (_id: string): PitchFeedback =>
 
 export const getAll = async (
   options?: PaginateOptions<PitchFeedbackSchema>,
-): Promise<PitchFeedbacksResponse> => {
-  const { offset, limit, sort, filters } = options;
-
-  const allFilters = mergeFilters<PitchFeedbackSchema>(filters, {});
-  const count = await PitchFeedback.countDocuments(allFilters);
-
-  const data = await PitchFeedback.find(allFilters)
-    .find(allFilters)
-    .skip(offset * limit)
-    .limit(limit)
-    .sort(sort)
-    .lean();
-
-  return { data, count };
-};
+): Promise<PitchFeedbacksResponse> => await paginate({}, options);
 
 export const getFeedbackForPitch = async (
   pitchId: string,
   options?: PaginateOptions<PitchFeedbackSchema>,
-): Promise<PitchFeedbacksResponse> => {
-  const { offset, limit, sort, filters } = options;
-
-  const allFilters = mergeFilters<PitchFeedbackSchema>(filters, { pitchId });
-  const count = await PitchFeedback.countDocuments(allFilters);
-
-  const data = await PitchFeedback.find(allFilters)
-    .find(allFilters)
-    .skip(offset * limit)
-    .limit(limit)
-    .sort(sort)
-    .lean();
-
-  return { data, count };
-};
+): Promise<PitchFeedbacksResponse> => await paginate({ pitchId }, options);
 
 export const update = async (
   _id: string,
