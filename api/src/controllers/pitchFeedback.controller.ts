@@ -38,11 +38,10 @@ export const getAllPitchFeedback = async (
 
   const populateType = extractPopulateQuery(req.query);
 
-  sendSuccess(
-    res,
-    'Successfully retrieved pitch feedback for all pitches',
-    await populatePitchFeedback(feedback, populateType),
-  );
+  sendSuccess(res, 'Successfully retrieved pitch feedback for all pitches', {
+    data: await populatePitchFeedback(feedback.data, populateType),
+    count: feedback.count,
+  });
 };
 
 type GetPitchFeedbackReq = Request<IdParam>;
@@ -79,11 +78,10 @@ export const getFeedbackForPitch = async (
 
   const populateType = extractPopulateQuery(req.query);
 
-  sendSuccess(
-    res,
-    'Successfully retrieved pitch feedback',
-    populatePitchFeedback(feedback, populateType),
-  );
+  sendSuccess(res, 'Successfully retrieved pitch feedback', {
+    data: await populatePitchFeedback(feedback.data, populateType),
+    count: feedback.count,
+  });
 };
 
 // UPDATE controls

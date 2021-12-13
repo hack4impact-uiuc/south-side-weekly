@@ -104,7 +104,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       const res = await getUsersByTeam('Editing');
 
       if (!isError(res)) {
-        setEditors(res.data.result);
+        setEditors(res.data.result.data);
       }
     };
 
@@ -112,7 +112,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       const res = await getUsersByTeam('Writing');
 
       if (!isError(res)) {
-        setWriters(res.data.result);
+        setWriters(res.data.result.data);
       }
     };
 
@@ -120,7 +120,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       const res = await getIssues();
 
       if (!isError(res)) {
-        setIssues(res.data.result);
+        setIssues(res.data.result.data);
       }
     };
 

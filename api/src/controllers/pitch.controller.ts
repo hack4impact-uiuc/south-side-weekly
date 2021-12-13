@@ -10,7 +10,13 @@ import {
 import { populatePitch } from '../populators';
 import { PitchService, UserService } from '../services';
 import { sendFail, sendNotFound, sendSuccess } from '../utils/helpers';
-import { extractPopulateQuery } from './utils';
+import {
+  extractFilterQuery,
+  extractLimit,
+  extractOffset,
+  extractPopulateQuery,
+  extractSortQuery,
+} from './utils';
 
 type IdParam = { id: string };
 
@@ -36,9 +42,18 @@ export const getPitches = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const pitches = await PitchService.getAll();
+  const populateType = extractPopulateQuery(req.query);
+  const limit = extractLimit(req.query);
+  const offset = extractOffset(req.query);
+  const sort = extractSortQuery(req.query);
+  const filters = extractFilterQuery(req.query);
 
-  sendSuccess(res, 'Pitches retrieved successfully', pitches);
+  const pitches = await PitchService.getAll({ limit, offset, sort, filters });
+
+  sendSuccess(res, 'Pitches retrieved successfully', {
+    data: await populatePitch(pitches.data, populateType),
+    count: pitches.count,
+  });
 };
 
 type GetPitchesReq = Request<IdParam>;
@@ -67,15 +82,23 @@ export const getPendingPitches = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const pitches = await PitchService.getPendingPitches();
-
   const populateType = extractPopulateQuery(req.query);
+  const limit = extractLimit(req.query);
+  const offset = extractOffset(req.query);
+  const sort = extractSortQuery(req.query);
+  const filters = extractFilterQuery(req.query);
 
-  sendSuccess(
-    res,
-    'Pitches retrieved successfully',
-    await populatePitch(pitches, populateType),
-  );
+  const pitches = await PitchService.getPendingPitches({
+    limit,
+    offset,
+    sort,
+    filters,
+  });
+
+  sendSuccess(res, 'Pitches retrieved successfully', {
+    data: await populatePitch(pitches.data, populateType),
+    count: pitches.count,
+  });
 };
 
 type GetApprovedPitchesReqQuery = { status: string };
@@ -85,32 +108,44 @@ export const getApprovedPitches = async (
   req: GetApprovedPitchesReq,
   res: Response,
 ): Promise<void> => {
+  const populateType = extractPopulateQuery(req.query);
+  const limit = extractLimit(req.query);
+  const offset = extractOffset(req.query);
+  const sort = extractSortQuery(req.query);
+  const filters = extractFilterQuery(req.query);
+
   const pitches = await PitchService.getApprovedPitches(
     req.query.status as string | undefined,
+    { limit, offset, sort, filters },
   );
 
-  const populateType = extractPopulateQuery(req.query);
-
-  sendSuccess(
-    res,
-    'Successfully retrieved all approved pitches',
-    await populatePitch(pitches, populateType),
-  );
+  sendSuccess(res, 'Successfully retrieved all approved pitches', {
+    data: await populatePitch(pitches.data, populateType),
+    count: pitches.count,
+  });
 };
 
 export const getPitchesWithPendingClaims = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const pitches = await PitchService.getPendingClaimPitches();
-
   const populateType = extractPopulateQuery(req.query);
+  const limit = extractLimit(req.query);
+  const offset = extractOffset(req.query);
+  const sort = extractSortQuery(req.query);
+  const filters = extractFilterQuery(req.query);
 
-  sendSuccess(
-    res,
-    'Pitches retrieved successfully',
-    await populatePitch(pitches, populateType),
-  );
+  const pitches = await PitchService.getPendingClaimPitches({
+    limit,
+    offset,
+    sort,
+    filters,
+  });
+
+  sendSuccess(res, 'Pitches retrieved successfully', {
+    data: await populatePitch(pitches.data, populateType),
+    count: pitches.count,
+  });
 };
 
 // UPDATE controls

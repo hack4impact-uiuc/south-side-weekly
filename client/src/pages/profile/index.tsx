@@ -80,11 +80,11 @@ const Profile = (): ReactElement => {
 
     if (!isError(res)) {
       const averageRating =
-        res.data.result.reduce((sum, feedback) => sum + feedback.stars, 0) /
-        res.data.result.length;
+        res.data.result.data.reduce((sum, feedback) => sum + feedback.stars, 0) /
+        res.data.result.count;
 
       setRating(averageRating);
-      setFeedback(res.data.result);
+      setFeedback(res.data.result.data);
     }
   }, [userId]);
 

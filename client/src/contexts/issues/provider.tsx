@@ -21,7 +21,7 @@ const IssuesProvider: FC = ({ children }): ReactElement => {
     const res = await getIssues();
 
     if (!isError(res)) {
-      setIssues(res.data.result);
+      setIssues(res.data.result.data);
     }
   }, []);
 

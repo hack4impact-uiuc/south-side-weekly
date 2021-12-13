@@ -55,7 +55,7 @@ const PitchDoc = (): ReactElement => {
   const getApproved = async (): Promise<void> => {
     const res = await getApprovedPitches();
     if (!isError(res)) {
-      setApproved(res.data.result);
+      setApproved(res.data.result.data);
     }
   };
 
@@ -64,7 +64,7 @@ const PitchDoc = (): ReactElement => {
 
     if (!isError(res)) {
       const unclaimedPitches = res.data.result;
-      const claimablePitches = unclaimedPitches.filter(
+      const claimablePitches = unclaimedPitches.data.filter(
         (pitch: IPitch) => getClaimableTeams(pitch, user).length > 0,
       );
 
@@ -78,7 +78,7 @@ const PitchDoc = (): ReactElement => {
     const res = await getPitchesPendingApproval();
 
     if (!isError(res)) {
-      setPendingApprovals(res.data.result);
+      setPendingApprovals(res.data.result.data);
     }
   };
 
@@ -86,7 +86,7 @@ const PitchDoc = (): ReactElement => {
     const res = await getPendingContributorPitches();
 
     if (!isError(res)) {
-      setPendingClaims(res.data.result);
+      setPendingClaims(res.data.result.data);
     }
   };
 

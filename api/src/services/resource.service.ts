@@ -3,8 +3,13 @@ import { IResource } from 'ssw-common';
 
 import Resource, { ResourceSchema } from '../models/resource';
 import { visibilityEnum } from '../utils/enums';
+import { PaginateOptions } from './types';
+import { mergeFilters } from './utils';
 
-type Resources = Promise<LeanDocument<ResourceSchema>[]>;
+interface ResourcesResponse {
+  data: LeanDocument<ResourceSchema>[];
+  count: number;
+}
 type Resource = Promise<LeanDocument<ResourceSchema>>;
 
 const updateModel = async <T>(
@@ -28,12 +33,25 @@ export const add = async (payload: Partial<IResource>): Resource =>
 export const getOne = async (_id: string): Resource =>
   await Resource.findById({ _id }).lean();
 
-export const getAll = async (isApproved: boolean): Resources => {
-  if (!isApproved) {
-    return await Resource.find({ visibility: visibilityEnum.PUBLIC }).lean();
-  }
+export const getAll = async (
+  isApproved: boolean,
+  options?: PaginateOptions<ResourceSchema>,
+): Promise<ResourcesResponse> => {
+  const { offset, limit, sort, filters } = options;
 
-  return await Resource.find({}).lean();
+  const visibilityFilter = isApproved
+    ? {}
+    : { visibility: visibilityEnum.PUBLIC };
+  const allFilters = mergeFilters<ResourceSchema>(filters, visibilityFilter);
+  const count = await Resource.countDocuments(allFilters);
+
+  const data = await Resource.find(allFilters)
+    .skip(offset * limit)
+    .limit(limit)
+    .sort(sort)
+    .lean();
+
+  return { data, count };
 };
 
 export const update = async (

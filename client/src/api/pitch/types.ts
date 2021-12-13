@@ -3,7 +3,10 @@ import { IPitch, IPitchAggregate } from 'ssw-common';
 import { ApiResponseBase } from '../types';
 
 export interface PitchesResponse extends ApiResponseBase {
-  result: IPitch[];
+  result: {
+    data: IPitch[];
+    count: number;
+  }
 }
 
 export interface AggregatedPitchResponse extends ApiResponseBase {

@@ -4,6 +4,14 @@ import { IIssue } from 'ssw-common';
 import Issue from '../models/issue';
 import { sendNotFound, sendSuccess } from '../utils/helpers';
 import { IssueService, PitchService } from '../services';
+import {
+  extractFilterQuery,
+  extractLimit,
+  extractOffset,
+  extractPopulateQuery,
+  extractSortQuery,
+} from './utils';
+import { populateIssue, populatePitch } from '../populators';
 
 type IdParam = { id: string };
 
@@ -17,18 +25,32 @@ export const createIssue = async (
   res: Response,
 ): Promise<void> => {
   const newIssue = await IssueService.add(req.body);
+  const populateType = extractPopulateQuery(req.query);
 
   if (newIssue) {
-    sendSuccess(res, 'Issue created', newIssue);
+    sendSuccess(
+      res,
+      'Issue created',
+      await populateIssue(newIssue, populateType),
+    );
   }
 };
 
 // READ controls
 
 export const getIssues = async (req: Request, res: Response): Promise<void> => {
-  const issues = await IssueService.getAll();
+  const populateType = extractPopulateQuery(req.query);
+  const limit = extractLimit(req.query);
+  const offset = extractOffset(req.query);
+  const sort = extractSortQuery(req.query);
+  const filters = extractFilterQuery(req.query);
 
-  sendSuccess(res, 'Issues retrieved', issues);
+  const issues = await IssueService.getAll({ limit, offset, sort, filters });
+
+  sendSuccess(res, 'Issues retrieved', {
+    data: await populateIssue(issues.data, populateType),
+    count: issues.count,
+  });
 };
 
 type GetIssueReq = Request<IdParam>;
@@ -37,6 +59,8 @@ export const getIssue = async (
   req: GetIssueReq,
   res: Response,
 ): Promise<void> => {
+  const populateType = extractPopulateQuery(req.query);
+
   const issue = await IssueService.getOne(req.params.id);
 
   if (!issue) {
@@ -44,7 +68,7 @@ export const getIssue = async (
     return;
   }
 
-  sendSuccess(res, 'Issue retrieved', issue);
+  sendSuccess(res, 'Issue retrieved', await populateIssue(issue, populateType));
 };
 
 type BuildIssueBucketReq = Request<IdParam>;
@@ -80,8 +104,13 @@ export const updateIssue = async (
     sendNotFound(res, `Issue with id ${req.params.id} not found`);
     return;
   }
+  const populateType = extractPopulateQuery(req.query);
 
-  sendSuccess(res, 'Issue updated', updatedIssue);
+  sendSuccess(
+    res,
+    'Issue updated',
+    await populateIssue(updatedIssue, populateType),
+  );
 };
 
 type UpdateIssueStatusReqBody = { issueId: string; issueStatus: string };
@@ -97,8 +126,9 @@ export const updateIssueStatus = async (
   res: Response,
 ): Promise<void> => {
   const { issueId, issueStatus } = req.body;
+  const populateType = extractPopulateQuery(req.query);
 
-  const pitch = PitchService.changeIssueStatus(
+  const pitch = await PitchService.changeIssueStatus(
     req.params.pitchId,
     issueId,
     issueStatus,
@@ -109,5 +139,9 @@ export const updateIssueStatus = async (
     return;
   }
 
-  sendSuccess(res, 'Issue status updated', pitch);
+  sendSuccess(
+    res,
+    'Issue status updated',
+    await populatePitch(pitch, populateType),
+  );
 };

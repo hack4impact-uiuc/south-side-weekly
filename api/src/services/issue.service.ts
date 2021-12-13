@@ -5,8 +5,14 @@ import { PitchService } from '.';
 import Issue, { IssueSchema } from '../models/issue';
 import { PitchSchema } from '../models/pitch';
 import { issueStatusEnum } from '../utils/enums';
+import { PaginateOptions } from './types';
+import { mergeFilters } from './utils';
 
-type Issues = Promise<LeanDocument<IssueSchema>[]>;
+interface IssuesResponse {
+  data: LeanDocument<IssueSchema>[];
+  count: number;
+}
+
 type Issue = Promise<LeanDocument<IssueSchema>>;
 
 const updateModel = async <T>(
@@ -26,10 +32,40 @@ export const add = async (payload: Partial<IIssue>): Issue => {
 export const getOne = async (_id: string): Issue =>
   await Issue.findById({ _id }).lean();
 
-export const getAll = async (): Issues => await Issue.find({}).lean();
+export const getAll = async (
+  options?: PaginateOptions<IssueSchema>,
+): Promise<IssuesResponse> => {
+  const { offset, limit, sort, filters } = options;
 
-export const getFeedbackForPitch = async (pitchId: string): Issues =>
-  await Issue.find({ pitchId }).lean();
+  const allFilters = mergeFilters<IssueSchema>(filters, {});
+  const count = await Issue.countDocuments(allFilters);
+
+  const data = await Issue.find(allFilters)
+    .skip(offset * limit)
+    .limit(limit)
+    .sort(sort)
+    .lean();
+
+  return { data, count };
+};
+
+export const getFeedbackForPitch = async (
+  pitchId: string,
+  options: PaginateOptions<IssueSchema>,
+): Promise<IssuesResponse> => {
+  const { offset, limit, sort, filters } = options;
+
+  const allFilters = mergeFilters<IssueSchema>(filters, { pitchId });
+  const count = await Issue.countDocuments(allFilters);
+
+  const data = await Issue.find(allFilters)
+    .skip(offset * limit)
+    .limit(limit)
+    .sort(sort)
+    .lean();
+
+  return { data, count };
+};
 
 export const update = async (_id: string, payload: Partial<IIssue>): Issue =>
   await updateModel({ _id }, payload);
@@ -62,7 +98,7 @@ export const getPitchBuckets = async (
   const issueId = issue._id.toString();
 
   Object.keys(issueStatusEnum).forEach((status) => {
-    const bucket = pitches.filter((pitch) =>
+    const bucket = pitches.data.filter((pitch) =>
       isPitchInStatusBucket(pitch.issueStatuses, status, issueId),
     );
     buckets.push({ status: status, pitches: bucket });

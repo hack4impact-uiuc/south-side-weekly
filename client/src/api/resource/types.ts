@@ -7,7 +7,10 @@ export interface ResourceResponse extends ApiResponseBase {
 }
 
 export interface ResourcesResponse extends ApiResponseBase {
-  result: IResource[];
+  result: {
+    data: IResource[];
+    count: number;
+  };
 }
 
 export type DeleteResourceResponseType = ApiResponseBase;

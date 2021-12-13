@@ -2,7 +2,10 @@ import { IUser, IUserAggregate } from 'ssw-common';
 
 import { ApiResponseBase } from '../types';
 export interface UsersResponse extends ApiResponseBase {
-  result: IUser[];
+  result: {
+    data: IUser[];
+    count: number;
+  }
 }
 
 export interface UserResponse extends ApiResponseBase {

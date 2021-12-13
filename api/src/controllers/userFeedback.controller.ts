@@ -3,7 +3,13 @@ import { IUserFeedback } from 'ssw-common';
 
 import { sendNotFound, sendSuccess } from '../utils/helpers';
 import { UserFeedbackService, UserService } from '../services';
-import { extractPopulateQuery } from './utils';
+import {
+  extractFilterQuery,
+  extractLimit,
+  extractOffset,
+  extractPopulateQuery,
+  extractSortQuery,
+} from './utils';
 import { populateUserFeedback } from '../populators';
 
 type IdParam = { id: string };
@@ -37,15 +43,23 @@ export const getAllUserFeedback = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const feedback = await UserFeedbackService.getAll();
+  const limit = extractLimit(req.query);
+  const offset = extractOffset(req.query);
+  const sort = extractSortQuery(req.query);
+  const filters = extractFilterQuery(req.query);
+  const feedback = await UserFeedbackService.getAll({
+    limit,
+    offset,
+    sort,
+    filters,
+  });
 
   const populateType = extractPopulateQuery(req.query);
 
-  sendSuccess(
-    res,
-    'Feedback retrieved successfully',
-    await populateUserFeedback(feedback, populateType),
-  );
+  sendSuccess(res, 'Feedback retrieved successfully', {
+    data: await populateUserFeedback(feedback.data, populateType),
+    count: feedback.count,
+  });
 };
 
 type GetUserFeedbackReq = Request<IdParam>;
@@ -76,17 +90,22 @@ export const getAllFeedbackForUser = async (
   req: GetAllFeedbackForUser,
   res: Response,
 ): Promise<void> => {
+  const limit = extractLimit(req.query);
+  const offset = extractOffset(req.query);
+  const sort = extractSortQuery(req.query);
+  const filters = extractFilterQuery(req.query);
+
   const feedback = await UserFeedbackService.getAllFeedbackForUser(
     req.params.id,
+    { limit, offset, sort, filters },
   );
 
   const populateType = extractPopulateQuery(req.query);
 
-  sendSuccess(
-    res,
-    'Feedback retrieved successfully',
-    await populateUserFeedback(feedback, populateType),
-  );
+  sendSuccess(res, 'Feedback retrieved successfully', {
+    data: await populateUserFeedback(feedback.data, populateType),
+    count: feedback.count,
+  });
 };
 
 // UPDATE controls

@@ -10,7 +10,10 @@ interface IssueReponse extends ApiResponseBase {
 }
 
 interface IssuesResponse extends ApiResponseBase {
-  result: IIssue[];
+  result: {
+    data: IIssue[];
+    count: number;
+  }
 }
 
 interface PitchBucketsResponse extends ApiResponseBase {

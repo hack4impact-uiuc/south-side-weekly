@@ -3,14 +3,20 @@ import { IUser } from 'ssw-common';
 
 import User, { UserSchema } from '../models/user';
 import { onboardingStatusEnum } from '../utils/enums';
+import { PaginateOptions } from './types';
+import { mergeFilters } from './utils';
 
-type Users = Promise<LeanDocument<UserSchema>[]>;
-type User = Promise<LeanDocument<UserSchema>>;
+type User = LeanDocument<UserSchema>;
+
+interface UsersResponse {
+  data: LeanDocument<UserSchema>[];
+  count: number;
+}
 
 const updateModel = async <T>(
   filters: FilterQuery<T>,
   payload: Partial<T>,
-): User =>
+): Promise<User> =>
   await User.findByIdAndUpdate(filters, payload, {
     new: true,
     runValidators: true,
@@ -19,12 +25,27 @@ const updateModel = async <T>(
 export const isValidId = async (_id: string): Promise<boolean> =>
   await User.exists({ _id });
 
-export const getAll = async (): Users => await User.find({}).lean();
+export const getAll = async (
+  options?: PaginateOptions<UserSchema>,
+): Promise<UsersResponse> => {
+  const { offset, limit, sort, filters } = options;
 
-export const getOne = async (id: string): User =>
+  const allFilters = mergeFilters<UserSchema>(filters, {});
+  const count = await User.countDocuments(allFilters);
+
+  const data = await User.find(allFilters)
+    .skip(offset * limit)
+    .limit(limit)
+    .sort(sort)
+    .lean();
+
+  return { data, count };
+};
+
+export const getOne = async (id: string): Promise<User> =>
   await User.findById({ _id: id }).lean();
 
-export const add = async (payload: Partial<IUser>): User =>
+export const add = async (payload: Partial<IUser>): Promise<User> =>
   await User.create(payload);
 
 export const stall = async (stallDate: Date): Promise<void> => {
@@ -41,33 +62,64 @@ export const stall = async (stallDate: Date): Promise<void> => {
   );
 };
 
-export const getWithOnboardStatus = async (...status: string[]): Users =>
-  await User.find({
+export const getWithOnboardStatus = async (
+  status: string[],
+  options?: PaginateOptions<UserSchema>,
+): Promise<UsersResponse> => {
+  const { offset, limit, sort, filters } = options;
+
+  const allFilters = mergeFilters(filters, {
     onboardingStatus: { $in: status },
-  }).lean();
+  });
+  const count = await User.countDocuments(allFilters);
 
-export const update = async (_id: string, payload: Partial<IUser>): User =>
-  await updateModel({ _id }, payload);
+  const data = await User.find(allFilters)
+    .skip(offset * limit)
+    .limit(limit)
+    .sort(sort)
+    .lean();
 
-export const markPageVisited = async (_id: string, page: string): User =>
+  return { data, count };
+};
+
+export const update = async (
+  _id: string,
+  payload: Partial<IUser>,
+): Promise<User> => await updateModel({ _id }, payload);
+
+export const markPageVisited = async (
+  _id: string,
+  page: string,
+): Promise<User> =>
   await updateModel({ _id }, { $addToSet: { visitedPages: page } });
 
-export const setOnboardStatus = async (_id: string, status: string): User =>
-  await updateModel({ _id }, { onboardingStatus: status });
+export const setOnboardStatus = async (
+  _id: string,
+  status: string,
+): Promise<User> => await updateModel({ _id }, { onboardingStatus: status });
 
-export const addClaimedPitch = async (_id: string, pitchId: string): User =>
+export const addClaimedPitch = async (
+  _id: string,
+  pitchId: string,
+): Promise<User> =>
   await updateModel(
     { _id },
     { $addToSet: { claimedPitches: pitchId }, lastActive: new Date() },
   );
 
-export const addSubmittedPitch = async (_id: string, pitchId: string): User =>
+export const addSubmittedPitch = async (
+  _id: string,
+  pitchId: string,
+): Promise<User> =>
   await updateModel(
     { _id },
     { $addToSet: { submittedPitches: pitchId }, lastActive: new Date() },
   );
 
-export const addClaimRequest = async (_id: string, pitchId: string): User =>
+export const addClaimRequest = async (
+  _id: string,
+  pitchId: string,
+): Promise<User> =>
   await updateModel(
     { _id },
     {
@@ -80,7 +132,7 @@ export const addClaimRequest = async (_id: string, pitchId: string): User =>
 export const receiveClaimRequestApproval = async (
   _id: string,
   pitchId: string,
-): User =>
+): Promise<User> =>
   await updateModel(
     { _id },
     {
@@ -93,7 +145,10 @@ export const receiveClaimRequestApproval = async (
     },
   );
 
-export const removeClaimRequest = async (_id: string, pitchId: string): User =>
+export const removeClaimRequest = async (
+  _id: string,
+  pitchId: string,
+): Promise<User> =>
   await updateModel(
     { _id },
     {
@@ -103,11 +158,17 @@ export const removeClaimRequest = async (_id: string, pitchId: string): User =>
     },
   );
 
-export const remove = async (_id: string): User =>
+export const remove = async (_id: string): Promise<User> =>
   await User.findByIdAndDelete({ _id }).lean();
 
-export const addFeedback = async (_id: string, feedbackId: string): User =>
+export const addFeedback = async (
+  _id: string,
+  feedbackId: string,
+): Promise<User> =>
   await updateModel({ _id }, { $addToSet: { feedback: feedbackId } });
 
-export const removeFeedback = async (_id: string, feedbackId: string): User =>
+export const removeFeedback = async (
+  _id: string,
+  feedbackId: string,
+): Promise<User> =>
   await updateModel({ _id }, { $pull: { feedback: feedbackId } });

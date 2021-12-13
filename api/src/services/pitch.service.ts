@@ -4,8 +4,14 @@ import { UserService } from '.';
 
 import Pitch, { PitchSchema } from '../models/pitch';
 import { pitchStatusEnum } from '../utils/enums';
+import { PaginateOptions } from './types';
+import { mergeFilters } from './utils';
 
-type Pitches = Promise<LeanDocument<PitchSchema>[]>;
+interface PitchesResponse {
+  data: LeanDocument<PitchSchema>[];
+  count: number;
+}
+
 type Pitch = Promise<LeanDocument<PitchSchema>>;
 
 const updateModel = async <T>(
@@ -38,30 +44,113 @@ export const add = async (payload: Partial<IPitch>): Pitch => {
 export const getOne = async (_id: string): Pitch =>
   await Pitch.findById({ _id }).lean();
 
-export const getAll = async (): Pitches => await Pitch.find({}).lean();
+export const getAll = async (
+  options?: PaginateOptions<PitchSchema>,
+): Promise<PitchesResponse> => {
+  const { offset, limit, sort, filters } = options;
 
-export const getPendingPitches = async (): Pitches =>
-  await Pitch.find({ status: pitchStatusEnum.PENDING }).lean();
+  const allFilters = mergeFilters<PitchSchema>(filters, {});
+  const count = await Pitch.countDocuments(allFilters);
 
-export const getApprovedPitches = async (status?: string): Pitches => {
-  const pitches = await Pitch.find({ status: pitchStatusEnum.APPROVED }).lean();
+  const data = await Pitch.find(allFilters)
+    .find(allFilters)
+    .skip(offset * limit)
+    .limit(limit)
+    .sort(sort)
+    .lean();
 
-  if (!status) {
-    return pitches;
-  } else if (status === 'unclaimed') {
-    return pitches.filter((pitch) => !isPitchClaimed(pitch));
-  }
-
-  return pitches.filter(isPitchClaimed);
+  return { data, count };
 };
 
-export const getPendingClaimPitches = async (): Pitches =>
-  await Pitch.find({
+export const getPendingPitches = async (
+  options?: PaginateOptions<PitchSchema>,
+): Promise<PitchesResponse> => {
+  const { offset, limit, sort, filters } = options;
+
+  const allFilters = mergeFilters<PitchSchema>(filters, {
+    status: pitchStatusEnum.PENDING,
+  });
+  const count = await Pitch.countDocuments(allFilters);
+
+  const data = await Pitch.find(allFilters)
+    .find(allFilters)
+    .skip(offset * limit)
+    .limit(limit)
+    .sort(sort)
+    .lean();
+
+  return { data, count };
+};
+
+export const getApprovedPitches = async (
+  status?: string,
+  options?: PaginateOptions<PitchSchema>,
+): Promise<PitchesResponse> => {
+  const { offset, limit, sort, filters } = options;
+
+  const allFilters = mergeFilters<PitchSchema>(filters, {
+    status: pitchStatusEnum.APPROVED,
+  });
+  const count = await Pitch.countDocuments(allFilters);
+
+  const data = await Pitch.find(allFilters)
+    .find(allFilters)
+    .skip(offset * limit)
+    .limit(limit)
+    .sort(sort)
+    .lean();
+
+  if (!status) {
+    return { data, count };
+  } else if (status === 'unclaimed') {
+    const unclaimedPitches = data.filter((pitch) => !isPitchClaimed(pitch));
+    return { data: unclaimedPitches, count: unclaimedPitches.length };
+  }
+
+  const claimedPitches = data.filter(isPitchClaimed);
+  return { data: claimedPitches, count: claimedPitches.length };
+};
+
+export const getPendingClaimPitches = async (
+  options?: PaginateOptions<PitchSchema>,
+): Promise<PitchesResponse> => {
+  const { offset, limit, sort, filters } = options;
+
+  const allFilters = mergeFilters<PitchSchema>(filters, {
     'pendingContributors.0': { $exists: true },
   });
 
-export const getFeedbackForPitch = async (pitchId: string): Pitches =>
-  await Pitch.find({ pitchId }).lean();
+  const count = await Pitch.countDocuments(allFilters);
+
+  const data = await Pitch.find(allFilters)
+    .find(allFilters)
+    .skip(offset * limit)
+    .limit(limit)
+    .sort(sort)
+    .lean();
+
+  return { data, count };
+};
+
+export const getFeedbackForPitch = async (
+  pitchId: string,
+  options?: PaginateOptions<PitchSchema>,
+): Promise<PitchesResponse> => {
+  const { offset, limit, sort, filters } = options;
+
+  const allFilters = mergeFilters<PitchSchema>(filters, { pitchId });
+
+  const count = await Pitch.countDocuments(allFilters);
+
+  const data = await Pitch.find(allFilters)
+    .find(allFilters)
+    .skip(offset * limit)
+    .limit(limit)
+    .sort(sort)
+    .lean();
+
+  return { data, count };
+};
 
 export const update = async (_id: string, payload: Partial<IPitch>): Pitch =>
   await updateModel({ _id }, payload);
@@ -69,8 +158,15 @@ export const update = async (_id: string, payload: Partial<IPitch>): Pitch =>
 export const remove = async (_id: string): Pitch =>
   await Pitch.findByIdAndRemove({ _id }).lean();
 
-export const getPitchesInIssue = async (issuePitchIds: string[]): Pitches =>
-  await Pitch.find({ _id: { $in: issuePitchIds } }).lean();
+export const getPitchesInIssue = async (
+  issuePitchIds: string[],
+): Promise<PitchesResponse> => {
+  const pitches = await Pitch.find({
+    _id: { $in: issuePitchIds },
+  }).lean();
+
+  return { data: pitches, count: pitches.length };
+};
 
 export const changeIssueStatus = async (
   _id: string,

@@ -53,7 +53,7 @@ const Resources = (): ReactElement => {
 
     if (!isError(res)) {
       setResources(
-        res.data.result.sort(
+        res.data.result.data.sort(
           (a: IResource, b: IResource) =>
             +new Date(b.updatedAt) - +new Date(a.updatedAt),
         ),

@@ -7,7 +7,7 @@ export const populateIssue = async (
   type: populateTypes,
 ): Promise<PopulateType<IssueSchema>> => {
   if (type === 'none') {
-    return;
+    return issue;
   }
 
   const baseOptions = [

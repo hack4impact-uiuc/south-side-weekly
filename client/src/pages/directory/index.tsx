@@ -59,7 +59,7 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
         res = await getDeniedUsers();
       }
       if (!isError(res)) {
-        setDirectory(res.data.result);
+        setDirectory(res.data.result.data);
       }
     };
 

@@ -6,7 +6,13 @@ import { onboardingStatusEnum } from '../utils/enums';
 import { sendNotFound, sendSuccess } from '../utils/helpers';
 import { populateResource } from '../populators';
 
-import { extractPopulateQuery } from './utils';
+import {
+  extractFilterQuery,
+  extractLimit,
+  extractOffset,
+  extractPopulateQuery,
+  extractSortQuery,
+} from './utils';
 
 type IdParam = { id: string };
 
@@ -53,15 +59,22 @@ export const getResources = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
+  const limit = extractLimit(req.query);
+  const offset = extractOffset(req.query);
+  const sort = extractSortQuery(req.query);
+  const filters = extractFilterQuery(req.query);
+
   // If user does not have an approved role, only show public resources
   const resources = await ResourceService.getAll(
     req.user.onboardingStatus === onboardingStatusEnum.ONBOARDED,
+    { limit, offset, sort, filters },
   );
   const populateType = extractPopulateQuery(req.query);
 
-  const populated = await populateResource(resources, populateType);
-
-  sendSuccess(res, 'Resources retrieved successfully', populated);
+  sendSuccess(res, 'Resources retrieved successfully', {
+    data: await populateResource(resources.data, populateType),
+    count: resources.count,
+  });
 };
 
 type GetByIdReq = Request<IdParam>;

@@ -17,7 +17,7 @@ const Issues = (): ReactElement => {
       const res = await getIssues();
 
       if (!isError(res)) {
-        const allIssues = res.data.result;
+        const allIssues = res.data.result.data;
 
         allIssues.sort(
           (a, b) =>
