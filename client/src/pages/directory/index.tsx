@@ -7,7 +7,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { Icon, Input, InputOnChangeData, Tab } from 'semantic-ui-react';
+import { Input, InputOnChangeData, Tab } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { Response, PaginationResponseBase } from '../../api/types';

@@ -1,5 +1,6 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import { Pagination, PaginationProps, Table } from 'semantic-ui-react';
+
 import { Select } from '../..';
 
 interface TableFooterProps {

@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, ReactNode } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 import { IUser } from 'ssw-common';
 
 import ReviewUserModal from '../../../Modals/ReviewUser';
