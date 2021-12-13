@@ -79,6 +79,7 @@ const DynamicTable = <
   useEffect(() => {
     setView(viewProp);
     setSort(viewProp.initialSort);
+    sortView();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewProp]);
 
