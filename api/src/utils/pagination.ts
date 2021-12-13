@@ -6,15 +6,16 @@ const processFilters = <T extends Document<any>>(
   req: Request,
   query: Query<T[], T, Record<string, unknown>>,
 ): void => {
-  type valueType = typeof req.query.value;
-  type queryFilter = Record<string, valueType | Record<string, valueType>>;
-  const filters: queryFilter = {};
+  type ValueType = typeof req.query.value;
+  type QueryFilter = Record<string, ValueType | Record<string, ValueType>>;
+  const filters: QueryFilter = {};
   const excludedFields = [
     'activity',
     'limit',
     'page',
     'sortBy',
     'sortDirection',
+    'search',
   ];
 
   if (req.query.activity) {

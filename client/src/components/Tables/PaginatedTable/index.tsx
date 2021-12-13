@@ -62,7 +62,6 @@ const PaginatedTable = <
       });
       const res = await query({ page: [page], ...getParams() });
       if (isError(res)) {
-        // TODO: handle request error
         return;
       }
 

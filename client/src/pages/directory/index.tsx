@@ -1,11 +1,13 @@
+import { debounce } from 'lodash';
 import React, {
   FC,
   ReactElement,
   useCallback,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
-import { Input, Tab } from 'semantic-ui-react';
+import { Icon, Input, InputOnChangeData, Tab } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
 import { Response, PaginationResponseBase } from '../../api/types';
@@ -36,14 +38,22 @@ interface PaneWrapperProps {
   status: 'approved' | 'pending' | 'denied';
 }
 
+const searchDebounceTime = 250;
+
 const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
   const [role, setRole] = useState<string>('');
   const [interests, setInterests] = useState<string[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
   const [search, setSearch] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState('');
   const [activity, setActivity] = useState<string>('');
   const [filterParams, setFilterParams] = useState<Record<string, string[]>>(
     {},
+  );
+
+  const setSearchQueryDebounced = useMemo(
+    () => debounce(setSearchQuery, searchDebounceTime),
+    [setSearchQuery],
   );
 
   useEffect(() => {
@@ -52,8 +62,9 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
       teams,
       role: role === '' ? [] : [role],
       activity: activity === '' ? [] : [activity],
+      search: searchQuery === '' ? [] : [searchQuery],
     });
-  }, [search, interests, teams, role, activity]);
+  }, [searchQuery, interests, teams, role, activity]);
 
   const queryFunction = useCallback(
     (
@@ -81,6 +92,15 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
     [status, filterParams],
   );
 
+  const handleSearch = (
+    _: React.ChangeEvent<HTMLInputElement>,
+    { value }: InputOnChangeData,
+  ): void => {
+    setSearch(value);
+    setSearchQueryDebounced.cancel();
+    setSearchQueryDebounced(value);
+  };
+
   return (
     <>
       {status === 'approved' && (
@@ -89,7 +109,7 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
             <div className="wrapper input">
               <Input
                 value={search}
-                onChange={(e, { value }) => setSearch(value)}
+                onChange={handleSearch}
                 fluid
                 placeholder="Search..."
                 icon="search"

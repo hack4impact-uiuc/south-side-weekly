@@ -20,12 +20,8 @@ const adminViewableFields: UserKeys = ['phone'];
 // Only Admin can edit these fields
 const adminEditableFields: UserKeys = ['teams', 'role', 'email', 'races'];
 
-const userSearchableFields: UserKeys = [
-  'firstName',
-  'preferredName',
-  'lastName',
-  'email',
-];
+// Don't need to include first, last, or preferred names since these are covered by the computed fields
+const userSearchableFields: UserKeys = ['email'];
 
 /**
  * Gets the fields of another user the current user can view
@@ -67,17 +63,39 @@ const searchUsers = (
   query: Query<UserSchema[], UserSchema, Record<string, unknown>>,
 ): void => {
   if (req.query.search) {
-    const searchKey = req.query.search as string;
-    query.find({
-      $or: userSearchableFields.map((field) => {
-        const searchParam: Record<string, Record<string, string>> = {};
-        searchParam[field] = {
-          $regex: searchKey,
-          $options: 'i',
-        };
-        return searchParam;
-      }),
-    });
+    const search = req.query.search as string;
+
+    const searchableFields = userSearchableFields.map((field) => ({
+      [field]: {
+        $regex: search,
+        $options: 'i',
+      },
+    }));
+    // Unique regex for the name computed field to encapsulate first -> last and preferred -> last
+    // in a single regular expression
+    const computedSearchableFields = [
+      {
+        $expr: {
+          $regexMatch: {
+            input: {
+              $concat: [
+                '$firstName',
+                ' ',
+                '$lastName',
+                ' ',
+                '$preferredName',
+                ' ',
+                '$lastName',
+              ],
+            },
+            regex: search,
+            options: 'i',
+          },
+        },
+      },
+    ];
+
+    query.find({ $or: [...searchableFields, ...computedSearchableFields] });
   }
 };
 
