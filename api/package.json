@@ -10,7 +10,7 @@
     "lint:fix": "eslint --fix src --ext ts",
     "format": "prettier --write \"./**/*.{ts,json,md}\"",
     "format:check": "prettier --check \"./**/*.{ts,json,md}\"",
-    "test": "yarn build && jest --forceExit --setupFiles dotenv/config",
+    "test": "yarn build && jest --forceExit --detectOpenHandles --setupFiles dotenv/config",
     "build": "tsc"
   },
   "dependencies": {

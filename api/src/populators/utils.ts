@@ -17,22 +17,22 @@ export const getPopulateOptions = <T>(
   model: model,
 });
 
-const selectModelFields = <T>(...fields: (keyof T)[]): SelectFields<T> => ({
+const selectModelFields = <T>(fields: (keyof T)[]): SelectFields<T> => ({
   ...fields.reduce(
     (acc, field) => ({ ...acc, [field]: 1 }),
     {} as SelectFields<T>,
   ),
 });
 
-const teamFields = selectModelFields<TeamFields>('name', 'color', 'active');
+const teamFields = selectModelFields<TeamFields>(['name', 'color', 'active']);
 
-const interestFields = selectModelFields<InterestFields>(
+const interestFields = selectModelFields<InterestFields>([
   'name',
   'color',
   'active',
-);
+]);
 
-const pitchFields = selectModelFields<PitchFields>(
+const pitchFields = selectModelFields<PitchFields>([
   'title',
   'description',
   'createdAt',
@@ -41,9 +41,9 @@ const pitchFields = selectModelFields<PitchFields>(
   'editStatus',
   'deadline',
   'issueStatuses',
-);
+]);
 
-const userFields = selectModelFields<UserFields>(
+const userFields = selectModelFields<UserFields>([
   'role',
   'firstName',
   'lastName',
@@ -54,7 +54,7 @@ const userFields = selectModelFields<UserFields>(
   'pronouns',
   'teams',
   'interests',
-);
+]);
 
 const getModelFields = (
   model: Models,

@@ -34,7 +34,6 @@ export const populatePitch = async (
     ...baseOptions,
     { ...getPopulateOptions<PitchSchema>('issues', 'Issue') },
     { ...getPopulateOptions('issueStatuses.issueId', 'Issue') },
-    { ...getPopulateOptions('issues', 'Issue') },
     { ...getPopulateOptions('pendingContributors.userId', 'User') },
     { ...getPopulateOptions('pendingContributors.teams', 'Team') },
   ];
