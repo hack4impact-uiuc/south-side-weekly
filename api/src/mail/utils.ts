@@ -53,7 +53,7 @@ export const groupContributors = (
     contributor.teams.forEach((team) => {
       if (teamsToContributors.has(team.name)) {
         const users = teamsToContributors.get(team.name);
-        users?.push(contributor.userId);
+        users.push(contributor.userId);
       } else {
         teamsToContributors.set(team.name, [contributor.userId]);
       }
