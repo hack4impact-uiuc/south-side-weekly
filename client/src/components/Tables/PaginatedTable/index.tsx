@@ -51,7 +51,7 @@ const PaginatedTable = <
 
   const [sort, setSort] = useState<Sort<Column> | undefined>(initialSort);
 
-  const [currTotalPages, setCurrTotalPages] = useState(0);
+  const [currTotalPages, setCurrTotalPages] = useState(1);
   const [records, setRecords] = useState<RecordType[]>([]);
 
   const fetchData = useCallback(
