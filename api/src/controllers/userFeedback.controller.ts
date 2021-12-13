@@ -4,11 +4,8 @@ import { IUserFeedback } from 'ssw-common';
 import { sendNotFound, sendSuccess } from '../utils/helpers';
 import { UserFeedbackService, UserService } from '../services';
 import {
-  extractFilterQuery,
-  extractLimit,
-  extractOffset,
+  extractOptions,
   extractPopulateQuery,
-  extractSortQuery,
 } from './utils';
 import { populateUserFeedback } from '../populators';
 
@@ -43,16 +40,8 @@ export const getAllUserFeedback = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const limit = extractLimit(req.query);
-  const offset = extractOffset(req.query);
-  const sort = extractSortQuery(req.query);
-  const filters = extractFilterQuery(req.query);
-  const feedback = await UserFeedbackService.getAll({
-    limit,
-    offset,
-    sort,
-    filters,
-  });
+  const options = extractOptions(req.query);
+  const feedback = await UserFeedbackService.getAll(options);
 
   const populateType = extractPopulateQuery(req.query);
 
@@ -90,14 +79,11 @@ export const getAllFeedbackForUser = async (
   req: GetAllFeedbackForUser,
   res: Response,
 ): Promise<void> => {
-  const limit = extractLimit(req.query);
-  const offset = extractOffset(req.query);
-  const sort = extractSortQuery(req.query);
-  const filters = extractFilterQuery(req.query);
+  const options = extractOptions(req.query);
 
   const feedback = await UserFeedbackService.getAllFeedbackForUser(
     req.params.id,
-    { limit, offset, sort, filters },
+    options,
   );
 
   const populateType = extractPopulateQuery(req.query);

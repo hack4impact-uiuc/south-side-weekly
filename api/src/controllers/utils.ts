@@ -1,5 +1,6 @@
 import _, { isEmpty } from 'lodash';
 import { FilterQuery } from 'mongoose';
+import { PaginateOptions } from '../services/types';
 
 export const extractPopulateQuery = (
   query: Record<string, unknown>,
@@ -19,18 +20,15 @@ export const extractPopulateQuery = (
   }
 };
 
-type PaginateParameters = { limit: number; offset: number };
 
-export const extractPaginateQuery = (
-  query: Record<string, unknown>,
-): PaginateParameters => {
-  const limit = extractLimit(query);
-  const offset = extractOffset(query);
+export const extractOptions = <T>(query: Record<string, unknown>): PaginateOptions<T>  => ({
+  limit: extractLimit(query),
+  offset: extractOffset(query),
+  sort: extractSortQuery(query),
+  filters: extractFilterQuery(query),
+})
 
-  return { limit, offset };
-};
-
-export const extractLimit = (query: Record<string, unknown>): number => {
+const extractLimit = (query: Record<string, unknown>): number => {
   if (!query.limit) {
     return 0;
   }
@@ -44,7 +42,7 @@ export const extractLimit = (query: Record<string, unknown>): number => {
   return Number(limit);
 };
 
-export const extractOffset = (query: Record<string, unknown>): number => {
+const extractOffset = (query: Record<string, unknown>): number => {
   if (!query.offset) {
     return 0;
   }
@@ -58,7 +56,7 @@ export const extractOffset = (query: Record<string, unknown>): number => {
   return Number(offset);
 };
 
-export const extractSortQuery = (
+const extractSortQuery = (
   query: Record<string, unknown>,
 ): Record<string, OrderBy> => {
   const sortyBy = extractSortBy(query);
@@ -70,7 +68,7 @@ export const extractSortQuery = (
   return { [sortyBy]: orderBy };
 };
 
-export const extractSortBy = (
+const extractSortBy = (
   query: Record<string, unknown>,
 ): string | null => {
   if (!query.sortBy) {
@@ -91,7 +89,7 @@ const isValidOrderBy = (orderBy: unknown): orderBy is OrderBy =>
   orderBy === 'ascending' ||
   orderBy === 'descending';
 
-export const extractOrderBy = (
+const extractOrderBy = (
   query: Record<string, unknown>,
 ): OrderBy | null => {
   if (!isValidOrderBy(query.orderBy)) {
@@ -103,7 +101,7 @@ export const extractOrderBy = (
 
 const takenKeys = ['limit', 'offset', 'populate', 'sortBy', 'orderBy'];
 
-export const extractFilterQuery = <T>(
+const extractFilterQuery = <T>(
   query: Record<string, unknown>,
 ): FilterQuery<T> | null => {
   Object.keys(query).forEach((key) => {
@@ -125,8 +123,6 @@ export const extractFilterQuery = <T>(
   });
 
   const filters = _.merge({}, ...cleanFilters);
-
-  console.log(filters);
 
   return filters;
 };

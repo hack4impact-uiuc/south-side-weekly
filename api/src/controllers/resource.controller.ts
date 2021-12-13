@@ -7,11 +7,8 @@ import { sendNotFound, sendSuccess } from '../utils/helpers';
 import { populateResource } from '../populators';
 
 import {
-  extractFilterQuery,
-  extractLimit,
-  extractOffset,
+ extractOptions,
   extractPopulateQuery,
-  extractSortQuery,
 } from './utils';
 
 type IdParam = { id: string };
@@ -59,15 +56,12 @@ export const getResources = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const limit = extractLimit(req.query);
-  const offset = extractOffset(req.query);
-  const sort = extractSortQuery(req.query);
-  const filters = extractFilterQuery(req.query);
+  const options = extractOptions(req.query);
 
   // If user does not have an approved role, only show public resources
   const resources = await ResourceService.getAll(
     req.user.onboardingStatus === onboardingStatusEnum.ONBOARDED,
-    { limit, offset, sort, filters },
+    options,
   );
   const populateType = extractPopulateQuery(req.query);
 

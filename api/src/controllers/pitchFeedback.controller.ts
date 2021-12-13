@@ -3,7 +3,7 @@ import { Request, Response } from 'express';
 import { sendNotFound, sendSuccess } from '../utils/helpers';
 import { IPitchFeedback } from 'ssw-common';
 import { PitchFeedbackService } from '../services';
-import { extractPopulateQuery } from './utils';
+import { extractPopulateQuery, extractOptions } from './utils';
 import { populatePitchFeedback } from '../populators';
 
 type IdParam = { id: string };
@@ -34,7 +34,9 @@ export const getAllPitchFeedback = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const feedback = await PitchFeedbackService.getAll();
+  const options = extractOptions(req.query);
+  
+  const feedback = await PitchFeedbackService.getAll(options);
 
   const populateType = extractPopulateQuery(req.query);
 
@@ -72,8 +74,10 @@ export const getFeedbackForPitch = async (
   req: GetFeedbackForPitchReq,
   res: Response,
 ): Promise<void> => {
+  const options = extractOptions(req.query);
   const feedback = await PitchFeedbackService.getFeedbackForPitch(
     req.params.id,
+    options,
   );
 
   const populateType = extractPopulateQuery(req.query);

@@ -5,11 +5,7 @@ import Issue from '../models/issue';
 import { sendNotFound, sendSuccess } from '../utils/helpers';
 import { IssueService, PitchService } from '../services';
 import {
-  extractFilterQuery,
-  extractLimit,
-  extractOffset,
-  extractPopulateQuery,
-  extractSortQuery,
+  extractOptions, extractPopulateQuery
 } from './utils';
 import { populateIssue, populatePitch } from '../populators';
 
@@ -40,12 +36,9 @@ export const createIssue = async (
 
 export const getIssues = async (req: Request, res: Response): Promise<void> => {
   const populateType = extractPopulateQuery(req.query);
-  const limit = extractLimit(req.query);
-  const offset = extractOffset(req.query);
-  const sort = extractSortQuery(req.query);
-  const filters = extractFilterQuery(req.query);
+  const options = extractOptions(req.query);
 
-  const issues = await IssueService.getAll({ limit, offset, sort, filters });
+  const issues = await IssueService.getAll(options);
 
   sendSuccess(res, 'Issues retrieved', {
     data: await populateIssue(issues.data, populateType),

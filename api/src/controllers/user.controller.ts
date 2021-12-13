@@ -9,11 +9,8 @@ import { UserService } from '../services';
 
 import { populateUser } from '../populators/user.populate';
 import {
-  extractFilterQuery,
-  extractLimit,
-  extractOffset,
+  extractOptions,
   extractPopulateQuery,
-  extractSortQuery,
 } from './utils';
 
 // CREATE controls
@@ -58,12 +55,9 @@ export const stallOldScheduledOnboarding = async (
 export const getUsers = async (req: Request, res: Response): Promise<void> => {
   const populateType = extractPopulateQuery(req.query);
 
-  const limit = extractLimit(req.query);
-  const offset = extractOffset(req.query);
-  const sort = extractSortQuery(req.query);
-  const filters = extractFilterQuery(req.query);
+  const options = extractOptions(req.query);
 
-  const users = await UserService.getAll({ filters, sort, limit, offset });
+  const users = await UserService.getAll(options);
 
   const response = {
     users: await populateUser(users.data, populateType),
@@ -79,14 +73,11 @@ export const getApproved = async (
   res: Response,
 ): Promise<void> => {
   const populateType = extractPopulateQuery(req.query);
-  const limit = extractLimit(req.query);
-  const offset = extractOffset(req.query);
-  const sort = extractSortQuery(req.query);
-  const filters = extractFilterQuery(req.query);
+  const options = extractOptions(req.query);
 
   const users = await UserService.getWithOnboardStatus(
     [onboardingStatusEnum.ONBOARDED],
-    { filters, sort, limit, offset },
+    options,
   );
 
   const response = {
@@ -103,14 +94,11 @@ export const getPendingUsers = async (
   res: Response,
 ): Promise<void> => {
   const populateType = extractPopulateQuery(req.query);
-  const limit = extractLimit(req.query);
-  const offset = extractOffset(req.query);
-  const sort = extractSortQuery(req.query);
-  const filters = extractFilterQuery(req.query);
+ const options = extractOptions(req.query);
 
   const users = await UserService.getWithOnboardStatus(
     [onboardingStatusEnum.ONBOARDING_SCHEDULED, onboardingStatusEnum.STALLED],
-    { filters, sort, limit, offset },
+    options
   );
 
   sendSuccess(res, 'Users retrieved successfully', {
@@ -125,14 +113,11 @@ export const getDeniedUsers = async (
   res: Response,
 ): Promise<void> => {
   const populateType = extractPopulateQuery(req.query);
-  const limit = extractLimit(req.query);
-  const offset = extractOffset(req.query);
-  const sort = extractSortQuery(req.query);
-  const filters = extractFilterQuery(req.query);
+  const options = extractOptions(req.query);
 
   const users = await UserService.getWithOnboardStatus(
     [onboardingStatusEnum.DENIED],
-    { filters, sort, limit, offset },
+    options
   );
 
   sendSuccess(res, 'Users retrieved successfully', {

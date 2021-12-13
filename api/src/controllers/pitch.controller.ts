@@ -11,11 +11,8 @@ import { populatePitch } from '../populators';
 import { PitchService, UserService } from '../services';
 import { sendFail, sendNotFound, sendSuccess } from '../utils/helpers';
 import {
-  extractFilterQuery,
-  extractLimit,
-  extractOffset,
+  extractOptions,
   extractPopulateQuery,
-  extractSortQuery,
 } from './utils';
 
 type IdParam = { id: string };
@@ -43,12 +40,9 @@ export const getPitches = async (
   res: Response,
 ): Promise<void> => {
   const populateType = extractPopulateQuery(req.query);
-  const limit = extractLimit(req.query);
-  const offset = extractOffset(req.query);
-  const sort = extractSortQuery(req.query);
-  const filters = extractFilterQuery(req.query);
+  const options = extractOptions(req.query);
 
-  const pitches = await PitchService.getAll({ limit, offset, sort, filters });
+  const pitches = await PitchService.getAll(options);
 
   sendSuccess(res, 'Pitches retrieved successfully', {
     data: await populatePitch(pitches.data, populateType),
@@ -83,17 +77,9 @@ export const getPendingPitches = async (
   res: Response,
 ): Promise<void> => {
   const populateType = extractPopulateQuery(req.query);
-  const limit = extractLimit(req.query);
-  const offset = extractOffset(req.query);
-  const sort = extractSortQuery(req.query);
-  const filters = extractFilterQuery(req.query);
+  const options = extractOptions(req.query);
 
-  const pitches = await PitchService.getPendingPitches({
-    limit,
-    offset,
-    sort,
-    filters,
-  });
+  const pitches = await PitchService.getPendingPitches(options);
 
   sendSuccess(res, 'Pitches retrieved successfully', {
     data: await populatePitch(pitches.data, populateType),
@@ -109,14 +95,10 @@ export const getApprovedPitches = async (
   res: Response,
 ): Promise<void> => {
   const populateType = extractPopulateQuery(req.query);
-  const limit = extractLimit(req.query);
-  const offset = extractOffset(req.query);
-  const sort = extractSortQuery(req.query);
-  const filters = extractFilterQuery(req.query);
+  const options = extractOptions(req.query);
 
   const pitches = await PitchService.getApprovedPitches(
-    req.query.status as string | undefined,
-    { limit, offset, sort, filters },
+    req.query.status as string | undefined, options
   );
 
   sendSuccess(res, 'Successfully retrieved all approved pitches', {
@@ -130,17 +112,9 @@ export const getPitchesWithPendingClaims = async (
   res: Response,
 ): Promise<void> => {
   const populateType = extractPopulateQuery(req.query);
-  const limit = extractLimit(req.query);
-  const offset = extractOffset(req.query);
-  const sort = extractSortQuery(req.query);
-  const filters = extractFilterQuery(req.query);
+  const options = extractOptions(req.query);
 
-  const pitches = await PitchService.getPendingClaimPitches({
-    limit,
-    offset,
-    sort,
-    filters,
-  });
+  const pitches = await PitchService.getPendingClaimPitches(options);
 
   sendSuccess(res, 'Pitches retrieved successfully', {
     data: await populatePitch(pitches.data, populateType),
