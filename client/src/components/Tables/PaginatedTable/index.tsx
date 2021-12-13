@@ -112,6 +112,7 @@ const PaginatedTable = <
       view={{
         records,
         columns,
+        initialSort: sort,
       }}
       onHeaderClick={handleColumnClick}
       singleLine={singleLineWhenPopulated && records.length > 0}

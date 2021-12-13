@@ -74,7 +74,13 @@ const DynamicTable = <
 
   useEffect(() => {
     sortView();
-  }, [sortView]);
+  }, [sortView, sort]);
+
+  useEffect(() => {
+    setView(viewProp);
+    setSort(viewProp.initialSort);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [viewProp]);
 
   const handleColumnClick = useCallback(
     (column: Column): void => {
