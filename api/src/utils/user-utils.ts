@@ -78,15 +78,18 @@ const searchUsers = (
         $expr: {
           $regexMatch: {
             input: {
-              $concat: [
-                '$firstName',
-                ' ',
-                '$lastName',
-                ' ',
-                '$preferredName',
-                ' ',
-                '$lastName',
-              ],
+              $concat: ['$firstName', ' ', '$lastName'],
+            },
+            regex: search,
+            options: 'i',
+          },
+        },
+      },
+      {
+        $expr: {
+          $regexMatch: {
+            input: {
+              $concat: ['$preferredName', ' ', '$lastName'],
             },
             regex: search,
             options: 'i',

@@ -80,13 +80,6 @@ const PaginatedTable = <
     fetchData(0);
   }, [fetchData]);
 
-  // const getNewPage = (recordsPerPage: number) => {
-  //   const pagesWithRecords = records.length / recordsPerPage;
-  //   return totalPages > pagesWithRecords
-  //     ? Math.floor(pagesWithRecords)
-  //     : currentPage;
-  // };
-
   const handleColumnClick = (column: Column): Sort<Column> | undefined => {
     let newSort: Sort<Column> | undefined = {
       column,
