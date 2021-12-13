@@ -47,6 +47,7 @@ const Onboard3 = (): ReactElement => {
       teams: Array.from(selectedTeams),
       role: data.role,
       races: reject(data.races, isEmpty),
+      neighborhood: data.neighborhood,
       interests: Array.from(selectedInterests),
     };
 

@@ -80,6 +80,16 @@ const getUser = async (userId: string): Promise<Response<UserResponse>> => {
   return await get(url, failureMessage);
 };
 
+// get user with submitted and claimed partial pitches
+// const getAggregatedUser = async (
+//   userId: string,
+// ): Promise<Response<AggregateUserResponse>> => {
+//   const url = buildEndpoint(USER_ENDPOINT, userId, 'aggregate');
+//   const failureMessage = 'GET_USER_FAIL';
+
+//   return await get(url, failureMessage);
+// };
+
 // Adds a pitch to a user's claimed pitches
 const updateUserClaimedPitches = async (
   userId: string,

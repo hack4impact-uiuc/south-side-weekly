@@ -2,6 +2,7 @@ import React, { ReactNode } from 'react';
 import { IUser } from 'ssw-common';
 
 import {
+  EditInterests,
   EditTeams,
   FieldTag,
   InterestList,
@@ -65,7 +66,7 @@ const interestsColumnNoModal = buildPaginatedColumn<IUser>({
 const interestsColumnModal = buildPaginatedColumn<IUser>({
   title: (
     <>
-      Interests <EditTeams />
+      Interests <EditInterests />
     </>
   ),
   extractor: function getInterests(user: IUser): ReactNode {

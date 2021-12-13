@@ -1,0 +1,25 @@
+@import '../../styles/colors.scss';
+
+.issue-page-wrapper {
+  .header {
+    display: flex;
+    padding: 0px 2% 0px 2%;
+    .issue-list-selector {
+      display: flex;
+      align-items: center;
+      flex-grow: 1;
+
+      .issue-select {
+        width: 20% !important;
+      }
+
+      .list-toggle {
+        cursor: pointer;
+
+        &.disabled {
+          cursor: default;
+        }
+      }
+    }
+  }
+}

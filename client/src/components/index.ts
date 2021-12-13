@@ -42,6 +42,7 @@ import ReviewUserModal from './Modals/ReviewUser';
 import { ApprovedUsers, DeniedUsers, PendingUsers } from './Tables';
 import { buildColumn } from './Tables/DynamicTable/util';
 import { buildPaginatedColumn } from './Tables/PaginatedTable/util';
+import Kanban from './Kanban';
 import ResourceTable from './Tables/Resource';
 
 export {
@@ -92,6 +93,7 @@ export {
   DynamicTable,
   buildColumn,
   buildPaginatedColumn,
+  Kanban,
 };
 
 export type { View, DynamicColumn };

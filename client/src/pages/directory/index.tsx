@@ -201,10 +201,12 @@ const panes = [
 
 const Directory = (): ReactElement => (
   <div className="directory-page">
-    <Walkthrough
-      page={pagesEnum.DIRECTORY}
-      content="Check out the members on the SSW team and click their profiles to view more details!"
-    />
+    <div className="page-header-content directory-page-header">
+      <Walkthrough
+        page={pagesEnum.DIRECTORY}
+        content="Check out the members on the SSW team and click their profiles to view more details!"
+      />
+    </div>
     <AdminView>
       <Tab
         menu={{ secondary: true, pointing: true }}

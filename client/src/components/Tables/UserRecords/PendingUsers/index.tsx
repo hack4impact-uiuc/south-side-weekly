@@ -101,7 +101,8 @@ const PendingUsers = <QueryArgs extends Record<string, string[]>>({
           columns={columns}
           query={query}
           params={filterParams}
-          emptyMessage={'There are no pending users.'}
+          singleLineWhenPopulated
+          emptyMessage="No pending users!"
           getModal={(user, isOpen, setIsOpen) => (
             <ReviewUserModal
               user={user}

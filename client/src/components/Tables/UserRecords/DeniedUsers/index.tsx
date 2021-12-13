@@ -60,7 +60,8 @@ const DeniedUsers = <QueryArgs extends Record<string, string[]>>({
           columns={columns}
           query={query}
           params={filterParams}
-          emptyMessage={'There are no denied users.'}
+          singleLineWhenPopulated
+          emptyMessage="No rejected users!"
           getModal={(user, isOpen, setIsOpen) => (
             <ReviewUserModal
               user={user}
