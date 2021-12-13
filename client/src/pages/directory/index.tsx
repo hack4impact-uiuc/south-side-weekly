@@ -111,7 +111,7 @@ const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
                 value={search}
                 onChange={handleSearch}
                 fluid
-                placeholder="Search..."
+                placeholder="Search by name or email..."
                 icon="search"
                 iconPosition="left"
               />
