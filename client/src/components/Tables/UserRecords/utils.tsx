@@ -16,7 +16,7 @@ import { buildPaginatedColumn } from '../PaginatedTable/util';
 
 const nameColumn = buildPaginatedColumn<IUser>({
   title: 'Name',
-  key: 'lastName',
+  key: 'firstName',
   width: 2,
   extractor: getUserFullName,
 });
