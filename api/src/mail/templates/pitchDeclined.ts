@@ -1,3 +1,4 @@
+export const pitchDeclinedHtml = `
 <html>
 
 <head></head>
@@ -23,4 +24,4 @@
     <p>{{ staff }} </p>
 </body>
 
-</html>
+</html>`;

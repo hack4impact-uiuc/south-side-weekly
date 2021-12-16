@@ -7,6 +7,7 @@ import cookieSession from 'cookie-session';
 import passport from 'passport';
 import apiRoutes from './routes';
 import { errorHandler } from './middleware';
+import path from 'path';
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Routes
+console.log(path.join(__dirname, 'src/public'));
 app.use('/api', apiRoutes);
 app.get('/', (req: Request, res: Response) => res.json('API working!'));
 app.get('/ssw-favicon.ico', (req: Request, res: Response) => res.status(204));

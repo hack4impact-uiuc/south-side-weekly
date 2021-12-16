@@ -1,3 +1,4 @@
+export const claimReqApprovedHtml = `
 <html>
 
 <head></head>
@@ -22,3 +23,4 @@
 </body>
 
 </html>
+`;

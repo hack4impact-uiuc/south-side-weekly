@@ -201,12 +201,12 @@ export const approveUser = async (
     onboardingStatusEnum.ONBOARDED,
   );
 
-  sendApproveUserMail(user, req.user);
-
   if (!user) {
     sendNotFound(res, `User not found with id ${req.params.id}`);
     return;
   }
+
+  sendApproveUserMail(user, user);
 
   sendSuccess(
     res,

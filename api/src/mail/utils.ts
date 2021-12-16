@@ -1,15 +1,32 @@
-import * as fs from 'fs';
-import * as path from 'path';
 import * as handlebars from 'handlebars';
 import { SendMailOptions } from 'nodemailer';
+import { ITeam, IUser } from 'ssw-common';
 
 import { Template } from './types';
-import { ITeam, IUser } from 'ssw-common';
 import { getUserFulName } from '../utils/helpers';
+import * as htmlTemplates from './templates';
 
 export const getHtmlString = (templateName: Template): string => {
-  const filePath = path.join(__dirname, './templates', templateName);
-  return fs.readFileSync(filePath, 'utf-8').toString();
+  switch (templateName) {
+    case 'claimRequestApproved.html':
+      return htmlTemplates.claimReqDeniedHtml;
+    case 'claimRequestDeclined.html':
+      return htmlTemplates.claimReqDeniedHtml;
+    case 'contributorAddedToPitch.html':
+      return htmlTemplates.contributorAddedToPitchHtml;
+    case 'pitchApprovedNoWriter.html':
+      return htmlTemplates.pitchApprovedNoWriterHtml;
+    case 'pitchApprovedWriter.html':
+      return htmlTemplates.pitchApprovedWriterHtml;
+    case 'pitchDeclined.html':
+      return htmlTemplates.pitchDeclinedHtml;
+    case 'userApproved.html':
+      return htmlTemplates.userApprovedHtml;
+    case 'userRejected.html':
+      return htmlTemplates.userRejectedHtml;
+    default:
+      return '';
+  }
 };
 
 export const compileTemplate = (

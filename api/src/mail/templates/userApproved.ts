@@ -1,3 +1,4 @@
+export const userApprovedHtml = `
 <html>
 
 <head></head>
@@ -18,4 +19,4 @@
     <p>{{ reviewer }} </p>
 </body>
 
-</html>
+</html>`;

@@ -1,3 +1,4 @@
+export const contributorAddedToPitchHtml = `
 <html>
 
 <head></head>
@@ -29,3 +30,4 @@
 </body>
 
 </html>
+`;

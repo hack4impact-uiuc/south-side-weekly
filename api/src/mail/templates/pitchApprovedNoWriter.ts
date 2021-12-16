@@ -1,3 +1,4 @@
+export const pitchApprovedNoWriterHtml = `
 <html>
 
 <head></head>
@@ -9,12 +10,7 @@
     </p>
     <p><b>{{ description }}</b></p>
     <br />
-    <p>Your pitch has been added to the <a href="{{ pitchDocLink }}">{{ pitchDocLink }}</a>. Your primary editor, {{
-        primaryEditor }}, is cc’ed on this email
-        and will be following up to begin discussing your story.</p>
-    <br />
-
-    <p>We can't wait to see your story come together!</p>
+    <p>Your pitch has been added to the <a href="{{ pitchDocLink }}">{{ pitchDocLink }}</a></p>
     <br />
 
     <p>Thanks for submitting your pitch,</p>
@@ -22,3 +18,4 @@
 </body>
 
 </html>
+`;

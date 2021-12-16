@@ -1,3 +1,4 @@
+export const claimReqDeniedHtml = `
 <html>
 
 <head></head>
@@ -20,3 +21,4 @@
 </body>
 
 </html>
+`;

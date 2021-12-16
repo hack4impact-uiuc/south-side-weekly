@@ -1,3 +1,4 @@
+export const userRejectedHtml = `
 <html>
 
 <head></head>
@@ -5,7 +6,7 @@
 <body>
     <p>Hi {{ contributor }}</p>
     <br />
-    <p>We appreciate you applying to be a {{ role }}at South Side Weekly. 
+    <p>We appreciate you applying to be a {{ role }} at South Side Weekly. 
         Unfortunately, your request to join the South Side Weekly contributor dashboard as a {{ role }} has been declined.</p>
     
     <br />
@@ -18,4 +19,4 @@
     <p>{{ reviewer }} </p>
 </body>
 
-</html>
+</html>`;
