@@ -48,7 +48,6 @@ const emptyUser: IUser = {
   genders: [],
   pronouns: [],
   dateJoined: new Date(Date.now()),
-  masthead: false,
   onboardingStatus: '',
   visitedPages: [],
   profilePic: '',
@@ -68,6 +67,9 @@ const emptyUser: IUser = {
   onboardReasoning: '',
   feedback: [],
   lastActive: new Date(),
+  fullname: '',
+  joinedNames: '',
+  activityStatus: '',
 };
 
 const emptyPitch: IPitch = {
