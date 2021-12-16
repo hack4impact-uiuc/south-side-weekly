@@ -34,11 +34,11 @@ export const getAllPitchFeedback = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
+  console.log(req.query);
   const options = extractOptions(req.query);
+  const populateType = extractPopulateQuery(req.query);
 
   const feedback = await PitchFeedbackService.getAll(options);
-
-  const populateType = extractPopulateQuery(req.query);
 
   sendSuccess(res, 'Successfully retrieved pitch feedback for all pitches', {
     data: await populatePitchFeedback(feedback.data, populateType),
@@ -53,13 +53,12 @@ export const getPitchFeedback = async (
   res: Response,
 ): Promise<void> => {
   const feedback = await PitchFeedbackService.getOne(req.params.id);
+  const populateType = extractPopulateQuery(req.query);
 
   if (!feedback) {
     sendNotFound(res, 'Pitch feedback not found');
     return;
   }
-
-  const populateType = extractPopulateQuery(req.query);
 
   sendSuccess(
     res,

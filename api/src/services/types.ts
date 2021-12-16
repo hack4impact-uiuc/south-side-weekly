@@ -5,4 +5,5 @@ export interface PaginateOptions<T> {
   limit: number;
   sort: Record<string, unknown>;
   filters: FilterQuery<T>;
+  search: string;
 }

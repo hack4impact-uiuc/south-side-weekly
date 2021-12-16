@@ -18,8 +18,6 @@ const paginate = async (
   const { offset, limit, sort, filters } = options || {};
   const mergedFilters = _.merge(filters, definedFilters);
 
-  console.log(sort);
-
   const users = await PitchFeedback.find(mergedFilters)
     .skip(offset * limit)
     .limit(limit)

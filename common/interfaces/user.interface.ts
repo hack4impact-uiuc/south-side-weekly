@@ -30,6 +30,9 @@ export interface User {
     onboardReasoning: string;
     feedback: string[];
     lastActive: Date;
+    fullname: string;
+    activityStatus: string;
+    joinedNames: string;
   }
   
   type BaseUserOmitFields = 'teams' | 'interests';

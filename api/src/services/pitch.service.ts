@@ -18,10 +18,10 @@ const paginate = async (
   definedFilters: FilterQuery<PitchSchema>,
   options?: PaginateOptions<PitchSchema>,
 ): Promise<PitchesResponse> => {
-  const { offset, limit, sort, filters } = options || {};
+  const { offset, limit, sort, filters, search } = options || {};
   const mergedFilters = _.merge(filters, definedFilters);
 
-  const users = await Pitch.find(mergedFilters)
+  const pitches = await Pitch.find(mergedFilters)
     .skip(offset * limit)
     .limit(limit)
     .sort(sort)
@@ -29,8 +29,23 @@ const paginate = async (
 
   const count = await Pitch.countDocuments(mergedFilters);
 
+  if (search) {
+    const searchRegex = new RegExp(search, 'i');
+    const filteredPitches = pitches.filter((pitch) => {
+      const searchableFields = [pitch.title, pitch.description];
+      return searchableFields.some(
+        (field) => field && field.match(searchRegex),
+      );
+    });
+
+    return {
+      data: filteredPitches,
+      count: filteredPitches.length,
+    };
+  }
+
   return {
-    data: users,
+    data: pitches,
     count,
   };
 };

@@ -11,10 +11,12 @@ import {
 export const getPopulateOptions = <T>(
   path: keyof T & string,
   model: Models,
+  populate?: PopulateOptions,
 ): PopulateOptions => ({
   path,
   select: getModelFields(model),
   model: model,
+  populate,
 });
 
 const selectModelFields = <T>(fields: (keyof T)[]): SelectFields<T> => ({

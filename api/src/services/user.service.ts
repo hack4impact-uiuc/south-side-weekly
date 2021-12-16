@@ -20,20 +20,40 @@ const updateModel = async <T>(
   await User.findByIdAndUpdate(filters, payload, {
     new: true,
     runValidators: true,
-  }).lean();
+  }).lean({ virtuals: true });
 
 const paginate = async (
   definedFilters: FilterQuery<UserSchema>,
   options?: PaginateOptions<UserSchema>,
 ): Promise<UsersResponse> => {
-  const { offset, limit, sort, filters } = options || {};
+  const { offset, limit, sort, filters, search } = options || {};
   const mergedFilters = _.merge(filters, definedFilters);
 
   const users = await User.find(mergedFilters)
     .skip(offset * limit)
     .limit(limit)
     .sort(sort)
-    .lean();
+    .lean({ virtuals: true });
+
+  if (search) {
+    const searchRegex = new RegExp(search, 'i');
+    const filteredUsers = users.filter((user) => {
+      const searchableFields = [
+        user.fullname,
+        user.email,
+        user.phone,
+        `${user.firstName} ${user.lastName}`,
+      ];
+      return searchableFields.some(
+        (field) => field && field.match(searchRegex),
+      );
+    });
+
+    return {
+      data: filteredUsers,
+      count: filteredUsers.length,
+    };
+  }
 
   const count = await User.countDocuments(mergedFilters);
 
@@ -51,7 +71,7 @@ export const getAll = async (
 ): Promise<UsersResponse> => paginate({}, options);
 
 export const getOne = async (id: string): Promise<User> =>
-  await User.findById({ _id: id }).lean();
+  await User.findById({ _id: id }).lean({ virtuals: true });
 
 export const add = async (payload: Partial<IUser>): Promise<User> =>
   await User.create(payload);
@@ -153,7 +173,7 @@ export const removeClaimRequest = async (
   );
 
 export const remove = async (_id: string): Promise<User> =>
-  await User.findByIdAndDelete({ _id }).lean();
+  await User.findByIdAndDelete({ _id }).lean({ virtuals: true });
 
 export const addFeedback = async (
   _id: string,

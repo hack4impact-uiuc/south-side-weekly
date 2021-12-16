@@ -5,6 +5,7 @@ import { PaginateOptions } from '../services/types';
 export const extractPopulateQuery = (
   query: Record<string, unknown>,
 ): 'none' | 'default' | 'full' => {
+  console.log(query);
   if (!query.populate) {
     return 'none';
   }
@@ -27,6 +28,7 @@ export const extractOptions = <T>(
   offset: extractOffset(query),
   sort: extractSortQuery(query),
   filters: extractFilterQuery(query),
+  search: extractSearchQuery(query),
 });
 
 const extractLimit = (query: Record<string, unknown>): number => {
@@ -96,25 +98,45 @@ const extractOrderBy = (query: Record<string, unknown>): OrderBy | null => {
   return query.orderBy;
 };
 
-const takenKeys = ['limit', 'offset', 'populate', 'sortBy', 'orderBy'];
+export const extractSearchQuery = (query: Record<string, unknown>): string => {
+  if (!query.search) {
+    return '';
+  }
+
+  return query.search as string;
+};
+
+const takenKeys = [
+  'limit',
+  'offset',
+  'populate',
+  'sortBy',
+  'orderBy',
+  'search',
+];
 
 const extractFilterQuery = <T>(
   query: Record<string, unknown>,
 ): FilterQuery<T> | null => {
-  Object.keys(query).forEach((key) => {
-    if (isEmpty(query[key]) || takenKeys.includes(key)) {
-      delete query[key];
+  const copyQuery = { ...query };
+  Object.keys(copyQuery).forEach((key) => {
+    if (isEmpty(copyQuery[key]) || takenKeys.includes(key)) {
+      delete copyQuery[key];
     }
   });
 
-  const cleanFilters = Object.keys(query).map((filter) => {
+  const cleanFilters = Object.keys(copyQuery).map((filter) => {
     const [field, operator] = filter.split('__');
 
-    const value = query[filter];
+    console.log(field, operator);
+    const value = copyQuery[filter];
 
     if (operator) {
+      console.log({ [field]: { [`$${operator}`]: value } });
       return { [field]: { [`$${operator}`]: value } };
     }
+
+    console.log(' I am here');
 
     return { [field]: value };
   });
