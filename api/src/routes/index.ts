@@ -9,6 +9,7 @@ import issueRoutes from './issue.routes';
 import userFeedbackRoutes from './userFeedback.routes';
 import pitchFeedbackRoutes from './pitchFeedback.routes';
 import pitchRoutes from './pitch.routes';
+import constantsRoutes from './constants.routes';
 
 const router = Router();
 
@@ -21,5 +22,6 @@ router.use('/teams', teamRoutes);
 router.use('/interests', interestRoutes);
 router.use('/userFeedback', userFeedbackRoutes);
 router.use('/pitchFeedback', pitchFeedbackRoutes);
+router.use('/constants', constantsRoutes);
 
 export default router;
