@@ -9,7 +9,7 @@ import {
   PitchResponse,
 } from './types';
 
-const PITCH_ENDPOINT = '/pitch';
+const PITCH_ENDPOINT = '/pitches';
 
 type Pitches = Response<PitchesResponse>;
 
@@ -24,7 +24,7 @@ const getPitchById = async (
 
 // Returns all of the approved pitches
 const getApprovedPitches = async (): Promise<Pitches> => {
-  const url = buildEndpoint(PITCH_ENDPOINT, 'all', 'approved');
+  const url = buildEndpoint(PITCH_ENDPOINT, 'approved');
   const failureMessage = 'GET_PITCHES_FAIL';
 
   return await get(url, failureMessage);
@@ -55,21 +55,21 @@ const submitPitchClaim = async (
 const approvePitch = async (
   pitchId: string,
   pitchData: Partial<IPitch>,
-  reasoning: string,
 ): Promise<Response<PitchResponse>> => {
   const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'approve');
   const failureMessage = 'APPROVE_CLAIM_FAIL';
 
-  return await put(url, { pitchData, reasoning }, failureMessage);
+  return await put(url, { pitchData }, failureMessage);
 };
 
 const declinePitch = async (
   pitchId: string,
+  reasoning: string,
 ): Promise<Response<PitchResponse>> => {
   const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'decline');
   const failureMessage = 'DECLINE_CLAIM_FAIL';
 
-  return await put(url, {}, failureMessage);
+  return await put(url, { reasoning }, failureMessage);
 };
 
 // Updates the information on a pitch
@@ -84,14 +84,14 @@ const updatePitch = async (
 };
 
 const getPitchesPendingApproval = async (): Promise<Pitches> => {
-  const url = buildEndpoint(PITCH_ENDPOINT, 'all', 'pending');
+  const url = buildEndpoint(PITCH_ENDPOINT, 'pending');
   const failureMessage = 'GET_PENDING_PITCHES_FAIL';
 
   return await get(url, failureMessage);
 };
 
 const getUnclaimedPitches = async (): Promise<Pitches> => {
-  const url = buildEndpoint(PITCH_ENDPOINT, 'all', 'approved').concat(
+  const url = buildEndpoint(PITCH_ENDPOINT, 'approved').concat(
     '?status=unclaimed',
   );
   const failureMessage = 'GET_UNCLAIMED_FAIL';
@@ -100,7 +100,7 @@ const getUnclaimedPitches = async (): Promise<Pitches> => {
 };
 
 const getPendingContributorPitches = async (): Promise<Pitches> => {
-  const url = buildEndpoint(PITCH_ENDPOINT, 'all', 'pendingClaims');
+  const url = buildEndpoint(PITCH_ENDPOINT, 'pendingClaims');
   const failureMessage = 'GET_PENDING_CONTRIBUTOR_FAIL';
 
   return await get(url, failureMessage);

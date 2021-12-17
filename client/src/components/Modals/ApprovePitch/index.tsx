@@ -192,11 +192,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
       return;
     }
 
-    const res = await approvePitch(
-      pitch._id,
-      removeOptionalEmptyKeys(),
-      reasoning,
-    );
+    const res = await approvePitch(pitch._id, removeOptionalEmptyKeys());
 
     if (!isError(res)) {
       callback();
@@ -219,7 +215,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
     if (user._id === author._id) {
       return;
     }
-    const res = await declinePitch(pitch._id);
+    const res = await declinePitch(pitch._id, reasoning);
 
     if (!isError(res)) {
       callback();

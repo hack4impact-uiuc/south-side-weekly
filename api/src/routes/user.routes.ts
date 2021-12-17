@@ -10,7 +10,7 @@ import {
 
 const router = Router();
 
-// GET /api/users/
+// GET /api/users
 router.get('/', requireRegistered, errorWrap(UserController.getUsers));
 
 // GET /api/users/approved

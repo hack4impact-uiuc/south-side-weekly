@@ -127,16 +127,12 @@ const extractFilterQuery = <T>(
 
   const cleanFilters = Object.keys(copyQuery).map((filter) => {
     const [field, operator] = filter.split('__');
-
-    console.log(field, operator);
     const value = copyQuery[filter];
 
     if (operator) {
       console.log({ [field]: { [`$${operator}`]: value } });
       return { [field]: { [`$${operator}`]: value } };
     }
-
-    console.log(' I am here');
 
     return { [field]: value };
   });

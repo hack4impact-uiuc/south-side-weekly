@@ -1,11 +1,11 @@
 import { PopulateOptions } from 'mongoose';
+import { UserFields } from 'ssw-common/interfaces/_types';
 import {
   InterestFields,
   Models,
   PitchFields,
   SelectFields,
   TeamFields,
-  UserFields,
 } from './types';
 
 export const getPopulateOptions = <T>(
@@ -56,6 +56,9 @@ const userFields = selectModelFields<UserFields>([
   'pronouns',
   'teams',
   'interests',
+  'fullname',
+  'joinedNames',
+  'activityStatus',
 ]);
 
 const getModelFields = (

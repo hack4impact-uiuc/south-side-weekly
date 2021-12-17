@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { IPitch, IUser } from 'ssw-common';
+import { BasePopulatedPitch, IPitch } from 'ssw-common';
 
 import {
   sendApprovedPitchMail,
@@ -160,13 +160,14 @@ export const approvePitch = async (
     return;
   }
 
-  const populatedPitch = await populatePitch(pitch, 'default');
-  const author = (populatedPitch.author as unknown) as IUser;
-  const reviewer = (populatedPitch.reviewedBy as unknown) as IUser;
+  const populatedPitch = (await populatePitch(
+    pitch,
+    'default',
+  )) as BasePopulatedPitch;
 
   sendApprovedPitchMail(
-    author,
-    reviewer,
+    populatedPitch.author,
+    populatedPitch.reviewedBy,
     populatedPitch,
     req.body.writer !== null,
   );
@@ -190,10 +191,17 @@ export const declinePitch = async (
     return;
   }
 
-  const populatedPitch = await populatePitch(pitch, 'default');
-  const author = (populatedPitch.author as unknown) as IUser;
+  const populatedPitch = (await populatePitch(
+    pitch,
+    'default',
+  )) as BasePopulatedPitch;
 
-  sendDeclinedPitchMail(author, req.user, populatedPitch, req.body.reasoning);
+  sendDeclinedPitchMail(
+    populatedPitch.author,
+    req.user,
+    populatedPitch,
+    req.body.reasoning,
+  );
 
   sendSuccess(res, 'Pitch declined successfully', populatedPitch);
 };

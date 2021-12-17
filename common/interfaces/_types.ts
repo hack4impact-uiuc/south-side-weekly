@@ -15,6 +15,9 @@ export type UserFields = Pick<
     | 'pronouns'
     | 'teams'
     | 'interests'
+    | 'fullname'
+    | 'joinedNames' 
+    | 'activityStatus'
 >;
 
 export type PitchFields = Pick<

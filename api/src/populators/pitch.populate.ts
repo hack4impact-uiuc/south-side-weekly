@@ -1,4 +1,10 @@
 import { LeanDocument } from 'mongoose';
+import {
+  BasePopulatedPitch,
+  FullPopulatedPitch,
+  Pitch as PitchType,
+} from 'ssw-common';
+
 import Pitch, { PitchSchema } from '../models/pitch';
 import { PopulateType, populateTypes } from './types';
 import { getPopulateOptions } from './utils';
@@ -6,7 +12,7 @@ import { getPopulateOptions } from './utils';
 export const populatePitch = async (
   pitch: PopulateType<PitchSchema>,
   type: populateTypes,
-): Promise<PitchSchema | LeanDocument<PitchSchema>> => {
+): Promise<FullPopulatedPitch | BasePopulatedPitch | PitchType> => {
   if (type === 'none') {
     return pitch as LeanDocument<PitchSchema> | PitchSchema;
   }

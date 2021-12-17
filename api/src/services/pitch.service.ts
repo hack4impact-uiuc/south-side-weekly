@@ -72,7 +72,7 @@ export const getOpenTeamsForPitch = (pitch: IPitch): IPitch['teams'] => {
 
 export const add = async (payload: Partial<IPitch>): Pitch => {
   const pitch = await Pitch.create(payload);
-  await UserService.addSubmittedPitch(payload._id, pitch._id);
+  await UserService.addSubmittedPitch(payload.author, pitch._id);
 
   return pitch;
 };

@@ -1,5 +1,6 @@
 import { SendMailOptions } from 'nodemailer';
-import { IPitch, ITeam, IUser } from 'ssw-common';
+import { BasePopulatedPitch, IPitch, ITeam, IUser, User } from 'ssw-common';
+import { UserFields } from 'ssw-common/interfaces/_types';
 import { getUserFulName } from '../utils/helpers';
 
 import transporter from './transporter';
@@ -86,16 +87,16 @@ export const sendClaimRequestApprovedMail = (
 };
 
 export const sendApprovedPitchMail = (
-  contributor: IUser,
-  reviewer: IUser,
-  pitch: IPitch,
+  contributor: UserFields,
+  reviewer: UserFields,
+  pitch: BasePopulatedPitch,
   hasWriter: boolean,
 ): void => {
   const templateValues = {
-    contributor: getUserFulName(contributor),
+    contributor: contributor.fullname,
     pitch: pitch.title,
     pitchDocLink: `https://ssw.h4i.app/pitches`,
-    reviewer: getUserFulName(reviewer),
+    reviewer: reviewer.fullname,
   };
 
   const mailOptions = buildSendMailOptions(
@@ -109,16 +110,16 @@ export const sendApprovedPitchMail = (
 };
 
 export const sendDeclinedPitchMail = (
-  contributor: IUser,
-  reviewer: IUser,
-  pitch: IPitch,
+  contributor: UserFields,
+  staff: User,
+  pitch: BasePopulatedPitch,
   reasoning?: string,
 ): void => {
   const templateValues = {
-    contributor: getUserFulName(contributor),
-    pitch: pitch.title,
+    contributor: contributor.fullname,
+    title: pitch.title,
     pitchDocLink: `https://ssw.h4i.app/pitches`,
-    reviewer: getUserFulName(reviewer),
+    staff: staff.fullname,
     reasoning: reasoning ? reasoning : '',
   };
 
