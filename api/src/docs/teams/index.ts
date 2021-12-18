@@ -1,6 +1,6 @@
 import { getTeam, getTeams } from './get';
-import { updateTeam, updateManyTeams } from './update';
-import { createTeam, createManyTeams } from './create';
+import { updateTeam, updateManyTeams } from './put';
+import { createTeam, createManyTeams } from './post';
 
 export const teamPaths = {
   '/teams': {

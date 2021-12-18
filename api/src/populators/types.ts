@@ -13,7 +13,9 @@ export type Models =
   | 'Pitch'
   | 'Issue'
   | 'PitchFeedback'
-  | 'UserFeedback';
+  | 'UserFeedback'
+  | 'Auth' // not a model, but an endpoint
+  | 'Constants'; // not a model, but an endpoint
 
 export type SelectFields<T> = Record<keyof T, number>;
 

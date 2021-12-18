@@ -12,6 +12,7 @@ export interface ResponseBuilder {
   code: string;
   description: string;
   model?: Models;
+  schema?: Schema;
 }
 
 interface PathBuilder {
@@ -43,9 +44,12 @@ export const buildPath = (config: PathBuilder): PathItem => {
     { code: '401', description: 'Unauthorized' },
     { code: '404', description: 'Not Found' },
     { code: '500', description: 'Internal Server Error' },
-  ].filter((res) => !ignoreRespones.includes(res.code));
+  ];
+  const unIgnoredResponses = baseResponses.filter(
+    (res) => !ignoreRespones.includes(res.code),
+  );
 
-  const allResponses = [...baseResponses, ...(responses || [])];
+  const allResponses = [...unIgnoredResponses, ...(responses || [])];
 
   const path: PathItem = {
     [method.toLowerCase()]: {
@@ -103,16 +107,18 @@ export const extractRefPath = (model: Models): string =>
   `#/components/schemas/${model}`;
 
 export const buildResponse = (response: ResponseBuilder): Responses => {
-  const { code, description, model } = response;
+  const { code, description, model, schema } = response;
 
   const res = {
     [code]: {
       description,
-      content: model && {
+      content: (model || schema) && {
         'application/json': {
-          schema: {
-            $ref: extractRefPath(model),
-          },
+          schema: model
+            ? {
+                $ref: extractRefPath(model),
+              }
+            : schema,
         },
       },
     },

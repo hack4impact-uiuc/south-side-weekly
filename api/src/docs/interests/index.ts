@@ -1,6 +1,6 @@
 import { getInterest, getInterests } from './get';
-import { updateInterest, updateManyInterests } from './update';
-import { createInterest, createManyInterests } from './create';
+import { updateInterest, updateManyInterests } from './put';
+import { createInterest, createManyInterests } from './post';
 
 export const interestPaths = {
   '/interests': {
