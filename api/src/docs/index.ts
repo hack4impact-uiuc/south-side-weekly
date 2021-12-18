@@ -1,6 +1,6 @@
 import { config } from './config';
 import { interestPaths } from './interests';
-import { models } from './models';
+import { components } from './components';
 import { servers } from './servers';
 import { tags } from './tags';
 import { teamPaths } from './teams';
@@ -17,7 +17,7 @@ const paths = {
 const docs = {
   ...config,
   ...servers,
-  ...models,
+  ...components,
   ...tags,
   ...paths,
 };

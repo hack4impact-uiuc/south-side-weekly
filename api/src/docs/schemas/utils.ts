@@ -10,7 +10,7 @@ export const buildSchema = (
   properties: {
     _id: {
       type: 'string',
-      description: 'The id of the team.',
+      description: 'The auto-generated MongoDB id of the model.',
       exampe: EXAMPLE_MONGO_ID,
     },
     ...body,

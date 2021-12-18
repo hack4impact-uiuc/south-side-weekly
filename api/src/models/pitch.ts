@@ -90,7 +90,6 @@ const Pitch = new mongoose.Schema(
     topics: [{ type: Schema.Types.ObjectId, ref: 'Interest' }],
     teams: [team],
     reviewedBy: { type: Schema.Types.ObjectId, ref: 'User' },
-    similarStories: [{ type: String, default: null }],
     deadline: { type: Date, default: null },
     neighborhoods: [{ type: String, default: null }],
     issueStatuses: [issueStatus],

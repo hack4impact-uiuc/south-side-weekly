@@ -31,6 +31,14 @@ export const resourceBody = {
     default: visibilityEnum.PRIVATE,
     required: true,
   },
+  createdAt: {
+    type: 'string',
+    description: 'The date that the resource was created.',
+  },
+  updatedAt: {
+    type: 'string',
+    description: 'The date that the resource was last updated.',
+  },
 };
 
 export const resourceSchema = buildSchema(resourceBody, ['name', 'link']);

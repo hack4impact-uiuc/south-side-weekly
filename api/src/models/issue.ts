@@ -7,7 +7,6 @@ export type IssueSchema = IIssue & Document<any>;
  * Mongoose Schema to represent an Issue at South Side Weekly.
  */
 const Issue = new mongoose.Schema({
-  name: { type: String, default: null, required: true },
   deadlineDate: { type: String, default: null, required: true },
   releaseDate: { type: String, default: null, required: true },
   pitches: [{ type: Schema.Types.ObjectId, ref: 'Pitch' }],
