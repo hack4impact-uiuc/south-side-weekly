@@ -6,7 +6,7 @@ import {
   getUserById,
   getUserPermissions,
 } from './get';
-import { createUser } from './create';
+import { createUser } from './post';
 import {
   updateUser,
   approveUser,
@@ -14,46 +14,44 @@ import {
   claimPitch,
   visitPage,
   stallUsers,
-} from './update';
+} from './put';
 import { deleteUser } from './delete';
 
 export const userPaths = {
-  paths: {
-    '/users': {
-      ...getUsers,
-    },
-    '/users/approved': {
-      ...getApprovedUsers,
-    },
-    '/users/pending': {
-      ...getPendingUsers,
-    },
-    '/users/denied': {
-      ...getDeniedUsers,
-    },
-    '/users/{id}': {
-      ...getUserById,
-      ...createUser,
-      ...updateUser,
-      ...deleteUser,
-    },
-    '/users/{id}/approve': {
-      ...approveUser,
-    },
-    '/users/{id}/deny': {
-      ...denyUser,
-    },
-    '/users/{id}/claimPitch': {
-      ...claimPitch,
-    },
-    '/users/{id}/permissions': {
-      ...getUserPermissions,
-    },
-    '/users/visitPage': {
-      ...visitPage,
-    },
-    '/users/stallUsers': {
-      ...stallUsers,
-    },
+  '/users': {
+    ...getUsers,
+  },
+  '/users/approved': {
+    ...getApprovedUsers,
+  },
+  '/users/pending': {
+    ...getPendingUsers,
+  },
+  '/users/denied': {
+    ...getDeniedUsers,
+  },
+  '/users/{id}': {
+    ...getUserById,
+    ...createUser,
+    ...updateUser,
+    ...deleteUser,
+  },
+  '/users/{id}/approve': {
+    ...approveUser,
+  },
+  '/users/{id}/deny': {
+    ...denyUser,
+  },
+  '/users/{id}/claimPitch': {
+    ...claimPitch,
+  },
+  '/users/{id}/permissions': {
+    ...getUserPermissions,
+  },
+  '/users/visitPage': {
+    ...visitPage,
+  },
+  '/users/stallUsers': {
+    ...stallUsers,
   },
 };

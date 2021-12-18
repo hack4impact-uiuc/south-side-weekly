@@ -14,32 +14,45 @@ export interface ResponseBuilder {
   model?: Models;
 }
 
-export const buildPath = (
-  method: HTTP_METHOD,
-  model: Models,
-  opId: string,
-  pathDescription: string,
-  paramDescriptions: Pick<Parameter, 'name' | 'description'>[] = [],
-  body: BodyBuilder = {},
-  unusedRespones: string[] = [],
-  responses?: ResponseBuilder[],
-): PathItem => {
+interface PathBuilder {
+  method: HTTP_METHOD;
+  model: Models;
+  opId: string;
+  description: string;
+  params?: Pick<Parameter, 'name' | 'description'>[];
+  body?: BodyBuilder;
+  ignoreRespones?: string[];
+  responses?: ResponseBuilder[];
+}
+
+export const buildPath = (config: PathBuilder): PathItem => {
+  const {
+    method,
+    model,
+    opId,
+    description,
+    params = [],
+    body = {},
+    ignoreRespones = [],
+    responses = [],
+  } = config;
+
   const baseResponses = [
     { code: '200', description: 'Success', model: model },
     { code: '400', description: 'Bad Request' },
     { code: '401', description: 'Unauthorized' },
     { code: '404', description: 'Not Found' },
     { code: '500', description: 'Internal Server Error' },
-  ].filter((res) => !unusedRespones.includes(res.code));
+  ].filter((res) => !ignoreRespones.includes(res.code));
 
   const allResponses = [...baseResponses, ...(responses || [])];
 
   const path: PathItem = {
     [method.toLowerCase()]: {
       tags: [model],
-      description: pathDescription,
+      description: description,
       operationId: opId,
-      parameters: paramDescriptions.map(buildParameter),
+      parameters: params.map(buildParameter),
       requestBody: buildRequestBody(body),
       // reduce an array of responses into an object with each code as a key
       responses: allResponses.reduce(

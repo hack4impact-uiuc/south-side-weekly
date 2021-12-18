@@ -1,3 +1,6 @@
+import { interestSchema } from './schemas/interest';
+import { resourceSchema } from './schemas/resource';
+import { teamSchema } from './schemas/team';
 import { userSchema } from './schemas/user';
 
 export const models = {
@@ -5,10 +8,10 @@ export const models = {
     schemas: {
       User: userSchema,
       Pitch: {},
-      Team: {},
-      Interest: {},
+      Team: teamSchema,
+      Interest: interestSchema,
       Issue: {},
-      Resource: {},
+      Resource: resourceSchema,
       PitchFeedback: {},
       UserFeedback: {},
     },
