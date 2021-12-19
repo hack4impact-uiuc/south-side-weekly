@@ -13,14 +13,7 @@ import { docs } from './docs';
 
 const app = express();
 
-app.use(
-  '/api/docs',
-  SwaggerUI.serve,
-  SwaggerUI.setup(docs, {
-    explorer: true,
-    customCss: '.swagger-ui .topbar { display: none; background: black; }',
-  }),
-);
+app.use('/api/docs', SwaggerUI.serve, SwaggerUI.setup(docs));
 
 app.use(helmet());
 if (process.env.NODE_ENV !== 'production') {
