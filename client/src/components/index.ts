@@ -43,6 +43,7 @@ import { ApprovedUsers, DeniedUsers, PendingUsers } from './Tables';
 import { buildColumn } from './Tables/DynamicTable/util';
 import { buildPaginatedColumn } from './Tables/PaginatedTable/util';
 import Kanban from './Kanban';
+import UserFeedbackModal from './Modals/UserFeedback';
 import ResourceTable from './Tables/Resource';
 
 export {
@@ -92,6 +93,7 @@ export {
   DeniedUsers,
   DynamicTable,
   buildColumn,
+  UserFeedbackModal,
   buildPaginatedColumn,
   Kanban,
 };

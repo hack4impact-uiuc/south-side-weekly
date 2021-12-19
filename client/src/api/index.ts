@@ -40,4 +40,5 @@ export {
 } from './interest';
 export { getIssues, createIssue, updateIssue, getNearestIssue } from './issue';
 export { getTeams, createManyTeams, updateManyTeams } from './teams';
+export { createUserFeedback } from './userfeedback';
 export { isError, buildLoginEndpoint, buildEndpoint } from './builders';
