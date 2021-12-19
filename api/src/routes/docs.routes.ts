@@ -15,4 +15,12 @@ router.use(
   SwaggerUI.setup(docs, { explorer: true }),
 );
 
+router.use(
+  '/swagger-ui.css',
+  (req: Request, res: Response, next: NextFunction) => {
+    res.setHeader('Content-Type', 'text/css');
+    next();
+  },
+);
+
 export default router;
