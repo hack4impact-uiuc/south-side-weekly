@@ -1,19 +1,22 @@
 import React, { ReactElement } from 'react';
 import { Table } from 'semantic-ui-react';
 
-import { ColumnType } from './types';
+import { DynamicColumn } from './types';
 
-interface TableRowProps<RecordType> {
+interface TableRowProps<RecordType, Column> {
   record: RecordType;
-  columns: ColumnType<RecordType>[];
+  columns: Column[];
   onClick: (record: RecordType) => void;
 }
 
-const TableRow = <RecordType,>({
+const TableRow = <
+  RecordType,
+  Column extends DynamicColumn<RecordType> = DynamicColumn<RecordType>,
+>({
   record,
   columns,
   onClick,
-}: TableRowProps<RecordType>): ReactElement => (
+}: TableRowProps<RecordType, Column>): ReactElement => (
   <Table.Row onClick={onClick}>
     {columns.map((column, i) => (
       <Table.Cell key={i} width={column.width}>

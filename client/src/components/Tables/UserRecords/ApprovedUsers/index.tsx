@@ -1,8 +1,9 @@
-import React, { FC, ReactElement } from 'react';
+import React, { ReactElement } from 'react';
 import { IUser } from 'ssw-common';
 
 import { useAuth } from '../../../../contexts';
-import DynamicTable from '../../DynamicTable';
+import PaginatedTable from '../../PaginatedTable';
+import { QueryFunction } from '../../PaginatedTable/types';
 import {
   nameColumn,
   roleColumn,
@@ -16,11 +17,15 @@ import {
   interestsColumnNoModal,
 } from '../utils';
 
-interface ApprovedUserProps {
-  users: IUser[];
+interface ApprovedUserProps<QueryArgs> {
+  query: QueryFunction<IUser, QueryArgs>;
+  filterParams: QueryArgs;
 }
 
-const ApprovedUsers: FC<ApprovedUserProps> = ({ users }): ReactElement => {
+const ApprovedUsers = <QueryArgs extends Record<string, string[]>>({
+  query,
+  filterParams,
+}: ApprovedUserProps<QueryArgs>): ReactElement => {
   const { isContributor } = useAuth();
 
   const columns = [
@@ -34,12 +39,15 @@ const ApprovedUsers: FC<ApprovedUserProps> = ({ users }): ReactElement => {
     ...(isContributor ? [] : [viewUserColumn]),
   ];
 
-  const view = { records: users, columns };
-
   return (
     <div className="table">
       <div className="directory">
-        <DynamicTable view={view} singleLine={users.length > 0} />
+        <PaginatedTable<IUser, QueryArgs>
+          columns={columns}
+          query={query}
+          params={filterParams}
+          emptyMessage={'There are no approved users.'}
+        />
       </div>
     </div>
   );

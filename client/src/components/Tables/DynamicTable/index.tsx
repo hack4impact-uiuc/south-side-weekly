@@ -9,12 +9,15 @@ import { Table } from 'semantic-ui-react';
 
 import TableHeader from './TableHeader';
 import TableRow from './TableRow';
-import { ColumnType, Sort, View } from './types';
+import { DynamicColumn, Sort, View } from './types';
 
 import './styles.scss';
 
-interface TableProps<RecordType> {
-  view: View<RecordType>;
+interface DynamicTableProps<
+  RecordType,
+  Column extends DynamicColumn<RecordType>,
+> {
+  view: View<RecordType, Column>;
   singleLine?: boolean;
   getModal?: (
     record: RecordType,
@@ -23,19 +26,24 @@ interface TableProps<RecordType> {
   ) => ReactElement;
   emptyMessage?: ReactNode;
   onRecordClick?: (record: RecordType) => void;
+  onHeaderClick?: (column: Column) => Sort<Column> | undefined;
+  footer?: ReactNode;
 }
 
-const DynamicTable = <RecordType,>({
+const DynamicTable = <
+  RecordType,
+  Column extends DynamicColumn<RecordType> = DynamicColumn<RecordType>,
+>({
   view: viewProp,
   singleLine,
   getModal,
   emptyMessage,
   onRecordClick,
-}: TableProps<RecordType>): ReactElement => {
-  type Column = ColumnType<RecordType>;
-
-  const [view, setView] = useState<View<RecordType>>(viewProp);
-  const [sort, setSort] = useState<Sort<RecordType> | undefined>(
+  onHeaderClick,
+  footer,
+}: DynamicTableProps<RecordType, Column>): ReactElement => {
+  const [view, setView] = useState<View<RecordType, Column>>(viewProp);
+  const [sort, setSort] = useState<Sort<Column> | undefined>(
     viewProp.initialSort,
   );
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -46,44 +54,58 @@ const DynamicTable = <RecordType,>({
     setIsOpen(true);
   };
 
-  const sortView = useCallback((): void => {
-    if (!sort) {
-      setView(({ columns }) => ({
-        records: viewProp.records,
-        columns,
-      }));
-      return;
-    }
-
-    const { column, direction } = sort;
-    setView(({ records, columns }) => {
-      records = [...records]; // Copy records so sort isn't done on the records tied to viewProp
-      if (direction === 'ascending') {
-        return { records: records.sort(column.sorter), columns };
+  const sortView = useCallback(
+    (
+      view: View<RecordType, Column>,
+      sort: Sort<Column> | undefined,
+    ): View<RecordType, Column> => {
+      if (onHeaderClick || !sort) {
+        return view;
       }
-      return { records: records.sort(column.sorter).reverse(), columns };
-    });
-  }, [sort, viewProp]);
+
+      const { column, direction } = sort;
+      const { records, columns } = view;
+
+      // Copy records so sort isn't done on the records tied to viewProp
+      const recordsCopy = [...records].sort(column.sorter);
+
+      if (direction === 'descending') {
+        recordsCopy.reverse();
+      }
+
+      return {
+        records: recordsCopy,
+        columns,
+      };
+    },
+    [onHeaderClick],
+  );
 
   useEffect(() => {
-    sortView();
+    setView((view) => sortView(view, sort));
   }, [sortView, sort]);
 
   useEffect(() => {
-    setView(viewProp);
+    setView(sortView(viewProp, viewProp.initialSort));
     setSort(viewProp.initialSort);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewProp]);
 
   const handleColumnClick = useCallback(
     (column: Column): void => {
-      if (!column.sorter) {
+      if (onHeaderClick) {
+        const newSort = onHeaderClick(column);
+        setSort(newSort);
         return;
       }
 
+      if (!column.sorter) {
+        return;
+      }
       const newSortColumn = !sort || (sort && column !== sort.column);
 
       if (newSortColumn) {
+        //This causes even columns with no sorting from onHeaderClick to be set as ascending
         setSort({
           column,
           direction: 'ascending',
@@ -104,7 +126,7 @@ const DynamicTable = <RecordType,>({
         direction: 'descending',
       });
     },
-    [sort],
+    [sort, onHeaderClick],
   );
 
   const { records, columns } = view;
@@ -120,7 +142,7 @@ const DynamicTable = <RecordType,>({
       singleLine={singleLine}
       className={`dynamic-table ${records.length === 0 && 'no-results-found'}`}
     >
-      <TableHeader
+      <TableHeader<RecordType, Column>
         columns={columns}
         sort={sort}
         onCellClick={handleColumnClick}
@@ -145,8 +167,13 @@ const DynamicTable = <RecordType,>({
           currentRecord &&
           getModal(currentRecord, isOpen, setIsOpen)}
       </Table.Body>
+
+      <Table.Footer>
+        <Table.Row>{footer}</Table.Row>
+      </Table.Footer>
     </Table>
   );
 };
 
 export default DynamicTable;
+export type { DynamicTableProps };

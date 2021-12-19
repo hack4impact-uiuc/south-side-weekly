@@ -32,16 +32,18 @@ import InterestsSelect from './Dropdowns/InterestsSelect';
 import ProviderWrapper from './ProviderWrapper';
 import TeamsSelect from './Dropdowns/TeamsSelect';
 import DynamicTable from './Tables/DynamicTable';
-import { ColumnType, View } from './Tables/DynamicTable/types';
-import { buildColumn } from './Tables/DynamicTable/util';
+import { DynamicColumn, View } from './Tables/DynamicTable/types';
 import {
   EditableTagModal,
   EditInterests,
   EditTeams,
 } from './Modals/EditableTags';
 import ReviewUserModal from './Modals/ReviewUser';
+import { ApprovedUsers, DeniedUsers, PendingUsers } from './Tables';
+import { buildColumn } from './Tables/DynamicTable/util';
+import { buildPaginatedColumn } from './Tables/PaginatedTable/util';
 import Kanban from './Kanban';
-import { ApprovedUsers, PendingUsers, DeniedUsers } from './Tables';
+import UserFeedbackModal from './Modals/UserFeedback';
 import ResourceTable from './Tables/Resource';
 import PitchFeedbackModal from './Modals/PitchFeedback';
 
@@ -93,7 +95,9 @@ export {
   DynamicTable,
   buildColumn,
   PitchFeedbackModal,
+  UserFeedbackModal,
+  buildPaginatedColumn,
   Kanban,
 };
 
-export type { View, ColumnType };
+export type { View, DynamicColumn };
