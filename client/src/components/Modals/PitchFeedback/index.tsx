@@ -31,17 +31,16 @@ const PitchFeedbackModal: FC<PitchFeedbackModal> = ({
       return;
     }
 
+    const getFeedback = async (): Promise<void> => {
+      const res = await getPitchFeedback(pitchId);
+
+      if (!isError(res)) {
+        setFeedbacks(res.data.result);
+      }
+    };
+
     getFeedback();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
-
-  const getFeedback = async (): Promise<void> => {
-    const res = await getPitchFeedback(pitchId);
-
-    if (!isError(res)) {
-      setFeedbacks(res.data.result);
-    }
-  };
+  }, [isOpen, pitchId]);
 
   return (
     <Modal
