@@ -14,7 +14,7 @@ import { docs } from './docs';
 const app = express();
 
 app.use(
-  '/api/docs',
+  '/api/docs/*',
   SwaggerUI.serve,
   SwaggerUI.setup(docs, { explorer: true }),
 );
