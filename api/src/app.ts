@@ -16,7 +16,10 @@ const app = express();
 app.use(
   '/api/docs',
   SwaggerUI.serve,
-  SwaggerUI.setup(docs, { explorer: true }),
+  SwaggerUI.setup(docs, {
+    explorer: true,
+    customCss: '.swagger-ui .topbar { display: none; background: black; }',
+  }),
 );
 
 app.use(helmet());
