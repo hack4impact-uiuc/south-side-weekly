@@ -45,6 +45,7 @@ import { buildPaginatedColumn } from './Tables/PaginatedTable/util';
 import Kanban from './Kanban';
 import UserFeedbackModal from './Modals/UserFeedback';
 import ResourceTable from './Tables/Resource';
+import PitchFeedbackModal from './Modals/PitchFeedback';
 
 export {
   Header,
@@ -93,6 +94,7 @@ export {
   DeniedUsers,
   DynamicTable,
   buildColumn,
+  PitchFeedbackModal,
   UserFeedbackModal,
   buildPaginatedColumn,
   Kanban,
