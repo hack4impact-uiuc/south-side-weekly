@@ -5,15 +5,11 @@ import helmet from 'helmet';
 import logger from 'morgan';
 import cookieSession from 'cookie-session';
 import passport from 'passport';
-import SwaggerUI from 'swagger-ui-express';
 
 import apiRoutes from './routes';
 import { errorHandler } from './middleware';
-import { docs } from './docs';
 
 const app = express();
-
-app.use('/api/docs', SwaggerUI.serveFiles(docs), SwaggerUI.setup(docs));
 
 app.use(helmet());
 if (process.env.NODE_ENV !== 'production') {
