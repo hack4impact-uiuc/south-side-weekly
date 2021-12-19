@@ -4,7 +4,11 @@ import { errorWrap } from '../middleware';
 import User from '../models/user';
 import Pitch from '../models/pitch';
 import Team from '../models/team';
-import { getEditableFields, getViewableFields } from '../utils/user-utils';
+import {
+  getEditableFields,
+  getViewableFields,
+  searchUsers,
+} from '../utils/user-utils';
 import {
   requireAdmin,
   requireRegistered,
@@ -16,6 +20,7 @@ import timezone from '../middleware/timezone';
 
 import { approveUser, declineUser } from '../utils/mailer-templates';
 import { sendMail } from '../utils/mailer';
+import { processFilters, processPagination } from '../utils/pagination';
 
 const router = express.Router();
 
@@ -198,7 +203,7 @@ router.put(
 router.get(
   '/all/pending',
   errorWrap(async (req: Request, res: Response) => {
-    const users = await User.find({
+    const query = User.find({
       onboardingStatus: {
         $in: [
           onboardingStatusEnum.ONBOARDING_SCHEDULED,
@@ -206,10 +211,23 @@ router.get(
         ],
       },
     });
+
+    let totalPages = 1;
+    processFilters(req, query);
+    searchUsers(req, query);
+    if (req.query.page && req.query.limit) {
+      const filteredDocs = await query.exec();
+      const limit = parseInt(req.query.limit as string);
+      totalPages = Math.ceil(filteredDocs.length / limit);
+    }
+    processPagination(req, query);
+    const users = await query.exec();
+
     res.status(200).json({
       message: `Successfully retrieved all pending users.`,
       success: true,
       result: users,
+      totalPages: totalPages,
     });
   }),
 );
@@ -218,13 +236,26 @@ router.get(
 router.get(
   '/all/approved',
   errorWrap(async (req: Request, res: Response) => {
-    const users = await User.find({
+    const query = User.find({
       onboardingStatus: onboardingStatusEnum.ONBOARDED,
     });
+
+    let totalPages = 1;
+    processFilters(req, query);
+    searchUsers(req, query);
+    if (req.query.page && req.query.limit) {
+      const filteredDocs = await query.exec();
+      const limit = parseInt(req.query.limit as string);
+      totalPages = Math.ceil(filteredDocs.length / limit);
+    }
+    processPagination(req, query);
+    const users = await query.exec();
+
     res.status(200).json({
       message: `Successfully retrieved all approved users.`,
       success: true,
       result: users,
+      totalPages: totalPages,
     });
   }),
 );
@@ -233,13 +264,25 @@ router.get(
 router.get(
   '/all/denied',
   errorWrap(async (req: Request, res: Response) => {
-    const users = await User.find({
+    const query = User.find({
       onboardingStatus: onboardingStatusEnum.DENIED,
     });
+    let totalPages = 1;
+    processFilters(req, query);
+    searchUsers(req, query);
+    if (req.query.page && req.query.limit) {
+      const filteredDocs = await query.exec();
+      const limit = parseInt(req.query.limit as string);
+      totalPages = Math.ceil(filteredDocs.length / limit);
+    }
+    processPagination(req, query);
+    const users = await query.exec();
+
     res.status(200).json({
       message: `Successfully retrieved all denied users.`,
       success: true,
       result: users,
+      totalPages: totalPages,
     });
   }),
 );

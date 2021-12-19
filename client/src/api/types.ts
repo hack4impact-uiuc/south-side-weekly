@@ -12,4 +12,9 @@ export interface ApiResponseBase {
   success: boolean;
 }
 
+export interface PaginationResponseBase<T> extends ApiResponseBase {
+  result: T;
+  totalPages: number;
+}
+
 export type Response<T> = AxiosResponse<T> | ErrorWrapper;
