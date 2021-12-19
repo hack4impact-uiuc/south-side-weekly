@@ -41,24 +41,23 @@ const UserFeedbackModal: FC<UserFeedbackModal> = ({
       return;
     }
 
+    const getContributorTeams = async (): Promise<void> => {
+      const res = await getAggregatedPitch(pitchId);
+
+      if (!isError(res)) {
+        let { assignmentContributors } = res.data.result.aggregated;
+
+        assignmentContributors = assignmentContributors.filter(
+          (ele) => ele.user._id === contributor._id,
+        );
+
+        const contr = assignmentContributors[0];
+        const tempTeams = contr.teams.map(getTeamFromId);
+        setTeams(tempTeams as ITeam[]);
+      }
+    };
     getContributorTeams();
-  }, [isOpen]);
-
-  const getContributorTeams = async (): Promise<void> => {
-    const res = await getAggregatedPitch(pitchId);
-
-    if (!isError(res)) {
-      let { assignmentContributors } = res.data.result.aggregated;
-
-      assignmentContributors = assignmentContributors.filter(
-        (ele) => ele.user._id === contributor._id,
-      );
-
-      const contr = assignmentContributors[0];
-      const tempTeams = contr.teams.map(getTeamFromId);
-      setTeams(tempTeams as ITeam[]);
-    }
-  };
+  }, [isOpen, contributor._id, getTeamFromId, pitchId]);
 
   const isEmpty = (): boolean =>
     rating === 0 || feedback === null || feedback.match(/^ *$/) !== null;
