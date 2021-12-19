@@ -15,11 +15,12 @@ interface PitchFeedbackModal extends ModalProps {
 
 const PitchFeedbackModal: FC<PitchFeedbackModal> = ({
   pitchId,
+  trigger,
 }): ReactElement => {
   const TABS = {
     QUESTIONS: 'Questions',
     INDIVIDUAL: 'Individual',
-  } as const; // As const prevents modification of this object
+  } as const;
   type Tab = typeof TABS[keyof typeof TABS];
   const [isOpen, setIsOpen] = useState(false);
   const [feedbacks, setFeedbacks] = useState<IPitchFeedback[]>([]);
@@ -48,6 +49,7 @@ const PitchFeedbackModal: FC<PitchFeedbackModal> = ({
       open={isOpen}
       onOpen={() => setIsOpen(true)}
       onClose={() => setIsOpen(false)}
+      trigger={trigger}
     >
       <Modal.Header>
         View Contributor Feedback

@@ -115,6 +115,22 @@ const emptyAggregatePitch: IPitchAggregate = {
   ...emptyPitch,
 };
 
+const pitchQuestionOptions = [
+  {
+    value: 'firstQuestion',
+    text: 'Is there any way that the Weekly staff could have supported you better during the Weekly’s writing/editing process of the story?',
+  },
+  {
+    value: 'secondQuestion',
+    text: 'Can you share anything about your reporting/writing process that would be useful for other writers to know, or any lessons you learned from the process?',
+  },
+  {
+    value: 'thirdQuestion',
+    text: 'List any new contacts you made that could be useful for future Weekly writers to have (include name, organizational affiliation, contact info):',
+  },
+  { value: 'fourthQuestion', text: 'Any additional feedback? Thank you!' },
+];
+
 export {
   allGenders,
   allPronouns,
@@ -127,4 +143,5 @@ export {
   contributorPages,
   pitchDocTabs,
   neighborhoods,
+  pitchQuestionOptions,
 };
