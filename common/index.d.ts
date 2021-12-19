@@ -22,6 +22,8 @@ export interface IUser {
   linkedIn: string;
   twitter: string;
   involvementResponse: string;
+  journalismResponse: string;
+  neighborhood: string;
   claimedPitches: string[];
   submittedPitches: string[];
   submittedClaims: string[];
@@ -79,6 +81,7 @@ export interface IPitch {
   neighborhoods: string[];
   createdAt: Date;
   updatedAt: Date;
+  issueStatuses: { issueId: string; issueStatus: string }[];
   editStatus: string;
 }
 

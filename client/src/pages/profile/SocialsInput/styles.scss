@@ -1,15 +1,11 @@
 .social-input {
-  padding: 0rem !important;
-  margin: 0rem;
+  display: flex;
+  align-items: center;
+  margin-bottom: 2%;
 
-  .col {
-    padding: 5px !important;
-  }
-
-  .col .input {
-    border: solid 1px !important;
-    border-radius: 1rem;
-    padding: 5px !important;
-    min-height: 30px;
+  .a:hover,
+  a:link,
+  a:visited {
+    color: black !important;
   }
 }

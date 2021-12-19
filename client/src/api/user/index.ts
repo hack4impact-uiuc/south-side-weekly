@@ -1,7 +1,7 @@
 import { IUser } from 'ssw-common';
 
 import { Response } from '../types';
-import { buildEndpoint, get, post, put } from '../builders';
+import { buildEndpoint, buildURI, get, post, put } from '../builders';
 import { PitchesResponse } from '../pitch/types';
 import { onboardingStatusEnum } from '../../utils/enums';
 
@@ -23,27 +23,36 @@ const getUsers = async (): Promise<Response<UsersResponse>> => {
 };
 
 // Returns all pending users
-const getPendingUsers = async (): Promise<Response<UsersResponse>> => {
+const getPendingUsers = async (
+  params: Record<string, string[]>,
+): Promise<Response<UsersResponse>> => {
   const url = buildEndpoint(USER_ENDPOINT, 'all', 'pending');
+  const uri = buildURI(url, params);
   const failureMessage = 'GET_PENDING_USERS_FAIL';
 
-  return await get(url, failureMessage);
+  return await get(uri, failureMessage);
 };
 
 // Returns all approved users
-const getApprovedUsers = async (): Promise<Response<UsersResponse>> => {
+const getApprovedUsers = async (
+  params: Record<string, string[]>,
+): Promise<Response<UsersResponse>> => {
   const url = buildEndpoint(USER_ENDPOINT, 'all', 'approved');
+  const uri = buildURI(url, params);
   const failureMessage = 'GET_APPROVED_USERS_FAIL';
 
-  return await get(url, failureMessage);
+  return await get(uri, failureMessage);
 };
 
 // Returns all denied users
-const getDeniedUsers = async (): Promise<Response<UsersResponse>> => {
+const getDeniedUsers = async (
+  params: Record<string, string[]>,
+): Promise<Response<UsersResponse>> => {
   const url = buildEndpoint(USER_ENDPOINT, 'all', 'denied');
+  const uri = buildURI(url, params);
   const failureMessage = 'GET_DENIED_USERS_FAIL';
 
-  return await get(url, failureMessage);
+  return await get(uri, failureMessage);
 };
 
 // Returns all pending contributors
@@ -69,6 +78,16 @@ const getUser = async (userId: string): Promise<Response<UserResponse>> => {
 
   return await get(url, failureMessage);
 };
+
+// get user with submitted and claimed partial pitches
+// const getAggregatedUser = async (
+//   userId: string,
+// ): Promise<Response<AggregateUserResponse>> => {
+//   const url = buildEndpoint(USER_ENDPOINT, userId, 'aggregate');
+//   const failureMessage = 'GET_USER_FAIL';
+
+//   return await get(url, failureMessage);
+// };
 
 // Adds a pitch to a user's claimed pitches
 const updateUserClaimedPitches = async (

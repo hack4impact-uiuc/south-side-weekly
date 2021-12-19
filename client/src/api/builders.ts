@@ -110,4 +110,30 @@ const buildLoginEndpoint = (endpoint: string): string =>
  */
 const buildEndpoint = (...paths: string[]): string => paths.join('/');
 
-export { buildLoginEndpoint, get, post, put, del, isError, buildEndpoint };
+/**
+ * Builds the URI with complete params that are parsed correctly
+ * @param url the url with the endpoints built
+ * @param params the query params
+ * @returns the uri string with params appended correctly
+ */
+
+const buildURI = (url: string, params: Record<string, string[]>): string => {
+  const query = new URLSearchParams();
+  Object.entries(params).map(([param, values]) => {
+    values.forEach((value) => {
+      query.append(param, value);
+    });
+  });
+  return `${url}?${query.toString()}`;
+};
+
+export {
+  buildLoginEndpoint,
+  get,
+  post,
+  put,
+  del,
+  isError,
+  buildEndpoint,
+  buildURI,
+};

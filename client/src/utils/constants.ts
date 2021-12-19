@@ -6,6 +6,7 @@ import neighborhoods from './neighborhoods';
 const allGenders = ['Man', 'Woman', 'Nonbinary', 'Other'];
 const allPronouns = ['He/his', 'She/her', 'They/them', 'Ze/hir', 'Other'];
 const allRoles = ['ADMIN', 'STAFF', 'CONTRIBUTOR'];
+const allActivities = ['Active', 'Recently Active', 'Inactive'];
 const allRaces = [
   'AMERICAN INDIAN OR ALASKAN NATIVE',
   'BLACK OR AFRICAN AMERICAN',
@@ -56,6 +57,8 @@ const emptyUser: IUser = {
   linkedIn: '',
   twitter: '',
   involvementResponse: '',
+  journalismResponse: '',
+  neighborhood: '',
   claimedPitches: [],
   submittedPitches: [],
   submittedClaims: [],
@@ -92,6 +95,7 @@ const emptyPitch: IPitch = {
   neighborhoods: [],
   createdAt: new Date(),
   updatedAt: new Date(),
+  issueStatuses: [],
   editStatus: editStatusEnum.WRITER_NEEDED,
 };
 
@@ -116,6 +120,7 @@ export {
   allGenders,
   allPronouns,
   allRoles,
+  allActivities,
   allRaces,
   emptyUser,
   emptyPitch,

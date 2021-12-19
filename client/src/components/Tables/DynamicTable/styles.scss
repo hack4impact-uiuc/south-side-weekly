@@ -1,9 +1,8 @@
-.dynamic-table {
-  position: relative;
+@import '../../../styles/styles.scss';
 
-  ::-webkit-scrollbar {
-    display: none;
-  }
+.dynamic-table {
+  @extend .scrollable;
+  position: relative;
 
   &.no-results-found > tbody {
     display: flex;
@@ -23,6 +22,10 @@
     display: table;
     width: 100%;
     table-layout: fixed;
+  }
+
+  tfoot th {
+    overflow: visible !important;
   }
 
   &.ui.table > tr > td.selectable,

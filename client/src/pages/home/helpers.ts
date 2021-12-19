@@ -1,6 +1,9 @@
 import { IPitch, IPitchAggregate, IUser, IUserAggregate } from 'ssw-common';
 
-import { Sort } from '../../components/Tables/DynamicTable/types';
+import {
+  DynamicColumn,
+  Sort,
+} from '../../components/Tables/DynamicTable/types';
 import { pitchStatusEnum } from '../../utils/enums';
 import {
   findPendingContributor,
@@ -88,7 +91,10 @@ const getRecordsForTab = (
   }
 };
 
-const getInitialSort = (user: IUser, tab: Tab): Sort<IPitch> | undefined => {
+const getInitialSort = (
+  user: IUser,
+  tab: Tab,
+): Sort<DynamicColumn<IPitch>> | undefined => {
   switch (tab) {
     case TABS.MEMBER_PITCHES:
       return {

@@ -31,6 +31,10 @@ body {
   background-color: $admin !important;
 }
 
+.pronouns-tag-color {
+  background-color: $pronouns !important;
+}
+
 .staff-tag-color {
   background-color: $staff !important;
 }
@@ -57,6 +61,14 @@ body {
 
 .recently-active-tag-color {
   background-color: $recentlyActive !important;
+}
+
+.published-tag-color {
+  background-color: $published !important;
+}
+
+.in-progress-tag-color {
+  background-color: $inprogress !important;
 }
 
 .active-tag-color {
@@ -91,6 +103,29 @@ body {
   background-color: $declined !important;
 }
 
+.maybe-in-tag-color {
+  background-color: $maybeIn !important;
+}
+
+.definitely-in-tag-color {
+  background-color: $definitelyIn !important;
+}
+
+.in-edits-tag-color {
+  background-color: $inEdits !important;
+}
+
+.ready-to-publish-tag-color,
+.writer-on-story-tag-color {
+  background-color: $readyToPublish !important;
+}
+
+.push-tag-color,
+.writer-needed-tag-color,
+.primary-editor-needed-tag-color {
+  background-color: $push !important;
+}
+
 .default-btn {
   background-color: $secondaryColor !important;
   color: white !important;
@@ -119,5 +154,60 @@ body {
         background-color: darken($secondaryColor, 5%);
       }
     }
+  }
+}
+
+.scrollable {
+  ::-webkit-scrollbar {
+    width: 8px;
+    overflow: visible;
+    margin: 0px 4px;
+  }
+
+  ::-webkit-scrollbar-corner {
+    display: none;
+    background: #f5f5f5;
+  }
+
+  ::-webkit-scrollbar-button {
+    display: none;
+    height: 0;
+    width: 0;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  ::-webkit-scrollbar-button:start:decrement,
+  ::-webkit-scrollbar-button:end:increment {
+    display: block;
+  }
+
+  ::-webkit-scrollbar-button:vertical:start:increment,
+  ::-webkit-scrollbar-button:vertical:end:decrement {
+    display: none;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    background-color: rgba(0, 0, 0, 0.125);
+    min-height: 28px;
+    padding-top: 100px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  ::-webkit-scrollbar-thumb:vertical,
+  ::-webkit-scrollbar-thumb:horizontal {
+    border-width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
   }
 }

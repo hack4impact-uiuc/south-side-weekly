@@ -10,7 +10,6 @@
   }
 
   .form {
-    display: flex;
     justify-content: center;
     width: 70%;
     margin: auto;
@@ -19,8 +18,8 @@
       width: 100% !important;
 
       textarea {
-        min-height: 300px;
-        max-height: 300px;
+        min-height: 200px;
+        max-height: 200px;
       }
     }
   }
