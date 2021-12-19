@@ -47,8 +47,7 @@
     "nodemailer": "^6.6.5",
     "passport": "^0.4.1",
     "passport-google-oauth20": "^2.0.0",
-    "swagger-jsdoc": "^6.1.0",
-    "swagger-ui-express": "^4.3.0"
+    "swagger-jsdoc": "^6.1.0"
   },
   "devDependencies": {
     "@hack4impact-uiuc/eslint-plugin": "^2.0.9",
@@ -58,6 +57,7 @@
     "prettier": "^2.2.1",
     "ssw-common": "file:../common",
     "supertest": "^6.1.1",
+    "swagger-ui-express": "^4.3.0",
     "typescript": "^4.1.5"
   },
   "jest": {
