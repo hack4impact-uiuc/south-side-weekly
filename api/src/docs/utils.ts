@@ -83,10 +83,10 @@ export const buildRequestBody = (body: BodyBuilder): RequestBody => {
   }
 
   return {
-    description: body.description ?? '',
+    description: body.description || '',
     content: {
       'application/json': {
-        schema: body.schema ?? {},
+        schema: body.schema || {},
       },
     },
   };
