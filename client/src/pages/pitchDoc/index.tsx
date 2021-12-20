@@ -169,7 +169,6 @@ const PitchDoc = (): ReactElement => {
           page={pagesEnum.PITCHDOC}
           content="The Pitch Doc is where you can claim, submit, and view pitches! Use the filters to find pitches you are interested in."
         />
-
         <Menu className="tab-menu" tabular secondary pointing size="large">
           <Menu.Item
             name={pitchDocTabs.UNCLAIMED}

@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express';
 import { errorWrap } from '../middleware';
+import { requireAdmin, requireRegistered } from '../middleware/auth';
 
 import PitchFeedback from '../models/pitchFeedback';
 import Pitch from '../models/pitch';
@@ -10,6 +11,7 @@ const router = express.Router();
 // Gets all of the anonymous feedback
 router.get(
   '/',
+  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     const feedback = await PitchFeedback.find({});
 
@@ -48,6 +50,7 @@ router.put(
 // Creates a new feedback
 router.post(
   '/',
+  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     const createFeedback = await PitchFeedback.create({ ...req.body });
 
@@ -65,9 +68,9 @@ router.post(
 // Gets a specific feedback
 router.get(
   '/:id',
+  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     const feedback = await PitchFeedback.findById(req.params.id);
-
     res.status(200).json({
       success: true,
       message: 'Feedback retrieved successfully',
@@ -79,6 +82,7 @@ router.get(
 // Gets all of the feedback for a specific pitch
 router.get(
   '/pitch/:id',
+  requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
     const feedback = await PitchFeedback.find({ pitchId: req.params.id });
 
@@ -93,6 +97,7 @@ router.get(
 // Updates a specific feedback
 router.put(
   '/:id',
+  requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
     const feedback = await PitchFeedback.findByIdAndUpdate(
       req.params.id,
@@ -111,6 +116,7 @@ router.put(
 // Deletes a specific feedback
 router.delete(
   '/:id',
+  requireAdmin,
   errorWrap(async (req: Request, res: Response) => {
     await PitchFeedback.findByIdAndDelete(req.params.id);
 

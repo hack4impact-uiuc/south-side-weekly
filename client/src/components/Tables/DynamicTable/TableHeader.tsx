@@ -1,19 +1,19 @@
 import React, { ReactElement } from 'react';
 import { Table } from 'semantic-ui-react';
 
-import { ColumnType, Sort } from './types';
+import { DynamicColumn, Sort } from './types';
 
-interface TableHeaderProps<RecordType> {
-  columns: ColumnType<RecordType>[];
-  sort?: Sort<RecordType>;
-  onCellClick: (column: ColumnType<RecordType>) => void;
+interface TableHeaderProps<Column> {
+  columns: Column[];
+  sort?: Sort<Column>;
+  onCellClick: (column: Column) => void;
 }
 
-const TableHeader = <RecordType,>({
+const TableHeader = <RecordType, Column extends DynamicColumn<RecordType>>({
   columns,
   sort,
   onCellClick,
-}: TableHeaderProps<RecordType>): ReactElement => (
+}: TableHeaderProps<Column>): ReactElement => (
   <Table.Header>
     {columns.map((column, index) => (
       <Table.HeaderCell

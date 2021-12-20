@@ -1,9 +1,16 @@
-import { startsWith, toLower, toString } from 'lodash';
-import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Input, Tab } from 'semantic-ui-react';
+import { debounce } from 'lodash';
+import React, {
+  FC,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { Input, InputOnChangeData, Tab } from 'semantic-ui-react';
 import { IUser } from 'ssw-common';
 
-import { isError } from '../../api';
+import { Response, PaginationResponseBase } from '../../api/types';
 import {
   getApprovedUsers,
   getDeniedUsers,
@@ -15,132 +22,146 @@ import {
   ApprovedUsers,
   InterestsSelect,
   PendingUsers,
+  DeniedUsers,
   Select,
   TeamsSelect,
   Walkthrough,
-  DeniedUsers,
 } from '../../components';
-import { allRoles } from '../../utils/constants';
+import { PaginationQueryArgs } from '../../components/Tables/PaginatedTable/types';
+import { allRoles, allActivities } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
 import { parseOptionsSelect } from '../../utils/helpers';
 
-import { filterInterests, filterRole, filterTeams } from './helpers';
-
 import './styles.scss';
-
-const searchFields: (keyof IUser)[] = [
-  'firstName',
-  'preferredName',
-  'lastName',
-  'email',
-];
 
 interface PaneWrapperProps {
   status: 'approved' | 'pending' | 'denied';
 }
 
+const searchDebounceTime = 250;
+
 const PaneWrapper: FC<PaneWrapperProps> = ({ status }): ReactElement => {
-  const [directory, setDirectory] = useState<IUser[]>([]);
-  const [filteredDirectory, setFilteredDirectory] = useState<IUser[]>([]);
   const [role, setRole] = useState<string>('');
   const [interests, setInterests] = useState<string[]>([]);
   const [teams, setTeams] = useState<string[]>([]);
-  const [query, setQuery] = useState<string>('');
+  const [search, setSearch] = useState<string>('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activity, setActivity] = useState<string>('');
+  const [filterParams, setFilterParams] = useState<Record<string, string[]>>(
+    {},
+  );
+
+  const setSearchQueryDebounced = useMemo(
+    () => debounce(setSearchQuery, searchDebounceTime),
+    [setSearchQuery],
+  );
 
   useEffect(() => {
-    const getAllUsers = async (): Promise<void> => {
-      let res;
+    setFilterParams({
+      interests,
+      teams,
+      role: role === '' ? [] : [role],
+      activity: activity === '' ? [] : [activity],
+      search: searchQuery === '' ? [] : [searchQuery],
+    });
+  }, [searchQuery, interests, teams, role, activity]);
 
-      if (status === 'approved') {
-        res = await getApprovedUsers();
-      } else if (status === 'pending') {
-        res = await getPendingUsers();
-      } else {
-        res = await getDeniedUsers();
-      }
-      if (!isError(res)) {
-        setDirectory(res.data.result.data);
-      }
-    };
+  const queryFunction = useCallback(
+    (
+      params: PaginationQueryArgs,
+    ): Promise<Response<PaginationResponseBase<IUser[]>>> => {
+      const fetchResource = (): Promise<
+        Response<PaginationResponseBase<IUser[]>>
+      > => {
+        let query;
 
-    getAllUsers();
-    return () => {
-      setDirectory([]);
-    };
-  }, [status]);
+        if (status === 'approved') {
+          query = getApprovedUsers;
+        } else if (status === 'pending') {
+          query = getPendingUsers;
+        } else {
+          query = getDeniedUsers;
+        }
 
-  useEffect(() => {
-    const search = (users: IUser[]): IUser[] => {
-      if (query.length === 0) {
-        return users;
-      }
+        return query({ ...params, ...filterParams }) as Promise<
+          Response<PaginationResponseBase<IUser[]>>
+        >;
+      };
+      return fetchResource();
+    },
+    [status, filterParams],
+  );
 
-      const searchTerm = toLower(query.trim());
-      const queryParts = searchTerm.split(' ');
-
-      return users.filter((user) =>
-        queryParts.every((part) =>
-          searchFields.some(
-            (field) =>
-              startsWith(toLower(toString(user[field])), part) ||
-              startsWith(toLower(toString(user[field])), searchTerm),
-          ),
-        ),
-      );
-    };
-
-    const filter = (users: IUser[]): IUser[] => {
-      let filtered = filterInterests(users, interests);
-      filtered = filterRole(filtered, role);
-      filtered = filterTeams(filtered, teams);
-
-      return filtered;
-    };
-    setFilteredDirectory([...search(filter(directory))]);
-  }, [directory, query, interests, teams, role]);
+  const handleSearch = (
+    _: React.ChangeEvent<HTMLInputElement>,
+    { value }: InputOnChangeData,
+  ): void => {
+    setSearch(value);
+    setSearchQueryDebounced.cancel();
+    setSearchQueryDebounced(value);
+  };
 
   return (
     <>
-      <Input
-        value={query}
-        onChange={(e, { value }) => setQuery(value)}
-        fluid
-        placeholder="Search..."
-        icon="search"
-        iconPosition="left"
-      />
       {status === 'approved' && (
-        <div className="filters">
-          <div>
-            <h3>Filters: </h3>
+        <>
+          <div className="top-filters">
+            <div className="wrapper input">
+              <Input
+                value={search}
+                onChange={handleSearch}
+                fluid
+                placeholder="Search by name or email..."
+                icon="search"
+                iconPosition="left"
+              />
+            </div>
+            <div className="wrapper">
+              <Select
+                value={activity}
+                options={parseOptionsSelect(allActivities)}
+                onChange={(e) => setActivity(e ? e.value : '')}
+                placeholder="Activity"
+              />
+            </div>
           </div>
-          <div className="wrapper">
-            <Select
-              value={role}
-              options={parseOptionsSelect(allRoles)}
-              onChange={(e) => setRole(e ? e.value : '')}
-              placeholder="Role"
-            />
+          <div className="bottom-filters">
+            <div className="wrapper">
+              <Select
+                value={role}
+                options={parseOptionsSelect(allRoles)}
+                onChange={(e) => setRole(e ? e.value : '')}
+                placeholder="Role"
+              />
+            </div>
+            <div className="wrapper">
+              <InterestsSelect
+                values={interests}
+                onChange={(values) =>
+                  setInterests(values.map((item) => item.value))
+                }
+              />
+            </div>
+            <div className="wrapper">
+              <TeamsSelect
+                values={teams}
+                onChange={(values) =>
+                  setTeams(values.map((item) => item.value))
+                }
+              />
+            </div>
           </div>
-          <div className="wrapper">
-            <InterestsSelect
-              values={interests}
-              onChange={(values) =>
-                setInterests(values.map((item) => item.value))
-              }
-            />
-          </div>
-          <div className="wrapper">
-            <TeamsSelect
-              values={teams}
-              onChange={(values) => setTeams(values.map((item) => item.value))}
-            />
-          </div>
-        </div>
+        </>
       )}
-      {status === 'approved' && <ApprovedUsers users={filteredDirectory} />}
-      {status === 'pending' && <PendingUsers users={filteredDirectory} />}
-      {status === 'denied' && <DeniedUsers users={filteredDirectory} />}
+      {status === 'approved' && (
+        <ApprovedUsers query={queryFunction} filterParams={filterParams} />
+      )}
+      {status === 'pending' && (
+        <PendingUsers query={queryFunction} filterParams={filterParams} />
+      )}
+      {status === 'denied' && (
+        <DeniedUsers query={queryFunction} filterParams={filterParams} />
+      )}
     </>
   );
 };
