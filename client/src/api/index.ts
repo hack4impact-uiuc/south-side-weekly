@@ -6,3 +6,5 @@ export * from './interest';
 export * from './teams';
 export * from './issue';
 export * from './builders';
+export * from './userfeedback';
+export * from './pitchFeedback';
