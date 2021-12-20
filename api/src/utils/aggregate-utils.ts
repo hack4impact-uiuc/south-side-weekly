@@ -11,6 +11,7 @@ import User from '../models/user';
 import Team from '../models/team';
 import Interest from '../models/interest';
 import Issue from '../models/issue';
+import UserFeedback from '../models/userFeedback';
 
 const simplifyUser = (user: IUser | null): Partial<IUser> => {
   if (user === null) {

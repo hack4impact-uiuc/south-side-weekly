@@ -40,7 +40,7 @@ router.get(
     if (current) {
       const issues = await Issue.find({
         releaseDate: {
-          $gte: new Date().toISOString(),
+          $gte: new Date() /* .toISOString() */,
         },
       })
         .sort({ releaseDate: 1 })

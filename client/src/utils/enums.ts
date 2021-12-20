@@ -47,6 +47,12 @@ export const assignmentStatusEnum = {
   UNCLAIMED: 'UNCLAIMED',
 };
 
+export const editorTypesEnum = {
+  PRIMARY: 'PRIMARY',
+  SECONDS: 'SECONDS',
+  THIRDS: 'THIRDS',
+};
+
 export const pitchStatusEnum = {
   APPROVED: 'APPROVED',
   PENDING: 'PENDING',

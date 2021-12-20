@@ -21,27 +21,29 @@ import UserChip from '../../UserChip';
 import './styles.scss';
 
 interface FeedbackLabelProps extends ModalProps {
-  userId: string;
-  pitchId: string;
+  checked: boolean;
 }
 
 const FeedbackLabel: FC<FeedbackLabelProps> = ({
-  userId,
-  pitchId,
+  checked,
+  ...rest
 }): ReactElement => {
-  const [checked, setChecked] = useState(false);
-  useEffect(() => {
-    const feedback = getUserFeedbackForPitch(userId, pitchId);
-
-    if (!feedback) {
-      setChecked(false);
-    } else {
-      setChecked(true);
-    }
-  }, []);
+  /* useEffect(() => {
+    const fetchFeedback = async () => {
+      const feedback = await getUserFeedbackForPitch(userId, pitchId);
+      console.log(userId, feedback);
+      if (!isError(feedback)) {
+        setChecked(true);
+      } else {
+        setChecked(false);
+      }
+    };
+    fetchFeedback();
+  }, []); */
+  console.log('');
   return (
-    <div>
-      {checked && <Icon name="checkmark" />}
+    <div {...rest}>
+      {checked && <Icon name="checkmark" color="green" />}
       <Label content="Leave Feedback" className="feedback-button" as="a" />
     </div>
   );
@@ -62,6 +64,7 @@ const ContributorFeedback: FC<ClaimPitchProps> = ({
   const [isOpen, setIsOpen] = useState(false);
   const [rating, setRating] = useState<number>(0 - 1);
   const [feedbackText, setFeedbackText] = useState('');
+  const [checked, setChecked] = useState(false);
 
   const submitFeedback = async (): Promise<void> => {
     const newFeedback: Partial<IUserFeedback> = {
@@ -71,7 +74,13 @@ const ContributorFeedback: FC<ClaimPitchProps> = ({
       userId: user._id,
     };
 
-    const res = await addFeedback(newFeedback);
+    let res;
+
+    if (checked) {
+      res = await addFeedback(newFeedback);
+    } else {
+      res = await addFeedback(newFeedback);
+    }
 
     if (!isError(res)) {
       console.log(res);
@@ -79,9 +88,31 @@ const ContributorFeedback: FC<ClaimPitchProps> = ({
   };
 
   useEffect(() => {
-    setRating(0 - 1);
-    setFeedbackText('');
+    if (!isOpen) {
+      setRating(0 - 1);
+      setFeedbackText('');
+    }
   }, [isOpen]);
+
+  useEffect(() => {
+    const fetchFeedback = async (): Promise<void> => {
+      const feedback = await getUserFeedbackForPitch(user._id!, pitchId);
+      //console.log(userId, feedback);
+      if (!isError(feedback)) {
+        if (isOpen) {
+          setRating(feedback.data.result.stars);
+          setFeedbackText(feedback.data.result.reasoning);
+        }
+        setChecked(true);
+      } else {
+        setChecked(false);
+      }
+    };
+
+    fetchFeedback();
+  }, [isOpen, pitchId, user._id]);
+
+  //thats insane
 
   const saveDisabled = (): boolean => rating === 0 - 1 || !feedbackText;
 
@@ -90,7 +121,7 @@ const ContributorFeedback: FC<ClaimPitchProps> = ({
       open={isOpen}
       onClose={() => setIsOpen(false)}
       onOpen={() => setIsOpen(true)}
-      trigger={<FeedbackLabel userId={user._id!} pitchId={pitchId} />}
+      trigger={<FeedbackLabel checked={checked} />}
       className="contributor-feedback-modal"
       {...rest}
     >
@@ -108,13 +139,14 @@ const ContributorFeedback: FC<ClaimPitchProps> = ({
           </div>
           <Rating
             icon="star"
-            defaultRating={0}
+            //defaultRating={rating}
             maxRating={5}
             className="rating"
             size="huge"
             onRate={(_, { rating }) =>
               setRating(rating ? (rating as number) : 0 - 1)
             }
+            rating={rating}
           />
           <Form>
             <TextArea
@@ -122,6 +154,7 @@ const ContributorFeedback: FC<ClaimPitchProps> = ({
               onChange={(_, { value }) =>
                 setFeedbackText(value ? (value as string) : '')
               }
+              value={feedbackText}
             />
           </Form>
           <pre>

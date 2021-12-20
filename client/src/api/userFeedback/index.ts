@@ -22,10 +22,21 @@ const getUserFeedbackForPitch = async (
   userId: string,
   pitchId: string,
 ): Promise<Response<UserFeedbackResponse>> => {
-  const url = buildEndpoint(USER_FEEDBACK_ENDPOINT, '/userFeedback');
+  const url = buildEndpoint(USER_FEEDBACK_ENDPOINT, userId, pitchId);
   const failureMessage = 'GET_USER_FEEDBACK_ON_PITCH_FAIL';
 
-  return await post(url, { userId, pitchId }, failureMessage);
+  return await get(url, failureMessage);
 };
 
-export { addFeedback, getUserFeedbackForPitch };
+// Updates the information on user feedback
+const updateUserFeedback = async (
+  userFeedbackData: Partial<IUserFeedback>,
+  userFeedbackId: string,
+): Promise<Response<UserFeedbackResponse>> => {
+  const url = buildEndpoint(USER_FEEDBACK_ENDPOINT, userFeedbackId);
+  const failureMessage = 'UPDATE_USER_FEEDBACK_FAIL';
+
+  return await put(url, userFeedbackData, failureMessage);
+};
+
+export { addFeedback, getUserFeedbackForPitch, updateUserFeedback };

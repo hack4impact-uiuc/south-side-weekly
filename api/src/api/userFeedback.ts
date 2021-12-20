@@ -30,9 +30,11 @@ router.get(
 
 // Gets feedback for a user on a pitch
 router.get(
-  '/userFeedback',
+  '/:userId/:pitchId',
   errorWrap(async (req: Request, res: Response) => {
-    const { userId, pitchId } = req.body;
+    //const { userId, pitchId } = req.body;
+    const { userId, pitchId } = req.params;
+    console.log('STUFF', userId, pitchId);
 
     const feedback = await UserFeedback.findOne({
       userId: userId,

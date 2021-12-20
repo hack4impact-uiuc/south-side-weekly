@@ -36,6 +36,7 @@ type FormData = Pick<
   | 'writer'
   | 'assignmentStatus'
   | 'deadline'
+  | 'issueStatuses'
 >;
 
 const defaultData: FormData = {
@@ -51,6 +52,7 @@ const defaultData: FormData = {
   thirdEditors: [],
   assignmentStatus: '',
   deadline: new Date(),
+  issueStatuses: [],
 };
 
 const ReviewClaimForm: FC<ReviewClaimFormProps> = ({
