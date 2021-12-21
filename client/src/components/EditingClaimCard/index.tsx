@@ -1,22 +1,18 @@
 import { omit } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { SelectOptionActionMeta } from 'react-select';
 import { Button, Divider, Icon, Input, Label } from 'semantic-ui-react';
-import { IPitchAggregate, ITeam, IUser } from 'ssw-common';
+import { ITeam, IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
 
 import { ContributorFeedback, FieldTag, Select, UserChip } from '..';
-import { editResource, isError } from '../../api';
+import { isError } from '../../api';
 import {
   addContributorToPitch,
-  approvePitchClaim,
   changeEditorType,
-  declinePitchClaim,
   removeContributorFromPitch,
   updatePitchTeamTarget,
 } from '../../api/pitch';
 import { getUsersByTeam } from '../../api/user';
-import { useTeams } from '../../contexts';
 import { EditorRecord } from '../../pages/reviewClaim/types';
 import { getUserFullName, pluralize } from '../../utils/helpers';
 import './styles.scss';
@@ -56,13 +52,11 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
   team,
   callback,
 }): ReactElement => {
-  const { getTeamFromId: getTeamFromProvider } = useTeams();
   const [selectContributorMode, setSelectContributorMode] = useState(false);
   const [filteredContributors, setFilteredContributors] = useState<IUser[]>([]);
   const [selectedContributor, setSelectedContributor] = useState('');
   const [editTargetMode, setEditTargetMode] = useState(false);
   const [allEditors, setAllEditors] = useState<IUser[]>([]);
-  const [loading, setLoading] = useState(false);
   const [temporaryContributors, setTemporaryContributors] =
     useState<EditorRecord>({});
 

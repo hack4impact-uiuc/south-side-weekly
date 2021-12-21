@@ -1,6 +1,5 @@
 import { lowerCase, pick, startCase } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { loadStyleSheet } from 'react-calendly/typings/calendly';
 import { Button, Form, Grid, Icon, Input, Label } from 'semantic-ui-react';
 import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
 
@@ -93,7 +92,7 @@ const ReviewClaimForm: FC<ReviewClaimFormProps> = ({
 
   const handleSave = async (): Promise<void> => {
     setEditMode(false);
-    const res = await updatePitch(formData, aggregatedPitch._id);
+    await updatePitch(formData, aggregatedPitch._id);
     await callback();
   };
 
@@ -380,8 +379,6 @@ const ReviewClaimForm: FC<ReviewClaimFormProps> = ({
           <Button content="Save" positive onClick={handleSave} />
         </div>
       )}
-
-      <pre>{JSON.stringify(formData, null, 2)}</pre>
     </div>
   );
 };

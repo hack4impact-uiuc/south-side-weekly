@@ -5,21 +5,15 @@ import {
   CheckboxProps,
   Form,
   Icon,
-  Input,
   Label,
   Modal,
   ModalProps,
-  Radio,
-  Rating,
-  TextArea,
 } from 'semantic-ui-react';
-import { IIssue, ITeam, IUser } from 'ssw-common';
+import { IIssue } from 'ssw-common';
+
 import { isError } from '../../../api';
 import { createIssue } from '../../../api/issue';
 import { issueTypeEnum } from '../../../utils/enums';
-
-import FieldTag from '../../FieldTag';
-import UserChip from '../../UserChip';
 import './styles.scss';
 
 interface AddIssueProps extends ModalProps {

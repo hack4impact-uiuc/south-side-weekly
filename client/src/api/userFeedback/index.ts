@@ -1,9 +1,7 @@
-import { IUser, IUserFeedback } from 'ssw-common';
+import { IUserFeedback } from 'ssw-common';
 
 import { Response } from '../types';
 import { buildEndpoint, get, post, put } from '../builders';
-import { PitchesResponse } from '../pitch/types';
-import { onboardingStatusEnum } from '../../utils/enums';
 
 import { UserFeedbackResponse } from './types';
 

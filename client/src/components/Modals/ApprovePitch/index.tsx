@@ -1,15 +1,6 @@
 import { isEmpty, lowerCase, startCase } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import {
-  Button,
-  Form,
-  Grid,
-  Icon,
-  Label,
-  Message,
-  Modal,
-  ModalProps,
-} from 'semantic-ui-react';
+import { Button, Form, Message, Modal, ModalProps } from 'semantic-ui-react';
 import { IPitch, ITeam, IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
 

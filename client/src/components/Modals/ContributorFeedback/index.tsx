@@ -11,13 +11,13 @@ import {
   TextArea,
 } from 'semantic-ui-react';
 import { ITeam, IUser, IUserFeedback } from 'ssw-common';
+
 import { isError } from '../../../api';
 import {
   addFeedback,
   getUserFeedbackForPitch,
   updateUserFeedback,
 } from '../../../api/userFeedback';
-
 import FieldTag from '../../FieldTag';
 import UserChip from '../../UserChip';
 import './styles.scss';

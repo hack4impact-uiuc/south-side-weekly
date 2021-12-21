@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useEffect } from 'react';
+import React, { FC, ReactElement } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Header, Icon } from 'semantic-ui-react';
 

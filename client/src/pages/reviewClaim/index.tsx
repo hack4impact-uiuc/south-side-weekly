@@ -1,4 +1,3 @@
-import { pick } from 'lodash';
 import React, {
   ReactElement,
   useCallback,
@@ -21,20 +20,7 @@ import { emptyAggregatePitch } from '../../utils/constants';
 import { assignmentStatusEnum } from '../../utils/enums';
 
 import './styles.scss';
-import {
-  editorContributorsType,
-  EditorRecord,
-  ParamTypes,
-  TeamContributorRecord,
-} from './types';
-
-//interface ReviewClaimProps {}
-
-/* const defaultEditorContributors: editorContributorsType = {
-  primaryEditor: {},
-  secondaryEditors: [],
-  thirdEditors: [],
-}; */
+import { EditorRecord, ParamTypes, TeamContributorRecord } from './types';
 
 const ReviewClaim = (): ReactElement => {
   const { pitchId } = useParams<ParamTypes>();
@@ -62,19 +48,12 @@ const ReviewClaim = (): ReactElement => {
 
     if (!isError(res)) {
       const { result } = res.data;
-      const { author } = result.aggregated;
 
       console.log(result);
       setPendingContributors(result.aggregated.pendingContributors);
       setPitchTeams(result.aggregated.teams);
       setAssignmentContributors(result.aggregated.assignmentContributors);
       console.log('aggregated', result.aggregated.assignmentContributors);
-      /* setEditorContributors(
-        pick(
-          result.aggregated,
-          Object.keys(defaultEditorContributors),
-        ) as editorContributorsType,
-      ); */
 
       const editors: EditorRecord = {};
 
@@ -183,7 +162,6 @@ const ReviewClaim = (): ReactElement => {
           )}
         </div>
       </div>
-      <pre>{JSON.stringify(editorContributors, null, 2)}</pre>
     </div>
   );
 };

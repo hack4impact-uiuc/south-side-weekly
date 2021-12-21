@@ -1,11 +1,10 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { SelectOptionActionMeta } from 'react-select';
 import { Button, Divider, Icon, Input, Label } from 'semantic-ui-react';
-import { IPitchAggregate, ITeam, IUser } from 'ssw-common';
+import { ITeam, IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
 
 import { ContributorFeedback, FieldTag, Select, UserChip } from '..';
-import { editResource, isError } from '../../api';
+import { isError } from '../../api';
 import {
   addContributorToPitch,
   approvePitchClaim,
@@ -14,7 +13,6 @@ import {
   updatePitchTeamTarget,
 } from '../../api/pitch';
 import { getUsersByTeam } from '../../api/user';
-import { useTeams } from '../../contexts';
 import { getUserFullName, pluralize } from '../../utils/helpers';
 import './styles.scss';
 
@@ -35,7 +33,6 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
   completed,
   callback,
 }): ReactElement => {
-  const { getTeamFromId } = useTeams();
   const [selectContributorMode, setSelectContributorMode] = useState(false);
   const [filteredContribtors, setFilteredContributors] = useState<IUser[]>([]);
   const [selectedContributor, setSelectedContributor] = useState('');
