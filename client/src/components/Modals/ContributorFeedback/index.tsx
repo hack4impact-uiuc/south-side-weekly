@@ -1,4 +1,5 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import {
   Button,
   Form,
@@ -14,6 +15,7 @@ import { isError } from '../../../api';
 import {
   addFeedback,
   getUserFeedbackForPitch,
+  updateUserFeedback,
 } from '../../../api/userFeedback';
 
 import FieldTag from '../../FieldTag';
@@ -65,6 +67,7 @@ const ContributorFeedback: FC<ClaimPitchProps> = ({
   const [rating, setRating] = useState<number>(0 - 1);
   const [feedbackText, setFeedbackText] = useState('');
   const [checked, setChecked] = useState(false);
+  const [feedbackId, setFeedbackId] = useState('');
 
   const submitFeedback = async (): Promise<void> => {
     const newFeedback: Partial<IUserFeedback> = {
@@ -77,13 +80,20 @@ const ContributorFeedback: FC<ClaimPitchProps> = ({
     let res;
 
     if (checked) {
-      res = await addFeedback(newFeedback);
+      res = await updateUserFeedback(newFeedback, feedbackId);
     } else {
       res = await addFeedback(newFeedback);
     }
 
     if (!isError(res)) {
-      console.log(res);
+      toast.success('Successfully saved feedback !', {
+        position: 'bottom-right',
+      });
+      setIsOpen(false);
+    } else {
+      toast.error('Please fill out all fields before submitting', {
+        position: 'bottom-right',
+      });
     }
   };
 
@@ -102,6 +112,7 @@ const ContributorFeedback: FC<ClaimPitchProps> = ({
         if (isOpen) {
           setRating(feedback.data.result.stars);
           setFeedbackText(feedback.data.result.reasoning);
+          setFeedbackId(feedback.data.result._id);
         }
         setChecked(true);
       } else {

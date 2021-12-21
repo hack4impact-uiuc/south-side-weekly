@@ -87,7 +87,7 @@ const ApprovePitchModal: FC<ApprovePitchProps> = ({
   const { issues, fetchIssues } = useIssues();
 
   const getIdFromTeam = (team: string): string | undefined =>
-    teams.find(({ name }) => name === team)?.name;
+    teams.find(({ name }) => name === team)?._id;
 
   useEffect(() => {
     if (!isOpen) {
