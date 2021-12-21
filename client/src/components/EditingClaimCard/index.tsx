@@ -4,7 +4,7 @@ import { Button, Divider, Icon, Input, Label } from 'semantic-ui-react';
 import { ITeam, IUser } from 'ssw-common';
 import Swal from 'sweetalert2';
 
-import { ContributorFeedback, FieldTag, Select, UserChip } from '..';
+import { AdminView, ContributorFeedback, FieldTag, Select, UserChip } from '..';
 import { isError } from '../../api';
 import {
   addContributorToPitch,
@@ -165,14 +165,16 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       );
     }
     return (
-      <Label
-        className="add-contributor"
-        as="a"
-        onClick={() => setSelectContributorMode(true)}
-      >
-        <Icon name="plus" />
-        Add contributor
-      </Label>
+      <AdminView>
+        <Label
+          className="add-contributor"
+          as="a"
+          onClick={() => setSelectContributorMode(true)}
+        >
+          <Icon name="plus" />
+          Add contributor
+        </Label>
+      </AdminView>
     );
   };
 
@@ -233,14 +235,16 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
           {pluralize('position', team.target + Object.keys(editors).length)}{' '}
           filled
         </p>
-        <Icon
-          name="pencil"
-          link
-          onClick={() => {
-            setEditTargetMode(true);
-            setTotalPositions(team.target + 1);
-          }}
-        />
+        <AdminView>
+          <Icon
+            name="pencil"
+            link
+            onClick={() => {
+              setEditTargetMode(true);
+              setTotalPositions(team.target + 1);
+            }}
+          />
+        </AdminView>
       </>
     );
   };

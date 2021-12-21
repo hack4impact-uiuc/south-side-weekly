@@ -5,6 +5,7 @@ import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
 
 import {
   AddIssue,
+  AdminView,
   FieldTag,
   LinkDisplay,
   MultiSelect,
@@ -173,14 +174,16 @@ const ReviewClaimForm: FC<ReviewClaimFormProps> = ({
   return (
     <div className="review-claim-form-content">
       {!editMode && (
-        <Label
-          className="edit-button"
-          onClick={() => setEditMode((v) => !v)}
-          as="a"
-        >
-          <Icon name="pencil" link />
-          Edit Pitch Info
-        </Label>
+        <AdminView>
+          <Label
+            className="edit-button"
+            onClick={() => setEditMode((v) => !v)}
+            as="a"
+          >
+            <Icon name="pencil" link />
+            Edit Pitch Info
+          </Label>
+        </AdminView>
       )}
       <div className="form-item">
         <p className="form-label">Pitch Title</p>
