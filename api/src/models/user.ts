@@ -40,7 +40,7 @@ const User = new mongoose.Schema({
   teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
   involvementResponse: { type: String, default: null },
   journalismResponse: { type: String, default: null },
-  neighborhood: { type: String, required: true },
+  neighborhood: { type: String, default: null },
   onboardReasoning: { type: String, default: null },
   feedback: [{ type: Schema.Types.ObjectId, ref: 'UserFeedback' }],
   lastActive: { type: Date, default: Date.now },
