@@ -85,8 +85,11 @@ const addContributorToPitch = async (
   pitchId: string,
   userId: string,
   team: string,
+  editor = '',
 ): Promise<Response<PitchResponse>> => {
-  const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'addContributor');
+  const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'addContributor').concat(
+    `?editor=${editor}`,
+  );
   const failureMessage = 'ADD_CONTRIBUTOR_FAIL';
 
   return await put(url, { userId, team }, failureMessage);
@@ -110,8 +113,13 @@ const removeContributorFromPitch = async (
   pitchId: string,
   userId: string,
   team: string,
+  editor = '',
 ): Promise<Response<PitchResponse>> => {
-  const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'removeContributor');
+  const url = buildEndpoint(
+    PITCH_ENDPOINT,
+    pitchId,
+    'removeContributor',
+  ).concat(`?editor=${editor}`);
   const failureMessage = 'REMOVE_CONTRIBUTOR_FAIL';
 
   return await put(url, { userId, team }, failureMessage);

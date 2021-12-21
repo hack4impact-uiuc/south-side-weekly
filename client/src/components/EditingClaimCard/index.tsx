@@ -63,9 +63,8 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
   const [editTargetMode, setEditTargetMode] = useState(false);
   const [allEditors, setAllEditors] = useState<IUser[]>([]);
   const [loading, setLoading] = useState(false);
-  const [temporaryContributors, setTemporaryContributors] = useState<string[]>(
-    [],
-  );
+  const [temporaryContributors, setTemporaryContributors] =
+    useState<EditorRecord>({});
 
   console.log('TMP:', temporaryContributors);
 
@@ -79,15 +78,47 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
   const addContributor = (): void => {
     setSelectContributorMode(false);
     if (selectedContributor) {
-      setTemporaryContributors((contributors) => [
-        selectedContributor,
-        ...contributors,
-      ]);
+      const tempContributorsCopy = { ...temporaryContributors };
+      tempContributorsCopy[selectedContributor] = {
+        ...getContributorFromId(selectedContributor)!,
+        editorType: 'None',
+      };
+
+      setTemporaryContributors(tempContributorsCopy);
     }
   };
 
-  const removeContributor = async (userId: string): Promise<void> => {
-    const res = await removeContributorFromPitch(pitchId, userId, team._id);
+  const addEditor = async (
+    editorId: string,
+    editorType: string,
+  ): Promise<void> => {
+    removeTemporaryContributor(editorId);
+    const res = await addContributorToPitch(
+      pitchId,
+      editorId,
+      team._id,
+      editorType,
+    );
+
+    console.log(res);
+
+    await callback();
+  };
+
+  const removeTemporaryContributor = (editorId: string): void => {
+    setTemporaryContributors(omit(temporaryContributors, editorId));
+  };
+
+  const removeContributor = async (
+    userId: string,
+    editorType: string,
+  ): Promise<void> => {
+    const res = await removeContributorFromPitch(
+      pitchId,
+      userId,
+      team._id,
+      editorType,
+    );
     console.log(res);
 
     await callback();
@@ -156,7 +187,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       contributors.filter(
         ({ _id }) =>
           !Object.keys(editors).includes(_id) &&
-          !temporaryContributors.includes(_id),
+          !Object.keys(temporaryContributors).includes(_id),
       );
 
     const getContributorsByTeam = async (): Promise<void> => {
@@ -181,14 +212,17 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       return (
         <div className="target-row">
           <div className="target-text">
-            <div style={{ display: 'flex' }}>{1} out of </div>
+            <div style={{ display: 'flex' }}>
+              {Object.keys(editors).length} out of{' '}
+            </div>
             <Input
               className="target-input"
               value={isNaN(totalPositions) ? '' : totalPositions}
               onChange={(_, { value }) => setTotalPositions(parseInt(value))}
             />
             <div style={{ display: 'block', position: 'relative' }}>
-              {pluralize('position', team.target + 1)} filled
+              {pluralize('position', team.target + Object.keys(editors).length)}{' '}
+              filled
             </div>
           </div>
 
@@ -200,7 +234,9 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
     return (
       <>
         <p>
-          {1} out of {team.target + 1} {pluralize('position', team.target + 1)}{' '}
+          {Object.keys(editors).length} out of{' '}
+          {team.target + Object.keys(editors).length}{' '}
+          {pluralize('position', team.target + Object.keys(editors).length)}{' '}
           filled
         </p>
         <Icon
@@ -266,7 +302,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
                     name="trash"
                     link
                     onClick={() =>
-                      removeContributor(editors['primaryEditor']._id!)
+                      removeContributor(editorId, editor.editorType)
                     }
                   />
                 </div>
@@ -275,36 +311,31 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
           );
         })}
 
-        {temporaryContributors.map((userId, idx) => {
-          const editor = getContributorFromId(userId)!;
-          return (
-            <div className="claim-row" key={idx}>
-              <UserChip user={editor} />
-              {completed ? (
-                <ContributorFeedback
-                  user={editors['primaryEditor']}
-                  team={team}
-                  pitchId={pitchId}
-                />
-              ) : (
+        {Object.entries(temporaryContributors).map(
+          ([editorId, editor], idx) => {
+            //const editor = getContributorFromId(userId)!;
+            console.log('jey');
+            return (
+              <div className="claim-row" key={idx}>
+                <UserChip user={omit(editor, 'editorType')} />
                 <div className="dropdown-trash">
                   <Select
-                    value={'Thirds'}
+                    value={editor.editorType}
                     options={editorTypeDropDownOptions}
-                    onChange={(e) => setSelectedContributor(e ? e.value : '')}
+                    onChange={(e) => addEditor(editorId, e ? e.value : '')}
                     placeholder="Editor Type"
                     className="select-editor-type"
                   />
                   <Icon
                     name="trash"
                     link
-                    onClick={() => removeContributor(editor._id!)}
+                    onClick={() => removeTemporaryContributor(editorId)}
                   />
                 </div>
-              )}
-            </div>
-          );
-        })}
+              </div>
+            );
+          },
+        )}
       </div>
     </div>
   );

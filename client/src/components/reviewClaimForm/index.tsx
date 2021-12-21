@@ -1,5 +1,6 @@
 import { lowerCase, pick, startCase } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
+import { loadStyleSheet } from 'react-calendly/typings/calendly';
 import { Button, Form, Grid, Icon, Input, Label } from 'semantic-ui-react';
 import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
 
@@ -14,7 +15,7 @@ import {
 import { updatePitch } from '../../api';
 import { useInterests } from '../../contexts';
 import { useIssues } from '../../contexts/issues/context';
-import { assignmentStatusEnum } from '../../utils/enums';
+import { assignmentStatusEnum, issueStatusEnum } from '../../utils/enums';
 import './styles.scss';
 
 interface ReviewClaimFormProps {
@@ -62,12 +63,19 @@ const ReviewClaimForm: FC<ReviewClaimFormProps> = ({
   const [formData, setFormData] = useState<FormData>(defaultData);
   const [author, setAuthor] = useState<Partial<IUser>>({});
   const [editMode, setEditMode] = useState<boolean>(false);
+  const [originalData, setOriginalData] = useState<FormData>(defaultData);
 
   const { getInterestById, interests } = useInterests();
   const { getIssueFromId, issues, fetchIssues } = useIssues();
 
   useEffect(() => {
-    setFormData(pick(aggregatedPitch, Object.keys(defaultData)) as FormData);
+    const original = pick(
+      aggregatedPitch,
+      Object.keys(defaultData),
+    ) as FormData;
+    setOriginalData(original);
+    setFormData(original);
+
     setAuthor(aggregatedPitch.aggregated.author);
   }, [aggregatedPitch]);
 
@@ -87,6 +95,80 @@ const ReviewClaimForm: FC<ReviewClaimFormProps> = ({
     setEditMode(false);
     const res = await updatePitch(formData, aggregatedPitch._id);
     await callback();
+  };
+
+  const changeIssueAssignmentStatus = (
+    issueId: string,
+    value: string,
+  ): IPitch['issueStatuses'] => {
+    const issueStatuses = formData.issueStatuses;
+    const indexOfIssueStatus = issueStatuses.findIndex(
+      (issue) => issue.issueStatus === issueId,
+    )!;
+    const notFoundIndex = -1;
+    if (indexOfIssueStatus !== notFoundIndex) {
+      issueStatuses[indexOfIssueStatus].issueStatus = value;
+    }
+    const issueStatusesCopy = [...issueStatuses];
+    return issueStatusesCopy;
+  };
+
+  const renderIssueAssignmentStatus = (): JSX.Element => {
+    const pitchIssues = formData.issueStatuses.map(({ issueId }) =>
+      getIssueFromId(issueId),
+    );
+
+    if (pitchIssues.length === 0) {
+      return <></>;
+    }
+
+    const latestIssue = pitchIssues.reduce((a, b) => {
+      if (a && b) {
+        a.releaseDate > b.releaseDate ? a : b;
+      } else {
+        return undefined;
+      }
+    });
+
+    let status: { issueId: string; issueStatus: string } | undefined;
+
+    if (latestIssue) {
+      status = formData.issueStatuses.find(
+        ({ issueId }) => issueId === latestIssue._id,
+      );
+    } else {
+      status = undefined;
+    }
+
+    if (status) {
+      return !editMode ? (
+        <div>
+          <FieldTag name={status.issueStatus} hexcode={'#E7F2FC'} />
+        </div>
+      ) : (
+        <div>
+          <Select
+            value={'Definitely In'}
+            options={Object.values(issueStatusEnum).map((s) => ({
+              value: s,
+              label: startCase(lowerCase(s)),
+            }))}
+            onChange={(e) =>
+              changeField(
+                'issueStatuses',
+                changeIssueAssignmentStatus(
+                  status ? status.issueId : '',
+                  e ? e.value : '',
+                ),
+              )
+            }
+            placeholder="Select"
+            className="issue-assignment-status-select"
+          />
+        </div>
+      );
+    }
+    return <></>;
   };
 
   return (
@@ -153,29 +235,7 @@ const ReviewClaimForm: FC<ReviewClaimFormProps> = ({
           </Grid.Column>
           <Grid.Column width={editMode ? 7 : 8}>
             <p className="form-label">Issue Assignment Status</p>
-
-            {!editMode ? (
-              <div>
-                <FieldTag name={'Definitely In'} hexcode={'#E7F2FC'} />
-              </div>
-            ) : (
-              <div>
-                <Select
-                  value={'Definitely In'}
-                  options={Object.values(assignmentStatusEnum).map(
-                    (status) => ({
-                      value: 'Definitely In',
-                      label: 'Definitely In',
-                    }),
-                  )}
-                  onChange={(e) =>
-                    changeField('assignmentStatus', e ? e.value : '')
-                  }
-                  placeholder="Select"
-                  className="issue-assignment-status-select"
-                />
-              </div>
-            )}
+            {renderIssueAssignmentStatus()}
           </Grid.Column>
         </Grid>
       </div>
@@ -312,13 +372,16 @@ const ReviewClaimForm: FC<ReviewClaimFormProps> = ({
           <Button
             content="Cancel"
             negative
-            onClick={() => setEditMode((v) => !v)}
+            onClick={() => {
+              setEditMode((v) => !v);
+              setFormData(originalData);
+            }}
           />
           <Button content="Save" positive onClick={handleSave} />
         </div>
       )}
 
-      {/* <pre>{JSON.stringify(aggregatedPitch, null, 2)}</pre> */}
+      <pre>{JSON.stringify(formData, null, 2)}</pre>
     </div>
   );
 };

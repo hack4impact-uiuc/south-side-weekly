@@ -513,12 +513,36 @@ router.put(
     // Check if user already exists in assignmentContributors
 
     let pitch;
-
-    pitch = await addContributorToAssignmentContributors(
-      req.params.pitchId,
-      userId,
-      team,
-    );
+    if (req.query.editor === 'First') {
+      pitch = await Pitch.findByIdAndUpdate(
+        req.params.pitchId,
+        {
+          primaryEditor: userId,
+        },
+        { new: true, runValidators: true },
+      ).lean();
+    } else if (
+      req.query.editor === 'Seconds' ||
+      req.query.editor === 'Thirds'
+    ) {
+      pitch = await Pitch.findByIdAndUpdate(
+        req.params.pitchId,
+        {
+          $addToSet: {
+            ...(req.query.editor === 'Seconds'
+              ? { secondEditors: userId }
+              : { thirdEditors: userId }),
+          },
+        },
+        { new: true, runValidators: true },
+      ).lean();
+    } else {
+      pitch = await addContributorToAssignmentContributors(
+        req.params.pitchId,
+        userId,
+        team,
+      );
+    }
 
     pitch = await updateTeamTarget(req.params.pitchId, team);
 
@@ -572,15 +596,42 @@ router.put(
   errorWrap(async (req: Request, res: Response) => {
     const { userId, team } = req.body;
 
-    let pitch = await Pitch.findOneAndUpdate(
-      { _id: req.params.pitchId, 'assignmentContributors.userId': userId },
-      {
-        $pull: {
-          'assignmentContributors.$.teams': team,
+    let pitch;
+
+    if (req.query.editor === 'First') {
+      pitch = await Pitch.findByIdAndUpdate(
+        req.params.pitchId,
+        {
+          primaryEditor: null,
         },
-      },
-      { new: true, runValidators: true },
-    ).lean();
+        { new: true, runValidators: true },
+      ).lean();
+    } else if (
+      req.query.editor === 'Seconds' ||
+      req.query.editor === 'Thirds'
+    ) {
+      pitch = await Pitch.findByIdAndUpdate(
+        req.params.pitchId,
+        {
+          $pull: {
+            ...(req.query.editor === 'Seconds'
+              ? { secondEditors: userId }
+              : { thirdEditors: userId }),
+          },
+        },
+        { new: true, runValidators: true },
+      ).lean();
+    } else {
+      pitch = await Pitch.findOneAndUpdate(
+        { _id: req.params.pitchId, 'assignmentContributors.userId': userId },
+        {
+          $pull: {
+            'assignmentContributors.$.teams': team,
+          },
+        },
+        { new: true, runValidators: true },
+      ).lean();
+    }
 
     console.log(userId, team, pitch);
 
