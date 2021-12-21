@@ -1,3 +1,4 @@
+import { omit } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { SelectOptionActionMeta } from 'react-select';
 import { Button, Divider, Icon, Input, Label } from 'semantic-ui-react';
@@ -9,20 +10,21 @@ import { editResource, isError } from '../../api';
 import {
   addContributorToPitch,
   approvePitchClaim,
+  changeEditorType,
   declinePitchClaim,
   removeContributorFromPitch,
   updatePitchTeamTarget,
 } from '../../api/pitch';
 import { getUsersByTeam } from '../../api/user';
 import { useTeams } from '../../contexts';
-import { editorContributorsType } from '../../pages/reviewClaim/types';
+import { EditorRecord } from '../../pages/reviewClaim/types';
 import { getUserFullName, pluralize } from '../../utils/helpers';
 import './styles.scss';
 
 interface EditingClaimCardProps {
   pitchId: string;
   completed: boolean;
-  editors: editorContributorsType;
+  editors: EditorRecord;
   team: ITeam & { target: number };
   callback: () => Promise<void>;
 }
@@ -153,9 +155,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
     const filterContributors = (contributors: IUser[]): IUser[] =>
       contributors.filter(
         ({ _id }) =>
-          (editors.primaryEditor ? editors.primaryEditor._id !== _id : true) &&
-          !editors.secondaryEditors.map((user) => user._id).includes(_id) &&
-          !editors.thirdEditors.map((user) => user._id).includes(_id) &&
+          !Object.keys(editors).includes(_id) &&
           !temporaryContributors.includes(_id),
       );
 
@@ -173,14 +173,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
     } else {
       setSelectedContributor('');
     }
-  }, [
-    editors.primaryEditor,
-    editors.secondaryEditors,
-    editors.thirdEditors,
-    selectContributorMode,
-    team.name,
-    temporaryContributors,
-  ]);
+  }, [editors, selectContributorMode, team.name, temporaryContributors]);
 
   const renderCardHeader = (): JSX.Element => {
     void 0;
@@ -222,6 +215,17 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
     );
   };
 
+  const changeEditor = async (
+    userId: string,
+    from: string,
+    to: string,
+  ): Promise<void> => {
+    console.log(userId, from, to);
+    await changeEditorType(pitchId, userId, from, to);
+    await callback();
+    //await void 0;
+  };
+
   return (
     <div className="approve-claim-card">
       <div className="card-header">
@@ -231,88 +235,45 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       <Divider />
       {!completed && renderAddContributor()}
       <div className="claim-section">
-        <div className="claim-row">
-          <UserChip user={editors['primaryEditor']} />
-          {console.log('PRIMARY EDITOR:', editors['primaryEditor'])}
+        {Object.entries(editors).map(([editorId, editor], idx) => {
+          console.log('hey');
+          return (
+            <div className="claim-row" key={idx}>
+              <UserChip user={omit(editor, 'editorType')} />
 
-          {completed ? (
-            <ContributorFeedback
-              user={editors['primaryEditor']}
-              team={team}
-              pitchId={pitchId}
-            />
-          ) : (
-            <div className="dropdown-trash">
-              <Select
-                value={'First'}
-                options={editorTypeDropDownOptions}
-                onChange={(e) => setSelectedContributor(e ? e.value : '')}
-                placeholder="Editor Type"
-                className="select-editor-type"
-              />
-              <Icon
-                name="trash"
-                link
-                onClick={() => removeContributor(editors['primaryEditor']._id!)}
-              />
+              {completed ? (
+                <ContributorFeedback
+                  user={omit(editor, 'editorType')}
+                  team={team}
+                  pitchId={pitchId}
+                />
+              ) : (
+                <div className="dropdown-trash">
+                  <Select
+                    value={editor.editorType}
+                    options={editorTypeDropDownOptions}
+                    onChange={(e) =>
+                      changeEditor(
+                        editorId,
+                        editor.editorType,
+                        e ? e.value : '',
+                      )
+                    }
+                    placeholder="Editor Type"
+                    className="select-editor-type"
+                  />
+                  <Icon
+                    name="trash"
+                    link
+                    onClick={() =>
+                      removeContributor(editors['primaryEditor']._id!)
+                    }
+                  />
+                </div>
+              )}
             </div>
-          )}
-        </div>
-        {editors['secondaryEditors'].map((editor, idx) => (
-          <div className="claim-row" key={idx}>
-            <UserChip user={editor} />
-            {completed ? (
-              <ContributorFeedback
-                user={editors['primaryEditor']}
-                team={team}
-                pitchId={pitchId}
-              />
-            ) : (
-              <div className="dropdown-trash">
-                <Select
-                  value={'Seconds'}
-                  options={editorTypeDropDownOptions}
-                  onChange={(e) => setSelectedContributor(e ? e.value : '')}
-                  placeholder="Editor Type"
-                  className="select-editor-type"
-                />
-                <Icon
-                  name="trash"
-                  link
-                  onClick={() => removeContributor(editor._id!)}
-                />
-              </div>
-            )}
-          </div>
-        ))}
-
-        {editors['thirdEditors'].map((editor, idx) => (
-          <div className="claim-row" key={idx}>
-            <UserChip user={editor} />
-            {completed ? (
-              <ContributorFeedback
-                user={editors['primaryEditor']}
-                team={team}
-                pitchId={pitchId}
-              />
-            ) : (
-              <div className="dropdown-trash">
-                <Select
-                  value={'Thirds'}
-                  options={editorTypeDropDownOptions}
-                  onChange={(e) => setSelectedContributor(e ? e.value : '')}
-                  placeholder="Editor Type"
-                  className="select-editor-type"
-                />
-                <Icon
-                  name="trash"
-                  link
-                  onClick={() => removeContributor(editor._id!)}
-                />
-              </div>
-            )}
-          </div>
-        ))}
+          );
+        })}
 
         {temporaryContributors.map((userId, idx) => {
           const editor = getContributorFromId(userId)!;

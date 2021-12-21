@@ -441,6 +441,68 @@ router.put(
   }),
 );
 
+//Change Editor Type on pitch
+router.put(
+  '/:pitchId/changeEditorType',
+  requireStaff,
+  errorWrap(async (req: Request, res: Response) => {
+    const { userId } = req.body;
+
+    let pitch;
+
+    if (req.query.from === 'First') {
+      pitch = await Pitch.findByIdAndUpdate(
+        req.params.pitchId,
+        {
+          primaryEditor: null,
+          $addToSet: {
+            ...(req.query.to === 'Seconds'
+              ? { secondEditors: userId }
+              : { thirdEditors: userId }),
+          },
+        },
+        { new: true, runValidators: true },
+      );
+    } else if (req.query.to === 'First') {
+      pitch = await Pitch.findByIdAndUpdate(
+        req.params.pitchId,
+        {
+          primaryEditor: userId,
+          $pull: {
+            ...(req.query.from === 'Seconds'
+              ? { secondEditors: userId }
+              : { thirdEditors: userId }),
+          },
+        },
+        { new: true, runValidators: true },
+      );
+    } else if (req.query.from === 'Seconds' || req.query.from === 'Thirds') {
+      pitch = await Pitch.findByIdAndUpdate(
+        req.params.pitchId,
+        {
+          $pull: {
+            ...(req.query.from === 'Seconds'
+              ? { secondEditors: userId }
+              : { thirdEditors: userId }),
+          },
+          $addToSet: {
+            ...(req.query.to === 'Seconds'
+              ? { secondEditors: userId }
+              : { thirdEditors: userId }),
+          },
+        },
+        { new: true, runValidators: true },
+      );
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Successfully changed editor',
+      result: pitch,
+    });
+  }),
+);
+
 // Adds an assignment contributor to a pitch
 router.put(
   '/:pitchId/addContributor',

@@ -15,7 +15,6 @@ import {
 } from '../../api/pitch';
 import { getUsersByTeam } from '../../api/user';
 import { useTeams } from '../../contexts';
-import { editorContributorsType } from '../../pages/reviewClaim/types';
 import { getUserFullName, pluralize } from '../../utils/helpers';
 import './styles.scss';
 
@@ -25,30 +24,8 @@ interface ApproveClaimCardProps {
   team: ITeam & { target: number };
   pitchId: string;
   completed: boolean;
-  editors: editorContributorsType;
-
   callback: () => Promise<void>;
 }
-
-interface SelectOption {
-  value: string;
-  label: string;
-}
-
-const editorTypeDropDownOptions: SelectOption[] = [
-  {
-    value: 'First',
-    label: 'First',
-  },
-  {
-    value: 'Seconds',
-    label: 'Seconds',
-  },
-  {
-    value: 'Thirds',
-    label: 'Thirds',
-  },
-];
 
 const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
   team,
@@ -56,7 +33,6 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
   assignmentContributors,
   pitchId,
   completed,
-  editors,
   callback,
 }): ReactElement => {
   const { getTeamFromId } = useTeams();

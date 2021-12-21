@@ -92,6 +92,20 @@ const addContributorToPitch = async (
   return await put(url, { userId, team }, failureMessage);
 };
 
+const changeEditorType = async (
+  pitchId: string,
+  userId: string,
+  from: string,
+  to: string,
+): Promise<Response<PitchResponse>> => {
+  const url = buildEndpoint(PITCH_ENDPOINT, pitchId, 'changeEditorType').concat(
+    `?from=${from}&to=${to}`,
+  );
+  const failureMessage = 'CHANGE_EDITOR_FAIL';
+
+  return await put(url, { userId }, failureMessage);
+};
+
 const removeContributorFromPitch = async (
   pitchId: string,
   userId: string,
@@ -198,4 +212,5 @@ export {
   updatePitchTeamTarget,
   approvePitchClaim,
   declinePitchClaim,
+  changeEditorType,
 };

@@ -1,4 +1,5 @@
 import { IPitchAggregate, ITeam, IUser } from 'ssw-common';
+import { editorTypesEnum } from '../../utils/enums';
 
 export interface ParamTypes {
   pitchId: string;
@@ -13,6 +14,10 @@ export type TeamContributorRecord = Record<
   ITeam['_id'],
   AllContributorsForTeam
 >;
+
+export type EditorRecord = Record<ITeam['_id'], UserWithEditorType>;
+
+type UserWithEditorType = Partial<IUser> & { editorType: string };
 
 export type editorContributorsType = Pick<
   IPitchAggregate['aggregated'],

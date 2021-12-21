@@ -23,17 +23,18 @@ import { assignmentStatusEnum } from '../../utils/enums';
 import './styles.scss';
 import {
   editorContributorsType,
+  EditorRecord,
   ParamTypes,
   TeamContributorRecord,
 } from './types';
 
 //interface ReviewClaimProps {}
 
-const defaultEditorContributors: editorContributorsType = {
+/* const defaultEditorContributors: editorContributorsType = {
   primaryEditor: {},
   secondaryEditors: [],
   thirdEditors: [],
-};
+}; */
 
 const ReviewClaim = (): ReactElement => {
   const { pitchId } = useParams<ParamTypes>();
@@ -47,8 +48,9 @@ const ReviewClaim = (): ReactElement => {
     IPitchAggregate['aggregated']['teams']
   >([]);
   const [statusIsCompleted, setStatusIsCompleted] = useState<boolean>(false);
-  const [editorContributors, setEditorContributors] =
-    useState<editorContributorsType>(defaultEditorContributors);
+  const [editorContributors, setEditorContributors] = useState<EditorRecord>(
+    {},
+  );
 
   const [aggregatedPitch, setAggregatedPitch] =
     useState<IPitchAggregate>(emptyAggregatePitch);
@@ -67,12 +69,30 @@ const ReviewClaim = (): ReactElement => {
       setPitchTeams(result.aggregated.teams);
       setAssignmentContributors(result.aggregated.assignmentContributors);
       console.log('aggregated', result.aggregated.assignmentContributors);
-      setEditorContributors(
+      /* setEditorContributors(
         pick(
           result.aggregated,
           Object.keys(defaultEditorContributors),
         ) as editorContributorsType,
+      ); */
+
+      const editors: EditorRecord = {};
+
+      if (result.aggregated.primaryEditor) {
+        editors[result.aggregated.primaryEditor._id!] = {
+          ...result.aggregated.primaryEditor,
+          editorType: 'First',
+        };
+      }
+      result.aggregated.secondaryEditors.map(
+        (user) => (editors[user._id!] = { ...user, editorType: 'Seconds' }),
       );
+      result.aggregated.thirdEditors.map(
+        (user) => (editors[user._id!] = { ...user, editorType: 'Thirds' }),
+      );
+
+      setEditorContributors(editors);
+
       setAggregatedPitch(result);
       setStatusIsCompleted(
         result.assignmentStatus === assignmentStatusEnum.COMPLETED,
@@ -157,7 +177,6 @@ const ReviewClaim = (): ReactElement => {
                   pitchId={pitchId}
                   callback={fetchAggregatedPitch}
                   completed={statusIsCompleted}
-                  editors={editorContributors}
                 />
               );
             },

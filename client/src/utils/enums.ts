@@ -51,6 +51,7 @@ export const editorTypesEnum = {
   PRIMARY: 'PRIMARY',
   SECONDS: 'SECONDS',
   THIRDS: 'THIRDS',
+  NONE: 'NONE',
 };
 
 export const pitchStatusEnum = {
