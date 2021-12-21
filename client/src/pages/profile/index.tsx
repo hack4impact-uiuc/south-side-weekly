@@ -6,23 +6,23 @@ import React, {
   useState,
 } from 'react';
 import { useParams } from 'react-router-dom';
-import { IPitch, IUser, IUserFeedback } from 'ssw-common';
 import { Grid, GridColumn, Rating } from 'semantic-ui-react';
+import { IPitch, IUser, IUserFeedback } from 'ssw-common';
 
-import { FieldTag, UserPicture } from '../../components';
 import {
-  isError,
-  getUser,
   getAggregatedUser,
+  getUser,
   getUserPermissionsByID,
+  isError,
 } from '../../api';
+import { getUserFeedback } from '../../api/userFeedback';
+import { FieldTag, UserPicture } from '../../components';
+import EditProfileModal from '../../components/Modals/EditProfile';
+import Contributions from '../../components/Tables/Contributions';
+import UserFeedback from '../../components/UserFeedback';
+import { useAuth, useInterests, useTeams } from '../../contexts';
 import { emptyPitch, emptyUser } from '../../utils/constants';
 import { formatDate, getUserFullName, titleCase } from '../../utils/helpers';
-import { useAuth, useInterests, useTeams } from '../../contexts';
-import Contributions from '../../components/Tables/Contributions';
-import EditProfileModal from '../../components/Modals/EditProfile';
-import { getUserFeedback } from '../../api/feedback';
-import UserFeedback from '../../components/UserFeedback';
 
 import SocialsInput from './SocialsInput';
 import './styles.scss';

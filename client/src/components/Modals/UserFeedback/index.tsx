@@ -12,7 +12,7 @@ import { IUserFeedback, IUser, ITeam } from 'ssw-common';
 import { toString } from 'lodash';
 
 import { useAuth, useTeams } from '../../../contexts';
-import { getAggregatedPitch, createUserFeedback, isError } from '../../../api';
+import { getAggregatedPitch, isError, addFeedback } from '../../../api';
 import FieldTag from '../../FieldTag';
 import UserChip from '../../UserChip';
 
@@ -71,7 +71,7 @@ const UserFeedbackModal: FC<UserFeedbackModal> = ({
         stars: rating,
         reasoning: feedback,
       };
-      const res = await createUserFeedback(newFeedback);
+      const res = await addFeedback(newFeedback);
       if (!isError(res)) {
         toast.success('Successfully left feedback', {
           position: 'bottom-right',
