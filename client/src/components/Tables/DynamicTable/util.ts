@@ -1,11 +1,11 @@
-import { ColumnType } from './types';
+import { DynamicColumn } from './types';
 
 export const buildColumn = <T>({
   title,
   width,
   sorter,
   extractor,
-}: ColumnType<T>): ColumnType<T> => ({
+}: DynamicColumn<T>): DynamicColumn<T> => ({
   title: title,
   width: width,
   sorter: sorter,

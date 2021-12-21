@@ -179,7 +179,7 @@ const getPitchesPendingApproval = async (): Promise<Pitches> => {
 
 const getUnclaimedPitches = async (): Promise<Pitches> => {
   const url = buildEndpoint(PITCH_ENDPOINT, 'all', 'approved').concat(
-    '?status=unclaimed',
+    '?claimStatus=unclaimed',
   );
   const failureMessage = 'GET_UNCLAIMED_FAIL';
 

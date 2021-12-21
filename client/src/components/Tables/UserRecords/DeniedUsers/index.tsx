@@ -1,22 +1,21 @@
-import React, { FC, ReactElement, ReactNode, useEffect, useState } from 'react';
+import React, { ReactElement, ReactNode } from 'react';
 import { IUser } from 'ssw-common';
 
-import DynamicTable from '../../DynamicTable';
 import ReviewUserModal from '../../../Modals/ReviewUser';
 import { nameColumn, roleColumn, userColumn, teamsColumnModal } from '../utils';
 import { buildColumn } from '../../DynamicTable/util';
+import PaginatedTable from '../../PaginatedTable';
+import { QueryFunction } from '../../PaginatedTable/types';
 
-interface DeniedUserProps {
-  users: IUser[];
+interface DeniedUserProps<QueryArgs> {
+  query: QueryFunction<IUser, QueryArgs>;
+  filterParams: QueryArgs;
 }
 
-const DeniedUsers: FC<DeniedUserProps> = ({ users }): ReactElement => {
-  const [data, setData] = useState<IUser[]>(users);
-
-  useEffect(() => {
-    setData(users);
-  }, [users]);
-
+const DeniedUsers = <QueryArgs extends Record<string, string[]>>({
+  query,
+  filterParams,
+}: DeniedUserProps<QueryArgs>): ReactElement => {
   const rejectionReasoningColumn = buildColumn<IUser>({
     title: 'Rejection Reasoning',
     extractor: function RejectionReasoningText(user: IUser): ReactNode {
@@ -57,9 +56,11 @@ const DeniedUsers: FC<DeniedUserProps> = ({ users }): ReactElement => {
   return (
     <div className="table">
       <div className="directory">
-        <DynamicTable<IUser>
-          view={{ records: data, columns: columns }}
-          singleLine={users.length > 0}
+        <PaginatedTable<IUser, QueryArgs>
+          columns={columns}
+          query={query}
+          params={filterParams}
+          singleLineWhenPopulated
           emptyMessage="No rejected users!"
           getModal={(user, isOpen, setIsOpen) => (
             <ReviewUserModal

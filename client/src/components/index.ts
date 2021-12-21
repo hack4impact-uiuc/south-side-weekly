@@ -8,13 +8,11 @@ import InterestsSelect from './Dropdowns/InterestsSelect';
 import MultiSelect from './Dropdowns/MultiSelect';
 import Select from './Dropdowns/Select';
 import TeamsSelect from './Dropdowns/TeamsSelect';
-import EditingClaimCard from './EditingClaimCard';
 import FieldTag from './FieldTag';
 import Header from './Header';
 import Kanban from './Kanban';
 import LinkDisplay from './LinkDisplay';
 import { InterestList, TeamList } from './Lists';
-import AddIssue from './Modals/AddIssue';
 import ApprovePitchModal from './Modals/ApprovePitch';
 import ClaimPitchModal from './Modals/ClaimPitch';
 import ContributorFeedback from './Modals/ContributorFeedback';
@@ -23,10 +21,12 @@ import {
   EditInterests,
   EditTeams,
 } from './Modals/EditableTags';
+import PitchFeedbackModal from './Modals/PitchFeedback';
 import ResourceModal from './Modals/Resource';
 import ReviewUserModal from './Modals/ReviewUser';
 import SubmitPitchModal from './Modals/SubmitPitch';
 import UserModal from './Modals/User';
+import UserFeedbackModal from './Modals/UserFeedback';
 import ViewPitchModal from './Modals/ViewPitch';
 import Navbar from './Navbar';
 import PitchCard from './PitchCard';
@@ -35,8 +35,9 @@ import ProviderWrapper from './ProviderWrapper';
 import ReviewClaimForm from './reviewClaimForm';
 import { ApprovedUsers, DeniedUsers, PendingUsers } from './Tables';
 import DynamicTable from './Tables/DynamicTable';
-import { ColumnType, View } from './Tables/DynamicTable/types';
+import { DynamicColumn, View } from './Tables/DynamicTable/types';
 import { buildColumn } from './Tables/DynamicTable/util';
+import { buildPaginatedColumn } from './Tables/PaginatedTable/util';
 import { PitchRow, PitchTable } from './Tables/PitchDoc';
 import ResourceTable from './Tables/Resource';
 import TableTool from './Tables/TableTool';
@@ -101,8 +102,9 @@ export {
   DeniedUsers,
   DynamicTable,
   buildColumn,
-  AddIssue,
-  EditingClaimCard,
+  PitchFeedbackModal,
+  UserFeedbackModal,
+  buildPaginatedColumn,
   Kanban,
 };
-export type { View, ColumnType };
+export type { View, DynamicColumn };

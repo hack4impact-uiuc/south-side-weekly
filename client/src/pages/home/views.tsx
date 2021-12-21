@@ -3,7 +3,7 @@ import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
 
 import {
   buildColumn,
-  ColumnType,
+  DynamicColumn,
   FieldTag,
   InterestList,
   TeamList,
@@ -16,7 +16,9 @@ import {
 
 import { Tab, TABS } from './helpers';
 
-const getColumnsForTab = (user: IUser, tab: Tab): ColumnType<IPitch>[] => {
+type Column = DynamicColumn<IPitch>;
+
+const getColumnsForTab = (user: IUser, tab: Tab): Column[] => {
   switch (tab) {
     case TABS.MEMBER_PITCHES:
       return getMemberPitchesView(user);
@@ -25,13 +27,13 @@ const getColumnsForTab = (user: IUser, tab: Tab): ColumnType<IPitch>[] => {
     case TABS.SUBMITTED_PITCHES:
       return getSubmittedPitchesView();
     case TABS.SUBMITTED_PUBLICATIONS:
-      return getSubmittedPublicationsView(user) as ColumnType<IPitch>[];
+      return getSubmittedPublicationsView(user) as Column[];
     default:
       return [];
   }
 };
 
-const getMemberPitchesView = (user: IUser): ColumnType<IPitch>[] => [
+const getMemberPitchesView = (user: IUser): Column[] => [
   titleColumn,
   associatedTopicsColumn,
   {
@@ -52,7 +54,7 @@ const getMemberPitchesView = (user: IUser): ColumnType<IPitch>[] => [
   },
 ];
 
-const getSubmittedPitchesView = (): ColumnType<IPitch>[] => [
+const getSubmittedPitchesView = (): Column[] => [
   titleColumn,
   descriptionColumn,
   {
@@ -78,7 +80,7 @@ const getSubmittedPitchesView = (): ColumnType<IPitch>[] => [
   },
 ];
 
-const getSubmittedClaimsView = (user: IUser): ColumnType<IPitch>[] => [
+const getSubmittedClaimsView = (user: IUser): Column[] => [
   {
     ...titleColumn,
     width: '4',
@@ -129,7 +131,7 @@ const getSubmittedClaimsView = (user: IUser): ColumnType<IPitch>[] => [
 
 const getSubmittedPublicationsView = (
   user: IUser,
-): ColumnType<IPitchAggregate>[] => [
+): DynamicColumn<IPitchAggregate>[] => [
   {
     ...titleColumn,
     width: '3',

@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 import { IPitch, IUser } from 'ssw-common';
 
-import { buildColumn, ColumnType, InterestList, TeamList } from '../..';
+import { buildColumn, DynamicColumn, InterestList, TeamList } from '../..';
 import { formatDate, getUserTeamsForPitch } from '../../../utils/helpers';
 import PitchPublishDate from '../../PitchPublishDate';
 import PitchStatusTag from '../../PitchStatusTag';
@@ -22,7 +22,7 @@ const topicsColumn = buildColumn<Partial<IPitch>>({
   },
 });
 
-const contributionColumns = (user: IUser): ColumnType<Partial<IPitch>>[] => [
+const contributionColumns = (user: IUser): DynamicColumn<Partial<IPitch>>[] => [
   titleColumn,
   topicsColumn,
   {

@@ -23,6 +23,7 @@ import {
   approveClaim,
   declineClaim,
 } from '../utils/mailer-templates';
+import { processFilters, processPagination } from '../utils/pagination';
 
 const router = express.Router();
 
@@ -45,14 +46,26 @@ router.get(
   '/all/pending',
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
-    const pitches = await Pitch.find({
+    const query = Pitch.find({
       status: pitchStatusEnum.PENDING,
     });
+
+    let totalPages = 1;
+    processFilters(req, query);
+    if (req.query.page && req.query.limit) {
+      const filteredDocs = await query.exec();
+      const limit = parseInt(req.query.limit as string);
+      totalPages = Math.ceil(filteredDocs.length / limit);
+    }
+    processPagination(req, query);
+
+    const pitches = await query.exec();
 
     res.status(200).json({
       success: true,
       message: 'Pending pitches successfully retrived',
       result: pitches,
+      totalPages: totalPages,
     });
   }),
 );
@@ -64,30 +77,34 @@ router.get(
   '/all/approved',
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
-    const pitches = await Pitch.find({
+    const query = Pitch.find({
       status: pitchStatusEnum.APPROVED,
     });
-    const status = req.query.status;
 
-    if (status === 'unclaimed') {
-      res.status(200).json({
-        message: 'Successfully retrieved unclaimed pitches',
-        success: true,
-        result: pitches.filter((pitch) => !isPitchClaimed(pitch)),
-      });
-    } else if (status === 'claimed') {
-      res.status(200).json({
-        message: 'Successfully retrieved unclaimed pitches',
-        success: true,
-        result: pitches.filter(isPitchClaimed),
-      });
-    } else {
-      res.status(200).json({
-        message: `Successfully retrieved approved pitches.`,
-        success: true,
-        result: pitches,
-      });
+    let totalPages = 1;
+    processFilters(req, query);
+    if (req.query.page && req.query.limit) {
+      const filteredDocs = await query.exec();
+      const limit = parseInt(req.query.limit as string);
+      totalPages = Math.ceil(filteredDocs.length / limit);
     }
+    processPagination(req, query);
+
+    let pitches = await query.exec();
+
+    const status = req.query.claimStatus;
+    if (status === 'unclaimed') {
+      pitches = pitches.filter((pitch) => !isPitchClaimed(pitch));
+    } else if (status === 'claimed') {
+      pitches = pitches.filter(isPitchClaimed);
+    }
+
+    res.status(200).json({
+      message: `Successfully retrieved pitches.`,
+      success: true,
+      result: pitches,
+      totalPages: totalPages,
+    });
   }),
 );
 
@@ -95,9 +112,14 @@ router.get(
   '/all/pendingClaims',
   requireRegistered,
   errorWrap(async (req: Request, res: Response) => {
-    const pitches = await Pitch.find({
+    const query = Pitch.find({
       'pendingContributors.0': { $exists: true },
     });
+
+    processFilters(req, query);
+    processPagination(req, query);
+
+    const pitches = await query.exec();
 
     res.status(200).json({
       success: true,
