@@ -1,57 +1,32 @@
-import React, { FC, useEffect, useState } from 'react';
+import React, { FC } from 'react';
 import { Link } from 'react-router-dom';
-import { Container, Grid, GridColumn, Icon, Rating } from 'semantic-ui-react';
-import { IPitch, IUser, IUserFeedback } from 'ssw-common';
+import { Container, Grid, Icon, Rating } from 'semantic-ui-react';
+import { PopulatedUserFeedback } from 'ssw-common';
 
-import { getAggregatedPitch, getUser, isError } from '../../api';
-import { emptyUser } from '../../utils/constants';
-import { formatDate, getUserFullName } from '../../utils/helpers';
+import { getUserFullName } from '../../utils/helpers';
 
 import './styles.scss';
 
 interface UserFeedbackProps {
-  feedback: IUserFeedback;
+  feedback: PopulatedUserFeedback;
 }
 
-const UserFeedback: FC<UserFeedbackProps> = ({ feedback }) => {
-  const [staffUser, setStaffUser] = useState<IUser>();
-  const [aggregate, setAggregate] = useState<IPitch>();
-
-  useEffect(() => {
-    const loadUser = async (): Promise<void> => {
-      const res = await getUser(feedback.staffId);
-      if (!isError(res)) {
-        const user = res.data.result;
-        setStaffUser(user);
-      }
-    };
-    const getAggregate = async (): Promise<void> => {
-      const res = await getAggregatedPitch(feedback.pitchId);
-
-      if (!isError(res)) {
-        const aggregatedPitch = res.data.result;
-        setAggregate(aggregatedPitch);
-      }
-    };
-    loadUser();
-    getAggregate();
-    return () => {
-      setStaffUser(emptyUser);
-    };
-  }, [feedback.pitchId, feedback.staffId]);
-  return (
-    <Container className="feedback-container">
-      <Grid>
-        <GridColumn width={5}>
-          <div>
-            <span className="staff-name">{getUserFullName(staffUser)}</span>
-            <span> left feedback: </span>
-          </div>
-          <p className="publish-date">
-            {formatDate(new Date(feedback.createdAt))}
-          </p>
-        </GridColumn>
-        <GridColumn width={10}>
+const UserFeedback: FC<UserFeedbackProps> = ({ feedback }) => (
+  <Container className="feedback-container">
+    <Grid>
+      <Grid.Column width={4}>
+        <div>
+          <span className="staff-name">
+            {getUserFullName(feedback.staffId)}
+          </span>
+          <span> left feedback: </span>
+        </div>
+        <p className="publish-date">
+          {new Date(feedback.createdAt).toLocaleDateString()}
+        </p>
+      </Grid.Column>
+      <Grid.Column width={10}>
+        <div>
           <Rating
             className="rating"
             size="large"
@@ -59,18 +34,19 @@ const UserFeedback: FC<UserFeedbackProps> = ({ feedback }) => {
             disabled
             defaultRating={feedback.stars}
           />
-          <p className="reasoning">{feedback.reasoning}</p>
-          <p className="relevant">RELEVANT PITCH</p>
-          <p className="pitch">
-            {aggregate?.title}
-            <Link className="open-link" to={`/pitch/${feedback.pitchId}`}>
-              <Icon name="external alternate" />
-            </Link>
-          </p>
-        </GridColumn>
-      </Grid>
-    </Container>
-  );
-};
+        </div>
+
+        <p className="reasoning">{feedback.reasoning}</p>
+        <p className="relevant">RELEVANT PITCH</p>
+        <p className="pitch">
+          {feedback.pitchId !== null && feedback.pitchId.title}
+          <Link className="open-link" to={`/pitch/${feedback.pitchId._id}`}>
+            <Icon name="external alternate" />
+          </Link>
+        </p>
+      </Grid.Column>
+    </Grid>
+  </Container>
+);
 
 export default UserFeedback;

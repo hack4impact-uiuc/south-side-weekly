@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { FilterQuery, LeanDocument, UpdateQuery } from 'mongoose';
 import { IPitch } from 'ssw-common';
-import { UserService } from '.';
+import { IssueService, UserService } from '.';
 
 import Pitch, { PitchSchema } from '../models/pitch';
 import { pitchStatusEnum } from '../utils/enums';
@@ -155,11 +155,15 @@ export const approvePitch = async (
   _id: string,
   reviewedBy: string,
   payload: Partial<PitchSchema>,
-): Pitch =>
-  await updateModel(
+): Pitch => {
+  await IssueService.addPitch(payload.issueStatuses.map(issue => issue.issueId), _id);
+
+  return await updateModel(
     { _id },
-    { status: pitchStatusEnum.APPROVED, reviewedBy, payload },
+    { status: pitchStatusEnum.APPROVED, reviewedBy, ...payload },
   );
+}
+
 
 export const declinePitch = async (_id: string, reviewedBy: string): Pitch =>
   await updateModel({ _id }, { status: pitchStatusEnum.DECLINED, reviewedBy });

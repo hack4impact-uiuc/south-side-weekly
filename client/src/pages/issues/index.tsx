@@ -1,20 +1,26 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { Button, Icon } from 'semantic-ui-react';
-import { IIssue } from 'ssw-common';
+import { Icon } from 'semantic-ui-react';
+import { PopulatedIssue } from 'ssw-common';
 
-import { getIssues, isError } from '../../api';
-import { Kanban, Select } from '../../components';
-import { titleCase } from '../../utils/helpers';
+import { isError } from '../../api';
+import { apiCall } from '../../api/request';
+import { Kanban } from '../../components';
+import { SingleSelect } from '../../components/select/SingleSelect';
+import { PrimaryButton } from '../../components/ui/PrimaryButton';
 
 import './styles.scss';
 
 const Issues = (): ReactElement => {
-  const [issues, setIssues] = useState<IIssue[]>([]);
+  const [issues, setIssues] = useState<PopulatedIssue[]>([]);
   const [viewIssueIndex, setViewIssueIndex] = useState<number>(0);
 
   useEffect(() => {
     const fetchIssues = async (): Promise<void> => {
-      const res = await getIssues();
+      const res = await apiCall<{ data: PopulatedIssue[]; count: number }>({
+        method: 'GET',
+        url: '/issues',
+        populate: 'default',
+      });
 
       if (!isError(res)) {
         const allIssues = res.data.result.data;
@@ -29,7 +35,11 @@ const Issues = (): ReactElement => {
           (issue) => new Date() <= new Date(issue.releaseDate),
         );
 
-        setViewIssueIndex(closestIssueIndex);
+        if (closestIssueIndex < 0) {
+          setViewIssueIndex(allIssues.length - 1);
+        } else {
+          setViewIssueIndex(closestIssueIndex);
+        }
 
         setIssues(allIssues);
       }
@@ -37,13 +47,6 @@ const Issues = (): ReactElement => {
 
     fetchIssues();
   }, []);
-
-  const formatIssueDate = (issue: IIssue): string => {
-    const date = new Date(issue.releaseDate);
-    return `${
-      date.getMonth() + 1
-    }/${date.getDate()}/${date.getFullYear()} - ${titleCase(issue.type)}`;
-  };
 
   return (
     <div className="issue-page-wrapper">
@@ -57,10 +60,10 @@ const Issues = (): ReactElement => {
             name="angle left"
           />
 
-          <Select
+          <SingleSelect
             className="issue-select"
             options={issues.map((issue) => ({
-              label: formatIssueDate(issue),
+              label: new Date(issue.releaseDate).toLocaleDateString(),
               value: issue._id,
             }))}
             value={issues[viewIssueIndex] ? issues[viewIssueIndex]._id : ''}
@@ -82,7 +85,7 @@ const Issues = (): ReactElement => {
             onClick={() => setViewIssueIndex(viewIssueIndex + 1)}
           />
         </div>
-        <Button icon="add" content="Add Issue" className="default-btn" />
+        <PrimaryButton icon="add" content="Add Issue" />
       </div>
 
       <Kanban issueId={issues.length > 0 ? issues[viewIssueIndex]._id : ''} />

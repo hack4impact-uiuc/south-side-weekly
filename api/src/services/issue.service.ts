@@ -57,10 +57,10 @@ export const getAll = async (
   options?: PaginateOptions<IssueSchema>,
 ): Promise<IssuesResponse> => await paginate({}, options);
 
-export const getFeedbackForPitch = async (
-  pitchId: string,
-  options: PaginateOptions<IssueSchema>,
-): Promise<IssuesResponse> => await paginate({ pitchId }, options);
+export const addPitch = (issueIds: string[], pichId: string) => Issue.updateMany(
+  { _id: { $in: issueIds } },
+  { $push: { pitches: pichId } },
+);
 
 export const update = async (_id: string, payload: Partial<IIssue>): Issue =>
   await updateModel({ _id }, payload);

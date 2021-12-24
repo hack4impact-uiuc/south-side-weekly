@@ -1,7 +1,7 @@
 import React, { FC } from 'react';
 import { Pagination, PaginationProps, Table } from 'semantic-ui-react';
 
-import { Select } from '../..';
+import { SingleSelect } from '../../select/SingleSelect';
 
 interface TableFooterProps {
   totalPages: number;
@@ -31,13 +31,13 @@ const TableFooter: FC<TableFooterProps> = ({
     />
     <span className="records-per-page-wrapper">
       Rows per page{' '}
-      <Select
+      <SingleSelect
         options={recordsPerPageSelectOptions}
         value={recordsPerPage}
         isClearable={false}
         onChange={(newValue) => handleRecordsPerPageChange(newValue!.value!)}
         className="records-per-page-select"
-      ></Select>
+      />
     </span>
   </Table.HeaderCell>
 );

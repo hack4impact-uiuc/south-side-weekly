@@ -1,6 +1,7 @@
 import React, { ReactElement, useState, useEffect } from 'react';
 
-import { Header, PageCounter, PrevButton, SubmitButton } from '../components';
+import { PageCounter, PrevButton, SubmitButton } from '../components';
+import { Header } from '../layouts';
 import { useWizard, WizardProvider } from '../contexts';
 
 import Completion from './Completion';

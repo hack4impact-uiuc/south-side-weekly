@@ -1,16 +1,9 @@
 import React from 'react';
 import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
 
-import {
-  buildColumn,
-  DynamicColumn,
-  FieldTag,
-  InterestList,
-  TeamList,
-} from '../../components';
+import { buildColumn, DynamicColumn, FieldTag } from '../../components';
 import {
   findPendingContributor,
-  getPitchTeamsForContributor,
   getUserClaimStatusForPitch,
 } from '../../utils/helpers';
 
@@ -21,28 +14,26 @@ type Column = DynamicColumn<IPitch>;
 const getColumnsForTab = (user: IUser, tab: Tab): Column[] => {
   switch (tab) {
     case TABS.MEMBER_PITCHES:
-      return getMemberPitchesView(user);
+      return getMemberPitchesView();
     case TABS.SUBMITTED_CLAIMS:
       return getSubmittedClaimsView(user);
     case TABS.SUBMITTED_PITCHES:
       return getSubmittedPitchesView();
     case TABS.SUBMITTED_PUBLICATIONS:
-      return getSubmittedPublicationsView(user) as Column[];
+      return getSubmittedPublicationsView() as Column[];
     default:
       return [];
   }
 };
 
-const getMemberPitchesView = (user: IUser): Column[] => [
+const getMemberPitchesView = (): Column[] => [
   titleColumn,
   associatedTopicsColumn,
   {
     title: "Team(s) You're On",
     width: '1',
-    extractor: function TeamsCell(pitch) {
-      return (
-        <TeamList teamIds={getPitchTeamsForContributor(pitch, user) ?? []} />
-      );
+    extractor: function TeamsCell() {
+      return 'TODO';
     },
   },
   {
@@ -92,10 +83,8 @@ const getSubmittedClaimsView = (user: IUser): Column[] => [
   {
     title: 'Team(s) Requested to Claim',
     width: '2',
-    extractor: function TeamsCell(pitch) {
-      return (
-        <TeamList teamIds={getPitchTeamsForContributor(pitch, user) ?? []} />
-      );
+    extractor: function TeamsCell() {
+      return 'TODO';
     },
   },
   {
@@ -129,9 +118,7 @@ const getSubmittedClaimsView = (user: IUser): Column[] => [
   },
 ];
 
-const getSubmittedPublicationsView = (
-  user: IUser,
-): DynamicColumn<IPitchAggregate>[] => [
+const getSubmittedPublicationsView = (): DynamicColumn<IPitchAggregate>[] => [
   {
     ...titleColumn,
     width: '3',
@@ -140,10 +127,8 @@ const getSubmittedPublicationsView = (
   {
     title: "Team(s) You're On",
     width: '1',
-    extractor: function TeamsCell(pitch) {
-      return (
-        <TeamList teamIds={getPitchTeamsForContributor(pitch, user) ?? []} />
-      );
+    extractor: function TeamsCell() {
+      return 'TODO';
     },
   },
   {
@@ -176,12 +161,8 @@ const descriptionColumn = buildColumn<IPitch>({
 const associatedTopicsColumn = buildColumn<IPitch>({
   title: 'Associated Topics',
   width: '1',
-  extractor: function InterestsCell({ topics }) {
-    return (
-      <div className="flex-cell">
-        <InterestList interestIds={topics} />
-      </div>
-    );
+  extractor: function InterestsCell() {
+    return <div className="flex-cell">'TODO'</div>;
   },
 });
 

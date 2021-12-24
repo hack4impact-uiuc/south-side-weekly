@@ -30,6 +30,7 @@ export const populatePitch = async (
     { ...getPopulateOptions<PitchSchema>('secondEditors', 'User') },
     { ...getPopulateOptions<PitchSchema>('thirdEditors', 'User') },
     { ...getPopulateOptions<PitchSchema>('reviewedBy', 'User') },
+    { ...getPopulateOptions('issueStatuses.issueId', 'Issue') },
   ];
 
   if (type === 'default') {
@@ -39,7 +40,6 @@ export const populatePitch = async (
   const allOptions = [
     ...baseOptions,
     { ...getPopulateOptions<PitchSchema>('issues', 'Issue') },
-    { ...getPopulateOptions('issueStatuses.issueId', 'Issue') },
     { ...getPopulateOptions('pendingContributors.userId', 'User') },
     { ...getPopulateOptions('pendingContributors.teams', 'Team') },
   ];

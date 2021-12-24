@@ -1,17 +1,15 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { openPopupWidget } from 'react-calendly';
-import { Button, Icon, Menu } from 'semantic-ui-react';
+import { Menu } from 'semantic-ui-react';
 import { IResource, ITeam } from 'ssw-common';
 
 import { getAllResources, isError } from '../../api';
 import { useAuth, useTeams } from '../../contexts';
-import {
-  ResourceModal,
-  Walkthrough,
-  ApprovedView,
-  ResourceTable,
-} from '../../components';
+import { ResourceModal, Walkthrough, ResourceTable } from '../../components';
 import { pagesEnum } from '../../utils/enums';
+import { AuthView } from '../../components/wrapper/AuthView';
+import { PrimaryButton } from '../../components/ui/PrimaryButton';
+import { SecondaryButton } from '../../components/ui/SecondaryButton';
 
 import './styles.scss';
 
@@ -106,26 +104,24 @@ const Resources = (): ReactElement => {
           <div className="controls">
             <h1>Resource Page</h1>
             <div className="push" />
-            <ApprovedView>
+            <AuthView view="isOnboarded">
               {isAdmin ? (
-                <Button
+                <PrimaryButton
+                  icon="add"
                   onClick={() => openModal('create')}
-                  className="default-btn"
-                >
-                  <Icon name="add" /> Add Resource
-                </Button>
+                  content="Add Resource"
+                />
               ) : (
-                <Button
+                <SecondaryButton
                   onClick={() =>
                     openPopupWidget({
                       url: 'https://calendly.com/sawhney4/60min',
                     })
                   }
                   content="Schedule Office Hour"
-                  className="calendly-button"
                 />
               )}
-            </ApprovedView>
+            </AuthView>
           </div>
 
           <Menu className="tab-menu" tabular secondary pointing size="large">

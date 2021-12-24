@@ -120,17 +120,29 @@ const extractFilterQuery = <T>(
 ): FilterQuery<T> | null => {
   const copyQuery = { ...query };
   Object.keys(copyQuery).forEach((key) => {
-    if (isEmpty(copyQuery[key]) || takenKeys.includes(key)) {
+    if (
+      isEmpty(copyQuery[key]) ||
+      copyQuery[key] === 'null' ||
+      copyQuery[key] === 'undefined' ||
+      takenKeys.includes(key)
+    ) {
       delete copyQuery[key];
     }
   });
 
   const cleanFilters = Object.keys(copyQuery).map((filter) => {
     const [field, operator] = filter.split('__');
-    const value = copyQuery[filter];
+    let value = copyQuery[filter];
+
+    if (typeof value === 'string') {
+      value = value.toUpperCase();
+    }
+
+    if (typeof value === 'string' && value.includes(',')) {
+      value = value.split(',');
+    }
 
     if (operator) {
-      console.log({ [field]: { [`$${operator}`]: value } });
       return { [field]: { [`$${operator}`]: value } };
     }
 

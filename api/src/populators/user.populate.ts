@@ -1,6 +1,11 @@
 import User, { UserSchema } from '../models/user';
 import { PopulateType, populateTypes } from './types';
-import { getPopulateOptions } from './utils';
+import {
+  getPopulateOptions,
+  interestFields,
+  pitchFields,
+  userFields,
+} from './utils';
 
 /**
  * Populates a user's ref fields
@@ -32,6 +37,9 @@ export const populateUser = async (
     { ...getPopulateOptions<UserSchema>('claimedPitches', 'Pitch') },
     { ...getPopulateOptions<UserSchema>('submittedPitches', 'Pitch') },
     { ...getPopulateOptions<UserSchema>('submittedClaims', 'Pitch') },
+    {
+      ...getPopulateOptions<UserSchema>('feedback', 'UserFeedback'),
+    },
   ];
 
   return await User.populate(user, paths);

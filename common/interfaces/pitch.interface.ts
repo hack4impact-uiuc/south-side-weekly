@@ -47,21 +47,26 @@ type BasePitchOmitFields =
   | 'secondEditors'
   | 'thirdEditors'
   | 'topics'
-  | 'reviewedBy';
+  | 'reviewedBy'
+  | 'issueStatuses';
 
 export interface BasePopulatedPitch extends Omit<Pitch, BasePitchOmitFields> {
-  teams: TeamFields;
-  topics: InterestFields;
-  assignmentContributors: { user: UserFields; teams: TeamFields[] }[];
+  teams: {
+    teamId: TeamFields;
+    target: number;
+  }[];
+  topics: InterestFields[];
+  assignmentContributors: { userId: UserFields; teams: TeamFields[] }[];
   author: UserFields;
   writer: UserFields;
   primaryEditor: UserFields;
   secondEditors: UserFields[];
   thirdEditors: UserFields[];
   reviewedBy: UserFields;
+  issueStatuses: { issueId: Issue; status: string }[];
 }
 
-type FullPitchOmitFields = BasePitchOmitFields | 'issues' | 'issueStatuses' | 'pendingContributors';
+type FullPitchOmitFields = BasePitchOmitFields | 'issues' | 'pendingContributors';
 
 interface PendingContributor {
   userId: UserFields;
@@ -73,6 +78,5 @@ interface PendingContributor {
 
 export interface FullPopulatedPitch extends Omit<Pitch, FullPitchOmitFields> {
   issues: Issue[];
-  issueStatuses: { issue: Issue; status: string }[];
   pendingContributors: PendingContributor[];
 }

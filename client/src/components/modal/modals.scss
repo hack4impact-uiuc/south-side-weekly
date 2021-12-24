@@ -1,0 +1,26 @@
+@import '../../styles/colors.scss';
+
+.ui.modal {
+  .header {
+    background-color: $primary !important;
+    color: white !important;
+  }
+
+  .content {
+    mark.optional {
+      color: #9b9b9b;
+      background-color: transparent !important;
+      font-weight: lighter !important;
+    }
+
+    .section {
+      margin-bottom: 20px;
+      width: 100%;
+    }
+  }
+
+  .actions {
+    text-align: right;
+    padding: 20px 0px 10px 0px !important;
+  }
+}

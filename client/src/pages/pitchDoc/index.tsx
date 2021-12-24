@@ -10,16 +10,10 @@ import {
   getUnclaimedPitches,
   isError,
 } from '../../api';
-import {
-  SubmitPitchModal,
-  StaffView,
-  AdminView,
-  Select,
-  Walkthrough,
-  InterestsSelect,
-  TeamsSelect,
-  PitchTable,
-} from '../../components';
+import { SubmitPitchModal, Walkthrough, PitchTable } from '../../components';
+import ContextSelect from '../../components/select/ContextSelect';
+import { SingleSelect } from '../../components/select/SingleSelect';
+import { AuthView } from '../../components/wrapper/AuthView';
 import { useAuth } from '../../contexts';
 import { pitchDocTabs } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
@@ -182,20 +176,20 @@ const PitchDoc = (): ReactElement => {
             onClick={(e, { name }) => setCurrentTab(name!)}
           />
 
-          <AdminView>
+          <AuthView view="isAdmin">
             <Menu.Item
               name={pitchDocTabs.PITCH_APPROVAL}
               active={pitchDocTabs.PITCH_APPROVAL === currentTab}
               onClick={(e, { name }) => setCurrentTab(name!)}
             />
-          </AdminView>
-          <StaffView>
+          </AuthView>
+          <AuthView view="isStaff">
             <Menu.Item
               name={pitchDocTabs.CLAIM_APPROVAL}
               active={pitchDocTabs.CLAIM_APPROVAL === currentTab}
               onClick={(e, { name }) => setCurrentTab(name!)}
             />
-          </StaffView>
+          </AuthView>
         </Menu>
       </div>
       <div className="page-inner-content">
@@ -209,7 +203,7 @@ const PitchDoc = (): ReactElement => {
             iconPosition="left"
             className="search"
           />
-          <SubmitPitchModal callback={populatePitches} />
+          <SubmitPitchModal callback={() => void 0} onClose={populatePitches} />
         </div>
 
         <div className="filters">
@@ -217,7 +211,8 @@ const PitchDoc = (): ReactElement => {
             <h3>Filters: </h3>
           </div>
           <div className="wrapper">
-            <InterestsSelect
+            <ContextSelect
+              type="Interests"
               values={interests}
               onChange={(values) =>
                 setInterests(values ? values.map((item) => item.value) : [])
@@ -225,14 +220,15 @@ const PitchDoc = (): ReactElement => {
             />
           </div>
           <div className="wrapper">
-            <TeamsSelect
+            <ContextSelect
+              type="Teams"
               values={teams}
               onChange={(values) => setTeams(values.map((item) => item.value))}
             />
           </div>
           {isEqual(currentTab, pitchDocTabs.APPROVED) && (
             <div className="wrapper">
-              <Select
+              <SingleSelect
                 value={claimStatus}
                 options={parseOptionsSelect(['Claimed', 'Unclaimed'])}
                 onChange={(e) => setClaimStatus(e ? e.value : '')}

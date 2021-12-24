@@ -7,6 +7,7 @@ import {
   Switch,
 } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { QueryParamProvider } from 'use-query-params';
 
 import {
   Directory,
@@ -18,10 +19,11 @@ import {
   Issues,
 } from './pages';
 import Wizard from './wizard';
-import { PrivateRoute, ProviderWrapper } from './components';
+import { PrivateRoute } from './components';
 import 'semantic-ui-css/semantic.min.css';
 import './styles/styles.scss';
 import Homepage from './pages/home';
+import { Providers } from './components/wrapper/Providers';
 
 const routes = [
   {
@@ -64,19 +66,26 @@ const routes = [
 
 ReactDOM.render(
   <React.StrictMode>
-    <ProviderWrapper>
+    <Providers>
       <Toaster />
       <Router>
-        <Switch>
-          <Route exact path="/">
-            <Redirect to="/login" />
-          </Route>
-          {routes.map(({ path, component }) => (
-            <PrivateRoute key={path} exact path={path} component={component} />
-          ))}
-        </Switch>
+        <QueryParamProvider ReactRouterRoute={Route}>
+          <Switch>
+            <Route exact path="/">
+              <Redirect to="/login" />
+            </Route>
+            {routes.map(({ path, component }) => (
+              <PrivateRoute
+                key={path}
+                exact
+                path={path}
+                component={component}
+              />
+            ))}
+          </Switch>
+        </QueryParamProvider>
       </Router>
-    </ProviderWrapper>
+    </Providers>
   </React.StrictMode>,
   document.getElementById('root'),
 );

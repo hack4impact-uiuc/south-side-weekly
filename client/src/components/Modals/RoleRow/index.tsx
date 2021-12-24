@@ -1,12 +1,12 @@
 import React, { FC, ReactElement } from 'react';
-import { IUser } from 'ssw-common';
+import { User } from 'ssw-common';
 
-import UserChip from '../../UserChip';
+import UserChip from '../../tags/UserChip';
 
 import './styles.scss';
 
 interface RoleRowProps {
-  users: Partial<IUser>[];
+  users: User[];
   roleName: string;
 }
 

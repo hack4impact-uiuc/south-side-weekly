@@ -19,9 +19,9 @@ import { isError } from '../../api';
 import { getPitchBuckets, updateIssueStatus } from '../../api/issue';
 import { issueStatusEnum } from '../../utils/enums';
 import { titleCase } from '../../utils/helpers';
-import FieldTag from '../FieldTag';
+import { FieldTag } from '../tags/FieldTag/FieldTag';
 
-import Pitch from './Pitch/Pitch';
+import Pitch from './Pitch/Card';
 
 import './styles.scss';
 

@@ -13,7 +13,7 @@ import {
 } from '../../../api';
 import './styles.scss';
 import { visibilityEnum } from '../../../utils/enums';
-import TeamsSelect from '../../Dropdowns/TeamsSelect';
+import ContextSelect from '../../select/ContextSelect';
 
 interface ResourceProps extends ModalProps {
   resource?: IResource;
@@ -158,7 +158,8 @@ const ResourceModal: FC<ResourceProps> = ({
               onChange={(e, { value }) => changeField('link', value)}
             />
             <h5>Teams</h5>
-            <TeamsSelect
+            <ContextSelect
+              type="Teams"
               values={formData.teams}
               onChange={(values) =>
                 changeField(

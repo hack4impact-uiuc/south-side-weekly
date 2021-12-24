@@ -1,8 +1,10 @@
 import _ from 'lodash';
+import { Condition } from 'mongodb';
 import { FilterQuery, LeanDocument } from 'mongoose';
 import { IUser } from 'ssw-common';
 
 import User, { UserSchema } from '../models/user';
+import { UserFeedbackSchema } from '../models/userFeedback';
 import { onboardingStatusEnum } from '../utils/enums';
 import { PaginateOptions } from './types';
 
@@ -22,38 +24,85 @@ const updateModel = async <T>(
     runValidators: true,
   }).lean({ virtuals: true });
 
+const searchFields = ['firstName', 'lastName', 'preferredName', 'email'];
+
+const ignoreKeys = ['activityStatus'];
+
+const mongooseFilters = (
+  filters: FilterQuery<UserSchema>,
+): FilterQuery<UserSchema> => {
+  return _.omit(filters, ignoreKeys);
+};
+
+const activityFilter = (status: Condition<string>): FilterQuery<UserSchema> => {
+  if (!status) {
+    return {};
+  }
+
+  status = status.toString().toUpperCase();
+  const now = new Date();
+  const lastActive =  new Date(
+    now.getFullYear(),
+    now.getMonth() - 3,
+    now.getDate(),
+  );
+  const lastRecentlyActive = new Date(
+    now.getFullYear() - 1,
+    now.getMonth(),
+    now.getDate(),
+  );
+  const lastInactive = new Date(
+    now.getFullYear(),
+    now.getMonth(),
+    now.getDate(),
+  );
+
+
+
+  if (status === 'ACTIVE') {
+    return {
+      lastActive: {
+        $gte: lastActive,
+      },
+    };
+  } else if (status === 'RECENTLY ACTIVE') {
+    return {
+      lastActive: {
+        $lt: lastActive,
+        $gte: lastRecentlyActive,
+      },
+    };
+  } else if (status === 'INACTIVE') {
+    return {
+      lastActive: {
+        $lt: lastInactive,
+      },
+    };
+  }
+  return {};
+};
+
 const paginate = async (
   definedFilters: FilterQuery<UserSchema>,
   options?: PaginateOptions<UserSchema>,
 ): Promise<UsersResponse> => {
   const { offset, limit, sort, filters, search } = options || {};
-  const mergedFilters = _.merge(filters, definedFilters);
+  const mergedFilters = _.merge(
+    mongooseFilters(filters),
+    definedFilters,
+    {
+      $or: searchFields.map((field) => ({
+        [field]: { $regex: search, $options: 'i' },
+      })),
+    },
+    activityFilter(filters['activityStatus']),
+  );
 
   const users = await User.find(mergedFilters)
     .skip(offset * limit)
     .limit(limit)
     .sort(sort)
     .lean({ virtuals: true });
-
-  if (search) {
-    const searchRegex = new RegExp(search, 'i');
-    const filteredUsers = users.filter((user) => {
-      const searchableFields = [
-        user.fullname,
-        user.email,
-        user.phone,
-        `${user.firstName} ${user.lastName}`,
-      ];
-      return searchableFields.some(
-        (field) => field && field.match(searchRegex),
-      );
-    });
-
-    return {
-      data: filteredUsers,
-      count: filteredUsers.length,
-    };
-  }
 
   const count = await User.countDocuments(mergedFilters);
 
@@ -177,9 +226,21 @@ export const remove = async (_id: string): Promise<User> =>
 
 export const addFeedback = async (
   _id: string,
-  feedbackId: string,
-): Promise<User> =>
-  await updateModel({ _id }, { $addToSet: { feedback: feedbackId } });
+  feedback: LeanDocument<UserFeedbackSchema>,
+): Promise<User> => {
+  const user = await updateModel(
+    { _id },
+    { $addToSet: { feedback: feedback._id } },
+  );
+
+  if (!user) {
+    return null;
+  }
+
+  const numFeedbacks = user.feedback.length;
+  const sum = feedback.stars * (numFeedbacks - 1) + feedback.stars;
+  await updateModel({ _id }, { $set: { rating: sum / numFeedbacks } });
+};
 
 export const removeFeedback = async (
   _id: string,

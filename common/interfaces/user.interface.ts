@@ -1,4 +1,5 @@
 import { InterestFields, PitchFields, TeamFields } from "./_types";
+import { UserFeedback } from "./userFeedback.interface";
 
 export interface User {
     _id: string;
@@ -33,26 +34,30 @@ export interface User {
     fullname: string;
     activityStatus: string;
     joinedNames: string;
+    shortName: string;
+    rating: number;
   }
   
   type BaseUserOmitFields = 'teams' | 'interests';
   
   export interface BasePopulatedUser extends Omit<User, BaseUserOmitFields> {
-    teams: TeamFields;
-    interests: InterestFields;
+    teams: TeamFields[];
+    interests: InterestFields[];
   }
 
   type FullUserOmitFields = 
     BaseUserOmitFields 
         | 'claimedPitches' 
         | 'submittedPitches' 
-        | 'submittedClaims';
+        | 'submittedClaims'
+        | 'feedback';
 
   export interface FullPopulatedUser extends Omit<User,FullUserOmitFields> {
-    teams: TeamFields;
-    interests: InterestFields;
-    claimedPitches: PitchFields;
-    submittedPitches: PitchFields;
-    submittedClaims: PitchFields;
+    teams: TeamFields[];
+    interests: InterestFields[];
+    claimedPitches: PitchFields[];
+    submittedPitches: PitchFields[];
+    submittedClaims: PitchFields[];
+    feedback: UserFeedback[];
   }
   

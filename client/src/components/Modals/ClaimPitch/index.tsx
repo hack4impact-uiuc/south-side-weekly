@@ -11,10 +11,9 @@ import { getAggregatedPitch } from '../../../api/pitch';
 import { useAuth, useTeams } from '../../../contexts';
 import { emptyAggregatePitch } from '../../../utils/constants';
 import { pluralize } from '../../../utils/helpers';
-import FieldTag from '../../FieldTag';
-import LinkDisplay from '../../LinkDisplay';
-import UserChip from '../../UserChip';
+import { FieldTag } from '../../tags/FieldTag/FieldTag';
 import './styles.scss';
+import { LinkDisplay } from '../../ui/LinkDisplayButton';
 
 interface ClaimPitchProps extends ModalProps {
   pitch: IPitch;
@@ -109,9 +108,7 @@ const ClaimPitchModal: FC<ClaimPitchProps> = ({
     <>
       <span style={{ fontWeight: 'bold' }}>{title}:</span>
       <span className="contributor-chip-list">
-        {users.length === 0
-          ? 'None'
-          : users.map((user) => <UserChip user={user} key={user._id} />)}
+        {users.length === 0 ? 'None' : users.map(() => <></>)}
       </span>
     </>
   );

@@ -18,6 +18,10 @@ export type UserFields = Pick<
     | 'fullname'
     | 'joinedNames' 
     | 'activityStatus'
+    | '_id'
+    | 'shortName'
+    | 'profilePic'
+    | 'rating'
 >;
 
 export type PitchFields = Pick<
@@ -30,6 +34,7 @@ export type PitchFields = Pick<
     | 'editStatus'
     | 'deadline'
     | 'issueStatuses'
+    | '_id'
 >;
-export type TeamFields = Pick<Team, 'name' | 'active' | 'color'>;
-export type InterestFields = Pick<Interest, 'name' | 'active' | 'color'>;
+export type TeamFields = Pick<Team, 'name' | 'active' | 'color' | '_id'>;
+export type InterestFields = Pick<Interest, 'name' | 'active' | 'color' | '_id'>;

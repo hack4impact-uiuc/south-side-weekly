@@ -2,17 +2,12 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Table } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
 
-import {
-  ApprovePitchModal,
-  ClaimPitchModal,
-  FieldTag,
-  TableTool,
-  ViewPitchModal,
-} from '../..';
+import { ClaimPitchModal, FieldTag, TableTool, ViewPitchModal } from '../..';
 import { useAuth, useInterests, useTeams } from '../../../contexts';
 import { pitchDocTabs } from '../../../utils/constants';
 import './styles.scss';
 import { getClaimableTeams } from '../../../utils/helpers';
+import { ReviewPitch } from '../../modal/ReviewPitch';
 
 interface PitchTableProps {
   pitches: IPitch[];
@@ -121,7 +116,11 @@ const PitchBody: FC<PitchBodyProps> = ({
         );
       } else if (currentTab === pitchDocTabs.PITCH_APPROVAL) {
         return (
-          <ApprovePitchModal callback={callback} key={index} pitch={pitch} />
+          <ReviewPitch
+            trigger={<PitchRow pitch={pitch} />}
+            key={index}
+            id={pitch._id}
+          />
         );
       } else if (currentTab === pitchDocTabs.CLAIM_APPROVAL) {
         //TODO: Replace PitchRow with the modal component

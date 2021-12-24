@@ -11,11 +11,11 @@ import {
   Header,
 } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
-import Swal from 'sweetalert2';
 
-import { InterestsSelect } from '../..';
-import { createPitch, isError } from '../../../api';
+import { isError } from '../../../api';
+import { apiCall } from '../../../api/request';
 import { useAuth, useTeams } from '../../../contexts';
+import ContextSelect from '../../select/ContextSelect';
 
 import './styles.scss';
 
@@ -117,23 +117,26 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
       body = { ...body, writer: user._id };
     }
 
-    const res = await createPitch({ ...body });
+    const res = await apiCall({
+      url: '/pitches',
+      method: 'POST',
+      body,
+    });
 
     if (!isError(res)) {
       callback();
-      Swal.fire({
-        title: 'Successfully submitted pitch!',
-        icon: 'success',
+      toast.success('Pitch successfully submitted!', {
+        position: 'bottom-right',
       });
 
       setIsOpen(false);
     }
-
-    return;
   };
 
   const isWriter = (): boolean => {
-    const writerObj = teams.find((team) => team.name === 'Writing');
+    const writerObj = teams.find(
+      (team) => team.name.toLowerCase() === 'writing',
+    );
 
     if (!writerObj) {
       console.error('No team with name Writing');
@@ -203,7 +206,8 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
             Associated topics
             <p className="unbold">(select 1-4 topics) </p>
           </h5>
-          <InterestsSelect
+          <ContextSelect
+            type="Interests"
             values={topics}
             onChange={(values) => {
               if (values.length <= 4) {

@@ -154,7 +154,6 @@ export const approvePitch = async (
     req.user._id,
     req.body,
   );
-
   if (!pitch) {
     sendNotFound(res, `Pitch with id ${req.params.id} not found`);
     return;

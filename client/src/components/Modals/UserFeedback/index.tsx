@@ -8,18 +8,18 @@ import {
   Icon,
 } from 'semantic-ui-react';
 import toast from 'react-hot-toast';
-import { IUserFeedback, IUser, ITeam } from 'ssw-common';
+import { IUserFeedback, ITeam, User } from 'ssw-common';
 import { toString } from 'lodash';
 
 import { useAuth, useTeams } from '../../../contexts';
 import { getAggregatedPitch, createUserFeedback, isError } from '../../../api';
-import FieldTag from '../../FieldTag';
-import UserChip from '../../UserChip';
+import { FieldTag } from '../../tags/FieldTag/FieldTag';
+import UserChip from '../../tags/UserChip';
 
 import './styles.scss';
 
 interface UserFeedbackModal extends ModalProps {
-  contributor: IUser;
+  contributor: User;
   pitchId: string;
 }
 

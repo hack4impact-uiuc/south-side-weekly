@@ -1,0 +1,27 @@
+@import '../../styles/colors.scss';
+
+.page-tabs {
+  .ui {
+    &.menu {
+      margin-bottom: 2px;
+      padding-inline-start: 4em;
+      padding-inline-end: 4em;
+    }
+    &.secondary.pointing.menu {
+      border-bottom: 0px;
+
+      .active.item {
+        border-bottom: 4px solid;
+        border-color: $secondaryColor;
+      }
+      .item {
+        border-bottom-width: auto;
+        padding-left: 3em;
+        padding-right: 3em;
+      }
+    }
+    &.segment {
+      padding: 1.5em 4em;
+    }
+  }
+}

@@ -18,7 +18,7 @@ export const createUserFeedback = async (
   res: Response,
 ): Promise<void> => {
   const newFeedback = await UserFeedbackService.add(req.body);
-  await UserService.addFeedback(newFeedback.userId, newFeedback.id);
+  await UserService.addFeedback(newFeedback.userId, newFeedback);
 
   const populateType = extractPopulateQuery(req.query);
 

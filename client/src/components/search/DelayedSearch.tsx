@@ -1,0 +1,46 @@
+import _ from 'lodash';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
+import { Input, InputProps } from 'semantic-ui-react';
+import { useQueryParams, withDefault, StringParam } from 'use-query-params';
+
+export const DelayedSearch: FC<InputProps> = ({ ...rest }): ReactElement => {
+  const [searchInput, setSearchInput] = useState('');
+
+  const [, setQuery] = useQueryParams({
+    search: withDefault(StringParam, ''),
+  });
+
+  const updateQuery = (value: string): void => {
+    if (value === '') {
+      setQuery({ search: undefined });
+      return;
+    }
+    toast.success(`Searching for ${value}`, { position: 'bottom-right' });
+    setQuery((prevQuery) => ({
+      ...prevQuery,
+      search: value,
+    }));
+  };
+
+  const DELAY = 500;
+  const delayedQuery = _.debounce(updateQuery, DELAY);
+
+  useEffect(() => {
+    delayedQuery(searchInput);
+
+    return delayedQuery.cancel;
+  }, [searchInput, delayedQuery]);
+
+  return (
+    <Input
+      {...rest}
+      value={searchInput}
+      onChange={(_, { value }) => setSearchInput(value)}
+      fluid
+      placeholder="Search by name or email..."
+      icon="search"
+      iconPosition="left"
+    />
+  );
+};

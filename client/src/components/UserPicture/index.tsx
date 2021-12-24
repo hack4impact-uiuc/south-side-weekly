@@ -1,13 +1,13 @@
 import React, { FC, ReactElement } from 'react';
 import { Image, ImageProps } from 'semantic-ui-react';
-import { IUser } from 'ssw-common';
+import { User } from 'ssw-common';
 import { isEmpty } from 'lodash';
 
-import { classNames, getUserFullName } from '../../utils/helpers';
+import { classNames } from '../../utils/helpers';
 import DefaultProfile from '../../assets/default_profile.png';
 
 interface UserPictureProps extends ImageProps {
-  user: Partial<IUser>;
+  user: Pick<User, 'profilePic' | 'fullname'>;
 }
 
 const UserPicture: FC<UserPictureProps> = ({
@@ -16,16 +16,17 @@ const UserPicture: FC<UserPictureProps> = ({
   className,
   ...rest
 }): ReactElement => {
-  const getPicture = (profilePic: IUser['profilePic'] = ''): string =>
-    !isEmpty(profilePic) ? profilePic : DefaultProfile;
+  const getPicture = (pic: string): string =>
+    !isEmpty(pic) ? pic : DefaultProfile;
 
   return (
     <Image
       circular
       size={size}
       src={getPicture(user.profilePic)}
-      alt={getUserFullName(user)}
+      alt={user.fullname}
       className={classNames('user-picture', className)}
+      onError={(e: any) => (e.target.src = DefaultProfile)}
       {...rest}
     />
   );

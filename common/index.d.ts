@@ -38,13 +38,6 @@ export interface IUser {
   joinedNames: string;
 }
 
-type BaseUserOmitFields = 'teams' | 'interests';
-
-export type DefaultPopulatedUser = Omit<IUser, BaseUserOmitFields> & {
-  teams: Pick<ITeam, 'name' | 'active' | 'color'>;
-  interests: Pick<IInterest, 'name' | 'active' | 'color'>;
-}
-
 export type PitchFields = Pick<
 IPitch,
 | 'title'
@@ -58,14 +51,6 @@ IPitch,
 >;
 export type TeamFields = Pick<ITeam, 'name' | 'active' | 'color'>;
 export type InterestFields = Pick<IInterest, 'name' | 'active' | 'color'>;
-
-export type FullPopulatedUser = Omit<IUser, BaseUserOmitFields | 'claimedPitches' | 'submittedPitches' | 'submittedClaims'> & {
-  teams: TeamFields;
-  interests: InterestFields;
-  claimedPitches: PitchFields;
-  submittedPitches: PitchFields;
-  submittedClaims: PitchFields;
-}
 
 export interface IUserAggregate extends IUser {
   aggregated: {

@@ -3,7 +3,7 @@ import { toLower } from 'lodash';
 import { Button, Grid, Icon, Modal, ModalProps } from 'semantic-ui-react';
 import { ITeam, IUser } from 'ssw-common';
 
-import FieldTag from '../../FieldTag';
+import { FieldTag } from '../../tags/FieldTag/FieldTag';
 import { getUserFullName } from '../../../utils/helpers';
 import UserPicture from '../../UserPicture';
 import { useInterests, useTeams } from '../../../contexts';

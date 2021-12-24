@@ -10,7 +10,6 @@ import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
 
 import { FieldTag, PitchRow } from '../..';
 import { getAggregatedPitch, isError } from '../../../api';
-import { useTeams } from '../../../contexts';
 import { emptyAggregatePitch } from '../../../utils/constants';
 import RoleRow from '../RoleRow';
 
@@ -29,8 +28,6 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
   pitch,
   ...rest
 }): ReactElement => {
-  const { getTeamFromId } = useTeams();
-
   const pitchId = pitch._id;
   const [isOpen, setIsOpen] = useState(false);
   const [aggregate, setAggregate] =
@@ -108,36 +105,21 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
         <Grid columns="2">
           <GridColumn>
             <div>
-              <RoleRow
-                roleName="Pitch Creator"
-                users={[aggregate?.aggregated.author]}
-              />
+              <RoleRow roleName="Pitch Creator" users={[]} />
             </div>
             <div>
-              <RoleRow
-                roleName="Writer"
-                users={[aggregate?.aggregated.writer]}
-              />
+              <RoleRow roleName="Writer" users={[]} />
             </div>
           </GridColumn>
           <GridColumn>
             <div>
-              <RoleRow
-                roleName="Primary Editor"
-                users={[aggregate?.aggregated.primaryEditor]}
-              />
+              <RoleRow roleName="Primary Editor" users={[]} />
             </div>
             <div>
-              <RoleRow
-                roleName="Second Editor"
-                users={aggregate?.aggregated.secondaryEditors}
-              />
+              <RoleRow roleName="Second Editor" users={[]} />
             </div>
             <div>
-              <RoleRow
-                roleName="Third Editor"
-                users={aggregate?.aggregated.thirdEditors}
-              />
+              <RoleRow roleName="Third Editor" users={[]} />
             </div>
           </GridColumn>
         </Grid>
@@ -145,12 +127,13 @@ const ViewPitchModal: FC<ViewPitchProps> = ({
         <Divider />
         <Grid columns="2">
           <GridColumn>
-            {teamsToContributors?.map((team, index) => (
-              <RoleRow
-                key={index}
-                roleName={getTeamFromId(team.team)?.name || ''}
-                users={team.users}
-              />
+            {teamsToContributors?.map(() => (
+              // <RoleRow
+              //   key={index}
+              //   roleName={getTeamFromId(team.team)?.name || ''}
+              //   users={team.users}
+              // />
+              <></>
             ))}
           </GridColumn>
         </Grid>

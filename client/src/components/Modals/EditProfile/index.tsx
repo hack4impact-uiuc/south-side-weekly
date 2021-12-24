@@ -1,27 +1,28 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Button, Form, Grid, Icon, Modal, ModalProps } from 'semantic-ui-react';
 import toast from 'react-hot-toast';
-import { IUser } from 'ssw-common';
+import { BasePopulatedUser, IUser, User } from 'ssw-common';
 import * as yup from 'yup';
 import { Formik, Form as FormikForm } from 'formik';
 
-import {
-  InterestsSelect,
-  MultiSelect,
-  TeamsSelect,
-  Select,
-  AdminView,
-} from '../..';
-import { isError, updateUser } from '../../../api';
-import { IPermissions } from '../../../pages/profile/types';
+import { isError } from '../../../api';
 import { allGenders, allPronouns, allRoles } from '../../../utils/constants';
 import './styles.scss';
 import { titleCase } from '../../../utils/helpers';
 import { useAuth } from '../../../contexts';
+import { apiCall } from '../../../api/request';
+import { PrimaryButton } from '../../ui/PrimaryButton';
+import { AuthView } from '../../wrapper/AuthView';
+import { MultiSelect } from '../../select/MultiSelect';
+import { SingleSelect } from '../../select/SingleSelect';
+import ContextSelect from '../../select/ContextSelect';
 
 interface EditProfileProps extends ModalProps {
-  user: IUser;
-  permissions: IPermissions;
+  user: BasePopulatedUser;
+  permissions: {
+    view: (keyof User)[];
+    edit: (keyof User)[];
+  };
   callback(): void;
 }
 
@@ -33,8 +34,6 @@ const EditProfileModal: FC<EditProfileProps> = ({
 }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
   const { register } = useAuth();
-  const phoneRegExp =
-    /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
   const userProfileSchema = yup.object({
     firstName: yup.string().required(),
@@ -46,7 +45,7 @@ const EditProfileModal: FC<EditProfileProps> = ({
     email: yup.string().required(),
     role: yup.string().required(),
     teams: yup.array().of(yup.string().required()).required().min(1),
-    phone: yup.string().matches(phoneRegExp).required(),
+    phone: yup.string().required(),
     twitter: yup.string().nullable().notRequired(),
     linkedIn: yup.string().nullable(),
     portfolio: yup.string().nullable(),
@@ -79,25 +78,27 @@ const EditProfileModal: FC<EditProfileProps> = ({
   }, [isOpen]);
 
   const updateProfile = async (values: userProfile): Promise<void> => {
-    const userRes = await updateUser(
-      {
-        firstName: values.firstName,
-        lastName: values.lastName,
-        preferredName: values.preferredName,
-        genders: values.genders,
-        pronouns: values.pronouns,
-        interests: values.interests,
-        email: values.email,
-        phone: values.phone,
-        role: values.role,
-        teams: values.teams,
-        twitter: values.twitter ?? undefined,
-        linkedIn: values.linkedIn ?? undefined,
-        portfolio: values.portfolio ?? undefined,
-      },
-      user._id,
-    );
-    if (!isError(userRes)) {
+    const data = {
+      firstName: values.firstName,
+      lastName: values.lastName,
+      preferredName: values.preferredName,
+      genders: values.genders,
+      pronouns: values.pronouns,
+      interests: values.interests,
+      email: values.email,
+      phone: values.phone,
+      role: values.role,
+      teams: values.teams,
+      twitter: values.twitter ?? undefined,
+      linkedIn: values.linkedIn ?? undefined,
+      portfolio: values.portfolio ?? undefined,
+    };
+    const res = await apiCall({
+      method: 'PUT',
+      url: `/users/${user._id}`,
+      body: data,
+    });
+    if (!isError(res)) {
       register();
       callback();
       toast.success('Profile updated successfully!');
@@ -128,7 +129,11 @@ const EditProfileModal: FC<EditProfileProps> = ({
       </Modal.Header>
       <Modal.Content scrolling>
         <Formik
-          initialValues={user}
+          initialValues={{
+            ...user,
+            interests: user.interests.map((i) => i._id),
+            teams: user.teams.map((t) => t._id),
+          }}
           onSubmit={updateProfile}
           validationSchema={userProfileSchema}
         >
@@ -188,9 +193,9 @@ const EditProfileModal: FC<EditProfileProps> = ({
                       ></MultiSelect>{' '}
                     </>
                   )}
-                  <AdminView>
+                  <AuthView view="isAdmin">
                     <h5>Role</h5>
-                    <Select
+                    <SingleSelect
                       options={allRoles.map((role) => ({
                         value: role,
                         label: titleCase(role.toLowerCase()),
@@ -200,7 +205,7 @@ const EditProfileModal: FC<EditProfileProps> = ({
                       }
                       value={props.values.role}
                     />
-                  </AdminView>
+                  </AuthView>
                 </Grid.Column>
 
                 {isEditable('pronouns') && (
@@ -218,7 +223,7 @@ const EditProfileModal: FC<EditProfileProps> = ({
                         )
                       }
                       value={props.values.pronouns}
-                    ></MultiSelect>
+                    />
                   </Grid.Column>
                 )}
               </Grid>
@@ -228,7 +233,8 @@ const EditProfileModal: FC<EditProfileProps> = ({
                   {isEditable('interests') && (
                     <>
                       <h4>Topic Interests</h4>
-                      <InterestsSelect
+                      <ContextSelect
+                        type="Interests"
                         onChange={(values) =>
                           props.setFieldValue(
                             'interests',
@@ -303,9 +309,10 @@ const EditProfileModal: FC<EditProfileProps> = ({
                 </Grid.Column>
 
                 <Grid.Column>
-                  <AdminView>
+                  <AuthView view="isAdmin">
                     <h5>Teams</h5>
-                    <TeamsSelect
+                    <ContextSelect
+                      type="Teams"
                       onChange={(values) =>
                         props.setFieldValue(
                           'teams',
@@ -314,16 +321,17 @@ const EditProfileModal: FC<EditProfileProps> = ({
                       }
                       values={props.values.teams}
                     />
-                  </AdminView>
+                  </AuthView>
                 </Grid.Column>
               </Grid>
             </FormikForm>
           )}
         </Formik>
+
+        <Modal.Actions>
+          <PrimaryButton type="submit" form="formik-form" content="Save" />
+        </Modal.Actions>
       </Modal.Content>
-      <Modal.Actions>
-        <Button type="submit" form="formik-form" content="Save" secondary />
-      </Modal.Actions>
     </Modal>
   );
 };

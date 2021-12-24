@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import mongooseLeanVirtuals from 'mongoose-lean-virtuals';
-import { IUser } from 'ssw-common';
+import { IUser, User } from 'ssw-common';
 
 import {
   onboardingStatusEnum,
@@ -9,7 +9,7 @@ import {
   racesEnum,
 } from '../utils/enums';
 
-export type UserSchema = IUser & Document<any>;
+export type UserSchema = User & Document<any>;
 
 /**
  * Mongoose Schema to represent a User at South Side Weekly.
@@ -41,7 +41,7 @@ const User = new mongoose.Schema(
     teams: [{ type: Schema.Types.ObjectId, ref: 'Team' }],
     involvementResponse: { type: String, default: null },
     journalismResponse: { type: String, default: null },
-    neighborhood: { type: String, required: true },
+    neighborhood: { type: String, default: null },
     onboardReasoning: { type: String, default: null },
     feedback: [{ type: Schema.Types.ObjectId, ref: 'UserFeedback' }],
     lastActive: { type: Date, default: Date.now },
@@ -61,6 +61,7 @@ const User = new mongoose.Schema(
     ],
 
     interests: [{ type: Schema.Types.ObjectId, ref: 'Interest' }],
+    rating: { type: Number, default: 0 },
   },
   {
     toObject: {
@@ -107,6 +108,14 @@ User.virtual('activityStatus').get(function () {
   }
 
   return 'INACTIVE';
+});
+
+User.virtual('shortName').get(function () {
+  if (this.preferredName) {
+    return `${this.preferredName} ${this.lastName.charAt(0)}.`;
+  }
+
+  return `${this.firstName} ${this.lastName.charAt(0)}.`;
 });
 
 User.plugin(mongooseLeanVirtuals);

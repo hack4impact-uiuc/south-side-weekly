@@ -7,7 +7,6 @@ import { IPitch, IUserAggregate } from 'ssw-common';
 import { getAggregatedUser, isError } from '../../api';
 import {
   DynamicTable,
-  InterestsSelect,
   SubmitPitchModal,
   View,
   Walkthrough,
@@ -15,6 +14,7 @@ import {
 import { useAuth } from '../../contexts';
 import { pagesEnum, pitchStatusEnum } from '../../utils/enums';
 import { filterPitchesByInterests, titleCase } from '../../utils/helpers';
+import ContextSelect from '../../components/select/ContextSelect';
 
 import {
   filterCreatedYear,
@@ -28,6 +28,7 @@ import {
   TABS,
 } from './helpers';
 import { getColumnsForTab } from './views';
+
 import './styles.scss';
 
 const searchFields: (keyof IPitch)[] = ['title'];
@@ -220,7 +221,8 @@ const Homepage: FC = () => {
           )}
           {canFilterInterests && (
             <div className="filter-dropdown">
-              <InterestsSelect
+              <ContextSelect
+                type="Interests"
                 values={filteredInterests}
                 onChange={(values) =>
                   setFilteredInterests(

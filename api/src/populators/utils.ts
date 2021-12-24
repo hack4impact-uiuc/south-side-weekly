@@ -1,5 +1,5 @@
 import { PopulateOptions } from 'mongoose';
-import { UserFields } from 'ssw-common/interfaces/_types';
+import { UserFields } from 'ssw-common';
 import {
   InterestFields,
   Models,
@@ -26,15 +26,19 @@ const selectModelFields = <T>(fields: (keyof T)[]): SelectFields<T> => ({
   ),
 });
 
-const teamFields = selectModelFields<TeamFields>(['name', 'color', 'active']);
-
-const interestFields = selectModelFields<InterestFields>([
+export const teamFields = selectModelFields<TeamFields>([
   'name',
   'color',
   'active',
 ]);
 
-const pitchFields = selectModelFields<PitchFields>([
+export const interestFields = selectModelFields<InterestFields>([
+  'name',
+  'color',
+  'active',
+]);
+
+export const pitchFields = selectModelFields<PitchFields>([
   'title',
   'description',
   'createdAt',
@@ -45,7 +49,7 @@ const pitchFields = selectModelFields<PitchFields>([
   'issueStatuses',
 ]);
 
-const userFields = selectModelFields<UserFields>([
+export const userFields = selectModelFields<UserFields>([
   'role',
   'firstName',
   'lastName',
@@ -59,6 +63,9 @@ const userFields = selectModelFields<UserFields>([
   'fullname',
   'joinedNames',
   'activityStatus',
+  'shortName',
+  'profilePic',
+  'rating',
 ]);
 
 const getModelFields = (
