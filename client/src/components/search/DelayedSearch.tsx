@@ -1,5 +1,11 @@
 import _ from 'lodash';
-import React, { FC, ReactElement, useEffect, useState } from 'react';
+import React, {
+  FC,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import toast from 'react-hot-toast';
 import { Input, InputProps } from 'semantic-ui-react';
 import { useQueryParams, withDefault, StringParam } from 'use-query-params';
@@ -24,7 +30,8 @@ export const DelayedSearch: FC<InputProps> = ({ ...rest }): ReactElement => {
   };
 
   const DELAY = 500;
-  const delayedQuery = _.debounce(updateQuery, DELAY);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const delayedQuery = useCallback(_.debounce(updateQuery, DELAY), []);
 
   useEffect(() => {
     delayedQuery(searchInput);

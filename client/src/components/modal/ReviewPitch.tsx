@@ -170,7 +170,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
         <Pusher />
         <Icon name="close" onClick={() => setIsOpen(false)} />
       </Modal.Header>
-      <Modal.Content>
+      <Modal.Content scrolling>
         <div className="flex-wrapper">
           <div id="title">
             <h2>{pitch?.title}</h2>
@@ -349,20 +349,20 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
             onChange={(e, { value }) => setReasoning(value)}
           />
         </div>
-        <Modal.Actions>
-          <PrimaryButton
-            disabled={false}
-            onClick={approvePitch}
-            content="Approve"
-          />
-          <SecondaryButton
-            disabled={user!._id === pitch?.author._id}
-            onClick={declinePitch}
-            content="Decline"
-            border
-          />
-        </Modal.Actions>
       </Modal.Content>
+      <Modal.Actions>
+        <PrimaryButton
+          disabled={false}
+          onClick={approvePitch}
+          content="Approve"
+        />
+        <SecondaryButton
+          disabled={user!._id === pitch?.author._id}
+          onClick={declinePitch}
+          content="Decline"
+          border
+        />
+      </Modal.Actions>
     </Modal>
   );
 };

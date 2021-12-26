@@ -1,7 +1,8 @@
 import React, { FC, useMemo } from 'react';
 import { BasePopulatedUser } from 'ssw-common';
 
-import { ReviewUserModal, UserModal } from '..';
+import { ReviewUser } from '..';
+import { ViewUserModal } from '../modal/ViewUser';
 
 import {
   profilePic,
@@ -76,10 +77,10 @@ export const UsersRecords: FC<TableProps> = ({ users, count, type }) => {
       getModal={(user, open, setOpen) => (
         <>
           {type === 'approved' && (
-            <UserModal open={open} setOpen={setOpen} user={user} />
+            <ViewUserModal open={open} setOpen={setOpen} user={user} />
           )}
           {type === 'pending' && (
-            <ReviewUserModal
+            <ReviewUser
               type="review"
               open={open}
               setOpen={setOpen}
@@ -87,7 +88,7 @@ export const UsersRecords: FC<TableProps> = ({ users, count, type }) => {
             />
           )}
           {type === 'denied' && (
-            <ReviewUserModal
+            <ReviewUser
               type="reject"
               open={open}
               setOpen={setOpen}

@@ -4,7 +4,7 @@ body {
   margin: 0 !important;
   padding: 0 !important;
   font-family: 'Lato', Tahoma, Geneva, Verdana, sans-serif !important;
-  background-color: $mainBackground;
+  background-color: $mainBackground !important;
 
   // Forces the sroll bar at ALL times to prevent div jumping
   overflow-y: scroll;
@@ -25,25 +25,6 @@ body {
   font-weight: 700;
   font-size: 36px;
   padding: 5vh 0 5vh 0;
-}
-
-.ui {
-  &.button {
-    font-weight: normal;
-
-    &.secondary {
-      background-color: $secondaryColor;
-
-      &:hover,
-      &:focus {
-        background-color: darken($secondaryColor, 2.5%);
-      }
-
-      &:active {
-        background-color: darken($secondaryColor, 5%);
-      }
-    }
-  }
 }
 
 .scrollable {

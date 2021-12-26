@@ -67,7 +67,7 @@ const routes = [
 ReactDOM.render(
   <React.StrictMode>
     <Providers>
-      <Toaster />
+      <Toaster position="bottom-right" />
       <Router>
         <QueryParamProvider ReactRouterRoute={Route}>
           <Switch>

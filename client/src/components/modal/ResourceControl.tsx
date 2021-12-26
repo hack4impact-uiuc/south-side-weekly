@@ -105,7 +105,7 @@ const ResourceModal: FC<ResourceProps> = ({
         <Pusher />
         <Icon id="close-icon" name="close" onClick={closeModal} />
       </Modal.Header>
-      <Modal.Content>
+      <Modal.Content scrolling>
         <Modal.Description>
           <ResourceForm
             id="resource-form"
@@ -113,25 +113,25 @@ const ResourceModal: FC<ResourceProps> = ({
             initialValues={formValues}
           />
         </Modal.Description>
-        <Modal.Actions>
-          <Form.Group>
-            <PrimaryButton
-              className="submit-btn"
-              content={action === 'edit' ? 'Save' : 'Create Resource'}
-              type="submit"
-              form="resource-form"
-            />
-            {action === 'edit' && (
-              <SecondaryButton
-                border
-                className="delete-btn"
-                content="Delete Resource"
-                onClick={deleteResource}
-              />
-            )}
-          </Form.Group>
-        </Modal.Actions>
       </Modal.Content>
+      <Modal.Actions>
+        <Form.Group>
+          <PrimaryButton
+            className="submit-btn"
+            content={action === 'edit' ? 'Save' : 'Create Resource'}
+            type="submit"
+            form="resource-form"
+          />
+          {action === 'edit' && (
+            <SecondaryButton
+              border
+              className="delete-btn"
+              content="Delete Resource"
+              onClick={deleteResource}
+            />
+          )}
+        </Form.Group>
+      </Modal.Actions>
     </Modal>
   );
 };

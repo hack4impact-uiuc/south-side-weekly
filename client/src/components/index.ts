@@ -1,7 +1,6 @@
 // import ClaimPitchModal from './Modals/ClaimPitch';
 import ResourceModal from './modal/ResourceControl';
 import SubmitPitchModal from './modal/SubmitPItch';
-import UserModal from './Modals/User';
 import WizardListTitle from './Wizard/ListTitle';
 import PageCounter from './Wizard/PageCounter';
 import WizardSvg from './Wizard/Svg';
@@ -19,7 +18,7 @@ import {
   EditInterests,
   EditTeams,
 } from './Modals/EditableTags';
-import ReviewUserModal from './Modals/ReviewUser';
+import { ReviewUser } from './modal/ReviewUser';
 import { buildColumn } from './Tables/DynamicTable/util';
 import { buildPaginatedColumn } from './Tables/PaginatedTable/util';
 import Kanban from './Kanban';
@@ -33,7 +32,6 @@ export {
   // ClaimPitchModal,
   ResourceModal,
   SubmitPitchModal,
-  UserModal,
   WizardListTitle,
   PageCounter,
   WizardSvg,
@@ -49,7 +47,7 @@ export {
   EditInterests,
   EditTeams,
   EditableTagModal,
-  ReviewUserModal,
+  ReviewUser,
   DynamicTable,
   buildColumn,
   PitchFeedbackModal,

@@ -8,30 +8,27 @@ import {
   Message,
 } from 'semantic-ui-react';
 import { BasePopulatedUser } from 'ssw-common';
+import toast from 'react-hot-toast';
 
-import { UserPicture, FieldTag } from '../..';
-import { titleCase } from '../../../utils/helpers';
-import { onboardingStatusEnum } from '../../../utils/enums';
-import { SecondaryButton } from '../../ui/SecondaryButton';
-import { PrimaryButton } from '../../ui/PrimaryButton';
-import { updateUser } from '../../../api';
-import { TagList } from '../../list/TagList';
+import { UserPicture, FieldTag } from '..';
+import { titleCase } from '../../utils/helpers';
+import { SecondaryButton } from '../ui/SecondaryButton';
+import { PrimaryButton } from '../ui/PrimaryButton';
+import { isError } from '../../api';
+import { TagList } from '../list/TagList';
+import { apiCall } from '../../api/request';
 
-import './styles.scss';
+import './modals.scss';
+import './ReviewUser.scss';
 
 interface ReviewUserProps extends ModalProps {
   user: BasePopulatedUser;
-  actionUpdate?: (
-    user: BasePopulatedUser,
-    status: keyof typeof onboardingStatusEnum,
-  ) => Promise<void>;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   type: 'reject' | 'review';
 }
 
-const ReviewUserModal: FC<ReviewUserProps> = ({
+export const ReviewUser: FC<ReviewUserProps> = ({
   user,
-  actionUpdate,
   open,
   setOpen,
   type,
@@ -39,10 +36,39 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
 }): ReactElement => {
   const [onboardReasoning, setOnboardReasoning] = useState('');
 
+  const denyUser = async (): Promise<void> => {
+    const res = await apiCall({
+      method: 'PUT',
+      url: `/users/${user._id}/deny`,
+      body: { onboardReasoning },
+    });
+
+    if (!isError(res)) {
+      toast.success('User denied', { position: 'bottom-right' });
+      setOpen(false);
+    } else {
+      toast.error('Fail to deny user!', { position: 'bottom-right' });
+    }
+  };
+
+  const approveUser = async (): Promise<void> => {
+    const res = await apiCall({
+      method: 'PUT',
+      url: `/users/${user._id}/approve`,
+      body: { onboardReasoning },
+    });
+
+    if (!isError(res)) {
+      toast.success('User approved', { position: 'bottom-right' });
+      setOpen(false);
+    } else {
+      toast.error('Fail to approve user!', { position: 'bottom-right' });
+    }
+  };
+
   return (
     <Modal
       {...rest}
-      size="large"
       open={open}
       onClose={() => setOpen(false)}
       className="review-user-modal"
@@ -50,7 +76,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
       <Modal.Header className="review-user-header">
         {type === 'reject' ? 'View Rejected User' : 'Review User'}
       </Modal.Header>
-      <Modal.Content>
+      <Modal.Content scrolling>
         <Grid divided="vertically">
           <Grid.Row columns={2}>
             <Grid.Column>
@@ -58,7 +84,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
                 <UserPicture className="review-user-picture" user={user} />
                 <div className="user-info-text">
                   <b>{user.joinedNames}</b>
-                  <br></br>
+                  <br />
                   {user.pronouns.join(', ')}
                 </div>
               </div>
@@ -73,8 +99,6 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
                 {user.phone}
               </div>
             </Grid.Column>
-          </Grid.Row>
-          <Grid.Row columns={1}>
             <Grid.Column>
               <b>Genders:</b> {user.genders.join(', ')}
               <br /> <b>Races:</b> {user.races.map(titleCase).join(', ')}
@@ -82,7 +106,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
               {user.neighborhood}
             </Grid.Column>
           </Grid.Row>
-          <Grid.Row columns={4}>
+          <Grid.Row columns="4">
             <Grid.Column>
               <b>Role</b>
               <div>
@@ -95,17 +119,18 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
             </Grid.Column>
             <Grid.Column>
               <b>Teams</b>
-              <div style={{ display: 'flex' }}>
+              <div>
                 <TagList tags={user.teams} />
               </div>
             </Grid.Column>
-            <Grid.Column>
+            <Grid.Column width={8}>
               <b>Topic Interests</b>
               <div>
                 <TagList tags={user.interests} />
               </div>
             </Grid.Column>
           </Grid.Row>
+
           <Grid.Row columns={1}>
             <Grid.Column>
               {type === 'reject' && (
@@ -122,16 +147,13 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
                 {new Date(user.dateJoined).toLocaleDateString()}
               </span>
             </Grid.Column>
-          </Grid.Row>
-
-          <Grid.Row columns={1}>
             <Grid.Column>
-              <div className="paragraph">
+              <div className="section">
                 <b>How and why user wants to get involved</b>
                 <br />
                 {user.involvementResponse}
               </div>
-              <div className="paragraph">
+              <div className="section">
                 <b>User's past experience</b>
                 <br />
                 {user.journalismResponse}
@@ -143,8 +165,8 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
                     Reasoning <span style={{ color: 'gray' }}>- Optional</span>
                   </h5>
                   <Form.Input
+                    fluid
                     value={onboardReasoning}
-                    type="text"
                     onChange={(e, { value }) => setOnboardReasoning(value)}
                   />
                 </>
@@ -152,32 +174,22 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
             </Grid.Column>
           </Grid.Row>
         </Grid>
-        {type === 'review' && (
-          <Modal.Actions className="review-user-actions">
-            <PrimaryButton
-              className="approve-button"
-              onClick={() => {
-                updateUser({ onboardReasoning: onboardReasoning }, user._id);
-                actionUpdate?.(user, 'ONBOARDED');
-                setOpen(false);
-              }}
-              content="Approve"
-            />
-            <SecondaryButton
-              className="decline-button"
-              onClick={() => {
-                updateUser({ onboardReasoning: onboardReasoning }, user._id);
-                actionUpdate?.(user, 'DENIED');
-                setOpen(false);
-              }}
-              content="Decline"
-              border
-            />
-          </Modal.Actions>
-        )}
       </Modal.Content>
+      {type === 'review' && (
+        <Modal.Actions className="review-user-actions">
+          <PrimaryButton
+            className="approve-button"
+            onClick={approveUser}
+            content="Approve"
+          />
+          <SecondaryButton
+            className="decline-button"
+            onClick={denyUser}
+            content="Decline"
+            border
+          />
+        </Modal.Actions>
+      )}
     </Modal>
   );
 };
-
-export default ReviewUserModal;

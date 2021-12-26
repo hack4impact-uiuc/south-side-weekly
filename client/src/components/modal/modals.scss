@@ -1,7 +1,7 @@
 @import '../../styles/colors.scss';
 
 .ui.modal {
-  .header {
+  > .header {
     background-color: $primary !important;
     color: white !important;
     display: flex !important;
@@ -14,6 +14,7 @@
   }
 
   .content {
+    background-color: $mainBackground !important;
     mark.optional {
       color: #9b9b9b;
       background-color: transparent !important;
@@ -27,7 +28,6 @@
   }
 
   .actions {
-    text-align: right;
-    padding: 20px 0px 10px 0px !important;
+    background-color: $mainBackground !important;
   }
 }
