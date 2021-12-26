@@ -1,6 +1,6 @@
 import mongoose, { Document, Schema } from 'mongoose';
 import mongooseLeanVirtuals from 'mongoose-lean-virtuals';
-import { IUser, User } from 'ssw-common';
+import { User } from 'ssw-common';
 
 import {
   onboardingStatusEnum,

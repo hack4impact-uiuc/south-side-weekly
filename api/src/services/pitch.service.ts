@@ -156,14 +156,16 @@ export const approvePitch = async (
   reviewedBy: string,
   payload: Partial<PitchSchema>,
 ): Pitch => {
-  await IssueService.addPitch(payload.issueStatuses.map(issue => issue.issueId), _id);
+  await IssueService.addPitch(
+    payload.issueStatuses.map((issue) => issue.issueId),
+    _id,
+  );
 
   return await updateModel(
     { _id },
     { status: pitchStatusEnum.APPROVED, reviewedBy, ...payload },
   );
-}
-
+};
 
 export const declinePitch = async (_id: string, reviewedBy: string): Pitch =>
   await updateModel({ _id }, { status: pitchStatusEnum.DECLINED, reviewedBy });

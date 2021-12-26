@@ -1,11 +1,6 @@
 import User, { UserSchema } from '../models/user';
 import { PopulateType, populateTypes } from './types';
-import {
-  getPopulateOptions,
-  interestFields,
-  pitchFields,
-  userFields,
-} from './utils';
+import { getPopulateOptions } from './utils';
 
 /**
  * Populates a user's ref fields

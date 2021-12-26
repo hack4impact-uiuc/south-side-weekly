@@ -30,9 +30,7 @@ const ignoreKeys = ['activityStatus'];
 
 const mongooseFilters = (
   filters: FilterQuery<UserSchema>,
-): FilterQuery<UserSchema> => {
-  return _.omit(filters, ignoreKeys);
-};
+): FilterQuery<UserSchema> => _.omit(filters, ignoreKeys);
 
 const activityFilter = (status: Condition<string>): FilterQuery<UserSchema> => {
   if (!status) {
@@ -41,7 +39,7 @@ const activityFilter = (status: Condition<string>): FilterQuery<UserSchema> => {
 
   status = status.toString().toUpperCase();
   const now = new Date();
-  const lastActive =  new Date(
+  const lastActive = new Date(
     now.getFullYear(),
     now.getMonth() - 3,
     now.getDate(),
@@ -56,8 +54,6 @@ const activityFilter = (status: Condition<string>): FilterQuery<UserSchema> => {
     now.getMonth(),
     now.getDate(),
   );
-
-
 
   if (status === 'ACTIVE') {
     return {
