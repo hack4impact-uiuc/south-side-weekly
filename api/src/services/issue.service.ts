@@ -8,8 +8,8 @@ import {
 import { IIssue, IPitch } from 'ssw-common';
 import { PitchService } from '.';
 
-import Issue, { IssueSchema } from '../models/issue';
-import { PitchSchema } from '../models/pitch';
+import Issue, { IssueSchema } from '../models/issue.model';
+import { PitchSchema } from '../models/pitch.model';
 import { issueStatusEnum } from '../utils/enums';
 import { PaginateOptions } from './types';
 

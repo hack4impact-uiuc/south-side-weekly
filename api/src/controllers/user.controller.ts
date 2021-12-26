@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 
-import Pitch from '../models/pitch';
+import Pitch from '../models/pitch.model';
 import { onboardingStatusEnum } from '../utils/enums';
 import { sendNotFound, sendSuccess } from '../utils/helpers';
 import { getEditableFields, getViewableFields } from '../utils/user-utils';

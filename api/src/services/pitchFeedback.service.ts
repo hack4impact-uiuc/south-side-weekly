@@ -2,7 +2,9 @@ import _ from 'lodash';
 import { FilterQuery, LeanDocument, UpdateQuery } from 'mongoose';
 import { IPitchFeedback } from 'ssw-common';
 
-import PitchFeedback, { PitchFeedbackSchema } from '../models/pitchFeedback';
+import PitchFeedback, {
+  PitchFeedbackSchema,
+} from '../models/pitchFeedback.model';
 import { PaginateOptions } from './types';
 
 interface PitchFeedbacksResponse {

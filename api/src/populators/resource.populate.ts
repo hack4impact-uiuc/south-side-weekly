@@ -1,4 +1,4 @@
-import Resource, { ResourceSchema } from '../models/resource';
+import Resource, { ResourceSchema } from '../models/resource.model';
 import { PopulateType, populateTypes } from './types';
 import { getPopulateOptions } from './utils';
 

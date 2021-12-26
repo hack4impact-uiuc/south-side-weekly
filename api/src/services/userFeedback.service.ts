@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { FilterQuery, LeanDocument, UpdateQuery } from 'mongoose';
 import { IUserFeedback } from 'ssw-common';
 
-import UserFeedback, { UserFeedbackSchema } from '../models/userFeedback';
+import UserFeedback, { UserFeedbackSchema } from '../models/userFeedback.model';
 import { PaginateOptions } from './types';
 
 type UserFeedback = Promise<LeanDocument<UserFeedbackSchema>>;

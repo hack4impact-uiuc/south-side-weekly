@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { IIssue } from 'ssw-common';
 
-import Issue from '../models/issue';
+import Issue from '../models/issue.model';
 import { sendNotFound, sendSuccess } from '../utils/helpers';
 import { IssueService, PitchService } from '../services';
 import { extractOptions, extractPopulateQuery } from './utils';

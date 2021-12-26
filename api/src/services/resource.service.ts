@@ -2,7 +2,7 @@ import _ from 'lodash';
 import { FilterQuery, LeanDocument, UpdateQuery } from 'mongoose';
 import { IResource } from 'ssw-common';
 
-import Resource, { ResourceSchema } from '../models/resource';
+import Resource, { ResourceSchema } from '../models/resource.model';
 import { visibilityEnum } from '../utils/enums';
 import { PaginateOptions } from './types';
 

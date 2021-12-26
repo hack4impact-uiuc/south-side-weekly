@@ -1,7 +1,7 @@
 import { FilterQuery, LeanDocument, UpdateQuery } from 'mongoose';
 import { IInterest } from 'ssw-common';
 
-import Interest, { InterestSchema } from '../models/interest';
+import Interest, { InterestSchema } from '../models/interest.model';
 
 type Interests = Promise<LeanDocument<InterestSchema>[]>;
 type Interest = Promise<LeanDocument<InterestSchema>>;

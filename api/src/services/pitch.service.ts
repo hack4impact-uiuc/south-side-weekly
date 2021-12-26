@@ -3,7 +3,7 @@ import { FilterQuery, LeanDocument, UpdateQuery } from 'mongoose';
 import { IPitch } from 'ssw-common';
 import { IssueService, UserService } from '.';
 
-import Pitch, { PitchSchema } from '../models/pitch';
+import Pitch, { PitchSchema } from '../models/pitch.model';
 import { pitchStatusEnum } from '../utils/enums';
 import { PaginateOptions } from './types';
 

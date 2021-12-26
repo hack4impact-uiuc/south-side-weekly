@@ -5,7 +5,7 @@ import {
   Pitch as PitchType,
 } from 'ssw-common';
 
-import Pitch, { PitchSchema } from '../models/pitch';
+import Pitch, { PitchSchema } from '../models/pitch.model';
 import { PopulateType, populateTypes } from './types';
 import { getPopulateOptions } from './utils';
 

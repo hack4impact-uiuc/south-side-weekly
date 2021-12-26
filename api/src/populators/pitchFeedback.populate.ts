@@ -1,4 +1,6 @@
-import PitchFeedback, { PitchFeedbackSchema } from '../models/pitchFeedback';
+import PitchFeedback, {
+  PitchFeedbackSchema,
+} from '../models/pitchFeedback.model';
 import { PopulateType, populateTypes } from './types';
 import { getPopulateOptions } from './utils';
 

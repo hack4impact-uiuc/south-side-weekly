@@ -3,8 +3,8 @@ import { Condition } from 'mongodb';
 import { FilterQuery, LeanDocument } from 'mongoose';
 import { IUser } from 'ssw-common';
 
-import User, { UserSchema } from '../models/user';
-import { UserFeedbackSchema } from '../models/userFeedback';
+import User, { UserSchema } from '../models/user.model';
+import { UserFeedbackSchema } from '../models/userFeedback.model';
 import { onboardingStatusEnum } from '../utils/enums';
 import { PaginateOptions } from './types';
 

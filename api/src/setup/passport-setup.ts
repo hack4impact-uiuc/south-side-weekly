@@ -5,7 +5,7 @@ import {
 import { IUser } from 'ssw-common';
 import passport from 'passport';
 
-import User from '../models/user';
+import User from '../models/user.model';
 import { rolesEnum } from '../utils/enums';
 
 passport.serializeUser((user: IUser, done) => {

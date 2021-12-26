@@ -1,4 +1,4 @@
-import User, { UserSchema } from '../models/user';
+import User, { UserSchema } from '../models/user.model';
 import { PopulateType, populateTypes } from './types';
 import { getPopulateOptions } from './utils';
 

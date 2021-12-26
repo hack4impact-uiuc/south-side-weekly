@@ -1,4 +1,4 @@
-import UserFeedback, { UserFeedbackSchema } from '../models/userFeedback';
+import UserFeedback, { UserFeedbackSchema } from '../models/userFeedback.model';
 import { PopulateType, populateTypes } from './types';
 import { getPopulateOptions } from './utils';
 

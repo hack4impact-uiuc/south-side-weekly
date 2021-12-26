@@ -1,7 +1,7 @@
 import { FilterQuery, LeanDocument, UpdateQuery } from 'mongoose';
 import { ITeam } from 'ssw-common';
 
-import Team, { TeamSchema } from '../models/team';
+import Team, { TeamSchema } from '../models/team.model';
 
 type Teams = Promise<LeanDocument<TeamSchema>[]>;
 type Team = Promise<LeanDocument<TeamSchema>>;

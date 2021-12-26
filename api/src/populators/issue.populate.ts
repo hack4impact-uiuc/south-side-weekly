@@ -1,4 +1,4 @@
-import Issue, { IssueSchema } from '../models/issue';
+import Issue, { IssueSchema } from '../models/issue.model';
 import { PopulateType, populateTypes } from './types';
 import { getPopulateOptions } from './utils';
 
