@@ -26,6 +26,9 @@ router.get('/pending', requireAdmin, errorWrap(UserController.getPendingUsers));
 // GET /api/users/denied
 router.get('/denied', requireAdmin, errorWrap(UserController.getDeniedUsers));
 
+// GET /api/users/me
+router.get('/me', requireRegistered, errorWrap(UserController.getMe));
+
 router.get(
   '/stallUsers',
   requireRequestSecret,

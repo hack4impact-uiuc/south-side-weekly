@@ -351,7 +351,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
             content="Approve"
           />
           <SecondaryButton
-            disabled={user._id === pitch?.author._id}
+            disabled={user!._id === pitch?.author._id}
             onClick={declinePitch}
             content="Decline"
             border

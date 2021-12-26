@@ -1,16 +1,14 @@
 import React, { ReactElement, FC, useState } from 'react';
+import { BasePopulatedUser } from 'ssw-common';
 
 import { WizardContext, useWizard, initialValues } from './context';
-import { UserElements } from './types';
 
 const WizardProvider: FC = ({ children }): ReactElement => {
   const [newUser, setNewUser] = useState(initialValues);
   const [pages, setPages] = useState(new Set<number>());
 
-  const store = (data: UserElements): void => {
-    const updated = { ...newUser };
-
-    updated.data = { ...updated.data, ...data };
+  const store = (data: Partial<BasePopulatedUser>): void => {
+    const updated = { ...newUser, data };
     updated.currentPage++;
 
     setNewUser(updated);

@@ -24,7 +24,7 @@ import {
   UserPicture,
 } from '../../components';
 import UserFeedback from '../../components/UserFeedback';
-import EditProfileModal from '../../components/Modals/EditProfile';
+import { EditUserModal } from '../../components/modal/EditUser';
 import { useAuth } from '../../contexts';
 import { TagList } from '../../components/list/TagList';
 
@@ -182,12 +182,8 @@ const Profile = (): ReactElement => {
                 )}
 
                 <div>
-                  {(userId === currentUser._id || isAdmin) && (
-                    <EditProfileModal
-                      user={user}
-                      callback={() => void 0}
-                      permissions={permissions}
-                    />
+                  {(userId === currentUser!._id || isAdmin) && (
+                    <EditUserModal user={user} permissions={permissions} />
                   )}
                 </div>
               </div>
@@ -259,7 +255,7 @@ const Profile = (): ReactElement => {
         </Grid>
       </div>
       <div className="page-inner-content">
-        {userId === currentUser._id ? (
+        {userId === currentUser!._id ? (
           <h2>Your Contributions</h2>
         ) : (
           <h2>{`${user.firstName}'s` + ` Contributions`}</h2>

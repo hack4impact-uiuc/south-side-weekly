@@ -124,6 +124,24 @@ export const getDeniedUsers = async (
 };
 
 // Gets a user by id
+export const getMe = async (req: Request, res: Response): Promise<void> => {
+  const populateType = extractPopulateQuery(req.query);
+
+  const user = await UserService.getOne(req.user._id);
+
+  if (!user) {
+    sendNotFound(res, 'User not found');
+    return;
+  }
+
+  sendSuccess(
+    res,
+    'User retrieved successfully',
+    await populateUser(user, populateType),
+  );
+};
+
+// Gets a user by id
 export const getUser = async (req: Request, res: Response): Promise<void> => {
   const populateType = extractPopulateQuery(req.query);
 

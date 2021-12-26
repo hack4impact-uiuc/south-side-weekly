@@ -11,14 +11,13 @@ import {
   isError,
 } from '../../api';
 import { SubmitPitchModal, Walkthrough, PitchTable } from '../../components';
-import ContextSelect from '../../components/select/ContextSelect';
+import { ContextSelect } from '../../components/select/ContextSelect';
 import { SingleSelect } from '../../components/select/SingleSelect';
 import { AuthView } from '../../components/wrapper/AuthView';
 import { useAuth } from '../../contexts';
 import { pitchDocTabs } from '../../utils/constants';
 import { pagesEnum } from '../../utils/enums';
 import {
-  getClaimableTeams,
   parseOptionsSelect,
   filterPitchesByInterests,
 } from '../../utils/helpers';
@@ -44,7 +43,7 @@ const PitchDoc = (): ReactElement => {
   const [teams, setTeams] = useState<string[]>([]);
   const [query, setQuery] = useState('');
 
-  const { user, isAdmin, isStaff } = useAuth();
+  const { isAdmin, isStaff } = useAuth();
 
   const getApproved = async (): Promise<void> => {
     const res = await getApprovedPitches();
@@ -57,16 +56,16 @@ const PitchDoc = (): ReactElement => {
     const res = await getUnclaimedPitches();
 
     if (!isError(res)) {
-      const unclaimedPitches = res.data.result;
-      const claimablePitches = unclaimedPitches.data.filter(
-        (pitch: IPitch) => getClaimableTeams(pitch, user).length > 0,
-      );
+      // const unclaimedPitches = res.data.result;
+      // const claimablePitches = unclaimedPitches.data.filter(
+      //   (pitch: IPitch) => getClaimableTeams(pitch, user).length > 0,
+      // );
 
-      setUnclaimed(claimablePitches);
-      setCurrentPitches(claimablePitches);
-      setFilteredPitches(claimablePitches);
+      setUnclaimed([]);
+      setCurrentPitches([]);
+      setFilteredPitches([]);
     }
-  }, [user]);
+  }, []);
 
   const getPendingApprovals = async (): Promise<void> => {
     const res = await getPitchesPendingApproval();

@@ -76,7 +76,7 @@ const Pitch = new mongoose.Schema(
     status: {
       type: String,
       enum: Object.values(pitchStatusEnum),
-      default: pitchStatusEnum.NONE,
+      default: pitchStatusEnum.PENDING,
     },
     description: { type: String, default: null, required: true },
     assignmentStatus: {

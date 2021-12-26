@@ -4,6 +4,12 @@
   .header {
     background-color: $primary !important;
     color: white !important;
+    display: flex !important;
+
+    i {
+      cursor: pointer;
+      float: right !important;
+    }
   }
 
   .content {

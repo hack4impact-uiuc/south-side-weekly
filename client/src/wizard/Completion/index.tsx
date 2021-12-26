@@ -33,7 +33,7 @@ const Completion = (): ReactElement => {
         className="default-btn"
         fluid
         content="Go to Dashboard"
-        onClick={() => openProfile(user)}
+        onClick={() => openProfile(user!)}
       />
     </div>
   );

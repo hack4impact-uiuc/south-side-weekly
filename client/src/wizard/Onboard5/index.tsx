@@ -4,9 +4,10 @@ import { CalendlyEventListener, InlineWidget } from 'react-calendly';
 import { Form } from 'semantic-ui-react';
 import Swal from 'sweetalert2';
 
-import { isError, updateUser } from '../../api';
+import { isError } from '../../api';
 import { useAuth, useWizard } from '../../contexts';
 import { formatNumber } from '../../utils/helpers';
+import { apiCall } from '../../api/request';
 
 import './styles.scss';
 
@@ -14,7 +15,7 @@ const Onboard5 = (): ReactElement => {
   const { store, data } = useWizard();
   const { user } = useAuth();
 
-  const [scheduled, setScheduled] = useState(!isEmpty(data.onboardingStatus));
+  const [scheduled, setScheduled] = useState(!isEmpty(data!.onboardingStatus));
 
   const onEventScheduled = (): void => {
     setScheduled(true);
@@ -30,25 +31,29 @@ const Onboard5 = (): ReactElement => {
     }
 
     const newUser = {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      preferredName: data.preferredName,
-      phone: formatNumber(data.phone),
-      genders: reject(data.genders, isEmpty),
-      pronouns: reject(data.pronouns, isEmpty),
+      firstName: data!.firstName,
+      lastName: data!.lastName,
+      preferredName: data!.preferredName,
+      phone: formatNumber(data!.phone),
+      genders: reject(data!.genders, isEmpty),
+      pronouns: reject(data!.pronouns, isEmpty),
       dateJoined: new Date(Date.now()),
       onboardingStatus: 'ONBOARDING_SCHEDULED',
-      involvementResponse: data.involvementResponse,
-      journalismResponse: data.journalismResponse,
-      neighborhood: data.neighborhood,
-      teams: data.teams,
-      role: data.role,
-      races: reject(data.races, isEmpty),
-      interests: reject(data.interests, isEmpty),
+      involvementResponse: data!.involvementResponse,
+      journalismResponse: data!.journalismResponse,
+      neighborhood: data!.neighborhood,
+      teams: data!.teams,
+      role: data!.role,
+      races: reject(data!.races, isEmpty),
+      interests: reject(data!.interests, isEmpty),
     };
 
     const onboardUser = async (): Promise<void> => {
-      const res = await updateUser(newUser, user._id);
+      const res = await apiCall({
+        url: `/users/${user!._id}`,
+        method: 'PUT',
+        body: newUser,
+      });
 
       if (!isError(res)) {
         store(newUser);

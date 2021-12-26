@@ -1,0 +1,14 @@
+@import '../../styles/colors.scss';
+
+.edit-user-modal {
+  .header {
+    i {
+      float: right;
+      cursor: pointer;
+    }
+  }
+
+  .grey-text {
+    color: grey;
+  }
+}

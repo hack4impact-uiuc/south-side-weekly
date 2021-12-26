@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 
 import { PageCounter, PrevButton, SubmitButton } from '../components';
 import { Header } from '../layouts';
@@ -39,8 +39,8 @@ const Wizard = (): ReactElement => {
   const [pages, setPages] = useState(staff);
 
   useEffect(() => {
-    setPages(data.role === 'STAFF' ? staff : contributor);
-  }, [data.role]);
+    setPages(data!.role === 'STAFF' ? staff : contributor);
+  }, [data]);
 
   const formLength = pages.length - IGNORE_COUNT;
   const isFormPage = currentPage > 0 && currentPage < formLength;

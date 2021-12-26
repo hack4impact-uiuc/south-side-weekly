@@ -1,7 +1,7 @@
 import { AsYouType } from 'libphonenumber-js';
 import { camelCase, isUndefined, reject, startCase } from 'lodash';
 import { DropdownItemProps } from 'semantic-ui-react';
-import { IUser, IPitch } from 'ssw-common';
+import { IUser, IPitch, BasePopulatedUser } from 'ssw-common';
 
 import { pitchStatusEnum } from './enums';
 
@@ -310,7 +310,7 @@ const classNames = (...classNames: (string | undefined)[]): string => {
  *
  * @param user the user whose profile should be opened
  */
-const openProfile = (user: IUser): void =>
+const openProfile = (user: BasePopulatedUser): void =>
   window.open(`/profile/${user._id}`)!.focus();
 
 interface SelectOption {

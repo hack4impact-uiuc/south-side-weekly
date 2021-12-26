@@ -1,0 +1,20 @@
+#edit-user-form {
+  .form-wrapper {
+    .row {
+      display: flex;
+      margin-bottom: 10px;
+
+      .left-col {
+        width: 50%;
+        float: left;
+        padding-right: 10px;
+      }
+
+      .right-col {
+        width: 50%;
+        float: right;
+        padding-left: 10px;
+      }
+    }
+  }
+}

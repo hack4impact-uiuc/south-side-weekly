@@ -10,10 +10,10 @@ const Onboard4 = (): ReactElement => {
   const { store, data } = useWizard();
 
   const [involvementResponse, setInvolvementResponse] = useState(
-    data.involvementResponse,
+    data!.involvementResponse,
   );
   const [journalismResponse, setJournalismResponse] = useState(
-    data.journalismResponse,
+    data!.journalismResponse,
   );
 
   const onSubmit = (): void => {
@@ -34,7 +34,7 @@ const Onboard4 = (): ReactElement => {
       <Form id="onboard-4" onSubmit={onSubmit}>
         <Form.TextArea
           required
-          defaultValue={data.involvementResponse}
+          defaultValue={data!.involvementResponse}
           onChange={(e, { value }) => setInvolvementResponse(toString(value))}
         />
         <div className="prompt">
@@ -43,7 +43,7 @@ const Onboard4 = (): ReactElement => {
         </div>
         <Form.TextArea
           required
-          defaultValue={data.journalismResponse}
+          defaultValue={data!.journalismResponse}
           onChange={(e, { value }) => setJournalismResponse(toString(value))}
         />
       </Form>

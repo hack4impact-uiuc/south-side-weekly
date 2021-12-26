@@ -15,7 +15,7 @@ const Walkthrough: FC<Props> = ({ page, content }) => {
 
   useEffect(() => {
     const isPageVisited = (page: string): boolean => {
-      const visitedPages = user.visitedPages;
+      const visitedPages = user!.visitedPages;
 
       return visitedPages.includes(page);
     };
@@ -23,7 +23,7 @@ const Walkthrough: FC<Props> = ({ page, content }) => {
     if (!isPageVisited(page)) {
       setVisible(true);
     }
-  }, [user.visitedPages, page]);
+  }, [user, page]);
 
   const closeWalkthrough = async (): Promise<void> => {
     setVisible(false);

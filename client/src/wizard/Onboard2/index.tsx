@@ -17,10 +17,10 @@ import './styles.scss';
 const Onboard2 = (): ReactElement => {
   const { store, data } = useWizard();
 
-  const [genders, setGenders] = useState(new Set(data.genders));
-  const [pronouns, setPronouns] = useState(new Set(data.pronouns));
-  const [races, setRaces] = useState(new Set(data.races));
-  const [neighborhood, setNeighborhood] = useState<string>(data.neighborhood);
+  const [genders, setGenders] = useState(new Set(data!.genders));
+  const [pronouns, setPronouns] = useState(new Set(data!.pronouns));
+  const [races, setRaces] = useState(new Set(data!.races));
+  const [neighborhood, setNeighborhood] = useState<string>(data!.neighborhood);
 
   const onSubmit = (): void => {
     const data = {
@@ -72,7 +72,7 @@ const Onboard2 = (): ReactElement => {
                 }))}
                 value={neighborhood}
                 onChange={(event, data) => {
-                  setNeighborhood(data.value ? data.value?.toString() : '');
+                  setNeighborhood(data!.value ? data!.value?.toString() : '');
                 }}
                 className="neighborhood-drop"
               />
@@ -85,7 +85,7 @@ const Onboard2 = (): ReactElement => {
               <div className="checkbox-wrapper" key={index}>
                 <Form.Checkbox
                   value={gender}
-                  defaultChecked={data.genders.includes(gender)}
+                  defaultChecked={data!.genders.includes(gender)}
                   label={titleCase(gender)}
                   onClick={() => handleGender(gender)}
                 />
@@ -98,7 +98,7 @@ const Onboard2 = (): ReactElement => {
               <div className="checkbox-wrapper" key={index}>
                 <Form.Checkbox
                   value={pronoun}
-                  defaultChecked={data.pronouns.includes(pronoun)}
+                  defaultChecked={data!.pronouns.includes(pronoun)}
                   label={titleCase(pronoun)}
                   onClick={() => handlePronoun(pronoun)}
                 />
@@ -111,7 +111,7 @@ const Onboard2 = (): ReactElement => {
               <div className="checkbox-wrapper" key={index}>
                 <Form.Checkbox
                   value={race}
-                  defaultChecked={data.races.includes(race)}
+                  defaultChecked={data!.races.includes(race)}
                   label={titleCase(race)}
                   onClick={() => handleRace(race)}
                 />

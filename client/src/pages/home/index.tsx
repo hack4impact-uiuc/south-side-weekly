@@ -14,20 +14,16 @@ import {
 import { useAuth } from '../../contexts';
 import { pagesEnum, pitchStatusEnum } from '../../utils/enums';
 import { filterPitchesByInterests, titleCase } from '../../utils/helpers';
-import ContextSelect from '../../components/select/ContextSelect';
+import { ContextSelect } from '../../components/select/ContextSelect';
 
 import {
   filterCreatedYear,
-  filterPitchClaimStatus,
   filterPitchStatus,
-  filterRequestClaimYear,
-  getInitialSort,
   getRecordsForTab,
   getYearsSinceSSWEstablished,
   Tab,
   TABS,
 } from './helpers';
-import { getColumnsForTab } from './views';
 
 import './styles.scss';
 
@@ -49,8 +45,7 @@ const Homepage: FC = () => {
 
   const [filteredView, setFilteredView] = useState<View<IPitch>>({
     records: [],
-    columns: getColumnsForTab(user, currentTab),
-    initialSort: getInitialSort(user, currentTab),
+    columns: [],
   });
   const canFilterInterests =
     currentTab !== TABS.MEMBER_PITCHES &&
@@ -90,14 +85,16 @@ const Homepage: FC = () => {
         pitches =
           currentTab === TABS.SUBMITTED_PITCHES
             ? filterPitchStatus(pitches, filteredStatus)
-            : filterPitchClaimStatus(pitches, user, filteredStatus);
+            : // : filterPitchClaimStatus(pitches, user, filteredStatus);
+              [];
       }
 
       if (canFilterYear && filteredYear) {
         pitches =
           currentTab === TABS.SUBMITTED_PITCHES
             ? filterCreatedYear(pitches, filteredYear)
-            : filterRequestClaimYear(pitches, user, filteredYear);
+            : // : filterRequestClaimYear(pitches, user, filteredYear);
+              [];
       }
 
       return pitches;
@@ -108,8 +105,7 @@ const Homepage: FC = () => {
 
     setFilteredView({
       records: filtered,
-      columns: getColumnsForTab(user, currentTab),
-      initialSort: getInitialSort(user, currentTab),
+      columns: [],
     });
   }, [
     searchInput,
@@ -126,7 +122,7 @@ const Homepage: FC = () => {
 
   useEffect(() => {
     const getAggregate = async (): Promise<void> => {
-      const res = await getAggregatedUser(user._id);
+      const res = await getAggregatedUser(user!._id);
 
       if (!isError(res)) {
         const aggregatedUser = res.data.result;

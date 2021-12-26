@@ -1,6 +1,6 @@
-import ClaimPitchModal from './Modals/ClaimPitch';
-import ResourceModal from './Modals/Resource';
-import SubmitPitchModal from './Modals/SubmitPitch';
+// import ClaimPitchModal from './Modals/ClaimPitch';
+import ResourceModal from './modal/ResourceControl';
+import SubmitPitchModal from './modal/SubmitPItch';
 import UserModal from './Modals/User';
 import WizardListTitle from './Wizard/ListTitle';
 import PageCounter from './Wizard/PageCounter';
@@ -9,7 +9,6 @@ import { FieldTag } from './tags/FieldTag/FieldTag';
 import UserPicture from './UserPicture';
 import SubmitButton from './Wizard/SubmitButton';
 import PrevButton from './Wizard/PrevButton';
-import ViewPitchModal from './Modals/ViewPitch';
 import { PitchTable, PitchRow } from './Tables/PitchDoc';
 import TableTool from './Tables/TableTool';
 import Walkthrough from './Walkthrough';
@@ -31,7 +30,7 @@ import PitchFeedbackModal from './Modals/PitchFeedback';
 export { PrivateRoute } from './wrapper/PrivateRoute';
 
 export {
-  ClaimPitchModal,
+  // ClaimPitchModal,
   ResourceModal,
   SubmitPitchModal,
   UserModal,
@@ -42,7 +41,6 @@ export {
   UserPicture,
   SubmitButton,
   PrevButton,
-  ViewPitchModal,
   ResourceTable,
   PitchTable,
   PitchRow,

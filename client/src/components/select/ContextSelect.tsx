@@ -23,7 +23,7 @@ interface ContextSelectProps {
   type: 'Interests' | 'Teams' | 'Issues';
 }
 
-const ContextSelect: FC<ContextSelectProps> = ({
+export const ContextSelect: FC<ContextSelectProps> = ({
   onChange,
   values,
   className,

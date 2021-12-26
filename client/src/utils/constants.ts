@@ -1,6 +1,4 @@
-import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
-
-import { editStatusEnum, wizardPages } from './enums';
+import { wizardPages } from './enums';
 import neighborhoods from './neighborhoods';
 
 const allGenders = ['Man', 'Woman', 'Nonbinary', 'Other'];
@@ -38,86 +36,6 @@ const pitchDocTabs = {
   CLAIM_APPROVAL: 'Assign Pitch Contributors',
 };
 
-const emptyUser: IUser = {
-  _id: '',
-  firstName: '',
-  lastName: '',
-  preferredName: '',
-  email: '',
-  phone: '',
-  oauthID: '',
-  genders: [],
-  pronouns: [],
-  dateJoined: new Date(Date.now()),
-  onboardingStatus: '',
-  visitedPages: [],
-  profilePic: '',
-  portfolio: '',
-  linkedIn: '',
-  twitter: '',
-  involvementResponse: '',
-  journalismResponse: '',
-  neighborhood: '',
-  claimedPitches: [],
-  submittedPitches: [],
-  submittedClaims: [],
-  teams: [],
-  role: '',
-  races: [],
-  interests: [],
-  onboardReasoning: '',
-  feedback: [],
-  lastActive: new Date(),
-  fullname: '',
-  joinedNames: '',
-  activityStatus: '',
-};
-
-const emptyPitch: IPitch = {
-  _id: '',
-  title: '',
-  author: '',
-  writer: '',
-  primaryEditor: '',
-  secondEditors: [],
-  thirdEditors: [],
-  issues: [],
-  conflictOfInterest: false,
-  status: '',
-  description: '',
-  assignmentStatus: '',
-  assignmentGoogleDocLink: '',
-  assignmentContributors: [],
-  pendingContributors: [],
-  topics: [],
-  teams: [],
-  reviewedBy: '',
-  similarStories: [],
-  deadline: new Date(),
-  neighborhoods: [],
-  createdAt: new Date(),
-  updatedAt: new Date(),
-  issueStatuses: [],
-  editStatus: editStatusEnum.WRITER_NEEDED,
-};
-
-const emptyAggregatePitch: IPitchAggregate = {
-  aggregated: {
-    author: emptyUser,
-    writer: emptyUser,
-    primaryEditor: emptyUser,
-    secondaryEditors: [emptyUser],
-    thirdEditors: [emptyUser],
-    assignmentContributors: [],
-    pendingContributors: [],
-    reviewedBy: emptyUser,
-    teams: [],
-    interests: [],
-    issues: [],
-  },
-  ...emptyPitch,
-};
-
 const pitchQuestionOptions = [
   {
     value: 'firstQuestion',
@@ -140,9 +58,6 @@ export {
   allRoles,
   allActivities,
   allRaces,
-  emptyUser,
-  emptyPitch,
-  emptyAggregatePitch,
   staffPages,
   contributorPages,
   pitchDocTabs,

@@ -10,10 +10,10 @@ import './styles.scss';
 const Onboard1 = (): ReactElement => {
   const { data, store } = useWizard();
 
-  const [firstName, setFirstName] = useState(data.firstName);
-  const [lastName, setLastName] = useState(data.lastName);
-  const [preferredName, setPreferredName] = useState(data.preferredName);
-  const [phone, setPhone] = useState(data.phone);
+  const [firstName, setFirstName] = useState(data!.firstName);
+  const [lastName, setLastName] = useState(data!.lastName);
+  const [preferredName, setPreferredName] = useState(data!.preferredName);
+  const [phone, setPhone] = useState(data!.phone);
 
   const onSubmit = (): void => {
     const data = {
@@ -41,7 +41,7 @@ const Onboard1 = (): ReactElement => {
                 name="firstName"
                 required
                 placeholder="First Name..."
-                defaultValue={data.firstName}
+                defaultValue={data!.firstName}
               />
               <Form.Input
                 onChange={(e, { value }) => setLastName(value)}
@@ -49,13 +49,13 @@ const Onboard1 = (): ReactElement => {
                 name="lastName"
                 required
                 placeholder="Last Name..."
-                defaultValue={data.lastName}
+                defaultValue={data!.lastName}
               />
               <Form.Input
                 onChange={(e, { value }) => setPreferredName(value)}
                 label="Preferred Name"
                 placeholder="Preferred Name..."
-                defaultValue={data.preferredName}
+                defaultValue={data!.preferredName}
               />
               <Form.Input
                 onChange={(e, { value }) => setPhone(value)}
@@ -63,7 +63,7 @@ const Onboard1 = (): ReactElement => {
                 name="phone"
                 required
                 placeholder="(123) 838-5466"
-                defaultValue={data.phone}
+                defaultValue={data!.phone}
               />
             </div>
           </div>

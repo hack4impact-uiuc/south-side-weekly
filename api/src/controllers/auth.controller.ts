@@ -13,7 +13,7 @@ interface IQuery {
 
 export const getCurrentUser = (req: Request, res: Response): Promise<void> => {
   if (req.user) {
-    sendSuccess(res, 'Logged in.', req.user);
+    res.redirect('/api/users/me');
     return;
   }
 

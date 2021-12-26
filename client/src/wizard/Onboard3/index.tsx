@@ -5,7 +5,8 @@ import Swal from 'sweetalert2';
 
 import { useAuth, useInterests, useTeams, useWizard } from '../../contexts';
 import { formatNumber, titleCase } from '../../utils/helpers';
-import { isError, updateUser } from '../../api';
+import { isError } from '../../api';
+import { apiCall } from '../../api/request';
 
 import './styles.scss';
 
@@ -13,15 +14,15 @@ const Onboard3 = (): ReactElement => {
   const { store, data } = useWizard();
   const { user } = useAuth();
 
-  const [selectedInterests, setInterests] = useState(new Set(data.interests));
-  const [selectedTeams, setSelectedTeams] = useState(new Set<string>());
+  const [selectedInterests, setInterests] = useState(new Set(data!.interests));
+  const [selectedTeams, setSelectedTeams] = useState(new Set(data!.teams));
   const { teams } = useTeams();
   const { interests } = useInterests();
 
   const onSubmit = (): void => {
-    if (data.role === 'STAFF') {
+    if (data!.role === 'STAFF') {
       staffSubmit();
-    } else if (data.role === 'CONTRIBUTOR') {
+    } else if (data!.role === 'CONTRIBUTOR') {
       contributorSubmit();
     }
   };
@@ -37,22 +38,27 @@ const Onboard3 = (): ReactElement => {
 
   const staffSubmit = (): void => {
     const newUser = {
-      firstName: data.firstName,
-      lastName: data.lastName,
-      preferredName: data.preferredName,
-      phone: formatNumber(data.phone),
-      genders: reject(data.genders, isEmpty),
-      pronouns: reject(data.pronouns, isEmpty),
+      firstName: data!.firstName,
+      lastName: data!.lastName,
+      preferredName: data!.preferredName,
+      phone: formatNumber(data!.phone),
+      genders: reject(data!.genders, isEmpty),
+      pronouns: reject(data!.pronouns, isEmpty),
       dateJoined: new Date(Date.now()),
       teams: Array.from(selectedTeams),
-      role: data.role,
-      races: reject(data.races, isEmpty),
-      neighborhood: data.neighborhood,
+      role: data!.role,
+      races: reject(data!.races, isEmpty),
+      neighborhood: data!.neighborhood,
       interests: Array.from(selectedInterests),
     };
 
     const onboardUser = async (): Promise<void> => {
-      const res = await updateUser(newUser, user._id);
+      const res = await apiCall({
+        url: `/users/${user!._id}`,
+        method: 'PUT',
+        body: newUser,
+      });
+      // const res = await updateUser(newUser, user._id);
 
       if (!isError(res)) {
         store(newUser);
@@ -69,40 +75,40 @@ const Onboard3 = (): ReactElement => {
   };
 
   useEffect(() => {
-    const initialInterets = data.interests.filter(
+    const initialInterets = data!.interests.filter(
       (interest) => !isEmpty(interest),
     );
 
     setInterests(new Set(initialInterets));
-  }, [data.teams, data.interests]);
+  }, [data]);
 
-  const handleInterests = (interest: string): void => {
-    if (!selectedInterests.has(interest) && selectedInterests.size === 5) {
-      Swal.fire({
-        title: 'Please select a maximum of 5 teams!',
-        icon: 'error',
-      });
-      return;
-    }
+  const handleInterests = (): void => {
+    // if (!selectedInterests.has() && selectedInterests.size === 5) {
+    //   Swal.fire({
+    //     title: 'Please select a maximum of 5 teams!',
+    //     icon: 'error',
+    //   });
+    //   return;
+    // }
 
-    selectedInterests.has(interest)
-      ? selectedInterests.delete(interest)
-      : selectedInterests.add(interest);
+    // selectedInterests.has(interest)
+    //   ? selectedInterests.delete(interest)
+    //   : selectedInterests.add(interest);
     setInterests(new Set(selectedInterests));
   };
 
-  const handleTeams = (team: string): void => {
-    if (!selectedTeams.has(team) && selectedTeams.size === 2) {
-      Swal.fire({
-        title: 'Please select a maximum of 2 teams!',
-        icon: 'error',
-      });
-      return;
-    }
+  const handleTeams = (): void => {
+    // if (!selectedTeams.has(team) && selectedTeams.size === 2) {
+    //   Swal.fire({
+    //     title: 'Please select a maximum of 2 teams!',
+    //     icon: 'error',
+    //   });
+    //   return;
+    // }
 
-    selectedTeams.has(team)
-      ? selectedTeams.delete(team)
-      : selectedTeams.add(team);
+    // selectedTeams.has(team)
+    //   ? selectedTeams.delete(team)
+    //   : selectedTeams.add(team);
     setSelectedTeams(new Set(selectedTeams));
   };
 
@@ -120,9 +126,9 @@ const Onboard3 = (): ReactElement => {
               <Grid.Column key={index}>
                 <Form.Checkbox
                   value={team.name}
-                  checked={selectedTeams.has(team._id)}
+                  checked={selectedTeams.has(team)}
                   label={titleCase(team.name)}
-                  onClick={() => handleTeams(team._id)}
+                  onClick={handleTeams}
                 />
               </Grid.Column>
             ))}
@@ -138,9 +144,9 @@ const Onboard3 = (): ReactElement => {
               <Grid.Column key={index}>
                 <Form.Checkbox
                   value={interest._id}
-                  checked={selectedInterests.has(interest._id)}
+                  checked={selectedInterests.has(interest)}
                   label={interest.name}
-                  onClick={() => handleInterests(interest._id)}
+                  onClick={handleInterests}
                 />
               </Grid.Column>
             ))}

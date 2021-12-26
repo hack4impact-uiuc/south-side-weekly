@@ -2,11 +2,10 @@ import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Table } from 'semantic-ui-react';
 import { IPitch } from 'ssw-common';
 
-import { ClaimPitchModal, FieldTag, TableTool, ViewPitchModal } from '../..';
-import { useAuth, useInterests, useTeams } from '../../../contexts';
+import { FieldTag, TableTool } from '../..';
+import { useInterests } from '../../../contexts';
 import { pitchDocTabs } from '../../../utils/constants';
 import './styles.scss';
-import { getClaimableTeams } from '../../../utils/helpers';
 import { ReviewPitch } from '../../modal/ReviewPitch';
 
 interface PitchTableProps {
@@ -98,7 +97,6 @@ const PitchHeader: FC<PitchHeaderProps> = ({
 
 const PitchBody: FC<PitchBodyProps> = ({
   sortedPitches,
-  callback,
   currentTab,
 }): ReactElement => (
   <>
@@ -112,7 +110,8 @@ const PitchBody: FC<PitchBodyProps> = ({
     {sortedPitches.map((pitch, index) => {
       if (currentTab === pitchDocTabs.UNCLAIMED) {
         return (
-          <ClaimPitchModal callback={callback} key={index} pitch={pitch} />
+          // <ClaimPitchModal callback={callback} key={index} pitch={pitch} />
+          <></>
         );
       } else if (currentTab === pitchDocTabs.PITCH_APPROVAL) {
         return (
@@ -127,16 +126,14 @@ const PitchBody: FC<PitchBodyProps> = ({
         return <PitchRow pitch={pitch} />;
       } else if (currentTab === pitchDocTabs.APPROVED) {
         //TODO: Replace PitchRow with the modal component
-        return <ViewPitchModal key={index} pitch={pitch} />;
+        return <></>;
       }
     })}
   </>
 );
 
 const PitchRow: FC<PitchRowProps> = ({ pitch, ...rest }): ReactElement => {
-  const { user } = useAuth();
   const { getInterestById } = useInterests();
-  const { getTeamFromId } = useTeams();
 
   return (
     <Table.Row {...rest}>
@@ -157,7 +154,7 @@ const PitchRow: FC<PitchRowProps> = ({ pitch, ...rest }): ReactElement => {
         })}
       </Table.Cell>
       <Table.Cell>
-        {getClaimableTeams(pitch, user).map((team, index) => {
+        {/* {getClaimableTeams(pitch, user!).map((team, index) => {
           const fullTeam = getTeamFromId(team);
 
           return (
@@ -168,7 +165,7 @@ const PitchRow: FC<PitchRowProps> = ({ pitch, ...rest }): ReactElement => {
               hexcode={fullTeam?.color}
             />
           );
-        })}
+        })} */}
       </Table.Cell>
     </Table.Row>
   );

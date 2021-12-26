@@ -66,7 +66,7 @@ const UserFeedbackModal: FC<UserFeedbackModal> = ({
     if (!isEmpty()) {
       const newFeedback: Partial<IUserFeedback> = {
         userId: contributor._id,
-        staffId: user._id,
+        staffId: user!._id,
         pitchId: pitchId,
         stars: rating,
         reasoning: feedback,

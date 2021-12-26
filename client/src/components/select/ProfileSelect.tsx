@@ -43,7 +43,7 @@ const ProfileSelect: FC<DropdownProps> = ({ ...rest }): ReactElement => {
 
   const handleClick = (value: string): void => {
     if (value === 'profile') {
-      history.push(`/profile/${user._id}`);
+      history.push(`/profile/${user!._id}`);
     } else if (value === 'logout') {
       logout();
     }
@@ -56,7 +56,7 @@ const ProfileSelect: FC<DropdownProps> = ({ ...rest }): ReactElement => {
       className={cn('profile-dropdown', rest.className)}
       closeOnChange
       item
-      trigger={<Trigger user={user} />}
+      trigger={<Trigger user={user!} />}
     >
       <Dropdown.Menu>
         <AuthView view="isOnboarded">

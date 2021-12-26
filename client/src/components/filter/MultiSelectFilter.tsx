@@ -4,7 +4,7 @@ import { useQueryParams, StringParam } from 'use-query-params';
 
 import { parseOptionsSelect } from '../../utils/helpers';
 import { MultiSelect } from '../select/MultiSelect';
-import ContextSelect from '../select/ContextSelect';
+import { ContextSelect } from '../select/ContextSelect';
 
 interface MultiMultiSelectFilterProps {
   filterKey: string;
