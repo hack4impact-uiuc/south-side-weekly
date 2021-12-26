@@ -1,6 +1,8 @@
 import React, { FC, useMemo } from 'react';
 import { BasePopulatedUser } from 'ssw-common';
 
+import { ReviewUserModal, UserModal } from '..';
+
 import {
   profilePic,
   roleColumn,
@@ -36,7 +38,7 @@ const pendingColumns = [
   actionColumn,
 ];
 
-const deniedColumsn = [
+const deniedColumns = [
   profilePic,
   nameColumn,
   roleColumn,
@@ -59,7 +61,7 @@ export const UsersRecords: FC<TableProps> = ({ users, count, type }) => {
       case 'pending':
         return pendingColumns;
       case 'denied':
-        return deniedColumsn;
+        return deniedColumns;
       default:
         return [];
     }
@@ -71,6 +73,29 @@ export const UsersRecords: FC<TableProps> = ({ users, count, type }) => {
       records={users}
       count={count}
       pageOptions={['1', '10', '25', '50']}
+      getModal={(user, open, setOpen) => (
+        <>
+          {type === 'approved' && (
+            <UserModal open={open} setOpen={setOpen} user={user} />
+          )}
+          {type === 'pending' && (
+            <ReviewUserModal
+              type="review"
+              open={open}
+              setOpen={setOpen}
+              user={user}
+            />
+          )}
+          {type === 'denied' && (
+            <ReviewUserModal
+              type="reject"
+              open={open}
+              setOpen={setOpen}
+              user={user}
+            />
+          )}
+        </>
+      )}
     />
   );
 };

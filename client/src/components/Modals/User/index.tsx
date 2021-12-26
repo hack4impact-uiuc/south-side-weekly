@@ -1,41 +1,31 @@
-import React, { ReactElement, FC, useState } from 'react';
+import React, { ReactElement, FC } from 'react';
 import { toLower } from 'lodash';
 import { Button, Grid, Icon, Modal, ModalProps } from 'semantic-ui-react';
-import { ITeam, IUser } from 'ssw-common';
+import { BasePopulatedUser } from 'ssw-common';
 
-import { FieldTag } from '../../tags/FieldTag/FieldTag';
-import { getUserFullName } from '../../../utils/helpers';
 import UserPicture from '../../UserPicture';
-import { useInterests, useTeams } from '../../../contexts';
+import { TagList } from '../../list/TagList';
 
 import './styles.scss';
 
 interface UserModalProps extends ModalProps {
-  user: IUser;
+  user: BasePopulatedUser;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const UserModal: FC<UserModalProps> = ({ user, ...rest }): ReactElement => {
-  const [isOpen, setIsOpen] = useState(false);
-  const { getTeamFromId } = useTeams();
-  const { getInterestById } = useInterests();
-
+const UserModal: FC<UserModalProps> = ({
+  user,
+  open,
+  setOpen,
+  ...rest
+}): ReactElement => {
   const openUserProfile = (): void =>
     window.open(`/profile/${user._id}`)!.focus();
 
   return (
     <Modal
-      open={isOpen}
-      onOpen={() => setIsOpen(true)}
-      onClose={() => setIsOpen(false)}
-      trigger={
-        rest.trigger ? (
-          rest.trigger
-        ) : (
-          <Button className="open-user-button" size="tiny" circular icon>
-            <Icon name="pencil" />
-          </Button>
-        )
-      }
+      open={open}
+      onClose={() => setOpen(false)}
       className="user-modal"
       {...rest}
     >
@@ -56,7 +46,7 @@ const UserModal: FC<UserModalProps> = ({ user, ...rest }): ReactElement => {
           <Grid.Column verticalAlign="middle" width={5}>
             <Grid.Row>
               <h1 className="user-information name">
-                <b>{getUserFullName(user)}</b>
+                <b>{user.fullname}</b>
               </h1>
             </Grid.Row>
             <Grid.Row>
@@ -68,32 +58,11 @@ const UserModal: FC<UserModalProps> = ({ user, ...rest }): ReactElement => {
           </Grid.Column>
           <Grid.Column>
             <h1 className="list-header">Topics</h1>
-            {user.interests.map((interest: string, index: number) => {
-              const fullInterest = getInterestById(interest);
-
-              return (
-                <FieldTag
-                  className="team-tag"
-                  key={index}
-                  name={fullInterest?.name}
-                  hexcode={fullInterest?.color}
-                />
-              );
-            })}
+            <TagList tags={user.interests} />
           </Grid.Column>
           <Grid.Column>
             <h1 className="list-header">Teams</h1>
-            {user.teams
-              .map(getTeamFromId)
-              .map((team: ITeam | undefined, index: number) => (
-                <Grid.Row key={index}>
-                  <FieldTag
-                    className="team-tag"
-                    name={team?.name}
-                    hexcode={team?.color}
-                  />
-                </Grid.Row>
-              ))}
+            <TagList tags={user.teams} />
           </Grid.Column>
         </Grid>
       </Modal.Content>

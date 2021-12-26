@@ -126,7 +126,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
           />
         </div>
         <Pusher />
-        <Icon id="close-icon" name="close" onClick={() => setIsOpen(false)} />
+        <Icon id="close-icon" name="times" onClick={() => setIsOpen(false)} />
       </Modal.Header>
       <Modal.Content>
         <SubmitPitchForm

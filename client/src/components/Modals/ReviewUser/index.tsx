@@ -1,31 +1,30 @@
 import React, { ReactElement, FC, useState } from 'react';
 import {
-  Button,
   Grid,
   Modal,
   ModalProps,
   Icon,
   Form,
-  Input,
   Message,
 } from 'semantic-ui-react';
-import { IUser } from 'ssw-common';
+import { BasePopulatedUser } from 'ssw-common';
 
-import { useInterests, useTeams } from '../../../contexts';
 import { UserPicture, FieldTag } from '../..';
-import { getUserFullName, titleCase } from '../../../utils/helpers';
+import { titleCase } from '../../../utils/helpers';
 import { onboardingStatusEnum } from '../../../utils/enums';
+import { SecondaryButton } from '../../ui/SecondaryButton';
+import { PrimaryButton } from '../../ui/PrimaryButton';
 import { updateUser } from '../../../api';
+import { TagList } from '../../list/TagList';
 
 import './styles.scss';
 
 interface ReviewUserProps extends ModalProps {
-  user: IUser;
+  user: BasePopulatedUser;
   actionUpdate?: (
-    user: IUser,
+    user: BasePopulatedUser,
     status: keyof typeof onboardingStatusEnum,
   ) => Promise<void>;
-  open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   type: 'reject' | 'review';
 }
@@ -36,23 +35,13 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
   open,
   setOpen,
   type,
+  ...rest
 }): ReactElement => {
-  const [formValue, setFormValue] = useState('');
-
-  const { getTeamFromId } = useTeams();
-  const { getInterestById } = useInterests();
-
-  const formatDate = (date: Date): string => {
-    date = new Date(date);
-    const day = date.getDate();
-    const month = date.getMonth() + 1;
-    const year = date.getFullYear();
-
-    return `${month}/${day}/${year}`;
-  };
+  const [onboardReasoning, setOnboardReasoning] = useState('');
 
   return (
     <Modal
+      {...rest}
       size="large"
       open={open}
       onClose={() => setOpen(false)}
@@ -68,11 +57,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
               <div className="user-info">
                 <UserPicture className="review-user-picture" user={user} />
                 <div className="user-info-text">
-                  <b>
-                    {user.preferredName
-                      ? `${user.preferredName} (${user.firstName} ${user.lastName})`
-                      : getUserFullName(user)}
-                  </b>
+                  <b>{user.joinedNames}</b>
                   <br></br>
                   {user.pronouns.join(', ')}
                 </div>
@@ -93,9 +78,8 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
             <Grid.Column>
               <b>Genders:</b> {user.genders.join(', ')}
               <br /> <b>Races:</b> {user.races.map(titleCase).join(', ')}
-              {/* TODO - update when the neighborhoods field is added to the user model */}
-              <br /> <b>Neighborhood:</b> Place Holder, update when the
-              neighborhoods field is added to the user model
+              <br /> <b>Neighborhood:</b>
+              {user.neighborhood}
             </Grid.Column>
           </Grid.Row>
           <Grid.Row columns={4}>
@@ -112,34 +96,13 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
             <Grid.Column>
               <b>Teams</b>
               <div style={{ display: 'flex' }}>
-                {user.teams.map(getTeamFromId).map((team, index) => (
-                  <Grid.Row key={index}>
-                    <FieldTag
-                      className="team-tag"
-                      name={team?.name}
-                      hexcode={team?.color}
-                      size="medium"
-                    />
-                  </Grid.Row>
-                ))}
+                <TagList tags={user.teams} />
               </div>
             </Grid.Column>
             <Grid.Column>
               <b>Topic Interests</b>
               <div>
-                {user.interests.map((interest: string, index: number) => {
-                  const fullInterest = getInterestById(interest);
-
-                  return (
-                    <FieldTag
-                      className="interest-tag"
-                      key={index}
-                      name={fullInterest?.name}
-                      hexcode={fullInterest?.color}
-                      size="medium"
-                    />
-                  );
-                })}
+                <TagList tags={user.interests} />
               </div>
             </Grid.Column>
           </Grid.Row>
@@ -156,7 +119,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
               )}
               <span style={{ color: 'gray' }}>
                 {type === 'reject' ? 'Applied' : 'Registered'} on{' '}
-                {formatDate(user.dateJoined)}
+                {new Date(user.dateJoined).toLocaleDateString()}
               </span>
             </Grid.Column>
           </Grid.Row>
@@ -171,9 +134,7 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
               <div className="paragraph">
                 <b>User's past experience</b>
                 <br />
-                {/* TODO - update when past experience field is added to the user model */}
-                Place Holder, update when past experience field is added to the
-                user model
+                {user.journalismResponse}
               </div>
 
               {type === 'review' && (
@@ -181,12 +142,11 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
                   <h5>
                     Reasoning <span style={{ color: 'gray' }}>- Optional</span>
                   </h5>
-                  <Form>
-                    <Input
-                      type="text"
-                      onChange={(e) => setFormValue(e.currentTarget.value)}
-                    ></Input>
-                  </Form>
+                  <Form.Input
+                    value={onboardReasoning}
+                    type="text"
+                    onChange={(e, { value }) => setOnboardReasoning(value)}
+                  />
                 </>
               )}
             </Grid.Column>
@@ -194,26 +154,25 @@ const ReviewUserModal: FC<ReviewUserProps> = ({
         </Grid>
         {type === 'review' && (
           <Modal.Actions className="review-user-actions">
-            <Button
+            <PrimaryButton
               className="approve-button"
               onClick={() => {
-                updateUser({ onboardReasoning: formValue }, user._id);
+                updateUser({ onboardReasoning: onboardReasoning }, user._id);
                 actionUpdate?.(user, 'ONBOARDED');
                 setOpen(false);
               }}
-            >
-              Approve
-            </Button>
-            <Button
+              content="Approve"
+            />
+            <SecondaryButton
               className="decline-button"
               onClick={() => {
-                updateUser({ onboardReasoning: formValue }, user._id);
+                updateUser({ onboardReasoning: onboardReasoning }, user._id);
                 actionUpdate?.(user, 'DENIED');
                 setOpen(false);
               }}
-            >
-              Decline
-            </Button>
+              content="Decline"
+              border
+            />
           </Modal.Actions>
         )}
       </Modal.Content>

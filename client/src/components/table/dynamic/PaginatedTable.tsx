@@ -13,10 +13,16 @@ interface PaginateOptions<T> {
   count: number;
   columns: DynamicColumn<T>[];
   pageOptions: string[];
+  getModal: (
+    record: T,
+    open: boolean,
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  ) => ReactElement;
 }
 
 export const PaginatedTable = <T,>({
   records,
+  getModal,
   count,
   columns,
   pageOptions,
@@ -62,6 +68,8 @@ export const PaginatedTable = <T,>({
         </div>
       </div>
       <DynamicTable<T>
+        onRecordClick={() => void 0}
+        getModal={getModal}
         view={{
           records,
           columns,
