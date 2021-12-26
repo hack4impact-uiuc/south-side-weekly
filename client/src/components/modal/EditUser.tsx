@@ -8,10 +8,10 @@ import { isError } from '../../api';
 import { useAuth } from '../../contexts';
 import { apiCall } from '../../api/request';
 import { PrimaryButton } from '../ui/PrimaryButton';
+import { Pusher } from '../ui/Pusher';
 import { EditUserForm } from '../form/EditUserForm';
 
 import './modals.scss';
-import './EditUser.scss';
 
 interface EditUserProps extends ModalProps {
   user: BasePopulatedUser;
@@ -55,6 +55,7 @@ export const EditUserModal: FC<EditUserProps> = ({
     >
       <Modal.Header>
         <span>Edit Profile</span>
+        <Pusher />
         <Icon name="close" onClick={() => setIsOpen(false)} />
       </Modal.Header>
       <Modal.Content scrolling>

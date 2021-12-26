@@ -13,6 +13,14 @@
           margin-right: 10px;
         }
       }
+
+      .description > * textarea {
+        min-width: 100%;
+        margin-top: 10px;
+        min-height: 100px;
+        height: 100px;
+        max-height: 150px;
+      }
     }
   }
 }

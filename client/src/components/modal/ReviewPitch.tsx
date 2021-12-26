@@ -1,5 +1,5 @@
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
-import { Input, Modal, ModalProps } from 'semantic-ui-react';
+import { Icon, Input, Modal, ModalProps } from 'semantic-ui-react';
 import { BasePopulatedPitch, BasePopulatedUser } from 'ssw-common';
 import cn from 'classnames';
 import toast from 'react-hot-toast';
@@ -24,6 +24,7 @@ import { TagList } from '../list/TagList';
 import { SingleSelect } from '../select/SingleSelect';
 import { MultiSelect } from '../select/MultiSelect';
 import { LinkDisplay } from '../ui/LinkDisplayButton';
+import { Pusher } from '../ui/Pusher';
 
 import './modals.scss';
 import './ReviewPitch.scss';
@@ -164,7 +165,11 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       onClose={() => setIsOpen(false)}
       className={cn('review-pitch-modal', rest.className)}
     >
-      <Modal.Header content="Review Pitch" />
+      <Modal.Header>
+        <span>Review Pitch</span>
+        <Pusher />
+        <Icon name="close" onClick={() => setIsOpen(false)} />
+      </Modal.Header>
       <Modal.Content>
         <div className="flex-wrapper">
           <div id="title">

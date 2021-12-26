@@ -7,6 +7,7 @@ import { FormInput } from '../ui/FormInput';
 import { FormMultiSelect } from '../ui/FormMultiSelect';
 import { useAuth, useInterests } from '../../contexts';
 import { FormRadio } from '../ui/FormRadio';
+import { FormTextArea } from '../ui/FormTextArea';
 
 import './SubmitPitchForm.scss';
 
@@ -63,9 +64,10 @@ export const SubmitPitchForm: FC<FormProps> = ({
           </div>
           <div className="row">
             <Field
-              component={FormInput}
+              component={FormTextArea}
               name="description"
               label="Description"
+              className="description"
             />
           </div>
           <div className="row">

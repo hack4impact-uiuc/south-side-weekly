@@ -15,9 +15,9 @@ import { apiCall } from '../../api/request';
 import { useAuth } from '../../contexts';
 import { SubmitPitchFields, SubmitPitchForm } from '../form/SubmitPitchForm';
 import { PrimaryButton } from '../ui/PrimaryButton';
+import { Pusher } from '../ui/Pusher';
 
 import './modals.scss';
-import './SubmitPitch.scss';
 
 interface SubmitPitchModalProps extends ModalProps {
   callback(): void;
@@ -109,20 +109,24 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
     <Modal
       trigger={<Button secondary>Submit Pitch</Button>}
       open={isOpen}
-      className="submit-modal"
+      className="submit-pitch-modal"
       onOpen={() => setIsOpen(true)}
       onClose={() => setIsOpen(false)}
       {...rest}
     >
       <Modal.Header>
         <span>Submit a pitch</span>
-        <Popup
-          content={HelperMessage()}
-          trigger={<Icon size="small" name="info circle" />}
-          position="bottom left"
-          wide="very"
-          hoverable
-        />
+        <div>
+          <Popup
+            content={HelperMessage()}
+            trigger={<Icon size="small" name="info circle" />}
+            position="bottom left"
+            wide="very"
+            hoverable
+          />
+        </div>
+        <Pusher />
+        <Icon id="close-icon" name="close" onClick={() => setIsOpen(false)} />
       </Modal.Header>
       <Modal.Content>
         <SubmitPitchForm

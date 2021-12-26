@@ -8,6 +8,7 @@ import { ResourceForm } from '../form/ResourceForm';
 import { apiCall } from '../../api/request';
 import { PrimaryButton } from '../ui/PrimaryButton';
 import { SecondaryButton } from '../ui/SecondaryButton';
+import { Pusher } from '../ui/Pusher';
 
 import './ResourceControl.scss';
 import './modals.scss';
@@ -101,7 +102,8 @@ const ResourceModal: FC<ResourceProps> = ({
     <Modal className="resource-modal" {...rest}>
       <Modal.Header>
         <span>Resource Control</span>
-        <Icon name="close" onClick={closeModal} />
+        <Pusher />
+        <Icon id="close-icon" name="close" onClick={closeModal} />
       </Modal.Header>
       <Modal.Content>
         <Modal.Description>

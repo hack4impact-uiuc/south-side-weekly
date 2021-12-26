@@ -21,7 +21,6 @@ export const FormRadio: FC<FormRadioProps> = ({
     () => (
       <div className={cn('form-field', className)}>
         <Form.Radio
-          fluid
           label={label}
           {...field}
           {...props}
