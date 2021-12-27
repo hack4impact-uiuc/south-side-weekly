@@ -35,9 +35,8 @@ const hasPublishDateFilter = (
     return { 'issueStatuses.0': { $exists: true } };
   } else if (hasPublishDate === 'FALSE') {
     return { 'issueStatuses.0': { $exists: false } };
-  } 
-    return {};
-  
+  }
+  return {};
 };
 
 type Pitch = Promise<LeanDocument<PitchSchema>>;
@@ -188,9 +187,8 @@ export const getClaimablePitches = async (
       data: [...noWriters, ...claimablePitches],
       count: noWriters.length + claimablePitches.length,
     };
-  } 
-    return { data: claimablePitches, count: claimablePitches.length };
-  
+  }
+  return { data: claimablePitches, count: claimablePitches.length };
 };
 
 export const getFeedbackForPitch = async (
