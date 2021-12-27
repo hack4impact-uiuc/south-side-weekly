@@ -1,7 +1,7 @@
 import WizardWrapper from '../wizard';
 
-import Directory from './directory';
-import PitchDoc from './pitchDoc';
+import Directory from './Directory';
+import PitchDoc from './pitchDoc/index';
 import NotFound from './invalid';
 import { Profile } from './profile/Profile';
 import Resources from './resources';

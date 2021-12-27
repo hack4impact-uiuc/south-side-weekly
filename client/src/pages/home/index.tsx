@@ -5,12 +5,7 @@ import Select from 'react-select';
 import { IPitch, IUserAggregate } from 'ssw-common';
 
 import { getAggregatedUser, isError } from '../../api';
-import {
-  DynamicTable,
-  SubmitPitchModal,
-  View,
-  Walkthrough,
-} from '../../components';
+import { DynamicTable, View, Walkthrough } from '../../components';
 import { useAuth } from '../../contexts';
 import { pagesEnum, pitchStatusEnum } from '../../utils/enums';
 import { filterPitchesByInterests, titleCase } from '../../utils/helpers';
@@ -26,13 +21,14 @@ import {
 } from './helpers';
 
 import './styles.scss';
+// import { SubmitPitchModal } from '../../components/modal/SubmitPitch';
 
 const searchFields: (keyof IPitch)[] = ['title'];
 
 const Homepage: FC = () => {
   const { user } = useAuth();
 
-  const [refreshRecords, setRefreshRecords] = useState(false);
+  const [refreshRecords] = useState(false);
   const [aggregatedUser, setAggregatedUser] = useState<IUserAggregate>();
 
   const [currentTab, setCurrentTab] = useState<Tab>(TABS.MEMBER_PITCHES);
@@ -133,9 +129,9 @@ const Homepage: FC = () => {
     getAggregate();
   }, [user, refreshRecords]);
 
-  const onSubmitPitch = (): void => {
-    setRefreshRecords((refresh) => !refresh);
-  };
+  // const onSubmitPitch = (): void => {
+  //   setRefreshRecords((refresh) => !refresh);
+  // };
 
   return (
     <div className="homepage-wrapper">
@@ -170,10 +166,7 @@ const Homepage: FC = () => {
             onClick={() => setCurrentTab(TABS.SUBMITTED_PUBLICATIONS)}
           />
 
-          <Menu.Item
-            content={<SubmitPitchModal callback={onSubmitPitch} />}
-            position="right"
-          />
+          {/* <Menu.Item content={<SubmitPitchModal />} position="right" /> */}
         </Menu>
       </div>
       <div className="page-inner-content">

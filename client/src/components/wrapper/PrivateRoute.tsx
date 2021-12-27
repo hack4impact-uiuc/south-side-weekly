@@ -11,14 +11,14 @@ export const PrivateRoute: FC<RouteProps> = ({ ...routeProps }) => {
 
   const canShowPage = useMemo(
     () => !isLoading && (isAuthenticated || location.pathname === '/login'),
-    [isLoading, isAuthenticated, location.pathname],
+    [isLoading, isAuthenticated, location],
   );
 
   if (isLoading) {
     return <Loading open={isLoading} />;
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated && location.pathname !== '/login') {
     return <Redirect to="/login" />;
   } else if (!isRegistered) {
     <Redirect to="/join" from={location.pathname} />;

@@ -1,9 +1,14 @@
 import React from 'react';
-import { BasePopulatedUser } from 'ssw-common';
+import { Icon } from 'semantic-ui-react';
+import { BasePopulatedPitch, BasePopulatedUser } from 'ssw-common';
 
 import { buildColumn, FieldTag, UserPicture } from '..';
 import { approveUser, rejectUser } from '../../api/apiWrapper';
+import { useTeams } from '../../contexts';
+import { ClaimableTeamsList } from '../list/ClaimableTeamsList';
 import { TagList } from '../list/TagList';
+import UserChip from '../tags/UserChip';
+import { LinkDisplay } from '../ui/LinkDisplayButton';
 import { PrimaryButton } from '../ui/PrimaryButton';
 import { SecondaryButton } from '../ui/SecondaryButton';
 
@@ -98,4 +103,147 @@ export const actionColumn = buildColumn({
 export const rejectionColumn = buildColumn({
   title: 'Rejection Reasoning',
   extractor: 'onboardReasoning',
+});
+
+export const titleColumn = buildColumn({
+  title: 'Title',
+  width: 3,
+  extractor: 'title',
+});
+
+export const descriptionColumn = buildColumn({
+  title: 'Description',
+  width: 5,
+  extractor: function getDescription(pitch: BasePopulatedPitch) {
+    return (
+      <div
+        style={{
+          textOverflow: 'ellipsis',
+          wordWrap: 'break-word',
+          maxHeight: '3.6em',
+          lineHeight: '1.8em',
+        }}
+      >
+        {pitch.description}
+      </div>
+    );
+  },
+});
+
+export const associatedInterestsColumn = buildColumn({
+  title: 'Associated Interests',
+  extractor: function getInterests(pich: BasePopulatedPitch) {
+    return <TagList size="tiny" tags={pich.topics} />;
+  },
+});
+
+export const claimableTeamsColumn = buildColumn({
+  title: 'Teams You Can Claim',
+  extractor: function getTeams(pitch: BasePopulatedPitch) {
+    return <ClaimableTeamsList pitch={pitch} />;
+  },
+});
+
+export const submittedColumn = buildColumn({
+  title: 'Submitter',
+  width: 2,
+  extractor: function getSubmitter(pitch: BasePopulatedPitch) {
+    return <UserChip user={pitch.author} />;
+  },
+});
+
+export const selfWriteColumn = buildColumn({
+  title: 'Self-write',
+  width: 1,
+  extractor: function getSelfWrite(pitch: BasePopulatedPitch) {
+    return pitch.writer ? (
+      <div style={{ textAlign: 'center' }}>
+        <Icon color="green" name="check" />
+      </div>
+    ) : (
+      <></>
+    );
+  },
+});
+
+export const googleDocColumn = buildColumn({
+  title: 'Google Doc',
+  width: 1,
+  extractor: function getGoogleDoc(pitch: BasePopulatedPitch) {
+    return (
+      <LinkDisplay
+        style={{ fontSize: '1.25em' }}
+        href={pitch.assignmentGoogleDocLink}
+      />
+    );
+  },
+});
+
+export const deadlineColumn = buildColumn({
+  title: 'Pitch Compleltion Deadline',
+  width: 2,
+  extractor: function getDeadline(pitch: BasePopulatedPitch) {
+    return new Date(pitch.deadline).toLocaleDateString();
+  },
+});
+
+export const unclaimedTeamsColumn = buildColumn({
+  title: 'Unclaimed Teams',
+  width: 2,
+  extractor: function GetUnclaimedTeams({
+    teams,
+    primaryEditor,
+    secondEditors,
+    thirdEditors,
+    writer,
+  }: BasePopulatedPitch) {
+    const { teams: allTeams } = useTeams();
+    const baseTeamsWithSpace = teams
+      .filter((team) => team.target > 0)
+      .map((team) => team.teamId);
+
+    const WRITING = allTeams.filter(
+      (team) => team.name.toLowerCase() === 'writing',
+    );
+    const EDIING = allTeams.filter(
+      (team) => team.name.toLowerCase() === 'editing',
+    );
+
+    const writingTeams = writer === null ? WRITING : [];
+    const editingTeams =
+      primaryEditor !== null ||
+      secondEditors.length < 2 ||
+      thirdEditors.length < 3
+        ? EDIING
+        : [];
+    const teamsWithSpace = [
+      ...writingTeams,
+      ...editingTeams,
+      ...baseTeamsWithSpace,
+    ];
+
+    return (
+      <div>
+        <TagList size="tiny" tags={teamsWithSpace} />
+      </div>
+    );
+  },
+});
+
+export const teamsRequireApprovalColumn = buildColumn({
+  title: 'Teams Requring Approval',
+  width: 2,
+  extractor: function GetTeams({ pendingContributors }: BasePopulatedPitch) {
+    const { getTeamFromId } = useTeams();
+    const teamIds = [
+      ...new Set(pendingContributors.map((c) => c.teams).flat()),
+    ];
+
+    return (
+      <TagList
+        size="tiny"
+        tags={teamIds.map(getTeamFromId).filter((team) => team !== undefined)}
+      />
+    );
+  },
 });

@@ -13,7 +13,7 @@ interface PaginateOptions<T> {
   count: number;
   columns: DynamicColumn<T>[];
   pageOptions: string[];
-  getModal: (
+  getModal?: (
     record: T,
     open: boolean,
     setOpen: React.Dispatch<React.SetStateAction<boolean>>,

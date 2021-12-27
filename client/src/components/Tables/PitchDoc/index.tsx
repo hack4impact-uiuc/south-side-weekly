@@ -6,7 +6,6 @@ import { FieldTag, TableTool } from '../..';
 import { useInterests } from '../../../contexts';
 import { pitchDocTabs } from '../../../utils/constants';
 import './styles.scss';
-import { ReviewPitch } from '../../modal/ReviewPitch';
 
 interface PitchTableProps {
   pitches: IPitch[];
@@ -107,7 +106,7 @@ const PitchBody: FC<PitchBodyProps> = ({
         </Table.Cell>
       </Table.Row>
     )}
-    {sortedPitches.map((pitch, index) => {
+    {sortedPitches.map((pitch) => {
       if (currentTab === pitchDocTabs.UNCLAIMED) {
         return (
           // <ClaimPitchModal callback={callback} key={index} pitch={pitch} />
@@ -115,11 +114,12 @@ const PitchBody: FC<PitchBodyProps> = ({
         );
       } else if (currentTab === pitchDocTabs.PITCH_APPROVAL) {
         return (
-          <ReviewPitch
-            trigger={<PitchRow pitch={pitch} />}
-            key={index}
-            id={pitch._id}
-          />
+          // <ReviewPitch
+          //   trigger={<PitchRow pitch={pitch} />}
+          //   key={index}
+          //   id={pitch._id}
+          // />
+          <></>
         );
       } else if (currentTab === pitchDocTabs.CLAIM_APPROVAL) {
         //TODO: Replace PitchRow with the modal component

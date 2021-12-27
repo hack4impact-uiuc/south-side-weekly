@@ -1,12 +1,13 @@
 import React, { ReactElement } from 'react';
 
-import { Walkthrough } from '../../components';
-import { UsersView } from '../../components/view/UsersView';
-import { AuthView } from '../../components/wrapper/AuthView';
-import { Tabs } from '../../layouts/tabs/Tabs';
-import { pagesEnum } from '../../utils/enums';
+import { Walkthrough } from '../components';
+import { UsersView } from '../components/view/UsersView';
+import { AuthView } from '../components/wrapper/AuthView';
+import { Tabs } from '../layouts/tabs/Tabs';
+import { pagesEnum } from '../utils/enums';
 
-import './styles.scss';
+import './pages.scss';
+import './Directory.scss';
 
 const Directory = (): ReactElement => (
   <div className="directory-page">

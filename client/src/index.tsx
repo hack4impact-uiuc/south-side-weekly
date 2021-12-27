@@ -14,7 +14,6 @@ import {
   Profile,
   NotFound,
   Login,
-  PitchDoc,
   Resources,
   Issues,
 } from './pages';
@@ -24,6 +23,7 @@ import 'semantic-ui-css/semantic.min.css';
 import './styles/styles.scss';
 import Homepage from './pages/home';
 import { Providers } from './components/wrapper/Providers';
+import { PitchDocPage } from './pages/PitchDoc';
 
 const routes = [
   {
@@ -44,7 +44,7 @@ const routes = [
   },
   {
     path: '/pitches',
-    component: PitchDoc,
+    component: PitchDocPage,
   },
   {
     path: '/issues',

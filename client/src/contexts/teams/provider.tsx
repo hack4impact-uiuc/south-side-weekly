@@ -5,17 +5,17 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import { ITeam } from 'ssw-common';
+import { Team } from 'ssw-common';
 
 import { getTeams, isError } from '../../api';
 
 import { TeamsContext, initialValues, useTeams } from './context';
 
 const TeamsProvider: FC = ({ children }): ReactElement => {
-  const [teams, setTeams] = useState<ITeam[]>(initialValues.teams);
+  const [teams, setTeams] = useState<Team[]>(initialValues.teams);
 
-  const getTeamFromId = (teamId: string): ITeam | undefined =>
-    teams.find(({ _id }) => _id === teamId);
+  const getTeamFromId = (teamId: string): Team =>
+    teams.find(({ _id }) => _id === teamId) || initialValues.getTeamFromId();
 
   const fetchTeams = useCallback(async () => {
     const res = await getTeams();

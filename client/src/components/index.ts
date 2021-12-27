@@ -1,6 +1,5 @@
 // import ClaimPitchModal from './Modals/ClaimPitch';
 import ResourceModal from './modal/ResourceControl';
-import SubmitPitchModal from './modal/SubmitPItch';
 import WizardListTitle from './Wizard/ListTitle';
 import PageCounter from './Wizard/PageCounter';
 import WizardSvg from './Wizard/Svg';
@@ -31,7 +30,6 @@ export { PrivateRoute } from './wrapper/PrivateRoute';
 export {
   // ClaimPitchModal,
   ResourceModal,
-  SubmitPitchModal,
   WizardListTitle,
   PageCounter,
   WizardSvg,

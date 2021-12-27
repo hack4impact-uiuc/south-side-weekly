@@ -1,16 +1,44 @@
 import _ from 'lodash';
+import { Condition } from 'mongodb';
 import { FilterQuery, LeanDocument, UpdateQuery } from 'mongoose';
-import { IPitch } from 'ssw-common';
+import { BasePopulatedUser, IPitch } from 'ssw-common';
 import { IssueService, UserService } from '.';
 
 import Pitch, { PitchSchema } from '../models/pitch.model';
-import { pitchStatusEnum } from '../utils/enums';
+import { populateUser } from '../populators';
+import { pitchStatusEnum, rolesEnum } from '../utils/enums';
 import { PaginateOptions } from './types';
 
 interface PitchesResponse {
   data: LeanDocument<PitchSchema>[];
   count: number;
 }
+
+const searchFields = ['title', 'description'];
+
+const ignoreKeys = ['hasPublishDate'];
+
+const mongooseFilters = (
+  filters: FilterQuery<PitchSchema>,
+): FilterQuery<PitchSchema> => _.omit(filters, ignoreKeys);
+
+const hasPublishDateFilter = (
+  hasPublishDate: Condition<string>,
+): FilterQuery<PitchSchema> => {
+  if (!hasPublishDate) {
+    return {};
+  }
+
+  hasPublishDate = hasPublishDate.toString().toUpperCase();
+
+  if (hasPublishDate === 'TRUE') {
+    return { 'issueStatuses.0': { $exists: true } };
+  } else if (hasPublishDate === 'FALSE') {
+    return { 'issueStatuses.0': { $exists: false } };
+  } 
+    return {};
+  
+};
 
 type Pitch = Promise<LeanDocument<PitchSchema>>;
 
@@ -19,7 +47,16 @@ const paginate = async (
   options?: PaginateOptions<PitchSchema>,
 ): Promise<PitchesResponse> => {
   const { offset, limit, sort, filters, search } = options || {};
-  const mergedFilters = _.merge(filters, definedFilters);
+  const mergedFilters = _.merge(
+    mongooseFilters(filters),
+    definedFilters,
+    {
+      $or: searchFields.map((field) => ({
+        [field]: { $regex: search, $options: 'i' },
+      })),
+    },
+    hasPublishDateFilter(filters['hasPublishDate']),
+  );
 
   const pitches = await Pitch.find(mergedFilters)
     .skip(offset * limit)
@@ -28,21 +65,6 @@ const paginate = async (
     .lean();
 
   const count = await Pitch.countDocuments(mergedFilters);
-
-  if (search) {
-    const searchRegex = new RegExp(search, 'i');
-    const filteredPitches = pitches.filter((pitch) => {
-      const searchableFields = [pitch.title, pitch.description];
-      return searchableFields.some(
-        (field) => field && field.match(searchRegex),
-      );
-    });
-
-    return {
-      data: filteredPitches,
-      count: filteredPitches.length,
-    };
-  }
 
   return {
     data: pitches,
@@ -112,6 +134,64 @@ export const getPendingClaimPitches = async (
   options?: PaginateOptions<PitchSchema>,
 ): Promise<PitchesResponse> =>
   await paginate({ 'pendingContributors.0': { $exists: true } }, options);
+
+export const getClaimablePitches = async (
+  userId: string,
+  options?: PaginateOptions<PitchSchema>,
+): Promise<PitchesResponse> => {
+  let pitches = (await getApprovedPitches(null, options)).data;
+  const user = ((await populateUser(
+    await UserService.getOne(userId),
+    'default',
+  )) as unknown) as BasePopulatedUser;
+
+  // Remove the pitches that the user created
+  pitches = pitches.filter(
+    (pitch) => pitch.author.toString() !== user._id.toString(),
+  );
+  const teamIds = user.teams.map((team) => team._id);
+  const isWriter = user.teams.some(
+    (team) => team.name.toLowerCase() === 'writing',
+  );
+  const isEditor = user.teams.some(
+    (team) => team.name.toLowerCase() === 'editing',
+  );
+
+  const [noWriters, writers] = _.partition(
+    pitches,
+    (pitch) => pitch.writer === null,
+  );
+
+  const isClaimablePitch = (pitch: PitchSchema): boolean => {
+    const pitchHasUserTeamWithSpace = teamIds.some((id) =>
+      pitch.teams.some(
+        (team) => team.teamId.toString() === id.toString() && team.target > 0,
+      ),
+    );
+
+    const isPrimaryEditorAvailable =
+      pitch.primaryEditor === null && user.role === rolesEnum.ADMIN;
+    const isSecondsThirdsEditorAvailable =
+      (pitch.secondEditors.length < 2 || pitch.thirdEditors.length < 3) &&
+      user.role === rolesEnum.STAFF;
+    const pitchHasEditorSpace =
+      isEditor && (isPrimaryEditorAvailable || isSecondsThirdsEditorAvailable);
+
+    return pitchHasUserTeamWithSpace || pitchHasEditorSpace;
+  };
+
+  const claimablePitches = writers.filter(isClaimablePitch);
+
+  // If user is not a writer
+  if (isWriter) {
+    return {
+      data: [...noWriters, ...claimablePitches],
+      count: noWriters.length + claimablePitches.length,
+    };
+  } 
+    return { data: claimablePitches, count: claimablePitches.length };
+  
+};
 
 export const getFeedbackForPitch = async (
   pitchId: string,

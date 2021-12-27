@@ -10,7 +10,7 @@ import {
   getUnclaimedPitches,
   isError,
 } from '../../api';
-import { SubmitPitchModal, Walkthrough, PitchTable } from '../../components';
+import { Walkthrough, PitchTable } from '../../components';
 import { ContextSelect } from '../../components/select/ContextSelect';
 import { SingleSelect } from '../../components/select/SingleSelect';
 import { AuthView } from '../../components/wrapper/AuthView';
@@ -202,7 +202,6 @@ const PitchDoc = (): ReactElement => {
             iconPosition="left"
             className="search"
           />
-          <SubmitPitchModal callback={() => void 0} onClose={populatePitches} />
         </div>
 
         <div className="filters">

@@ -1,13 +1,6 @@
 import React, { FC, ReactElement, useState } from 'react';
 import toast from 'react-hot-toast';
-import {
-  Button,
-  Icon,
-  Modal,
-  ModalProps,
-  Popup,
-  Header,
-} from 'semantic-ui-react';
+import { Icon, Modal, ModalProps, Popup, Header } from 'semantic-ui-react';
 import { Pitch } from 'ssw-common';
 
 import { isError } from '../../api';
@@ -18,10 +11,6 @@ import { PrimaryButton } from '../ui/PrimaryButton';
 import { Pusher } from '../ui/Pusher';
 
 import './modals.scss';
-
-interface SubmitPitchModalProps extends ModalProps {
-  callback(): void;
-}
 
 const HelperMessage = (): ReactElement => (
   <>
@@ -58,10 +47,7 @@ const HelperMessage = (): ReactElement => (
   </>
 );
 
-const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
-  callback,
-  ...rest
-}): ReactElement => {
+export const SubmitPitchModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
   const { user } = useAuth();
 
@@ -96,7 +82,6 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
     });
 
     if (!isError(res)) {
-      callback();
       toast.success('Pitch successfully submitted!', {
         position: 'bottom-right',
       });
@@ -107,7 +92,7 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
 
   return (
     <Modal
-      trigger={<Button secondary>Submit Pitch</Button>}
+      trigger={<PrimaryButton content="Submit Pitch" />}
       open={isOpen}
       className="submit-pitch-modal"
       onOpen={() => setIsOpen(true)}
@@ -141,16 +126,14 @@ const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
           }}
           onSubmit={submitPitch}
         />
-        <Modal.Actions>
-          <PrimaryButton
-            type="submit"
-            content="Submit"
-            form="submit-pitch-form"
-          />
-        </Modal.Actions>
       </Modal.Content>
+      <Modal.Actions>
+        <PrimaryButton
+          type="submit"
+          content="Submit"
+          form="submit-pitch-form"
+        />
+      </Modal.Actions>
     </Modal>
   );
 };
-
-export default SubmitPitchModal;

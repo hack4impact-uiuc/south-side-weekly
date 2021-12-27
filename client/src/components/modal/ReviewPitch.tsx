@@ -31,10 +31,13 @@ import './ReviewPitch.scss';
 
 interface ReviewPitchProps extends ModalProps {
   id: string;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const ReviewPitch: FC<ReviewPitchProps> = ({
   id,
+  open,
+  setOpen,
   ...rest
 }): ReactElement => {
   const { user } = useAuth();
@@ -42,7 +45,6 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
   const { teams } = useTeams();
 
   const [pitch, setPitch] = useState<BasePopulatedPitch | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
 
   const [writers, setWriters] = useState<BasePopulatedUser[]>([]);
   const [primaryEditors, setPrimaryEditors] = useState<BasePopulatedUser[]>([]);
@@ -84,10 +86,10 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       setWriter(pitch && pitch.writer && pitch.writer._id);
     };
 
-    if (isOpen) {
+    if (open) {
       loadPitch();
     }
-  }, [isOpen, id, teams]);
+  }, [open, id, teams]);
 
   const approvePitch = async (): Promise<void> => {
     const parsedTeams = Object.entries(teamConfig)
@@ -121,7 +123,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
 
     if (!isError(res)) {
       toast.success('Pitch approved', { position: 'bottom-right' });
-      setIsOpen(false);
+      setOpen(false);
     } else {
       toast.error('Error approving pitch', { position: 'bottom-right' });
     }
@@ -138,7 +140,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
 
     if (!isError(res)) {
       toast.success('Pitch declined', { position: 'bottom-right' });
-      setIsOpen(false);
+      setOpen(false);
     } else {
       toast.error('Failed to decline pitch', { position: 'bottom-right' });
     }
@@ -160,15 +162,14 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
   return (
     <Modal
       {...rest}
-      open={isOpen}
-      onOpen={() => setIsOpen(true)}
-      onClose={() => setIsOpen(false)}
+      open={open}
+      onClose={() => setOpen(false)}
       className={cn('review-pitch-modal', rest.className)}
     >
       <Modal.Header>
         <span>Review Pitch</span>
         <Pusher />
-        <Icon name="close" onClick={() => setIsOpen(false)} />
+        <Icon name="close" onClick={() => setOpen(false)} />
       </Modal.Header>
       <Modal.Content scrolling>
         <div className="flex-wrapper">

@@ -34,6 +34,12 @@ router.get(
   errorWrap(PitchController.getPitchesWithPendingClaims),
 );
 
+router.get(
+  '/claimable/:userId',
+  requireRegistered,
+  errorWrap(PitchController.getClaimablePitches),
+);
+
 // GET /api/pitches/:id
 router.get('/:id', requireRegistered, errorWrap(PitchController.getPitch));
 

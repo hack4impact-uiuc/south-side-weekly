@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 
 import Pitch from '../models/pitch.model';
 import { onboardingStatusEnum } from '../utils/enums';
-import { sendNotFound, sendSuccess } from '../utils/helpers';
+import { sendNotFound, sendSuccess, sendUnauthorized } from '../utils/helpers';
 import { getEditableFields, getViewableFields } from '../utils/user-utils';
 import { sendApproveUserMail, sendRejectUserMail } from '../mail/sender';
 import { UserService } from '../services';
@@ -125,6 +125,11 @@ export const getDeniedUsers = async (
 
 // Gets a user by id
 export const getMe = async (req: Request, res: Response): Promise<void> => {
+  if (req.isUnauthenticated()) {
+    sendUnauthorized(res);
+    return;
+  }
+
   const populateType = extractPopulateQuery(req.query);
 
   const user = await UserService.getOne(req.user._id);
