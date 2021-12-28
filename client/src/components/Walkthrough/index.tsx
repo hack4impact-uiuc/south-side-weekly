@@ -1,7 +1,7 @@
-import React, { useState, useEffect, FC } from 'react';
+import React, { useState, useEffect, FC, ReactElement } from 'react';
 import { Message } from 'semantic-ui-react';
 
-import { addVisitedPage } from '../../api/user';
+import { apiCall } from '../../api/request';
 import { useAuth } from '../../contexts';
 
 interface Props {
@@ -9,34 +9,32 @@ interface Props {
   content: string;
 }
 
-const Walkthrough: FC<Props> = ({ page, content }) => {
+const Walkthrough: FC<Props> = ({ page, content }): ReactElement => {
   const { user, register } = useAuth();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    const isPageVisited = (page: string): boolean => {
-      const visitedPages = user!.visitedPages;
-
-      return visitedPages.includes(page);
-    };
-
-    if (!isPageVisited(page)) {
+    if (!user!.visitedPages.includes(page)) {
       setVisible(true);
     }
   }, [user, page]);
 
   const closeWalkthrough = async (): Promise<void> => {
     setVisible(false);
-    await addVisitedPage(page);
+    await apiCall({
+      url: '/users/visitPage',
+      method: 'PUT',
+      body: { page },
+    });
     register();
   };
 
+  if (!visible) {
+    return <></>;
+  }
+
   return (
-    <>
-      {visible && (
-        <Message onDismiss={closeWalkthrough} content={content} color="blue" />
-      )}
-    </>
+    <Message onDismiss={closeWalkthrough} content={content} color="blue" />
   );
 };
 

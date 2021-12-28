@@ -6,23 +6,23 @@ $backgroundColor: gainsboro;
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 5px;
-  border-radius: 5px;
-  background-color: $backgroundColor;
+  padding-right: 5px;
+  border-radius: 0.75rem;
+  background-color: rgba($backgroundColor, 0.6);
   color: black;
   transition: background-color 250ms ease;
 
   > img {
     border-radius: 50%;
-    height: 20px;
+    height: 25px;
   }
 
   &:hover,
   &:focus {
-    background-color: darken($backgroundColor, 5%);
+    background-color: darken($backgroundColor, 2%);
   }
 
   &:active {
-    background-color: darken($backgroundColor, 10%);
+    background-color: darken($backgroundColor, 5%);
   }
 }

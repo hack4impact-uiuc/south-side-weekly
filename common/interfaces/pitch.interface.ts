@@ -79,4 +79,17 @@ interface PendingContributor {
 export interface FullPopulatedPitch extends Omit<Pitch, FullPitchOmitFields> {
   issues: Issue[];
   pendingContributors: PendingContributor[];
+  teams: {
+    teamId: TeamFields;
+    target: number;
+  }[];
+  topics: InterestFields[];
+  assignmentContributors: { userId: UserFields; teams: TeamFields[] }[];
+  author: UserFields;
+  writer: UserFields;
+  primaryEditor: UserFields;
+  secondEditors: UserFields[];
+  thirdEditors: UserFields[];
+  reviewedBy: UserFields;
+  issueStatuses: { issueId: Issue; status: string }[];
 }

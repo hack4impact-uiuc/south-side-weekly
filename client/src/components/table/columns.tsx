@@ -4,8 +4,11 @@ import { BasePopulatedPitch, BasePopulatedUser } from 'ssw-common';
 
 import { buildColumn, FieldTag, UserPicture } from '..';
 import { approveUser, rejectUser } from '../../api/apiWrapper';
-import { useTeams } from '../../contexts';
-import { ClaimableTeamsList } from '../list/ClaimableTeamsList';
+import { useAuth, useTeams } from '../../contexts';
+import {
+  ClaimableTeamsList,
+  getClaimableTeams,
+} from '../list/ClaimableTeamsList';
 import { TagList } from '../list/TagList';
 import UserChip from '../tags/UserChip';
 import { LinkDisplay } from '../ui/LinkDisplayButton';
@@ -157,7 +160,7 @@ export const selfWriteColumn = buildColumn({
   width: 1,
   extractor: function getSelfWrite(pitch: BasePopulatedPitch) {
     return pitch.writer ? (
-      <div style={{ textAlign: 'center' }}>
+      <div>
         <Icon color="green" name="check" />
       </div>
     ) : (
@@ -190,41 +193,15 @@ export const deadlineColumn = buildColumn({
 export const unclaimedTeamsColumn = buildColumn({
   title: 'Unclaimed Teams',
   width: 2,
-  extractor: function GetUnclaimedTeams({
-    teams,
-    primaryEditor,
-    secondEditors,
-    thirdEditors,
-    writer,
-  }: BasePopulatedPitch) {
-    const { teams: allTeams } = useTeams();
-    const baseTeamsWithSpace = teams
-      .filter((team) => team.target > 0)
-      .map((team) => team.teamId);
-
-    const WRITING = allTeams.filter(
-      (team) => team.name.toLowerCase() === 'writing',
-    );
-    const EDIING = allTeams.filter(
-      (team) => team.name.toLowerCase() === 'editing',
-    );
-
-    const writingTeams = writer === null ? WRITING : [];
-    const editingTeams =
-      primaryEditor !== null ||
-      secondEditors.length < 2 ||
-      thirdEditors.length < 3
-        ? EDIING
-        : [];
-    const teamsWithSpace = [
-      ...writingTeams,
-      ...editingTeams,
-      ...baseTeamsWithSpace,
-    ];
+  extractor: function GetUnclaimedTeams({ ...pitch }: BasePopulatedPitch) {
+    const { user } = useAuth();
 
     return (
       <div>
-        <TagList size="tiny" tags={teamsWithSpace} />
+        <TagList
+          size="tiny"
+          tags={getClaimableTeams(user!, pitch).map((team) => team.teamId)}
+        />
       </div>
     );
   },

@@ -4,7 +4,7 @@ import WizardListTitle from './Wizard/ListTitle';
 import PageCounter from './Wizard/PageCounter';
 import WizardSvg from './Wizard/Svg';
 import { FieldTag } from './tags/FieldTag/FieldTag';
-import UserPicture from './UserPicture';
+import UserPicture from './ui/UserPicture';
 import SubmitButton from './Wizard/SubmitButton';
 import PrevButton from './Wizard/PrevButton';
 import { PitchTable, PitchRow } from './Tables/PitchDoc';

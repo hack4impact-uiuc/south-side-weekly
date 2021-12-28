@@ -1,6 +1,7 @@
 import React, { FC, useMemo } from 'react';
 import { BasePopulatedPitch } from 'ssw-common';
 
+import { ClaimPitch } from '../modal/ClaimPitch';
 import { ReviewPitch } from '../modal/ReviewPitch';
 
 import {
@@ -70,6 +71,9 @@ export const PitchRecords: FC<TableProps> = ({ data, count, type }) => {
         <>
           {type === 'review-new' && (
             <ReviewPitch open={open} setOpen={setOpen} id={pitch._id} />
+          )}
+          {type === 'claim' && (
+            <ClaimPitch open={open} setOpen={setOpen} id={pitch._id} />
           )}
         </>
       )}

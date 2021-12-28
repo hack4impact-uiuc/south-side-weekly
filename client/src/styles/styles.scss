@@ -8,6 +8,10 @@ body {
 
   // Forces the sroll bar at ALL times to prevent div jumping
   overflow-y: scroll;
+
+  .error {
+    color: red;
+  }
 }
 
 /* SSW Header Logo Styling */

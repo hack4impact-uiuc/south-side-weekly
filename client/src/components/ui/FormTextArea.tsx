@@ -1,13 +1,13 @@
 import { FieldProps } from 'formik';
 import { Form } from 'semantic-ui-react';
-import React, { FC, ReactElement, useMemo } from 'react';
+import React, { FC, ReactElement, ReactNode, useMemo } from 'react';
 import cn from 'classnames';
 
 import './Form.scss';
 
 interface FormTextAreaProps extends FieldProps<string> {
   className?: string;
-  label?: string;
+  label?: ReactNode;
 }
 
 export const FormTextArea: FC<FormTextAreaProps> = ({

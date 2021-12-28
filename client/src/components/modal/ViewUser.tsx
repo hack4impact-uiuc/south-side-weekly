@@ -3,7 +3,7 @@ import { toLower } from 'lodash';
 import { Button, Grid, Icon, Modal, ModalProps } from 'semantic-ui-react';
 import { BasePopulatedUser } from 'ssw-common';
 
-import UserPicture from '../UserPicture';
+import UserPicture from '../ui/UserPicture';
 import { TagList } from '../list/TagList';
 
 import './modals.scss';

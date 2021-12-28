@@ -2,8 +2,8 @@ import React, { FC, ReactElement } from 'react';
 import { Image, ImageProps } from 'semantic-ui-react';
 import { User } from 'ssw-common';
 import { isEmpty } from 'lodash';
+import cn from 'classnames';
 
-import { classNames } from '../../utils/helpers';
 import DefaultProfile from '../../assets/default_profile.png';
 
 interface UserPictureProps extends ImageProps {
@@ -25,7 +25,7 @@ const UserPicture: FC<UserPictureProps> = ({
       size={size}
       src={getPicture(user.profilePic)}
       alt={user.fullname}
-      className={classNames('user-picture', className)}
+      className={cn('user-picture', className)}
       onError={(e: any) => (e.target.src = DefaultProfile)}
       {...rest}
     />

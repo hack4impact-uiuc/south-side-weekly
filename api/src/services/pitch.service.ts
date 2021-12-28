@@ -171,7 +171,7 @@ export const getClaimablePitches = async (
     const isPrimaryEditorAvailable =
       pitch.primaryEditor === null && user.role === rolesEnum.ADMIN;
     const isSecondsThirdsEditorAvailable =
-      (pitch.secondEditors.length < 2 || pitch.thirdEditors.length < 3) &&
+      (pitch.secondEditors.length < 1 || pitch.thirdEditors.length < 1) &&
       user.role === rolesEnum.STAFF;
     const pitchHasEditorSpace =
       isEditor && (isPrimaryEditorAvailable || isSecondsThirdsEditorAvailable);
