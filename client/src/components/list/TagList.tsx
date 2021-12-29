@@ -2,7 +2,7 @@ import React, { FC, ReactElement } from 'react';
 import { Interest, Team } from 'ssw-common';
 import { LabelProps } from 'semantic-ui-react';
 
-import { FieldTag } from '../tags/FieldTag/FieldTag';
+import { FieldTag } from '../tag/FieldTag';
 
 interface TagListProps extends LabelProps {
   tags: Team[] | Interest[];

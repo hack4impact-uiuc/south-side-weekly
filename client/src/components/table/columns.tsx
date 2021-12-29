@@ -10,7 +10,7 @@ import {
   getClaimableTeams,
 } from '../list/ClaimableTeamsList';
 import { TagList } from '../list/TagList';
-import UserChip from '../tags/UserChip';
+import UserChip from '../tag/UserChip';
 import { LinkDisplay } from '../ui/LinkDisplayButton';
 import { PrimaryButton } from '../ui/PrimaryButton';
 import { SecondaryButton } from '../ui/SecondaryButton';

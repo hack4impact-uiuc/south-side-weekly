@@ -3,7 +3,7 @@ import { openPopupWidget } from 'react-calendly';
 import { Menu } from 'semantic-ui-react';
 import { Resource, Team } from 'ssw-common';
 
-import { getAllResources, isError } from '../api';
+import { apiCall, isError } from '../api';
 import { useAuth, useTeams } from '../contexts';
 import { ResourceModal, Walkthrough, ResourceTable } from '../components';
 import { pagesEnum } from '../utils/enums';
@@ -47,7 +47,10 @@ const Resources = (): ReactElement => {
   };
 
   const getResources = async (): Promise<void> => {
-    const res = await getAllResources();
+    const res = await apiCall<{ data: Resource[]; count: number }>({
+      url: '/resources',
+      method: 'GET',
+    });
 
     if (!isError(res)) {
       setResources(

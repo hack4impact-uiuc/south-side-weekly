@@ -1,7 +1,7 @@
 import React, { FC, ReactElement } from 'react';
 import { User } from 'ssw-common';
 
-import UserChip from '../../tags/UserChip';
+import UserChip from '../../tag/UserChip';
 
 import './styles.scss';
 

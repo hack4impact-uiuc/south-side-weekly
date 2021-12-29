@@ -4,9 +4,8 @@ import toast from 'react-hot-toast';
 import { BasePopulatedUser, User } from 'ssw-common';
 import _ from 'lodash';
 
-import { isError } from '../../api';
+import { isError, apiCall } from '../../api';
 import { useAuth } from '../../contexts';
-import { apiCall } from '../../api/request';
 import { PrimaryButton } from '../ui/PrimaryButton';
 import { Pusher } from '../ui/Pusher';
 import { EditUserForm } from '../form/EditUserForm';
@@ -67,9 +66,9 @@ export const EditUserModal: FC<EditUserProps> = ({
           id="edit-user-form"
         />
       </Modal.Content>
-        <Modal.Actions>
-          <PrimaryButton type="submit" form="edit-user-form" content="Save" />
-        </Modal.Actions>
+      <Modal.Actions>
+        <PrimaryButton type="submit" form="edit-user-form" content="Save" />
+      </Modal.Actions>
     </Modal>
   );
 };

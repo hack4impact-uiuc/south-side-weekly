@@ -8,9 +8,9 @@ import toast from 'react-hot-toast';
 
 import { rolesEnum } from '../utils/enums';
 
-import { apiCall } from './request';
+import { isError } from './builders';
 
-import { isError } from '.';
+import { apiCall } from '.';
 
 export const loadUserPermissions = async (
   userId: string,

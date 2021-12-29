@@ -3,8 +3,7 @@ import toast from 'react-hot-toast';
 import { Icon, Modal, ModalProps, Popup, Header } from 'semantic-ui-react';
 import { Pitch } from 'ssw-common';
 
-import { isError } from '../../api';
-import { apiCall } from '../../api/request';
+import { isError, apiCall } from '../../api';
 import { useAuth } from '../../contexts';
 import { SubmitPitchFields, SubmitPitchForm } from '../form/SubmitPitchForm';
 import { PrimaryButton } from '../ui/PrimaryButton';

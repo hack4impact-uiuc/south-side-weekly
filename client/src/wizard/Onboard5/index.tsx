@@ -4,10 +4,9 @@ import { CalendlyEventListener, InlineWidget } from 'react-calendly';
 import { Form } from 'semantic-ui-react';
 import Swal from 'sweetalert2';
 
-import { isError } from '../../api';
+import { isError, apiCall } from '../../api';
 import { useAuth, useWizard } from '../../contexts';
 import { formatNumber } from '../../utils/helpers';
-import { apiCall } from '../../api/request';
 
 import './styles.scss';
 

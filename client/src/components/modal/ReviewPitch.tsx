@@ -5,16 +5,15 @@ import cn from 'classnames';
 import toast from 'react-hot-toast';
 
 import { FieldTag } from '..';
-import { isError } from '../../api';
+import { isError, apiCall } from '../../api';
 import {
   loadBasePitch,
   loadEditors,
   loadPrimaryEditors,
   loadWriters,
 } from '../../api/apiWrapper';
-import { apiCall } from '../../api/request';
 import { useAuth, useTeams } from '../../contexts';
-import UserChip from '../tags/UserChip';
+import UserChip from '../tag/UserChip';
 import neighborhoods from '../../utils/neighborhoods';
 import { useIssues } from '../../contexts/issues/context';
 import { issueStatusEnum } from '../../utils/enums';

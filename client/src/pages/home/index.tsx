@@ -4,7 +4,7 @@ import { Input, Menu } from 'semantic-ui-react';
 import Select from 'react-select';
 import { IPitch, IUserAggregate } from 'ssw-common';
 
-import { getAggregatedUser, isError } from '../../api';
+import { apiCall, isError } from '../../api';
 import { DynamicTable, View, Walkthrough } from '../../components';
 import { useAuth } from '../../contexts';
 import { pagesEnum, pitchStatusEnum } from '../../utils/enums';
@@ -29,7 +29,7 @@ const Homepage: FC = () => {
   const { user } = useAuth();
 
   const [refreshRecords] = useState(false);
-  const [aggregatedUser, setAggregatedUser] = useState<IUserAggregate>();
+  const [aggregatedUser] = useState<IUserAggregate>();
 
   const [currentTab, setCurrentTab] = useState<Tab>(TABS.MEMBER_PITCHES);
 
@@ -118,11 +118,14 @@ const Homepage: FC = () => {
 
   useEffect(() => {
     const getAggregate = async (): Promise<void> => {
-      const res = await getAggregatedUser(user!._id);
+      const res = await apiCall({
+        url: '/users',
+        method: 'GET',
+      });
 
       if (!isError(res)) {
-        const aggregatedUser = res.data.result;
-        setAggregatedUser(aggregatedUser);
+        // const aggregatedUser = res.data.result;
+        // setAggregatedUser(aggregatedUser);
       }
     };
 

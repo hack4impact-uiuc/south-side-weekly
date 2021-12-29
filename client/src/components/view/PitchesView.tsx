@@ -5,8 +5,7 @@ import { BasePopulatedPitch } from 'ssw-common';
 import { useQueryParams } from 'use-query-params';
 import toast from 'react-hot-toast';
 
-import { isError } from '../../api';
-import { apiCall } from '../../api/request';
+import { isError, apiCall } from '../../api';
 import { MultiSelectFilter } from '../filter/MultiSelectFilter';
 import { DelayedSearch } from '../search/DelayedSearch';
 import { CheckboxFilter } from '../filter/CheckboxFilter';

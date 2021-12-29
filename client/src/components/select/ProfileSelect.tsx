@@ -7,8 +7,7 @@ import toast from 'react-hot-toast';
 
 import { useAuth } from '../../contexts';
 import UserPicture from '../ui/UserPicture';
-import { apiCall } from '../../api/request';
-import { isError } from '../../api';
+import { apiCall, isError } from '../../api';
 import { AuthView } from '../wrapper/AuthView';
 
 interface TriggerProps {

@@ -12,7 +12,7 @@ import { QueryParamProvider } from 'use-query-params';
 import {
   Directory,
   Profile,
-  NotFound,
+  UnknownRoute,
   Login,
   Resources,
   Issues,
@@ -60,7 +60,7 @@ const routes = [
   },
   {
     path: '*',
-    component: NotFound,
+    component: UnknownRoute,
   },
 ];
 

@@ -5,9 +5,9 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import { IInterest } from 'ssw-common';
+import { IInterest, Interest } from 'ssw-common';
 
-import { getInterests, isError } from '../../api';
+import { apiCall, isError } from '../../api';
 
 import { InterestsContext, initialValues, useInterests } from './context';
 
@@ -21,7 +21,10 @@ const InterestsProvider: FC = ({ children }): ReactElement => {
     interests.find(({ _id }) => _id === id);
 
   const fetchInterests = useCallback(async () => {
-    const res = await getInterests();
+    const res = await apiCall<Interest[]>({
+      url: '/interests',
+      method: 'GET',
+    });
 
     if (!isError(res)) {
       setInterests(res.data.result);

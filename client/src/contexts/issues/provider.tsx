@@ -5,9 +5,9 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import { IIssue } from 'ssw-common';
+import { IIssue, Issue } from 'ssw-common';
 
-import { getIssues, isError } from '../../api';
+import { apiCall, isError } from '../../api';
 
 import { IssuesContext, initialValues, useIssues } from './context';
 
@@ -18,7 +18,10 @@ const IssuesProvider: FC = ({ children }): ReactElement => {
     issues.find(({ _id }) => _id === issueId);
 
   const fetchIssues = useCallback(async () => {
-    const res = await getIssues();
+    const res = await apiCall<{ data: Issue[]; count: number }>({
+      url: '/issues',
+      method: 'GET',
+    });
 
     if (!isError(res)) {
       setIssues(res.data.result.data);

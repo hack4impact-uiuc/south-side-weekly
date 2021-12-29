@@ -67,14 +67,22 @@ export const PitchRecords: FC<TableProps> = ({ data, count, type }) => {
     }
 
     if (type === 'review-new') {
-      return function getModalOpts(pitch: BasePopulatedPitch, open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>) {
+      return function getModalOpts(
+        pitch: BasePopulatedPitch,
+        open: boolean,
+        setOpen: React.Dispatch<React.SetStateAction<boolean>>,
+      ) {
         return <ReviewPitch open={open} setOpen={setOpen} id={pitch._id} />;
-      } 
+      };
     }
 
-    return function getModalOpts(pitch: BasePopulatedPitch, open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>) {
+    return function getModalOpts(
+      pitch: BasePopulatedPitch,
+      open: boolean,
+      setOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    ) {
       return <ClaimPitch open={open} setOpen={setOpen} id={pitch._id} />;
-    } 
+    };
   }, [type]);
 
   return (

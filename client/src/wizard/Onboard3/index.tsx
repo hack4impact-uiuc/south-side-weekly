@@ -5,8 +5,7 @@ import Swal from 'sweetalert2';
 
 import { useAuth, useInterests, useTeams, useWizard } from '../../contexts';
 import { formatNumber, titleCase } from '../../utils/helpers';
-import { isError } from '../../api';
-import { apiCall } from '../../api/request';
+import { isError, apiCall } from '../../api';
 
 import './styles.scss';
 

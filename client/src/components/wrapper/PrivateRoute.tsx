@@ -3,7 +3,7 @@ import { Redirect, Route, RouteProps, useLocation } from 'react-router-dom';
 
 import { useAuth } from '../../contexts';
 import { Page } from '../../layouts/page/Page';
-import Loading from '../Loading';
+import Loading from '../ui/Loading';
 
 export const PrivateRoute: FC<RouteProps> = ({ ...routeProps }) => {
   const { isAuthenticated, isLoading, isRegistered, isOnboarded } = useAuth();

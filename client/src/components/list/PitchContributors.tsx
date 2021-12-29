@@ -1,7 +1,7 @@
 import React, { FC, ReactElement, useMemo } from 'react';
 import { FullPopulatedPitch, UserFields } from 'ssw-common';
 
-import UserChip from '../tags/UserChip';
+import UserChip from '../tag/UserChip';
 
 interface PitchContributorsProps {
   pitch: FullPopulatedPitch | null;

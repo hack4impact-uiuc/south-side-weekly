@@ -14,9 +14,8 @@ import { UserPicture, FieldTag } from '..';
 import { titleCase } from '../../utils/helpers';
 import { SecondaryButton } from '../ui/SecondaryButton';
 import { PrimaryButton } from '../ui/PrimaryButton';
-import { isError } from '../../api';
+import { isError, apiCall } from '../../api';
 import { TagList } from '../list/TagList';
-import { apiCall } from '../../api/request';
 
 import './modals.scss';
 import './ReviewUser.scss';

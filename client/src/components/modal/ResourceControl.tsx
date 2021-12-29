@@ -3,9 +3,8 @@ import toast from 'react-hot-toast';
 import { Form, Icon, Modal, ModalProps } from 'semantic-ui-react';
 import { Resource } from 'ssw-common';
 
-import { isError } from '../../api';
+import { isError, apiCall } from '../../api';
 import { ResourceForm } from '../form/ResourceForm';
-import { apiCall } from '../../api/request';
 import { PrimaryButton } from '../ui/PrimaryButton';
 import { SecondaryButton } from '../ui/SecondaryButton';
 import { Pusher } from '../ui/Pusher';

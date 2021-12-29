@@ -2,8 +2,9 @@ import React, { FC, ReactElement, useMemo } from 'react';
 import { Tab, TabProps } from 'semantic-ui-react';
 import cn from 'classnames';
 
-import './Tabs.scss';
 import { AuthView } from '../../components/wrapper/AuthView';
+
+import './Tabs.scss';
 
 interface Props extends TabProps {
   views: {

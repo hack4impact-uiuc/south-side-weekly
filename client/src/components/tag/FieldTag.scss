@@ -1,0 +1,120 @@
+@import '../../styles/colors.scss';
+
+.field-tag-label {
+  font-weight: normal !important;
+  padding: 5px 10px 5px 10px;
+  border-radius: 0.3rem !important;
+  transition: none !important;
+  margin-bottom: 2px !important;
+}
+
+.admin-tag-color {
+  background-color: $admin !important;
+}
+
+.pronouns-tag-color {
+  background-color: $pronouns !important;
+}
+
+.staff-tag-color {
+  background-color: $staff !important;
+}
+
+.contributor-tag-color {
+  background-color: $contributor !important;
+}
+
+.onboarded-tag-color {
+  background-color: $onboarded !important;
+}
+
+.onboarding-scheduled-tag-color {
+  background-color: $onboardingScheduled !important;
+}
+
+.no-show-tag-color {
+  background-color: $noShow !important;
+}
+
+.denied-tag-color {
+  background-color: $denied !important;
+}
+
+.recently-active-tag-color {
+  background-color: $recentlyActive !important;
+}
+
+.published-tag-color {
+  background-color: $published !important;
+}
+
+.in-progress-tag-color {
+  background-color: $inprogress !important;
+}
+
+.active-tag-color {
+  background-color: $active !important;
+}
+
+.inactive-tag-color,
+.stalled-tag-color {
+  background-color: $inactive !important;
+}
+
+.public-tag-color {
+  background-color: $public !important;
+}
+
+.private-tag-color {
+  background-color: $private !important;
+}
+
+.pending-tag-color,
+.pending-review-tag-color {
+  background-color: $pending !important;
+}
+
+.approved-tag-color,
+.approved-review-tag-color {
+  background-color: $approved !important;
+}
+
+.declined-tag-color,
+.declined-review-tag-color {
+  background-color: $declined !important;
+}
+
+.maybe-in-tag-color {
+  background-color: $maybeIn !important;
+}
+
+.definitely-in-tag-color {
+  background-color: $definitelyIn !important;
+}
+
+.in-edits-tag-color {
+  background-color: $inEdits !important;
+}
+
+.ready-to-publish-tag-color,
+.writer-on-story-tag-color {
+  background-color: $readyToPublish !important;
+}
+
+.push-tag-color,
+.writer-needed-tag-color,
+.primary-editor-needed-tag-color {
+  background-color: $push !important;
+}
+
+.default-btn {
+  background-color: $secondaryColor !important;
+  color: white !important;
+
+  &:hover,
+  :focus {
+    background-color: $secondaryColor !important;
+    color: white !important;
+    opacity: 0.9;
+  }
+}

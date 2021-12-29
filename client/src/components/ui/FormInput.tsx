@@ -13,8 +13,8 @@ export const FormInput: FC<FormInputProps> = ({
   className,
   field,
   ...props
-}): ReactElement => {
-  const memoizedJSX = useMemo(
+}): ReactElement =>
+  useMemo(
     () => (
       <div className={cn('form-field', className)}>
         <Form.Input fluid {...field} {...props} />
@@ -22,6 +22,3 @@ export const FormInput: FC<FormInputProps> = ({
     ),
     [field, className, props],
   );
-
-  return memoizedJSX;
-};

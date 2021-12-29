@@ -1,15 +1,15 @@
 import WizardWrapper from '../wizard';
 
 import Directory from './Directory';
-import NotFound from './invalid';
-import { Profile } from './profile/Profile';
+import UnknownRoute from './UnknownRoute';
+import Profile from './Profile';
 import Resources from './Resources';
-import Login from './login';
-import Issues from './issues';
+import Login from './Login';
+import Issues from './Issues';
 
 export {
   Directory,
-  NotFound,
+  UnknownRoute,
   Profile,
   WizardWrapper,
   Resources,

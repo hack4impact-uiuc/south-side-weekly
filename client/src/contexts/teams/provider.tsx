@@ -7,7 +7,7 @@ import React, {
 } from 'react';
 import { Team } from 'ssw-common';
 
-import { getTeams, isError } from '../../api';
+import { apiCall, isError } from '../../api';
 
 import { TeamsContext, initialValues, useTeams } from './context';
 
@@ -18,7 +18,10 @@ const TeamsProvider: FC = ({ children }): ReactElement => {
     teams.find(({ _id }) => _id === teamId) || initialValues.getTeamFromId();
 
   const fetchTeams = useCallback(async () => {
-    const res = await getTeams();
+    const res = await apiCall<Team[]>({
+      url: '/teams',
+      method: 'GET',
+    });
 
     if (!isError(res)) {
       setTeams(res.data.result);

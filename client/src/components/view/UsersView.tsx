@@ -5,8 +5,7 @@ import { BasePopulatedUser } from 'ssw-common';
 import { useQueryParams } from 'use-query-params';
 import toast from 'react-hot-toast';
 
-import { isError } from '../../api';
-import { apiCall } from '../../api/request';
+import { isError, apiCall } from '../../api';
 import { allActivities, allRoles } from '../../utils/constants';
 import { MultiSelectFilter } from '../filter/MultiSelectFilter';
 import { SelectFilter } from '../filter/SelectFilter';
