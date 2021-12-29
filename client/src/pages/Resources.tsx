@@ -1,25 +1,25 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { openPopupWidget } from 'react-calendly';
 import { Menu } from 'semantic-ui-react';
-import { IResource, ITeam } from 'ssw-common';
+import { Resource, Team } from 'ssw-common';
 
-import { getAllResources, isError } from '../../api';
-import { useAuth, useTeams } from '../../contexts';
-import { ResourceModal, Walkthrough, ResourceTable } from '../../components';
-import { pagesEnum } from '../../utils/enums';
-import { AuthView } from '../../components/wrapper/AuthView';
-import { PrimaryButton } from '../../components/ui/PrimaryButton';
-import { SecondaryButton } from '../../components/ui/SecondaryButton';
+import { getAllResources, isError } from '../api';
+import { useAuth, useTeams } from '../contexts';
+import { ResourceModal, Walkthrough, ResourceTable } from '../components';
+import { pagesEnum } from '../utils/enums';
+import { AuthView } from '../components/wrapper/AuthView';
+import { PrimaryButton } from '../components/ui/PrimaryButton';
+import { SecondaryButton } from '../components/ui/SecondaryButton';
 
-import './styles.scss';
+import './Resources.scss';
 
 interface ModalInfo {
   action: 'create' | 'edit';
   isOpen: boolean;
-  resource?: IResource;
+  resource?: Resource;
 }
 
-const generalTeam: ITeam = {
+const generalTeam: Team = {
   _id: 'General',
   name: 'General',
   color: '',
@@ -31,7 +31,7 @@ const Resources = (): ReactElement => {
   const { isAdmin } = useAuth();
 
   const [selectedTab, setSelectedTab] = useState('General');
-  const [resources, setResources] = useState<IResource[]>([]);
+  const [resources, setResources] = useState<Resource[]>([]);
   const [modal, setModal] = useState<ModalInfo>({
     action: 'edit',
     isOpen: false,
@@ -39,7 +39,7 @@ const Resources = (): ReactElement => {
   });
   const tabs = [generalTeam, ...teams];
 
-  const filterResources = (team: string): IResource[] => {
+  const filterResources = (team: string): Resource[] => {
     if (team === 'General') {
       return resources.filter((resource) => resource.isGeneral);
     }
@@ -52,7 +52,7 @@ const Resources = (): ReactElement => {
     if (!isError(res)) {
       setResources(
         res.data.result.data.sort(
-          (a: IResource, b: IResource) =>
+          (a: Resource, b: Resource) =>
             +new Date(b.updatedAt) - +new Date(a.updatedAt),
         ),
       );
@@ -76,7 +76,7 @@ const Resources = (): ReactElement => {
     setModal({ ...modal });
   };
 
-  const handleResourceAction = (selected: IResource): void => {
+  const handleResourceAction = (selected: Resource): void => {
     setModal({
       action: 'edit',
       isOpen: true,

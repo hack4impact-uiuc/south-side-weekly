@@ -61,22 +61,29 @@ export const PitchRecords: FC<TableProps> = ({ data, count, type }) => {
     }
   }, [type]);
 
+  const getModal = useMemo(() => {
+    if (type === 'review-unclaimed' || type === 'all') {
+      return undefined;
+    }
+
+    if (type === 'review-new') {
+      return function getModalOpts(pitch: BasePopulatedPitch, open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>) {
+        return <ReviewPitch open={open} setOpen={setOpen} id={pitch._id} />;
+      } 
+    }
+
+    return function getModalOpts(pitch: BasePopulatedPitch, open: boolean, setOpen: React.Dispatch<React.SetStateAction<boolean>>) {
+      return <ClaimPitch open={open} setOpen={setOpen} id={pitch._id} />;
+    } 
+  }, [type]);
+
   return (
     <PaginatedTable
       columns={cols}
       records={data}
       count={count}
       pageOptions={['1', '10', '25', '50']}
-      getModal={(pitch, open, setOpen) => (
-        <>
-          {type === 'review-new' && (
-            <ReviewPitch open={open} setOpen={setOpen} id={pitch._id} />
-          )}
-          {type === 'claim' && (
-            <ClaimPitch open={open} setOpen={setOpen} id={pitch._id} />
-          )}
-        </>
-      )}
+      getModal={getModal}
     />
   );
 };

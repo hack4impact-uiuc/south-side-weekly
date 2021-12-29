@@ -66,10 +66,10 @@ export const EditUserModal: FC<EditUserProps> = ({
           onSubmit={() => void 0}
           id="edit-user-form"
         />
+      </Modal.Content>
         <Modal.Actions>
           <PrimaryButton type="submit" form="edit-user-form" content="Save" />
         </Modal.Actions>
-      </Modal.Content>
     </Modal>
   );
 };

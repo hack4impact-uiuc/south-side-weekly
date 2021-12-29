@@ -12,6 +12,7 @@ import { MultiSelectFilter } from '../filter/MultiSelectFilter';
 import { SelectFilter } from '../filter/SelectFilter';
 import { DelayedSearch } from '../search/DelayedSearch';
 import { UsersRecords } from '../table/UserRecords';
+
 import './UsersView.scss';
 
 interface UsersRes {
