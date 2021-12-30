@@ -1,15 +1,14 @@
 import React, { ReactElement, useState } from 'react';
 import { Form, Grid } from 'semantic-ui-react';
 
-import { WizardSvg } from '../../components';
-import { useWizard } from '../../contexts';
-import { wizardPages } from '../../utils/enums';
+import { WizardSvg } from '../../../components';
+import { useWizard } from '../../../contexts';
+import { wizardPages } from '../../../utils/enums';
 
-import './styles.scss';
+import './Onboard1.scss';
 
 const Onboard1 = (): ReactElement => {
   const { data, store } = useWizard();
-
   const [firstName, setFirstName] = useState(data!.firstName);
   const [lastName, setLastName] = useState(data!.lastName);
   const [preferredName, setPreferredName] = useState(data!.preferredName);

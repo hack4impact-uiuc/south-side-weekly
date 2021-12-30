@@ -6,7 +6,7 @@ import { WizardSvg } from '../../components';
 import { useAuth, useWizard } from '../../contexts';
 import { rolesEnum, wizardPages } from '../../utils/enums';
 
-import './styles.scss';
+import './InitialPrompt.scss';
 
 const InitialPrompt = (): ReactElement => {
   const { store } = useWizard();
