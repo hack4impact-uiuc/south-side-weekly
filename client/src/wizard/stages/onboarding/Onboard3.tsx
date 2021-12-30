@@ -2,13 +2,13 @@ import React, { ReactElement, useState, useEffect } from 'react';
 import { Form, Grid } from 'semantic-ui-react';
 import { isEmpty, reject } from 'lodash';
 import Swal from 'sweetalert2';
+import { IInterest, ITeam } from 'ssw-common';
 
 import { useAuth, useInterests, useTeams, useWizard } from '../../../contexts';
 import { formatNumber, titleCase } from '../../../utils/helpers';
 import { isError, apiCall } from '../../../api';
 
 import './Onboard3.scss';
-import { IInterest, ITeam } from 'ssw-common';
 
 const Onboard3 = (): ReactElement => {
   const { store, data } = useWizard();
