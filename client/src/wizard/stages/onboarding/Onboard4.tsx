@@ -2,9 +2,9 @@ import React, { ReactElement, useState } from 'react';
 import { Form } from 'semantic-ui-react';
 import { toString } from 'lodash';
 
-import { useWizard } from '../../contexts';
+import { useWizard } from '../../../contexts';
 
-import './styles.scss';
+import './Onboard4.scss';
 
 const Onboard4 = (): ReactElement => {
   const { store, data } = useWizard();

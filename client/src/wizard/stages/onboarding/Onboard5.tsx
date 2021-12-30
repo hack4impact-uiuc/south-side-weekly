@@ -4,11 +4,11 @@ import { CalendlyEventListener, InlineWidget } from 'react-calendly';
 import { Form } from 'semantic-ui-react';
 import Swal from 'sweetalert2';
 
-import { isError, apiCall } from '../../api';
-import { useAuth, useWizard } from '../../contexts';
-import { formatNumber } from '../../utils/helpers';
+import { isError, apiCall } from '../../../api';
+import { useAuth, useWizard } from '../../../contexts';
+import { formatNumber } from '../../../utils/helpers';
 
-import './styles.scss';
+import './Onboard5.scss';
 
 const Onboard5 = (): ReactElement => {
   const { store, data } = useWizard();
@@ -33,7 +33,7 @@ const Onboard5 = (): ReactElement => {
       firstName: data!.firstName,
       lastName: data!.lastName,
       preferredName: data!.preferredName,
-      phone: formatNumber(data!.phone),
+      phone: formatNumber(data!.phone!),
       genders: reject(data!.genders, isEmpty),
       pronouns: reject(data!.pronouns, isEmpty),
       dateJoined: new Date(Date.now()),

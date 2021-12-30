@@ -5,7 +5,7 @@ import Swal from 'sweetalert2';
 import { useAuth } from '../../contexts';
 import { openProfile } from '../../utils/helpers';
 
-import './styles.scss';
+import './Completion.scss';
 
 const Completion = (): ReactElement => {
   const { register, user } = useAuth();

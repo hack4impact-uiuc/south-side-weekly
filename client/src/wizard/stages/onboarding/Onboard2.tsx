@@ -1,18 +1,18 @@
 import React, { ReactElement, useState } from 'react';
 import { Form, Grid } from 'semantic-ui-react';
 
-import { WizardListTitle, WizardSvg } from '../../components';
-import { useWizard } from '../../contexts';
+import { WizardListTitle, WizardSvg } from '../../../components';
+import { useWizard } from '../../../contexts';
 import {
   allGenders,
   allPronouns,
   allRaces,
   neighborhoods,
-} from '../../utils/constants';
-import { titleCase } from '../../utils/helpers';
-import { wizardPages } from '../../utils/enums';
+} from '../../../utils/constants';
+import { titleCase } from '../../../utils/helpers';
+import { wizardPages } from '../../../utils/enums';
 
-import './styles.scss';
+import './Onboard2.scss';
 
 const Onboard2 = (): ReactElement => {
   const { store, data } = useWizard();
@@ -20,7 +20,7 @@ const Onboard2 = (): ReactElement => {
   const [genders, setGenders] = useState(new Set(data!.genders));
   const [pronouns, setPronouns] = useState(new Set(data!.pronouns));
   const [races, setRaces] = useState(new Set(data!.races));
-  const [neighborhood, setNeighborhood] = useState<string>(data!.neighborhood);
+  const [neighborhood, setNeighborhood] = useState(data!.neighborhood);
 
   const onSubmit = (): void => {
     const data = {
@@ -85,7 +85,7 @@ const Onboard2 = (): ReactElement => {
               <div className="checkbox-wrapper" key={index}>
                 <Form.Checkbox
                   value={gender}
-                  defaultChecked={data!.genders.includes(gender)}
+                  defaultChecked={genders.has(gender)}
                   label={titleCase(gender)}
                   onClick={() => handleGender(gender)}
                 />
@@ -98,7 +98,7 @@ const Onboard2 = (): ReactElement => {
               <div className="checkbox-wrapper" key={index}>
                 <Form.Checkbox
                   value={pronoun}
-                  defaultChecked={data!.pronouns.includes(pronoun)}
+                  defaultChecked={pronouns.has(pronoun)}
                   label={titleCase(pronoun)}
                   onClick={() => handlePronoun(pronoun)}
                 />
@@ -111,7 +111,7 @@ const Onboard2 = (): ReactElement => {
               <div className="checkbox-wrapper" key={index}>
                 <Form.Checkbox
                   value={race}
-                  defaultChecked={data!.races.includes(race)}
+                  defaultChecked={races.has(race)}
                   label={titleCase(race)}
                   onClick={() => handleRace(race)}
                 />

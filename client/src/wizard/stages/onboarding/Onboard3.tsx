@@ -2,12 +2,13 @@ import React, { ReactElement, useState, useEffect } from 'react';
 import { Form, Grid } from 'semantic-ui-react';
 import { isEmpty, reject } from 'lodash';
 import Swal from 'sweetalert2';
+import { IInterest, ITeam } from 'ssw-common';
 
-import { useAuth, useInterests, useTeams, useWizard } from '../../contexts';
-import { formatNumber, titleCase } from '../../utils/helpers';
-import { isError, apiCall } from '../../api';
+import { useAuth, useInterests, useTeams, useWizard } from '../../../contexts';
+import { formatNumber, titleCase } from '../../../utils/helpers';
+import { isError, apiCall } from '../../../api';
 
-import './styles.scss';
+import './Onboard3.scss';
 
 const Onboard3 = (): ReactElement => {
   const { store, data } = useWizard();
@@ -24,6 +25,7 @@ const Onboard3 = (): ReactElement => {
     } else if (data!.role === 'CONTRIBUTOR') {
       contributorSubmit();
     }
+    console.log(data?.role);
   };
 
   const contributorSubmit = (): void => {
@@ -40,7 +42,7 @@ const Onboard3 = (): ReactElement => {
       firstName: data!.firstName,
       lastName: data!.lastName,
       preferredName: data!.preferredName,
-      phone: formatNumber(data!.phone),
+      phone: formatNumber(data!.phone!),
       genders: reject(data!.genders, isEmpty),
       pronouns: reject(data!.pronouns, isEmpty),
       dateJoined: new Date(Date.now()),
@@ -74,40 +76,42 @@ const Onboard3 = (): ReactElement => {
   };
 
   useEffect(() => {
-    const initialInterets = data!.interests.filter(
-      (interest) => !isEmpty(interest),
-    );
+    if (data && data.interests) {
+      const initialInterets = data.interests.filter(
+        (interest) => !isEmpty(interest),
+      );
 
-    setInterests(new Set(initialInterets));
+      setInterests(new Set(initialInterets));
+    }
   }, [data]);
 
-  const handleInterests = (): void => {
-    // if (!selectedInterests.has() && selectedInterests.size === 5) {
-    //   Swal.fire({
-    //     title: 'Please select a maximum of 5 teams!',
-    //     icon: 'error',
-    //   });
-    //   return;
-    // }
+  const handleInterests = (interest: IInterest): void => {
+    if (!selectedInterests.has(interest) && selectedInterests.size === 5) {
+      Swal.fire({
+        title: 'Please select a maximum of 5 teams!',
+        icon: 'error',
+      });
+      return;
+    }
 
-    // selectedInterests.has(interest)
-    //   ? selectedInterests.delete(interest)
-    //   : selectedInterests.add(interest);
+    selectedInterests.has(interest)
+      ? selectedInterests.delete(interest)
+      : selectedInterests.add(interest);
     setInterests(new Set(selectedInterests));
   };
 
-  const handleTeams = (): void => {
-    // if (!selectedTeams.has(team) && selectedTeams.size === 2) {
-    //   Swal.fire({
-    //     title: 'Please select a maximum of 2 teams!',
-    //     icon: 'error',
-    //   });
-    //   return;
-    // }
+  const handleTeams = (team: ITeam): void => {
+    if (!selectedTeams.has(team) && selectedTeams.size === 2) {
+      Swal.fire({
+        title: 'Please select a maximum of 2 teams!',
+        icon: 'error',
+      });
+      return;
+    }
 
-    // selectedTeams.has(team)
-    //   ? selectedTeams.delete(team)
-    //   : selectedTeams.add(team);
+    selectedTeams.has(team)
+      ? selectedTeams.delete(team)
+      : selectedTeams.add(team);
     setSelectedTeams(new Set(selectedTeams));
   };
 
@@ -127,7 +131,7 @@ const Onboard3 = (): ReactElement => {
                   value={team.name}
                   checked={selectedTeams.has(team)}
                   label={titleCase(team.name)}
-                  onClick={handleTeams}
+                  onClick={() => handleTeams(team)}
                 />
               </Grid.Column>
             ))}
@@ -145,7 +149,7 @@ const Onboard3 = (): ReactElement => {
                   value={interest._id}
                   checked={selectedInterests.has(interest)}
                   label={interest.name}
-                  onClick={handleInterests}
+                  onClick={() => handleInterests(interest)}
                 />
               </Grid.Column>
             ))}

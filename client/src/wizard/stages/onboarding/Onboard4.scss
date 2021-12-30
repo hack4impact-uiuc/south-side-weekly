@@ -1,4 +1,4 @@
-@import '../../styles/colors.scss';
+@import '../../../styles/colors.scss';
 
 .onboard4-wrapper {
   .prompt {
@@ -13,6 +13,7 @@
     justify-content: center;
     width: 70%;
     margin: auto;
+    padding-bottom: 100px;
 
     .field {
       width: 100% !important;
