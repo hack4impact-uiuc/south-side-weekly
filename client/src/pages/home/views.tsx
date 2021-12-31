@@ -6,25 +6,7 @@ import {
   findPendingContributor,
   getUserClaimStatusForPitch,
 } from '../../utils/helpers';
-
-import { Tab, TABS } from './helpers';
-
-type Column = DynamicColumn<IPitch>;
-
-const getColumnsForTab = (user: IUser, tab: Tab): Column[] => {
-  switch (tab) {
-    case TABS.MEMBER_PITCHES:
-      return getMemberPitchesView();
-    case TABS.SUBMITTED_CLAIMS:
-      return getSubmittedClaimsView(user);
-    case TABS.SUBMITTED_PITCHES:
-      return getSubmittedPitchesView();
-    case TABS.SUBMITTED_PUBLICATIONS:
-      return getSubmittedPublicationsView() as Column[];
-    default:
-      return [];
-  }
-};
+import { Column } from './helpers';
 
 const getMemberPitchesView = (): Column[] => [
   titleColumn,
@@ -166,4 +148,9 @@ const associatedTopicsColumn = buildColumn<IPitch>({
   },
 });
 
-export { getColumnsForTab };
+export {
+  getMemberPitchesView,
+  getSubmittedPitchesView,
+  getSubmittedPublicationsView,
+  getSubmittedClaimsView,
+};

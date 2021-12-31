@@ -11,8 +11,6 @@ import {
   isPast,
 } from '../../utils/helpers';
 
-import { getColumnsForTab } from './views';
-
 const sswEstablishedYear = 1995;
 
 const getYearsSinceSSWEstablished = (): number[] => {
@@ -21,14 +19,6 @@ const getYearsSinceSSWEstablished = (): number[] => {
     .fill(null)
     .map((_, i) => currentYear - i);
 };
-
-const TABS = {
-  MEMBER_PITCHES: 'Your Current Pitches',
-  SUBMITTED_PITCHES: 'Pitches You Submitted',
-  SUBMITTED_CLAIMS: 'Your Claim Requests',
-  SUBMITTED_PUBLICATIONS: 'Your Publications',
-} as const; // As const prevents modification of this object
-type Tab = typeof TABS[keyof typeof TABS];
 
 const filterCreatedYear = (pitches: IPitch[], year?: number): IPitch[] =>
   pitches.filter((pitch) => new Date(pitch.createdAt).getFullYear() === year);
@@ -57,39 +47,7 @@ const filterPitchClaimStatus = (
 ): IPitch[] =>
   pitches.filter((pitch) => getUserClaimStatusForPitch(pitch, user) === status);
 
-const isPitchPublished = (pitch: IPitchAggregate): boolean =>
-  pitch.aggregated.issues.length > 0 &&
-  pitch.aggregated.issues
-    .map((issue) => new Date(issue.releaseDate))
-    .some(isPast);
-
-const getPublishedPitches = (pitches: IPitchAggregate[]): IPitchAggregate[] =>
-  pitches.filter(isPitchPublished);
-
-const getUnpublishedPitches = (pitches: IPitchAggregate[]): IPitchAggregate[] =>
-  pitches.filter((pitch) => !isPitchPublished(pitch));
-
-const getRecordsForTab = (
-  { aggregated }: IUserAggregate,
-  tab: Tab,
-): IPitch[] => {
-  switch (tab) {
-    case TABS.MEMBER_PITCHES:
-      return getUnpublishedPitches(
-        aggregated.claimedPitches as IPitchAggregate[],
-      );
-    case TABS.SUBMITTED_CLAIMS:
-      return aggregated.submittedClaims as IPitch[];
-    case TABS.SUBMITTED_PITCHES:
-      return aggregated.submittedPitches as IPitch[];
-    case TABS.SUBMITTED_PUBLICATIONS:
-      return getPublishedPitches(
-        aggregated.claimedPitches as IPitchAggregate[],
-      );
-    default:
-      return [];
-  }
-};
+type Column = DynamicColumn<IPitch>;
 
 const getInitialSort = (
   user: IUser,
@@ -137,6 +95,5 @@ export {
   filterPitchClaimStatus,
   getRecordsForTab,
   getInitialSort,
-  TABS,
 };
-export type { Tab };
+export type { Column };
