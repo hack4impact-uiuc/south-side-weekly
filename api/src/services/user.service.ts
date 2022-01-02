@@ -204,6 +204,19 @@ export const receiveClaimRequestApproval = async (
     },
   );
 
+export const removeClaimedPitch = async (
+  _id: string,
+  pitchId: string,
+): Promise<User> =>
+  await updateModel(
+    { _id },
+    {
+      $pull: {
+        claimedPitches: pitchId,
+      },
+    },
+  );
+
 export const removeClaimRequest = async (
   _id: string,
   pitchId: string,

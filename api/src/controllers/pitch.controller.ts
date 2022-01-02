@@ -257,20 +257,28 @@ export const submitClaim = async (
   );
 };
 
-type ApproveClaimReqBody = { userId: string; teams: string[] };
+type ApproveClaimReqBody = { userId: string; teams: string[]; teamId: string };
 type ApproveClaimReq = Request<IdParam, never, ApproveClaimReqBody, never>;
 
 export const approveClaimRequest = async (
   req: ApproveClaimReq,
   res: Response,
 ): Promise<void> => {
-  const { userId, teams } = req.body;
+  const { userId, teams, teamId } = req.body;
 
-  const pitch = await PitchService.approveClaimRequest(
+  let pitch = await PitchService.approveClaimRequest(
     req.params.id,
     userId,
-    teams,
+    teamId,
   );
+
+  pitch = await PitchService.addContributorToAssignmentContributors(
+    req.params.id,
+    userId,
+    teamId,
+  );
+
+  pitch = await PitchService.decrementTeamTarget(req.params.id, teamId);
 
   const user = await UserService.receiveClaimRequestApproval(
     userId,
@@ -360,6 +368,139 @@ export const updateTeamTarget = async (
   sendSuccess(
     res,
     'Successfully updated pitch team target',
+    await populatePitch(pitch, populateType),
+  );
+};
+
+type ChangeEditorQuery = { from: string; to: string };
+type ChangeEditorBody = { userId: string };
+type ChangeEditorReq = Request<
+  IdParam,
+  never,
+  ChangeEditorBody,
+  ChangeEditorQuery
+>;
+
+export const changeEditor = async (
+  req: ChangeEditorReq,
+  res: Response,
+): Promise<void> => {
+  const { userId } = req.body;
+
+  const pitch = await PitchService.changeEditor(
+    req.params.id,
+    userId,
+    req.query.from,
+    req.query.to,
+  );
+
+  if (!pitch) {
+    sendNotFound(res, `Pitch with id ${req.params.id} not found`);
+    return;
+  }
+
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Successfully changed editor',
+    await populatePitch(pitch, populateType),
+  );
+};
+
+type AddContributorQuery = {
+  editor: 'First' | 'Seconds' | 'Thirds' | undefined;
+};
+type AddContributorBody = { userId: string; teamId: string };
+type AddContributorReq = Request<
+  IdParam,
+  never,
+  AddContributorBody,
+  AddContributorQuery
+>;
+
+export const addContributor = async (
+  req: AddContributorReq,
+  res: Response,
+): Promise<void> => {
+  const { userId, teamId } = req.body;
+
+  let pitch = await PitchService.addContributor(
+    req.params.id,
+    userId,
+    teamId,
+    req.query.editor,
+  );
+
+  pitch = await PitchService.decrementTeamTarget(req.params.id, teamId);
+
+  const user = await UserService.receiveClaimRequestApproval(
+    userId,
+    req.params.id,
+  );
+
+  if (!user) {
+    sendNotFound(res, `User with id ${userId} not found`);
+    return;
+  } else if (!pitch) {
+    sendNotFound(res, `Pitch with id ${req.params.id} not found`);
+    return;
+  }
+
+  //TODO: Add mail for adding contributor
+
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Successfully added contributor',
+    await populatePitch(pitch, populateType),
+  );
+};
+
+type RemoveContributorQuery = {
+  editor: 'First' | 'Seconds' | 'Thirds' | undefined;
+};
+type RemoveContributorBody = { userId: string; teamId: string };
+type RemoveContributorReq = Request<
+  IdParam,
+  never,
+  RemoveContributorBody,
+  RemoveContributorQuery
+>;
+
+export const removeContributor = async (
+  req: AddContributorReq,
+  res: Response,
+): Promise<void> => {
+  const { userId, teamId } = req.body;
+
+  let pitch = await PitchService.removeContributor(
+    req.params.id,
+    userId,
+    teamId,
+    req.query.editor,
+  );
+
+  pitch = await PitchService.incrementTeamTarget(req.params.id, teamId);
+
+  const user = await UserService.removeClaimedPitch(userId, req.params.id);
+
+  if (!user) {
+    sendNotFound(res, `User with id ${userId} not found`);
+    return;
+  } else if (!pitch) {
+    sendNotFound(res, `Pitch with id ${req.params.id} not found`);
+    return;
+  }
+
+  //TODO: Add mail for removing contributor
+
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Successfully removed contributor',
     await populatePitch(pitch, populateType),
   );
 };

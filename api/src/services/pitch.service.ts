@@ -272,20 +272,53 @@ export const submitClaim = async (
 export const approveClaimRequest = async (
   _id: string,
   userId: string,
-  teams: string[],
+  teamId: string,
 ): Pitch =>
-  await updateModel(
-    { _id },
+  await Pitch.findOneAndUpdate(
+    { _id: _id, 'pendingContributors.userId': userId },
     {
       $pull: {
-        pendingContributors: { userId: userId, teams: teams },
-      },
-      //TODO: Target in teams should decrease after
-      $addToSet: {
-        assignmentContributors: { userId: userId, teams: teams },
+        'pendingContributors.$.teams': teamId,
       },
     },
-  );
+    { new: true, runValidators: true },
+  ).lean();
+
+export const addContributorToAssignmentContributors = async (
+  _id: string,
+  userId: string,
+  teamId: string,
+): Pitch => {
+  const pitchWithUser = await Pitch.findOne({
+    _id: _id,
+    'assignmentContributors.userId': userId,
+  });
+
+  let pitch;
+
+  if (pitchWithUser) {
+    pitch = await Pitch.findOneAndUpdate(
+      { _id: _id, 'assignmentContributors.userId': userId },
+      {
+        $addToSet: {
+          'assignmentContributors.$.teams': teamId,
+        },
+      },
+      { new: true, runValidators: true },
+    ).lean();
+  } else {
+    pitch = await updateModel(
+      { _id },
+      {
+        $addToSet: {
+          assignmentContributors: { userId: userId, teams: [teamId] },
+        },
+      },
+    );
+  }
+
+  return pitch;
+};
 
 export const declineClaimRequest = async (_id: string, userId: string): Pitch =>
   await updateModel(
@@ -317,4 +350,186 @@ export const updateTeamTarget = async (
   }
 
   return updatedPitch;
+};
+
+export const decrementTeamTarget = async (
+  _id: string,
+  teamId: string,
+): Pitch => {
+  const pitchWithTeam = await Pitch.findOne({
+    _id: _id,
+    'teams.teamId': teamId,
+  });
+
+  let pitch;
+
+  if (pitchWithTeam) {
+    console.log('WITH TEAM');
+    pitch = await Pitch.findOneAndUpdate(
+      {
+        _id: _id,
+        'teams.teamId': teamId,
+        'teams.target': { $gt: 0 },
+      },
+      {
+        $inc: {
+          'teams.$.target': -1,
+        },
+      },
+      { new: true, runValidators: true },
+    ).lean();
+  } else {
+    console.log('NO TEAM');
+    pitch = await Pitch.findByIdAndUpdate(
+      _id,
+      {
+        $addToSet: {
+          teams: { teamId: teamId, target: 0 },
+        },
+      },
+      { new: true, runValidators: true },
+    ).lean();
+  }
+
+  return pitch;
+};
+
+export const incrementTeamTarget = async (_id: string, teamId: string): Pitch =>
+  await Pitch.findOneAndUpdate(
+    {
+      _id: _id,
+      'teams.teamId': teamId,
+    },
+    {
+      $inc: {
+        'teams.$.target': 1,
+      },
+    },
+    { new: true, runValidators: true },
+  ).lean();
+
+export const changeEditor = async (
+  _id: string,
+  userId: string,
+  from: string,
+  to: string,
+): Pitch => {
+  let pitch;
+
+  if (from === 'First') {
+    pitch = await updateModel(
+      { _id },
+      {
+        primaryEditor: null,
+        $addToSet: {
+          ...(to === 'Seconds'
+            ? { secondEditors: userId }
+            : { thirdEditors: userId }),
+        },
+      },
+    );
+  } else if (to === 'First') {
+    pitch = await updateModel(
+      { _id },
+      {
+        primaryEditor: userId,
+        $pull: {
+          ...(from === 'Seconds'
+            ? { secondEditors: userId }
+            : { thirdEditors: userId }),
+        },
+      },
+    );
+  } else if (from === 'Seconds' || from === 'Thirds') {
+    pitch = updateModel(
+      { _id },
+      {
+        $pull: {
+          ...(from === 'Seconds'
+            ? { secondEditors: userId }
+            : { thirdEditors: userId }),
+        },
+        $addToSet: {
+          ...(to === 'Seconds'
+            ? { secondEditors: userId }
+            : { thirdEditors: userId }),
+        },
+      },
+    );
+  }
+
+  return pitch;
+};
+
+export const addContributor = async (
+  _id: string,
+  userId: string,
+  teamId: string,
+  editor: 'First' | 'Seconds' | 'Thirds' | undefined,
+): Pitch => {
+  let pitch;
+  if (editor === 'First') {
+    pitch = await updateModel(
+      { _id },
+      {
+        primaryEditor: userId,
+      },
+    );
+  } else if (editor === 'Seconds' || editor === 'Thirds') {
+    pitch = updateModel(
+      { _id },
+      {
+        $addToSet: {
+          ...(editor === 'Seconds'
+            ? { secondEditors: userId }
+            : { thirdEditors: userId }),
+        },
+      },
+    );
+  } else {
+    pitch = await addContributorToAssignmentContributors(_id, userId, teamId);
+  }
+
+  return pitch;
+};
+
+export const removeContributor = async (
+  _id: string,
+  userId: string,
+  teamId: string,
+  editor: 'First' | 'Seconds' | 'Thirds' | undefined,
+): Pitch => {
+  let pitch;
+
+  if (editor === 'First') {
+    pitch = await updateModel(
+      { _id },
+      {
+        primaryEditor: null,
+      },
+    );
+  } else if (editor === 'Seconds' || editor === 'Thirds') {
+    pitch = await updateModel(
+      { _id },
+      {
+        $pull: {
+          ...(editor === 'Seconds'
+            ? { secondEditors: userId }
+            : { thirdEditors: userId }),
+        },
+      },
+    );
+  } else {
+    pitch = await Pitch.findOneAndUpdate(
+      { _id: _id, 'assignmentContributors.userId': userId },
+      {
+        $pull: {
+          'assignmentContributors.$.teams': teamId,
+        },
+      },
+      { new: true, runValidators: true },
+    ).lean();
+  }
+
+  return pitch;
 };

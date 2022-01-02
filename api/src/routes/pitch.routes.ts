@@ -70,10 +70,39 @@ router.put(
   errorWrap(PitchController.submitClaim),
 );
 
+// PUT /api/pitches/:id/teamTarget
 router.put(
-  '/:pitchId/teamTarget',
+  '/:id/teamTarget',
   requireRegistered,
   errorWrap(PitchController.updateTeamTarget),
+);
+
+// PUT /api/pitches/:id/approveClaim
+router.put(
+  '/:id/approveClaim',
+  requireStaff,
+  errorWrap(PitchController.approveClaimRequest),
+);
+
+// PUT /api/pitches/:id/changeEditor
+router.put(
+  '/:id/changeEditor',
+  requireStaff,
+  errorWrap(PitchController.changeEditor),
+);
+
+// PUT /api/pitches/:id/addContributor
+router.put(
+  '/:id/addContributor',
+  requireStaff,
+  errorWrap(PitchController.addContributor),
+);
+
+// PUT /api/pitches/:id/removeContributor
+router.put(
+  '/:id/removeContributor',
+  requireStaff,
+  errorWrap(PitchController.removeContributor),
 );
 
 // DELETE /api/pitches/:id
