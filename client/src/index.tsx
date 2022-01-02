@@ -24,6 +24,7 @@ import './styles/styles.scss';
 import Homepage from './pages/home';
 import { Providers } from './components/wrapper/Providers';
 import { PitchDocPage } from './pages/PitchDoc';
+import Pitch from './pages/Pitch';
 
 const routes = [
   {
@@ -45,6 +46,10 @@ const routes = [
   {
     path: '/pitches',
     component: PitchDocPage,
+  },
+  {
+    path: '/pitch/:pitchId',
+    component: Pitch,
   },
   {
     path: '/issues',

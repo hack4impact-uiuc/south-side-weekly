@@ -84,6 +84,13 @@ export const issueStatusEnum = {
   PUSH: 'PUSH',
 };
 
+export const assignmentStatusEnum = {
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  ABANDONED: 'ABANDONED',
+  UNCLAIMED: 'UNCLAIMED',
+};
+
 export const editStatusEnum = {
   WRITER_NEEDED: 'Writer Needed',
   FIRST_NEEDED: '1st Needed',
