@@ -335,6 +335,35 @@ export const declineClaimRequest = async (
   );
 };
 
+type UpdateTeamTargetBody = { teamId: string; target: number };
+type UpdateTeamTargetReq = Request<IdParam, never, UpdateTeamTargetBody, never>;
+
+export const updateTeamTarget = async (
+  req: UpdateTeamTargetReq,
+  res: Response,
+): Promise<void> => {
+  const { teamId, target } = req.body;
+
+  const pitch = await PitchService.updateTeamTarget(
+    req.params.id,
+    teamId,
+    target,
+  );
+
+  if (!pitch) {
+    sendNotFound(res, `Pitch with id ${req.params.id} not found`);
+    return;
+  }
+
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Successfully updated pitch team target',
+    await populatePitch(pitch, populateType),
+  );
+};
+
 // DELETE controls
 
 type DeletePitchReq = Request<IdParam>;

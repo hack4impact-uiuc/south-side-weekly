@@ -296,3 +296,25 @@ export const declineClaimRequest = async (_id: string, userId: string): Pitch =>
       },
     },
   );
+
+export const updateTeamTarget = async (
+  _id: string,
+  teamId: string,
+  target: number,
+): Pitch => {
+  let updatedPitch = await Pitch.findOneAndUpdate(
+    { _id: _id, 'teams.teamId': teamId },
+    { 'teams.$.target': target },
+    { new: true, runValidators: true },
+  ).lean();
+
+  if (!updatedPitch) {
+    updatedPitch = await Pitch.findOneAndUpdate(
+      { _id: _id },
+      { $addToSet: { teams: { teamId: teamId, target: target } } },
+      { new: true, runValidators: true },
+    ).lean();
+  }
+
+  return updatedPitch;
+};

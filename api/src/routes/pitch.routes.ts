@@ -70,6 +70,12 @@ router.put(
   errorWrap(PitchController.submitClaim),
 );
 
+router.put(
+  '/:pitchId/teamTarget',
+  requireRegistered,
+  errorWrap(PitchController.updateTeamTarget),
+);
+
 // DELETE /api/pitches/:id
 router.delete(
   '/:id',
