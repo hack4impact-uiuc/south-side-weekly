@@ -1,4 +1,5 @@
 import React, { FC, useMemo } from 'react';
+import { useHistory } from 'react-router-dom';
 import { BasePopulatedPitch } from 'ssw-common';
 
 import { ClaimPitch } from '../modal/ClaimPitch';
@@ -47,6 +48,7 @@ interface TableProps {
 }
 
 export const PitchRecords: FC<TableProps> = ({ data, count, type }) => {
+  const history = useHistory();
   const cols = useMemo(() => {
     switch (type) {
       case 'review-new':
@@ -85,6 +87,10 @@ export const PitchRecords: FC<TableProps> = ({ data, count, type }) => {
     };
   }, [type]);
 
+  const onRecordClick = (pitch: BasePopulatedPitch): void => {
+    history.push(`/pitch/${pitch._id}`);
+  };
+
   return (
     <PaginatedTable
       columns={cols}
@@ -92,6 +98,7 @@ export const PitchRecords: FC<TableProps> = ({ data, count, type }) => {
       count={count}
       pageOptions={['1', '10', '25', '50']}
       getModal={getModal}
+      onRecordClick={onRecordClick}
     />
   );
 };
