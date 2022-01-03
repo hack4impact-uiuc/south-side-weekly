@@ -2,8 +2,6 @@ import _ from 'lodash';
 import { Condition } from 'mongodb';
 import { FilterQuery, LeanDocument } from 'mongoose';
 import { IUser } from 'ssw-common';
-import { PitchService } from '.';
-import { PitchSchema } from '../models/pitch.model';
 
 import User, { UserSchema } from '../models/user.model';
 import { UserFeedbackSchema } from '../models/userFeedback.model';

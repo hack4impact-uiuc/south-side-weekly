@@ -8,7 +8,6 @@ import toast from 'react-hot-toast';
 import { isError, apiCall } from '../../api';
 import { MultiSelectFilter } from '../filter/MultiSelectFilter';
 import { DelayedSearch } from '../search/DelayedSearch';
-import { CheckboxFilter } from '../filter/CheckboxFilter';
 import { useAuth } from '../../contexts';
 import { issueStatusEnum, pitchStatusEnum } from '../../utils/enums';
 import { HomepageRecords } from '../table/HomepageRecords';
