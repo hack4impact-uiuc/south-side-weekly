@@ -2,12 +2,9 @@ import React, { ReactElement, useMemo } from 'react';
 
 import { Walkthrough } from '../../components';
 import { SubmitPitchModal } from '../../components/modal/SubmitPitchModal';
-import { Pusher } from '../../components/ui/Pusher';
-import { PitchesView } from '../../components/view/PitchesView';
 import { useAuth } from '../../contexts';
 import { Tabs } from '../../layouts/tabs/Tabs';
 import { pagesEnum } from '../../utils/enums';
-
 import './styles.scss';
 import '../pages.scss';
 import { HomepageView } from '../../components/view/HomepageView';

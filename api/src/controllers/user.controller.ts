@@ -5,7 +5,7 @@ import { onboardingStatusEnum } from '../utils/enums';
 import { sendNotFound, sendSuccess, sendUnauthorized } from '../utils/helpers';
 import { getEditableFields, getViewableFields } from '../utils/user-utils';
 import { sendApproveUserMail, sendRejectUserMail } from '../mail/sender';
-import { UserService } from '../services';
+import { PitchService, UserService } from '../services';
 
 import { populateUser } from '../populators/user.populate';
 import { extractOptions, extractPopulateQuery } from './utils';
@@ -299,7 +299,7 @@ export const pitches = async (req: Request, res: Response): Promise<void> => {
   const populateType = extractPopulateQuery(req.query);
   const options = extractOptions(req.query);
 
-  const pitches = await UserService.getMemberPitches(req.params.id, options);
+  const pitches = await PitchService.getMemberPitches(req.params.id, options);
 
   if (pitches === undefined) {
     sendNotFound(res, `User not found with id ${req.params.id}`);
@@ -319,7 +319,7 @@ export const submittedClaims = async (
   const populateType = extractPopulateQuery(req.query);
   const options = extractOptions(req.query);
 
-  const pitches = await UserService.getPendingClaims(req.params.id, options);
+  const pitches = await PitchService.getPendingClaims(req.params.id, options);
 
   if (pitches === undefined) {
     sendNotFound(res, `User not found with id ${req.params.id}`);

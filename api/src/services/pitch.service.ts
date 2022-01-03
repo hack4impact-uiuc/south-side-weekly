@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { Condition } from 'mongodb';
-import { FilterQuery, LeanDocument, UpdateQuery } from 'mongoose';
+import { FilterQuery, LeanDocument, UpdateQuery, Types } from 'mongoose';
 import { BasePopulatedUser, IPitch } from 'ssw-common';
 import { IssueService, UserService } from '.';
 
@@ -56,6 +56,7 @@ const paginate = async (
     },
     hasPublishDateFilter(filters['hasPublishDate']),
   );
+  console.log(mergedFilters);
 
   const pitches = await Pitch.find(mergedFilters)
     .skip(offset * limit)
@@ -296,3 +297,49 @@ export const declineClaimRequest = async (_id: string, userId: string): Pitch =>
       },
     },
   );
+
+export const getMemberPitches = async (
+  _id: string,
+  options?: PaginateOptions<PitchSchema>,
+): Promise<{
+  data: LeanDocument<PitchSchema>[];
+  count: number;
+}> => {
+  const filteredPitches = await paginate(
+    {
+      $or: [
+        {
+          author: _id,
+        },
+        { writer: _id },
+        {
+          'assignmentContributors.userId': Types.ObjectId(_id),
+        },
+        { primaryEditor: _id },
+        { secondEditors: _id },
+        { thirdEditors: _id },
+      ],
+    },
+    options,
+  );
+
+  return filteredPitches;
+};
+
+export const getPendingClaims = async (
+  _id: string,
+  options?: PaginateOptions<PitchSchema>,
+): Promise<{
+  data: LeanDocument<PitchSchema>[];
+  count: number;
+}> => {
+  const filteredPitches = await paginate(
+    {
+      'pendingContributors.userId': Types.ObjectId(_id),
+    },
+    options,
+  );
+  console.log(filteredPitches);
+
+  return filteredPitches;
+};

@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { Condition } from 'mongodb';
 import { FilterQuery, LeanDocument } from 'mongoose';
-import { IUser, Pitch } from 'ssw-common';
+import { IUser } from 'ssw-common';
 import { PitchService } from '.';
 import { PitchSchema } from '../models/pitch.model';
 
@@ -245,51 +245,3 @@ export const removeFeedback = async (
   feedbackId: string,
 ): Promise<User> =>
   await updateModel({ _id }, { $pull: { feedback: feedbackId } });
-
-export const getMemberPitches = async (
-  _id: string,
-  options?: PaginateOptions<PitchSchema>,
-): Promise<{
-  data: LeanDocument<PitchSchema>[];
-  count: number;
-}> => {
-  const approvedPitches = await PitchService.getApprovedPitches(
-    undefined,
-    options,
-  );
-
-  const filteredPitches = approvedPitches.data.filter(
-    (pitch) =>
-      pitch.author == _id ||
-      pitch.assignmentContributors
-        .map((contributor) => contributor.userId)
-        .includes(_id) ||
-      pitch.writer == _id ||
-      pitch.primaryEditor == _id ||
-      pitch.secondEditors.includes(_id) ||
-      pitch.thirdEditors.includes(_id),
-  );
-
-  return { data: filteredPitches, count: filteredPitches.length };
-};
-
-export const getPendingClaims = async (
-  _id: string,
-  options?: PaginateOptions<PitchSchema>,
-): Promise<{
-  data: LeanDocument<PitchSchema>[];
-  count: number;
-}> => {
-  const approvedPitches = await PitchService.getApprovedPitches(
-    undefined,
-    options,
-  );
-
-  const filteredPitches = approvedPitches.data.filter((pitch) =>
-    pitch.pendingContributors
-      .map((contributor) => contributor.userId.toString())
-      .includes(_id),
-  );
-
-  return { data: filteredPitches, count: filteredPitches.length };
-};

@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { BasePopulatedPitch, FullPopulatedPitch } from 'ssw-common';
+import { FullPopulatedPitch } from 'ssw-common';
 import { useQueryParams } from 'use-query-params';
 import toast from 'react-hot-toast';
 
@@ -38,8 +38,7 @@ export const HomepageView: FC<HomepageViewProps> = ({ type }): ReactElement => {
       search: params.get('search'),
       teams__all: params.get('teams__all'),
       interests__all: params.get('interests__all'),
-      hasPublishDate: params.get('hasPublishDate') || type === 'published',
-      hasNoPublishDate: params.get('hasNoPublishDate'),
+      hasPublishDate: type === 'published' || undefined,
       'issueStatuses.issueStatus':
         type === 'published' ? issueStatusEnum.PUSH : undefined,
       status: type === 'submitted' ? pitchStatusEnum.PENDING : undefined,
@@ -47,7 +46,7 @@ export const HomepageView: FC<HomepageViewProps> = ({ type }): ReactElement => {
     };
 
     return _.omitBy(q, _.isNil);
-  }, [location.search, type]);
+  }, [location.search, type, user]);
 
   const apiUrl = useMemo(() => {
     switch (type) {
@@ -105,12 +104,6 @@ export const HomepageView: FC<HomepageViewProps> = ({ type }): ReactElement => {
           <div id="search">
             <DelayedSearch id="search" />
           </div>
-          <CheckboxFilter label="Has Publish Date" filterKey="hasPublishDate" />
-          <CheckboxFilter
-            label="Has No Publish Date"
-            value="false"
-            filterKey="hasPublishDate"
-          />
         </div>
 
         <div className="bottom-filters">

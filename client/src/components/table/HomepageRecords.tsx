@@ -1,26 +1,14 @@
 import React, { FC, useEffect, useMemo } from 'react';
-import {
-  BasePopulatedPitch,
-  BasePopulatedUser,
-  FullPopulatedPitch,
-} from 'ssw-common';
+import { FullPopulatedPitch } from 'ssw-common';
+
 import { buildColumn } from '..';
 import { useAuth } from '../../contexts';
 import { findPendingContributor } from '../../utils/helpers';
 
-import { ClaimPitch } from '../modal/ClaimPitch';
-import { ReviewPitch } from '../modal/ReviewPitch';
-
 import {
   titleColumn,
   descriptionColumn,
-  submittedColumn,
-  selfWriteColumn,
-  googleDocColumn,
   associatedInterestsColumn,
-  claimableTeamsColumn,
-  teamsRequireApprovalColumn,
-  unclaimedTeamsColumn,
   deadlineColumn,
   pitchStatusCol,
   dateSubmittedCol,

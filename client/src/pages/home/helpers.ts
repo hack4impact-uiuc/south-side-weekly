@@ -1,6 +1,6 @@
-import { IPitch, IPitchAggregate, IUser, IUserAggregate } from 'ssw-common';
-import { Sort } from '../../components/table/dynamic/types';
+import { IPitch, IUser } from 'ssw-common';
 
+import { Sort } from '../../components/table/dynamic/types';
 import { DynamicColumn } from '../../components/Tables/DynamicTable/types';
 import { pitchStatusEnum } from '../../utils/enums';
 import {
