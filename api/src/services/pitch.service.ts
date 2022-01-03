@@ -111,7 +111,7 @@ export const getPendingPitches = async (
   await paginate({ status: pitchStatusEnum.PENDING }, options);
 
 export const getApprovedPitches = async (
-  status?: string,
+  status?: 'unclaimed',
   options?: PaginateOptions<PitchSchema>,
 ): Promise<PitchesResponse> => {
   const pitches = await paginate({ status: pitchStatusEnum.APPROVED }, options);

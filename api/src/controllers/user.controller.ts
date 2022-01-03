@@ -9,6 +9,7 @@ import { UserService } from '../services';
 
 import { populateUser } from '../populators/user.populate';
 import { extractOptions, extractPopulateQuery } from './utils';
+import { populatePitches } from '../populators';
 
 // CREATE controls
 
@@ -290,6 +291,48 @@ export const claimPitch = async (
     res,
     'User claimed pitch successfully',
     await populateUser(user, populateType),
+  );
+};
+
+// Returns all pitches that a user is a member of
+export const pitches = async (req: Request, res: Response): Promise<void> => {
+  const populateType = extractPopulateQuery(req.query);
+  const options = extractOptions(req.query);
+
+  const pitches = await UserService.getMemberPitches(req.params.id, options);
+
+  if (pitches === undefined) {
+    sendNotFound(res, `User not found with id ${req.params.id}`);
+    return;
+  }
+
+  sendSuccess(res, 'Successfully retrieved all user pitches', {
+    data: await populatePitches(pitches.data, populateType),
+    count: pitches.count,
+  });
+};
+
+export const submittedClaims = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  const populateType = extractPopulateQuery(req.query);
+  const options = extractOptions(req.query);
+
+  const pitches = await UserService.getPendingClaims(req.params.id, options);
+
+  if (pitches === undefined) {
+    sendNotFound(res, `User not found with id ${req.params.id}`);
+    return;
+  }
+
+  sendSuccess(
+    res,
+    'Successfully retrieved all pitches with a pending user claim',
+    {
+      data: await populatePitches(pitches.data, populateType),
+      count: pitches.count,
+    },
   );
 };
 

@@ -1,45 +1,56 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
+import React, { ReactElement, useMemo } from 'react';
 
-import { DynamicTable, View, Walkthrough } from '../../components';
-import { pagesEnum, pitchStatusEnum } from '../../utils/enums';
+import { Walkthrough } from '../../components';
+import { SubmitPitchModal } from '../../components/modal/SubmitPitchModal';
+import { Pusher } from '../../components/ui/Pusher';
+import { PitchesView } from '../../components/view/PitchesView';
+import { useAuth } from '../../contexts';
+import { Tabs } from '../../layouts/tabs/Tabs';
+import { pagesEnum } from '../../utils/enums';
 
 import './styles.scss';
-import { Tabs } from '../../layouts/tabs/Tabs';
-import { useAuth } from '../../contexts';
-import { getMemberPitchesView, getSubmittedPitchesView } from './views';
-import HomepageTab from './tab';
+import '../pages.scss';
+import { HomepageView } from '../../components/view/HomepageView';
 
-const Homepage: FC = () => {
-  const { user } = useAuth();
-  const views = useMemo(() => [
-    {
-      title: 'Your Current Pitches',
-      content: <HomepageTab columns={getMemberPitchesView()} initialSort />,
-    },
-    {
-      title: 'Pitches You Submitted',
-      content: <HomepageTab columns={getSubmittedPitchesView} filters />,
-    },
-    {
-      title: 'Your Claim Requests',
-      content: <HomepageTab columns={}
-    },
-    {
-      title: 'Your Publications',
-  
+const Homepage = (): ReactElement => {
+  const { isAdmin } = useAuth();
+
+  const views = useMemo(() => {
+    const panes = [
+      {
+        title: 'Your Current Pitches',
+        content: <HomepageView type="member" />,
+      },
+      {
+        title: 'Pitches You Submitted',
+        content: <HomepageView type="submitted" />,
+      },
+    ];
+
+    if (isAdmin) {
+      panes.push({
+        title: 'Your Claim Requests',
+        content: <HomepageView type="claim-submitted" />,
+      });
+      panes.push({
+        title: 'Your Publications',
+        content: <HomepageView type="published" />,
+      });
     }
-  ], user);
+
+    return panes;
+  }, [isAdmin]);
 
   return (
-    <div className="homepage-wrapper">
-      <div className="page-header-content homepage-header">
+    <div className="pitch-doc-page">
+      <div className="page-header-content page-wrapper-header">
         <Walkthrough
-          page={pagesEnum.HOMEPAGE}
-          content="The homepage is the main landing point for users to see their pitch history."
+          page={pagesEnum.PITCHDOC}
+          content="The Pitch Doc is where you can claim, submit, and view pitches! Use the filters to find pitches you are interested in."
         />
       </div>
 
-      <Tabs views={views} />
+      <Tabs views={views} button={<SubmitPitchModal />} />
     </div>
   );
 };

@@ -95,8 +95,7 @@ export const ClaimPitch: FC<ClaimPitchProps> = ({
     }
 
     return (
-      pitch.pendingContributors.findIndex((c) => c.userId._id === user!._id) >=
-      0
+      pitch.pendingContributors.findIndex((c) => c.userId === user!._id) >= 0
     );
   }, [pitch, user]);
 

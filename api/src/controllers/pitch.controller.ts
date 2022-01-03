@@ -95,7 +95,7 @@ export const getApprovedPitches = async (
   const options = extractOptions(req.query);
 
   const pitches = await PitchService.getApprovedPitches(
-    req.query.status as string | undefined,
+    req.query.status as 'unclaimed' | undefined,
     options,
   );
 

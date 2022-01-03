@@ -1,15 +1,14 @@
 import { IPitch, IPitchAggregate, IUser, IUserAggregate } from 'ssw-common';
+import { Sort } from '../../components/table/dynamic/types';
 
-import {
-  DynamicColumn,
-  Sort,
-} from '../../components/Tables/DynamicTable/types';
+import { DynamicColumn } from '../../components/Tables/DynamicTable/types';
 import { pitchStatusEnum } from '../../utils/enums';
 import {
   findPendingContributor,
   getUserClaimStatusForPitch,
-  isPast,
 } from '../../utils/helpers';
+
+type Column = DynamicColumn<IPitch>;
 
 const sswEstablishedYear = 1995;
 
@@ -47,45 +46,10 @@ const filterPitchClaimStatus = (
 ): IPitch[] =>
   pitches.filter((pitch) => getUserClaimStatusForPitch(pitch, user) === status);
 
-type Column = DynamicColumn<IPitch>;
-
-const getInitialSort = (
-  user: IUser,
-  tab: Tab,
-): Sort<DynamicColumn<IPitch>> | undefined => {
-  switch (tab) {
-    case TABS.MEMBER_PITCHES:
-      return {
-        column: getColumnsForTab(user, tab).find(
-          (column) => column.title === 'Deadline',
-        )!,
-        direction: 'descending',
-      };
-    case TABS.SUBMITTED_PITCHES:
-      return {
-        column: getColumnsForTab(user, tab).find(
-          (column) => column.title === 'Date Submitted',
-        )!,
-        direction: 'descending',
-      };
-    case TABS.SUBMITTED_CLAIMS:
-      return {
-        column: getColumnsForTab(user, tab).find(
-          (column) => column.title === 'Date Submitted',
-        )!,
-        direction: 'descending',
-      };
-    case TABS.SUBMITTED_PUBLICATIONS:
-      return {
-        column: getColumnsForTab(user, tab).find(
-          (column) => column.title === 'Publish Date',
-        )!,
-        direction: 'descending',
-      };
-    default:
-      return;
-  }
-};
+const getInitialSort = (column: Column): Sort<Column> => ({
+  column,
+  direction: 'descending',
+});
 
 export {
   getYearsSinceSSWEstablished,
@@ -93,7 +57,6 @@ export {
   filterRequestClaimYear,
   filterPitchStatus,
   filterPitchClaimStatus,
-  getRecordsForTab,
   getInitialSort,
 };
 export type { Column };
