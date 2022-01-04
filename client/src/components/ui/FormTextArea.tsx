@@ -8,12 +8,14 @@ import './Form.scss';
 interface FormTextAreaProps extends FieldProps<string> {
   className?: string;
   label?: ReactNode;
+  editable?: string;
 }
 
 export const FormTextArea: FC<FormTextAreaProps> = ({
   className,
   label,
   field,
+  editable = false,
   ...props
 }): ReactElement => {
   const memoizedJSX = useMemo(
@@ -25,6 +27,15 @@ export const FormTextArea: FC<FormTextAreaProps> = ({
     ),
     [field, className, props, label],
   );
+
+  if (!editable) {
+    return (
+      <div className={cn('form-field', className)}>
+        <label>{label}</label>
+        <p>{field.value}</p>
+      </div>
+    );
+  }
 
   return memoizedJSX;
 };

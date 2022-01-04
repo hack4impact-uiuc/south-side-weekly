@@ -65,6 +65,11 @@ export const wizardPages = {
   COMPLETION: 'COMPLETION',
 };
 
+export const issueTypeEnum = {
+  PRINT: 'PRINT',
+  ONLINE: 'ONLINE',
+};
+
 export const visibilityEnum = {
   PUBLIC: 'PUBLIC',
   PRIVATE: 'PRIVATE',
@@ -89,6 +94,7 @@ export const assignmentStatusEnum = {
   COMPLETED: 'COMPLETED',
   ABANDONED: 'ABANDONED',
   UNCLAIMED: 'UNCLAIMED',
+  NONE: 'NONE',
 };
 
 export const editStatusEnum = {

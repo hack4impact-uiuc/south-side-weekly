@@ -1,7 +1,7 @@
-import { IIssue } from 'ssw-common';
+import { Issue } from 'ssw-common';
 
 export interface IIssueContext {
-  issues: IIssue[];
-  getIssueFromId: (id: string) => IIssue | undefined;
-  fetchIssues: () => void;
+  issues: Issue[];
+  getIssueFromId: (id: string) => Issue | undefined;
+  fetchIssues: () => Promise<void>;
 }

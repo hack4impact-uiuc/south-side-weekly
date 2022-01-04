@@ -18,6 +18,7 @@ interface FormMultiSelectProps extends FieldProps<string[]> {
   label?: string;
   viewable?: boolean;
   editable?: boolean;
+  getTagData?: (id: string) => any;
 }
 
 export const FormMultiSelect: FC<FormMultiSelectProps> = ({
@@ -27,6 +28,7 @@ export const FormMultiSelect: FC<FormMultiSelectProps> = ({
   label,
   options = [],
   field,
+  getTagData = undefined,
   form: { setFieldValue },
 }): ReactElement => {
   const memoizedJSX = useMemo(
@@ -52,11 +54,21 @@ export const FormMultiSelect: FC<FormMultiSelectProps> = ({
     return <></>;
   } else if (!editable) {
     return (
-      <>
-        {field.value.map((value: string) => (
-          <FieldTag content={value} key={value} />
-        ))}
-      </>
+      <div className={cn('form-field', className)}>
+        {label && <label>{label}</label>}
+        <div>
+          {field.value.map((value: string) => {
+            if (getTagData) {
+              const data = getTagData(value);
+              console.log('DATA', data, value);
+              return (
+                <FieldTag name={data?.name} hexcode={data?.color} key={value} />
+              );
+            }
+            <FieldTag content={value} key={value} />;
+          })}
+        </div>
+      </div>
     );
   }
 

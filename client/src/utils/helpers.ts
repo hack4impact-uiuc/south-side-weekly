@@ -267,6 +267,11 @@ const titleCase = (str: string): string => startCase(camelCase(str));
 const defaultFunc = (): void => void 0;
 
 /**
+ * A default async void function to use as an initial function for contexts
+ */
+const defaultAsyncFunc = (): Promise<void> => Promise.resolve();
+
+/**
  * Formats a number using libphonenumber-js into a US phone number
  *
  * @param value the unformatted phone number
@@ -371,4 +376,5 @@ export {
   pluralize,
   formatDate,
   isPast,
+  defaultAsyncFunc,
 };

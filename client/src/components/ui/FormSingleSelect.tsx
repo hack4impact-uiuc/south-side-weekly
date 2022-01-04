@@ -18,6 +18,8 @@ interface FormSingleSelectProps extends FieldProps<string> {
   label?: string;
   viewable?: boolean;
   editable?: boolean;
+  name?: string;
+  tagColor?: string;
 }
 
 export const FormSingleSelect: FC<FormSingleSelectProps> = ({
@@ -27,6 +29,8 @@ export const FormSingleSelect: FC<FormSingleSelectProps> = ({
   label,
   options = [],
   field,
+  tagColor = undefined,
+  form: { setFieldValue },
 }): ReactElement => {
   const memoizedJSX = useMemo(
     () => (
@@ -35,17 +39,25 @@ export const FormSingleSelect: FC<FormSingleSelectProps> = ({
         <SingleSelect
           options={options}
           value={field.value}
-          onChange={field.onChange}
+          onChange={(value) => setFieldValue(field.name, value?.value)}
         />
       </div>
     ),
-    [field, className, label, options],
+    [field, className, label, options, setFieldValue],
   );
 
   if (!viewable) {
     return <></>;
   } else if (!editable) {
-    return <FieldTag content={field.value} key={field.value} />;
+    <div className={cn('form-field', className)}>
+      {label && <label>{label}</label>}{' '}
+      {() => {
+        if (tagColor) {
+          return <FieldTag name={field.value} hexcode={tagColor} />;
+        }
+        return <FieldTag content={field.value} key={field.value} />;
+      }}
+    </div>;
   }
 
   return memoizedJSX;

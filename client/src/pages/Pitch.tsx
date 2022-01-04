@@ -15,6 +15,7 @@ import {
 } from 'ssw-common';
 import { apiCall, isError } from '../api';
 import ApproveClaimCard from '../components/card/ApproveClaimCard';
+import EditingClaimCard from '../components/card/EditingClaimCard';
 import { ReviewClaimForm } from '../components/form/ReviewClaimForm';
 import { useTeams } from '../contexts';
 import { assignmentStatusEnum } from '../utils/enums';
@@ -44,6 +45,10 @@ type AllContributorsForTeam = {
 
 type TeamContributorRecord = Record<string, AllContributorsForTeam>;
 
+export type EditorRecord = Record<string, UserWithEditorType>;
+
+type UserWithEditorType = UserFields & { editorType: string };
+
 const Pitch = (): ReactElement => {
   const { pitchId } = useParams<ParamTypes>();
   const [pendingContributors, setPendingContributors] = useState<
@@ -54,9 +59,9 @@ const Pitch = (): ReactElement => {
   >([]);
   const [pitchTeams, setPitchTeams] = useState<FullPopulatedPitch['teams']>([]);
   const [statusIsCompleted, setStatusIsCompleted] = useState<boolean>(false);
-  /* const [editorContributors, setEditorContributors] = useState<EditorRecord>(
+  const [editorContributors, setEditorContributors] = useState<EditorRecord>(
     {},
-  ); */
+  );
 
   const { teams, getTeamFromId } = useTeams();
 
@@ -95,6 +100,23 @@ const Pitch = (): ReactElement => {
       setStatusIsCompleted(
         result.assignmentStatus === assignmentStatusEnum.COMPLETED,
       );
+
+      const editors: EditorRecord = {};
+
+      if (result.primaryEditor) {
+        editors[result.primaryEditor._id] = {
+          ...result.primaryEditor,
+          editorType: 'First',
+        };
+      }
+      result.secondEditors.map(
+        (user) => (editors[user?._id] = { ...user, editorType: 'Seconds' }),
+      );
+      result.thirdEditors.map(
+        (user) => (editors[user?._id] = { ...user, editorType: 'Thirds' }),
+      );
+
+      setEditorContributors(editors);
     }
 
     /* if (!isError(res)) {
@@ -191,17 +213,13 @@ const Pitch = (): ReactElement => {
 
               if (getTeamFromId(teamId)?.name === 'Editing') {
                 return (
-                  <>
-                    {/* <EditingClaimCard
-                      editors={editorContributors}
-                      pitchId={pitchId}
-                      completed={statusIsCompleted}
-                      callback={fetchAggregatedPitch}
-                      team={getTeamWithTargetFromId(teamId)}
-                    /> */}
-
-                    <></>
-                  </>
+                  <EditingClaimCard
+                    editors={editorContributors}
+                    pitchId={pitchId}
+                    completed={statusIsCompleted}
+                    callback={fetchAggregatedPitch}
+                    team={getTeamWithTargetFromId(teamId)}
+                  />
                 );
               }
               return (
@@ -220,7 +238,7 @@ const Pitch = (): ReactElement => {
         </div>
       </div>
 
-      <pre>{JSON.stringify(allContributors, null, 2)}</pre>
+      <pre>{JSON.stringify(pitch, null, 2)}</pre>
     </div>
   );
 };
