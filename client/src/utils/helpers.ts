@@ -7,6 +7,7 @@ import {
   BasePopulatedUser,
   BasePopulatedPitch,
   TeamFields,
+  FullPopulatedPitch,
 } from 'ssw-common';
 
 import { pitchStatusEnum } from './enums';
@@ -44,7 +45,7 @@ const getUserTeamsForPitch = (
  * @returns an array of all the teams belonging to the user
  */
 const getPitchTeamsForContributor = (
-  pitch: BasePopulatedPitch,
+  pitch: BasePopulatedPitch | FullPopulatedPitch,
   user: BasePopulatedUser,
 ): TeamFields[] | undefined => {
   type Contributor = BasePopulatedPitch['assignmentContributors'][0];
@@ -67,9 +68,30 @@ type PendingContributor = IPitch['pendingContributors'][0];
 const findPendingContributor = (
   pitch: IPitch | BasePopulatedPitch,
   user: IUser | BasePopulatedUser,
-): PendingContributor | undefined =>
-  pitch.pendingContributors.find(
+): PendingContributor | undefined => {
+  if (pitch.pendingContributors.length === 0) {
+    return undefined;
+  }
+
+  return (pitch as BasePopulatedPitch).pendingContributors.find(
     (contributor) => contributor.userId === user._id,
+  );
+};
+
+type FullPendingContributor = FullPopulatedPitch['pendingContributors'][0];
+/**
+ * Find a pending contributor on a pitch that matches a given user
+ *
+ * @param pitch the pitch to check
+ * @param user the user to patch
+ * @returns the fully populated pending contributor object
+ */
+const findFullPendingContributor = (
+  pitch: FullPopulatedPitch,
+  user: BasePopulatedUser | IUser,
+): FullPendingContributor | undefined =>
+  pitch.pendingContributors.find(
+    (contributor) => contributor.userId._id === user._id,
   );
 
 /**
@@ -95,7 +117,7 @@ const findAssignmentContributor = (
  * @returns whether or not the assignment contributor is found on the pitch
  */
 const hasAssignmentContributor = (
-  pitch: IPitch | BasePopulatedPitch,
+  pitch: IPitch | BasePopulatedPitch | FullPopulatedPitch,
   user: IUser | BasePopulatedUser,
 ): boolean => {
   if (typeof pitch.author === 'string') {
@@ -121,14 +143,19 @@ type PitchClaimStatus = typeof pitchStatusEnum[keyof typeof pitchStatusEnum];
  * @returns the user's pitch claim status
  */
 const getUserClaimStatusForPitch = (
-  pitch: IPitch | BasePopulatedPitch,
+  pitch: IPitch | BasePopulatedPitch | FullPopulatedPitch,
   user: IUser | BasePopulatedUser,
 ): PitchClaimStatus => {
   if (hasAssignmentContributor(pitch, user)) {
     return pitchStatusEnum.APPROVED;
   }
 
-  const pendingContributor = findPendingContributor(pitch, user);
+  const base =
+    pitch.pendingContributors.length === 0 ||
+    typeof pitch.pendingContributors[0].userId === 'string';
+  const pendingContributor = base
+    ? findPendingContributor(pitch as BasePopulatedPitch, user)
+    : findFullPendingContributor(pitch as FullPopulatedPitch, user);
   if (pendingContributor) {
     return pendingContributor.status;
   }
@@ -379,6 +406,7 @@ export {
   getPitchTeamsForContributor,
   getUserTeamsForPitch,
   findPendingContributor,
+  findFullPendingContributor,
   findAssignmentContributor,
   getUserClaimStatusForPitch,
   filterPitchesByInterests,

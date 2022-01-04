@@ -74,12 +74,6 @@ router.get(
   errorWrap(UserController.pitches),
 );
 
-router.get(
-  '/:id/submittedClaims',
-  requireContributor,
-  errorWrap(UserController.submittedClaims),
-);
-
 // DELETE /api/users/:id
 router.delete('/:id', requireAdmin, errorWrap(UserController.deleteUser));
 

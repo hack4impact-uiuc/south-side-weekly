@@ -4,6 +4,7 @@ import {
   BasePopulatedPitch,
   BasePopulatedUser,
   FullPopulatedPitch,
+  Pitch,
 } from 'ssw-common';
 
 import { buildColumn, FieldTag, UserPicture } from '..';
@@ -16,6 +17,7 @@ import {
 } from '../../utils/helpers';
 import {
   ClaimableTeamsList,
+  ClaimableTeamsPitch,
   getClaimableTeams,
 } from '../list/ClaimableTeamsList';
 import { TagList } from '../list/TagList';
@@ -123,7 +125,7 @@ export const titleColumn = buildColumn({
   extractor: 'title',
 });
 
-export const descriptionColumn = buildColumn<BasePopulatedPitch>({
+export const descriptionColumn = buildColumn<Pick<Pitch, 'description'>>({
   title: 'Description',
   width: 5,
   extractor: function getDescription(pitch) {
@@ -142,21 +144,23 @@ export const descriptionColumn = buildColumn<BasePopulatedPitch>({
   },
 });
 
-export const associatedInterestsColumn = buildColumn<BasePopulatedPitch>({
+export const associatedInterestsColumn = buildColumn<
+  Pick<BasePopulatedPitch, 'topics'>
+>({
   title: 'Associated Interests',
   extractor: function getInterests(pitch) {
     return <TagList size="tiny" tags={pitch.topics} />;
   },
 });
 
-export const claimableTeamsColumn = buildColumn<BasePopulatedPitch>({
+export const claimableTeamsColumn = buildColumn<ClaimableTeamsPitch>({
   title: 'Teams You Can Claim',
   extractor: function getTeams(pitch) {
     return <ClaimableTeamsList pitch={pitch} />;
   },
 });
 
-export const submittedColumn = buildColumn<BasePopulatedPitch>({
+export const submittedColumn = buildColumn<Pick<BasePopulatedPitch, 'author'>>({
   title: 'Submitter',
   width: 2,
   extractor: function getSubmitter(pitch) {
@@ -164,7 +168,7 @@ export const submittedColumn = buildColumn<BasePopulatedPitch>({
   },
 });
 
-export const selfWriteColumn = buildColumn<BasePopulatedPitch>({
+export const selfWriteColumn = buildColumn<Pick<BasePopulatedPitch, 'writer'>>({
   title: 'Self-write',
   width: 1,
   extractor: function getSelfWrite(pitch) {
@@ -178,7 +182,9 @@ export const selfWriteColumn = buildColumn<BasePopulatedPitch>({
   },
 });
 
-export const googleDocColumn = buildColumn<BasePopulatedPitch>({
+export const googleDocColumn = buildColumn<
+  Pick<BasePopulatedPitch, 'assignmentGoogleDocLink'>
+>({
   title: 'Google Doc',
   width: 1,
   extractor: function getGoogleDoc(pitch) {
@@ -191,15 +197,17 @@ export const googleDocColumn = buildColumn<BasePopulatedPitch>({
   },
 });
 
-export const deadlineColumn = buildColumn<BasePopulatedPitch>({
-  title: 'Deadline',
-  width: 1,
-  extractor: function getDeadline({ deadline }) {
-    return new Date(deadline).toLocaleDateString();
+export const deadlineColumn = buildColumn<Pick<BasePopulatedPitch, 'deadline'>>(
+  {
+    title: 'Deadline',
+    width: 1,
+    extractor: function getDeadline({ deadline }) {
+      return new Date(deadline).toLocaleDateString();
+    },
   },
-});
+);
 
-export const unclaimedTeamsColumn = buildColumn<BasePopulatedPitch>({
+export const unclaimedTeamsColumn = buildColumn<ClaimableTeamsPitch>({
   title: 'Unclaimed Teams',
   width: 2,
   extractor: function GetUnclaimedTeams({ ...pitch }) {
@@ -216,10 +224,10 @@ export const unclaimedTeamsColumn = buildColumn<BasePopulatedPitch>({
   },
 });
 
-export const teamsRequireApprovalColumn = buildColumn({
+export const teamsRequireApprovalColumn = buildColumn<BasePopulatedPitch>({
   title: 'Teams Requring Approval',
   width: 2,
-  extractor: function GetTeams({ pendingContributors }: BasePopulatedPitch) {
+  extractor: function GetTeams({ pendingContributors }) {
     const { getTeamFromId } = useTeams();
     const teamIds = [
       ...new Set(pendingContributors.map((c) => c.teams).flat()),
@@ -234,26 +242,27 @@ export const teamsRequireApprovalColumn = buildColumn({
   },
 });
 
-export const pitchStatusCol = buildColumn<BasePopulatedPitch>({
+export const pitchStatusCol = buildColumn<Pick<BasePopulatedPitch, 'status'>>({
   title: 'Status',
   width: '1',
-  sorter: (p1, p2) => p1.status.localeCompare(p2.status),
   extractor: function StatusCell({ status }) {
     return <FieldTag content={status} size={'small'} />;
   },
 });
 
-export const dateSubmittedCol = buildColumn<BasePopulatedPitch>({
+export const dateSubmittedCol = buildColumn<
+  Pick<BasePopulatedPitch, 'createdAt'>
+>({
   title: 'Date Submitted',
   width: '1',
-  sorter: (p1, p2) =>
-    new Date(p1.createdAt).getTime() - new Date(p2.createdAt).getTime(),
   extractor: function DateCell(pitch) {
     return new Date(pitch.createdAt).toLocaleDateString();
   },
 });
 
-export const associatedTeamsColumn = buildColumn<BasePopulatedPitch>({
+export const associatedTeamsColumn = buildColumn<
+  BasePopulatedPitch | FullPopulatedPitch
+>({
   title: "Teams You're On",
   width: 1,
   extractor: function TeamsCell(pitch) {
@@ -274,16 +283,22 @@ export const requestedTeamsColumn = buildColumn<BasePopulatedPitch>({
   width: '2',
   extractor: function TeamsCell(pitch) {
     const { user } = useAuth();
-    return findPendingContributor(pitch, user!)?.teams.map((teamId) => (
-      <FieldTag content={teamId} size={'small'} key={teamId} />
-    ));
+    const { getTeamFromId } = useTeams();
+    const { teams } = findPendingContributor(pitch, user!) ?? { teams: [] };
+
+    return (
+      <div>
+        <TagList size="tiny" tags={teams.map(getTeamFromId)} />
+      </div>
+    );
   },
 });
 
-export const claimStatusColumn = buildColumn<BasePopulatedPitch>({
+export const claimStatusColumn = buildColumn<
+  FullPopulatedPitch | BasePopulatedPitch
+>({
   title: 'Status',
   width: '1',
-  sorter: (p1, p2) => p1.status.localeCompare(p2.status),
   extractor: function StatusCell(pitch) {
     const { user } = useAuth();
     return (
@@ -298,12 +313,11 @@ export const claimStatusColumn = buildColumn<BasePopulatedPitch>({
 export const publishDateColumn = buildColumn<FullPopulatedPitch>({
   title: 'Publish Date',
   width: '1',
-  sorter: (p1, p2) =>
-    new Date(p1.loadedIssues && p1.loadedIssues[0].releaseDate).getTime() -
-    new Date(p2.loadedIssues && p2.loadedIssues[0].releaseDate).getTime(),
   extractor: function DateCell(pitch) {
-    return new Date(
-      pitch.loadedIssues && pitch.loadedIssues[0].releaseDate,
-    ).toLocaleDateString();
+    if (!pitch.issues || pitch.issues.length <= 0) {
+      return undefined;
+    }
+
+    return new Date(pitch.issues[0].releaseDate).toLocaleDateString();
   },
 });

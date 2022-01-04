@@ -79,9 +79,10 @@ interface PendingContributor {
   status: string;
 }
 
-export interface FullPopulatedPitch extends BasePopulatedPitch {
-  loadedIssues: Issue[];
-  loadedPendingContributors: PendingContributor[];
+export interface FullPopulatedPitch
+  extends Omit<BasePopulatedPitch, FullPitchOmitFields> {
+  issues: Issue[];
+  pendingContributors: PendingContributor[];
   teams: {
     teamId: TeamFields;
     target: number;

@@ -1,5 +1,5 @@
 import React, { FC, useEffect, useMemo } from 'react';
-import { FullPopulatedPitch } from 'ssw-common';
+import { BasePopulatedPitch, FullPopulatedPitch, Pitch } from 'ssw-common';
 
 import { buildColumn } from '..';
 import { useAuth } from '../../contexts';
@@ -20,7 +20,7 @@ import {
 import { PaginatedTable } from './dynamic/PaginatedTable';
 import { DynamicColumn } from './dynamic/types';
 
-const memberCols: DynamicColumn<FullPopulatedPitch>[] = [
+const memberCols: DynamicColumn<BasePopulatedPitch>[] = [
   titleColumn,
   {
     ...associatedInterestsColumn,
@@ -30,7 +30,7 @@ const memberCols: DynamicColumn<FullPopulatedPitch>[] = [
   deadlineColumn,
 ];
 
-const submittedCols: DynamicColumn<FullPopulatedPitch>[] = [
+const submittedCols: DynamicColumn<BasePopulatedPitch>[] = [
   titleColumn,
   { ...descriptionColumn, width: '3' },
   {
@@ -41,7 +41,7 @@ const submittedCols: DynamicColumn<FullPopulatedPitch>[] = [
   dateSubmittedCol,
 ];
 
-const claimsSubmittedCols: DynamicColumn<FullPopulatedPitch>[] = [
+const claimsSubmittedCols: DynamicColumn<BasePopulatedPitch>[] = [
   {
     ...titleColumn,
     width: '4',
@@ -69,23 +69,16 @@ const publishedCols: DynamicColumn<FullPopulatedPitch>[] = [
 
 interface TableProps {
   count: number;
-  data: FullPopulatedPitch[];
+  data: (BasePopulatedPitch | FullPopulatedPitch)[];
   type: 'member' | 'submitted' | 'claim-submitted' | 'published';
 }
 
 export const HomepageRecords: FC<TableProps> = ({ data, count, type }) => {
   const { user } = useAuth();
   useEffect(() => {
-    const col = buildColumn<FullPopulatedPitch>({
+    const col = buildColumn<BasePopulatedPitch>({
       title: 'Date Submitted',
       width: '1',
-      sorter: (p1, p2) =>
-        new Date(
-          findPendingContributor(p1, user!)?.dateSubmitted ?? Date.now(),
-        ).getTime() -
-        new Date(
-          findPendingContributor(p2, user!)?.dateSubmitted ?? Date.now(),
-        ).getTime(),
       extractor: function DateCell(pitch) {
         return new Date(
           findPendingContributor(pitch, user!)?.dateSubmitted ?? Date.now(),
@@ -118,44 +111,16 @@ export const HomepageRecords: FC<TableProps> = ({ data, count, type }) => {
     }
   }, [type]);
 
-  const getModal = useMemo(() => {
-    // TODO: Once EditSubmittedPitch modal and EditClaimRequest modal are
-    // done remove last two clauses of if and uncomment below
-    if (
-      type === 'member' ||
-      type === 'published' ||
-      type === 'submitted' ||
-      type === 'claim-submitted'
-    ) {
-      return undefined;
-    }
-
-    // if (type === 'submitted') {
-    //   return function getModalOpts(
-    //     pitch: FullPopulatedPitch,
-    //     open: boolean,
-    //     setOpen: React.Dispatch<React.SetStateAction<boolean>>,
-    //   ) {
-    //     return <ReviewPitch open={open} setOpen={setOpen} id={pitch._id} />;
-    //   };
-    // }
-
-    // return function getModalOpts(
-    //   pitch: FullPopulatedPitch,
-    //   open: boolean,
-    //   setOpen: React.Dispatch<React.SetStateAction<boolean>>,
-    // ) {
-    //   return <ClaimPitch open={open} setOpen={setOpen} id={pitch._id} />;
-    // };
-  }, [type]);
+  const viewPitch = (pitch: Pick<Pitch, '_id'>): any =>
+    window.open(`/pitch/${pitch._id}`);
 
   return (
-    <PaginatedTable<FullPopulatedPitch>
-      columns={cols}
+    <PaginatedTable<FullPopulatedPitch | BasePopulatedPitch>
+      columns={cols as any}
       records={data}
       count={count}
       pageOptions={['1', '10', '25', '50']}
-      getModal={getModal}
+      onRecordClick={viewPitch}
       emptyMessage="There are no pitches in this category."
     />
   );

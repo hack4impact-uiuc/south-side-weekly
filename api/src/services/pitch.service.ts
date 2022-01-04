@@ -56,7 +56,6 @@ const paginate = async (
     },
     hasPublishDateFilter(filters['hasPublishDate']),
   );
-  console.log(mergedFilters);
 
   const pitches = await Pitch.find(mergedFilters)
     .skip(offset * limit)
@@ -112,7 +111,7 @@ export const getPendingPitches = async (
   await paginate({ status: pitchStatusEnum.PENDING }, options);
 
 export const getApprovedPitches = async (
-  status?: 'unclaimed',
+  status?: string,
   options?: PaginateOptions<PitchSchema>,
 ): Promise<PitchesResponse> => {
   const pitches = await paginate({ status: pitchStatusEnum.APPROVED }, options);
@@ -322,24 +321,6 @@ export const getMemberPitches = async (
     },
     options,
   );
-
-  return filteredPitches;
-};
-
-export const getPendingClaims = async (
-  _id: string,
-  options?: PaginateOptions<PitchSchema>,
-): Promise<{
-  data: LeanDocument<PitchSchema>[];
-  count: number;
-}> => {
-  const filteredPitches = await paginate(
-    {
-      'pendingContributors.userId': Types.ObjectId(_id),
-    },
-    options,
-  );
-  console.log(filteredPitches);
 
   return filteredPitches;
 };

@@ -41,7 +41,9 @@ export const HomepageView: FC<HomepageViewProps> = ({ type }): ReactElement => {
       'issueStatuses.issueStatus':
         type === 'published' ? issueStatusEnum.PUSH : undefined,
       status: type === 'submitted' ? pitchStatusEnum.PENDING : undefined,
-      author: ['submitted'].includes(type) ? user?._id : undefined,
+      author: type === 'submitted' ? user?._id : undefined,
+      'pendingContributors.userId':
+        type === 'claim-submitted' ? user?._id : undefined,
     };
 
     return _.omitBy(q, _.isNil);
@@ -54,7 +56,7 @@ export const HomepageView: FC<HomepageViewProps> = ({ type }): ReactElement => {
       case 'submitted':
         return '/pitches/pending';
       case 'claim-submitted':
-        return `/users/${user?._id}/submittedClaims`;
+        return `/pitches/approved`;
       case 'published':
         return `/users/${user?._id}/pitches`;
       default:
@@ -67,7 +69,7 @@ export const HomepageView: FC<HomepageViewProps> = ({ type }): ReactElement => {
       const res = await apiCall<PitchesRes>({
         url: apiUrl,
         method: 'GET',
-        populate: 'full',
+        populate: type === 'published' ? 'full' : 'default',
         query: queryParams,
       });
 

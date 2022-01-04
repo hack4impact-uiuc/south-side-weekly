@@ -25,7 +25,6 @@ const Onboard3 = (): ReactElement => {
     } else if (data!.role === 'CONTRIBUTOR') {
       contributorSubmit();
     }
-    console.log(data?.role);
   };
 
   const contributorSubmit = (): void => {

@@ -312,30 +312,6 @@ export const pitches = async (req: Request, res: Response): Promise<void> => {
   });
 };
 
-export const submittedClaims = async (
-  req: Request,
-  res: Response,
-): Promise<void> => {
-  const populateType = extractPopulateQuery(req.query);
-  const options = extractOptions(req.query);
-
-  const pitches = await PitchService.getPendingClaims(req.params.id, options);
-
-  if (pitches === undefined) {
-    sendNotFound(res, `User not found with id ${req.params.id}`);
-    return;
-  }
-
-  sendSuccess(
-    res,
-    'Successfully retrieved all pitches with a pending user claim',
-    {
-      data: await populatePitches(pitches.data, populateType),
-      count: pitches.count,
-    },
-  );
-};
-
 // DELETE controls
 
 // Deletes a user from the database - UNUSED
