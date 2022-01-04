@@ -470,7 +470,7 @@ type RemoveContributorReq = Request<
 >;
 
 export const removeContributor = async (
-  req: AddContributorReq,
+  req: RemoveContributorReq,
   res: Response,
 ): Promise<void> => {
   const { userId, teamId } = req.body;

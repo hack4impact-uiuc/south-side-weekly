@@ -68,7 +68,7 @@ export interface BasePopulatedPitch extends Omit<Pitch, BasePitchOmitFields> {
 
 type FullPitchOmitFields = BasePitchOmitFields | 'issues' | 'pendingContributors';
 
-interface PendingContributor {
+export interface PendingContributor {
   userId: UserFields;
   teams: TeamFields[];
   message: string;

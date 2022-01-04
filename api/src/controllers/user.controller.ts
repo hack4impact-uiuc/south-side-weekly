@@ -2,10 +2,15 @@ import { Request, Response } from 'express';
 
 import Pitch from '../models/pitch.model';
 import { onboardingStatusEnum } from '../utils/enums';
-import { sendNotFound, sendSuccess, sendUnauthorized } from '../utils/helpers';
+import {
+  sendFail,
+  sendNotFound,
+  sendSuccess,
+  sendUnauthorized,
+} from '../utils/helpers';
 import { getEditableFields, getViewableFields } from '../utils/user-utils';
 import { sendApproveUserMail, sendRejectUserMail } from '../mail/sender';
-import { UserService } from '../services';
+import { TeamService, UserService } from '../services';
 
 import { populateUser } from '../populators/user.populate';
 import { extractOptions, extractPopulateQuery } from './utils';
@@ -175,6 +180,30 @@ export const getUserPermissions = async (
   };
 
   sendSuccess(res, 'Permissions retrieved successfully', permissions);
+};
+
+// Gets a user's permissions
+export const getUsersByTeam = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  const teamName = req.params.teamName;
+
+  if (!teamName) {
+    sendFail(res, 'Team id is required');
+  }
+
+  const team = await TeamService.getOneByName(teamName);
+
+  if (!team) {
+    sendNotFound(res, 'Team not found with name');
+  }
+
+  console.log(team);
+
+  const users = await UserService.getUsersByTeamId(team._id);
+
+  sendSuccess(res, 'Successfully retrieved all users on team.', users);
 };
 
 // UPDATE controls

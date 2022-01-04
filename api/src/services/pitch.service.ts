@@ -75,7 +75,7 @@ const updateModel = async <T>(
   filters: FilterQuery<T>,
   payload: UpdateQuery<T>,
 ): Pitch =>
-  await Pitch.findByIdAndUpdate(filters, payload, {
+  await Pitch.findOneAndUpdate(filters, payload, {
     new: true,
     runValidators: true,
   }).lean();
@@ -274,15 +274,14 @@ export const approveClaimRequest = async (
   userId: string,
   teamId: string,
 ): Pitch =>
-  await Pitch.findOneAndUpdate(
+  await updateModel(
     { _id: _id, 'pendingContributors.userId': userId },
     {
       $pull: {
         'pendingContributors.$.teams': teamId,
       },
     },
-    { new: true, runValidators: true },
-  ).lean();
+  );
 
 export const addContributorToAssignmentContributors = async (
   _id: string,
@@ -297,15 +296,14 @@ export const addContributorToAssignmentContributors = async (
   let pitch;
 
   if (pitchWithUser) {
-    pitch = await Pitch.findOneAndUpdate(
+    pitch = await updateModel(
       { _id: _id, 'assignmentContributors.userId': userId },
       {
         $addToSet: {
           'assignmentContributors.$.teams': teamId,
         },
       },
-      { new: true, runValidators: true },
-    ).lean();
+    );
   } else {
     pitch = await updateModel(
       { _id },
@@ -335,18 +333,15 @@ export const updateTeamTarget = async (
   teamId: string,
   target: number,
 ): Pitch => {
-  let updatedPitch = await Pitch.findOneAndUpdate(
+  let updatedPitch = await updateModel(
     { _id: _id, 'teams.teamId': teamId },
     { 'teams.$.target': target },
-    { new: true, runValidators: true },
-  ).lean();
-
+  );
   if (!updatedPitch) {
-    updatedPitch = await Pitch.findOneAndUpdate(
+    updatedPitch = await updateModel(
       { _id: _id },
       { $addToSet: { teams: { teamId: teamId, target: target } } },
-      { new: true, runValidators: true },
-    ).lean();
+    );
   }
 
   return updatedPitch;
@@ -364,8 +359,8 @@ export const decrementTeamTarget = async (
   let pitch;
 
   if (pitchWithTeam) {
-    console.log('WITH TEAM');
-    pitch = await Pitch.findOneAndUpdate(
+    //console.log('WITH TEAM');
+    pitch = await updateModel(
       {
         _id: _id,
         'teams.teamId': teamId,
@@ -376,26 +371,24 @@ export const decrementTeamTarget = async (
           'teams.$.target': -1,
         },
       },
-      { new: true, runValidators: true },
-    ).lean();
+    );
   } else {
-    console.log('NO TEAM');
-    pitch = await Pitch.findByIdAndUpdate(
-      _id,
+    //console.log('NO TEAM');
+    pitch = await updateModel(
+      { _id },
       {
         $addToSet: {
           teams: { teamId: teamId, target: 0 },
         },
       },
-      { new: true, runValidators: true },
-    ).lean();
+    );
   }
 
   return pitch;
 };
 
 export const incrementTeamTarget = async (_id: string, teamId: string): Pitch =>
-  await Pitch.findOneAndUpdate(
+  await updateModel(
     {
       _id: _id,
       'teams.teamId': teamId,
@@ -405,8 +398,7 @@ export const incrementTeamTarget = async (_id: string, teamId: string): Pitch =>
         'teams.$.target': 1,
       },
     },
-    { new: true, runValidators: true },
-  ).lean();
+  );
 
 export const changeEditor = async (
   _id: string,
@@ -520,15 +512,14 @@ export const removeContributor = async (
       },
     );
   } else {
-    pitch = await Pitch.findOneAndUpdate(
+    pitch = await updateModel(
       { _id: _id, 'assignmentContributors.userId': userId },
       {
         $pull: {
           'assignmentContributors.$.teams': teamId,
         },
       },
-      { new: true, runValidators: true },
-    ).lean();
+    );
   }
 
   return pitch;

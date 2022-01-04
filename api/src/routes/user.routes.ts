@@ -44,6 +44,13 @@ router.get(
   errorWrap(UserController.getUserPermissions),
 );
 
+// GET /api/users/all/team/:teamName
+router.get(
+  '/all/team/:teamName',
+  requireRegistered,
+  errorWrap(UserController.getUsersByTeam),
+);
+
 // POST /api/users/
 router.post('/', requireAdmin, errorWrap(UserController.createUser));
 

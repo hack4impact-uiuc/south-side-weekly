@@ -118,6 +118,15 @@ export const getAll = async (
 export const getOne = async (id: string): Promise<User> =>
   await User.findById({ _id: id }).lean({ virtuals: true });
 
+export const getUsersByTeamId = async (
+  teamId: string,
+): Promise<UsersResponse> =>
+  await User.find({
+    teams: {
+      $in: [teamId],
+    },
+  }).lean();
+
 export const add = async (payload: Partial<IUser>): Promise<User> =>
   await User.create(payload);
 

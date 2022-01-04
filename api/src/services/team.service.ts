@@ -24,6 +24,9 @@ export const addMany = async (payload: Partial<ITeam>[]): Teams =>
 export const getOne = async (_id: string): Team =>
   await Team.findById({ _id }).lean();
 
+export const getOneByName = async (teamName: string): Team =>
+  await Team.findOne({ name: teamName }).lean();
+
 export const getAll = async (): Teams => await Team.find({}).lean();
 
 export const update = async (_id: string, payload: Partial<ITeam>): Team =>

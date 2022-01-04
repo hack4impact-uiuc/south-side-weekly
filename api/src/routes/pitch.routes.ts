@@ -84,6 +84,13 @@ router.put(
   errorWrap(PitchController.approveClaimRequest),
 );
 
+// PUT /api/pitches/:id/declineClaim
+router.put(
+  '/:id/declineClaim',
+  requireStaff,
+  errorWrap(PitchController.declineClaimRequest),
+);
+
 // PUT /api/pitches/:id/changeEditor
 router.put(
   '/:id/changeEditor',
