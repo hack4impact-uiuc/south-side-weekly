@@ -125,7 +125,7 @@ export const getUsersByTeamId = async (
     teams: {
       $in: [teamId],
     },
-  }).lean();
+  }).lean({ virtuals: true });
 
 export const add = async (payload: Partial<IUser>): Promise<User> =>
   await User.create(payload);

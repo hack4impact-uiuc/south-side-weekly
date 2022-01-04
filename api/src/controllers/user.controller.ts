@@ -182,7 +182,7 @@ export const getUserPermissions = async (
   sendSuccess(res, 'Permissions retrieved successfully', permissions);
 };
 
-// Gets a user's permissions
+// Gets the users on a specific team
 export const getUsersByTeam = async (
   req: Request,
   res: Response,
