@@ -484,7 +484,6 @@ export const addContributor = async (
       },
     );
   } else if (writer === 'true') {
-    console.log('WRITER SELECTED', writer);
     pitch = updateModel(
       { _id },
       {
