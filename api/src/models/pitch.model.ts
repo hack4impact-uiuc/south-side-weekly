@@ -23,11 +23,6 @@ const pendingContributor = new mongoose.Schema(
     ...contributor.obj,
     message: { type: String },
     dateSubmitted: { type: Date, required: true },
-    status: {
-      type: String,
-      enum: Object.values(pitchStatusEnum),
-      default: pitchStatusEnum.PENDING,
-    },
   },
   { _id: false },
 );

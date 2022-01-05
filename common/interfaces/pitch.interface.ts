@@ -19,7 +19,6 @@ export interface Pitch {
     teams: string[];
     message: string;
     dateSubmitted: Date;
-    status: string;
   }[];
   topics: string[];
   teams: {
@@ -72,7 +71,6 @@ export interface PendingContributor {
   teams: TeamFields[];
   message: string;
   dateSubmitted: Date;
-  status: string;
 }
 
 export interface FullPopulatedPitch extends Omit<Pitch, FullPitchOmitFields> {

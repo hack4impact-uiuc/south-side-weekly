@@ -112,9 +112,6 @@ export const getUserFeedbackForPitch = async (
     teamId,
   );
 
-  console.log('FDKLFJDKL');
-  console.log('feedbackdsfsadfsadfasdfsadf', feedback);
-
   if (!feedback) {
     sendNotFound(res, 'User feedback not found for user on pitch');
     return;
