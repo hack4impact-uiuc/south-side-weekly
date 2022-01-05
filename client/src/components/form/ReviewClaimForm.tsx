@@ -52,7 +52,7 @@ export const ReviewClaimForm: FC<FormProps> = ({ pitch }): ReactElement => {
   const [editMode, setEditMode] = useState<boolean>(false);
   console.log(fields);
   const { getInterestById, interests } = useInterests();
-  const { issues, fetchIssues } = useIssues();
+  const { getIssueFromId, issues, fetchIssues } = useIssues();
 
   const getIssueFromIssueStatuses = (
     id: string,
@@ -99,7 +99,7 @@ export const ReviewClaimForm: FC<FormProps> = ({ pitch }): ReactElement => {
       }}
       onSubmit={handleSave}
     >
-      {({ handleReset }) => (
+      {({ values, handleReset }) => (
         <FormikForm id={'review-claim-form'}>
           {!editMode && (
             <AuthView view="isAdmin">
@@ -167,7 +167,7 @@ export const ReviewClaimForm: FC<FormProps> = ({ pitch }): ReactElement => {
             </div>
             <div className="row">
               {!editMode ? (
-                <LinkDisplay href={pitch.assignmentGoogleDocLink} />
+                <LinkDisplay href={values.assignmentGoogleDocLink} />
               ) : (
                 <Field
                   component={FormInput}
@@ -199,22 +199,40 @@ export const ReviewClaimForm: FC<FormProps> = ({ pitch }): ReactElement => {
                   editable={editMode}
                 />
               </div>
-              <div className="right-col">
+              <div className="right-col form-field">
                 {editMode && <AddIssue callback={fetchIssues} />}
-                <Field
-                  component={FormMultiSelect}
-                  name="issueStatuses"
-                  label={
-                    editMode ? 'Add Pitch to Issue(s)' : 'Associated Issue(s)'
-                  }
-                  options={issues.map((issue) => ({
-                    value: issue._id,
-                    label: `${formatDate(issue.releaseDate)} - ${startCase(
-                      lowerCase(issue.type),
-                    )}`,
-                  }))}
-                  editable={editMode}
-                />
+
+                {editMode ? (
+                  <Field
+                    component={FormMultiSelect}
+                    name="issueStatuses"
+                    label={'Add Pitch to Issue(s)'}
+                    options={issues.map((issue) => ({
+                      value: issue._id,
+                      label: `${formatDate(issue.releaseDate)} - ${startCase(
+                        lowerCase(issue.type),
+                      )}`,
+                    }))}
+                    editable={editMode}
+                  />
+                ) : (
+                  <>
+                    <label htmlFor="issueStatuses">Associated Issue(s)</label>
+                    {values.issueStatuses.map((issueId, idx) => {
+                      const issue = getIssueFromId(issueId);
+                      if (!issue) {
+                        return <></>;
+                      }
+                      return (
+                        <p className="issue-item" key={idx}>{`${startCase(
+                          lowerCase(issue.type),
+                        )} - ${new Date(issue.releaseDate).toLocaleDateString(
+                          'en-US',
+                        )}`}</p>
+                      );
+                    })}
+                  </>
+                )}
               </div>
             </div>
             {editMode && (

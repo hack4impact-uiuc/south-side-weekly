@@ -28,6 +28,10 @@
       flex-direction: row;
       justify-content: flex-start;
 
+      .issue-item {
+        margin-bottom: 0 !important;
+      }
+
       .form-label {
         font-weight: bold;
         margin-right: 10px !important;
