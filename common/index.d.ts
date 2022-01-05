@@ -39,18 +39,16 @@ export interface IUser {
 }
 
 export type PitchFields = Pick<
-IPitch,
-| 'title'
-| 'description'
-| 'createdAt'
-| 'topics'
-| 'status'
-| 'editStatus'
-| 'deadline'
-| 'issueStatuses'
+  IPitch,
+  | 'title'
+  | 'description'
+  | 'createdAt'
+  | 'topics'
+  | 'status'
+  | 'editStatus'
+  | 'deadline'
+  | 'issueStatuses'
 >;
-export type TeamFields = Pick<ITeam, 'name' | 'active' | 'color'>;
-export type InterestFields = Pick<IInterest, 'name' | 'active' | 'color'>;
 
 export interface IUserAggregate extends IUser {
   aggregated: {
@@ -173,7 +171,7 @@ type BaseIssueOmitFields = 'pitches';
 
 export type PopulatedIssue = Omit<IIssue, BaseIssueOmitFields> & {
   pitches: PitchFields[];
-}
+};
 
 /**
  * Interface for UserFeedback Schedma.

@@ -1,5 +1,5 @@
-import { Issue } from "./issue.interface";
-import { InterestFields, TeamFields, UserFields } from "./_types";
+import { Issue } from './issue.interface';
+import { InterestFields, TeamFields, UserFields } from './_types';
 
 export interface Pitch {
   _id: string;
@@ -38,7 +38,7 @@ export interface Pitch {
 }
 
 type BasePitchOmitFields =
-  'pitches'
+  | 'pitches'
   | 'teams'
   | 'assignmentContributors'
   | 'author'
@@ -66,7 +66,10 @@ export interface BasePopulatedPitch extends Omit<Pitch, BasePitchOmitFields> {
   issueStatuses: { issueId: Issue; status: string }[];
 }
 
-type FullPitchOmitFields = BasePitchOmitFields | 'issues' | 'pendingContributors';
+type FullPitchOmitFields =
+  | BasePitchOmitFields
+  | 'issues'
+  | 'pendingContributors';
 
 interface PendingContributor {
   userId: UserFields;
@@ -76,7 +79,8 @@ interface PendingContributor {
   status: string;
 }
 
-export interface FullPopulatedPitch extends Omit<Pitch, FullPitchOmitFields> {
+export interface FullPopulatedPitch
+  extends Omit<BasePopulatedPitch, FullPitchOmitFields> {
   issues: Issue[];
   pendingContributors: PendingContributor[];
   teams: {

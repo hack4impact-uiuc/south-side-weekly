@@ -18,14 +18,18 @@ interface PaginateOptions<T> {
     open: boolean,
     setOpen: React.Dispatch<React.SetStateAction<boolean>>,
   ) => ReactElement;
+  onRecordClick?: (record: T) => void;
+  emptyMessage?: string;
 }
 
 export const PaginatedTable = <T,>({
   records,
   getModal,
+  onRecordClick,
   count,
   columns,
   pageOptions,
+  emptyMessage,
 }: PaginateOptions<T>): ReactElement => {
   const [query, setQuery] = useQueryParams({
     limit: StringParam,
@@ -68,13 +72,13 @@ export const PaginatedTable = <T,>({
         </div>
       </div>
       <DynamicTable<T>
-        onRecordClick={() => void 0}
+        onRecordClick={onRecordClick}
         getModal={getModal}
         view={{
           records,
           columns,
         }}
-        emptyMessage="There are no users."
+        emptyMessage={emptyMessage}
         footer={
           <Table.HeaderCell>
             <Pagination

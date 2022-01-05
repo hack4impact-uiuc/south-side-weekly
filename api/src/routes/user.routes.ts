@@ -4,6 +4,7 @@ import { errorWrap } from '../middleware';
 import { UserController } from '../controllers';
 import {
   requireAdmin,
+  requireContributor,
   requireRegistered,
   requireRequestSecret,
 } from '../middleware/auth';
@@ -65,6 +66,12 @@ router.put(
   '/:id/claimPitch',
   requireRegistered,
   errorWrap(UserController.claimPitch),
+);
+
+router.get(
+  '/:id/pitches',
+  requireContributor,
+  errorWrap(UserController.pitches),
 );
 
 // DELETE /api/users/:id
