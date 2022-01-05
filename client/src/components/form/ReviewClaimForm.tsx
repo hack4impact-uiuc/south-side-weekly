@@ -10,7 +10,11 @@ import * as yup from 'yup';
 //import { updatePitch } from '../../api';
 import { useInterests } from '../../contexts';
 import { useIssues } from '../../contexts/issues/context';
-import { assignmentStatusEnum, issueStatusEnum } from '../../utils/enums';
+import {
+  assignmentStatusEnum,
+  editStatusEnum,
+  issueStatusEnum,
+} from '../../utils/enums';
 import './ReviewClaimForm.scss';
 import { FormSingleSelect } from '../ui/FormSingleSelect';
 import { FormInput } from '../ui/FormInput';
@@ -22,6 +26,8 @@ import UserChip from '../tag/UserChip';
 import { LinkDisplay } from '../ui/LinkDisplayButton';
 import { formatDate } from '../../utils/helpers';
 import { PrimaryButton } from '../ui/PrimaryButton';
+import { apiCall } from '../../api';
+import { MultiSelect } from '../select/MultiSelect';
 
 export interface ReviewClaimFields {
   teams: string[];
@@ -38,7 +44,6 @@ type FormData = Pick<
   | 'assignmentGoogleDocLink'
   | 'description'
   | 'topics'
-  | 'issues'
   | 'teams'
   | 'primaryEditor'
   | 'secondEditors'
@@ -47,6 +52,7 @@ type FormData = Pick<
   | 'assignmentStatus'
   | 'deadline'
   | 'issueStatuses'
+  | 'editStatus'
 >;
 
 const defaultData: FormData = {
@@ -55,7 +61,6 @@ const defaultData: FormData = {
   description: '',
   topics: [],
   teams: [],
-  issues: [],
   writer: '',
   primaryEditor: '',
   secondEditors: [],
@@ -63,6 +68,7 @@ const defaultData: FormData = {
   assignmentStatus: '',
   deadline: new Date(),
   issueStatuses: [],
+  editStatus: '',
 };
 
 export const ReviewClaimForm: FC<FormProps> = ({ pitch }): ReactElement => {
@@ -76,22 +82,63 @@ export const ReviewClaimForm: FC<FormProps> = ({ pitch }): ReactElement => {
     //await updatePitch(formData, aggregatedPitch._id);
     //await callback();
     console.log(data);
+
+    await apiCall({
+      method: 'PUT',
+      url: `/pitches/${pitch?._id}`,
+      body: {
+        deadline: data.deadline,
+      },
+    });
+
     await void 0;
   };
+
+  const formatFormDate = (date: Date | undefined): string =>
+    new Date(date || new Date()).toISOString().split('T')[0];
+
+  const getLatestIssueStatus = (
+    status: FullPopulatedPitch['issueStatuses'],
+  ) => {
+    const latestIssue = status.reduce((a, b): any => {
+      a.issueId.releaseDate > b.issueId.releaseDate ? a : b;
+    });
+
+    console.log('latest', latestIssue);
+    return latestIssue.issueStatus;
+  };
+
+  //getLatestIssueStatus(pitch.issueStatuses);
+
+  /* const changeIssueAssignmentStatus = (
+    issueId: string,
+    value: string,
+  ): Pitch['issueStatuses'] => {
+    const issueStatuses = formData.issueStatuses;
+    const indexOfIssueStatus = issueStatuses.findIndex(
+      (issue) => issue.issueStatus === issueId,
+    )!;
+    const notFoundIndex = -1;
+    if (indexOfIssueStatus !== notFoundIndex) {
+      issueStatuses[indexOfIssueStatus].issueStatus = value;
+    }
+    const issueStatusesCopy = [...issueStatuses];
+    return issueStatusesCopy;
+  }; */
 
   if (!pitch) {
     return <div id="review-claim-form"></div>;
   }
-
-  const formatFormDate = (date: Date | undefined): string =>
-    new Date(date || new Date()).toISOString().split('T')[0];
 
   return (
     <Formik<any>
       initialValues={{
         ...pitch,
         topics: pitch.topics.map((i) => i._id),
+        issues: pitch.issueStatuses.map((issue) => issue.issueId._id),
         deadline: formatFormDate(pitch.deadline),
+        //issueStatus: getLatestIssueStatus(pitch.issueStatuses),
+
         //...{ title: 'hifdf', boo: 'jjj' },
       }}
       onSubmit={handleSave}
@@ -129,27 +176,26 @@ export const ReviewClaimForm: FC<FormProps> = ({ pitch }): ReactElement => {
             <div className="left-col">
               <Field
                 component={FormSingleSelect}
-                options={Object.values(assignmentStatusEnum).map((status) => ({
+                options={Object.values(editStatusEnum).map((status) => ({
                   value: status,
-                  label: startCase(lowerCase(status)),
+                  label: status,
                 }))}
-                name="assignmentStatus"
+                name="editStatus"
                 label="Edit Status"
                 editable={editMode}
-                //tagColor={'#FEF0DB'}
               />
             </div>
-            {/* <div className="right-col">
+            <div className="right-col">
               <Field
                 component={FormSingleSelect}
-                options={Object.values(assignmentStatusEnum).map((status) => ({
+                options={Object.values(issueStatusEnum).map((status) => ({
                   value: status,
                   label: startCase(lowerCase(status)),
                 }))}
-                name="assignmentStatus"
-                label="Edit Status"
+                name="issueStatus"
+                label="Issue Assignment Status"
               />
-            </div> */}
+            </div>
           </div>
           <div className="row">
             <Field

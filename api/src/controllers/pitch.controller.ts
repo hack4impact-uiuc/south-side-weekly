@@ -12,7 +12,7 @@ import { PitchService, UserService } from '../services';
 import { sendFail, sendNotFound, sendSuccess } from '../utils/helpers';
 import { extractOptions, extractPopulateQuery } from './utils';
 
-type IdParam = { id: string };
+type IdParam = { id?: string };
 
 // CREATE controls
 
@@ -258,7 +258,7 @@ export const submitClaim = async (
 };
 
 type ApproveClaimReqBody = { userId: string; teams: string[]; teamId: string };
-type ApproveClaimReq = Request<IdParam, never, ApproveClaimReqBody, never>;
+type ApproveClaimReq = Request<IdParam, never, ApproveClaimReqBody, any>;
 
 export const approveClaimRequest = async (
   req: ApproveClaimReq,
@@ -272,11 +272,19 @@ export const approveClaimRequest = async (
     teamId,
   );
 
-  pitch = await PitchService.addContributorToAssignmentContributors(
+  pitch = await PitchService.addContributor(
     req.params.id,
     userId,
     teamId,
+    req.query.editor,
+    req.query.writer,
   );
+
+  /* pitch = await PitchService.addContributorToAssignmentContributors(
+    req.params.id,
+    userId,
+    teamId,
+  ); */
 
   pitch = await PitchService.decrementTeamTarget(req.params.id, teamId);
 
@@ -304,21 +312,25 @@ export const approveClaimRequest = async (
   );
 };
 
-type DeclineClaimReqBody = { userId: string };
+type DeclineClaimReqBody = { userId: string; teamId: string };
 type DeclineClaimReq = Request<IdParam, never, DeclineClaimReqBody, never>;
 
 export const declineClaimRequest = async (
   req: DeclineClaimReq,
   res: Response,
 ): Promise<void> => {
-  const { userId } = req.body;
+  const { userId, teamId } = req.body;
 
   if (!userId) {
     sendFail(res, 'User id is required');
     return;
   }
 
-  const pitch = await PitchService.declineClaimRequest(req.params.id, userId);
+  const pitch = await PitchService.declineClaimRequest(
+    req.params.id,
+    userId,
+    teamId,
+  );
 
   if (!pitch) {
     sendNotFound(res, `Pitch with id ${req.params.id} not found`);
@@ -409,15 +421,12 @@ export const changeEditor = async (
 };
 
 type AddContributorQuery = {
+  //writer: true | false;
   editor: 'First' | 'Seconds' | 'Thirds' | undefined;
+  writer: boolean;
 };
 type AddContributorBody = { userId: string; teamId: string };
-type AddContributorReq = Request<
-  IdParam,
-  never,
-  AddContributorBody,
-  AddContributorQuery
->;
+type AddContributorReq = Request<IdParam, never, AddContributorBody, any>;
 
 export const addContributor = async (
   req: AddContributorReq,
@@ -430,6 +439,7 @@ export const addContributor = async (
     userId,
     teamId,
     req.query.editor,
+    req.query.writer,
   );
 
   pitch = await PitchService.decrementTeamTarget(req.params.id, teamId);
@@ -460,14 +470,10 @@ export const addContributor = async (
 
 type RemoveContributorQuery = {
   editor: 'First' | 'Seconds' | 'Thirds' | undefined;
+  writer: boolean;
 };
 type RemoveContributorBody = { userId: string; teamId: string };
-type RemoveContributorReq = Request<
-  IdParam,
-  never,
-  RemoveContributorBody,
-  RemoveContributorQuery
->;
+type RemoveContributorReq = Request<IdParam, never, RemoveContributorBody, any>;
 
 export const removeContributor = async (
   req: RemoveContributorReq,
@@ -480,6 +486,7 @@ export const removeContributor = async (
     userId,
     teamId,
     req.query.editor,
+    req.query.writer,
   );
 
   pitch = await PitchService.incrementTeamTarget(req.params.id, teamId);

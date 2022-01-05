@@ -89,5 +89,5 @@ export interface FullPopulatedPitch extends Omit<Pitch, FullPitchOmitFields> {
   secondEditors: UserFields[];
   thirdEditors: UserFields[];
   reviewedBy: UserFields;
-  issueStatuses: { issueId: Issue; status: string }[];
+  issueStatuses: { issueId: Issue; issueStatus: string }[];
 }

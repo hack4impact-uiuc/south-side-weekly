@@ -27,6 +27,7 @@ interface EditingClaimCardProps {
   pitchId: string;
   completed: boolean;
   editors: EditorRecord;
+  pendingEditors: EditorRecord;
   team: Team & { target: number };
   callback: () => Promise<void>;
 }
@@ -56,6 +57,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
   completed,
   editors,
   team,
+  pendingEditors,
   callback,
 }): ReactElement => {
   const [selectContributorMode, setSelectContributorMode] = useState(false);
@@ -65,11 +67,6 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
   const [allEditors, setAllEditors] = useState<User[]>([]);
   const [temporaryContributors, setTemporaryContributors] =
     useState<EditorRecord>({});
-
-  console.log('TMP:', temporaryContributors);
-  console.log('filtered contributors: ', filteredContributors);
-
-  console.log('EDITORS:', editors);
 
   const [totalPositions, setTotalPositions] = useState(0);
 
@@ -87,6 +84,38 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
 
       setTemporaryContributors(tempContributorsCopy);
     }
+  };
+
+  const declineClaim = async (userId: string): Promise<void> => {
+    const res = await apiCall<any>({
+      method: 'PUT',
+      url: `/pitches/${pitchId}/declineClaim`,
+      body: {
+        userId: userId,
+        teamId: team._id,
+      },
+    });
+    await callback();
+  };
+
+  const approveClaim = async (
+    editorId: string,
+    editorType: string,
+  ): Promise<void> => {
+    const res = await apiCall<any>({
+      method: 'PUT',
+      url: `/pitches/${pitchId}/approveClaim`,
+      body: {
+        userId: editorId,
+        teamId: team._id,
+        teams: [team.name],
+      },
+      query: {
+        editor: editorType,
+      },
+    });
+
+    await callback();
   };
 
   const addEditor = async (
@@ -210,6 +239,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       contributors.filter(
         ({ _id }) =>
           !Object.keys(editors).includes(_id) &&
+          !Object.keys(pendingEditors).includes(_id) &&
           !Object.keys(temporaryContributors).includes(_id),
       );
 
@@ -231,7 +261,13 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
     } else {
       setSelectedContributor('');
     }
-  }, [editors, selectContributorMode, team.name, temporaryContributors]);
+  }, [
+    editors,
+    selectContributorMode,
+    team.name,
+    temporaryContributors,
+    pendingEditors,
+  ]);
 
   const renderCardHeader = (): JSX.Element => {
     void 0;
@@ -287,7 +323,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
   ): Promise<void> => {
     console.log(userId, from, to);
 
-    const res = apiCall<any>({
+    const res = await apiCall<any>({
       method: 'PUT',
       url: `/pitches/${pitchId}/changeEditor`,
       body: {
@@ -341,9 +377,39 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
                   <Icon
                     name="trash"
                     link
-                    onClick={() =>
-                      removeContributor(editorId, editor.editorType)
-                    }
+                    onClick={() => declineClaim(editorId)}
+                  />
+                </div>
+              )}
+            </div>
+          );
+        })}
+
+        {Object.entries(pendingEditors).map(([editorId, editor], idx) => {
+          console.log('hey');
+          return (
+            <div className="claim-row" key={idx}>
+              <UserChip user={omit(editor, 'editorType')} />
+
+              {completed ? (
+                <ContributorFeedback
+                  user={omit(editor, 'editorType')}
+                  team={team}
+                  pitchId={pitchId}
+                />
+              ) : (
+                <div className="dropdown-trash">
+                  <SingleSelect
+                    value={editor.editorType}
+                    options={editorTypeDropDownOptions}
+                    onChange={(e) => approveClaim(editorId, e ? e.value : '')}
+                    placeholder="Editor Type"
+                    className="select-editor-type"
+                  />
+                  <Icon
+                    name="trash"
+                    link
+                    onClick={() => declineClaim(editorId)}
                   />
                 </div>
               )}

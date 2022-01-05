@@ -318,12 +318,16 @@ export const addContributorToAssignmentContributors = async (
   return pitch;
 };
 
-export const declineClaimRequest = async (_id: string, userId: string): Pitch =>
+export const declineClaimRequest = async (
+  _id: string,
+  userId: string,
+  teamId: string,
+): Pitch =>
   await updateModel(
-    { _id, 'pendingContributors.userId': userId },
+    { _id: _id, 'pendingContributors.userId': userId },
     {
-      $set: {
-        'pendingContributors.$.status': pitchStatusEnum.DECLINED,
+      $pull: {
+        'pendingContributors.$.teams': teamId,
       },
     },
   );
@@ -458,6 +462,7 @@ export const addContributor = async (
   userId: string,
   teamId: string,
   editor: 'First' | 'Seconds' | 'Thirds' | undefined,
+  writer: boolean,
 ): Pitch => {
   let pitch;
   if (editor === 'First') {
@@ -478,6 +483,13 @@ export const addContributor = async (
         },
       },
     );
+  } else if (writer) {
+    pitch = updateModel(
+      { _id },
+      {
+        writer: userId,
+      },
+    );
   } else {
     pitch = await addContributorToAssignmentContributors(_id, userId, teamId);
   }
@@ -490,6 +502,7 @@ export const removeContributor = async (
   userId: string,
   teamId: string,
   editor: 'First' | 'Seconds' | 'Thirds' | undefined,
+  writer: boolean,
 ): Pitch => {
   let pitch;
 
@@ -509,6 +522,13 @@ export const removeContributor = async (
             ? { secondEditors: userId }
             : { thirdEditors: userId }),
         },
+      },
+    );
+  } else if (writer) {
+    pitch = await updateModel(
+      { _id },
+      {
+        writer: null,
       },
     );
   } else {

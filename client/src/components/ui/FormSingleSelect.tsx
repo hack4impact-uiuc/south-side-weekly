@@ -49,15 +49,18 @@ export const FormSingleSelect: FC<FormSingleSelectProps> = ({
   if (!viewable) {
     return <></>;
   } else if (!editable) {
-    <div className={cn('form-field', className)}>
-      {label && <label>{label}</label>}{' '}
-      {() => {
-        if (tagColor) {
-          return <FieldTag name={field.value} hexcode={tagColor} />;
-        }
-        return <FieldTag content={field.value} key={field.value} />;
-      }}
-    </div>;
+    return (
+      <div className={cn('form-field', className)}>
+        {label && <label>{label}</label>}
+        <div>
+          <FieldTag
+            content={field.value}
+            name={field.value}
+            key={field.value}
+          />
+        </div>
+      </div>
+    );
   }
 
   return memoizedJSX;

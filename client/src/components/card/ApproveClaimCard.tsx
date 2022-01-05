@@ -58,6 +58,9 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
           userId: selectedContributor,
           teamId: team._id,
         },
+        query: {
+          writer: team.name === 'Writing',
+        },
       });
       console.log(res);
     }
@@ -71,6 +74,9 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
       body: {
         userId: userId,
         teamId: team._id,
+      },
+      query: {
+        writer: team.name === 'Writing',
       },
     });
     console.log(res);
@@ -89,6 +95,9 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
         teamId: team._id,
         teams: [team.name],
       },
+      query: {
+        writer: team.name === 'Writing',
+      },
     });
 
     await callback();
@@ -101,6 +110,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
       url: `/pitches/${pitchId}/declineClaim`,
       body: {
         userId: userId,
+        teamId: team._id,
       },
     });
     await callback();

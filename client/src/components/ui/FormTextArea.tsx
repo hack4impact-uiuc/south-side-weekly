@@ -15,7 +15,7 @@ export const FormTextArea: FC<FormTextAreaProps> = ({
   className,
   label,
   field,
-  editable = false,
+  editable = true,
   ...props
 }): ReactElement => {
   const memoizedJSX = useMemo(

@@ -62,6 +62,8 @@ const Pitch = (): ReactElement => {
   const [editorContributors, setEditorContributors] = useState<EditorRecord>(
     {},
   );
+  const [pendingEditors, setPendingEditors] = useState<EditorRecord>({});
+  const [writer, setWriter] = useState<UserFields[]>([]);
 
   const { teams, getTeamFromId } = useTeams();
 
@@ -96,6 +98,7 @@ const Pitch = (): ReactElement => {
 
       setPendingContributors(result.pendingContributors);
       setAssignmentContributors(result.assignmentContributors);
+      setWriter(result.writer ? [result.writer] : []);
       setPitchTeams(result.teams);
       setStatusIsCompleted(
         result.assignmentStatus === assignmentStatusEnum.COMPLETED,
@@ -163,11 +166,21 @@ const Pitch = (): ReactElement => {
       allContributorsRecord[team._id] = { pending: [], assignment: [] };
     });
 
+    const pendingEditorContributors: EditorRecord = {};
+
     pendingContributors.map((pendingContributor) => {
       pendingContributor.teams.map((team) => {
+        if (team.name === 'Editing') {
+          pendingEditorContributors[pendingContributor.userId._id] = {
+            ...pendingContributor.userId,
+            editorType: 'None',
+          };
+        }
         allContributorsRecord[team._id].pending.push(pendingContributor.userId);
       });
     });
+
+    setPendingEditors(pendingEditorContributors);
 
     assignmentContributors.map((assignmentContributor) => {
       assignmentContributor.teams.map((team) => {
@@ -216,9 +229,10 @@ const Pitch = (): ReactElement => {
                   <EditingClaimCard
                     editors={editorContributors}
                     pitchId={pitchId}
-                    completed={true}
+                    completed={false}
                     callback={fetchAggregatedPitch}
                     team={getTeamWithTargetFromId(teamId)}
+                    pendingEditors={pendingEditors}
                   />
                 );
               }
@@ -226,11 +240,15 @@ const Pitch = (): ReactElement => {
                 <ApproveClaimCard
                   key={idx}
                   pendingContributors={pending}
-                  assignmentContributors={assignment}
+                  assignmentContributors={
+                    getTeamFromId(teamId)?.name === 'Writing'
+                      ? writer
+                      : assignment
+                  }
                   team={getTeamWithTargetFromId(teamId)}
                   pitchId={pitchId}
                   callback={fetchAggregatedPitch}
-                  completed={true}
+                  completed={false}
                 />
               );
             },
