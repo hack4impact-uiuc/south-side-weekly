@@ -1,21 +1,12 @@
 import { omit } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Button, Divider, Icon, Input, Label } from 'semantic-ui-react';
-import { User, Team } from 'ssw-common';
+import { Team, User } from 'ssw-common';
 import Swal from 'sweetalert2';
-import { FieldTag } from '..';
 
-/* import { AdminView, ContributorFeedback, FieldTag, Select, UserChip } from '..';
- */ import { apiCall, isError } from '../../api';
-/* import {
-  addContributorToPitch,
-  changeEditorType,
-  removeContributorFromPitch,
-  updatePitchTeamTarget,
-} from '../../api/pitch'; */
-/* import { getUsersByTeam } from '../../api/user'; */
+import { FieldTag } from '..';
+import { apiCall, isError } from '../../api';
 import { EditorRecord } from '../../pages/Pitch';
-/* import { EditorRecord } from '../../pages/reviewClaim/types'; */
 import { getUserFullName, pluralize } from '../../utils/helpers';
 import ContributorFeedback from '../modal/ContributorFeedback';
 import { SingleSelect } from '../select/SingleSelect';
@@ -87,7 +78,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
   };
 
   const declineClaim = async (userId: string): Promise<void> => {
-    const res = await apiCall<any>({
+    await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/declineClaim`,
       body: {
@@ -102,7 +93,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
     editorId: string,
     editorType: string,
   ): Promise<void> => {
-    const res = await apiCall<any>({
+    await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/approveClaim`,
       body: {
@@ -124,7 +115,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
   ): Promise<void> => {
     removeTemporaryContributor(editorId);
 
-    const res = await apiCall<any>({
+    await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/addContributor/`,
       body: {
@@ -135,8 +126,6 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
         editor: editorType,
       },
     });
-
-    console.log(res);
 
     await callback();
   };
@@ -149,7 +138,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
     userId: string,
     editorType: string,
   ): Promise<void> => {
-    const res = await apiCall<any>({
+    await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/removeContributor`,
       body: {
@@ -160,7 +149,6 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
         editor: editorType,
       },
     });
-    console.log(res);
 
     await callback();
   };
@@ -177,7 +165,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
 
     setEditTargetMode(false);
 
-    const res = await apiCall<any>({
+    await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/teamTarget`,
       body: {
@@ -251,7 +239,6 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
 
       if (!isError(res)) {
         const contributors = res.data.result;
-        console.log('FETCHED CONTRIBUTORS', contributors);
         setAllEditors(contributors);
         setFilteredContributors(filterContributors(contributors));
       }
@@ -290,7 +277,6 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
           </div>
 
           <Button content="Save" color="black" onClick={changeTarget} />
-          {/* <Button content="cancel" /> */}
         </div>
       );
     }
@@ -321,9 +307,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
     from: string,
     to: string,
   ): Promise<void> => {
-    console.log(userId, from, to);
-
-    const res = await apiCall<any>({
+    await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/changeEditor`,
       body: {
@@ -335,7 +319,6 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       },
     });
     await callback();
-    //await void 0;
   };
 
   return (
@@ -347,100 +330,86 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       <Divider />
       {!completed && renderAddContributor()}
       <div className="claim-section">
-        {Object.entries(editors).map(([editorId, editor], idx) => {
-          console.log('hey');
-          return (
-            <div className="claim-row" key={idx}>
-              <UserChip user={omit(editor, 'editorType')} />
+        {Object.entries(editors).map(([editorId, editor], idx) => (
+          <div className="claim-row" key={idx}>
+            <UserChip user={omit(editor, 'editorType')} />
 
-              {completed ? (
-                <ContributorFeedback
-                  user={omit(editor, 'editorType')}
-                  team={team}
-                  pitchId={pitchId}
+            {completed ? (
+              <ContributorFeedback
+                user={omit(editor, 'editorType')}
+                team={team}
+                pitchId={pitchId}
+              />
+            ) : (
+              <div className="dropdown-trash">
+                <SingleSelect
+                  value={editor.editorType}
+                  options={editorTypeDropDownOptions}
+                  onChange={(e) =>
+                    changeEditor(editorId, editor.editorType, e ? e.value : '')
+                  }
+                  placeholder="Editor Type"
+                  className="select-editor-type"
                 />
-              ) : (
-                <div className="dropdown-trash">
-                  <SingleSelect
-                    value={editor.editorType}
-                    options={editorTypeDropDownOptions}
-                    onChange={(e) =>
-                      changeEditor(
-                        editorId,
-                        editor.editorType,
-                        e ? e.value : '',
-                      )
-                    }
-                    placeholder="Editor Type"
-                    className="select-editor-type"
-                  />
-                  <Icon
-                    name="trash"
-                    link
-                    onClick={() => declineClaim(editorId)}
-                  />
-                </div>
-              )}
-            </div>
-          );
-        })}
-
-        {Object.entries(pendingEditors).map(([editorId, editor], idx) => {
-          console.log('hey');
-          return (
-            <div className="claim-row" key={idx}>
-              <UserChip user={omit(editor, 'editorType')} />
-
-              {completed ? (
-                <ContributorFeedback
-                  user={omit(editor, 'editorType')}
-                  team={team}
-                  pitchId={pitchId}
+                <Icon
+                  name="trash"
+                  link
+                  onClick={() => removeContributor(editorId, editor.editorType)}
                 />
-              ) : (
-                <div className="dropdown-trash">
-                  <SingleSelect
-                    value={editor.editorType}
-                    options={editorTypeDropDownOptions}
-                    onChange={(e) => approveClaim(editorId, e ? e.value : '')}
-                    placeholder="Editor Type"
-                    className="select-editor-type"
-                  />
-                  <Icon
-                    name="trash"
-                    link
-                    onClick={() => declineClaim(editorId)}
-                  />
-                </div>
-              )}
-            </div>
-          );
-        })}
+              </div>
+            )}
+          </div>
+        ))}
+
+        {Object.entries(pendingEditors).map(([editorId, editor], idx) => (
+          <div className="claim-row" key={idx}>
+            <UserChip user={omit(editor, 'editorType')} />
+
+            {completed ? (
+              <ContributorFeedback
+                user={omit(editor, 'editorType')}
+                team={team}
+                pitchId={pitchId}
+              />
+            ) : (
+              <div className="dropdown-trash">
+                <SingleSelect
+                  value={editor.editorType}
+                  options={editorTypeDropDownOptions}
+                  onChange={(e) => approveClaim(editorId, e ? e.value : '')}
+                  placeholder="Editor Type"
+                  className="select-editor-type"
+                />
+                <Icon
+                  name="trash"
+                  link
+                  onClick={() => declineClaim(editorId)}
+                />
+              </div>
+            )}
+          </div>
+        ))}
 
         {Object.entries(temporaryContributors).map(
-          ([editorId, editor], idx) => {
-            //const editor = getContributorFromId(userId)!;
-            console.log('jey');
-            return (
-              <div className="claim-row" key={idx}>
-                <UserChip user={omit(editor, 'editorType')} />
-                <div className="dropdown-trash">
-                  <SingleSelect
-                    value={editor.editorType}
-                    options={editorTypeDropDownOptions}
-                    onChange={(e) => addEditor(editorId, e ? e.value : '')}
-                    placeholder="Editor Type"
-                    className="select-editor-type"
-                  />
-                  <Icon
-                    name="trash"
-                    link
-                    onClick={() => removeTemporaryContributor(editorId)}
-                  />
-                </div>
+          ([editorId, editor], idx) => (
+            <div className="claim-row" key={idx}>
+              <UserChip user={omit(editor, 'editorType')} />
+              <div className="dropdown-trash">
+                <SingleSelect
+                  value={editor.editorType}
+                  options={editorTypeDropDownOptions}
+                  onChange={(e) => addEditor(editorId, e ? e.value : '')}
+                  placeholder="Editor Type"
+                  className="select-editor-type"
+                />
+                <Icon
+                  name="trash"
+                  link
+                  onClick={() => removeTemporaryContributor(editorId)}
+                />
               </div>
-            );
-          },
+            </div>
+          ),
         )}
       </div>
     </div>

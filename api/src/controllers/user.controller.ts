@@ -199,8 +199,6 @@ export const getUsersByTeam = async (
     sendNotFound(res, 'Team not found with name');
   }
 
-  console.log(team);
-
   const users = await UserService.getUsersByTeamId(team._id);
 
   sendSuccess(res, 'Successfully retrieved all users on team.', users);

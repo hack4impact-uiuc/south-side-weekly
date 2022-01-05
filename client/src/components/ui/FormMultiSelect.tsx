@@ -60,7 +60,6 @@ export const FormMultiSelect: FC<FormMultiSelectProps> = ({
           {field.value.map((value: string) => {
             if (getTagData) {
               const data = getTagData(value);
-              console.log('DATA', data, value);
               return (
                 <FieldTag name={data?.name} hexcode={data?.color} key={value} />
               );

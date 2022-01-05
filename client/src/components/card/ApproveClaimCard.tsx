@@ -51,7 +51,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
   const addContributor = async (): Promise<void> => {
     setSelectContributorMode(false);
     if (selectedContributor) {
-      const res = await apiCall<any>({
+      await apiCall({
         method: 'PUT',
         url: `/pitches/${pitchId}/addContributor`,
         body: {
@@ -62,13 +62,12 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
           writer: team.name === 'Writing',
         },
       });
-      console.log(res);
     }
     await callback();
   };
 
   const removeContributor = async (userId: string): Promise<void> => {
-    const res = await apiCall<any>({
+    await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/removeContributor`,
       body: {
@@ -79,7 +78,6 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
         writer: team.name === 'Writing',
       },
     });
-    console.log(res);
 
     await callback();
   };
@@ -87,7 +85,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
   const approveClaim = async (userId: string): Promise<void> => {
     setLoading(true);
 
-    const res = await apiCall<any>({
+    await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/approveClaim`,
       body: {
@@ -105,7 +103,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
   };
 
   const declineClaim = async (userId: string): Promise<void> => {
-    const res = await apiCall<any>({
+    await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/declineClaim`,
       body: {
@@ -128,7 +126,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
 
     setEditTargetMode(false);
 
-    const res = await apiCall<any>({
+    await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/teamTarget`,
       body: {
@@ -204,7 +202,6 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
       if (!isError(res)) {
         const contributors = res.data.result;
         setAllTeamContributors(contributors);
-        console.log('FETCHED CONTRIBUTORS', contributors);
         setFilteredContributors(filterContributors(contributors));
       }
     };
@@ -284,7 +281,6 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
       {!completed && renderAddContributor()}
       <div className="claim-section">
         {pendingContributors.map((contributor, idx) => {
-          //console.log("contributor");
           void 0;
           return (
             <div key={idx} className="claim-row">
@@ -308,28 +304,25 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
             </div>
           );
         })}
-        {assignmentContributors.map((contributor, idx) => {
-          console.log(contributor);
-          return (
-            <div key={idx} className="claim-row">
-              <UserChip user={contributor} />
+        {assignmentContributors.map((contributor, idx) => (
+          <div key={idx} className="claim-row">
+            <UserChip user={contributor} />
 
-              {completed ? (
-                <ContributorFeedback
-                  user={contributor}
-                  team={team}
-                  pitchId={pitchId}
-                />
-              ) : (
-                <Icon
-                  name="trash"
-                  link
-                  onClick={() => removeContributor(contributor._id)}
-                />
-              )}
-            </div>
-          );
-        })}
+            {completed ? (
+              <ContributorFeedback
+                user={contributor}
+                team={team}
+                pitchId={pitchId}
+              />
+            ) : (
+              <Icon
+                name="trash"
+                link
+                onClick={() => removeContributor(contributor._id)}
+              />
+            )}
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -19,7 +19,6 @@ interface FormSingleSelectProps extends FieldProps<string> {
   viewable?: boolean;
   editable?: boolean;
   name?: string;
-  tagColor?: string;
 }
 
 export const FormSingleSelect: FC<FormSingleSelectProps> = ({
@@ -29,7 +28,6 @@ export const FormSingleSelect: FC<FormSingleSelectProps> = ({
   label,
   options = [],
   field,
-  tagColor = undefined,
   form: { setFieldValue },
 }): ReactElement => {
   const memoizedJSX = useMemo(

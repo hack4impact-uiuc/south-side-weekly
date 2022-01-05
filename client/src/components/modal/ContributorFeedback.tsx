@@ -10,13 +10,12 @@ import {
   Rating,
   TextArea,
 } from 'semantic-ui-react';
-import { Team, User, UserFeedback, UserFields } from 'ssw-common';
-import { FieldTag } from '..';
+import { Team, UserFeedback, UserFields } from 'ssw-common';
 
+import { FieldTag } from '..';
 import { apiCall, isError } from '../../api';
 import UserChip from '../tag/UserChip';
-/* import FieldTag from '../../FieldTag';
-import UserChip from '../../UserChip'; */
+
 import './ContributorFeedback.scss';
 
 interface FeedbackLabelProps extends ModalProps {
@@ -101,7 +100,6 @@ const ContributorFeedback: FC<ClaimPitchProps> = ({
         method: 'GET',
         url: `/userFeedback/${user._id}/${pitchId}/${team._id}`,
       });
-      //console.log(userId, feedback);
       if (!isError(feedback)) {
         if (isOpen) {
           setRating(feedback.data.result.stars);

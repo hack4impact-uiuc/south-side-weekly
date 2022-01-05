@@ -1,6 +1,6 @@
 import { createContext, useContext } from 'react';
 
-import { defaultAsyncFunc, defaultFunc } from '../../utils/helpers';
+import { defaultAsyncFunc } from '../../utils/helpers';
 
 import { IIssueContext } from './types';
 

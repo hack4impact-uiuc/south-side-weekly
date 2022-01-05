@@ -13,7 +13,6 @@ import { IssuesContext, initialValues, useIssues } from './context';
 
 const IssuesProvider: FC = ({ children }): ReactElement => {
   const [issues, setIssues] = useState<Issue[]>(initialValues.issues);
-  console.log(issues);
 
   const getIssueFromId = (issueId: string): Issue | undefined =>
     issues.find(({ _id }) => _id === issueId);

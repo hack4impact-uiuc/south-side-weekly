@@ -264,7 +264,7 @@ export const approveClaimRequest = async (
   req: ApproveClaimReq,
   res: Response,
 ): Promise<void> => {
-  const { userId, teams, teamId } = req.body;
+  const { userId, teamId } = req.body;
 
   let pitch = await PitchService.approveClaimRequest(
     req.params.id,
@@ -279,12 +279,6 @@ export const approveClaimRequest = async (
     req.query.editor,
     req.query.writer,
   );
-
-  /* pitch = await PitchService.addContributorToAssignmentContributors(
-    req.params.id,
-    userId,
-    teamId,
-  ); */
 
   pitch = await PitchService.decrementTeamTarget(req.params.id, teamId);
 
@@ -420,11 +414,10 @@ export const changeEditor = async (
   );
 };
 
-type AddContributorQuery = {
-  //writer: true | false;
+/* type AddContributorQuery = {
   editor: 'First' | 'Seconds' | 'Thirds' | undefined;
   writer: boolean;
-};
+}; */
 type AddContributorBody = { userId: string; teamId: string };
 type AddContributorReq = Request<IdParam, never, AddContributorBody, any>;
 
@@ -468,10 +461,10 @@ export const addContributor = async (
   );
 };
 
-type RemoveContributorQuery = {
+/* type RemoveContributorQuery = {
   editor: 'First' | 'Seconds' | 'Thirds' | undefined;
   writer: boolean;
-};
+}; */
 type RemoveContributorBody = { userId: string; teamId: string };
 type RemoveContributorReq = Request<IdParam, never, RemoveContributorBody, any>;
 

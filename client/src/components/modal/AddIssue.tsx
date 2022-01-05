@@ -10,10 +10,9 @@ import {
   ModalProps,
 } from 'semantic-ui-react';
 import { IIssue } from 'ssw-common';
+
 import { apiCall, isError } from '../../api';
-
 import { issueTypeEnum } from '../../utils/enums';
-
 import './AddIssue.scss';
 
 interface AddIssueProps extends ModalProps {
@@ -40,7 +39,6 @@ const AddIssue: FC<AddIssueProps> = ({ callback, ...rest }): ReactElement => {
 
     if (!isError(res)) {
       await callback();
-      console.log('SUCCESS');
       toast.success('Successfully added a new issue!');
       setIsOpen(false);
     } else {
@@ -123,13 +121,7 @@ const AddIssue: FC<AddIssueProps> = ({ callback, ...rest }): ReactElement => {
         </div>
       </Modal.Content>
       <Modal.Actions>
-        <Button
-          type="submit"
-          onClick={submitIssue}
-          content="Save"
-          secondary
-          //disabled={didUserClaim() || didUserSubmitClaimReq()}
-        />
+        <Button type="submit" onClick={submitIssue} content="Save" secondary />
       </Modal.Actions>
     </Modal>
   );
