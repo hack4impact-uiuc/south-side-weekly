@@ -1,4 +1,4 @@
-import { IPitch, IUser } from 'ssw-common';
+import { Pitch, User } from 'ssw-common';
 
 import { Sort } from '../../components/table/dynamic/types';
 import { DynamicColumn } from '../../components/Tables/DynamicTable/types';
@@ -8,7 +8,7 @@ import {
   getUserClaimStatusForPitch,
 } from '../../utils/helpers';
 
-type Column = DynamicColumn<IPitch>;
+type Column = DynamicColumn<Pitch>;
 
 const sswEstablishedYear = 1995;
 
@@ -19,14 +19,14 @@ const getYearsSinceSSWEstablished = (): number[] => {
     .map((_, i) => currentYear - i);
 };
 
-const filterCreatedYear = (pitches: IPitch[], year?: number): IPitch[] =>
+const filterCreatedYear = (pitches: Pitch[], year?: number): Pitch[] =>
   pitches.filter((pitch) => new Date(pitch.createdAt).getFullYear() === year);
 
 const filterRequestClaimYear = (
-  pitches: IPitch[],
-  user: IUser,
+  pitches: Pitch[],
+  user: User,
   year?: number,
-): IPitch[] =>
+): Pitch[] =>
   pitches.filter(
     (pitch) =>
       new Date(
@@ -35,15 +35,15 @@ const filterRequestClaimYear = (
   );
 
 const filterPitchStatus = (
-  pitches: IPitch[],
+  pitches: Pitch[],
   status?: keyof typeof pitchStatusEnum,
-): IPitch[] => pitches.filter((pitch) => pitch.status === status);
+): Pitch[] => pitches.filter((pitch) => pitch.status === status);
 
 const filterPitchClaimStatus = (
-  pitches: IPitch[],
-  user: IUser,
+  pitches: Pitch[],
+  user: User,
   status?: keyof typeof pitchStatusEnum,
-): IPitch[] =>
+): Pitch[] =>
   pitches.filter((pitch) => getUserClaimStatusForPitch(pitch, user) === status);
 
 const getInitialSort = (column: Column): Sort<Column> => ({

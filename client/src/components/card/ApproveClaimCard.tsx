@@ -42,9 +42,6 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
   );
   const [selectedContributor, setSelectedContributor] = useState('');
   const [editTargetMode, setEditTargetMode] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  //const team = getTeamFromId(teamId);
 
   const [totalPositions, setTotalPositions] = useState(0);
 
@@ -83,8 +80,6 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
   };
 
   const approveClaim = async (userId: string): Promise<void> => {
-    setLoading(true);
-
     await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/approveClaim`,
@@ -99,7 +94,6 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
     });
 
     await callback();
-    setLoading(false);
   };
 
   const declineClaim = async (userId: string): Promise<void> => {
@@ -245,7 +239,6 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
           </div>
 
           <Button content="Save" color="black" onClick={changeTarget} />
-          {/* <Button content="cancel" /> */}
         </div>
       );
     }
@@ -292,7 +285,6 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
                   positive
                   size="small"
                   onClick={() => approveClaim(contributor._id)}
-                  loading={loading}
                 />
                 <Button
                   content="Decline"

@@ -462,7 +462,7 @@ export const addContributor = async (
   userId: string,
   teamId: string,
   editor: 'First' | 'Seconds' | 'Thirds' | undefined,
-  writer: boolean,
+  writer: string,
 ): Pitch => {
   let pitch;
   if (editor === 'First') {
@@ -483,7 +483,8 @@ export const addContributor = async (
         },
       },
     );
-  } else if (writer) {
+  } else if (writer === 'true') {
+    console.log('WRITER SELECTED', writer);
     pitch = updateModel(
       { _id },
       {
@@ -502,7 +503,7 @@ export const removeContributor = async (
   userId: string,
   teamId: string,
   editor: 'First' | 'Seconds' | 'Thirds' | undefined,
-  writer: boolean,
+  writer: string,
 ): Pitch => {
   let pitch;
 
@@ -524,7 +525,7 @@ export const removeContributor = async (
         },
       },
     );
-  } else if (writer) {
+  } else if (writer === 'true') {
     pitch = await updateModel(
       { _id },
       {
