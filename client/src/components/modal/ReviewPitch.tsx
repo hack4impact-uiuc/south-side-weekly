@@ -352,7 +352,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       </Modal.Content>
       <Modal.Actions>
         <PrimaryButton
-          disabled={false}
+          disabled={user!._id === pitch?.author._id}
           onClick={approvePitch}
           content="Approve"
         />

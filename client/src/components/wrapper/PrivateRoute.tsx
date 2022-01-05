@@ -1,11 +1,13 @@
-import React, { FC, createElement, useMemo } from 'react';
+import React, { FC, createElement, useMemo, ReactElement } from 'react';
 import { Redirect, Route, RouteProps, useLocation } from 'react-router-dom';
 
 import { useAuth } from '../../contexts';
 import { Page } from '../../layouts/page/Page';
 import Loading from '../ui/Loading';
 
-export const PrivateRoute: FC<RouteProps> = ({ ...routeProps }) => {
+export const PrivateRoute: FC<RouteProps> = ({
+  ...routeProps
+}): ReactElement => {
   const { isAuthenticated, isLoading, isRegistered, isOnboarded } = useAuth();
   const location = useLocation();
 

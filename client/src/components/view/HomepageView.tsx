@@ -9,7 +9,7 @@ import { isError, apiCall } from '../../api';
 import { MultiSelectFilter } from '../filter/MultiSelectFilter';
 import { DelayedSearch } from '../search/DelayedSearch';
 import { useAuth } from '../../contexts';
-import { issueStatusEnum, pitchStatusEnum } from '../../utils/enums';
+import { issueStatusEnum } from '../../utils/enums';
 import { HomepageRecords } from '../table/HomepageRecords';
 
 interface PitchesRes {
@@ -40,7 +40,6 @@ export const HomepageView: FC<HomepageViewProps> = ({ type }): ReactElement => {
       hasPublishDate: type === 'published' || undefined,
       'issueStatuses.issueStatus':
         type === 'published' ? issueStatusEnum.PUSH : undefined,
-      status: type === 'submitted' ? pitchStatusEnum.PENDING : undefined,
       author: type === 'submitted' ? user?._id : undefined,
       'pendingContributors.userId':
         type === 'claim-submitted' ? user?._id : undefined,
@@ -54,7 +53,7 @@ export const HomepageView: FC<HomepageViewProps> = ({ type }): ReactElement => {
       case 'member':
         return `/users/${user?._id}/pitches`;
       case 'submitted':
-        return '/pitches/pending';
+        return '/pitches';
       case 'claim-submitted':
         return `/pitches/approved`;
       case 'published':

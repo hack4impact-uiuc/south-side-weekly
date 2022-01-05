@@ -5,11 +5,14 @@ import { Resource, Team } from 'ssw-common';
 
 import { apiCall, isError } from '../api';
 import { useAuth, useTeams } from '../contexts';
-import { ResourceModal, Walkthrough, ResourceTable } from '../components';
+import { ResourceModal, Walkthrough } from '../components';
 import { pagesEnum } from '../utils/enums';
 import { AuthView } from '../components/wrapper/AuthView';
 import { PrimaryButton } from '../components/ui/PrimaryButton';
 import { SecondaryButton } from '../components/ui/SecondaryButton';
+import DynamicTable, {
+  configureColumn,
+} from '../components/table/dynamic/DynamicTable2.0';
 
 import './Resources.scss';
 
@@ -39,12 +42,12 @@ const Resources = (): ReactElement => {
   });
   const tabs = [generalTeam, ...teams];
 
-  const filterResources = (team: string): Resource[] => {
-    if (team === 'General') {
-      return resources.filter((resource) => resource.isGeneral);
-    }
-    return resources.filter((resource) => resource.teams.includes(team));
-  };
+  // const filterResources = (team: string): Resource[] => {
+  //   if (team === 'General') {
+  //     return resources.filter((resource) => resource.isGeneral);
+  //   }
+  //   return resources.filter((resource) => resource.teams.includes(team));
+  // };
 
   const getResources = async (): Promise<void> => {
     const res = await apiCall<{ data: Resource[]; count: number }>({
@@ -140,10 +143,30 @@ const Resources = (): ReactElement => {
           </Menu>
         </div>
         <div className="page-inner-content">
-          <ResourceTable
+          {/* <ResourceTable
             resource={filterResources(selectedTab)}
             handleOpen={handleResourceAction}
             isAdmin={isAdmin}
+          /> */}
+          <DynamicTable<Resource>
+            records={resources}
+            columns={[
+              configureColumn({
+                id: 'name',
+                value: 'Title',
+                extractor: 'name',
+                sorter: (a, b) => a.name.localeCompare(b.name),
+              }),
+              configureColumn({
+                id: 'visibility',
+                value: 'Visibility',
+                extractor: 'visibility',
+                width: 2,
+              }),
+            ]}
+            sortable
+            onRecordClick={handleResourceAction}
+            sortType="query"
           />
         </div>
       </div>

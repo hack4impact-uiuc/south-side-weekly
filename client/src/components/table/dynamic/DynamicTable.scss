@@ -1,0 +1,10 @@
+@import '../../../styles/colors.scss';
+
+.dynamic-table {
+  .selectable {
+    &:hover {
+      background-color: darken(white, 10%);
+      cursor: pointer;
+    }
+  }
+}
