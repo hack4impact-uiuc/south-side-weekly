@@ -1,7 +1,14 @@
 import { AsYouType } from 'libphonenumber-js';
 import { camelCase, isUndefined, reject, startCase } from 'lodash';
 import { DropdownItemProps } from 'semantic-ui-react';
-import { IUser, IPitch, BasePopulatedUser } from 'ssw-common';
+import {
+  IUser,
+  IPitch,
+  BasePopulatedUser,
+  BasePopulatedPitch,
+  TeamFields,
+  FullPopulatedPitch,
+} from 'ssw-common';
 
 import { pitchStatusEnum } from './enums';
 
@@ -35,21 +42,19 @@ const getUserTeamsForPitch = (
  *
  * @param pitch the pitch to check
  * @param user the user to look at teams for
- * @returns an array of all the team IDs belonging to the user or undefined if the user isn't on the pitch
+ * @returns an array of all the teams belonging to the user
  */
 const getPitchTeamsForContributor = (
-  pitch: IPitch,
-  user: IUser,
-): string[] | undefined => {
-  type Contributor = IPitch['assignmentContributors'][0];
+  pitch: BasePopulatedPitch | FullPopulatedPitch,
+  user: BasePopulatedUser,
+): TeamFields[] | undefined => {
+  type Contributor = BasePopulatedPitch['assignmentContributors'][0];
   const isUser = (contributor: Contributor): boolean =>
-    contributor.userId === user._id;
+    contributor.userId._id === user._id;
 
-  const contributor =
-    pitch.assignmentContributors.find(isUser) ||
-    pitch.pendingContributors.find(isUser);
+  const contributor = pitch.assignmentContributors.find(isUser);
 
-  return contributor?.teams;
+  return contributor?.teams ?? [];
 };
 
 type PendingContributor = IPitch['pendingContributors'][0];
@@ -61,14 +66,34 @@ type PendingContributor = IPitch['pendingContributors'][0];
  * @returns the pending contributor object
  */
 const findPendingContributor = (
-  pitch: IPitch,
-  user: IUser,
-): PendingContributor | undefined =>
-  pitch.pendingContributors.find(
+  pitch: IPitch | BasePopulatedPitch,
+  user: IUser | BasePopulatedUser,
+): PendingContributor | undefined => {
+  if (pitch.pendingContributors.length === 0) {
+    return undefined;
+  }
+
+  return (pitch as BasePopulatedPitch).pendingContributors.find(
     (contributor) => contributor.userId === user._id,
   );
+};
 
-type AssignmentContributor = IPitch['assignmentContributors'][0];
+type FullPendingContributor = FullPopulatedPitch['pendingContributors'][0];
+/**
+ * Find a pending contributor on a pitch that matches a given user
+ *
+ * @param pitch the pitch to check
+ * @param user the user to patch
+ * @returns the fully populated pending contributor object
+ */
+const findFullPendingContributor = (
+  pitch: FullPopulatedPitch,
+  user: BasePopulatedUser | IUser,
+): FullPendingContributor | undefined =>
+  pitch.pendingContributors.find(
+    (contributor) => contributor.userId._id === user._id,
+  );
+
 /**
  * Find an assignment contributor on a pitch that matches a given user
  *
@@ -77,12 +102,37 @@ type AssignmentContributor = IPitch['assignmentContributors'][0];
  * @returns the assignment contributor object
  */
 const findAssignmentContributor = (
-  pitch: IPitch,
-  user: IUser,
-): AssignmentContributor | undefined =>
+  pitch: BasePopulatedPitch,
+  user: BasePopulatedUser,
+): BasePopulatedPitch['assignmentContributors'][0] | undefined =>
   pitch.assignmentContributors.find(
-    (contributor) => contributor.userId === user._id,
+    (contributor) => contributor.userId._id === user._id,
   );
+
+/**
+ * Check if an assignment contributor is found on a pitch
+ *
+ * @param pitch the pitch to check
+ * @param user the user to match
+ * @returns whether or not the assignment contributor is found on the pitch
+ */
+const hasAssignmentContributor = (
+  pitch: IPitch | BasePopulatedPitch | FullPopulatedPitch,
+  user: IUser | BasePopulatedUser,
+): boolean => {
+  if (typeof pitch.author === 'string') {
+    return (
+      (pitch as IPitch).assignmentContributors.find(
+        (contributor) => contributor.userId === user._id,
+      ) !== undefined
+    );
+  }
+  return (
+    (pitch as BasePopulatedPitch).assignmentContributors.find(
+      (contributor) => contributor.userId._id === user._id,
+    ) !== undefined
+  );
+};
 
 type PitchClaimStatus = typeof pitchStatusEnum[keyof typeof pitchStatusEnum];
 /**
@@ -93,14 +143,19 @@ type PitchClaimStatus = typeof pitchStatusEnum[keyof typeof pitchStatusEnum];
  * @returns the user's pitch claim status
  */
 const getUserClaimStatusForPitch = (
-  pitch: IPitch,
-  user: IUser,
+  pitch: IPitch | BasePopulatedPitch | FullPopulatedPitch,
+  user: IUser | BasePopulatedUser,
 ): PitchClaimStatus => {
-  if (findAssignmentContributor(pitch, user)) {
+  if (hasAssignmentContributor(pitch, user)) {
     return pitchStatusEnum.APPROVED;
   }
 
-  const pendingContributor = findPendingContributor(pitch, user);
+  const base =
+    pitch.pendingContributors.length === 0 ||
+    typeof pitch.pendingContributors[0].userId === 'string';
+  const pendingContributor = base
+    ? findPendingContributor(pitch as BasePopulatedPitch, user)
+    : findFullPendingContributor(pitch as FullPopulatedPitch, user);
   if (pendingContributor) {
     return pendingContributor.status;
   }
@@ -356,6 +411,7 @@ export {
   getPitchTeamsForContributor,
   getUserTeamsForPitch,
   findPendingContributor,
+  findFullPendingContributor,
   findAssignmentContributor,
   getUserClaimStatusForPitch,
   filterPitchesByInterests,

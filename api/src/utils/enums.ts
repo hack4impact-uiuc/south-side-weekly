@@ -25,6 +25,7 @@ const onboardingStatusEnum = {
 };
 
 const pagesEnum = {
+  HOMEPAGE: 'HOMEPAGE',
   PITCHDOC: 'PITCHDOC',
   DIRECTORY: 'DIRECTORY',
   RESOURCES: 'RESOURCES',

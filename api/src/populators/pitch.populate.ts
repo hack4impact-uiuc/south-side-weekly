@@ -46,7 +46,7 @@ export const populatePitch = async (
   return await Pitch.populate(pitch, allOptions);
 };
 
-export const popoulatePitches = async (
+export const populatePitches = async (
   pitches: PopulateType<PitchSchema>,
   type: populateTypes,
 ): Promise<PopulateType<PitchSchema[] | LeanDocument<PitchSchema[]>>> =>

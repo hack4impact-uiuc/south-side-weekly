@@ -19,15 +19,17 @@ interface PaginateOptions<T> {
     setOpen: React.Dispatch<React.SetStateAction<boolean>>,
   ) => ReactElement;
   onRecordClick?: (record: T) => void;
+  emptyMessage?: string;
 }
 
 export const PaginatedTable = <T,>({
   records,
   getModal,
+  onRecordClick,
   count,
   columns,
   pageOptions,
-  onRecordClick,
+  emptyMessage,
 }: PaginateOptions<T>): ReactElement => {
   const [query, setQuery] = useQueryParams({
     limit: StringParam,
@@ -76,7 +78,7 @@ export const PaginatedTable = <T,>({
           records,
           columns,
         }}
-        emptyMessage="There are no users."
+        emptyMessage={emptyMessage}
         footer={
           <Table.HeaderCell>
             <Pagination

@@ -8,6 +8,13 @@ export interface DynamicColumn<T> {
   extractor: keyof T | ((record: T) => ReactNode);
 }
 
+type PaginatedColumnOmittedFields = 'sorter';
+
+export interface PaginatedColumn<T>
+  extends Omit<DynamicColumn<T>, PaginatedColumnOmittedFields> {
+  key?: keyof T;
+}
+
 export type SortDirection = 'ascending' | 'descending';
 
 export type Sort<T> = {

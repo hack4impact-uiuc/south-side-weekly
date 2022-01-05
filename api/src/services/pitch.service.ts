@@ -1,6 +1,6 @@
 import _ from 'lodash';
 import { Condition } from 'mongodb';
-import { FilterQuery, LeanDocument, UpdateQuery } from 'mongoose';
+import { FilterQuery, LeanDocument, UpdateQuery, Types } from 'mongoose';
 import { BasePopulatedUser, IPitch } from 'ssw-common';
 import { IssueService, UserService } from '.';
 
@@ -543,4 +543,32 @@ export const removeContributor = async (
   }
 
   return pitch;
+};
+
+export const getMemberPitches = async (
+  _id: string,
+  options?: PaginateOptions<PitchSchema>,
+): Promise<{
+  data: LeanDocument<PitchSchema>[];
+  count: number;
+}> => {
+  const filteredPitches = await paginate(
+    {
+      $or: [
+        {
+          author: _id,
+        },
+        { writer: _id },
+        {
+          'assignmentContributors.userId': Types.ObjectId(_id),
+        },
+        { primaryEditor: _id },
+        { secondEditors: _id },
+        { thirdEditors: _id },
+      ],
+    },
+    options,
+  );
+
+  return filteredPitches;
 };

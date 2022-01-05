@@ -1,11 +1,11 @@
 import React, { FC, ReactElement } from 'react';
-import { Interest, Team } from 'ssw-common';
+import { Interest, InterestFields, Team, TeamFields } from 'ssw-common';
 import { LabelProps } from 'semantic-ui-react';
 
 import { FieldTag } from '../tag/FieldTag';
 
 interface TagListProps extends LabelProps {
-  tags: Team[] | Interest[];
+  tags: TeamFields[] | InterestFields[] | Team[] | Interest[];
 }
 
 export const TagList: FC<TagListProps> = ({

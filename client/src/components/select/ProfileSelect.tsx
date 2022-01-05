@@ -16,9 +16,9 @@ interface TriggerProps {
 
 const Trigger: FC<TriggerProps> = ({ user }): ReactElement => (
   <div style={{ display: 'flex', alignItems: 'center' }}>
-    <div style={{ marginRight: 10 }}>
+    {/* <div style={{ marginRight: 10 }}>
       <p>{`Welcome, ${user.fullname}`}</p>
-    </div>
+    </div> */}
     <UserPicture user={user} />
   </div>
 );
@@ -57,7 +57,7 @@ const ProfileSelect: FC<DropdownProps> = ({ ...rest }): ReactElement => {
       item
       trigger={<Trigger user={user!} />}
     >
-      <Dropdown.Menu>
+      <Dropdown.Menu style={{ width: '200px' }}>
         <AuthView view="isOnboarded">
           <Dropdown.Item
             value="profile"
@@ -69,7 +69,7 @@ const ProfileSelect: FC<DropdownProps> = ({ ...rest }): ReactElement => {
         <Dropdown.Item
           value="logout"
           text="Logout"
-          icon="logout"
+          icon="log out"
           onClick={(e, { value }) => handleClick(value as string)}
         />
       </Dropdown.Menu>

@@ -5,16 +5,18 @@ import { useAuth } from '../../contexts';
 
 import { TagList } from './TagList';
 
+export type ClaimableTeamsPitch = Pick<
+  BasePopulatedPitch,
+  'teams' | 'primaryEditor' | 'secondEditors' | 'thirdEditors' | 'writer'
+>;
+
 interface Props {
-  pitch: BasePopulatedPitch;
+  pitch: ClaimableTeamsPitch;
 }
 
 export const getClaimableTeams = (
   user: Pick<BasePopulatedUser, 'role' | 'teams'>,
-  pitch: Pick<
-    BasePopulatedPitch,
-    'teams' | 'primaryEditor' | 'secondEditors' | 'thirdEditors' | 'writer'
-  > | null,
+  pitch: ClaimableTeamsPitch | null,
 ): { teamId: Team; target: number }[] => {
   if (pitch === null) {
     return [];
