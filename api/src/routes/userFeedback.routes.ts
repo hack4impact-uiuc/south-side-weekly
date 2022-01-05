@@ -27,6 +27,13 @@ router.get(
   errorWrap(UserFeedbackController.getAllFeedbackForUser),
 );
 
+// GET /api/userFeedback/:userId/:pitchId/:teamId
+router.get(
+  '/:userId/:pitchId/:teamId',
+  requireRegistered,
+  errorWrap(UserFeedbackController.getUserFeedbackForPitch),
+);
+
 // POST /api/userFeedback
 router.post(
   '/',

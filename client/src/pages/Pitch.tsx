@@ -216,7 +216,7 @@ const Pitch = (): ReactElement => {
                   <EditingClaimCard
                     editors={editorContributors}
                     pitchId={pitchId}
-                    completed={statusIsCompleted}
+                    completed={true}
                     callback={fetchAggregatedPitch}
                     team={getTeamWithTargetFromId(teamId)}
                   />
@@ -230,7 +230,7 @@ const Pitch = (): ReactElement => {
                   team={getTeamWithTargetFromId(teamId)}
                   pitchId={pitchId}
                   callback={fetchAggregatedPitch}
-                  completed={statusIsCompleted}
+                  completed={true}
                 />
               );
             },

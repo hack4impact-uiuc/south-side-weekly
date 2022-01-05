@@ -17,6 +17,7 @@ import { FieldTag } from '..';
 import { EditorRecord } from '../../pages/Pitch';
 /* import { EditorRecord } from '../../pages/reviewClaim/types'; */
 import { getUserFullName, pluralize } from '../../utils/helpers';
+import ContributorFeedback from '../modal/ContributorFeedback';
 import { SingleSelect } from '../select/SingleSelect';
 import UserChip from '../tag/UserChip';
 import { AuthView } from '../wrapper/AuthView';
@@ -317,13 +318,11 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
               <UserChip user={omit(editor, 'editorType')} />
 
               {completed ? (
-                {
-                  /* <ContributorFeedback
+                <ContributorFeedback
                   user={omit(editor, 'editorType')}
                   team={team}
                   pitchId={pitchId}
-                /> */
-                }
+                />
               ) : (
                 <div className="dropdown-trash">
                   <SingleSelect

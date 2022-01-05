@@ -12,6 +12,7 @@ import Swal from 'sweetalert2';
 import { FieldTag } from '..';
 import { apiCall, isError } from '../../api';
 import { getUserFullName, pluralize } from '../../utils/helpers';
+import ContributorFeedback from '../modal/ContributorFeedback';
 import { SingleSelect } from '../select/SingleSelect';
 import UserChip from '../tag/UserChip';
 import { AuthView } from '../wrapper/AuthView';
@@ -304,13 +305,11 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
               <UserChip user={contributor} />
 
               {completed ? (
-                {
-                  /* <ContributorFeedback
+                <ContributorFeedback
                   user={contributor}
                   team={team}
                   pitchId={pitchId}
-                /> */
-                }
+                />
               ) : (
                 <Icon
                   name="trash"
