@@ -58,7 +58,6 @@ const issueStatus = new mongoose.Schema(
 const Pitch = new mongoose.Schema(
   {
     title: { type: String, default: null, required: true },
-    issues: [{ type: Schema.Types.ObjectId, ref: 'Issue', required: true }],
     author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     primaryEditor: {
       type: Schema.Types.ObjectId,

@@ -4,7 +4,6 @@ import { InterestFields, TeamFields, UserFields } from "./_types";
 export interface Pitch {
   _id: string;
   title: string;
-  issues: string[];
   author: string;
   writer: string;
   primaryEditor: string;
@@ -77,7 +76,6 @@ export interface PendingContributor {
 }
 
 export interface FullPopulatedPitch extends Omit<Pitch, FullPitchOmitFields> {
-  issues: Issue[];
   pendingContributors: PendingContributor[];
   teams: {
     teamId: TeamFields;
