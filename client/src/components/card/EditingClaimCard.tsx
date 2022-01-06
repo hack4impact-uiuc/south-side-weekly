@@ -364,29 +364,16 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
         {Object.entries(pendingEditors).map(([editorId, editor], idx) => (
           <div className="claim-row" key={idx}>
             <UserChip user={omit(editor, 'editorType')} />
-
-            {completed ? (
-              <ContributorFeedback
-                user={omit(editor, 'editorType')}
-                team={team}
-                pitchId={pitchId}
+            <div className="dropdown-trash">
+              <SingleSelect
+                value={editor.editorType}
+                options={editorTypeDropDownOptions}
+                onChange={(e) => approveClaim(editorId, e ? e.value : '')}
+                placeholder="Editor Type"
+                className="select-editor-type"
               />
-            ) : (
-              <div className="dropdown-trash">
-                <SingleSelect
-                  value={editor.editorType}
-                  options={editorTypeDropDownOptions}
-                  onChange={(e) => approveClaim(editorId, e ? e.value : '')}
-                  placeholder="Editor Type"
-                  className="select-editor-type"
-                />
-                <Icon
-                  name="trash"
-                  link
-                  onClick={() => declineClaim(editorId)}
-                />
-              </div>
-            )}
+              <Icon name="trash" link onClick={() => declineClaim(editorId)} />
+            </div>
           </div>
         ))}
 
