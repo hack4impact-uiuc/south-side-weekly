@@ -13,14 +13,12 @@ interface Props extends TabProps {
   }[];
   className?: string;
   adminView?: boolean;
-  button?: ReactNode;
 }
 
 export const Tabs: FC<Props> = ({
   views,
   className,
   adminView = false,
-  button,
   ...rest
 }): ReactElement => {
   const panes = useMemo(() => {

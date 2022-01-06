@@ -52,7 +52,7 @@ const Homepage = (): ReactElement => {
         </div>
       </div>
 
-      <Tabs views={views} button={<SubmitPitchModal />} />
+      <Tabs views={views} />
     </div>
   );
 };
