@@ -50,6 +50,9 @@
         position: relative;
       }
     }
+    .right {
+      justify-content: flex-end !important;
+    }
   }
   .add-issue {
     position: absolute;

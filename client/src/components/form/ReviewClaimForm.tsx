@@ -236,7 +236,7 @@ export const ReviewClaimForm: FC<FormProps> = ({ pitch }): ReactElement => {
               </div>
             </div>
             {editMode && (
-              <div className="row">
+              <div className="row right">
                 <Button
                   content="Cancel"
                   onClick={() => {
