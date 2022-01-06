@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, ReactNode, useMemo } from 'react';
+import React, { FC, ReactElement, useMemo } from 'react';
 import { Tab, TabProps } from 'semantic-ui-react';
 import cn from 'classnames';
 
