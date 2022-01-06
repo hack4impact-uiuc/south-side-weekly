@@ -8,6 +8,7 @@ import { pagesEnum } from '../../utils/enums';
 import './styles.scss';
 import '../pages.scss';
 import { HomepageView } from '../../components/view/HomepageView';
+import { Pusher } from '../../components/ui/Pusher';
 
 const Homepage = (): ReactElement => {
   const { isAdmin } = useAuth();
@@ -45,6 +46,10 @@ const Homepage = (): ReactElement => {
           page={pagesEnum.PITCHDOC}
           content="The Pitch Doc is where you can claim, submit, and view pitches! Use the filters to find pitches you are interested in."
         />
+        <div className="header">
+          <Pusher />
+          <SubmitPitchModal />
+        </div>
       </div>
 
       <Tabs views={views} button={<SubmitPitchModal />} />

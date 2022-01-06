@@ -24,21 +24,17 @@ export const Tabs: FC<Props> = ({
   ...rest
 }): ReactElement => {
   const panes = useMemo(() => {
-    const tabPanes: { menuItem: any; render?: () => ReactElement }[] =
-      views.map(({ title, content }) => ({
-        menuItem: title,
-        render: function show() {
-          return <Tab.Pane>{content}</Tab.Pane>;
-        },
-      }));
-
-    if (button) {
-      tabPanes.push({
-        menuItem: <div className="button-tab">{button}</div>,
-      });
-    }
+    const tabPanes: {
+      menuItem: any;
+      render?: () => ReactElement | undefined;
+    }[] = views.map(({ title, content }) => ({
+      menuItem: title,
+      render: function show() {
+        return <Tab.Pane>{content}</Tab.Pane>;
+      },
+    }));
     return tabPanes;
-  }, [views, button]);
+  }, [views]);
 
   const tabs = (
     <Tab
