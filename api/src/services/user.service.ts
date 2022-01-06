@@ -256,7 +256,7 @@ export const addFeedback = async (
   }
 
   const numFeedbacks = user.feedback.length;
-  const sum = feedback.stars * (numFeedbacks - 1) + feedback.stars;
+  const sum = user.rating * (numFeedbacks - 1) + feedback.stars;
   await updateModel({ _id }, { $set: { rating: sum / numFeedbacks } });
 };
 
