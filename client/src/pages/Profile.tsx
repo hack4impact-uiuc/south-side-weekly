@@ -210,23 +210,29 @@ const Profile = (): ReactElement => {
             </Grid.Column>
 
             <Grid.Column textAlign="left" width={2}>
-              <h4>Teams</h4>
-              <TagList
-                size="medium"
-                className="tag-spacing"
-                tags={user.teams}
-              />
+              <div>
+                <h4>Teams</h4>
+              </div>
+              <div className="tag-col">
+                <TagList
+                  size="medium"
+                  className="tag-spacing"
+                  tags={user.teams}
+                />
+              </div>
             </Grid.Column>
 
             <Grid.Column textAlign="left" width={2}>
               <div>
                 <h4>Topic Interests</h4>
               </div>
-              <TagList
-                size="medium"
-                className="tag-spacing"
-                tags={user.interests}
-              />
+              <div className="tag-col">
+                <TagList
+                  size="medium"
+                  className="tag-spacing"
+                  tags={user.interests}
+                />
+              </div>
             </Grid.Column>
 
             <Grid.Column width={2}>
