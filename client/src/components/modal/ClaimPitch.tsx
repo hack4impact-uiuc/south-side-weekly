@@ -124,6 +124,7 @@ export const ClaimPitch: FC<ClaimPitchProps> = ({
           <Message
             header="Wait!"
             content="You have already claimed this pitch"
+            warning
           />
         )}
         <div className="flex-wrapper">

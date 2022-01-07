@@ -1,5 +1,5 @@
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
-import { Icon, Input, Modal, ModalProps } from 'semantic-ui-react';
+import { Icon, Input, Message, Modal, ModalProps } from 'semantic-ui-react';
 import { BasePopulatedPitch, BasePopulatedUser } from 'ssw-common';
 import cn from 'classnames';
 import toast from 'react-hot-toast';
@@ -171,6 +171,13 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
         <Icon name="close" onClick={() => setOpen(false)} />
       </Modal.Header>
       <Modal.Content scrolling>
+        {user!._id === pitch?.author._id && (
+          <Message
+            warning
+            header="Wait!"
+            content="You have already claimed this pitch"
+          />
+        )}
         <div className="flex-wrapper">
           <div id="title">
             <h2>{pitch?.title}</h2>

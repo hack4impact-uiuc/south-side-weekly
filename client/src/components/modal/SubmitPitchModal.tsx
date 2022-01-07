@@ -70,8 +70,8 @@ export const SubmitPitchModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
       author: user!._id,
     };
 
-    if (!data.writerIntent) {
-      delete body.writer;
+    if (data.writerIntent === 'false') {
+      body.writer = undefined;
     }
 
     const res = await apiCall({
@@ -121,7 +121,7 @@ export const SubmitPitchModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
             assignmentGoogleDocLink: '',
             topics: [],
             conflictOfInterest: false,
-            writerIntent: false,
+            writerIntent: undefined,
           }}
           onSubmit={submitPitch}
         />

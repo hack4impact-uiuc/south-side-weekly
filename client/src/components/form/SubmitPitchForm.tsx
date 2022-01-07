@@ -16,7 +16,7 @@ const schema = yup.object({
   assignmentGoogleDocLink: yup.string().required(),
   description: yup.string().required(),
   topics: yup.array().of(yup.string().required()).required().min(1),
-  writerIntent: yup.boolean().required(),
+  writerIntent: yup.string().required(),
   conflictOfInterest: yup.boolean().required(),
 });
 
@@ -29,7 +29,7 @@ export interface SubmitPitchFields
     | 'topics'
     | 'conflictOfInterest'
   > {
-  writerIntent: boolean;
+  writerIntent?: string;
 }
 
 interface FormProps extends FormikConfig<SubmitPitchFields> {
