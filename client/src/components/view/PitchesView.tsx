@@ -41,6 +41,8 @@ export const PitchesView: FC<PitchesViewProps> = ({ type }): ReactElement => {
       hasPublishDate: params.get('hasPublishDate'),
       hasNoPublishDate: params.get('hasNoPublishDate'),
       status: type === 'review-unclaimed' ? 'unclaimed' : undefined,
+      sortBy: params.get('sortBy'),
+      orderBy: params.get('orderBy'),
     };
 
     return _.omitBy(q, _.isNil);

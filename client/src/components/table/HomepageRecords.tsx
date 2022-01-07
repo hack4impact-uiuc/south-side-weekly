@@ -122,6 +122,8 @@ export const HomepageRecords: FC<TableProps> = ({ data, count, type }) => {
       pageOptions={['1', '10', '25', '50']}
       onRecordClick={viewPitch}
       emptyMessage="There are no pitches in this category."
+      sortType="query"
+      sortable
     />
   );
 };
