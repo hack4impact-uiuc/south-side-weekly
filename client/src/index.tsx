@@ -21,7 +21,7 @@ import Wizard from './wizard';
 import { PrivateRoute } from './components';
 import 'semantic-ui-css/semantic.min.css';
 import './styles/styles.scss';
-import Homepage from './pages/home';
+import Homepage from './pages/home/Homepage';
 import { Providers } from './components/wrapper/Providers';
 import { PitchDocPage } from './pages/PitchDoc';
 
