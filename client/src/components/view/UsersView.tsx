@@ -40,6 +40,8 @@ export const UsersView: FC<UsersViewProps> = ({ type }): ReactElement => {
       interests__all: params.get('interests__all'),
       role: params.get('role'),
       activityStatus: params.get('activityStatus'),
+      sortBy: params.get('sortBy'),
+      orderBy: params.get('orderBy'),
     };
 
     return _.omitBy(q, _.isNil);
@@ -60,13 +62,14 @@ export const UsersView: FC<UsersViewProps> = ({ type }): ReactElement => {
       }
     };
 
+    toast.loading('Loading users...');
     queryUsers();
   }, [queryParams, type]);
 
   useEffect(() => {
     setData({ users: [], count: 0 });
     setQuery({ limit: 10, offset: 0 }, 'push');
-    toast.loading(`Loading ${type} users...`, { position: 'bottom-right' });
+    toast.loading(`Loading ${type} users...`);
   }, [type, setQuery]);
 
   return (

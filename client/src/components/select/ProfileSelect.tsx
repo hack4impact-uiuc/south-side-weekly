@@ -32,7 +32,7 @@ const logout = async (): Promise<void> => {
   if (!isError(res)) {
     window.location.reload();
   } else {
-    toast.error('Error logging out', { position: 'bottom-right' });
+    toast.error('Error logging out');
   }
 };
 

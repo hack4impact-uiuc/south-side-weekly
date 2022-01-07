@@ -163,9 +163,9 @@ export const approveUser = async (user: BasePopulatedUser): Promise<void> => {
   });
 
   if (!isError(res)) {
-    toast.success('User approved', { position: 'bottom-right' });
+    toast.success('User approved');
   } else {
-    toast.error('Error approving user', { position: 'bottom-right' });
+    toast.error('Error approving user');
   }
 };
 
@@ -176,8 +176,8 @@ export const rejectUser = async (user: BasePopulatedUser): Promise<void> => {
   });
 
   if (!isError(res)) {
-    toast.success('User rejected', { position: 'bottom-right' });
+    toast.success('User rejected');
   } else {
-    toast.error('Error rejecting user', { position: 'bottom-right' });
+    toast.error('Error rejecting user');
   }
 };

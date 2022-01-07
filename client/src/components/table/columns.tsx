@@ -26,7 +26,10 @@ import { LinkDisplay } from '../ui/LinkDisplayButton';
 import { PrimaryButton } from '../ui/PrimaryButton';
 import { SecondaryButton } from '../ui/SecondaryButton';
 
-export const profilePic = buildColumn({
+import { configureColumn } from './dynamic/DynamicTable2.0';
+
+export const profilePic = configureColumn<BasePopulatedUser>({
+  id: 'profilePic',
   title: '',
   width: 1,
   extractor: function Pic(user: BasePopulatedUser) {
@@ -36,24 +39,28 @@ export const profilePic = buildColumn({
   },
 });
 
-export const nameColumn = buildColumn({
+export const nameColumn = configureColumn<BasePopulatedUser>({
+  id: 'firstName',
   title: 'Name',
-  width: 2,
+  width: 3,
   extractor: function getName(user: BasePopulatedUser) {
-    return `${user.fullname} (${user.pronouns.join('/')})`;
+    return `${user.joinedNames} (${user.pronouns.join('/')})`;
   },
-  sorter: (a, b) => a.fullname.localeCompare(b.fullname),
+  sortable: true,
 });
 
-export const roleColumn = buildColumn({
+export const roleColumn = configureColumn<BasePopulatedUser>({
+  id: 'role',
   title: 'Role',
   width: 2,
   extractor: function getRoles(user: BasePopulatedUser) {
     return <FieldTag size="tiny" content={user.role} />;
   },
+  sortable: true,
 });
 
-export const teamsColumn = buildColumn({
+export const teamsColumn = configureColumn<BasePopulatedUser>({
+  id: 'teams',
   title: 'Teams',
   width: 2,
   extractor: function getTeams(user: BasePopulatedUser) {
@@ -61,14 +68,20 @@ export const teamsColumn = buildColumn({
   },
 });
 
-export const interestsColumn = buildColumn({
+export const interestsColumn = configureColumn<BasePopulatedUser>({
+  id: 'interests',
   title: 'Interests',
   extractor: function getInterests(user: BasePopulatedUser) {
-    return <TagList size="tiny" tags={user.interests} />;
+    return (
+      <>
+        <TagList size="tiny" tags={user.interests} limit={3} />
+      </>
+    );
   },
 });
 
-export const statusColumn = buildColumn({
+export const statusColumn = configureColumn<BasePopulatedUser>({
+  id: 'activityStatus',
   title: 'Status',
   width: 1,
   extractor: function getStatus(user: BasePopulatedUser) {
@@ -76,23 +89,27 @@ export const statusColumn = buildColumn({
   },
 });
 
-export const ratingColumn = buildColumn({
+export const ratingColumn = configureColumn<BasePopulatedUser>({
+  id: 'rating',
   title: 'Rating',
   width: 2,
   extractor: function getRating(user: BasePopulatedUser) {
     return `${user.rating ? user.rating.toFixed(2) : '-'} / 5`;
   },
+  sortable: true,
 });
 
-export const joinedColumn = buildColumn({
+export const joinedColumn = configureColumn<BasePopulatedUser>({
+  id: 'dateJoined',
   title: 'Joined',
   width: 2,
   extractor: function getJoined(user: BasePopulatedUser) {
     return new Date(user.dateJoined).toLocaleDateString();
   },
+  sortable: true,
 });
 
-export const actionColumn = buildColumn({
+export const actionColumn = configureColumn<BasePopulatedUser>({
   title: '',
   width: 2,
   extractor: function getAction(user: BasePopulatedUser) {
@@ -114,7 +131,8 @@ export const actionColumn = buildColumn({
   },
 });
 
-export const rejectionColumn = buildColumn({
+export const rejectionColumn = configureColumn<BasePopulatedUser>({
+  id: 'onboardReasoning',
   title: 'Rejection Reasoning',
   extractor: 'onboardReasoning',
 });

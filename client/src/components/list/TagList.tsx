@@ -6,15 +6,17 @@ import { FieldTag } from '../tag/FieldTag';
 
 interface TagListProps extends LabelProps {
   tags: TeamFields[] | InterestFields[] | Team[] | Interest[];
+  limit?: number;
 }
 
 export const TagList: FC<TagListProps> = ({
   tags,
   size = 'small',
+  limit,
   ...rest
 }): ReactElement => (
   <>
-    {tags.map((tag) => (
+    {tags.slice(0, limit || tags.length).map((tag) => (
       <FieldTag
         {...rest}
         size={size}
@@ -23,5 +25,6 @@ export const TagList: FC<TagListProps> = ({
         hexcode={tag.color}
       />
     ))}
+    {limit && tags.length > limit && '...'}
   </>
 );

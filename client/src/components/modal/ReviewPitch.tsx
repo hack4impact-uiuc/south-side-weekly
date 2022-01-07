@@ -96,7 +96,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       .filter(({ target }) => target > 0);
 
     if (!primaryEditor || deadline.length === 0 || parsedTeams.length === 0) {
-      toast.error('Please fill out all fields', { position: 'bottom-right' });
+      toast.error('Please fill out all fields');
       return;
     }
 
@@ -121,10 +121,10 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
     });
 
     if (!isError(res)) {
-      toast.success('Pitch approved', { position: 'bottom-right' });
+      toast.success('Pitch approved');
       setOpen(false);
     } else {
-      toast.error('Error approving pitch', { position: 'bottom-right' });
+      toast.error('Error approving pitch');
     }
   };
 
@@ -138,10 +138,10 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
     });
 
     if (!isError(res)) {
-      toast.success('Pitch declined', { position: 'bottom-right' });
+      toast.success('Pitch declined');
       setOpen(false);
     } else {
-      toast.error('Failed to decline pitch', { position: 'bottom-right' });
+      toast.error('Failed to decline pitch');
     }
   };
 

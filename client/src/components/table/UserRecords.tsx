@@ -69,8 +69,42 @@ export const UsersRecords: FC<TableProps> = ({ users, count, type }) => {
   }, [type]);
 
   return (
-    <PaginatedTable
+    <PaginatedTable<BasePopulatedUser>
+      count={count}
+      pageOptions={['1', '10', '25', '50']}
+      sortType="query"
+      sortable
+      records={users}
       columns={cols}
+      getModal={(user, open, setOpen) => (
+        <>
+          {type === 'approved' && (
+            <ViewUserModal open={open} setOpen={setOpen} user={user} />
+          )}
+          {type === 'pending' && (
+            <ReviewUser
+              type="review"
+              open={open}
+              setOpen={setOpen}
+              user={user}
+            />
+          )}
+          {type === 'denied' && (
+            <ReviewUser
+              type="reject"
+              open={open}
+              setOpen={setOpen}
+              user={user}
+            />
+          )}
+        </>
+      )}
+    />
+  );
+
+  return (
+    <PaginatedTable
+      columns={[]}
       records={users}
       count={count}
       pageOptions={['1', '10', '25', '50']}

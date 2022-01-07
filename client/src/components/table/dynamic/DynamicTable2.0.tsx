@@ -7,14 +7,9 @@ import React, {
 } from 'react';
 import { v4 } from 'uuid';
 import cn from 'classnames';
-import {
-  Modal,
-  ModalProps,
-  SemanticWIDTHS,
-  Table,
-  TableProps,
-} from 'semantic-ui-react';
+import { SemanticWIDTHS, Table, TableProps } from 'semantic-ui-react';
 import { StringParam, useQueryParams } from 'use-query-params';
+import toast from 'react-hot-toast';
 
 import './DynamicTable.scss';
 
@@ -31,8 +26,8 @@ const log = (message: string): void => {
  * Generic type for a column in the dynamic table
  */
 interface Column<T> {
-  id: keyof T;
-  value: string | ReactNode | keyof T;
+  id?: keyof T;
+  title: string | ReactNode | keyof T;
   extractor: ((record: T) => ReactNode) | keyof T;
   onClick?: () => void;
   sorter?: (a: T, b: T) => number;
@@ -63,15 +58,19 @@ interface Sort<T> {
 /**
  * Configuration props for the dynamic table
  */
-interface Props<T> extends Omit<TableProps, 'columns'> {
+export interface DynamicTableProps<T> extends Omit<TableProps, 'columns'> {
   records: T[];
   columns: Column<T>[];
   style?: CSSProperties;
   headerStyle?: CSSProperties;
   bodyStyle?: CSSProperties;
   onRecordClick?: (record: T) => void;
-  modal?: ReactElement;
-  modalProps?: ModalProps;
+  getModal?: (
+    record: T,
+    open: boolean,
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  ) => ReactElement;
+  emptyMessage?: ReactNode;
   footer?: ReactNode;
   sortType?: 'internal' | 'query';
 }
@@ -97,16 +96,17 @@ const DynamicTable = <T,>({
   headerStyle,
   bodyStyle,
   className,
-  modal,
-  modalProps,
   onRecordClick,
+  getModal,
   footer,
+  emptyMessage = 'No records found',
   sortType = 'internal',
   ...rest
-}: Props<T>): ReactElement => {
+}: DynamicTableProps<T>): ReactElement => {
   const [sortedRecords, setSortedRecords] = useState(records);
   const [sort, setSort] = useState<Sort<T>>();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [clickedRecord, setClickedRecord] = useState<T>();
   const [, setQuery] = useQueryParams({
     sortBy: StringParam,
     orderBy: StringParam,
@@ -169,6 +169,11 @@ const DynamicTable = <T,>({
    * @param column the column to sort.
    */
   const handleSort = (column: Column<T>): void => {
+    if (sortedRecords.length === 0) {
+      toast.error('No records to sort');
+      return;
+    }
+
     const isNewSort = !sort || sort.column.id !== column.id;
 
     if (isNewSort) {
@@ -215,49 +220,57 @@ const DynamicTable = <T,>({
       onRecordClick(record);
     }
 
-    if (modal) {
+    if (getModal) {
+      setClickedRecord(record);
       setIsModalOpen(true);
     }
   };
 
   return (
-    <>
-      {isModalOpen && (
-        <Modal open={isModalOpen} size="large" {...modalProps}>
-          {modal}
-        </Modal>
-      )}
-
-      <Table
-        compact
-        celled
-        {...rest}
-        style={style}
-        className={cn('dynamic-table', className)}
-        singleLine
-      >
-        <Table.Header style={headerStyle}>
+    <Table
+      compact
+      celled
+      {...rest}
+      style={style}
+      className={cn('dynamic-table', className)}
+      singleLine
+    >
+      <Table.Header style={headerStyle}>
+        <Table.Row>
+          {columns.map((column) => (
+            <Table.HeaderCell
+              width={column.width}
+              onClick={() => handleColumnClick(column)}
+              key={v4()}
+              sorted={
+                sort?.column.id === column.id && sort?.column.sortable
+                  ? sort?.direction
+                  : undefined
+              }
+              style={column.style}
+            >
+              {column.title}
+            </Table.HeaderCell>
+          ))}
+        </Table.Row>
+      </Table.Header>
+      <Table.Body style={bodyStyle}>
+        {clickedRecord &&
+          isModalOpen &&
+          getModal?.(clickedRecord, isModalOpen, setIsModalOpen)}
+        {sortedRecords.length === 0 ? (
           <Table.Row>
-            {columns.map((column) => (
-              <Table.HeaderCell
-                width={column.width}
-                onClick={() => handleColumnClick(column)}
-                key={v4()}
-                sorted={
-                  sort?.column.id === column.id && sort.column.sortable
-                    ? sort?.direction
-                    : undefined
-                }
-              >
-                {column.value}
-              </Table.HeaderCell>
-            ))}
+            <Table.Cell
+              style={{ textAlign: 'center', padding: '35px 0px 35px 0px' }}
+              colSpan={columns.length}
+            >
+              {emptyMessage}
+            </Table.Cell>
           </Table.Row>
-        </Table.Header>
-        <Table.Body style={bodyStyle}>
-          {sortedRecords.map((record) => (
+        ) : (
+          sortedRecords.map((record) => (
             <Table.Row
-              className={`${onRecordClick || modal ? 'selectable' : ''}`}
+              className={`${onRecordClick || getModal ? 'selectable' : ''}`}
               onClick={() => handleRecordClick(record)}
               key={v4()}
             >
@@ -267,19 +280,19 @@ const DynamicTable = <T,>({
                 </Table.Cell>
               ))}
             </Table.Row>
-          ))}
-        </Table.Body>
-        {footer && (
-          <Table.Footer>
-            <Table.Row>
-              <Table.HeaderCell colSpan={columns.length}>
-                {footer}
-              </Table.HeaderCell>
-            </Table.Row>
-          </Table.Footer>
+          ))
         )}
-      </Table>
-    </>
+      </Table.Body>
+      {footer && (
+        <Table.Footer>
+          <Table.Row>
+            <Table.HeaderCell colSpan={columns.length}>
+              {footer}
+            </Table.HeaderCell>
+          </Table.Row>
+        </Table.Footer>
+      )}
+    </Table>
   );
 };
 
