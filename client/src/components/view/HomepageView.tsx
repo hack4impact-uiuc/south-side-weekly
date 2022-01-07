@@ -43,6 +43,8 @@ export const HomepageView: FC<HomepageViewProps> = ({ type }): ReactElement => {
       author: type === 'submitted' ? user?._id : undefined,
       'pendingContributors.userId':
         type === 'claim-submitted' ? user?._id : undefined,
+      sortBy: params.get('sortBy'),
+      orderBy: params.get('orderBy'),
     };
 
     return _.omitBy(q, _.isNil);
