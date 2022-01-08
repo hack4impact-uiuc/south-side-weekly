@@ -18,7 +18,7 @@ import ApproveClaimCard from '../components/card/ApproveClaimCard';
 import EditingClaimCard from '../components/card/EditingClaimCard';
 import { ReviewClaimForm } from '../components/form/ReviewClaimForm';
 import { useTeams } from '../contexts';
-import { assignmentStatusEnum } from '../utils/enums';
+import { assignmentStatusEnum, issueStatusEnum } from '../utils/enums';
 import './Pitch.scss';
 
 interface ParamTypes {
@@ -45,7 +45,7 @@ const Pitch = (): ReactElement => {
     FullPopulatedPitch['assignmentContributors']
   >([]);
   const [pitchTeams, setPitchTeams] = useState<FullPopulatedPitch['teams']>([]);
-  const [statusIsCompleted, setStatusIsCompleted] = useState<boolean>(false);
+  const [readyForFeedback, setReadyForFeedback] = useState<boolean>(false);
   const [editorContributors, setEditorContributors] = useState<EditorRecord>(
     {},
   );
@@ -71,9 +71,7 @@ const Pitch = (): ReactElement => {
       setAssignmentContributors(result.assignmentContributors);
       setWriter(result.writer ? [result.writer] : []);
       setPitchTeams(result.teams);
-      setStatusIsCompleted(
-        result.assignmentStatus === assignmentStatusEnum.COMPLETED,
-      );
+      isReadyForFeedback(result.issueStatuses);
 
       const editors: EditorRecord = {};
 
@@ -97,6 +95,17 @@ const Pitch = (): ReactElement => {
   useEffect(() => {
     fetchAggregatedPitch();
   }, [pitchId, fetchAggregatedPitch]);
+
+  const isReadyForFeedback = (
+    issueStatuses: FullPopulatedPitch['issueStatuses'],
+  ): void =>
+    setReadyForFeedback(
+      !!issueStatuses.find(
+        ({ issueId, issueStatus }) =>
+          new Date(issueId.releaseDate) <= new Date() &&
+          issueStatus === issueStatusEnum.READY_TO_PUBLISH,
+      ),
+    );
 
   const allContributors = useMemo(() => {
     const allContributorsRecord: TeamContributorRecord = {};
@@ -144,7 +153,10 @@ const Pitch = (): ReactElement => {
   return (
     <div className="review-claim-page">
       <div className="content">
-        <ReviewClaimForm pitch={pitch} />
+        <ReviewClaimForm
+          pitch={pitch}
+          isReadyForFeedback={isReadyForFeedback}
+        />
 
         <div className="card-content">
           {Object.entries(allContributors).map(
@@ -154,7 +166,7 @@ const Pitch = (): ReactElement => {
                   <EditingClaimCard
                     editors={editorContributors}
                     pitchId={pitchId}
-                    completed={statusIsCompleted}
+                    completed={readyForFeedback}
                     callback={fetchAggregatedPitch}
                     team={getTeamWithTargetFromId(teamId)}
                     pendingEditors={pendingEditors}
@@ -173,13 +185,14 @@ const Pitch = (): ReactElement => {
                   team={getTeamWithTargetFromId(teamId)}
                   pitchId={pitchId}
                   callback={fetchAggregatedPitch}
-                  completed={statusIsCompleted}
+                  completed={readyForFeedback}
                 />
               );
             },
           )}
         </div>
       </div>
+      <pre>{JSON.stringify(pitch, null, 2)}</pre>
     </div>
   );
 };

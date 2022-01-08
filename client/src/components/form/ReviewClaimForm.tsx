@@ -2,9 +2,14 @@ import { Field, Form as FormikForm, Formik } from 'formik';
 import { lowerCase, pick, startCase } from 'lodash';
 import React, { FC, ReactElement, useState } from 'react';
 import { Button, Form, Icon, Label } from 'semantic-ui-react';
-import { FullPopulatedPitch, Issue, Pitch } from 'ssw-common';
+import {
+  BasePopulatedPitch,
+  FullPopulatedPitch,
+  Issue,
+  Pitch,
+} from 'ssw-common';
 
-import { apiCall } from '../../api';
+import { apiCall, isError } from '../../api';
 import { useInterests } from '../../contexts';
 import { useIssues } from '../../contexts/issues/context';
 import { editStatusEnum, issueStatusEnum } from '../../utils/enums';
@@ -22,6 +27,9 @@ import './ReviewClaimForm.scss';
 
 interface FormProps {
   pitch: FullPopulatedPitch | null;
+  isReadyForFeedback: (
+    issueStatuses: FullPopulatedPitch['issueStatuses'],
+  ) => void;
 }
 
 interface FormData
@@ -48,7 +56,10 @@ const fields: (keyof FormData)[] = [
   'issueStatuses',
 ];
 
-export const ReviewClaimForm: FC<FormProps> = ({ pitch }): ReactElement => {
+export const ReviewClaimForm: FC<FormProps> = ({
+  pitch,
+  isReadyForFeedback,
+}): ReactElement => {
   const [editMode, setEditMode] = useState<boolean>(false);
   console.log(fields);
   const { getInterestById, interests } = useInterests();
@@ -73,11 +84,18 @@ export const ReviewClaimForm: FC<FormProps> = ({ pitch }): ReactElement => {
       }),
     };
 
-    await apiCall({
+    const res = await apiCall<BasePopulatedPitch>({
       method: 'PUT',
       url: `/pitches/${pitch?._id}`,
       body: newPitch,
+      query: {
+        populate: 'default',
+      },
     });
+
+    if (!isError(res)) {
+      isReadyForFeedback(res.data.result.issueStatuses);
+    }
 
     setEditMode(false);
   };
