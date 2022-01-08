@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useLocation } from 'react-router-dom';
 import {
   BasePopulatedPitch,
   BasePopulatedUser,
@@ -8,35 +8,38 @@ import {
   User,
 } from 'ssw-common';
 import { Grid, Rating } from 'semantic-ui-react';
+import _ from 'lodash';
+import { useQueryParams } from 'use-query-params';
 
 import {
-  loadBasePitches,
   loadFullFeedback,
   loadFullUser,
   loadUserPermissions,
 } from '../api/apiWrapper';
-import {
-  buildColumn,
-  DynamicTable,
-  FieldTag,
-  UserPicture,
-} from '../components';
+import { buildColumn, FieldTag, UserPicture } from '../components';
 import UserFeedback from '../components/card/UserFeedback';
 import { EditUserModal } from '../components/modal/EditUser';
 import { useAuth } from '../contexts';
 import { TagList } from '../components/list/TagList';
 import { IconLabel } from '../components/ui/IconLabel';
-
 import './Profile.scss';
+import { PaginatedTable } from '../components/table/dynamic/PaginatedTable';
+import { apiCall, isError } from '../api';
+
+interface PitchesRes {
+  data: BasePopulatedPitch[];
+  count: number;
+}
 
 const Profile = (): ReactElement => {
   const { userId } = useParams<{ userId: string }>();
   const { user: currentUser, isAdmin } = useAuth();
-
+  const [, setQuery] = useQueryParams({});
   const [user, setUser] = useState<BasePopulatedUser>();
   const [feedback, setFeedback] = useState<PopulatedUserFeedback[]>([]);
-  const [pitches, setPitches] = useState<BasePopulatedPitch[]>([]);
+  const [data, setData] = useState<PitchesRes>({ data: [], count: 0 });
 
+  const location = useLocation();
   const [permissions, setPermissions] = useState<{
     view: (keyof User)[];
     edit: (keyof User)[];
@@ -51,6 +54,21 @@ const Profile = (): ReactElement => {
     return sum / feedback.length;
   }, [feedback]);
 
+  const queryParams = useMemo(() => {
+    if (!user) {
+      return;
+    }
+    const params = new URLSearchParams(location.search);
+    const ids = [...user.claimedPitches, ...user.submittedPitches];
+    const q = {
+      limit: params.get('limit'),
+      offset: params.get('offset'),
+      _id__in: ids.join(','),
+    };
+
+    return _.omitBy(q, _.isNil);
+  }, [location.search, user]);
+
   useEffect(() => {
     const loadData = async (): Promise<void> => {
       const user = await loadFullUser(userId);
@@ -59,20 +77,38 @@ const Profile = (): ReactElement => {
         return;
       }
 
-      const [feedback, pitches, permissions] = await Promise.all([
+      const [feedback, permissions] = await Promise.all([
         loadFullFeedback(user.feedback),
-        loadBasePitches([...user.claimedPitches, ...user.submittedPitches]),
         loadUserPermissions(userId),
       ]);
 
       setPermissions(permissions);
       setFeedback(feedback);
-      setPitches(pitches);
       setUser(user);
     };
-
     loadData();
   }, [userId]);
+
+  useEffect(() => {
+    const loadPitches = async (): Promise<void> => {
+      const res = await apiCall<PitchesRes>({
+        url: `/pitches`,
+        method: 'GET',
+        populate: 'default',
+        query: queryParams,
+      });
+
+      if (!isError(res)) {
+        setData(res.data.result);
+      }
+    };
+    loadPitches();
+  }, [queryParams]);
+
+  useEffect(() => {
+    setData({ data: [], count: 0 });
+    setQuery({ limit: 10, offset: 0 }, 'push');
+  }, [setQuery]);
 
   if (!user) {
     return <div>Loading...</div>;
@@ -243,13 +279,11 @@ const Profile = (): ReactElement => {
           <h2>{`${user.firstName}'s` + ` Contributions`}</h2>
         )}
 
-        <DynamicTable<BasePopulatedPitch>
-          view={{
-            records: pitches,
-            columns: cols,
-          }}
-          emptyMessage="No pitches yet"
-          singleLine={pitches.length > 0}
+        <PaginatedTable
+          columns={cols}
+          records={data.data}
+          count={data.count}
+          pageOptions={['1', '10', '25', '50']}
         />
 
         <Grid columns={2} className="experience">
