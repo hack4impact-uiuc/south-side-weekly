@@ -15,12 +15,10 @@ import {
   loadFullUser,
   loadUserPermissions,
 } from '../api/apiWrapper';
-import {
-  buildColumn,
-  DynamicTable,
-  FieldTag,
-  UserPicture,
-} from '../components';
+import { FieldTag, UserPicture } from '../components';
+import DynamicTable, {
+  configureColumn,
+} from '../components/table/dynamic/DynamicTable2.0';
 import UserFeedback from '../components/card/UserFeedback';
 import { EditUserModal } from '../components/modal/EditUser';
 import { useAuth } from '../contexts';
@@ -78,17 +76,18 @@ const Profile = (): ReactElement => {
     return <div>Loading...</div>;
   }
 
-  const titleColumn = buildColumn<BasePopulatedPitch>({
+  const titleColumn = configureColumn<BasePopulatedPitch>({
     title: 'Title',
     width: 5,
     extractor: (pitch) => pitch.title,
+    sortable: true,
     sorter: (a, b) => a.title.localeCompare(b.title),
   });
-  const topicsColumn = buildColumn<BasePopulatedPitch>({
+  const topicsColumn = configureColumn<BasePopulatedPitch>({
     title: 'Associated Topics',
     width: 5,
     extractor: function getTopics(pitch) {
-      return <TagList tags={pitch.topics} />;
+      return <TagList limit={3} tags={pitch.topics} />;
     },
   });
 
@@ -104,15 +103,15 @@ const Profile = (): ReactElement => {
     return contributor.teams;
   };
 
-  const teamsColumn = buildColumn<BasePopulatedPitch>({
+  const teamsColumn = configureColumn<BasePopulatedPitch>({
     title: "Team(s) You're On",
-    width: 5,
+    width: 3,
     extractor: function getTeams(pitch) {
       return <TagList tags={getTeamsForPitch(pitch)} />;
     },
   });
 
-  const publishDateColumn = buildColumn<BasePopulatedPitch>({
+  const publishDateColumn = configureColumn<BasePopulatedPitch>({
     title: 'Publish Date',
     width: 5,
     extractor: (pitch) =>
@@ -121,6 +120,7 @@ const Profile = (): ReactElement => {
             pitch.issueStatuses[0].issueId.releaseDate,
           ).toLocaleDateString()
         : 'Not Published',
+    sortable: true,
     sorter: (a, b) => {
       if (a.issueStatuses.length === 0) {
         return 1;
@@ -250,12 +250,11 @@ const Profile = (): ReactElement => {
         )}
 
         <DynamicTable<BasePopulatedPitch>
-          view={{
-            records: pitches,
-            columns: cols,
-          }}
+          records={pitches}
+          columns={cols}
           emptyMessage="No pitches yet"
           singleLine={pitches.length > 0}
+          sortable
         />
 
         <Grid columns={2} className="experience">
