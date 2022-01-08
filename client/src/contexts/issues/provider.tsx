@@ -5,16 +5,16 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import { IIssue, Issue } from 'ssw-common';
+import { Issue } from 'ssw-common';
 
 import { apiCall, isError } from '../../api';
 
 import { IssuesContext, initialValues, useIssues } from './context';
 
 const IssuesProvider: FC = ({ children }): ReactElement => {
-  const [issues, setIssues] = useState<IIssue[]>(initialValues.issues);
+  const [issues, setIssues] = useState<Issue[]>(initialValues.issues);
 
-  const getIssueFromId = (issueId: string): IIssue | undefined =>
+  const getIssueFromId = (issueId: string): Issue | undefined =>
     issues.find(({ _id }) => _id === issueId);
 
   const fetchIssues = useCallback(async () => {

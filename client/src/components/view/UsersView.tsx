@@ -62,7 +62,6 @@ export const UsersView: FC<UsersViewProps> = ({ type }): ReactElement => {
       }
     };
 
-    toast.loading('Loading users...');
     queryUsers();
   }, [queryParams, type]);
 

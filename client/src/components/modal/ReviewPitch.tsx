@@ -281,32 +281,38 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
             <b>Number of Contributors Needed Per Team</b>
           </p>
           <div id="target-selectors" className="section">
-            {teams.map((team) => (
-              <div style={{ margin: '0px 10px 0px 10px' }} key={team._id}>
-                <div style={{ textAlign: 'center', margin: '10px' }}>
-                  <FieldTag
-                    size="small"
-                    name={team.name}
-                    hexcode={team.color}
-                  />
+            {teams
+              .filter(
+                (team) =>
+                  team.name.toLowerCase() !== 'writing' &&
+                  team.name.toLowerCase() !== 'editing',
+              )
+              .map((team) => (
+                <div style={{ margin: '0px 10px 0px 10px' }} key={team._id}>
+                  <div style={{ textAlign: 'center', margin: '10px' }}>
+                    <FieldTag
+                      size="small"
+                      name={team.name}
+                      hexcode={team.color}
+                    />
+                  </div>
+                  <div>
+                    <pre></pre>
+                    <Input
+                      type="number"
+                      value={teamConfig[team._id] || 0}
+                      onChange={(e, { value }) =>
+                        setTeamConfig((curr) => ({
+                          ...curr,
+                          [team._id]: parseInt(value),
+                        }))
+                      }
+                      style={{ width: '100px' }}
+                      min={0}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <pre></pre>
-                  <Input
-                    type="number"
-                    value={teamConfig[team._id] || 0}
-                    onChange={(e, { value }) =>
-                      setTeamConfig((curr) => ({
-                        ...curr,
-                        [team._id]: parseInt(value),
-                      }))
-                    }
-                    style={{ width: '100px' }}
-                    min={0}
-                  />
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
         <div className="section" id="date-issue-selector">

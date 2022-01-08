@@ -11,7 +11,6 @@ import { DelayedSearch } from '../search/DelayedSearch';
 import { CheckboxFilter } from '../filter/CheckboxFilter';
 import { PitchRecords } from '../table/PitchRecords';
 import { useAuth } from '../../contexts';
-// import './ReviewPitches.scss';
 
 interface PitchesRes {
   data: BasePopulatedPitch[];
@@ -104,11 +103,16 @@ export const PitchesView: FC<PitchesViewProps> = ({ type }): ReactElement => {
           <div id="search">
             <DelayedSearch id="search" />
           </div>
-          <CheckboxFilter label="Has Publish Date" filterKey="hasPublishDate" />
+          <CheckboxFilter
+            className="publish-date-checkbox"
+            label="Has Publish Date"
+            filterKey="hasPublishDate"
+          />
           <CheckboxFilter
             label="Has No Publish Date"
             value="false"
             filterKey="hasPublishDate"
+            className="publish-date-checkbox"
           />
         </div>
 
