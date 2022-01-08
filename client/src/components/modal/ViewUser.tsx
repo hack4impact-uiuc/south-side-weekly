@@ -59,11 +59,15 @@ export const ViewUserModal: FC<ViewUserProps> = ({
         </Grid.Column>
         <Grid.Column>
           <h1 className="list-header">Topics</h1>
-          <TagList tags={user.interests} />
+          <div className="tag-col">
+            <TagList tags={user.interests} />
+          </div>
         </Grid.Column>
         <Grid.Column>
           <h1 className="list-header">Teams</h1>
-          <TagList tags={user.teams} />
+          <div className="tag-col">
+            <TagList tags={user.teams} />
+          </div>
         </Grid.Column>
       </Grid>
     </Modal.Content>

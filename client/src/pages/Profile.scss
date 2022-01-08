@@ -4,7 +4,7 @@
   }
 
   .tag-spacing {
-    margin-top: 2%;
+    margin-top: 2% !important;
   }
 
   .user-role {
@@ -77,5 +77,11 @@
   }
   &.segment {
     background-color: white;
+  }
+
+  .tag-col {
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start;
   }
 }
