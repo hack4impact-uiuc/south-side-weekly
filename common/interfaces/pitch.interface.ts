@@ -61,7 +61,7 @@ export interface BasePopulatedPitch extends Omit<Pitch, BasePitchOmitFields> {
   secondEditors: UserFields[];
   thirdEditors: UserFields[];
   reviewedBy: UserFields;
-  issueStatuses: { issueId: Issue; status: string }[];
+  issueStatuses: { issueId: Issue; issueStatus: string }[];
 }
 
 type FullPitchOmitFields =
