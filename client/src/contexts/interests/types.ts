@@ -1,7 +1,7 @@
-import { IInterest } from 'ssw-common';
+import { Interest } from 'ssw-common';
 
 export interface IInterestsContext {
-  interests: IInterest[];
+  interests: Interest[];
   fetchInterests: () => void;
-  getInterestById: (id: string) => IInterest | undefined;
+  getInterestById: (id: string) => Interest | undefined;
 }

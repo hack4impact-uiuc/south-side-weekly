@@ -1,5 +1,6 @@
 import WizardWrapper from '../wizard';
 
+import Homepage from './Home';
 import Directory from './Directory';
 import UnknownRoute from './UnknownRoute';
 import Profile from './Profile';
@@ -15,4 +16,5 @@ export {
   Resources,
   Login,
   Issues,
+  Homepage,
 };

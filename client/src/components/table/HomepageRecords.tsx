@@ -1,10 +1,10 @@
 import React, { FC, useEffect, useMemo } from 'react';
 import { BasePopulatedPitch, FullPopulatedPitch, Pitch } from 'ssw-common';
 
-import { buildColumn } from '..';
 import { useAuth } from '../../contexts';
 import { findPendingContributor } from '../../utils/helpers';
 
+import { configureColumn } from './dynamic/DynamicTable2.0';
 import {
   titleColumn,
   descriptionColumn,
@@ -76,7 +76,7 @@ interface TableProps {
 export const HomepageRecords: FC<TableProps> = ({ data, count, type }) => {
   const { user } = useAuth();
   useEffect(() => {
-    const col = buildColumn<BasePopulatedPitch>({
+    const col = configureColumn<BasePopulatedPitch>({
       title: 'Date Submitted',
       width: '1',
       extractor: function DateCell(pitch) {

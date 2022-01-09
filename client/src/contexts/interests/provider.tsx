@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import { IInterest, Interest } from 'ssw-common';
+import { Interest } from 'ssw-common';
 
 import { apiCall, isError } from '../../api';
 
@@ -13,11 +13,11 @@ import { InterestsContext, initialValues, useInterests } from './context';
 
 // Interest provider
 const InterestsProvider: FC = ({ children }): ReactElement => {
-  const [interests, setInterests] = useState<IInterest[]>(
+  const [interests, setInterests] = useState<Interest[]>(
     initialValues.interests,
   );
 
-  const getInterestById = (id: string): IInterest | undefined =>
+  const getInterestById = (id: string): Interest | undefined =>
     interests.find(({ _id }) => _id === id);
 
   const fetchInterests = useCallback(async () => {
