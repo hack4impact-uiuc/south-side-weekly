@@ -233,6 +233,7 @@ const DynamicTable = <T,>({
       {...rest}
       style={style}
       className={cn('dynamic-table', className)}
+      fixed
       singleLine
     >
       <Table.Header style={headerStyle}>
