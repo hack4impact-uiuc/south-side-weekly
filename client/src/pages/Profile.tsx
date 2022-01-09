@@ -7,9 +7,9 @@ import {
   Team,
   User,
 } from 'ssw-common';
-import { Grid, Rating } from 'semantic-ui-react';
+import { Grid, Pagination, Rating } from 'semantic-ui-react';
 import _ from 'lodash';
-import { useQueryParams } from 'use-query-params';
+import { StringParam, useQueryParams } from 'use-query-params';
 
 import {
   loadFullFeedback,
@@ -26,25 +26,60 @@ import { IconLabel } from '../components/ui/IconLabel';
 import './Profile.scss';
 import { PaginatedTable } from '../components/table/dynamic/PaginatedTable';
 import { apiCall, isError } from '../api';
+import { SingleSelect } from '../components/select/SingleSelect';
+import { parseOptionsSelect } from '../utils/helpers';
 
 interface PitchesRes {
   data: BasePopulatedPitch[];
   count: number;
 }
 
+interface FeedbackRes {
+  data: PopulatedUserFeedback[];
+  count: number;
+}
+
 const Profile = (): ReactElement => {
   const { userId } = useParams<{ userId: string }>();
   const { user: currentUser, isAdmin } = useAuth();
-  const [, setQuery] = useQueryParams({});
+  const [queries, setQueries] = useQueryParams({
+    limit: StringParam,
+    offset: StringParam,
+    f_limit: StringParam,
+    f_offset: StringParam,
+  });
   const [user, setUser] = useState<BasePopulatedUser>();
   const [feedback, setFeedback] = useState<PopulatedUserFeedback[]>([]);
-  const [data, setData] = useState<PitchesRes>({ data: [], count: 0 });
+  const [pitchesData, setPitchesData] = useState<PitchesRes>({
+    data: [],
+    count: 0,
+  });
+  const [feedbackData, setFeedbackData] = useState<FeedbackRes>({
+    data: [],
+    count: 0,
+  });
 
   const location = useLocation();
   const [permissions, setPermissions] = useState<{
     view: (keyof User)[];
     edit: (keyof User)[];
   }>({ view: [], edit: [] });
+
+  const updateQuery = (key: string, v: string | undefined): void => {
+    if (v === undefined || v === '') {
+      setQueries({ [key]: undefined });
+      return;
+    }
+    setQueries({ [key]: v });
+  };
+
+  const parseActivePage = (page: string | number | undefined): number => {
+    if (page === undefined) {
+      return 0;
+    }
+
+    return parseInt(String(page), 10) - 1;
+  };
 
   const rating = useMemo((): number => {
     if (feedback.length === 0) {
@@ -65,6 +100,20 @@ const Profile = (): ReactElement => {
       limit: params.get('limit'),
       offset: params.get('offset'),
       _id__in: ids.join(','),
+    };
+
+    return _.omitBy(q, _.isNil);
+  }, [location.search, user]);
+
+  const feedbackQueryParams = useMemo(() => {
+    if (!user) {
+      return;
+    }
+    const params = new URLSearchParams(location.search);
+    const q = {
+      limit: params.get('f_limit'),
+      offset: params.get('f_offset'),
+      _id__in: user.feedback.join(','),
     };
 
     return _.omitBy(q, _.isNil);
@@ -100,16 +149,36 @@ const Profile = (): ReactElement => {
       });
 
       if (!isError(res)) {
-        setData(res.data.result);
+        setPitchesData(res.data.result);
       }
     };
     loadPitches();
   }, [queryParams]);
 
   useEffect(() => {
-    setData({ data: [], count: 0 });
-    setQuery({ limit: 10, offset: 0 }, 'push');
-  }, [setQuery]);
+    const loadFeedback = async (): Promise<void> => {
+      const res = await apiCall<{
+        data: PopulatedUserFeedback[];
+        count: number;
+      }>({
+        url: `/userFeedback`,
+        method: 'GET',
+        query: feedbackQueryParams,
+        populate: 'default',
+      });
+
+      if (!isError(res)) {
+        setFeedbackData(res.data.result);
+      }
+    };
+    loadFeedback();
+  }, [feedbackQueryParams]);
+
+  useEffect(() => {
+    setPitchesData({ data: [], count: 0 });
+    setFeedbackData({ data: [], count: 0 });
+    setQueries({ limit: '10', offset: '0', f_limit: '10', f_offset: '0' });
+  }, [setQueries]);
 
   if (!user) {
     return <div>Loading...</div>;
@@ -290,8 +359,8 @@ const Profile = (): ReactElement => {
 
         <PaginatedTable
           columns={cols}
-          records={data.data}
-          count={data.count}
+          records={pitchesData.data}
+          count={pitchesData.count}
           pageOptions={['1', '10', '25', '50']}
         />
 
@@ -310,12 +379,40 @@ const Profile = (): ReactElement => {
           <Grid centered className="feedback">
             <Grid.Column width={10}>
               <h2 className="title">{`${user.firstName}'s`} Feedback</h2>
-
-              {feedback.map((feedback, index) => (
-                <div key={index} className="user-feedback">
-                  <UserFeedback feedback={feedback} />
+              <div
+                style={{
+                  display: 'flex',
+                  marginTop: '20px',
+                  alignItems: 'center',
+                }}
+              >
+                <span>Records per page: </span>
+                <SingleSelect
+                  value={queries.f_limit || '10'}
+                  options={parseOptionsSelect(['1', '10', '25', '50'])}
+                  onChange={(v) => updateQuery('f_limit', v ? v?.value : '10')}
+                  placeholder="Limit"
+                />
+                <br />
+                <div>
+                  <p>Total count: {feedbackData.count}</p>
                 </div>
-              ))}
+              </div>
+              <div className="feedback-cards">
+                {feedbackData.data.map((feedback, index) => (
+                  <div key={index} className="user-feedback">
+                    <UserFeedback feedback={feedback} />
+                  </div>
+                ))}
+              </div>
+              <Pagination
+                totalPages={Math.ceil(
+                  feedbackData.count / parseInt(queries.f_limit || '10', 10),
+                )}
+                onPageChange={(e, { activePage }) =>
+                  updateQuery('f_offset', String(parseActivePage(activePage)))
+                }
+              />
             </Grid.Column>
           </Grid>
         )}
