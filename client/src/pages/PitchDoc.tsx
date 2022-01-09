@@ -1,4 +1,5 @@
-import React, { ReactElement, useMemo } from 'react';
+import React, { ReactElement, useEffect, useMemo } from 'react';
+import toast from 'react-hot-toast';
 
 import { Walkthrough } from '../components';
 import { SubmitPitchModal } from '../components/modal/SubmitPitchModal';
@@ -39,6 +40,10 @@ export const PitchDocPage = (): ReactElement => {
 
     return panes;
   }, [isAdmin]);
+
+  useEffect(() => {
+    toast.loading('Loading Pitch Doc...');
+  }, []);
 
   return (
     <div className="pitch-doc-page">

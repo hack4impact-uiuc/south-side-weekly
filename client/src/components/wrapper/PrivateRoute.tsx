@@ -24,7 +24,7 @@ export const PrivateRoute: FC<RouteProps> = ({
     return <Redirect to="/login" />;
   } else if (!isRegistered) {
     <Redirect to="/join" from={location.pathname} />;
-  } else if (!isOnboarded) {
+  } else if (!isOnboarded && location.pathname !== '/resources') {
     return <Redirect to="/resources" from={location.pathname} />;
   }
 
@@ -41,5 +41,5 @@ export const PrivateRoute: FC<RouteProps> = ({
     );
   }
 
-  return <></>;
+  return <>You are not authorized to view this page!</>;
 };

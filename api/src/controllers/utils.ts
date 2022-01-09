@@ -134,10 +134,6 @@ const extractFilterQuery = <T>(
     const [field, operator] = filter.split('__');
     let value = copyQuery[filter];
 
-    if (typeof value === 'string') {
-      value = value.toUpperCase();
-    }
-
     if (typeof value === 'string' && value.includes(',')) {
       value = value.split(',');
     }

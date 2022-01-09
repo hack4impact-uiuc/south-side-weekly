@@ -24,14 +24,14 @@ export const PaginatedTable = <T,>({
 
   const updateQuery = (
     key: 'offset' | 'limit',
-    v: string | undefined,
+    v: { value: string | undefined } | undefined | null,
   ): void => {
-    if (v === undefined || v === '') {
-      setQuery({ [key]: undefined });
+    if (v === null || v === undefined || v.value === '') {
+      setQuery({ offset: '0', limit: '10' });
       return;
     }
 
-    setQuery({ [key]: v });
+    setQuery({ [key]: v.value });
   };
 
   const parseActivePage = (page: string | number | undefined): number => {
@@ -49,7 +49,7 @@ export const PaginatedTable = <T,>({
         <SingleSelect
           value={query.limit || '10'}
           options={parseOptionsSelect(pageOptions)}
-          onChange={(v) => updateQuery('limit', v ? v?.value : '10')}
+          onChange={(v) => updateQuery('limit', v)}
           placeholder="Limit"
         />
         <br />
@@ -60,12 +60,16 @@ export const PaginatedTable = <T,>({
       <DynamicTable<T>
         {...rest}
         footer={
-          <Pagination
-            totalPages={Math.ceil(count / parseInt(query.limit || '10', 10))}
-            onPageChange={(e, { activePage }) =>
-              updateQuery('offset', String(parseActivePage(activePage)))
-            }
-          />
+          count > 0 ? (
+            <Pagination
+              totalPages={Math.ceil(count / parseInt(query.limit || '10', 10))}
+              onPageChange={(e, { activePage }) =>
+                updateQuery('offset', {
+                  value: String(parseActivePage(activePage)),
+                })
+              }
+            />
+          ) : undefined
         }
       />
     </div>

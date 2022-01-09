@@ -39,7 +39,7 @@ export const PitchesView: FC<PitchesViewProps> = ({ type }): ReactElement => {
       interests__all: params.get('interests__all'),
       hasPublishDate: params.get('hasPublishDate'),
       hasNoPublishDate: params.get('hasNoPublishDate'),
-      status: type === 'review-unclaimed' ? 'unclaimed' : undefined,
+      claimStatus: type === 'review-unclaimed' ? 'unclaimed' : undefined,
       sortBy: params.get('sortBy'),
       orderBy: params.get('orderBy'),
     };
@@ -70,6 +70,8 @@ export const PitchesView: FC<PitchesViewProps> = ({ type }): ReactElement => {
         populate: 'default',
         query: queryParams,
       });
+
+      console.log(queryParams);
 
       if (!isError(res)) {
         setData(res.data.result);
