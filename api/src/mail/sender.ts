@@ -1,5 +1,5 @@
 import { SendMailOptions } from 'nodemailer';
-import { BasePopulatedPitch, IPitch, ITeam, IUser, User } from 'ssw-common';
+import { BasePopulatedPitch, Pitch, ITeam, User } from 'ssw-common';
 import { UserFields } from 'ssw-common/interfaces/_types';
 import { getUserFulName } from '../utils/helpers';
 
@@ -16,14 +16,14 @@ export const sendMail = async (mailOptions: SendMailOptions): Promise<void> => {
   await mailDelivered;
 };
 
-export const sendRejectUserMail = (
-  contributor: IUser,
-  reviewer: IUser,
-): void => {
+export const sendRejectUserMail = (contributor: User, reviewer: User): void => {
+  console.log(contributor);
+  console.log(reviewer);
+
   const templateValues = {
-    contributor: getUserFulName(contributor),
+    contributor: contributor.fullname,
     role: contributor.role,
-    reviewer: getUserFulName(reviewer),
+    reviewer: reviewer.fullname,
     contact: 'South Side Weekly',
   };
 
@@ -38,8 +38,8 @@ export const sendRejectUserMail = (
 };
 
 export const sendApproveUserMail = (
-  contributor: IUser,
-  reviewer: IUser,
+  contributor: User,
+  reviewer: User,
 ): void => {
   const templateValues = {
     contributor: getUserFulName(contributor),
@@ -59,18 +59,18 @@ export const sendApproveUserMail = (
 };
 
 export const sendClaimRequestApprovedMail = (
-  contributor: IUser,
-  pitch: IPitch,
-  staff: IUser,
+  contributor: User,
+  pitch: Pitch,
+  staff: User,
 ): void => {
   const templateValues = {
     contributor: getUserFulName(contributor),
     title: pitch.title,
-    primaryEditor: getUserFulName((pitch.primaryEditor as unknown) as IUser), // TODO: use populate better
+    primaryEditor: getUserFulName((pitch.primaryEditor as unknown) as User), // TODO: use populate better
     staff: getUserFulName(staff),
     contributorsList: buildContributorHtml(
       (pitch.assignmentContributors as unknown) as {
-        userId: IUser;
+        userId: User;
         teams: ITeam[];
       }[],
     ),
@@ -134,9 +134,9 @@ export const sendDeclinedPitchMail = (
 };
 
 export const sendClaimRequestDeclinedMail = (
-  contributor: IUser,
-  staff: IUser,
-  pitch: IPitch,
+  contributor: User,
+  staff: User,
+  pitch: Pitch,
 ): void => {
   const templateValues = {
     staff: getUserFulName(staff),
