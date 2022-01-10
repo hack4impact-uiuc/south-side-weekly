@@ -6,7 +6,7 @@ import { IssueService, UserService } from '.';
 
 import Pitch, { PitchSchema } from '../models/pitch.model';
 import { populateUser } from '../populators';
-import { pitchStatusEnum, rolesEnum } from '../utils/enums';
+import { pitchStatusEnum } from '../utils/enums';
 import { PaginateOptions } from './types';
 
 interface PitchesResponse {
@@ -90,7 +90,7 @@ const claimablePitchesFilter = (
             },
           },
         },
-        isEditor && user.role === rolesEnum.STAFF
+        isEditor
           ? {
               $or: [
                 { secondEditors: { $ne: [] } },
@@ -116,7 +116,7 @@ const claimablePitchesFilter = (
           },
         },
       },
-      isEditor && user.role === rolesEnum.STAFF
+      isEditor
         ? {
             $or: [
               { secondEditors: { $ne: [] } },

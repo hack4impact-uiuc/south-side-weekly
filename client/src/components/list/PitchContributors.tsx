@@ -3,6 +3,8 @@ import { FullPopulatedPitch, UserFields } from 'ssw-common';
 
 import UserChip from '../tag/UserChip';
 
+import './PitchContributors.scss';
+
 interface PitchContributorsProps {
   pitch: FullPopulatedPitch | null;
 }
@@ -37,7 +39,7 @@ export const PitchContributors: FC<PitchContributorsProps> = ({
   return (
     <>
       {teams.map((team) => (
-        <div key={team.team} className="row">
+        <div key={team.team} className="contributors-group-list">
           <span className="chip-label">
             <h4>{team.team}</h4>
           </span>
