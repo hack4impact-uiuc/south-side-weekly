@@ -115,7 +115,7 @@ export const PitchesView: FC<PitchesViewProps> = ({ type }): ReactElement => {
             label="Has Publish Date"
             filterKey="hasPublishDate"
           />
-          <CheckboxFilter 
+          <CheckboxFilter
             label="Has No Publish Date"
             value="false"
             filterKey="hasPublishDate"
