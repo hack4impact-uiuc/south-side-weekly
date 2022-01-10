@@ -37,9 +37,7 @@ export const EditUserModal: FC<EditUserProps> = ({
     if (!isError(res)) {
       register();
       setIsOpen(false);
-      toast.success('Profile updated successfully!', {
-        position: 'bottom-right',
-      });
+      toast.success('Profile updated successfully!');
     }
   };
 
