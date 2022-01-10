@@ -18,7 +18,7 @@ import ApproveClaimCard from '../components/card/ApproveClaimCard';
 import EditingClaimCard from '../components/card/EditingClaimCard';
 import { ReviewClaimForm } from '../components/form/ReviewClaimForm';
 import { useTeams } from '../contexts';
-import { assignmentStatusEnum, issueStatusEnum } from '../utils/enums';
+import { issueStatusEnum } from '../utils/enums';
 import './Pitch.scss';
 
 interface ParamTypes {

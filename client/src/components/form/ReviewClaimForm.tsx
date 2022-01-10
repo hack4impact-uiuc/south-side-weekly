@@ -1,4 +1,4 @@
-import { Field, Form as FormikForm, Formik, FormikHelpers } from 'formik';
+import { FastField, Form as FormikForm, Formik, FormikHelpers } from 'formik';
 import { cloneDeep, difference, lowerCase, pick, startCase } from 'lodash';
 import React, { FC, ReactElement, useState } from 'react';
 import { MultiValue } from 'react-select';
@@ -64,7 +64,7 @@ export const ReviewClaimForm: FC<FormProps> = ({
 
   const handleSave = async (
     data: FormData,
-    { resetForm }: FormikHelpers<FormData>,
+    { resetForm, setSubmitting }: FormikHelpers<FormData>,
   ): Promise<void> => {
     const newPitch: Partial<Pitch> = {
       ...data,
@@ -81,7 +81,7 @@ export const ReviewClaimForm: FC<FormProps> = ({
     });
 
     if (!isError(res)) {
-      resetForm({ values: data });
+      resetForm({ values: data, isSubmitting: true });
       isReadyForFeedback(data.issueStatuses);
     }
 
@@ -143,13 +143,18 @@ export const ReviewClaimForm: FC<FormProps> = ({
       }}
       onSubmit={handleSave}
     >
-      {({ values, handleReset, setFieldValue }) => (
+      {({ values, handleReset, setFieldValue, setSubmitting }) => (
         <FormikForm id={'review-claim-form'}>
           {!editMode && (
             <AuthView view="isAdmin">
               <Label
                 className="edit-button"
-                onClick={() => setEditMode((v) => !v)}
+                onClick={() => {
+                  setEditMode((v) => {
+                    setSubmitting(!v);
+                    return !v;
+                  });
+                }}
                 as="a"
               >
                 <Icon name="pencil" link />
@@ -159,7 +164,7 @@ export const ReviewClaimForm: FC<FormProps> = ({
           )}
           <div className="form-wrapper">
             <div className="row">
-              <Field
+              <FastField
                 component={FormInput}
                 name="title"
                 label="Pitch Title"
@@ -172,7 +177,7 @@ export const ReviewClaimForm: FC<FormProps> = ({
             </div>
             <div className="row">
               <div className="left-col">
-                <Field
+                <FastField
                   component={FormSingleSelect}
                   options={Object.values(editStatusEnum).map((status) => ({
                     value: status,
@@ -185,7 +190,7 @@ export const ReviewClaimForm: FC<FormProps> = ({
               </div>
             </div>
             <div className="row">
-              <Field
+              <FastField
                 component={FormMultiSelect}
                 name="topics"
                 label="Associated Topics"
@@ -201,7 +206,7 @@ export const ReviewClaimForm: FC<FormProps> = ({
               {!editMode ? (
                 <LinkDisplay href={values.assignmentGoogleDocLink} />
               ) : (
-                <Field
+                <FastField
                   component={FormInput}
                   name="assignmentGoogleDocLink"
                   label="Google Doc Link"
@@ -211,7 +216,7 @@ export const ReviewClaimForm: FC<FormProps> = ({
 
             <Form>
               <div className="row">
-                <Field
+                <FastField
                   component={FormTextArea}
                   name="description"
                   label="Description"
@@ -228,6 +233,7 @@ export const ReviewClaimForm: FC<FormProps> = ({
                 {editMode ? (
                   <>
                     <div>
+                      {console.log('hey')}
                       <b>Add Pitch to Issue(s)</b>
                       <MultiSelect
                         options={issues.map((issue) => ({
@@ -251,7 +257,7 @@ export const ReviewClaimForm: FC<FormProps> = ({
                           <div className="text">
                             {formatIssue(releaseDate, type)}
                           </div>
-                          <Field
+                          <FastField
                             component={FormSingleSelect}
                             options={Object.values(issueStatusEnum).map(
                               (status) => ({
@@ -260,7 +266,6 @@ export const ReviewClaimForm: FC<FormProps> = ({
                               }),
                             )}
                             name={`issueStatuses[${idx}].issueStatus`}
-                            editable={editMode}
                             className="select"
                           />
                         </div>
@@ -285,7 +290,7 @@ export const ReviewClaimForm: FC<FormProps> = ({
                 )}
               </div>
               <div className="right-col">
-                <Field
+                <FastField
                   component={FormInput}
                   name="deadline"
                   label="Pitch Completion Deadline"
