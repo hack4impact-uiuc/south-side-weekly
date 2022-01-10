@@ -142,7 +142,6 @@ const ContributorFeedback: FC<ClaimPitchProps> = ({
           </div>
           <Rating
             icon="star"
-            //defaultRating={rating}
             maxRating={5}
             className="rating"
             size="huge"
@@ -160,9 +159,6 @@ const ContributorFeedback: FC<ClaimPitchProps> = ({
               value={feedbackText}
             />
           </Form>
-          <pre>
-            {JSON.stringify({ rating: rating, text: feedbackText }, null, 2)}
-          </pre>
         </div>
       </Modal.Content>
       <Modal.Actions>
