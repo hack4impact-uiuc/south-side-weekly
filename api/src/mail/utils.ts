@@ -1,9 +1,8 @@
 import * as handlebars from 'handlebars';
 import { SendMailOptions } from 'nodemailer';
-import { ITeam, IUser } from 'ssw-common';
+import { BasePopulatedPitch, Team, UserFields } from 'ssw-common';
 
 import { Template } from './types';
-import { getUserFulName } from '../utils/helpers';
 import * as htmlTemplates from './templates';
 
 export const getHtmlString = (templateName: Template): string => {
@@ -44,27 +43,34 @@ export const buildSendMailOptions = (
   subject: string,
   html: Template,
   htmlData: Record<string, unknown>,
+  options?: SendMailOptions,
 ): SendMailOptions => ({
   to: to,
   from: process.env.EMAIL_USERNAME,
   subject: subject,
   html: compileTemplate(html, htmlData),
+  ...options,
 });
 
 interface Contributor {
-  userId: IUser;
-  teams: ITeam[];
+  userId: UserFields;
+  teams: Team[];
 }
 
 interface TeamMembers {
   team: string;
-  users: IUser[];
+  users: UserFields[];
 }
 
-export const groupContributors = (
-  contributors: Contributor[],
-): TeamMembers[] => {
-  const teamsToContributors = new Map<string, IUser[]>();
+export const groupContributors = (pitch: BasePopulatedPitch): TeamMembers[] => {
+  const teamsToContributors = new Map<string, UserFields[]>();
+  const {
+    assignmentContributors: contributors,
+    writer,
+    primaryEditor,
+    secondEditors,
+    thirdEditors,
+  } = pitch;
 
   contributors.forEach((contributor) => {
     contributor.teams.forEach((team) => {
@@ -77,6 +83,21 @@ export const groupContributors = (
     });
   });
 
+  if (writer) {
+    teamsToContributors.set('Writing', [writer]);
+  }
+  if (primaryEditor) {
+    teamsToContributors.set('Primary Editor', [primaryEditor]);
+  }
+
+  if (secondEditors.length > 0) {
+    teamsToContributors.set('Second Editors', secondEditors);
+  }
+
+  if (thirdEditors.length > 0) {
+    teamsToContributors.set('Third Editors', thirdEditors);
+  }
+
   const groupedContributors = Array.from(
     teamsToContributors,
     ([team, users]) => ({ team, users }),
@@ -85,14 +106,14 @@ export const groupContributors = (
   return groupedContributors.sort((a, b) => a.team.localeCompare(b.team));
 };
 
-export const buildContributorHtml = (contributors: Contributor[]): string => {
-  const groupedContributors = groupContributors(contributors);
+export const buildContributorHtml = (pitch: BasePopulatedPitch): string => {
+  const groupedContributors = groupContributors(pitch);
 
   // Build html multilevel list of contributors for each team
   const contributorHtml = groupedContributors
     .map((group) => {
       const teamHtml = group.users
-        .map((user) => `<li>${getUserFulName(user)}</li>`)
+        .map((user) => `<li>${user.fullname} - ${user.email}</li>`)
         .join('');
 
       return `<li>${group.team}<ul>${teamHtml}</ul></li>`;

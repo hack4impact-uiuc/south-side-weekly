@@ -5,6 +5,7 @@ import {
   sendApprovedPitchMail,
   sendClaimRequestApprovedMail,
   sendClaimRequestDeclinedMail,
+  sendContributorAddedToPitchMail,
   sendDeclinedPitchMail,
 } from '../mail/sender';
 import { populatePitch } from '../populators';
@@ -185,8 +186,16 @@ export const approvePitch = async (
     populatedPitch.author,
     populatedPitch.reviewedBy,
     populatedPitch,
-    req.body.writer !== null,
+    req.body.writer === populatedPitch.author._id,
   );
+
+  if (req.body.writer && req.body.writer !== populatedPitch.author._id) {
+    sendContributorAddedToPitchMail(
+      populatedPitch.writer,
+      populatedPitch.reviewedBy,
+      populatedPitch,
+    );
+  }
 
   sendSuccess(res, 'Pitch approved successfully', pitch);
 };
@@ -295,15 +304,14 @@ export const approveClaimRequest = async (
     return;
   }
 
-  sendClaimRequestApprovedMail(user, pitch, req.user);
+  const defaultPopulatedPitch = (await populatePitch(
+    pitch,
+    'default',
+  )) as BasePopulatedPitch;
 
-  const populateType = extractPopulateQuery(req.query);
+  sendClaimRequestApprovedMail(user, defaultPopulatedPitch, req.user);
 
-  sendSuccess(
-    res,
-    'Claim approved successfully',
-    await populatePitch(pitch, populateType),
-  );
+  sendSuccess(res, 'Claim approved successfully', defaultPopulatedPitch);
 };
 
 type DeclineClaimReqBody = { userId: string; teamId: string };
