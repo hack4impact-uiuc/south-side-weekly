@@ -14,8 +14,6 @@ interface PitchesResponse {
   count: number;
 }
 
-const searchFields = ['title', 'description'];
-
 const ignoreKeys = ['hasPublishDate', 'claimStatus'];
 
 const mongooseFilters = (
@@ -95,7 +93,7 @@ const claimablePitchesFilter = (
         isEditor && user.role === rolesEnum.STAFF
           ? {
               $or: [
-                { secondaryEditor: { $ne: [] } },
+                { secondEditors: { $ne: [] } },
                 { thirdEditors: { $ne: [] } },
               ],
             }
@@ -121,12 +119,34 @@ const claimablePitchesFilter = (
       isEditor && user.role === rolesEnum.STAFF
         ? {
             $or: [
-              { secondaryEditor: { $ne: [] } },
+              { secondEditors: { $ne: [] } },
               { thirdEditors: { $ne: [] } },
             ],
           }
         : undefined,
     ].filter((item) => item !== undefined),
+  };
+};
+
+const searchFilter = (search: string): FilterQuery<PitchSchema> => {
+  if (!search || search === '') {
+    return {};
+  }
+
+  search = search.trim();
+
+  const regexMatch = (field: string): Condition<any> => ({
+    $regexMatch: {
+      input: field,
+      regex: search,
+      options: 'i',
+    },
+  });
+
+  return {
+    $expr: {
+      $or: [regexMatch('$title'), regexMatch('$description')],
+    },
   };
 };
 
@@ -142,28 +162,8 @@ const paginate = async (
     definedFilters,
     hasPublishDateFilter(filters['hasPublishDate']),
     claimStatusFilter(filters['claimStatus']),
+    searchFilter(search),
   );
-
-  if (search !== null && search !== '') {
-    if (mergedFilters.$and !== undefined) {
-      mergedFilters.$and.push({
-        $or: searchFields.map((field) => ({
-          [field]: { $regex: search, $options: 'i' },
-        })),
-      });
-    } else if (mergedFilters.$or !== undefined) {
-      mergedFilters.$or = [
-        ...mergedFilters.$or,
-        ...searchFields.map((field) => ({
-          [field]: { $regex: search, $options: 'i' },
-        })),
-      ];
-    } else {
-      mergedFilters.$or = searchFields.map((field) => ({
-        [field]: { $regex: search, $options: 'i' },
-      }));
-    }
-  }
 
   console.log('Pitch doc filters: ');
   console.log(mergedFilters);

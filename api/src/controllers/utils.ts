@@ -103,7 +103,7 @@ export const extractSearchQuery = (query: Record<string, unknown>): string => {
     return '';
   }
 
-  return query.search as string;
+  return (query.search as string).trim();
 };
 
 const takenKeys = [

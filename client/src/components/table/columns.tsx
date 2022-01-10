@@ -5,6 +5,7 @@ import {
   BasePopulatedUser,
   FullPopulatedPitch,
   Pitch,
+  Team,
 } from 'ssw-common';
 
 import { FieldTag, UserPicture } from '..';
@@ -18,7 +19,6 @@ import {
 import {
   ClaimableTeamsList,
   ClaimableTeamsPitch,
-  getClaimableTeams,
 } from '../list/ClaimableTeamsList';
 import { TagList } from '../list/TagList';
 import UserChip from '../tag/UserChip';
@@ -64,7 +64,12 @@ export const teamsColumn = configureColumn<BasePopulatedUser>({
   title: 'Teams',
   width: 2,
   extractor: function getTeams(user: BasePopulatedUser) {
-    return <TagList size="tiny" tags={user.teams} />;
+    return (
+      <TagList
+        size="tiny"
+        tags={user.teams.sort((a, b) => a.name.localeCompare(b.name))}
+      />
+    );
   },
 });
 
@@ -74,7 +79,11 @@ export const interestsColumn = configureColumn<BasePopulatedUser>({
   extractor: function getInterests(user: BasePopulatedUser) {
     return (
       <>
-        <TagList size="tiny" tags={user.interests} limit={3} />
+        <TagList
+          size="tiny"
+          tags={user.interests.sort((a, b) => a.name.localeCompare(b.name))}
+          limit={3}
+        />
       </>
     );
   },
@@ -172,7 +181,13 @@ export const associatedInterestsColumn = configureColumn<
   id: 'topics',
   title: 'Associated Interests',
   extractor: function getInterests(pitch) {
-    return <TagList size="tiny" tags={pitch.topics} limit={3} />;
+    return (
+      <TagList
+        size="tiny"
+        tags={pitch.topics.sort((a, b) => a.name.localeCompare(b.name))}
+        limit={3}
+      />
+    );
   },
   width: 3,
 });
@@ -246,14 +261,34 @@ export const unclaimedTeamsColumn = configureColumn<ClaimableTeamsPitch>({
   title: 'Unclaimed Teams',
   width: 2,
   extractor: function GetUnclaimedTeams({ ...pitch }) {
-    const { user } = useAuth();
+    const { teams } = useTeams();
+
+    const EDITING_TEAM = teams.find((team) => team.name === 'Editing')!;
+    const WRITING_TEAM = teams.find((team) => team.name === 'Writing')!;
+
+    const getUnclaimedTeams = (pitch: ClaimableTeamsPitch): Team[] => {
+      const needsEditors =
+        pitch.secondEditors.length === 0 || pitch.thirdEditors.length === 0;
+      const needsWriter = pitch.writer === null;
+
+      const unclaimedTeams = pitch.teams
+        .filter((team) => team.target > 0)
+        .map((team) => team.teamId);
+
+      if (needsEditors) {
+        unclaimedTeams.push(EDITING_TEAM);
+      }
+
+      if (needsWriter) {
+        unclaimedTeams.push(WRITING_TEAM);
+      }
+
+      return unclaimedTeams.sort((a, b) => a.name.localeCompare(b.name));
+    };
 
     return (
       <div>
-        <TagList
-          size="tiny"
-          tags={getClaimableTeams(user!, pitch).map((team) => team.teamId)}
-        />
+        <TagList size="tiny" tags={getUnclaimedTeams(pitch)} limit={3} />
       </div>
     );
   },

@@ -21,8 +21,6 @@ export const getClaimableTeams = (
   if (pitch === null) {
     return [];
   }
-  const isAdmin = user.role === 'ADMIN';
-  const isStaff = user.role === 'STAFF';
 
   const writing = user!.teams.filter(
     (team) => team.name.toLowerCase() === 'writing',
@@ -48,9 +46,10 @@ export const getClaimableTeams = (
     }
 
     return sum;
-  }
+  };
 
-  const EDITING_TEAM = numEditors() > 0 ? { teamId: editing[0], target: numEditors() } : null;
+  const EDITING_TEAM =
+    numEditors() > 0 ? { teamId: editing[0], target: numEditors() } : null;
   const WRITING_TEAM =
     writing.length > 0 && pitch?.writer === null
       ? { teamId: writing[0], target: 1 }
@@ -71,7 +70,7 @@ export const getClaimableTeams = (
     teams.push(WRITING_TEAM);
   }
 
-  return teams;
+  return teams.sort((a, b) => a.teamId.name.localeCompare(b.teamId.name));
 };
 
 export const ClaimableTeamsList: FC<Props> = ({ pitch }): ReactElement => {
