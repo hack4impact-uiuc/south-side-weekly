@@ -1,5 +1,12 @@
 import _ from 'lodash';
-import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import React, {
+  FC,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useLocation } from 'react-router-dom';
 import { BasePopulatedPitch } from 'ssw-common';
 import { useQueryParams } from 'use-query-params';
@@ -35,8 +42,8 @@ export const PitchesView: FC<PitchesViewProps> = ({ type }): ReactElement => {
       limit: params.get('limit'),
       offset: params.get('offset'),
       search: params.get('search'),
-      teams__all: params.get('teams__all'),
-      interests__all: params.get('interests__all'),
+      'teams.teamId__all': params.get('teams__all'),
+      topics__all: params.get('interests__all'),
       hasPublishDate: params.get('hasPublishDate'),
       hasNoPublishDate: params.get('hasNoPublishDate'),
       claimStatus: type === 'review-unclaimed' ? 'unclaimed' : undefined,
@@ -62,26 +69,24 @@ export const PitchesView: FC<PitchesViewProps> = ({ type }): ReactElement => {
     }
   }, [type, user]);
 
+  const queryPitches = useCallback(async (): Promise<void> => {
+    const res = await apiCall<PitchesRes>({
+      url: apiUrl,
+      method: 'GET',
+      populate: 'default',
+      query: queryParams,
+    });
+
+    if (!isError(res)) {
+      setData(res.data.result);
+      toast.dismiss();
+      toast.success('Successfully loaded pitches!');
+    }
+  }, [queryParams, apiUrl]);
+
   useEffect(() => {
-    const queryPitches = async (): Promise<void> => {
-      const res = await apiCall<PitchesRes>({
-        url: apiUrl,
-        method: 'GET',
-        populate: 'default',
-        query: queryParams,
-      });
-
-      console.log(queryParams);
-
-      if (!isError(res)) {
-        setData(res.data.result);
-        toast.dismiss();
-        toast.success('Successfully loaded pitches!');
-      }
-    };
-
     queryPitches();
-  }, [queryParams, type, apiUrl]);
+  }, [type, queryPitches]);
 
   useEffect(() => {
     setData({ data: [], count: 0 });
@@ -132,7 +137,12 @@ export const PitchesView: FC<PitchesViewProps> = ({ type }): ReactElement => {
           />
         </div>
       </div>
-      <PitchRecords type={type} data={data.data} count={data.count} />
+      <PitchRecords
+        onModalClose={queryPitches}
+        type={type}
+        data={data.data}
+        count={data.count}
+      />
     </div>
   );
 };

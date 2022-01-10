@@ -44,9 +44,15 @@ interface TableProps {
   count: number;
   data: BasePopulatedPitch[];
   type: 'review-new' | 'review-unclaimed' | 'claim' | 'all';
+  onModalClose?: () => void;
 }
 
-export const PitchRecords: FC<TableProps> = ({ data, count, type }) => {
+export const PitchRecords: FC<TableProps> = ({
+  data,
+  count,
+  type,
+  onModalClose,
+}) => {
   const cols = useMemo(() => {
     switch (type) {
       case 'review-new':
@@ -72,7 +78,14 @@ export const PitchRecords: FC<TableProps> = ({ data, count, type }) => {
         open: boolean,
         setOpen: React.Dispatch<React.SetStateAction<boolean>>,
       ) {
-        return <ReviewPitch open={open} setOpen={setOpen} id={pitch._id} />;
+        return (
+          <ReviewPitch
+            onUnmount={onModalClose}
+            open={open}
+            setOpen={setOpen}
+            id={pitch._id}
+          />
+        );
       };
     }
 
@@ -81,9 +94,16 @@ export const PitchRecords: FC<TableProps> = ({ data, count, type }) => {
       open: boolean,
       setOpen: React.Dispatch<React.SetStateAction<boolean>>,
     ) {
-      return <ClaimPitch open={open} setOpen={setOpen} id={pitch._id} />;
+      return (
+        <ClaimPitch
+          open={open}
+          onUnmount={onModalClose}
+          setOpen={setOpen}
+          id={pitch._id}
+        />
+      );
     };
-  }, [type]);
+  }, [type, onModalClose]);
 
   return (
     <PaginatedTable

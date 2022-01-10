@@ -11,3 +11,4 @@ jobs:
           curl --request POST \
           --url 'https://south-side-weekly.vercel.app/api/users/update-stalled' \
           --header 'X-REQUEST-SECRET: ${{ secrets.REQUEST_SECRET }}'
+# TODO: update the endpoint and method to GET

@@ -3,8 +3,6 @@ import React, { FC, ReactElement, useMemo } from 'react';
 import cn from 'classnames';
 
 import { MultiSelect } from '../select/MultiSelect';
-import { FieldTag } from '..';
-
 import './Form.scss';
 
 interface Option {
@@ -36,6 +34,7 @@ export const FormMultiSelect: FC<FormMultiSelectProps> = ({
         <MultiSelect
           options={options}
           value={field.value}
+          disabled={!editable}
           onChange={(values) =>
             setFieldValue(
               field.name,
@@ -45,19 +44,11 @@ export const FormMultiSelect: FC<FormMultiSelectProps> = ({
         />
       </div>
     ),
-    [field, setFieldValue, label, className, options],
+    [field, setFieldValue, label, className, options, editable],
   );
 
   if (!viewable) {
     return <></>;
-  } else if (!editable) {
-    return (
-      <>
-        {field.value.map((value: string) => (
-          <FieldTag content={value} key={value} />
-        ))}
-      </>
-    );
   }
 
   return memoizedJSX;

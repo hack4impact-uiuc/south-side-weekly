@@ -57,7 +57,7 @@ const ProfileSelect: FC<DropdownProps> = ({ ...rest }): ReactElement => {
       item
       trigger={<Trigger user={user!} />}
     >
-      <Dropdown.Menu style={{ width: '200px' }}>
+      <Dropdown.Menu>
         <AuthView view="isOnboarded">
           <Dropdown.Item
             value="profile"

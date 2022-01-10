@@ -2,7 +2,10 @@ import React, { FC, useMemo } from 'react';
 import { BasePopulatedUser } from 'ssw-common';
 
 import { ReviewUser } from '..';
+import { approveUser, rejectUser } from '../../api';
 import { ViewUserModal } from '../modal/ViewUser';
+import { PrimaryButton } from '../ui/PrimaryButton';
+import { SecondaryButton } from '../ui/SecondaryButton';
 
 import {
   profilePic,
@@ -13,9 +16,9 @@ import {
   statusColumn,
   ratingColumn,
   joinedColumn,
-  actionColumn,
   rejectionColumn,
 } from './columns';
+import { configureColumn } from './dynamic/DynamicTable2.0';
 import { PaginatedTable } from './dynamic/PaginatedTable';
 
 const approvedColumns = [
@@ -36,7 +39,6 @@ const pendingColumns = [
   teamsColumn,
   interestsColumn,
   joinedColumn,
-  actionColumn,
 ];
 
 const deniedColumns = [
@@ -52,21 +54,61 @@ interface TableProps {
   count: number;
   users: BasePopulatedUser[];
   type: 'approved' | 'pending' | 'denied';
+  onModalClose?: () => void;
 }
 
-export const UsersRecords: FC<TableProps> = ({ users, count, type }) => {
+export const UsersRecords: FC<TableProps> = ({
+  users,
+  count,
+  type,
+  onModalClose,
+}) => {
+  const actionColumn = configureColumn<BasePopulatedUser>({
+    title: '',
+    width: 2,
+    extractor: function getAction(user: BasePopulatedUser) {
+      return (
+        <div style={{ display: 'flex' }}>
+          <PrimaryButton
+            size="mini"
+            onClick={async (e) => {
+              e.stopPropagation();
+              await approveUser(user);
+              if (onModalClose) {
+                onModalClose();
+              }
+            }}
+            content="Approve"
+          />
+          <SecondaryButton
+            size="mini"
+            onClick={async (e) => {
+              e.stopPropagation();
+              await rejectUser(user);
+              if (onModalClose) {
+                onModalClose();
+              }
+            }}
+            content="Decline"
+            border
+          />
+        </div>
+      );
+    },
+  });
+
   const cols = useMemo(() => {
     switch (type) {
       case 'approved':
         return approvedColumns;
       case 'pending':
-        return pendingColumns;
+        return [...pendingColumns, actionColumn];
       case 'denied':
         return deniedColumns;
       default:
         return [];
     }
-  }, [type]);
+  }, [type, actionColumn]);
 
   return (
     <PaginatedTable<BasePopulatedUser>
@@ -79,7 +121,12 @@ export const UsersRecords: FC<TableProps> = ({ users, count, type }) => {
       getModal={(user, open, setOpen) => (
         <>
           {type === 'approved' && (
-            <ViewUserModal open={open} setOpen={setOpen} user={user} />
+            <ViewUserModal
+              onUnmount={onModalClose}
+              open={open}
+              setOpen={setOpen}
+              user={user}
+            />
           )}
           {type === 'pending' && (
             <ReviewUser
@@ -87,6 +134,7 @@ export const UsersRecords: FC<TableProps> = ({ users, count, type }) => {
               open={open}
               setOpen={setOpen}
               user={user}
+              onUnmount={onModalClose}
             />
           )}
           {type === 'denied' && (
@@ -95,38 +143,7 @@ export const UsersRecords: FC<TableProps> = ({ users, count, type }) => {
               open={open}
               setOpen={setOpen}
               user={user}
-            />
-          )}
-        </>
-      )}
-    />
-  );
-
-  return (
-    <PaginatedTable
-      columns={[]}
-      records={users}
-      count={count}
-      pageOptions={['1', '10', '25', '50']}
-      getModal={(user, open, setOpen) => (
-        <>
-          {type === 'approved' && (
-            <ViewUserModal open={open} setOpen={setOpen} user={user} />
-          )}
-          {type === 'pending' && (
-            <ReviewUser
-              type="review"
-              open={open}
-              setOpen={setOpen}
-              user={user}
-            />
-          )}
-          {type === 'denied' && (
-            <ReviewUser
-              type="reject"
-              open={open}
-              setOpen={setOpen}
-              user={user}
+              onUnmount={onModalClose}
             />
           )}
         </>

@@ -1,4 +1,10 @@
-import React, { ReactElement, useEffect, useMemo, useState } from 'react';
+import React, {
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useParams, useLocation } from 'react-router-dom';
 import {
   BasePopulatedPitch,
@@ -11,11 +17,7 @@ import { Grid, Pagination, Rating } from 'semantic-ui-react';
 import _ from 'lodash';
 import { StringParam, useQueryParams } from 'use-query-params';
 
-import {
-  loadFullFeedback,
-  loadFullUser,
-  loadUserPermissions,
-} from '../api/apiWrapper';
+import { loadFullUser, loadUserPermissions } from '../api/apiWrapper';
 import { FieldTag, UserPicture } from '../components';
 import { configureColumn } from '../components/table/dynamic/DynamicTable2.0';
 import UserFeedback from '../components/card/UserFeedback';
@@ -23,11 +25,13 @@ import { EditUserModal } from '../components/modal/EditUser';
 import { useAuth } from '../contexts';
 import { TagList } from '../components/list/TagList';
 import { IconLabel } from '../components/ui/IconLabel';
-import './Profile.scss';
 import { PaginatedTable } from '../components/table/dynamic/PaginatedTable';
 import { apiCall, isError } from '../api';
 import { SingleSelect } from '../components/select/SingleSelect';
 import { parseOptionsSelect } from '../utils/helpers';
+import Loading from '../components/ui/Loading';
+
+import './Profile.scss';
 
 interface PitchesRes {
   data: BasePopulatedPitch[];
@@ -49,15 +53,8 @@ const Profile = (): ReactElement => {
     f_offset: StringParam,
   });
   const [user, setUser] = useState<BasePopulatedUser>();
-  const [feedback, setFeedback] = useState<PopulatedUserFeedback[]>([]);
-  const [pitchesData, setPitchesData] = useState<PitchesRes>({
-    data: [],
-    count: 0,
-  });
-  const [feedbackData, setFeedbackData] = useState<FeedbackRes>({
-    data: [],
-    count: 0,
-  });
+  const [pitchesData, setPitchesData] = useState<PitchesRes>();
+  const [feedbackData, setFeedbackData] = useState<FeedbackRes>();
 
   const location = useLocation();
   const [permissions, setPermissions] = useState<{
@@ -82,13 +79,17 @@ const Profile = (): ReactElement => {
   };
 
   const rating = useMemo((): number => {
-    if (feedback.length === 0) {
+    if (!feedbackData) {
       return 0;
     }
 
-    const sum = feedback.reduce((acc, curr) => acc + curr.stars, 0);
-    return sum / feedback.length;
-  }, [feedback]);
+    if (feedbackData.count === 0) {
+      return 0;
+    }
+
+    const sum = feedbackData.data.reduce((acc, curr) => acc + curr.stars, 0);
+    return sum / feedbackData.data.length;
+  }, [feedbackData]);
 
   const queryParams = useMemo(() => {
     if (!user) {
@@ -119,25 +120,24 @@ const Profile = (): ReactElement => {
     return _.omitBy(q, _.isNil);
   }, [location.search, user]);
 
-  useEffect(() => {
-    const loadData = async (): Promise<void> => {
-      const user = await loadFullUser(userId);
+  const loadUser = useCallback(async (): Promise<void> => {
+    const user = await loadFullUser(userId);
 
-      if (!user) {
-        return;
-      }
+    console.log('here');
 
-      const [feedback, permissions] = await Promise.all([
-        loadFullFeedback(user.feedback),
-        loadUserPermissions(userId),
-      ]);
+    if (!user) {
+      return;
+    }
 
-      setPermissions(permissions);
-      setFeedback(feedback);
-      setUser(user);
-    };
-    loadData();
+    const [permissions] = await Promise.all([loadUserPermissions(userId)]);
+
+    setPermissions(permissions);
+    setUser(user);
   }, [userId]);
+
+  useEffect(() => {
+    loadUser();
+  }, [userId, loadUser]);
 
   useEffect(() => {
     const loadPitches = async (): Promise<void> => {
@@ -180,8 +180,8 @@ const Profile = (): ReactElement => {
     setQueries({ limit: '10', offset: '0', f_limit: '10', f_offset: '0' });
   }, [setQueries]);
 
-  if (!user) {
-    return <div>Loading...</div>;
+  if (!user || !feedbackData || !pitchesData) {
+    return <Loading open />;
   }
 
   const titleColumn = configureColumn<BasePopulatedPitch>({
@@ -274,7 +274,7 @@ const Profile = (): ReactElement => {
                 <div className="user-role">
                   <FieldTag size="small" content={user.role} />
                 </div>
-                {feedback.length > 0 ? (
+                {feedbackData.count > 0 ? (
                   <div className="rating">
                     <Rating
                       defaultRating={rating}
@@ -282,7 +282,7 @@ const Profile = (): ReactElement => {
                       disabled
                       className="rating-icon"
                     />
-                    <p className="number-ratings">({feedback.length})</p>
+                    <p className="number-ratings">({feedbackData.count})</p>
                   </div>
                 ) : (
                   <p className="no-ratings"> No ratings </p>
@@ -290,7 +290,11 @@ const Profile = (): ReactElement => {
 
                 <div>
                   {(userId === currentUser!._id || isAdmin) && (
-                    <EditUserModal user={user} permissions={permissions} />
+                    <EditUserModal
+                      onUnmount={loadUser}
+                      user={user}
+                      permissions={permissions}
+                    />
                   )}
                 </div>
               </div>
@@ -375,7 +379,7 @@ const Profile = (): ReactElement => {
             <p>{user.journalismResponse}</p>
           </Grid.Column>
         </Grid>
-        {feedback.length > 0 && (
+        {feedbackData.count > 0 && (
           <Grid centered className="feedback">
             <Grid.Column width={10}>
               <h2 className="title">{`${user.firstName}'s`} Feedback</h2>

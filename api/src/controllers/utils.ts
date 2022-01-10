@@ -138,6 +138,11 @@ const extractFilterQuery = <T>(
       value = value.split(',');
     }
 
+    console.log('Filter is: ', filter);
+    console.log('Field is: ', field);
+    console.log('Operator is: ', operator);
+    console.log('Value is: ', value);
+
     if (operator) {
       return { [field]: { [`$${operator}`]: value } };
     }
@@ -147,5 +152,6 @@ const extractFilterQuery = <T>(
 
   const filters = _.merge({}, ...cleanFilters);
 
+  console.log(filters);
   return filters;
 };

@@ -94,6 +94,9 @@ const paginate = async (
     activityFilter(filters['activityStatus']),
   );
 
+  console.log('User filters');
+  console.log(mergedFilters);
+
   const users = await User.find(mergedFilters)
     .skip(offset * limit)
     .limit(limit)

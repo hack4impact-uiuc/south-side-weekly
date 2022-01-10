@@ -8,7 +8,7 @@ const Loading: FC<ModalProps> = ({ ...rest }): ReactElement => (
   <Modal dimmer="blurring" className="loading-modal" size="mini" {...rest}>
     <Modal.Content>
       <div className="spinner">
-        <Loader color="white" type="Bars" height={150} width={150} />
+        <Loader color="black" type="Bars" height={150} width={250} />
       </div>
     </Modal.Content>
   </Modal>

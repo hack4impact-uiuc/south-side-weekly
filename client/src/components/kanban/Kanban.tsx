@@ -115,7 +115,7 @@ const Kanban: FC<KanbanProps> = ({ issueId }): ReactElement => {
   }, [issueId]);
 
   return (
-    <Segment className="kanban-wrapper">
+    <Segment stacked className="kanban-wrapper">
       <DragDropContext
         onDragEnd={(result) => onDragEnd(result, columns, setColumns)}
       >

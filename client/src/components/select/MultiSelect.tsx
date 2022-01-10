@@ -17,6 +17,7 @@ export interface MultiSelectProps {
   className?: string;
   styles?: StylesConfig<MultiSelectOption>;
   maxMenuHeight?: number;
+  disabled?: boolean;
 }
 
 export const MultiSelect: FC<MultiSelectProps> = ({
@@ -27,6 +28,7 @@ export const MultiSelect: FC<MultiSelectProps> = ({
   className = '',
   styles = {},
   maxMenuHeight,
+  disabled = false,
 }): ReactElement => (
   <Select<MultiSelectOption, true>
     isMulti
@@ -39,5 +41,6 @@ export const MultiSelect: FC<MultiSelectProps> = ({
     className={className}
     styles={styles}
     maxMenuHeight={maxMenuHeight}
+    isDisabled={disabled}
   />
 );

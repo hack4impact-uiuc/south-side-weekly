@@ -3,7 +3,6 @@ import React, { FC, ReactElement, useMemo } from 'react';
 import cn from 'classnames';
 
 import { SingleSelect } from '../select/SingleSelect';
-import { FieldTag } from '..';
 
 import './Form.scss';
 
@@ -33,19 +32,18 @@ export const FormSingleSelect: FC<FormSingleSelectProps> = ({
       <div className={cn('form-field', className)}>
         {label && <label>{label}</label>}
         <SingleSelect
+          disabled={!editable}
           options={options}
           value={field.value}
           onChange={field.onChange}
         />
       </div>
     ),
-    [field, className, label, options],
+    [field, className, label, options, editable],
   );
 
   if (!viewable) {
     return <></>;
-  } else if (!editable) {
-    return <FieldTag content={field.value} key={field.value} />;
   }
 
   return memoizedJSX;

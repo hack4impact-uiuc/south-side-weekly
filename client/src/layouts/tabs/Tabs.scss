@@ -1,6 +1,11 @@
 @import '../../styles/colors.scss';
 
 .page-tabs {
+  .tab-wrapper {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
   .ui {
     &.menu {
       margin-bottom: 2px;

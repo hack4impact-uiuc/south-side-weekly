@@ -2,16 +2,49 @@
 @import '../../styles/variables.scss';
 
 .navbar {
+  display: flex;
+  align-items: center;
   background-color: $primary !important;
   border-top: solid $primary 1px !important;
   border-bottom: solid $mainBackground 10px !important;
   border-radius: 0 !important;
   position: sticky;
   z-index: 1;
-  height: $navbarHeight;
+
+  .item {
+    padding: 3px !important;
+  }
+
+  #mobile-wrapper {
+    #open-sidebar {
+      background: transparent;
+      color: white;
+    }
+    .sidebar {
+      background: $primary !important;
+
+      .menu {
+        background-color: transparent !important;
+        .item {
+          padding: 3px !important;
+          width: 100% !important;
+        }
+      }
+    }
+  }
+
+  #desktop-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+  }
 
   .header {
     margin-left: 20px !important;
+
+    #nav-title {
+      font-size: 1.25rem;
+    }
   }
 
   a.item:not(.header) {
@@ -21,7 +54,7 @@
 
   .item {
     color: white !important;
-    padding: 10px !important;
+    padding: 3px !important;
 
     &.active {
       background-color: $mainBackground !important;
@@ -40,6 +73,7 @@
 
   .item.profile {
     margin-right: 20px !important;
+    background-color: black !important;
 
     .item.active {
       background-color: $primary !important;
@@ -49,5 +83,17 @@
     .welcome-text {
       margin-right: 20px;
     }
+  }
+}
+
+@media only screen and (min-width: 150px) and (max-width: 1023px) {
+  #desktop-wrapper {
+    display: none !important;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  #mobile-wrapper {
+    display: none !important;
   }
 }

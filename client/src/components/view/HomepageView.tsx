@@ -1,5 +1,12 @@
 import _ from 'lodash';
-import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import React, {
+  FC,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useLocation } from 'react-router-dom';
 import { FullPopulatedPitch } from 'ssw-common';
 import { useQueryParams } from 'use-query-params';
@@ -35,8 +42,8 @@ export const HomepageView: FC<HomepageViewProps> = ({ type }): ReactElement => {
       limit: params.get('limit'),
       offset: params.get('offset'),
       search: params.get('search'),
-      teams__all: params.get('teams__all'),
-      interests__all: params.get('interests__all'),
+      'teams.teamId__all': params.get('teams__all'),
+      topics__all: params.get('interests__all'),
       hasPublishDate: type === 'published' || undefined,
       'issueStatuses.issueStatus':
         type === 'published' ? issueStatusEnum.PUSH : undefined,
@@ -65,24 +72,24 @@ export const HomepageView: FC<HomepageViewProps> = ({ type }): ReactElement => {
     }
   }, [type, user]);
 
+  const queryPitches = useCallback(async (): Promise<void> => {
+    const res = await apiCall<PitchesRes>({
+      url: apiUrl,
+      method: 'GET',
+      populate: type === 'published' ? 'full' : 'default',
+      query: queryParams,
+    });
+
+    if (!isError(res)) {
+      setData(res.data.result);
+      toast.dismiss();
+      toast.success('Successfully loaded pitches!');
+    }
+  }, [queryParams, apiUrl, type]);
+
   useEffect(() => {
-    const queryPitches = async (): Promise<void> => {
-      const res = await apiCall<PitchesRes>({
-        url: apiUrl,
-        method: 'GET',
-        populate: type === 'published' ? 'full' : 'default',
-        query: queryParams,
-      });
-
-      if (!isError(res)) {
-        setData(res.data.result);
-        toast.dismiss();
-        toast.success('Successfully loaded pitches!');
-      }
-    };
-
     queryPitches();
-  }, [queryParams, type, apiUrl]);
+  }, [queryPitches]);
 
   useEffect(() => {
     setData({ data: [], count: 0 });
@@ -122,7 +129,12 @@ export const HomepageView: FC<HomepageViewProps> = ({ type }): ReactElement => {
           />
         </div>
       </div>
-      <HomepageRecords type={type} data={data.data} count={data.count} />
+      <HomepageRecords
+        onModalClose={queryPitches}
+        type={type}
+        data={data.data}
+        count={data.count}
+      />
     </div>
   );
 };

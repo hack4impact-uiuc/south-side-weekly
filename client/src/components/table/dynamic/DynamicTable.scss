@@ -1,6 +1,7 @@
 @import '../../../styles/colors.scss';
 
 .dynamic-table {
+  max-height: 10% !important;
   tr td,
   tr th {
     border-right: none !important;

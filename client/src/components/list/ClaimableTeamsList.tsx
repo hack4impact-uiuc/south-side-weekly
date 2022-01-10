@@ -31,19 +31,26 @@ export const getClaimableTeams = (
     (team) => team.name.toLowerCase() === 'editing',
   );
 
-  const numberOfEditorsNeeded =
-    (pitch.primaryEditor ? 0 : 1) +
-    (pitch.secondEditors.length ? 1 : 0) +
-    pitch.thirdEditors.length
-      ? 1
-      : 0;
-  const EDITING_TEAM =
-    (isAdmin && editing.length > 0 && pitch.primaryEditor !== null) ||
-    (isStaff &&
-      editing.length > 0 &&
-      (pitch.secondEditors.length < 1 || pitch.thirdEditors.length < 1))
-      ? { teamId: editing[0], target: numberOfEditorsNeeded }
-      : null;
+  const numEditors = (): number => {
+    // User is not an editor
+    if (editing.length === 0) {
+      return 0;
+    }
+
+    let sum = 0;
+
+    if (pitch.secondEditors.length === 0) {
+      sum++;
+    }
+
+    if (pitch.thirdEditors.length === 0) {
+      sum++;
+    }
+
+    return sum;
+  }
+
+  const EDITING_TEAM = numEditors() > 0 ? { teamId: editing[0], target: numEditors() } : null;
   const WRITING_TEAM =
     writing.length > 0 && pitch?.writer === null
       ? { teamId: writing[0], target: 1 }

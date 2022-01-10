@@ -38,7 +38,7 @@ export const Tabs: FC<Props> = ({
     <Tab
       {...rest}
       className={cn('page-tabs', className)}
-      menu={{ secondary: true, pointing: true }}
+      menu={{ secondary: true, pointing: true, className: 'tab-wrapper' }}
       panes={panes}
     />
   );

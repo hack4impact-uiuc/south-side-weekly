@@ -71,6 +71,7 @@ interface TableProps {
   count: number;
   data: (BasePopulatedPitch | FullPopulatedPitch)[];
   type: 'member' | 'submitted' | 'claim-submitted' | 'published';
+  onModalClose?: () => void;
 }
 
 export const HomepageRecords: FC<TableProps> = ({ data, count, type }) => {
@@ -111,8 +112,9 @@ export const HomepageRecords: FC<TableProps> = ({ data, count, type }) => {
     }
   }, [type]);
 
-  const viewPitch = (pitch: Pick<Pitch, '_id'>): any =>
+  const viewPitch = (pitch: Pick<Pitch, '_id'>): void => {
     window.open(`/pitch/${pitch._id}`);
+  };
 
   return (
     <PaginatedTable<FullPopulatedPitch | BasePopulatedPitch>

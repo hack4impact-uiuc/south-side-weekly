@@ -26,16 +26,15 @@ const claimStatusFilter = (
   status: Condition<string>,
 ): FilterQuery<PitchSchema> => {
   status = String(status).toLowerCase();
-  console.log(status);
   if (!status || (status !== 'unclaimed' && status !== 'claimed')) {
     return {};
   }
 
   if (status === 'claimed') {
     return {
-      'teams.target': { $eq: 0 },
-      writer: { $exists: true },
-      primaryEditor: { $exists: true },
+      teams: { $not: { $elemMatch: { target: { $gt: 0 } } } },
+      writer: { $ne: null },
+      primaryEditor: { $ne: null },
       'secondaryEditor.0': { $exists: true },
       'thirdEditors.0': { $exists: true },
     };
@@ -43,11 +42,11 @@ const claimStatusFilter = (
 
   return {
     $or: [
-      { writer: { $exists: false } },
-      { 'teams.target': { $gt: 0 } },
-      { primaryEditor: { $exists: false } },
-      { 'secondaryEditor.0': { $exists: false } },
-      { 'thirdEditors.0': { $exists: false } },
+      { writer: { $eq: null } },
+      { teams: { $elemMatch: { target: { $gt: 0 } } } },
+      { primaryEditor: { $eq: null } },
+      { secondEditors: { $eq: [] } },
+      { thirdEditors: { $eq: [] } },
     ],
   };
 };
@@ -79,27 +78,55 @@ const claimablePitchesFilter = (
     (team) => team.name.toLowerCase() === 'editing',
   );
 
+  if (!isWriter) {
+    return {
+      author: { $eq: user._id },
+      status: { $eq: pitchStatusEnum.APPROVED },
+      writer: { $ne: null },
+      $or: [
+        {
+          teams: {
+            $elemMatch: {
+              target: { $gt: 0 },
+              teamId: { $in: user.teams.map((team) => team._id) },
+            },
+          },
+        },
+        isEditor && user.role === rolesEnum.STAFF
+          ? {
+              $or: [
+                { secondaryEditor: { $ne: [] } },
+                { thirdEditors: { $ne: [] } },
+              ],
+            }
+          : undefined,
+      ].filter((item) => item !== undefined),
+    };
+  }
   return {
-    author: { $ne: user._id },
-    status: pitchStatusEnum.APPROVED,
-    writer: { $exists: !isWriter },
-    primaryEditor:
-      isEditor && user.role === rolesEnum.ADMIN
-        ? { $exists: false }
-        : undefined,
-    $or:
-      isEditor && user.role === rolesEnum.STAFF
-        ? [
-            { 'secondaryEditor.0': { $exists: false } },
-            { 'thirdEditors.0': { $exists: false } },
-          ]
-        : [],
-    teams: {
-      $elemMatch: {
-        target: { $gt: 0 },
-        teamId: { $in: user.teams.map((t) => t._id) },
+    $and: [
+      { author: { $eq: user._id } },
+      { status: { $eq: pitchStatusEnum.APPROVED } },
+    ],
+    $or: [
+      { writer: { $eq: null } },
+      {
+        teams: {
+          $elemMatch: {
+            target: { $gt: 0 },
+            teamId: { $in: user.teams.map((team) => team._id) },
+          },
+        },
       },
-    },
+      isEditor && user.role === rolesEnum.STAFF
+        ? {
+            $or: [
+              { secondaryEditor: { $ne: [] } },
+              { thirdEditors: { $ne: [] } },
+            ],
+          }
+        : undefined,
+    ].filter((item) => item !== undefined),
   };
 };
 
@@ -113,15 +140,32 @@ const paginate = async (
   const mergedFilters = _.merge(
     mongooseFilters(filters),
     definedFilters,
-    {
-      $or: searchFields.map((field) => ({
-        [field]: { $regex: search, $options: 'i' },
-      })),
-    },
     hasPublishDateFilter(filters['hasPublishDate']),
     claimStatusFilter(filters['claimStatus']),
   );
 
+  if (search !== null && search !== '') {
+    if (mergedFilters.$and !== undefined) {
+      mergedFilters.$and.push({
+        $or: searchFields.map((field) => ({
+          [field]: { $regex: search, $options: 'i' },
+        })),
+      });
+    } else if (mergedFilters.$or !== undefined) {
+      mergedFilters.$or = [
+        ...mergedFilters.$or,
+        ...searchFields.map((field) => ({
+          [field]: { $regex: search, $options: 'i' },
+        })),
+      ];
+    } else {
+      mergedFilters.$or = searchFields.map((field) => ({
+        [field]: { $regex: search, $options: 'i' },
+      }));
+    }
+  }
+
+  console.log('Pitch doc filters: ');
   console.log(mergedFilters);
 
   const pitches = await Pitch.find(mergedFilters)

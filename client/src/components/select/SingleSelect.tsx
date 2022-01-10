@@ -18,6 +18,7 @@ export interface SelectProps<T> {
   className?: string | undefined;
   isClearable?: boolean;
   maxMenuHeight?: number;
+  disabled?: boolean;
 }
 
 export const SingleSelect = <SelectOptionValue,>({
@@ -28,6 +29,7 @@ export const SingleSelect = <SelectOptionValue,>({
   className,
   isClearable = true,
   maxMenuHeight,
+  disabled = false,
 }: SelectProps<SelectOptionValue>): ReactElement => (
   <ReactSelect<SelectOption<SelectOptionValue>>
     placeholder={placeholder}
@@ -38,5 +40,6 @@ export const SingleSelect = <SelectOptionValue,>({
     className={cn(className)}
     menuPlacement={'auto'}
     maxMenuHeight={maxMenuHeight}
+    isDisabled={disabled}
   />
 );

@@ -1,5 +1,12 @@
 import _ from 'lodash';
-import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import React, {
+  FC,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useLocation } from 'react-router-dom';
 import { BasePopulatedUser } from 'ssw-common';
 import { useQueryParams } from 'use-query-params';
@@ -47,23 +54,23 @@ export const UsersView: FC<UsersViewProps> = ({ type }): ReactElement => {
     return _.omitBy(q, _.isNil);
   }, [location.search]);
 
-  useEffect(() => {
-    const queryUsers = async (): Promise<void> => {
-      const res = await apiCall<UsersRes>({
-        url: `/users/${type}`,
-        method: 'GET',
-        populate: 'default',
-        query: queryParams,
-      });
+  const queryUsers = useCallback(async (): Promise<void> => {
+    const res = await apiCall<UsersRes>({
+      url: `/users/${type}`,
+      method: 'GET',
+      populate: 'default',
+      query: queryParams,
+    });
 
-      if (!isError(res)) {
-        setData(res.data.result);
-        toast.dismiss();
-      }
-    };
-
-    queryUsers();
+    if (!isError(res)) {
+      setData(res.data.result);
+      toast.dismiss();
+    }
   }, [queryParams, type]);
+
+  useEffect(() => {
+    queryUsers();
+  }, [queryUsers]);
 
   useEffect(() => {
     setData({ users: [], count: 0 });
@@ -109,7 +116,12 @@ export const UsersView: FC<UsersViewProps> = ({ type }): ReactElement => {
           </div>
         )}
       </div>
-      <UsersRecords type={type} users={data.users} count={data.count} />
+      <UsersRecords
+        onModalClose={queryUsers}
+        type={type}
+        users={data.users}
+        count={data.count}
+      />
     </div>
   );
 };
