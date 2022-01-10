@@ -127,3 +127,47 @@
     opacity: 0.9;
   }
 }
+
+.writer-needed-tag-color {
+  background-color: $tagRed !important;
+}
+
+.\31st-needed-tag-color {
+  background-color: $tagRed !important;
+}
+
+.\31st-in-progress-tag-color {
+  background-color: $tagYellow !important;
+}
+
+.\32nds-needed-tag-color {
+  background-color: $tagRed !important;
+}
+
+.\32nds-in-progress-tag-color {
+  background-color: $tagYellow !important;
+}
+
+.fact-checking-in-progress-tag-color {
+  background-color: $tagYellow !important;
+}
+
+.\33rds-needed-tag-color {
+  background-color: $tagRed !important;
+}
+
+.\33rds-in-progress-tag-color {
+  background-color: $tagYellow !important;
+}
+
+.ready-to-publish-tag-color {
+  background-color: $tagGreen !important;
+}
+
+.dropped-tag-color {
+  background-color: $tagPurple !important;
+}
+
+.translation-in-progress-tag-color {
+  background-color: $tagYellow !important;
+}

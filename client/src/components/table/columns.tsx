@@ -7,7 +7,7 @@ import {
   Pitch,
 } from 'ssw-common';
 
-import { buildColumn, FieldTag, UserPicture } from '..';
+import { FieldTag, UserPicture } from '..';
 import { approveUser, rejectUser } from '../../api/apiWrapper';
 import { useAuth, useTeams } from '../../contexts';
 import {
@@ -26,7 +26,10 @@ import { LinkDisplay } from '../ui/LinkDisplayButton';
 import { PrimaryButton } from '../ui/PrimaryButton';
 import { SecondaryButton } from '../ui/SecondaryButton';
 
-export const profilePic = buildColumn({
+import { configureColumn } from './dynamic/DynamicTable2.0';
+
+export const profilePic = configureColumn<BasePopulatedUser>({
+  id: 'profilePic',
   title: '',
   width: 1,
   extractor: function Pic(user: BasePopulatedUser) {
@@ -36,24 +39,28 @@ export const profilePic = buildColumn({
   },
 });
 
-export const nameColumn = buildColumn({
+export const nameColumn = configureColumn<BasePopulatedUser>({
+  id: 'firstName',
   title: 'Name',
-  width: 2,
+  width: 3,
   extractor: function getName(user: BasePopulatedUser) {
-    return `${user.fullname} (${user.pronouns.join('/')})`;
+    return `${user.joinedNames} (${user.pronouns.join('/')})`;
   },
-  sorter: (a, b) => a.fullname.localeCompare(b.fullname),
+  sortable: true,
 });
 
-export const roleColumn = buildColumn({
+export const roleColumn = configureColumn<BasePopulatedUser>({
+  id: 'role',
   title: 'Role',
   width: 2,
   extractor: function getRoles(user: BasePopulatedUser) {
     return <FieldTag size="tiny" content={user.role} />;
   },
+  sortable: true,
 });
 
-export const teamsColumn = buildColumn({
+export const teamsColumn = configureColumn<BasePopulatedUser>({
+  id: 'teams',
   title: 'Teams',
   width: 2,
   extractor: function getTeams(user: BasePopulatedUser) {
@@ -61,14 +68,20 @@ export const teamsColumn = buildColumn({
   },
 });
 
-export const interestsColumn = buildColumn({
+export const interestsColumn = configureColumn<BasePopulatedUser>({
+  id: 'interests',
   title: 'Interests',
   extractor: function getInterests(user: BasePopulatedUser) {
-    return <TagList size="tiny" tags={user.interests} />;
+    return (
+      <>
+        <TagList size="tiny" tags={user.interests} limit={3} />
+      </>
+    );
   },
 });
 
-export const statusColumn = buildColumn({
+export const statusColumn = configureColumn<BasePopulatedUser>({
+  id: 'activityStatus',
   title: 'Status',
   width: 1,
   extractor: function getStatus(user: BasePopulatedUser) {
@@ -76,23 +89,27 @@ export const statusColumn = buildColumn({
   },
 });
 
-export const ratingColumn = buildColumn({
+export const ratingColumn = configureColumn<BasePopulatedUser>({
+  id: 'rating',
   title: 'Rating',
   width: 2,
   extractor: function getRating(user: BasePopulatedUser) {
     return `${user.rating ? user.rating.toFixed(2) : '-'} / 5`;
   },
+  sortable: true,
 });
 
-export const joinedColumn = buildColumn({
+export const joinedColumn = configureColumn<BasePopulatedUser>({
+  id: 'dateJoined',
   title: 'Joined',
   width: 2,
   extractor: function getJoined(user: BasePopulatedUser) {
     return new Date(user.dateJoined).toLocaleDateString();
   },
+  sortable: true,
 });
 
-export const actionColumn = buildColumn({
+export const actionColumn = configureColumn<BasePopulatedUser>({
   title: '',
   width: 2,
   extractor: function getAction(user: BasePopulatedUser) {
@@ -114,24 +131,29 @@ export const actionColumn = buildColumn({
   },
 });
 
-export const rejectionColumn = buildColumn({
+export const rejectionColumn = configureColumn<BasePopulatedUser>({
+  id: 'onboardReasoning',
   title: 'Rejection Reasoning',
   extractor: 'onboardReasoning',
 });
 
-export const titleColumn = buildColumn({
+export const titleColumn = configureColumn({
+  id: 'title',
   title: 'Title',
-  width: 3,
+  width: 4,
   extractor: 'title',
+  sortable: true,
 });
 
-export const descriptionColumn = buildColumn<Pick<Pitch, 'description'>>({
+export const descriptionColumn = configureColumn<Pick<Pitch, 'description'>>({
+  id: 'description',
   title: 'Description',
-  width: 5,
+  width: 4,
   extractor: function getDescription(pitch) {
     return (
       <div
         style={{
+          overflow: 'hidden',
           textOverflow: 'ellipsis',
           wordWrap: 'break-word',
           maxHeight: '3.6em',
@@ -144,47 +166,59 @@ export const descriptionColumn = buildColumn<Pick<Pitch, 'description'>>({
   },
 });
 
-export const associatedInterestsColumn = buildColumn<
+export const associatedInterestsColumn = configureColumn<
   Pick<BasePopulatedPitch, 'topics'>
 >({
+  id: 'topics',
   title: 'Associated Interests',
   extractor: function getInterests(pitch) {
-    return <TagList size="tiny" tags={pitch.topics} />;
+    return <TagList size="tiny" tags={pitch.topics} limit={3} />;
   },
+  width: 3,
 });
 
-export const claimableTeamsColumn = buildColumn<ClaimableTeamsPitch>({
+export const claimableTeamsColumn = configureColumn<ClaimableTeamsPitch>({
   title: 'Teams You Can Claim',
   extractor: function getTeams(pitch) {
     return <ClaimableTeamsList pitch={pitch} />;
   },
+  width: 2,
 });
 
-export const submittedColumn = buildColumn<Pick<BasePopulatedPitch, 'author'>>({
+export const submittedColumn = configureColumn<
+  Pick<BasePopulatedPitch, 'author'>
+>({
+  id: 'author',
   title: 'Submitter',
   width: 2,
   extractor: function getSubmitter(pitch) {
     return <UserChip user={pitch.author} />;
   },
+  sortable: true,
 });
 
-export const selfWriteColumn = buildColumn<Pick<BasePopulatedPitch, 'writer'>>({
+export const selfWriteColumn = configureColumn<
+  Pick<BasePopulatedPitch, 'writer'>
+>({
   title: 'Self-write',
   width: 1,
   extractor: function getSelfWrite(pitch) {
-    return pitch.writer ? (
+    if (!pitch.writer) {
+      return <></>;
+    }
+
+    return (
       <div>
         <Icon color="green" name="check" />
       </div>
-    ) : (
-      <></>
     );
   },
 });
 
-export const googleDocColumn = buildColumn<
+export const googleDocColumn = configureColumn<
   Pick<BasePopulatedPitch, 'assignmentGoogleDocLink'>
 >({
+  id: 'assignmentGoogleDocLink',
   title: 'Google Doc',
   width: 1,
   extractor: function getGoogleDoc(pitch) {
@@ -197,17 +231,18 @@ export const googleDocColumn = buildColumn<
   },
 });
 
-export const deadlineColumn = buildColumn<Pick<BasePopulatedPitch, 'deadline'>>(
-  {
-    title: 'Deadline',
-    width: 1,
-    extractor: function getDeadline({ deadline }) {
-      return new Date(deadline).toLocaleDateString();
-    },
+export const deadlineColumn = configureColumn<
+  Pick<BasePopulatedPitch, 'deadline'>
+>({
+  id: 'deadline',
+  title: 'Deadline',
+  width: 1,
+  extractor: function getDeadline({ deadline }) {
+    return new Date(deadline).toLocaleDateString();
   },
-);
+});
 
-export const unclaimedTeamsColumn = buildColumn<ClaimableTeamsPitch>({
+export const unclaimedTeamsColumn = configureColumn<ClaimableTeamsPitch>({
   title: 'Unclaimed Teams',
   width: 2,
   extractor: function GetUnclaimedTeams({ ...pitch }) {
@@ -224,7 +259,7 @@ export const unclaimedTeamsColumn = buildColumn<ClaimableTeamsPitch>({
   },
 });
 
-export const teamsRequireApprovalColumn = buildColumn<BasePopulatedPitch>({
+export const teamsRequireApprovalColumn = configureColumn<BasePopulatedPitch>({
   title: 'Teams Requring Approval',
   width: 2,
   extractor: function GetTeams({ pendingContributors }) {
@@ -242,25 +277,29 @@ export const teamsRequireApprovalColumn = buildColumn<BasePopulatedPitch>({
   },
 });
 
-export const pitchStatusCol = buildColumn<Pick<BasePopulatedPitch, 'status'>>({
+export const pitchStatusCol = configureColumn<
+  Pick<BasePopulatedPitch, 'status'>
+>({
+  id: 'status',
   title: 'Status',
-  width: '1',
+  width: 1,
   extractor: function StatusCell({ status }) {
     return <FieldTag content={status} size={'small'} />;
   },
 });
 
-export const dateSubmittedCol = buildColumn<
+export const dateSubmittedCol = configureColumn<
   Pick<BasePopulatedPitch, 'createdAt'>
 >({
+  id: 'createdAt',
   title: 'Date Submitted',
-  width: '1',
+  width: 1,
   extractor: function DateCell(pitch) {
     return new Date(pitch.createdAt).toLocaleDateString();
   },
 });
 
-export const associatedTeamsColumn = buildColumn<
+export const associatedTeamsColumn = configureColumn<
   BasePopulatedPitch | FullPopulatedPitch
 >({
   title: "Teams You're On",
@@ -278,9 +317,9 @@ export const associatedTeamsColumn = buildColumn<
   },
 });
 
-export const requestedTeamsColumn = buildColumn<BasePopulatedPitch>({
+export const requestedTeamsColumn = configureColumn<BasePopulatedPitch>({
   title: 'Team(s) Requested to Claim',
-  width: '2',
+  width: 2,
   extractor: function TeamsCell(pitch) {
     const { user } = useAuth();
     const { getTeamFromId } = useTeams();
@@ -294,25 +333,25 @@ export const requestedTeamsColumn = buildColumn<BasePopulatedPitch>({
   },
 });
 
-export const claimStatusColumn = buildColumn<
+export const claimStatusColumn = configureColumn<
   FullPopulatedPitch | BasePopulatedPitch
 >({
   title: 'Status',
-  width: '1',
+  width: 1,
   extractor: function StatusCell(pitch) {
     const { user } = useAuth();
     return (
       <FieldTag
         content={getUserClaimStatusForPitch(pitch, user!)}
-        size={'small'}
+        size="small"
       />
     );
   },
 });
 
-export const publishDateColumn = buildColumn<FullPopulatedPitch>({
+export const publishDateColumn = configureColumn<FullPopulatedPitch>({
   title: 'Publish Date',
-  width: '1',
+  width: 1,
   extractor: function DateCell(pitch) {
     if (!pitch.issueStatuses || pitch.issueStatuses.length <= 0) {
       return undefined;

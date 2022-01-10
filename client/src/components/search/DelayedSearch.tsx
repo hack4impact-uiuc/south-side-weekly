@@ -22,7 +22,7 @@ export const DelayedSearch: FC<InputProps> = ({ ...rest }): ReactElement => {
       setQuery({ search: undefined });
       return;
     }
-    toast.success(`Searching for ${value}`, { position: 'bottom-right' });
+    toast.success(`Searching for ${value}`);
     setQuery((prevQuery) => ({
       ...prevQuery,
       search: value,

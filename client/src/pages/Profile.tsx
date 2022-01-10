@@ -1,5 +1,11 @@
-import React, { ReactElement, useEffect, useMemo, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import React, {
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { useParams, useLocation } from 'react-router-dom';
 import {
   BasePopulatedPitch,
   BasePopulatedUser,
@@ -7,88 +13,189 @@ import {
   Team,
   User,
 } from 'ssw-common';
-import { Grid, Rating } from 'semantic-ui-react';
+import { Grid, Pagination, Rating } from 'semantic-ui-react';
+import _ from 'lodash';
+import { StringParam, useQueryParams } from 'use-query-params';
 
-import {
-  loadBasePitches,
-  loadFullFeedback,
-  loadFullUser,
-  loadUserPermissions,
-} from '../api/apiWrapper';
-import {
-  buildColumn,
-  DynamicTable,
-  FieldTag,
-  UserPicture,
-} from '../components';
+import { loadFullUser, loadUserPermissions } from '../api/apiWrapper';
+import { FieldTag, UserPicture } from '../components';
+import { configureColumn } from '../components/table/dynamic/DynamicTable2.0';
 import UserFeedback from '../components/card/UserFeedback';
 import { EditUserModal } from '../components/modal/EditUser';
 import { useAuth } from '../contexts';
 import { TagList } from '../components/list/TagList';
 import { IconLabel } from '../components/ui/IconLabel';
+import { PaginatedTable } from '../components/table/dynamic/PaginatedTable';
+import { apiCall, isError } from '../api';
+import { SingleSelect } from '../components/select/SingleSelect';
+import { parseOptionsSelect } from '../utils/helpers';
+import Loading from '../components/ui/Loading';
 
 import './Profile.scss';
+
+interface PitchesRes {
+  data: BasePopulatedPitch[];
+  count: number;
+}
+
+interface FeedbackRes {
+  data: PopulatedUserFeedback[];
+  count: number;
+}
 
 const Profile = (): ReactElement => {
   const { userId } = useParams<{ userId: string }>();
   const { user: currentUser, isAdmin } = useAuth();
-
+  const [queries, setQueries] = useQueryParams({
+    limit: StringParam,
+    offset: StringParam,
+    f_limit: StringParam,
+    f_offset: StringParam,
+  });
   const [user, setUser] = useState<BasePopulatedUser>();
-  const [feedback, setFeedback] = useState<PopulatedUserFeedback[]>([]);
-  const [pitches, setPitches] = useState<BasePopulatedPitch[]>([]);
+  const [pitchesData, setPitchesData] = useState<PitchesRes>();
+  const [feedbackData, setFeedbackData] = useState<FeedbackRes>();
 
+  const location = useLocation();
   const [permissions, setPermissions] = useState<{
     view: (keyof User)[];
     edit: (keyof User)[];
   }>({ view: [], edit: [] });
 
-  const rating = useMemo((): number => {
-    if (feedback.length === 0) {
+  const updateQuery = (key: string, v: string | undefined): void => {
+    if (v === undefined || v === '') {
+      setQueries({ [key]: undefined });
+      return;
+    }
+    setQueries({ [key]: v });
+  };
+
+  const parseActivePage = (page: string | number | undefined): number => {
+    if (page === undefined) {
       return 0;
     }
 
-    const sum = feedback.reduce((acc, curr) => acc + curr.stars, 0);
-    return sum / feedback.length;
-  }, [feedback]);
+    return parseInt(String(page), 10) - 1;
+  };
 
-  useEffect(() => {
-    const loadData = async (): Promise<void> => {
-      const user = await loadFullUser(userId);
+  const rating = useMemo((): number => {
+    if (!feedbackData) {
+      return 0;
+    }
 
-      if (!user) {
-        return;
-      }
+    if (feedbackData.count === 0) {
+      return 0;
+    }
 
-      const [feedback, pitches, permissions] = await Promise.all([
-        loadFullFeedback(user.feedback),
-        loadBasePitches([...user.claimedPitches, ...user.submittedPitches]),
-        loadUserPermissions(userId),
-      ]);
+    const sum = feedbackData.data.reduce((acc, curr) => acc + curr.stars, 0);
+    return sum / feedbackData.data.length;
+  }, [feedbackData]);
 
-      setPermissions(permissions);
-      setFeedback(feedback);
-      setPitches(pitches);
-      setUser(user);
+  const queryParams = useMemo(() => {
+    if (!user) {
+      return;
+    }
+    const params = new URLSearchParams(location.search);
+    const ids = [...user.claimedPitches, ...user.submittedPitches];
+    const q = {
+      limit: params.get('limit'),
+      offset: params.get('offset'),
+      _id__in: ids.join(','),
     };
 
-    loadData();
+    return _.omitBy(q, _.isNil);
+  }, [location.search, user]);
+
+  const feedbackQueryParams = useMemo(() => {
+    if (!user) {
+      return;
+    }
+    const params = new URLSearchParams(location.search);
+    const q = {
+      limit: params.get('f_limit'),
+      offset: params.get('f_offset'),
+      _id__in: user.feedback.join(','),
+    };
+
+    return _.omitBy(q, _.isNil);
+  }, [location.search, user]);
+
+  const loadUser = useCallback(async (): Promise<void> => {
+    const user = await loadFullUser(userId);
+
+    console.log('here');
+
+    if (!user) {
+      return;
+    }
+
+    const [permissions] = await Promise.all([loadUserPermissions(userId)]);
+
+    setPermissions(permissions);
+    setUser(user);
   }, [userId]);
 
-  if (!user) {
-    return <div>Loading...</div>;
+  useEffect(() => {
+    loadUser();
+  }, [userId, loadUser]);
+
+  useEffect(() => {
+    const loadPitches = async (): Promise<void> => {
+      const res = await apiCall<PitchesRes>({
+        url: `/pitches`,
+        method: 'GET',
+        populate: 'default',
+        query: queryParams,
+      });
+
+      if (!isError(res)) {
+        setPitchesData(res.data.result);
+      }
+    };
+    loadPitches();
+  }, [queryParams]);
+
+  useEffect(() => {
+    const loadFeedback = async (): Promise<void> => {
+      const res = await apiCall<{
+        data: PopulatedUserFeedback[];
+        count: number;
+      }>({
+        url: `/userFeedback`,
+        method: 'GET',
+        query: feedbackQueryParams,
+        populate: 'default',
+      });
+
+      if (!isError(res)) {
+        setFeedbackData(res.data.result);
+      }
+    };
+    loadFeedback();
+  }, [feedbackQueryParams]);
+
+  useEffect(() => {
+    setPitchesData({ data: [], count: 0 });
+    setFeedbackData({ data: [], count: 0 });
+    setQueries({ limit: '10', offset: '0', f_limit: '10', f_offset: '0' });
+  }, [setQueries]);
+
+  if (!user || !feedbackData || !pitchesData) {
+    return <Loading open />;
   }
 
-  const titleColumn = buildColumn<BasePopulatedPitch>({
+  const titleColumn = configureColumn<BasePopulatedPitch>({
     title: 'Title',
     width: 5,
     extractor: (pitch) => pitch.title,
+    sortable: true,
     sorter: (a, b) => a.title.localeCompare(b.title),
   });
-  const topicsColumn = buildColumn<BasePopulatedPitch>({
+  const topicsColumn = configureColumn<BasePopulatedPitch>({
     title: 'Associated Topics',
     width: 5,
     extractor: function getTopics(pitch) {
-      return <TagList tags={pitch.topics} />;
+      return <TagList limit={3} tags={pitch.topics} />;
     },
   });
 
@@ -104,15 +211,15 @@ const Profile = (): ReactElement => {
     return contributor.teams;
   };
 
-  const teamsColumn = buildColumn<BasePopulatedPitch>({
+  const teamsColumn = configureColumn<BasePopulatedPitch>({
     title: "Team(s) You're On",
-    width: 5,
+    width: 3,
     extractor: function getTeams(pitch) {
       return <TagList tags={getTeamsForPitch(pitch)} />;
     },
   });
 
-  const publishDateColumn = buildColumn<BasePopulatedPitch>({
+  const publishDateColumn = configureColumn<BasePopulatedPitch>({
     title: 'Publish Date',
     width: 5,
     extractor: (pitch) =>
@@ -121,6 +228,7 @@ const Profile = (): ReactElement => {
             pitch.issueStatuses[0].issueId.releaseDate,
           ).toLocaleDateString()
         : 'Not Published',
+    sortable: true,
     sorter: (a, b) => {
       if (a.issueStatuses.length === 0) {
         return 1;
@@ -166,7 +274,7 @@ const Profile = (): ReactElement => {
                 <div className="user-role">
                   <FieldTag size="small" content={user.role} />
                 </div>
-                {feedback.length > 0 ? (
+                {feedbackData.count > 0 ? (
                   <div className="rating">
                     <Rating
                       defaultRating={rating}
@@ -174,7 +282,7 @@ const Profile = (): ReactElement => {
                       disabled
                       className="rating-icon"
                     />
-                    <p className="number-ratings">({feedback.length})</p>
+                    <p className="number-ratings">({feedbackData.count})</p>
                   </div>
                 ) : (
                   <p className="no-ratings"> No ratings </p>
@@ -182,7 +290,11 @@ const Profile = (): ReactElement => {
 
                 <div>
                   {(userId === currentUser!._id || isAdmin) && (
-                    <EditUserModal user={user} permissions={permissions} />
+                    <EditUserModal
+                      onUnmount={loadUser}
+                      user={user}
+                      permissions={permissions}
+                    />
                   )}
                 </div>
               </div>
@@ -210,23 +322,29 @@ const Profile = (): ReactElement => {
             </Grid.Column>
 
             <Grid.Column textAlign="left" width={2}>
-              <h4>Teams</h4>
-              <TagList
-                size="medium"
-                className="tag-spacing"
-                tags={user.teams}
-              />
+              <div>
+                <h4>Teams</h4>
+              </div>
+              <div className="tag-col">
+                <TagList
+                  size="medium"
+                  className="tag-spacing"
+                  tags={user.teams}
+                />
+              </div>
             </Grid.Column>
 
             <Grid.Column textAlign="left" width={2}>
               <div>
                 <h4>Topic Interests</h4>
               </div>
-              <TagList
-                size="medium"
-                className="tag-spacing"
-                tags={user.interests}
-              />
+              <div className="tag-col">
+                <TagList
+                  size="medium"
+                  className="tag-spacing"
+                  tags={user.interests}
+                />
+              </div>
             </Grid.Column>
 
             <Grid.Column width={2}>
@@ -243,13 +361,11 @@ const Profile = (): ReactElement => {
           <h2>{`${user.firstName}'s` + ` Contributions`}</h2>
         )}
 
-        <DynamicTable<BasePopulatedPitch>
-          view={{
-            records: pitches,
-            columns: cols,
-          }}
-          emptyMessage="No pitches yet"
-          singleLine={pitches.length > 0}
+        <PaginatedTable
+          columns={cols}
+          records={pitchesData.data}
+          count={pitchesData.count}
+          pageOptions={['1', '10', '25', '50']}
         />
 
         <Grid columns={2} className="experience">
@@ -263,16 +379,44 @@ const Profile = (): ReactElement => {
             <p>{user.journalismResponse}</p>
           </Grid.Column>
         </Grid>
-        {feedback.length > 0 && (
+        {feedbackData.count > 0 && (
           <Grid centered className="feedback">
             <Grid.Column width={10}>
               <h2 className="title">{`${user.firstName}'s`} Feedback</h2>
-
-              {feedback.map((feedback, index) => (
-                <div key={index} className="user-feedback">
-                  <UserFeedback feedback={feedback} />
+              <div
+                style={{
+                  display: 'flex',
+                  marginTop: '20px',
+                  alignItems: 'center',
+                }}
+              >
+                <span>Records per page: </span>
+                <SingleSelect
+                  value={queries.f_limit || '10'}
+                  options={parseOptionsSelect(['1', '10', '25', '50'])}
+                  onChange={(v) => updateQuery('f_limit', v ? v?.value : '10')}
+                  placeholder="Limit"
+                />
+                <br />
+                <div>
+                  <p>Total count: {feedbackData.count}</p>
                 </div>
-              ))}
+              </div>
+              <div className="feedback-cards">
+                {feedbackData.data.map((feedback, index) => (
+                  <div key={index} className="user-feedback">
+                    <UserFeedback feedback={feedback} />
+                  </div>
+                ))}
+              </div>
+              <Pagination
+                totalPages={Math.ceil(
+                  feedbackData.count / parseInt(queries.f_limit || '10', 10),
+                )}
+                onPageChange={(e, { activePage }) =>
+                  updateQuery('f_offset', String(parseActivePage(activePage)))
+                }
+              />
             </Grid.Column>
           </Grid>
         )}

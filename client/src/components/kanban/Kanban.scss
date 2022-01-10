@@ -2,6 +2,8 @@
 
 .kanban-wrapper {
   display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
   justify-content: space-between;
   height: 100%;
   font-family: Lato;

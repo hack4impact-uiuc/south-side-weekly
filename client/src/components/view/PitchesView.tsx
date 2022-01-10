@@ -1,5 +1,12 @@
 import _ from 'lodash';
-import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import React, {
+  FC,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
 import { useLocation } from 'react-router-dom';
 import { BasePopulatedPitch } from 'ssw-common';
 import { useQueryParams } from 'use-query-params';
@@ -11,7 +18,6 @@ import { DelayedSearch } from '../search/DelayedSearch';
 import { CheckboxFilter } from '../filter/CheckboxFilter';
 import { PitchRecords } from '../table/PitchRecords';
 import { useAuth } from '../../contexts';
-// import './ReviewPitches.scss';
 
 interface PitchesRes {
   data: BasePopulatedPitch[];
@@ -36,11 +42,13 @@ export const PitchesView: FC<PitchesViewProps> = ({ type }): ReactElement => {
       limit: params.get('limit'),
       offset: params.get('offset'),
       search: params.get('search'),
-      teams__all: params.get('teams__all'),
-      interests__all: params.get('interests__all'),
+      'teams.teamId__all': params.get('teams__all'),
+      topics__all: params.get('interests__all'),
       hasPublishDate: params.get('hasPublishDate'),
       hasNoPublishDate: params.get('hasNoPublishDate'),
-      status: type === 'review-unclaimed' ? 'unclaimed' : undefined,
+      claimStatus: type === 'review-unclaimed' ? 'unclaimed' : undefined,
+      sortBy: params.get('sortBy'),
+      orderBy: params.get('orderBy'),
     };
 
     return _.omitBy(q, _.isNil);
@@ -61,24 +69,24 @@ export const PitchesView: FC<PitchesViewProps> = ({ type }): ReactElement => {
     }
   }, [type, user]);
 
+  const queryPitches = useCallback(async (): Promise<void> => {
+    const res = await apiCall<PitchesRes>({
+      url: apiUrl,
+      method: 'GET',
+      populate: 'default',
+      query: queryParams,
+    });
+
+    if (!isError(res)) {
+      setData(res.data.result);
+      toast.dismiss();
+      toast.success('Successfully loaded pitches!');
+    }
+  }, [queryParams, apiUrl]);
+
   useEffect(() => {
-    const queryPitches = async (): Promise<void> => {
-      const res = await apiCall<PitchesRes>({
-        url: apiUrl,
-        method: 'GET',
-        populate: 'default',
-        query: queryParams,
-      });
-
-      if (!isError(res)) {
-        setData(res.data.result);
-        toast.dismiss();
-        toast.success('Successfully loaded pitches!');
-      }
-    };
-
     queryPitches();
-  }, [queryParams, type, apiUrl]);
+  }, [type, queryPitches]);
 
   useEffect(() => {
     setData({ data: [], count: 0 });
@@ -102,11 +110,16 @@ export const PitchesView: FC<PitchesViewProps> = ({ type }): ReactElement => {
           <div id="search">
             <DelayedSearch id="search" />
           </div>
-          <CheckboxFilter label="Has Publish Date" filterKey="hasPublishDate" />
+          <CheckboxFilter
+            className="publish-date-checkbox"
+            label="Has Publish Date"
+            filterKey="hasPublishDate"
+          />
           <CheckboxFilter
             label="Has No Publish Date"
             value="false"
             filterKey="hasPublishDate"
+            className="publish-date-checkbox"
           />
         </div>
 
@@ -124,7 +137,12 @@ export const PitchesView: FC<PitchesViewProps> = ({ type }): ReactElement => {
           />
         </div>
       </div>
-      <PitchRecords type={type} data={data.data} count={data.count} />
+      <PitchRecords
+        onModalClose={queryPitches}
+        type={type}
+        data={data.data}
+        count={data.count}
+      />
     </div>
   );
 };

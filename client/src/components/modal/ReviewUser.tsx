@@ -43,10 +43,10 @@ export const ReviewUser: FC<ReviewUserProps> = ({
     });
 
     if (!isError(res)) {
-      toast.success('User denied', { position: 'bottom-right' });
+      toast.success('User denied');
       setOpen(false);
     } else {
-      toast.error('Fail to deny user!', { position: 'bottom-right' });
+      toast.error('Fail to deny user!');
     }
   };
 
@@ -58,10 +58,10 @@ export const ReviewUser: FC<ReviewUserProps> = ({
     });
 
     if (!isError(res)) {
-      toast.success('User approved', { position: 'bottom-right' });
+      toast.success('User approved');
       setOpen(false);
     } else {
-      toast.error('Fail to approve user!', { position: 'bottom-right' });
+      toast.error('Fail to approve user!');
     }
   };
 

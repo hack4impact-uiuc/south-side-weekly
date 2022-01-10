@@ -16,12 +16,12 @@ import {
   Login,
   Resources,
   Issues,
+  Homepage,
 } from './pages';
 import Wizard from './wizard';
 import { PrivateRoute } from './components';
 import 'semantic-ui-css/semantic.min.css';
 import './styles/styles.scss';
-import Homepage from './pages/home';
 import { Providers } from './components/wrapper/Providers';
 import { PitchDocPage } from './pages/PitchDoc';
 import Pitch from './pages/Pitch';

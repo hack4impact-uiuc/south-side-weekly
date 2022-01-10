@@ -24,6 +24,7 @@ const paginate = async (
     .skip(offset * limit)
     .limit(limit)
     .sort(sort)
+    .collation({ locale: 'en' })
     .lean();
 
   const count = await PitchFeedback.countDocuments(mergedFilters);

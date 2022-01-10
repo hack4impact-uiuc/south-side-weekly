@@ -45,9 +45,15 @@ interface TableProps {
   count: number;
   data: BasePopulatedPitch[];
   type: 'review-new' | 'review-unclaimed' | 'claim' | 'all';
+  onModalClose?: () => void;
 }
 
-export const PitchRecords: FC<TableProps> = ({ data, count, type }) => {
+export const PitchRecords: FC<TableProps> = ({
+  data,
+  count,
+  type,
+  onModalClose,
+}) => {
   const history = useHistory();
   const cols = useMemo(() => {
     switch (type) {
@@ -74,7 +80,14 @@ export const PitchRecords: FC<TableProps> = ({ data, count, type }) => {
         open: boolean,
         setOpen: React.Dispatch<React.SetStateAction<boolean>>,
       ) {
-        return <ReviewPitch open={open} setOpen={setOpen} id={pitch._id} />;
+        return (
+          <ReviewPitch
+            onUnmount={onModalClose}
+            open={open}
+            setOpen={setOpen}
+            id={pitch._id}
+          />
+        );
       };
     }
 
@@ -83,9 +96,16 @@ export const PitchRecords: FC<TableProps> = ({ data, count, type }) => {
       open: boolean,
       setOpen: React.Dispatch<React.SetStateAction<boolean>>,
     ) {
-      return <ClaimPitch open={open} setOpen={setOpen} id={pitch._id} />;
+      return (
+        <ClaimPitch
+          open={open}
+          onUnmount={onModalClose}
+          setOpen={setOpen}
+          id={pitch._id}
+        />
+      );
     };
-  }, [type]);
+  }, [type, onModalClose]);
 
   const onRecordClick = (pitch: BasePopulatedPitch): void => {
     history.push(`/pitch/${pitch._id}`);
@@ -99,6 +119,8 @@ export const PitchRecords: FC<TableProps> = ({ data, count, type }) => {
       pageOptions={['1', '10', '25', '50']}
       getModal={getModal}
       onRecordClick={onRecordClick}
+      sortType="query"
+      sortable
     />
   );
 };

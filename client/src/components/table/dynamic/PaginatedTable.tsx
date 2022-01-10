@@ -1,35 +1,21 @@
 import React, { ReactElement } from 'react';
-import { Pagination, Table } from 'semantic-ui-react';
+import { Pagination } from 'semantic-ui-react';
 import { useQueryParams, StringParam } from 'use-query-params';
 
 import { parseOptionsSelect } from '../../../utils/helpers';
 import { SingleSelect } from '../../select/SingleSelect';
 
-import DynamicTable from './DynamicTable';
-import { DynamicColumn } from './types';
+import DynamicTable, { DynamicTableProps } from './DynamicTable2.0';
 
-interface PaginateOptions<T> {
-  records: T[];
-  count: number;
-  columns: DynamicColumn<T>[];
+interface PaginateOptions<T> extends DynamicTableProps<T> {
   pageOptions: string[];
-  getModal?: (
-    record: T,
-    open: boolean,
-    setOpen: React.Dispatch<React.SetStateAction<boolean>>,
-  ) => ReactElement;
-  onRecordClick?: (record: T) => void;
-  emptyMessage?: string;
+  count: number;
 }
 
 export const PaginatedTable = <T,>({
-  records,
-  getModal,
-  onRecordClick,
   count,
-  columns,
   pageOptions,
-  emptyMessage,
+  ...rest
 }: PaginateOptions<T>): ReactElement => {
   const [query, setQuery] = useQueryParams({
     limit: StringParam,
@@ -38,14 +24,14 @@ export const PaginatedTable = <T,>({
 
   const updateQuery = (
     key: 'offset' | 'limit',
-    v: string | undefined,
+    v: { value: string | undefined } | undefined | null,
   ): void => {
-    if (v === undefined || v === '') {
-      setQuery({ [key]: undefined });
+    if (v === null || v === undefined || v.value === '') {
+      setQuery({ offset: '0', limit: '10' });
       return;
     }
 
-    setQuery({ [key]: v });
+    setQuery({ [key]: v.value });
   };
 
   const parseActivePage = (page: string | number | undefined): number => {
@@ -63,7 +49,7 @@ export const PaginatedTable = <T,>({
         <SingleSelect
           value={query.limit || '10'}
           options={parseOptionsSelect(pageOptions)}
-          onChange={(v) => updateQuery('limit', v ? v?.value : '10')}
+          onChange={(v) => updateQuery('limit', v)}
           placeholder="Limit"
         />
         <br />
@@ -72,22 +58,18 @@ export const PaginatedTable = <T,>({
         </div>
       </div>
       <DynamicTable<T>
-        onRecordClick={onRecordClick}
-        getModal={getModal}
-        view={{
-          records,
-          columns,
-        }}
-        emptyMessage={emptyMessage}
+        {...rest}
         footer={
-          <Table.HeaderCell>
+          count > 0 ? (
             <Pagination
               totalPages={Math.ceil(count / parseInt(query.limit || '10', 10))}
               onPageChange={(e, { activePage }) =>
-                updateQuery('offset', String(parseActivePage(activePage)))
+                updateQuery('offset', {
+                  value: String(parseActivePage(activePage)),
+                })
               }
             />
-          </Table.HeaderCell>
+          ) : undefined
         }
       />
     </div>

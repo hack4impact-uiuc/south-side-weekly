@@ -94,10 +94,14 @@ const paginate = async (
     activityFilter(filters['activityStatus']),
   );
 
+  console.log('User filters');
+  console.log(mergedFilters);
+
   const users = await User.find(mergedFilters)
     .skip(offset * limit)
     .limit(limit)
     .sort(sort)
+    .collation({ locale: 'en' })
     .lean({ virtuals: true });
 
   const count = await User.countDocuments(mergedFilters);

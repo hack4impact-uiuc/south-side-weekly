@@ -4,7 +4,7 @@
   }
 
   .tag-spacing {
-    margin-top: 2%;
+    margin-top: 2% !important;
   }
 
   .user-role {
@@ -74,8 +74,18 @@
       margin-top: 2%;
       margin-left: 0 !important;
     }
+
+    .feedback-cards {
+      padding-bottom: 2%;
+    }
   }
   &.segment {
     background-color: white;
+  }
+
+  .tag-col {
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start;
   }
 }

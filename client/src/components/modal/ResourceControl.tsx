@@ -54,7 +54,7 @@ const ResourceModal: FC<ResourceProps> = ({
       });
       closeModal();
     } else {
-      toast.error('Error deleting resource', { position: 'bottom-right' });
+      toast.error('Error deleting resource');
     }
   };
 

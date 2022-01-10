@@ -1,10 +1,10 @@
 import React, { FC, useEffect, useMemo } from 'react';
 import { BasePopulatedPitch, FullPopulatedPitch, Pitch } from 'ssw-common';
 
-import { buildColumn } from '..';
 import { useAuth } from '../../contexts';
 import { findPendingContributor } from '../../utils/helpers';
 
+import { configureColumn } from './dynamic/DynamicTable2.0';
 import {
   titleColumn,
   descriptionColumn,
@@ -71,12 +71,13 @@ interface TableProps {
   count: number;
   data: (BasePopulatedPitch | FullPopulatedPitch)[];
   type: 'member' | 'submitted' | 'claim-submitted' | 'published';
+  onModalClose?: () => void;
 }
 
 export const HomepageRecords: FC<TableProps> = ({ data, count, type }) => {
   const { user } = useAuth();
   useEffect(() => {
-    const col = buildColumn<BasePopulatedPitch>({
+    const col = configureColumn<BasePopulatedPitch>({
       title: 'Date Submitted',
       width: '1',
       extractor: function DateCell(pitch) {
@@ -111,8 +112,9 @@ export const HomepageRecords: FC<TableProps> = ({ data, count, type }) => {
     }
   }, [type]);
 
-  const viewPitch = (pitch: Pick<Pitch, '_id'>): any =>
+  const viewPitch = (pitch: Pick<Pitch, '_id'>): void => {
     window.open(`/pitch/${pitch._id}`);
+  };
 
   return (
     <PaginatedTable<FullPopulatedPitch | BasePopulatedPitch>
@@ -122,6 +124,8 @@ export const HomepageRecords: FC<TableProps> = ({ data, count, type }) => {
       pageOptions={['1', '10', '25', '50']}
       onRecordClick={viewPitch}
       emptyMessage="There are no pitches in this category."
+      sortType="query"
+      sortable
     />
   );
 };

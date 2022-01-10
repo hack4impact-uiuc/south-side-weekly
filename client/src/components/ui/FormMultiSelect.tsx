@@ -3,9 +3,8 @@ import React, { FC, ReactElement, useMemo } from 'react';
 import cn from 'classnames';
 
 import { MultiSelect } from '../select/MultiSelect';
-import { FieldTag } from '..';
-
 import './Form.scss';
+import { FieldTag } from '..';
 
 interface Option {
   label: string;
@@ -38,6 +37,7 @@ export const FormMultiSelect: FC<FormMultiSelectProps> = ({
         <MultiSelect
           options={options}
           value={field.value}
+          disabled={!editable}
           onChange={(values) =>
             setFieldValue(
               field.name,
@@ -47,7 +47,7 @@ export const FormMultiSelect: FC<FormMultiSelectProps> = ({
         />
       </div>
     ),
-    [field, setFieldValue, label, className, options],
+    [field, setFieldValue, label, className, options, editable],
   );
 
   if (!viewable) {

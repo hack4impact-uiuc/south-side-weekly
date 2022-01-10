@@ -153,13 +153,13 @@ const Resources = (): ReactElement => {
             columns={[
               configureColumn({
                 id: 'name',
-                value: 'Title',
+                title: 'Title',
                 extractor: 'name',
                 sorter: (a, b) => a.name.localeCompare(b.name),
               }),
               configureColumn({
                 id: 'visibility',
-                value: 'Visibility',
+                title: 'Visibility',
                 extractor: 'visibility',
                 width: 2,
               }),

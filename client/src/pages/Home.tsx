@@ -1,13 +1,15 @@
 import React, { ReactElement, useMemo } from 'react';
 
-import { Walkthrough } from '../../components';
-import { SubmitPitchModal } from '../../components/modal/SubmitPitchModal';
-import { useAuth } from '../../contexts';
-import { Tabs } from '../../layouts/tabs/Tabs';
-import { pagesEnum } from '../../utils/enums';
-import './styles.scss';
-import '../pages.scss';
-import { HomepageView } from '../../components/view/HomepageView';
+import { Walkthrough } from '../components';
+import { SubmitPitchModal } from '../components/modal/SubmitPitchModal';
+import { HomepageView } from '../components/view/HomepageView';
+import { Pusher } from '../components/ui/Pusher';
+import { useAuth } from '../contexts';
+import { Tabs } from '../layouts/tabs/Tabs';
+import { pagesEnum } from '../utils/enums';
+
+import './Home.scss';
+import './pages.scss';
 
 const Homepage = (): ReactElement => {
   const { isAdmin } = useAuth();
@@ -45,9 +47,13 @@ const Homepage = (): ReactElement => {
           page={pagesEnum.PITCHDOC}
           content="The Pitch Doc is where you can claim, submit, and view pitches! Use the filters to find pitches you are interested in."
         />
+        <div className="header">
+          <Pusher />
+          <SubmitPitchModal />
+        </div>
       </div>
 
-      <Tabs views={views} button={<SubmitPitchModal />} />
+      <Tabs views={views} />
     </div>
   );
 };

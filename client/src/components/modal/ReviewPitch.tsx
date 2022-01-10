@@ -1,5 +1,5 @@
 import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
-import { Icon, Input, Modal, ModalProps } from 'semantic-ui-react';
+import { Icon, Input, Message, Modal, ModalProps } from 'semantic-ui-react';
 import { BasePopulatedPitch, BasePopulatedUser } from 'ssw-common';
 import cn from 'classnames';
 import toast from 'react-hot-toast';
@@ -96,7 +96,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       .filter(({ target }) => target > 0);
 
     if (!primaryEditor || deadline.length === 0 || parsedTeams.length === 0) {
-      toast.error('Please fill out all fields', { position: 'bottom-right' });
+      toast.error('Please fill out all fields');
       return;
     }
 
@@ -121,10 +121,10 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
     });
 
     if (!isError(res)) {
-      toast.success('Pitch approved', { position: 'bottom-right' });
+      toast.success('Pitch approved');
       setOpen(false);
     } else {
-      toast.error('Error approving pitch', { position: 'bottom-right' });
+      toast.error('Error approving pitch');
     }
   };
 
@@ -138,10 +138,10 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
     });
 
     if (!isError(res)) {
-      toast.success('Pitch declined', { position: 'bottom-right' });
+      toast.success('Pitch declined');
       setOpen(false);
     } else {
-      toast.error('Failed to decline pitch', { position: 'bottom-right' });
+      toast.error('Failed to decline pitch');
     }
   };
 
@@ -171,6 +171,13 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
         <Icon name="close" onClick={() => setOpen(false)} />
       </Modal.Header>
       <Modal.Content scrolling>
+        {user!._id === pitch?.author._id && (
+          <Message
+            warning
+            header="Wait!"
+            content="You have already claimed this pitch"
+          />
+        )}
         <div className="flex-wrapper">
           <div id="title">
             <h2>{pitch?.title}</h2>
@@ -274,32 +281,38 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
             <b>Number of Contributors Needed Per Team</b>
           </p>
           <div id="target-selectors" className="section">
-            {teams.map((team) => (
-              <div style={{ margin: '0px 10px 0px 10px' }} key={team._id}>
-                <div style={{ textAlign: 'center', margin: '10px' }}>
-                  <FieldTag
-                    size="small"
-                    name={team.name}
-                    hexcode={team.color}
-                  />
+            {teams
+              .filter(
+                (team) =>
+                  team.name.toLowerCase() !== 'writing' &&
+                  team.name.toLowerCase() !== 'editing',
+              )
+              .map((team) => (
+                <div style={{ margin: '0px 10px 0px 10px' }} key={team._id}>
+                  <div style={{ textAlign: 'center', margin: '10px' }}>
+                    <FieldTag
+                      size="small"
+                      name={team.name}
+                      hexcode={team.color}
+                    />
+                  </div>
+                  <div>
+                    <pre></pre>
+                    <Input
+                      type="number"
+                      value={teamConfig[team._id] || 0}
+                      onChange={(e, { value }) =>
+                        setTeamConfig((curr) => ({
+                          ...curr,
+                          [team._id]: parseInt(value),
+                        }))
+                      }
+                      style={{ width: '100px' }}
+                      min={0}
+                    />
+                  </div>
                 </div>
-                <div>
-                  <pre></pre>
-                  <Input
-                    type="number"
-                    value={teamConfig[team._id] || 0}
-                    onChange={(e, { value }) =>
-                      setTeamConfig((curr) => ({
-                        ...curr,
-                        [team._id]: parseInt(value),
-                      }))
-                    }
-                    style={{ width: '100px' }}
-                    min={0}
-                  />
-                </div>
-              </div>
-            ))}
+              ))}
           </div>
         </div>
         <div className="section" id="date-issue-selector">

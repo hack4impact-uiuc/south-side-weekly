@@ -95,10 +95,7 @@ export const getApprovedPitches = async (
   const populateType = extractPopulateQuery(req.query);
   const options = extractOptions(req.query);
 
-  const pitches = await PitchService.getApprovedPitches(
-    req.query.status as string | undefined,
-    options,
-  );
+  const pitches = await PitchService.getApprovedPitches(options);
 
   sendSuccess(res, 'Successfully retrieved all approved pitches', {
     data: await populatePitch(pitches.data, populateType),

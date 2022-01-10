@@ -135,13 +135,14 @@ const extractFilterQuery = <T>(
     const [field, operator] = filter.split('__');
     let value = copyQuery[filter];
 
-    if (typeof value === 'string') {
-      value = value.toUpperCase();
-    }
-
     if (typeof value === 'string' && value.includes(',')) {
       value = value.split(',');
     }
+
+    console.log('Filter is: ', filter);
+    console.log('Field is: ', field);
+    console.log('Operator is: ', operator);
+    console.log('Value is: ', value);
 
     if (operator) {
       return { [field]: { [`$${operator}`]: value } };
@@ -152,5 +153,6 @@ const extractFilterQuery = <T>(
 
   const filters = _.merge({}, ...cleanFilters);
 
+  console.log(filters);
   return filters;
 };

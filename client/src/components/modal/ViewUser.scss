@@ -52,5 +52,11 @@
       font-size: large;
       text-transform: capitalize;
     }
+
+    .tag-col {
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+    }
   }
 }
