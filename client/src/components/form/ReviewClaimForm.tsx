@@ -64,7 +64,7 @@ export const ReviewClaimForm: FC<FormProps> = ({
 
   const handleSave = async (
     data: FormData,
-    { resetForm, setSubmitting }: FormikHelpers<FormData>,
+    { resetForm }: FormikHelpers<FormData>,
   ): Promise<void> => {
     const newPitch: Partial<Pitch> = {
       ...data,
