@@ -1,20 +1,18 @@
-import { Field, Form as FormikForm, Formik } from 'formik';
-import { lowerCase, pick, startCase } from 'lodash';
+import { Field, Form as FormikForm, Formik, FormikHelpers } from 'formik';
+import { cloneDeep, difference, lowerCase, pick, startCase } from 'lodash';
 import React, { FC, ReactElement, useState } from 'react';
+import { MultiValue } from 'react-select';
 import { Button, Form, Icon, Label } from 'semantic-ui-react';
-import {
-  BasePopulatedPitch,
-  FullPopulatedPitch,
-  Issue,
-  Pitch,
-} from 'ssw-common';
+import { BasePopulatedPitch, FullPopulatedPitch, Pitch } from 'ssw-common';
 
+import { FieldTag } from '..';
 import { apiCall, isError } from '../../api';
 import { useInterests } from '../../contexts';
 import { useIssues } from '../../contexts/issues/context';
 import { editStatusEnum, issueStatusEnum } from '../../utils/enums';
 import { formatDate } from '../../utils/helpers';
 import AddIssue from '../modal/AddIssue';
+import { MultiSelect } from '../select/MultiSelect';
 import UserChip from '../tag/UserChip';
 import { FormInput } from '../ui/FormInput';
 import { FormMultiSelect } from '../ui/FormMultiSelect';
@@ -40,9 +38,8 @@ interface FormData
     | 'topics'
     | 'assignmentGoogleDocLink'
     | 'description'
-    | 'assignmentStatus'
   > {
-  issueStatuses: string[];
+  issueStatuses: FullPopulatedPitch['issueStatuses'];
   deadline: string;
 }
 
@@ -65,36 +62,27 @@ export const ReviewClaimForm: FC<FormProps> = ({
   const { getInterestById, interests } = useInterests();
   const { getIssueFromId, issues, fetchIssues } = useIssues();
 
-  const getIssueFromIssueStatuses = (
-    id: string,
-  ): { issueId: Issue; issueStatus: string } | undefined =>
-    pitch?.issueStatuses.find(({ issueId: { _id } }) => _id === id);
-
-  const handleSave = async (data: FormData): Promise<void> => {
+  const handleSave = async (
+    data: FormData,
+    { resetForm }: FormikHelpers<FormData>,
+  ): Promise<void> => {
     const newPitch: Partial<Pitch> = {
       ...data,
       deadline: new Date(data.deadline),
-      issueStatuses: data.issueStatuses.map((id) => {
-        const issue = getIssueFromIssueStatuses(id);
-
-        if (!issue) {
-          return { issueId: id, issueStatus: issueStatusEnum.DEFINITELY_IN };
-        }
-        return { issueId: id, issueStatus: issue.issueStatus };
-      }),
+      issueStatuses: data.issueStatuses.map(
+        ({ issueId: { _id }, issueStatus }) => ({ issueId: _id, issueStatus }),
+      ),
     };
 
     const res = await apiCall<BasePopulatedPitch>({
       method: 'PUT',
       url: `/pitches/${pitch?._id}`,
       body: newPitch,
-      query: {
-        populate: 'default',
-      },
     });
 
     if (!isError(res)) {
-      isReadyForFeedback(res.data.result.issueStatuses);
+      resetForm({ values: data });
+      isReadyForFeedback(data.issueStatuses);
     }
 
     setEditMode(false);
@@ -102,6 +90,45 @@ export const ReviewClaimForm: FC<FormProps> = ({
 
   const formatFormDate = (date: Date | undefined): string =>
     new Date(date || new Date()).toISOString().split('T')[0];
+
+  const updateIssueStatuses = (
+    values: FormData,
+    newValues: MultiValue<{ label: string; value: string }>,
+  ): FullPopulatedPitch['issueStatuses'] => {
+    const newIds = newValues.map(({ value }) => value);
+    const currentIssues = cloneDeep(values.issueStatuses);
+
+    if (newIds.length < currentIssues.length) {
+      const removedIdx = currentIssues.findIndex(
+        ({ issueId: { _id } }) => !newIds.includes(_id),
+      );
+
+      const notFound = -1;
+
+      if (removedIdx !== notFound) {
+        currentIssues.splice(removedIdx, 1);
+      }
+    } else {
+      const addedId = difference(
+        newIds,
+        currentIssues.map(({ issueId: { _id } }) => _id),
+      );
+
+      if (addedId) {
+        const issue = getIssueFromId(addedId[0]);
+        if (issue) {
+          currentIssues.push({
+            issueId: issue,
+            issueStatus: issueStatusEnum.DEFINITELY_IN,
+          });
+        }
+      }
+    }
+    return currentIssues;
+  };
+
+  const formatIssue = (releaseDate: string, type: string): string =>
+    `${formatDate(releaseDate)} - ${startCase(lowerCase(type))}`;
 
   if (!pitch) {
     return <div id="review-claim-form"></div>;
@@ -112,12 +139,11 @@ export const ReviewClaimForm: FC<FormProps> = ({
       initialValues={{
         ...pick(pitch, fields),
         topics: pitch.topics.map((i) => i._id),
-        issueStatuses: pitch.issueStatuses.map((issue) => issue.issueId._id),
         deadline: formatFormDate(pitch.deadline),
       }}
       onSubmit={handleSave}
     >
-      {({ values, handleReset }) => (
+      {({ values, handleReset, setFieldValue }) => (
         <FormikForm id={'review-claim-form'}>
           {!editMode && (
             <AuthView view="isAdmin">
@@ -157,18 +183,6 @@ export const ReviewClaimForm: FC<FormProps> = ({
                   editable={editMode}
                 />
               </div>
-              {/*TODO: Figure out this field */}
-              {/* <div className="right-col">
-                <Field
-                  component={FormSingleSelect}
-                  options={Object.values(issueStatusEnum).map((status) => ({
-                    value: status,
-                    label: startCase(lowerCase(status)),
-                  }))}
-                  name="issueStatus"
-                  label="Issue Assignment Status"
-                />
-              </div> */}
             </div>
             <div className="row">
               <Field
@@ -207,8 +221,70 @@ export const ReviewClaimForm: FC<FormProps> = ({
               </div>
             </Form>
 
-            <div className="row">
-              <div className="left-col">
+            <div className={editMode ? 'column' : 'row'}>
+              <div className={editMode ? 'issue-column' : 'left-col'}>
+                {editMode && <AddIssue callback={fetchIssues} />}
+
+                {editMode ? (
+                  <>
+                    <div>
+                      <b>Add Pitch to Issue(s)</b>
+                      <MultiSelect
+                        options={issues.map((issue) => ({
+                          value: issue._id,
+                          label: formatIssue(issue.releaseDate, issue.type),
+                        }))}
+                        value={values.issueStatuses.map(
+                          ({ issueId: { _id } }) => _id,
+                        )}
+                        onChange={(newValues) => {
+                          setFieldValue(
+                            'issueStatuses',
+                            updateIssueStatuses(values, newValues),
+                          );
+                        }}
+                      />
+                    </div>
+                    {values.issueStatuses.map(
+                      ({ issueId: { type, _id, releaseDate } }, idx) => (
+                        <div key={_id} className="issue-type-row">
+                          <div className="text">
+                            {formatIssue(releaseDate, type)}
+                          </div>
+                          <Field
+                            component={FormSingleSelect}
+                            options={Object.values(issueStatusEnum).map(
+                              (status) => ({
+                                value: status,
+                                label: startCase(lowerCase(status)),
+                              }),
+                            )}
+                            name={`issueStatuses[${idx}].issueStatus`}
+                            editable={editMode}
+                            className="select"
+                          />
+                        </div>
+                      ),
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <b>Associated Issue(s)</b>
+                    {values.issueStatuses.map(({ issueId, issueStatus }) => (
+                      <div key={issueId._id} className="issue-text-tag">
+                        <p className="issue-item">
+                          {formatIssue(issueId.releaseDate, issueId.type)}
+                        </p>
+                        <FieldTag
+                          content={startCase(lowerCase(issueStatus))}
+                          className="issue-tag"
+                        />
+                      </div>
+                    ))}
+                  </>
+                )}
+              </div>
+              <div className="right-col">
                 <Field
                   component={FormInput}
                   name="deadline"
@@ -216,41 +292,6 @@ export const ReviewClaimForm: FC<FormProps> = ({
                   type="date"
                   editable={editMode}
                 />
-              </div>
-              <div className="right-col form-field">
-                {editMode && <AddIssue callback={fetchIssues} />}
-
-                {editMode ? (
-                  <Field
-                    component={FormMultiSelect}
-                    name="issueStatuses"
-                    label={'Add Pitch to Issue(s)'}
-                    options={issues.map((issue) => ({
-                      value: issue._id,
-                      label: `${formatDate(issue.releaseDate)} - ${startCase(
-                        lowerCase(issue.type),
-                      )}`,
-                    }))}
-                    editable={editMode}
-                  />
-                ) : (
-                  <>
-                    <label htmlFor="issueStatuses">Associated Issue(s)</label>
-                    {values.issueStatuses.map((issueId, idx) => {
-                      const issue = getIssueFromId(issueId);
-                      if (!issue) {
-                        return <></>;
-                      }
-                      return (
-                        <p className="issue-item" key={idx}>{`${startCase(
-                          lowerCase(issue.type),
-                        )} - ${new Date(issue.releaseDate).toLocaleDateString(
-                          'en-US',
-                        )}`}</p>
-                      );
-                    })}
-                  </>
-                )}
               </div>
             </div>
             {editMode && (
