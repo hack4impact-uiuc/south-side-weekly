@@ -1,11 +1,10 @@
+import cn from 'classnames';
 import { FieldProps } from 'formik';
 import React, { FC, ReactElement, useMemo } from 'react';
-import cn from 'classnames';
 
-import { SingleSelect } from '../select/SingleSelect';
-
-import './Form.scss';
 import { FieldTag } from '..';
+import { SingleSelect } from '../select/SingleSelect';
+import './Form.scss';
 
 interface Option {
   label: string;
