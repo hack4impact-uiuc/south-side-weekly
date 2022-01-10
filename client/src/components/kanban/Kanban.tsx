@@ -100,6 +100,7 @@ const Kanban: FC<KanbanProps> = ({ issueId }): ReactElement => {
 
       if (!isError(res)) {
         const pitchBuckets = res.data.result;
+        console.log('here');
 
         const newColumns: ColumnProps[] = pitchBuckets.map((bucket: any) => ({
           name: titleCase(bucket.status.split('_').join(' ')),
@@ -110,6 +111,10 @@ const Kanban: FC<KanbanProps> = ({ issueId }): ReactElement => {
         setColumns(newColumns);
       }
     };
+
+    if (!issueId) {
+      return;
+    }
 
     fetchData();
   }, [issueId]);
