@@ -117,12 +117,18 @@ export const actionColumn = configureColumn<BasePopulatedUser>({
       <div style={{ display: 'flex' }}>
         <PrimaryButton
           size="mini"
-          onClick={() => approveUser(user)}
+          onClick={(e) => {
+            e.stopPropagation();
+            approveUser(user);
+          }}
           content="Approve"
         />
         <SecondaryButton
           size="mini"
-          onClick={() => rejectUser(user)}
+          onClick={(e) => {
+            e.stopPropagation();
+            rejectUser(user);
+          }}
           content="Decline"
           border
         />
