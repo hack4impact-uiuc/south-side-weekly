@@ -192,7 +192,6 @@ const Pitch = (): ReactElement => {
           )}
         </div>
       </div>
-      <pre>{JSON.stringify(pitch, null, 2)}</pre>
     </div>
   );
 };

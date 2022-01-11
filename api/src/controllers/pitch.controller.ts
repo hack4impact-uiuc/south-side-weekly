@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { BasePopulatedPitch, IPitch } from 'ssw-common';
+import { BasePopulatedPitch, Pitch } from 'ssw-common';
 
 import {
   sendApprovedPitchMail,
@@ -17,7 +17,7 @@ type IdParam = { id?: string };
 
 // CREATE controls
 
-type CreateReqQuery = Partial<IPitch>;
+type CreateReqQuery = Partial<Pitch>;
 type CreateReq = Request<never, never, CreateReqQuery>;
 
 export const createPitch = async (
@@ -137,7 +137,7 @@ export const getClaimablePitches = async (
 
 // UPDATE controls
 
-type UpdateReqBody = Partial<IPitch>;
+type UpdateReqBody = Partial<Pitch>;
 type UpdateReq = Request<IdParam, never, UpdateReqBody, never>;
 
 export const updatePitch = async (

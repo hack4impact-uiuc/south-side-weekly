@@ -1,6 +1,6 @@
 import * as handlebars from 'handlebars';
 import { SendMailOptions } from 'nodemailer';
-import { BasePopulatedPitch, Team, UserFields } from 'ssw-common';
+import { BasePopulatedPitch, UserFields } from 'ssw-common';
 
 import { Template } from './types';
 import * as htmlTemplates from './templates';
@@ -51,11 +51,6 @@ export const buildSendMailOptions = (
   html: compileTemplate(html, htmlData),
   ...options,
 });
-
-interface Contributor {
-  userId: UserFields;
-  teams: Team[];
-}
 
 interface TeamMembers {
   team: string;

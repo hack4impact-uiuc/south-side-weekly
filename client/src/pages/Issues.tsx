@@ -1,11 +1,11 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { Icon } from 'semantic-ui-react';
 import { PopulatedIssue } from 'ssw-common';
 
 import { isError, apiCall } from '../api';
 import { Kanban } from '../components';
+import AddIssueModal from '../components/modal/AddIssue';
 import { SingleSelect } from '../components/select/SingleSelect';
-import { PrimaryButton } from '../components/ui/PrimaryButton';
 
 import './Issues.scss';
 
@@ -13,39 +13,46 @@ const Issues = (): ReactElement => {
   const [issues, setIssues] = useState<PopulatedIssue[]>([]);
   const [viewIssueIndex, setViewIssueIndex] = useState<number>(0);
 
-  useEffect(() => {
-    const fetchIssues = async (): Promise<void> => {
-      const res = await apiCall<{ data: PopulatedIssue[]; count: number }>({
-        method: 'GET',
-        url: '/issues',
-        populate: 'default',
-      });
+  const fetchIssues = useCallback(async (): Promise<void> => {
+    const res = await apiCall<{ data: PopulatedIssue[]; count: number }>({
+      method: 'GET',
+      url: '/issues',
+      populate: 'default',
+    });
 
-      if (!isError(res)) {
-        const allIssues = res.data.result.data;
+    if (!isError(res)) {
+      const allIssues = res.data.result.data;
 
-        allIssues.sort(
-          (a, b) =>
-            new Date(a.releaseDate).getTime() -
-            new Date(b.releaseDate).getTime(),
-        );
+      allIssues.sort(
+        (a, b) =>
+          new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime(),
+      );
 
-        const closestIssueIndex = allIssues.findIndex(
-          (issue) => new Date() <= new Date(issue.releaseDate),
-        );
+      const closestIssueIndex = allIssues.findIndex(
+        (issue) => new Date() <= new Date(issue.releaseDate),
+      );
 
-        if (closestIssueIndex < 0) {
-          setViewIssueIndex(allIssues.length - 1);
-        } else {
-          setViewIssueIndex(closestIssueIndex);
-        }
-
-        setIssues(allIssues);
+      if (closestIssueIndex < 0) {
+        setViewIssueIndex(allIssues.length - 1);
+      } else {
+        setViewIssueIndex(closestIssueIndex);
       }
-    };
 
-    fetchIssues();
+      setIssues(allIssues);
+    }
   }, []);
+
+  useEffect(() => {
+    fetchIssues();
+  }, [fetchIssues]);
+
+  if (
+    issues.length === 0 ||
+    viewIssueIndex < 0 ||
+    viewIssueIndex > issues.length
+  ) {
+    return <>Loading...</>;
+  }
 
   return (
     <div className="issue-page-wrapper">
@@ -84,7 +91,7 @@ const Issues = (): ReactElement => {
             onClick={() => setViewIssueIndex(viewIssueIndex + 1)}
           />
         </div>
-        <PrimaryButton icon="add" content="Add Issue" />
+        <AddIssueModal callback={void 0} onUnmount={fetchIssues} />
       </div>
 
       <Kanban issueId={issues.length > 0 ? issues[viewIssueIndex]._id : ''} />

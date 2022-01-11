@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import { Condition } from 'mongodb';
-import { FilterQuery, LeanDocument, UpdateQuery, Types } from 'mongoose';
-import { BasePopulatedUser, IPitch } from 'ssw-common';
+import { FilterQuery, LeanDocument, UpdateQuery } from 'mongoose';
+import { BasePopulatedUser, IPitch, Pitch as PitchType } from 'ssw-common';
 import { IssueService, UserService } from '.';
 
 import Pitch, { PitchSchema } from '../models/pitch.model';
@@ -14,7 +14,7 @@ interface PitchesResponse {
   count: number;
 }
 
-const ignoreKeys = ['hasPublishDate', 'claimStatus'];
+const ignoreKeys = ['hasPublishDate', 'claimStatus', 'isPublished'];
 
 const mongooseFilters = (
   filters: FilterQuery<PitchSchema>,
@@ -43,8 +43,8 @@ const claimStatusFilter = (
       { writer: { $eq: null } },
       { teams: { $elemMatch: { target: { $gt: 0 } } } },
       { primaryEditor: { $eq: null } },
-      { secondEditors: { $eq: [] } },
-      { thirdEditors: { $eq: [] } },
+      { secondEditors: { $eq: [] as any[] } },
+      { thirdEditors: { $eq: [] as any[] } },
     ],
   };
 };
@@ -77,21 +77,26 @@ const isPublishedFilter = (
 
   if (isPublished === 'TRUE') {
     return {
-      'issueStatuses.issueStatus': issueStatusEnum.READY_TO_PUBLISH,
-      'issues.releaseDate': { $lte: new Date() },
-    };
-  } else if (isPublished === 'FALSE') {
-    return {
-      $or: [
-        {
-          'issuesStatuses.issueStatus': {
-            $ne: issueStatusEnum.READY_TO_PUBLISH,
-          },
+      issueStatuses: {
+        $elemMatch: {
+          issueStatus: issueStatusEnum.READY_TO_PUBLISH,
+          releaseDate: { $lt: new Date() },
         },
-        { 'issues.releaseDate': { $gte: new Date() } },
-      ],
+      },
     };
   }
+  // else if (isPublished === 'FALSE') {
+  //   return {
+  //     $or: [
+  //       {
+  //         'issuesStatuses.issueStatus': {
+  //           $ne: issueStatusEnum.READY_TO_PUBLISH,
+  //         },
+  //       },
+  //       { 'issues.releaseDate': { $gte: new Date() } },
+  //     ],
+  //   };
+  // }
   return {};
 };
 
@@ -107,14 +112,14 @@ const claimablePitchesFilter = (
 
   const editorQuery = isEditor
     ? [
-        { secondEditors: { $eq: Array<undefined>() } },
-        { thirdEditors: { $eq: Array<undefined>() } },
+        { secondEditors: { $eq: [] as any[] } },
+        { thirdEditors: { $eq: [] as any[] } },
       ]
     : [];
 
   if (!isWriter) {
     return {
-      author: { $eq: user._id },
+      author: { $ne: user._id },
       status: { $eq: pitchStatusEnum.APPROVED },
       writer: { $ne: null },
       $or: [
@@ -132,10 +137,8 @@ const claimablePitchesFilter = (
   }
 
   return {
-    $and: [
-      { author: { $eq: user._id } },
-      { status: { $eq: pitchStatusEnum.APPROVED } },
-    ],
+    author: { $ne: user._id },
+    status: { $eq: pitchStatusEnum.APPROVED },
     $or: [
       { writer: { $eq: null } },
       {
@@ -173,7 +176,7 @@ const searchFilter = (search: string): FilterQuery<PitchSchema> => {
   };
 };
 
-type Pitch = Promise<LeanDocument<PitchSchema>>;
+export type Pitch = Promise<LeanDocument<PitchSchema>>;
 
 const paginate = async (
   definedFilters: FilterQuery<PitchSchema>,
@@ -188,6 +191,9 @@ const paginate = async (
     claimStatusFilter(filters['claimStatus']),
     searchFilter(search),
   );
+
+  console.log('Mereged filters: ');
+  console.log(mergedFilters);
 
   const pitches = await Pitch.find(mergedFilters)
     .skip(offset * limit)
@@ -224,7 +230,7 @@ export const getOpenTeamsForPitch = (pitch: IPitch): IPitch['teams'] => {
   return openTeams;
 };
 
-export const add = async (payload: Partial<IPitch>): Pitch => {
+export const add = async (payload: Partial<PitchType>): Pitch => {
   const pitch = await Pitch.create(payload);
   await UserService.addSubmittedPitch(payload.author, pitch._id);
 
@@ -268,7 +274,7 @@ export const getFeedbackForPitch = async (
   options?: PaginateOptions<PitchSchema>,
 ): Promise<PitchesResponse> => await paginate({ _id: pitchId }, options);
 
-export const update = async (_id: string, payload: Partial<IPitch>): Pitch =>
+export const update = async (_id: string, payload: Partial<PitchType>): Pitch =>
   await updateModel({ _id }, payload);
 
 export const remove = async (_id: string): Pitch =>
@@ -288,6 +294,7 @@ export const changeIssueStatus = async (
   _id: string,
   issueId: string,
   issueStatus: string,
+  releaseDate: string,
 ): Pitch => {
   await updateModel({ _id }, { $pull: { issueStatuses: { issueId } } });
 
@@ -295,7 +302,7 @@ export const changeIssueStatus = async (
     { _id },
     {
       $addToSet: {
-        issueStatuses: { issueId, issueStatus },
+        issueStatuses: { issueId, issueStatus, releaseDate: releaseDate },
       },
     },
   );
@@ -626,14 +633,13 @@ export const getMemberPitches = async (
 }> => {
   const filteredPitches = await paginate(
     {
+      status: pitchStatusEnum.APPROVED,
       $or: [
         {
           author: _id,
         },
         { writer: _id },
-        {
-          'assignmentContributors.userId': Types.ObjectId(_id),
-        },
+        { assignmentContributors: { $elemMatch: { userId: _id } } },
         { primaryEditor: _id },
         { secondEditors: _id },
         { thirdEditors: _id },

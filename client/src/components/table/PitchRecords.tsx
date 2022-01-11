@@ -1,4 +1,4 @@
-import React, { FC, useMemo } from 'react';
+import React, { FC, useCallback, useMemo } from 'react';
 import { useHistory } from 'react-router-dom';
 import { BasePopulatedPitch } from 'ssw-common';
 
@@ -107,9 +107,14 @@ export const PitchRecords: FC<TableProps> = ({
     };
   }, [type, onModalClose]);
 
-  const onRecordClick = (pitch: BasePopulatedPitch): void => {
-    history.push(`/pitch/${pitch._id}`);
-  };
+  const onRecordClick = useCallback(
+    (pitch: BasePopulatedPitch): void => {
+      if (type === 'all' || type === 'review-unclaimed') {
+        history.push(`/pitch/${pitch._id}`);
+      }
+    },
+    [history, type],
+  );
 
   return (
     <PaginatedTable

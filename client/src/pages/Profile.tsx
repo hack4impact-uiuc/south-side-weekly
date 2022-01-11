@@ -95,12 +95,13 @@ const Profile = (): ReactElement => {
     if (!user) {
       return;
     }
+
     const params = new URLSearchParams(location.search);
     const ids = [...user.claimedPitches, ...user.submittedPitches];
     const q = {
-      limit: params.get('limit'),
-      offset: params.get('offset'),
-      _id__in: ids.join(','),
+      limit: params.get('limit') || '10',
+      offset: params.get('offset') || '0',
+      _id__in: ids.length > 0 ? ids.join(',') : ',',
     };
 
     return _.omitBy(q, _.isNil);
@@ -112,9 +113,9 @@ const Profile = (): ReactElement => {
     }
     const params = new URLSearchParams(location.search);
     const q = {
-      limit: params.get('f_limit'),
-      offset: params.get('f_offset'),
-      _id__in: user.feedback.join(','),
+      limit: params.get('f_limit') || '10',
+      offset: params.get('f_offset') || '0',
+      _id__in: user.feedback.length > 0 ? user.feedback.join(',') : ',',
     };
 
     return _.omitBy(q, _.isNil);
@@ -122,8 +123,6 @@ const Profile = (): ReactElement => {
 
   const loadUser = useCallback(async (): Promise<void> => {
     const user = await loadFullUser(userId);
-
-    console.log('here');
 
     if (!user) {
       return;
@@ -152,8 +151,13 @@ const Profile = (): ReactElement => {
         setPitchesData(res.data.result);
       }
     };
+
+    if (!user) {
+      return;
+    }
+
     loadPitches();
-  }, [queryParams]);
+  }, [queryParams, user]);
 
   useEffect(() => {
     const loadFeedback = async (): Promise<void> => {
@@ -171,8 +175,13 @@ const Profile = (): ReactElement => {
         setFeedbackData(res.data.result);
       }
     };
+
+    if (!user) {
+      return;
+    }
+
     loadFeedback();
-  }, [feedbackQueryParams]);
+  }, [feedbackQueryParams, user]);
 
   useEffect(() => {
     setPitchesData({ data: [], count: 0 });
@@ -379,10 +388,10 @@ const Profile = (): ReactElement => {
             <p>{user.journalismResponse}</p>
           </Grid.Column>
         </Grid>
-        {feedbackData.count > 0 && (
-          <Grid centered className="feedback">
-            <Grid.Column width={10}>
-              <h2 className="title">{`${user.firstName}'s`} Feedback</h2>
+        <Grid centered className="feedback">
+          <Grid.Column width={10}>
+            <h2 className="title">{`${user.firstName}'s`} Feedback</h2>
+            {feedbackData.count > 0 ? (
               <div
                 style={{
                   display: 'flex',
@@ -390,36 +399,42 @@ const Profile = (): ReactElement => {
                   alignItems: 'center',
                 }}
               >
-                <span>Records per page: </span>
-                <SingleSelect
-                  value={queries.f_limit || '10'}
-                  options={parseOptionsSelect(['1', '10', '25', '50'])}
-                  onChange={(v) => updateQuery('f_limit', v ? v?.value : '10')}
-                  placeholder="Limit"
-                />
-                <br />
                 <div>
-                  <p>Total count: {feedbackData.count}</p>
-                </div>
-              </div>
-              <div className="feedback-cards">
-                {feedbackData.data.map((feedback, index) => (
-                  <div key={index} className="user-feedback">
-                    <UserFeedback feedback={feedback} />
+                  <span>Records per page: </span>
+                  <SingleSelect
+                    value={queries.f_limit || '10'}
+                    options={parseOptionsSelect(['1', '10', '25', '50'])}
+                    onChange={(v) =>
+                      updateQuery('f_limit', v ? v?.value : '10')
+                    }
+                    placeholder="Limit"
+                  />
+                  <br />
+                  <div>
+                    <p>Total count: {feedbackData.count}</p>
                   </div>
-                ))}
+                </div>
+                <div className="feedback-cards">
+                  {feedbackData.data.map((feedback, index) => (
+                    <div key={index} className="user-feedback">
+                      <UserFeedback feedback={feedback} />
+                    </div>
+                  ))}
+                </div>
+                <Pagination
+                  totalPages={Math.ceil(
+                    feedbackData.count / parseInt(queries.f_limit || '10', 10),
+                  )}
+                  onPageChange={(e, { activePage }) =>
+                    updateQuery('f_offset', String(parseActivePage(activePage)))
+                  }
+                />
               </div>
-              <Pagination
-                totalPages={Math.ceil(
-                  feedbackData.count / parseInt(queries.f_limit || '10', 10),
-                )}
-                onPageChange={(e, { activePage }) =>
-                  updateQuery('f_offset', String(parseActivePage(activePage)))
-                }
-              />
-            </Grid.Column>
-          </Grid>
-        )}
+            ) : (
+              <div>No feedback</div>
+            )}
+          </Grid.Column>
+        </Grid>
       </div>
     </div>
   );

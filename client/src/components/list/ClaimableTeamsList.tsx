@@ -57,10 +57,7 @@ export const getClaimableTeams = (
 
   const teams = pitch?.teams
     .filter((team) => team.target > 0)
-    .filter(
-      (team) =>
-        user!.teams.findIndex((myTeam) => myTeam._id === team.teamId._id) > 0,
-    );
+    .filter((team) => user!.teams.some((t) => t._id === team.teamId._id));
 
   if (EDITING_TEAM !== null) {
     teams.push(EDITING_TEAM);

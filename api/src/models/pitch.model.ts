@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from 'mongoose';
-import { IPitch } from 'ssw-common';
+import { Pitch } from 'ssw-common';
 
 import {
   pitchStatusEnum,
@@ -8,7 +8,7 @@ import {
   editStatusEnum,
 } from '../utils/enums';
 
-export type PitchSchema = IPitch & Document<any>;
+export type PitchSchema = Pitch & Document<any>;
 
 const contributor = new mongoose.Schema(
   {
@@ -41,8 +41,9 @@ const issueStatus = new mongoose.Schema(
     issueStatus: {
       type: String,
       enum: Object.values(issueStatusEnum),
-      default: issueStatusEnum.DEFINITELY_IN,
+      default: issueStatusEnum.MAYBE_IN,
     },
+    releaseDate: { type: Date },
   },
   { _id: false },
 );

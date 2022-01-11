@@ -43,8 +43,7 @@ export const HomepageView: FC<HomepageViewProps> = ({ type }): ReactElement => {
       search: params.get('search'),
       'teams.teamId__all': params.get('teams__all'),
       topics__all: params.get('interests__all'),
-      hasPublishDate: type === 'published' || undefined,
-      isPublished: type === 'published',
+      isPublished: type === 'published' || undefined,
       author: type === 'submitted' ? user?._id : undefined,
       'pendingContributors.userId':
         type === 'claim-submitted' ? user?._id : undefined,

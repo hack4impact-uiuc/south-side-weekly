@@ -304,37 +304,45 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
         {Object.entries(editors).map(([editorId, editor], idx) => (
           <div className="claim-row" key={idx}>
             <UserChip user={omit(editor, 'editorType')} />
-
-            {completed ? (
-              <ContributorFeedback
-                user={omit(editor, 'editorType')}
-                team={team}
-                pitchId={pitchId}
-              />
-            ) : (
-              <div className="dropdown-trash">
-                <SingleSelect
-                  value={editor.editorType}
-                  options={editorTypeDropDownOptions}
-                  onChange={(e) =>
-                    changeEditor(editorId, editor.editorType, e ? e.value : '')
-                  }
-                  placeholder="Editor Type"
-                  className="select-editor-type"
-                  isClearable={false}
+            <FieldTag content={editor.editorType} />
+            <AuthView view="minStaff">
+              {completed ? (
+                <ContributorFeedback
+                  user={omit(editor, 'editorType')}
+                  team={team}
+                  pitchId={pitchId}
                 />
+              ) : (
+                <div className="dropdown-trash">
+                  <SingleSelect
+                    value={editor.editorType}
+                    options={editorTypeDropDownOptions}
+                    onChange={(e) =>
+                      changeEditor(
+                        editorId,
+                        editor.editorType,
+                        e ? e.value : '',
+                      )
+                    }
+                    placeholder="Editor Type"
+                    className="select-editor-type"
+                    isClearable={false}
+                  />
 
-                <Icon
-                  name="trash"
-                  link={editor.editorType !== 'Primary'}
-                  onClick={() => removeContributor(editorId, editor.editorType)}
-                  disabled={editor.editorType === 'Primary'}
-                  className={
-                    editor.editorType === 'Primary' ? 'disabled-trash' : ''
-                  }
-                />
-              </div>
-            )}
+                  <Icon
+                    name="trash"
+                    link={editor.editorType !== 'Primary'}
+                    onClick={() =>
+                      removeContributor(editorId, editor.editorType)
+                    }
+                    disabled={editor.editorType === 'Primary'}
+                    className={
+                      editor.editorType === 'Primary' ? 'disabled-trash' : ''
+                    }
+                  />
+                </div>
+              )}
+            </AuthView>
           </div>
         ))}
 
@@ -344,15 +352,21 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
 
             <div className="dropdown-trash">
               <FieldTag content="pending" />
-              <SingleSelect
-                value={editor.editorType}
-                options={editorTypeDropDownOptions}
-                onChange={(e) => approveClaim(editorId, e ? e.value : '')}
-                placeholder="Editor Type"
-                className="select-editor-type"
-                isClearable={false}
-              />
-              <Icon name="trash" link onClick={() => declineClaim(editorId)} />
+              <AuthView view="minStaff">
+                <SingleSelect
+                  value={editor.editorType}
+                  options={editorTypeDropDownOptions}
+                  onChange={(e) => approveClaim(editorId, e ? e.value : '')}
+                  placeholder="Editor Type"
+                  className="select-editor-type"
+                  isClearable={false}
+                />
+                <Icon
+                  name="trash"
+                  link
+                  onClick={() => declineClaim(editorId)}
+                />
+              </AuthView>
             </div>
           </div>
         ))}

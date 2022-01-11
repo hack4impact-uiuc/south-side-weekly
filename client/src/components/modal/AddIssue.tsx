@@ -5,7 +5,6 @@ import {
   CheckboxProps,
   Form,
   Icon,
-  Label,
   Modal,
   ModalProps,
 } from 'semantic-ui-react';
@@ -13,11 +12,8 @@ import { IIssue } from 'ssw-common';
 
 import { apiCall, isError } from '../../api';
 import { issueTypeEnum } from '../../utils/enums';
+import { PrimaryButton } from '../ui/PrimaryButton';
 import './AddIssue.scss';
-
-interface AddIssueProps extends ModalProps {
-  callback: () => Promise<void>;
-}
 
 type FormData = Pick<IIssue, 'releaseDate' | 'type'>;
 
@@ -26,7 +22,7 @@ const defaultData: FormData = {
   type: '',
 };
 
-const AddIssue: FC<AddIssueProps> = ({ callback, ...rest }): ReactElement => {
+const AddIssueModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
   const [isOpen, setIsOpen] = useState(false);
   const [formData, setFormData] = useState(defaultData);
 
@@ -38,7 +34,6 @@ const AddIssue: FC<AddIssueProps> = ({ callback, ...rest }): ReactElement => {
     });
 
     if (!isError(res)) {
-      await callback();
       toast.success('Successfully added a new issue!');
       setIsOpen(false);
     } else {
@@ -74,12 +69,7 @@ const AddIssue: FC<AddIssueProps> = ({ callback, ...rest }): ReactElement => {
       open={isOpen}
       onClose={() => setIsOpen(false)}
       onOpen={() => setIsOpen(true)}
-      trigger={
-        <Label className="add-issue" as="a">
-          <Icon name="plus" />
-          Add Issue
-        </Label>
-      }
+      trigger={<PrimaryButton content="Add Issue" icon="add" />}
       className="add-issue-modal"
       {...rest}
     >
@@ -127,4 +117,4 @@ const AddIssue: FC<AddIssueProps> = ({ callback, ...rest }): ReactElement => {
   );
 };
 
-export default AddIssue;
+export default AddIssueModal;

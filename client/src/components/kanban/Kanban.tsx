@@ -13,7 +13,7 @@ import {
   DropResult,
 } from 'react-beautiful-dnd';
 import { Segment } from 'semantic-ui-react';
-import { IPitch } from 'ssw-common';
+import { Pitch } from 'ssw-common';
 
 import { isError, apiCall } from '../../api';
 import { issueStatusEnum } from '../../utils/enums';
@@ -26,7 +26,7 @@ import './Kanban.scss';
 
 interface ColumnProps {
   name: string;
-  items: IPitch[];
+  items: Pitch[];
   issueId: string;
 }
 
@@ -100,7 +100,6 @@ const Kanban: FC<KanbanProps> = ({ issueId }): ReactElement => {
 
       if (!isError(res)) {
         const pitchBuckets = res.data.result;
-        console.log('here');
 
         const newColumns: ColumnProps[] = pitchBuckets.map((bucket: any) => ({
           name: titleCase(bucket.status.split('_').join(' ')),
@@ -150,7 +149,7 @@ const Kanban: FC<KanbanProps> = ({ issueId }): ReactElement => {
                       snapshot.isDraggingOver && 'dragging'
                     }`}
                   >
-                    {column.items.map((item: IPitch, index: number) => (
+                    {column.items.map((item: Pitch, index: number) => (
                       <Draggable
                         key={item._id}
                         draggableId={item._id}

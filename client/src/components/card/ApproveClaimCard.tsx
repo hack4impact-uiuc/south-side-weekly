@@ -307,21 +307,21 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
           <div key={idx} className="claim-row">
             <UserChip user={contributor} />
 
-            {completed ? (
-              <ContributorFeedback
-                user={contributor}
-                team={team}
-                pitchId={pitchId}
-              />
-            ) : (
-              <AuthView view="minStaff">
+            <AuthView view="minStaff">
+              {completed ? (
+                <ContributorFeedback
+                  user={contributor}
+                  team={team}
+                  pitchId={pitchId}
+                />
+              ) : (
                 <Icon
                   name="trash"
                   link
                   onClick={() => removeContributor(contributor._id)}
                 />
-              </AuthView>
-            )}
+              )}
+            </AuthView>
           </div>
         ))}
       </div>

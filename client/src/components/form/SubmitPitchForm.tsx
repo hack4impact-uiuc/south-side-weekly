@@ -56,95 +56,92 @@ export const SubmitPitchForm: FC<FormProps> = ({
       onSubmit={rest.onSubmit}
       validationSchema={schema}
     >
-      {(props) => (
-        <FormikForm id={id}>
-          <pre>{JSON.stringify(props.errors, null, 2)}</pre>
-          <div className="form-wrapper">
-            <div className="row">
-              <Field component={FormInput} name="title" label="Title" />
-            </div>
-            <div className="row">
-              <Field
-                component={FormInput}
-                name="assignmentGoogleDocLink"
-                label="Google Doc Link"
-              />
-            </div>
-            <div className="row">
-              <Field
-                component={FormTextArea}
-                name="description"
-                label="Description"
-                className="description"
-              />
-            </div>
-            <div className="row">
-              <Field
-                component={FormMultiSelect}
-                name="topics"
-                label="Associated Topics (select 1-4 topics)"
-                options={interests.map((i) => ({
-                  label: i.name,
-                  value: i._id,
-                }))}
-              />
-            </div>
-            {isWriter && (
-              <div className="row">
-                <div>
-                  <p>
-                    <b>Do you want to be the writer of the story?</b>
-                  </p>
-                  <div className="select-group">
-                    <Field
-                      type="radio"
-                      component={FormRadio}
-                      name="writerIntent"
-                      label="Yes"
-                      value="true"
-                    />
-                    <Field
-                      type="radio"
-                      component={FormRadio}
-                      name="writerIntent"
-                      label="No, I want someone else to write this story."
-                      value="false"
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
+      <FormikForm id={id}>
+        <div className="form-wrapper">
+          <div className="row">
+            <Field component={FormInput} name="title" label="Title" />
+          </div>
+          <div className="row">
+            <Field
+              component={FormInput}
+              name="assignmentGoogleDocLink"
+              label="Google Doc Link"
+            />
+          </div>
+          <div className="row">
+            <Field
+              component={FormTextArea}
+              name="description"
+              label="Description"
+              className="description"
+            />
+          </div>
+          <div className="row">
+            <Field
+              component={FormMultiSelect}
+              name="topics"
+              label="Associated Topics (select 1-4 topics)"
+              options={interests.map((i) => ({
+                label: i.name,
+                value: i._id,
+              }))}
+            />
+          </div>
+          {isWriter && (
             <div className="row">
               <div>
                 <p>
-                  <b>Conflict of Interest Disclosure</b>
-                  <br />
-                  Are you involved with the events or people covered in your
-                  pitch? i.e. do you have a relationship with them as an
-                  employee, family member, friend, or donor?
+                  <b>Do you want to be the writer of the story?</b>
                 </p>
                 <div className="select-group">
                   <Field
                     type="radio"
                     component={FormRadio}
-                    name="conflictOfInterest"
+                    name="writerIntent"
                     label="Yes"
                     value="true"
                   />
                   <Field
                     type="radio"
                     component={FormRadio}
-                    name="conflictOfInterest"
-                    label="No"
+                    name="writerIntent"
+                    label="No, I want someone else to write this story."
                     value="false"
                   />
                 </div>
               </div>
             </div>
+          )}
+
+          <div className="row">
+            <div>
+              <p>
+                <b>Conflict of Interest Disclosure</b>
+                <br />
+                Are you involved with the events or people covered in your
+                pitch? i.e. do you have a relationship with them as an employee,
+                family member, friend, or donor?
+              </p>
+              <div className="select-group">
+                <Field
+                  type="radio"
+                  component={FormRadio}
+                  name="conflictOfInterest"
+                  label="Yes"
+                  value="true"
+                />
+                <Field
+                  type="radio"
+                  component={FormRadio}
+                  name="conflictOfInterest"
+                  label="No"
+                  value="false"
+                />
+              </div>
+            </div>
           </div>
-        </FormikForm>
-      )}
+        </div>
+      </FormikForm>
     </Formik>
   );
 };

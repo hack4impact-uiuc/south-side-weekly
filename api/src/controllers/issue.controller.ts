@@ -119,10 +119,13 @@ export const updateIssueStatus = async (
   const { issueId, issueStatus } = req.body;
   const populateType = extractPopulateQuery(req.query);
 
+  const issue = await IssueService.getOne(issueId);
+
   const pitch = await PitchService.changeIssueStatus(
     req.params.pitchId,
     issueId,
     issueStatus,
+    issue.releaseDate,
   );
 
   if (!pitch) {

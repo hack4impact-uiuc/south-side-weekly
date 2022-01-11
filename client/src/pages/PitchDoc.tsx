@@ -1,6 +1,5 @@
 import React, { ReactElement, useEffect, useMemo } from 'react';
 import toast from 'react-hot-toast';
-import { useQueryParams, BooleanParam } from 'use-query-params';
 
 import { Walkthrough } from '../components';
 import { SubmitPitchModal } from '../components/modal/SubmitPitchModal';
@@ -15,9 +14,6 @@ import './PitchDoc.scss';
 
 export const PitchDocPage = (): ReactElement => {
   const { isAdmin } = useAuth();
-  const [query, setQuery] = useQueryParams({
-    trigger: BooleanParam,
-  });
 
   const views = useMemo(() => {
     const panes = [
@@ -58,14 +54,7 @@ export const PitchDocPage = (): ReactElement => {
         />
         <div className="header">
           <Pusher />
-          <SubmitPitchModal
-            onUnmount={() =>
-              setQuery(
-                { trigger: query.trigger ? !query.trigger : true },
-                'push',
-              )
-            }
-          />
+          <SubmitPitchModal />
         </div>
       </div>
 

@@ -111,6 +111,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       issueStatuses: pitchIssues.map((issueId) => ({
         issueId,
         issueStatus: issueStatusEnum.MAYBE_IN,
+        releaseDate: issues.find((issue) => issue._id === issueId)!.releaseDate,
       })),
     };
 

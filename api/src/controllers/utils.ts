@@ -137,6 +137,11 @@ const extractFilterQuery = <T>(
 
     if (typeof value === 'string' && value.includes(',')) {
       value = value.split(',');
+      const typedVal = value as string[];
+
+      if (typedVal[0] === '') {
+        value = [];
+      }
     }
 
     console.log('Filter is: ', filter);

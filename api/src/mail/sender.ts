@@ -1,5 +1,5 @@
 import { SendMailOptions } from 'nodemailer';
-import { BasePopulatedPitch, Pitch, ITeam, User } from 'ssw-common';
+import { BasePopulatedPitch, Pitch, User } from 'ssw-common';
 import { UserFields } from 'ssw-common/interfaces/_types';
 import { getUserFulName } from '../utils/helpers';
 

@@ -31,7 +31,7 @@ export interface Pitch {
   neighborhoods: string[];
   createdAt: Date;
   updatedAt: Date;
-  issueStatuses: { issueId: string; issueStatus: string }[];
+  issueStatuses: { issueId: string; issueStatus: string, releaseDate: string }[];
   editStatus: string;
 }
 
@@ -61,7 +61,7 @@ export interface BasePopulatedPitch extends Omit<Pitch, BasePitchOmitFields> {
   secondEditors: UserFields[];
   thirdEditors: UserFields[];
   reviewedBy: UserFields;
-  issueStatuses: { issueId: Issue; issueStatus: string }[];
+  issueStatuses: { issueId: Issue; issueStatus: string, releaseDate: string }[];
 }
 
 type FullPitchOmitFields =
@@ -90,5 +90,5 @@ export interface FullPopulatedPitch extends Omit<Pitch, FullPitchOmitFields> {
   secondEditors: UserFields[];
   thirdEditors: UserFields[];
   reviewedBy: UserFields;
-  issueStatuses: { issueId: Issue; issueStatus: string }[];
+  issueStatuses: { issueId: Issue; issueStatus: string, releaseDate: string }[];
 }

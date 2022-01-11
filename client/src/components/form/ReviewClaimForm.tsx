@@ -70,7 +70,11 @@ export const ReviewClaimForm: FC<FormProps> = ({
       ...data,
       deadline: new Date(data.deadline),
       issueStatuses: data.issueStatuses.map(
-        ({ issueId: { _id }, issueStatus }) => ({ issueId: _id, issueStatus }),
+        ({ issueId: { _id }, issueStatus, releaseDate }) => ({
+          issueId: _id,
+          issueStatus,
+          releaseDate,
+        }),
       ),
     };
 
@@ -120,6 +124,7 @@ export const ReviewClaimForm: FC<FormProps> = ({
           currentIssues.push({
             issueId: issue,
             issueStatus: issueStatusEnum.DEFINITELY_IN,
+            releaseDate: issue.releaseDate,
           });
         }
       }
