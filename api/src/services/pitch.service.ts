@@ -77,15 +77,19 @@ const isPublishedFilter = (
 
   if (isPublished === 'TRUE') {
     return {
-      'issueStatuses.issueStatus': issueStatusEnum.DEFINITELY_IN,
+      'issueStatuses.issueStatus': issueStatusEnum.READY_TO_PUBLISH,
       'issues.releaseDate': { $lte: new Date() },
     };
   } else if (isPublished === 'FALSE') {
     return {
-      $not: {
-        'issuesStatuses.issueStatus': issueStatusEnum.DEFINITELY_IN,
-        'issues.releaseDate': { $lte: new Date() },
-      },
+      $or: [
+        {
+          'issuesStatuses.issueStatus': {
+            $ne: issueStatusEnum.READY_TO_PUBLISH,
+          },
+        },
+        { 'issues.releaseDate': { $gte: new Date() } },
+      ],
     };
   }
   return {};
