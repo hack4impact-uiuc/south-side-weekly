@@ -16,7 +16,6 @@ import { isError, apiCall } from '../../api';
 import { MultiSelectFilter } from '../filter/MultiSelectFilter';
 import { DelayedSearch } from '../search/DelayedSearch';
 import { useAuth } from '../../contexts';
-import { issueStatusEnum } from '../../utils/enums';
 import { HomepageRecords } from '../table/HomepageRecords';
 
 interface PitchesRes {
