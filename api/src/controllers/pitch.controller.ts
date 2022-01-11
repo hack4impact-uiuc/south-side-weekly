@@ -5,6 +5,7 @@ import {
   sendApprovedPitchMail,
   sendClaimRequestApprovedMail,
   sendClaimRequestDeclinedMail,
+  sendContributorAddedToPitchMail,
   sendDeclinedPitchMail,
 } from '../mail/sender';
 import { populatePitch } from '../populators';
@@ -12,7 +13,7 @@ import { PitchService, UserService } from '../services';
 import { sendFail, sendNotFound, sendSuccess } from '../utils/helpers';
 import { extractOptions, extractPopulateQuery } from './utils';
 
-type IdParam = { id: string };
+type IdParam = { id?: string };
 
 // CREATE controls
 
@@ -182,8 +183,16 @@ export const approvePitch = async (
     populatedPitch.author,
     populatedPitch.reviewedBy,
     populatedPitch,
-    req.body.writer !== null,
+    req.body.writer === populatedPitch.author._id,
   );
+
+  if (req.body.writer && req.body.writer !== populatedPitch.author._id) {
+    sendContributorAddedToPitchMail(
+      populatedPitch.writer,
+      populatedPitch.reviewedBy,
+      populatedPitch,
+    );
+  }
 
   sendSuccess(res, 'Pitch approved successfully', pitch);
 };
@@ -254,20 +263,30 @@ export const submitClaim = async (
   );
 };
 
-type ApproveClaimReqBody = { userId: string; teams: string[] };
-type ApproveClaimReq = Request<IdParam, never, ApproveClaimReqBody, never>;
+type ApproveClaimReqBody = { userId: string; teams: string[]; teamId: string };
+type ApproveClaimReq = Request<IdParam, never, ApproveClaimReqBody, any>;
 
 export const approveClaimRequest = async (
   req: ApproveClaimReq,
   res: Response,
 ): Promise<void> => {
-  const { userId, teams } = req.body;
+  const { userId, teamId } = req.body;
 
-  const pitch = await PitchService.approveClaimRequest(
+  let pitch = await PitchService.approveClaimRequest(
     req.params.id,
     userId,
-    teams,
+    teamId,
   );
+
+  pitch = await PitchService.addContributor(
+    req.params.id,
+    userId,
+    teamId,
+    req.query.editor,
+    req.query.writer,
+  );
+
+  pitch = await PitchService.decrementTeamTarget(req.params.id, teamId);
 
   const user = await UserService.receiveClaimRequestApproval(
     userId,
@@ -282,32 +301,35 @@ export const approveClaimRequest = async (
     return;
   }
 
-  sendClaimRequestApprovedMail(user, pitch, req.user);
+  const defaultPopulatedPitch = (await populatePitch(
+    pitch,
+    'default',
+  )) as BasePopulatedPitch;
 
-  const populateType = extractPopulateQuery(req.query);
+  sendClaimRequestApprovedMail(user, defaultPopulatedPitch, req.user);
 
-  sendSuccess(
-    res,
-    'Claim approved successfully',
-    await populatePitch(pitch, populateType),
-  );
+  sendSuccess(res, 'Claim approved successfully', defaultPopulatedPitch);
 };
 
-type DeclineClaimReqBody = { userId: string };
+type DeclineClaimReqBody = { userId: string; teamId: string };
 type DeclineClaimReq = Request<IdParam, never, DeclineClaimReqBody, never>;
 
 export const declineClaimRequest = async (
   req: DeclineClaimReq,
   res: Response,
 ): Promise<void> => {
-  const { userId } = req.body;
+  const { userId, teamId } = req.body;
 
   if (!userId) {
     sendFail(res, 'User id is required');
     return;
   }
 
-  const pitch = await PitchService.declineClaimRequest(req.params.id, userId);
+  const pitch = await PitchService.declineClaimRequest(
+    req.params.id,
+    userId,
+    teamId,
+  );
 
   if (!pitch) {
     sendNotFound(res, `Pitch with id ${req.params.id} not found`);
@@ -328,6 +350,162 @@ export const declineClaimRequest = async (
   sendSuccess(
     res,
     'Claim declined successfully',
+    await populatePitch(pitch, populateType),
+  );
+};
+
+type UpdateTeamTargetBody = { teamId: string; target: number };
+type UpdateTeamTargetReq = Request<IdParam, never, UpdateTeamTargetBody, never>;
+
+export const updateTeamTarget = async (
+  req: UpdateTeamTargetReq,
+  res: Response,
+): Promise<void> => {
+  const { teamId, target } = req.body;
+
+  const pitch = await PitchService.updateTeamTarget(
+    req.params.id,
+    teamId,
+    target,
+  );
+
+  if (!pitch) {
+    sendNotFound(res, `Pitch with id ${req.params.id} not found`);
+    return;
+  }
+
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Successfully updated pitch team target',
+    await populatePitch(pitch, populateType),
+  );
+};
+
+type ChangeEditorQuery = { from: string; to: string };
+type ChangeEditorBody = { userId: string };
+type ChangeEditorReq = Request<
+  IdParam,
+  never,
+  ChangeEditorBody,
+  ChangeEditorQuery
+>;
+
+export const changeEditor = async (
+  req: ChangeEditorReq,
+  res: Response,
+): Promise<void> => {
+  const { userId } = req.body;
+
+  const pitch = await PitchService.changeEditor(
+    req.params.id,
+    userId,
+    req.query.from,
+    req.query.to,
+  );
+
+  if (!pitch) {
+    sendNotFound(res, `Pitch with id ${req.params.id} not found`);
+    return;
+  }
+
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Successfully changed editor',
+    await populatePitch(pitch, populateType),
+  );
+};
+
+/* type AddContributorQuery = {
+  editor: 'First' | 'Seconds' | 'Thirds' | undefined;
+  writer: boolean;
+}; */
+type AddContributorBody = { userId: string; teamId: string };
+type AddContributorReq = Request<IdParam, never, AddContributorBody, any>;
+
+export const addContributor = async (
+  req: AddContributorReq,
+  res: Response,
+): Promise<void> => {
+  const { userId, teamId } = req.body;
+
+  let pitch = await PitchService.addContributor(
+    req.params.id,
+    userId,
+    teamId,
+    req.query.editor,
+    req.query.writer,
+  );
+
+  pitch = await PitchService.decrementTeamTarget(req.params.id, teamId);
+
+  const user = await UserService.receiveClaimRequestApproval(
+    userId,
+    req.params.id,
+  );
+
+  if (!user) {
+    sendNotFound(res, `User with id ${userId} not found`);
+    return;
+  } else if (!pitch) {
+    sendNotFound(res, `Pitch with id ${req.params.id} not found`);
+    return;
+  }
+
+  //TODO: Add mail for adding contributor
+
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Successfully added contributor',
+    await populatePitch(pitch, populateType),
+  );
+};
+
+/* type RemoveContributorQuery = {
+  editor: 'First' | 'Seconds' | 'Thirds' | undefined;
+  writer: boolean;
+}; */
+type RemoveContributorBody = { userId: string; teamId: string };
+type RemoveContributorReq = Request<IdParam, never, RemoveContributorBody, any>;
+
+export const removeContributor = async (
+  req: RemoveContributorReq,
+  res: Response,
+): Promise<void> => {
+  const { userId, teamId } = req.body;
+
+  let pitch = await PitchService.removeContributor(
+    req.params.id,
+    userId,
+    teamId,
+    req.query.editor,
+    req.query.writer,
+  );
+
+  pitch = await PitchService.incrementTeamTarget(req.params.id, teamId);
+
+  const user = await UserService.removeClaimedPitch(userId, req.params.id);
+
+  if (!user) {
+    sendNotFound(res, `User with id ${userId} not found`);
+    return;
+  } else if (!pitch) {
+    sendNotFound(res, `Pitch with id ${req.params.id} not found`);
+    return;
+  }
+
+  //TODO: Add mail for removing contributor
+
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Successfully removed contributor',
     await populatePitch(pitch, populateType),
   );
 };

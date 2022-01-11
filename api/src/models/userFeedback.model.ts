@@ -11,6 +11,7 @@ const UserFeedback = new mongoose.Schema(
     staffId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     userId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     pitchId: { type: Schema.Types.ObjectId, ref: 'Pitch', required: true },
+    teamId: { type: Schema.Types.ObjectId, ref: 'Team', required: true },
     stars: { type: Number, default: null },
     reasoning: { type: String, default: null },
   },

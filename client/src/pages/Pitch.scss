@@ -1,0 +1,17 @@
+.review-claim-page {
+  .content {
+    width: 95%;
+    margin: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 2rem;
+
+    .card-content {
+      width: 40%;
+      display: flex;
+      flex-direction: column;
+      row-gap: 15px;
+    }
+  }
+}

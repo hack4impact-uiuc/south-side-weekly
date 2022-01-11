@@ -34,7 +34,6 @@ const AuthProvider: FC = ({ children }): ReactElement => {
 
       if (!isError(res)) {
         const user = res.data.result;
-        console.log(user);
 
         const sessionizedUser = {
           user: user,

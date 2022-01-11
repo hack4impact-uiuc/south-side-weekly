@@ -65,6 +65,11 @@ export const wizardPages = {
   COMPLETION: 'COMPLETION',
 };
 
+export const issueTypeEnum = {
+  PRINT: 'PRINT',
+  ONLINE: 'ONLINE',
+};
+
 export const visibilityEnum = {
   PUBLIC: 'PUBLIC',
   PRIVATE: 'PRIVATE',
@@ -82,6 +87,20 @@ export const issueStatusEnum = {
   IN_EDITS: 'IN_EDITS',
   READY_TO_PUBLISH: 'READY_TO_PUBLISH',
   PUSH: 'PUSH',
+};
+
+export const assignmentStatusEnum = {
+  IN_PROGRESS: 'IN_PROGRESS',
+  COMPLETED: 'COMPLETED',
+  ABANDONED: 'ABANDONED',
+  UNCLAIMED: 'UNCLAIMED',
+  NONE: 'NONE',
+};
+
+export const claimStatusEnum = {
+  APPROVED: 'APPROVED',
+  PENDING: 'PENDING',
+  DECLINED: 'DECLINED',
 };
 
 export const editStatusEnum = {

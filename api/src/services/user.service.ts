@@ -139,6 +139,15 @@ export const getAll = async (
 export const getOne = async (id: string): Promise<User> =>
   await User.findById({ _id: id }).lean({ virtuals: true });
 
+export const getUsersByTeamId = async (
+  teamId: string,
+): Promise<UsersResponse> =>
+  await User.find({
+    teams: {
+      $in: [teamId],
+    },
+  }).lean({ virtuals: true });
+
 export const add = async (payload: Partial<IUser>): Promise<User> =>
   await User.create(payload);
 
@@ -225,6 +234,19 @@ export const receiveClaimRequestApproval = async (
     },
   );
 
+export const removeClaimedPitch = async (
+  _id: string,
+  pitchId: string,
+): Promise<User> =>
+  await updateModel(
+    { _id },
+    {
+      $pull: {
+        claimedPitches: pitchId,
+      },
+    },
+  );
+
 export const removeClaimRequest = async (
   _id: string,
   pitchId: string,
@@ -255,7 +277,7 @@ export const addFeedback = async (
   }
 
   const numFeedbacks = user.feedback.length;
-  const sum = feedback.stars * (numFeedbacks - 1) + feedback.stars;
+  const sum = user.rating * (numFeedbacks - 1) + feedback.stars;
   await updateModel({ _id }, { $set: { rating: sum / numFeedbacks } });
 };
 

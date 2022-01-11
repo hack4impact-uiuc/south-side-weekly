@@ -9,8 +9,8 @@ export const contributorAddedToPitchHtml = `
     <p>{{ staff }} has added you to the "{{ title }}" pitch!</p>
     
     <p>Here are the other current contributors for this story:</p>
-    {{ contributorsList }}
-
+    {{{ contributorsList }}}
+    <br />
 
     <p>Your primary editor, {{ primaryEditor }}, is cc’ed on this email and will be following up to begin discussing your story.
     </p>

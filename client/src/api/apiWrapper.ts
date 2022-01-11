@@ -103,9 +103,6 @@ export const loadWriters = async (): Promise<BasePopulatedUser[]> => {
   const res = await apiCall<{ users: BasePopulatedUser[]; count: number }>({
     url: `/users`,
     method: 'GET',
-    query: {
-      role: rolesEnum.STAFF,
-    },
     populate: 'default',
   });
 

@@ -107,6 +107,27 @@
   background-color: $push !important;
 }
 
+//TODO: Determine colors for type of status tags
+.abandoned-tag-color,
+.in-progress-tag-color,
+.completed-tag-color,
+.unclaimed-tag-color,
+.none-tag-color {
+  background-color: $inprogress !important ;
+}
+
+.default-btn {
+  background-color: $secondaryColor !important;
+  color: white !important;
+
+  &:hover,
+  :focus {
+    background-color: $secondaryColor !important;
+    color: white !important;
+    opacity: 0.9;
+  }
+}
+
 .writer-needed-tag-color {
   background-color: $tagRed !important;
 }

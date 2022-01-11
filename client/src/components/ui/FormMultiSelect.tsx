@@ -4,6 +4,7 @@ import cn from 'classnames';
 
 import { MultiSelect } from '../select/MultiSelect';
 import './Form.scss';
+import { FieldTag } from '..';
 
 interface Option {
   label: string;
@@ -16,6 +17,7 @@ interface FormMultiSelectProps extends FieldProps<string[]> {
   label?: string;
   viewable?: boolean;
   editable?: boolean;
+  getTagData?: (id: string) => any;
 }
 
 export const FormMultiSelect: FC<FormMultiSelectProps> = ({
@@ -25,6 +27,7 @@ export const FormMultiSelect: FC<FormMultiSelectProps> = ({
   label,
   options = [],
   field,
+  getTagData = undefined,
   form: { setFieldValue },
 }): ReactElement => {
   const memoizedJSX = useMemo(
@@ -49,6 +52,23 @@ export const FormMultiSelect: FC<FormMultiSelectProps> = ({
 
   if (!viewable) {
     return <></>;
+  } else if (!editable) {
+    return (
+      <div className={cn('form-field', className)}>
+        {label && <label>{label}</label>}
+        <div>
+          {field.value.map((value: string) => {
+            if (getTagData) {
+              const data = getTagData(value);
+              return (
+                <FieldTag name={data?.name} hexcode={data?.color} key={value} />
+              );
+            }
+            <FieldTag content={value} key={value} />;
+          })}
+        </div>
+      </div>
+    );
   }
 
   return memoizedJSX;

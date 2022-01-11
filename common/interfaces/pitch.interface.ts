@@ -4,7 +4,6 @@ import { InterestFields, TeamFields, UserFields } from './_types';
 export interface Pitch {
   _id: string;
   title: string;
-  issues: string[];
   author: string;
   writer: string;
   primaryEditor: string;
@@ -20,7 +19,6 @@ export interface Pitch {
     teams: string[];
     message: string;
     dateSubmitted: Date;
-    status: string;
   }[];
   topics: string[];
   teams: {
@@ -63,7 +61,7 @@ export interface BasePopulatedPitch extends Omit<Pitch, BasePitchOmitFields> {
   secondEditors: UserFields[];
   thirdEditors: UserFields[];
   reviewedBy: UserFields;
-  issueStatuses: { issueId: Issue; status: string }[];
+  issueStatuses: { issueId: Issue; issueStatus: string }[];
 }
 
 type FullPitchOmitFields =
@@ -71,17 +69,14 @@ type FullPitchOmitFields =
   | 'issues'
   | 'pendingContributors';
 
-interface PendingContributor {
+export interface PendingContributor {
   userId: UserFields;
   teams: TeamFields[];
   message: string;
   dateSubmitted: Date;
-  status: string;
 }
 
-export interface FullPopulatedPitch
-  extends Omit<BasePopulatedPitch, FullPitchOmitFields> {
-  issues: Issue[];
+export interface FullPopulatedPitch extends Omit<Pitch, FullPitchOmitFields> {
   pendingContributors: PendingContributor[];
   teams: {
     teamId: TeamFields;
@@ -95,5 +90,5 @@ export interface FullPopulatedPitch
   secondEditors: UserFields[];
   thirdEditors: UserFields[];
   reviewedBy: UserFields;
-  issueStatuses: { issueId: Issue; status: string }[];
+  issueStatuses: { issueId: Issue; issueStatus: string }[];
 }

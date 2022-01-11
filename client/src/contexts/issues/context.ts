@@ -1,13 +1,13 @@
 import { createContext, useContext } from 'react';
 
-import { defaultFunc } from '../../utils/helpers';
+import { defaultAsyncFunc } from '../../utils/helpers';
 
 import { IIssueContext } from './types';
 
 const initialValues = {
   issues: [],
   getIssueFromId: (): undefined => undefined,
-  fetchIssues: defaultFunc,
+  fetchIssues: defaultAsyncFunc,
 };
 
 const IssuesContext = createContext<IIssueContext>(initialValues);

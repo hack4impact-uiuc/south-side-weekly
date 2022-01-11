@@ -388,10 +388,12 @@ export const publishDateColumn = configureColumn<FullPopulatedPitch>({
   title: 'Publish Date',
   width: 1,
   extractor: function DateCell(pitch) {
-    if (!pitch.issues || pitch.issues.length <= 0) {
+    if (!pitch.issueStatuses || pitch.issueStatuses.length <= 0) {
       return undefined;
     }
 
-    return new Date(pitch.issues[0].releaseDate).toLocaleDateString();
+    return new Date(
+      pitch.issueStatuses[0].issueId.releaseDate,
+    ).toLocaleDateString();
   },
 });

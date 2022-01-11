@@ -60,20 +60,15 @@ export const sendApproveUserMail = (
 
 export const sendClaimRequestApprovedMail = (
   contributor: User,
-  pitch: Pitch,
+  pitch: BasePopulatedPitch,
   staff: User,
 ): void => {
   const templateValues = {
-    contributor: getUserFulName(contributor),
+    contributor: contributor.fullname,
     title: pitch.title,
-    primaryEditor: getUserFulName((pitch.primaryEditor as unknown) as User), // TODO: use populate better
-    staff: getUserFulName(staff),
-    contributorsList: buildContributorHtml(
-      (pitch.assignmentContributors as unknown) as {
-        userId: User;
-        teams: ITeam[];
-      }[],
-    ),
+    primaryEditor: pitch.primaryEditor.fullname,
+    staff: staff.fullname,
+    contributorsList: buildContributorHtml(pitch),
   };
 
   const mailOptions = buildSendMailOptions(
@@ -81,6 +76,9 @@ export const sendClaimRequestApprovedMail = (
     `Claim Request for "${pitch.title}" approved`,
     'claimRequestApproved.html',
     templateValues,
+    {
+      cc: pitch.primaryEditor.email,
+    },
   );
 
   sendMail(mailOptions);
@@ -97,6 +95,8 @@ export const sendApprovedPitchMail = (
     pitch: pitch.title,
     pitchDocLink: `https://ssw.h4i.app/pitches`,
     reviewer: reviewer.fullname,
+    primaryEditor: pitch.primaryEditor.fullname,
+    description: pitch.description,
   };
 
   const mailOptions = buildSendMailOptions(
@@ -104,6 +104,9 @@ export const sendApprovedPitchMail = (
     `Pitch "${pitch.title}" approved`,
     hasWriter ? 'pitchApprovedWriter.html' : 'pitchApprovedNoWriter.html',
     templateValues,
+    {
+      cc: pitch.primaryEditor.email,
+    },
   );
 
   sendMail(mailOptions);
@@ -128,6 +131,32 @@ export const sendDeclinedPitchMail = (
     `Pitch "${pitch.title}" declined`,
     'pitchDeclined.html',
     templateValues,
+  );
+
+  sendMail(mailOptions);
+};
+
+export const sendContributorAddedToPitchMail = (
+  contributor: UserFields,
+  staff: UserFields,
+  pitch: BasePopulatedPitch,
+): void => {
+  const templateValues = {
+    contributor: contributor.fullname,
+    primaryEditor: pitch.primaryEditor.fullname,
+    contributorsList: buildContributorHtml(pitch),
+    title: pitch.title,
+    staff: staff.fullname,
+  };
+
+  const mailOptions = buildSendMailOptions(
+    contributor.email,
+    `You've been added to "${pitch.title}" Story`,
+    'contributorAddedToPitch.html',
+    templateValues,
+    {
+      cc: pitch.primaryEditor.email,
+    },
   );
 
   sendMail(mailOptions);

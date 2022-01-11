@@ -4,6 +4,7 @@ export interface UserFeedback {
     _id: string;
     staffId: string;
     userId: string;
+    teamId: string;
     pitchId: string;
     stars: number;
     reasoning: string;

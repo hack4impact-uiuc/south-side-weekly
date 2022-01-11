@@ -64,3 +64,14 @@ export const getAllFeedbackForUser = async (
   userId: string,
   options?: PaginateOptions<UserFeedbackSchema>,
 ): Promise<UserFeedbacksResponse> => paginate({ userId }, options);
+
+export const getUserFeedbackForPitch = async (
+  userId: string,
+  pitchId: string,
+  teamId: string,
+): UserFeedback =>
+  await UserFeedback.findOne({
+    userId: userId,
+    pitchId: pitchId,
+    teamId: teamId,
+  });

@@ -13,6 +13,7 @@ export const extractPopulateQuery = (
   const populate = query.populate as string;
 
   switch (populate) {
+    case 'none':
     case 'default':
     case 'full':
       return populate;

@@ -23,11 +23,6 @@ const pendingContributor = new mongoose.Schema(
     ...contributor.obj,
     message: { type: String },
     dateSubmitted: { type: Date, required: true },
-    status: {
-      type: String,
-      enum: Object.values(pitchStatusEnum),
-      default: pitchStatusEnum.PENDING,
-    },
   },
   { _id: false },
 );
@@ -58,7 +53,6 @@ const issueStatus = new mongoose.Schema(
 const Pitch = new mongoose.Schema(
   {
     title: { type: String, default: null, required: true },
-    issues: [{ type: Schema.Types.ObjectId, ref: 'Issue', required: true }],
     author: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     primaryEditor: {
       type: Schema.Types.ObjectId,

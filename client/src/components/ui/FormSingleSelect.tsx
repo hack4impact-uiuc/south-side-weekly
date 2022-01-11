@@ -1,9 +1,9 @@
+import cn from 'classnames';
 import { FieldProps } from 'formik';
 import React, { FC, ReactElement, useMemo } from 'react';
-import cn from 'classnames';
 
+import { FieldTag } from '..';
 import { SingleSelect } from '../select/SingleSelect';
-
 import './Form.scss';
 
 interface Option {
@@ -17,6 +17,7 @@ interface FormSingleSelectProps extends FieldProps<string> {
   label?: string;
   viewable?: boolean;
   editable?: boolean;
+  name?: string;
 }
 
 export const FormSingleSelect: FC<FormSingleSelectProps> = ({
@@ -40,11 +41,24 @@ export const FormSingleSelect: FC<FormSingleSelectProps> = ({
         />
       </div>
     ),
-    [field, className, label, options, editable, setFieldValue],
+    [field, className, label, editable, options, setFieldValue],
   );
 
   if (!viewable) {
     return <></>;
+  } else if (!editable) {
+    return (
+      <div className={cn('form-field', className)}>
+        {label && <label>{label}</label>}
+        <div>
+          <FieldTag
+            content={field.value}
+            name={field.value}
+            key={field.value}
+          />
+        </div>
+      </div>
+    );
   }
 
   return memoizedJSX;
