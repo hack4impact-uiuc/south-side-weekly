@@ -40,11 +40,11 @@ const ProfileSelect: FC<DropdownProps> = ({ ...rest }): ReactElement => {
   const { user } = useAuth();
   const history = useHistory();
 
-  const handleClick = (value: string): void => {
+  const handleClick = async (value: string): Promise<void> => {
     if (value === 'profile') {
       history.push(`/profile/${user!._id}`);
     } else if (value === 'logout') {
-      logout();
+      await logout();
     }
   };
 
