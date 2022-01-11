@@ -89,9 +89,7 @@ export const SubmitPitchForm: FC<FormProps> = ({
                 }))}
               />
             </div>
-            {user!.teams.findIndex(
-              (team) => team.name.toLowerCase() === 'writing',
-            ) > 0 && (
+            {isWriter && (
               <div className="row">
                 <div>
                   <p>
