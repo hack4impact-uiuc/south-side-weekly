@@ -76,7 +76,12 @@ const claimablePitchesFilter = (
     (team) => team.name.toLowerCase() === 'editing',
   );
 
-  const editorQuery = isEditor ? [{ secondEditors: { $eq: Array<undefined>() } }, { thirdEditors: { $eq: Array<undefined>() } }] : [];
+  const editorQuery = isEditor
+    ? [
+        { secondEditors: { $eq: Array<undefined>() } },
+        { thirdEditors: { $eq: Array<undefined>() } },
+      ]
+    : [];
 
   if (!isWriter) {
     return {
@@ -113,7 +118,7 @@ const claimablePitchesFilter = (
         },
       },
       ...editorQuery,
-    ]
+    ],
   };
 };
 
