@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import nocache from 'nocache';
 
 import { errorWrap } from '../middleware';
 import { AuthController } from '../controllers';
@@ -21,6 +22,6 @@ router.get('/redirectURI', errorWrap(AuthController.redirectURI));
 router.get('/google/callback', errorWrap(AuthController.receiveGoogleCallback));
 
 // GET /api/auth/logout
-router.get('/logout', errorWrap(AuthController.logout));
+router.get('/logout', nocache, errorWrap(AuthController.logout));
 
 export default router;
