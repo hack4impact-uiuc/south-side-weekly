@@ -76,6 +76,8 @@ const claimablePitchesFilter = (
     (team) => team.name.toLowerCase() === 'editing',
   );
 
+  const editorQuery = isEditor ? [{ secondEditors: { $eq: Array<undefined>() } }, { thirdEditors: { $eq: Array<undefined>() } }] : [];
+
   if (!isWriter) {
     return {
       author: { $eq: user._id },
@@ -90,17 +92,11 @@ const claimablePitchesFilter = (
             },
           },
         },
-        isEditor
-          ? {
-              $or: [
-                { secondEditors: { $ne: [] } },
-                { thirdEditors: { $ne: [] } },
-              ],
-            }
-          : undefined,
-      ].filter((item) => item !== undefined),
+        ...editorQuery,
+      ],
     };
   }
+
   return {
     $and: [
       { author: { $eq: user._id } },
@@ -116,15 +112,8 @@ const claimablePitchesFilter = (
           },
         },
       },
-      isEditor
-        ? {
-            $or: [
-              { secondEditors: { $ne: [] } },
-              { thirdEditors: { $ne: [] } },
-            ],
-          }
-        : undefined,
-    ].filter((item) => item !== undefined),
+      ...editorQuery,
+    ]
   };
 };
 
@@ -167,6 +156,7 @@ const paginate = async (
 
   console.log('Pitch doc filters: ');
   console.log(mergedFilters);
+  console.log(mergedFilters.$or);
 
   const pitches = await Pitch.find(mergedFilters)
     .skip(offset * limit)

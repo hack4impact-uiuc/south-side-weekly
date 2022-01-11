@@ -26,6 +26,7 @@ export const FormSingleSelect: FC<FormSingleSelectProps> = ({
   label,
   options = [],
   field,
+  form: { setFieldValue },
 }): ReactElement => {
   const memoizedJSX = useMemo(
     () => (
@@ -35,11 +36,11 @@ export const FormSingleSelect: FC<FormSingleSelectProps> = ({
           disabled={!editable}
           options={options}
           value={field.value}
-          onChange={field.onChange}
+          onChange={(value) => setFieldValue(field.name, value?.value)}
         />
       </div>
     ),
-    [field, className, label, options, editable],
+    [field, className, label, options, editable, setFieldValue],
   );
 
   if (!viewable) {
