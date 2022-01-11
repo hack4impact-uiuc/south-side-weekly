@@ -70,7 +70,7 @@ export const getClaimableTeams = (
     teams.push(WRITING_TEAM);
   }
 
-  return teams;
+  return teams.sort((a, b) => a.teamId.name.localeCompare(b.teamId.name));
 };
 
 export const ClaimableTeamsList: FC<Props> = ({ pitch }): ReactElement => {

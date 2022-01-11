@@ -65,7 +65,7 @@ export const SubmitPitchModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
       assignmentGoogleDocLink: data.assignmentGoogleDocLink,
       description: data.description,
       topics: data.topics,
-      conflictOfInterest: data.conflictOfInterest,
+      conflictOfInterest: data.conflictOfInterest === 'true',
       writer: user!._id,
       author: user!._id,
     };
@@ -81,10 +81,7 @@ export const SubmitPitchModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
     });
 
     if (!isError(res)) {
-      toast.success('Pitch successfully submitted!', {
-        position: 'bottom-right',
-      });
-
+      toast.success('Pitch successfully submitted!');
       setIsOpen(false);
     }
   };
@@ -120,7 +117,7 @@ export const SubmitPitchModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
             description: '',
             assignmentGoogleDocLink: '',
             topics: [],
-            conflictOfInterest: false,
+            conflictOfInterest: 'false',
             writerIntent: undefined,
           }}
           onSubmit={submitPitch}

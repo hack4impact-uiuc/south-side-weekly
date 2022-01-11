@@ -68,6 +68,7 @@ export const PaginatedTable = <T,>({
                   value: String(parseActivePage(activePage)),
                 })
               }
+              activePage={parseActivePage(query.offset || '0') + 2}
             />
           ) : undefined
         }

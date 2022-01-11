@@ -24,8 +24,6 @@ const updateModel = async <T>(
     runValidators: true,
   }).lean({ virtuals: true });
 
-const searchFields = ['firstName', 'lastName', 'preferredName', 'email'];
-
 const ignoreKeys = ['activityStatus'];
 
 const mongooseFilters = (
@@ -78,6 +76,32 @@ const activityFilter = (status: Condition<string>): FilterQuery<UserSchema> => {
   return {};
 };
 
+const searchFilter = (search: string): FilterQuery<UserSchema> => {
+  if (!search || search === '') {
+    return {};
+  }
+
+  search = search.trim();
+
+  const regexMatch = (input: Condition<any>): Condition<any> => ({
+    $regexMatch: {
+      input: input,
+      regex: search,
+      options: 'i',
+    },
+  });
+
+  return {
+    $expr: {
+      $or: [
+        regexMatch({ $concat: ['$firstName', ' ', '$lastName'] }),
+        regexMatch('$email'),
+        regexMatch('$preferredName'),
+      ],
+    },
+  };
+};
+
 const paginate = async (
   definedFilters: FilterQuery<UserSchema>,
   options?: PaginateOptions<UserSchema>,
@@ -86,16 +110,9 @@ const paginate = async (
   const mergedFilters = _.merge(
     mongooseFilters(filters),
     definedFilters,
-    {
-      $or: searchFields.map((field) => ({
-        [field]: { $regex: search, $options: 'i' },
-      })),
-    },
     activityFilter(filters['activityStatus']),
+    searchFilter(search),
   );
-
-  console.log('User filters');
-  console.log(mergedFilters);
 
   const users = await User.find(mergedFilters)
     .skip(offset * limit)

@@ -39,8 +39,8 @@ export const PitchesView: FC<PitchesViewProps> = ({ type }): ReactElement => {
     const params = new URLSearchParams(location.search);
 
     const q = {
-      limit: params.get('limit'),
-      offset: params.get('offset'),
+      limit: params.get('limit') || '10',
+      offset: params.get('offset') || '0',
       search: params.get('search'),
       'teams.teamId__all': params.get('teams__all'),
       topics__all: params.get('interests__all'),

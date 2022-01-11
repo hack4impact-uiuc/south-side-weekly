@@ -1,5 +1,5 @@
 import { Pitch } from 'ssw-common';
-import React, { FC, ReactElement } from 'react';
+import React, { FC, ReactElement, useMemo } from 'react';
 import { Formik, Form as FormikForm, FormikConfig, Field } from 'formik';
 import * as yup from 'yup';
 
@@ -16,20 +16,17 @@ const schema = yup.object({
   assignmentGoogleDocLink: yup.string().required(),
   description: yup.string().required(),
   topics: yup.array().of(yup.string().required()).required().min(1),
-  writerIntent: yup.string().required(),
-  conflictOfInterest: yup.boolean().required(),
+  writerIntent: yup.string().nullable(),
+  conflictOfInterest: yup.string().nullable().required(),
 });
 
 export interface SubmitPitchFields
   extends Pick<
     Pitch,
-    | 'title'
-    | 'assignmentGoogleDocLink'
-    | 'description'
-    | 'topics'
-    | 'conflictOfInterest'
+    'title' | 'assignmentGoogleDocLink' | 'description' | 'topics'
   > {
   writerIntent?: string;
+  conflictOfInterest: string;
 }
 
 interface FormProps extends FormikConfig<SubmitPitchFields> {
@@ -42,6 +39,15 @@ export const SubmitPitchForm: FC<FormProps> = ({
 }): ReactElement => {
   const { interests } = useInterests();
   const { user } = useAuth();
+
+  const isWriter = useMemo(
+    () => user!.teams.findIndex((team) => team.name === 'Writing') >= 0,
+    [user],
+  );
+
+  if (isWriter) {
+    schema.fields.writerIntent = schema.fields.writerIntent.required();
+  }
 
   return (
     <Formik<SubmitPitchFields>

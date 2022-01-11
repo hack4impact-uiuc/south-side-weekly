@@ -49,9 +49,7 @@ const ResourceModal: FC<ResourceProps> = ({
     });
 
     if (!isError(res)) {
-      toast.success('Resource deleted successfully', {
-        position: 'bottom-right',
-      });
+      toast.success('Resource deleted successfully');
       closeModal();
     } else {
       toast.error('Error deleting resource');
@@ -80,16 +78,10 @@ const ResourceModal: FC<ResourceProps> = ({
           `Successfully ${
             action === 'create' ? 'created' : 'updated'
           } resource`,
-          {
-            position: 'bottom-right',
-          },
         );
       } else {
         toast.error(
           `Error ${action === 'create' ? 'creating' : 'updating'} resource`,
-          {
-            position: 'bottom-right',
-          },
         );
       }
     };

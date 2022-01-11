@@ -14,7 +14,7 @@ import './EditUserForm.scss';
 const schema = yup.object({
   firstName: yup.string().required(),
   lastName: yup.string().required(),
-  preferredName: yup.string().required(),
+  preferredName: yup.string(),
   genders: yup.array().of(yup.string().required()).required().min(1),
   pronouns: yup.array().of(yup.string().required()).required().min(1),
   interests: yup.array().of(yup.string()).required().min(1).max(5),

@@ -7,11 +7,13 @@ import React, {
   useState,
 } from 'react';
 import toast from 'react-hot-toast';
+import { useLocation } from 'react-router-dom';
 import { Input, InputProps } from 'semantic-ui-react';
 import { useQueryParams, withDefault, StringParam } from 'use-query-params';
 
 export const DelayedSearch: FC<InputProps> = ({ ...rest }): ReactElement => {
   const [searchInput, setSearchInput] = useState('');
+  const location = useLocation();
 
   const [, setQuery] = useQueryParams({
     search: withDefault(StringParam, ''),
@@ -32,6 +34,14 @@ export const DelayedSearch: FC<InputProps> = ({ ...rest }): ReactElement => {
   const DELAY = 500;
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const delayedQuery = useCallback(_.debounce(updateQuery, DELAY), []);
+
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+
+    if (params.get('search') === null) {
+      setSearchInput('');
+    }
+  }, [location.search]);
 
   useEffect(() => {
     delayedQuery(searchInput);
