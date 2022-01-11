@@ -1,176 +1,51 @@
-import React, { ReactElement, useEffect, useState } from 'react';
-import { openPopupWidget } from 'react-calendly';
-import { Menu } from 'semantic-ui-react';
-import { Resource, Team } from 'ssw-common';
+import React, { ReactElement, useMemo } from 'react';
 
-import { apiCall, isError } from '../api';
-import { useAuth, useTeams } from '../contexts';
 import { ResourceModal, Walkthrough } from '../components';
-import { pagesEnum } from '../utils/enums';
-import { AuthView } from '../components/wrapper/AuthView';
 import { PrimaryButton } from '../components/ui/PrimaryButton';
-import { SecondaryButton } from '../components/ui/SecondaryButton';
-import DynamicTable, {
-  configureColumn,
-} from '../components/table/dynamic/DynamicTable2.0';
-
-import './Resources.scss';
-
-interface ModalInfo {
-  action: 'create' | 'edit';
-  isOpen: boolean;
-  resource?: Resource;
-}
-
-const generalTeam: Team = {
-  _id: 'General',
-  name: 'General',
-  color: '',
-  active: false,
-};
+import { Pusher } from '../components/ui/Pusher';
+import { ResourcesView } from '../components/view/ResourcesView';
+import { useAuth, useTeams } from '../contexts';
+import { Tabs } from '../layouts/tabs/Tabs';
+import { pagesEnum } from '../utils/enums';
 
 const Resources = (): ReactElement => {
+  const { isOnboarded } = useAuth();
   const { teams } = useTeams();
-  const { isAdmin } = useAuth();
 
-  const [selectedTab, setSelectedTab] = useState('General');
-  const [resources, setResources] = useState<Resource[]>([]);
-  const [modal, setModal] = useState<ModalInfo>({
-    action: 'edit',
-    isOpen: false,
-    resource: undefined,
-  });
-  const tabs = [generalTeam, ...teams];
-
-  // const filterResources = (team: string): Resource[] => {
-  //   if (team === 'General') {
-  //     return resources.filter((resource) => resource.isGeneral);
-  //   }
-  //   return resources.filter((resource) => resource.teams.includes(team));
-  // };
-
-  const getResources = async (): Promise<void> => {
-    const res = await apiCall<{ data: Resource[]; count: number }>({
-      url: '/resources',
-      method: 'GET',
-    });
-
-    if (!isError(res)) {
-      setResources(
-        res.data.result.data.sort(
-          (a: Resource, b: Resource) =>
-            +new Date(b.updatedAt) - +new Date(a.updatedAt),
+  const views = useMemo(
+    () =>
+      teams.map((team) => ({
+        title: team.name,
+        content: (
+          <ResourcesView team={{ teamId: team._id, teamName: team.name }} />
         ),
-      );
+      })),
+    [teams],
+  );
+
+  const walkthroughContent = useMemo(() => {
+    if (!isOnboarded) {
+      return 'After you are onboarded, you will be able to submit and claim pitches and begin your South Side Weekly journey!';
     }
-  };
 
-  useEffect(() => {
-    getResources();
-
-    return () => setResources([]);
-  }, [modal.isOpen]);
-
-  const closeModal = (): void => {
-    modal.isOpen = false;
-    setModal({ ...modal });
-  };
-
-  const openModal = (action: ModalInfo['action']): void => {
-    modal.isOpen = true;
-    modal.action = action;
-    setModal({ ...modal });
-  };
-
-  const handleResourceAction = (selected: Resource): void => {
-    setModal({
-      action: 'edit',
-      isOpen: true,
-      resource: selected,
-    });
-  };
+    return 'Check out the members on the SSW team and click their profiles to view more details!';
+  }, [isOnboarded]);
 
   return (
-    <>
-      <ResourceModal
-        closeModal={closeModal}
-        resource={modal.resource}
-        action={modal.action}
-        open={modal.isOpen}
-        onOpen={() => openModal(modal.action)}
-        onClose={closeModal}
-      />
-
-      <div className="resources-page">
-        <div className="page-header-content resource-page-header">
-          <Walkthrough
-            page={pagesEnum.RESOURCES}
-            content="Check out the members on the SSW team and click their profiles to view more details!"
-          />
-          <div className="controls">
-            <h1>Resource Page</h1>
-            <div className="push" />
-            <AuthView view="isOnboarded">
-              {isAdmin ? (
-                <PrimaryButton
-                  icon="add"
-                  onClick={() => openModal('create')}
-                  content="Add Resource"
-                />
-              ) : (
-                <SecondaryButton
-                  onClick={() =>
-                    openPopupWidget({
-                      url: 'https://calendly.com/sawhney4/60min',
-                    })
-                  }
-                  content="Schedule Office Hour"
-                />
-              )}
-            </AuthView>
-          </div>
-
-          <Menu className="tab-menu" tabular secondary pointing size="large">
-            {tabs.map((tab, index) => (
-              <Menu.Item
-                key={index}
-                name={tab.name}
-                value={tab._id}
-                active={tab._id === selectedTab}
-                onClick={(e, { value }) => setSelectedTab(value)}
-              />
-            ))}
-          </Menu>
-        </div>
-        <div className="page-inner-content">
-          {/* <ResourceTable
-            resource={filterResources(selectedTab)}
-            handleOpen={handleResourceAction}
-            isAdmin={isAdmin}
-          /> */}
-          <DynamicTable<Resource>
-            records={resources}
-            columns={[
-              configureColumn({
-                id: 'name',
-                title: 'Title',
-                extractor: 'name',
-                sorter: (a, b) => a.name.localeCompare(b.name),
-              }),
-              configureColumn({
-                id: 'visibility',
-                title: 'Visibility',
-                extractor: 'visibility',
-                width: 2,
-              }),
-            ]}
-            sortable
-            onRecordClick={handleResourceAction}
-            sortType="query"
+    <div className="directory-page">
+      <div className="page-header-content directory-page-header">
+        <Walkthrough page={pagesEnum.RESOURCES} content={walkthroughContent} />
+        <div style={{ display: 'flex' }}>
+          <Pusher />
+          <ResourceModal
+            action="create"
+            trigger={<PrimaryButton content="Add Resource" icon="add" />}
           />
         </div>
       </div>
-    </>
+      <div style={{ display: 'flex' }}></div>
+      <Tabs views={views} />
+    </div>
   );
 };
 

@@ -5,6 +5,7 @@ import {
   BasePopulatedUser,
   FullPopulatedPitch,
   Pitch,
+  Resource,
   Team,
 } from 'ssw-common';
 
@@ -395,5 +396,29 @@ export const publishDateColumn = configureColumn<FullPopulatedPitch>({
     return new Date(
       pitch.issueStatuses[0].issueId.releaseDate,
     ).toLocaleDateString();
+  },
+});
+
+export const resourceTitleColumn = configureColumn<Resource>({
+  title: null,
+  width: 1,
+  extractor: 'name',
+});
+
+export const adminResourceTitleColumn = configureColumn<Resource>({
+  title: 'Title',
+  width: 5,
+  extractor: 'name',
+  sortable: true,
+  id: 'name',
+});
+
+export const visibilityColumn = configureColumn<Resource>({
+  id: 'visibility',
+  title: 'Visibility',
+  width: 1,
+  sortable: true,
+  extractor: function getVisibility(resource) {
+    return <FieldTag content={resource.visibility} size="small" />;
   },
 });

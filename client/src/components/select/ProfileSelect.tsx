@@ -26,7 +26,7 @@ const Trigger: FC<TriggerProps> = ({ user }): ReactElement => (
 const logout = async (): Promise<void> => {
   const res = await apiCall({
     url: '/auth/logout',
-    method: 'GET',
+    method: 'PUT',
   });
 
   if (!isError(res)) {

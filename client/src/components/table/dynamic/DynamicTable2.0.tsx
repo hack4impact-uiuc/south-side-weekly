@@ -73,6 +73,7 @@ export interface DynamicTableProps<T> extends Omit<TableProps, 'columns'> {
   emptyMessage?: ReactNode;
   footer?: ReactNode;
   sortType?: 'internal' | 'query';
+  noHeader?: boolean;
 }
 
 /**
@@ -101,6 +102,7 @@ const DynamicTable = <T,>({
   footer,
   emptyMessage = 'No records found',
   sortType = 'internal',
+  noHeader = false,
   ...rest
 }: DynamicTableProps<T>): ReactElement => {
   const [sortedRecords, setSortedRecords] = useState(records);
@@ -236,25 +238,27 @@ const DynamicTable = <T,>({
       fixed
       singleLine
     >
-      <Table.Header style={headerStyle}>
-        <Table.Row>
-          {columns.map((column) => (
-            <Table.HeaderCell
-              width={column.width}
-              onClick={() => handleColumnClick(column)}
-              key={v4()}
-              sorted={
-                sort?.column.id === column.id && sort?.column.sortable
-                  ? sort?.direction
-                  : undefined
-              }
-              style={column.style}
-            >
-              {column.title}
-            </Table.HeaderCell>
-          ))}
-        </Table.Row>
-      </Table.Header>
+      {!noHeader && (
+        <Table.Header style={headerStyle}>
+          <Table.Row>
+            {columns.map((column) => (
+              <Table.HeaderCell
+                width={column.width}
+                onClick={() => handleColumnClick(column)}
+                key={v4()}
+                sorted={
+                  sort?.column.id === column.id && sort?.column.sortable
+                    ? sort?.direction
+                    : undefined
+                }
+                style={column.style}
+              >
+                {column.title}
+              </Table.HeaderCell>
+            ))}
+          </Table.Row>
+        </Table.Header>
+      )}
       <Table.Body style={bodyStyle}>
         {clickedRecord &&
           isModalOpen &&

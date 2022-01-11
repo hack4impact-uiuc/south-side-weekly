@@ -15,7 +15,7 @@ import './modals.scss';
 interface ResourceProps extends ModalProps {
   resource?: Resource;
   action: 'create' | 'edit';
-  closeModal: () => void;
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const defaultData = {
@@ -32,7 +32,8 @@ const defaultData = {
 const ResourceModal: FC<ResourceProps> = ({
   resource,
   action,
-  closeModal = () => void 0,
+  open,
+  setOpen,
   ...rest
 }): ReactElement => {
   const formValues = useMemo(
@@ -49,8 +50,8 @@ const ResourceModal: FC<ResourceProps> = ({
     });
 
     if (!isError(res)) {
+      setOpen?.(false);
       toast.success('Resource deleted successfully');
-      closeModal();
     } else {
       toast.error('Error deleting resource');
     }
@@ -73,7 +74,7 @@ const ResourceModal: FC<ResourceProps> = ({
       });
 
       if (!isError(res)) {
-        closeModal();
+        setOpen?.(false);
         toast.success(
           `Successfully ${
             action === 'create' ? 'created' : 'updated'
@@ -90,11 +91,17 @@ const ResourceModal: FC<ResourceProps> = ({
   };
 
   return (
-    <Modal className="resource-modal" {...rest}>
+    <Modal
+      open={open}
+      onOpen={() => setOpen?.(true)}
+      onClose={() => setOpen?.(false)}
+      className="resource-modal"
+      {...rest}
+    >
       <Modal.Header>
         <span>Resource Control</span>
         <Pusher />
-        <Icon id="close-icon" name="close" onClick={closeModal} />
+        <Icon id="close-icon" name="close" onClick={() => setOpen?.(false)} />
       </Modal.Header>
       <Modal.Content scrolling>
         <Modal.Description>

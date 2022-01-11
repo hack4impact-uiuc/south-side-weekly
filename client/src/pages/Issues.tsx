@@ -6,12 +6,14 @@ import { isError, apiCall } from '../api';
 import { Kanban } from '../components';
 import AddIssueModal from '../components/modal/AddIssue';
 import { SingleSelect } from '../components/select/SingleSelect';
+import { useAuth } from '../contexts';
 
 import './Issues.scss';
 
 const Issues = (): ReactElement => {
   const [issues, setIssues] = useState<PopulatedIssue[]>([]);
   const [viewIssueIndex, setViewIssueIndex] = useState<number>(0);
+  const { isAdmin } = useAuth();
 
   const fetchIssues = useCallback(async (): Promise<void> => {
     const res = await apiCall<{ data: PopulatedIssue[]; count: number }>({
@@ -45,6 +47,14 @@ const Issues = (): ReactElement => {
   useEffect(() => {
     fetchIssues();
   }, [fetchIssues]);
+
+  if (!isAdmin) {
+    return (
+      <div style={{ textAlign: 'center', paddingTop: '15vh' }}>
+        <h2>{`You are not authorized to view this page >:(`}</h2>
+      </div>
+    );
+  }
 
   if (
     issues.length === 0 ||

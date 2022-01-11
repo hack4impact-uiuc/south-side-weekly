@@ -90,6 +90,28 @@ export const getResource = async (
   );
 };
 
+export const getResourceByName = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  const options = extractOptions(req.query);
+
+  console.log(req.params.name);
+  const resource = await ResourceService.getByName(req.params.name, options);
+
+  if (!resource) {
+    sendNotFound(res, 'Resource not found');
+    return;
+  }
+
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(res, 'Resource retrieved successfully', {
+    data: await populateResource(resource.data, populateType),
+    count: resource.count,
+  });
+};
+
 // UPDATE controls
 
 type UpdateReqBody = Partial<IResource>;

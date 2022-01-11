@@ -55,6 +55,11 @@ export const add = async (payload: Partial<IResource>): Resource =>
 export const getOne = async (_id: string): Resource =>
   await Resource.findById({ _id }).lean();
 
+export const getByName = async (
+  name: string,
+  options?: PaginateOptions<ResourceSchema>,
+): Promise<ResourcesResponse> => await paginate({ teams: name }, options);
+
 export const getAll = async (
   isApproved: boolean,
   options?: PaginateOptions<ResourceSchema>,

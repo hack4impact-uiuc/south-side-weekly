@@ -9,6 +9,12 @@ const router = Router();
 // GET /api/resources
 router.get('/', requireRegistered, errorWrap(ResourceController.getResources));
 
+router.get(
+  '/teamName/:name',
+  requireRegistered,
+  errorWrap(ResourceController.getResourceByName),
+);
+
 // GET /api/resources/:id
 router.get(
   '/:id',
