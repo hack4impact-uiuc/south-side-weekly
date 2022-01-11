@@ -45,8 +45,7 @@ export const HomepageView: FC<HomepageViewProps> = ({ type }): ReactElement => {
       'teams.teamId__all': params.get('teams__all'),
       topics__all: params.get('interests__all'),
       hasPublishDate: type === 'published' || undefined,
-      'issueStatuses.issueStatus':
-        type === 'published' ? issueStatusEnum.PUSH : undefined,
+      isPublished: type === 'published',
       author: type === 'submitted' ? user?._id : undefined,
       'pendingContributors.userId':
         type === 'claim-submitted' ? user?._id : undefined,
