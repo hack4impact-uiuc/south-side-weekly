@@ -50,6 +50,7 @@ const AuthProvider: FC = ({ children }): ReactElement => {
 
         setAuth(sessionizedUser);
       } else {
+        console.log(res.error);
         setAuth({ ...initialValues, isLoading: false });
       }
     };
