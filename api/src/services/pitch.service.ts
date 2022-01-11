@@ -6,7 +6,7 @@ import { IssueService, UserService } from '.';
 
 import Pitch, { PitchSchema } from '../models/pitch.model';
 import { populateUser } from '../populators';
-import { pitchStatusEnum } from '../utils/enums';
+import { issueStatusEnum, pitchStatusEnum } from '../utils/enums';
 import { PaginateOptions } from './types';
 
 interface PitchesResponse {
@@ -62,6 +62,35 @@ const hasPublishDateFilter = (
     return { 'issueStatuses.0': { $exists: true } };
   } else if (hasPublishDate === 'FALSE') {
     return { 'issueStatuses.0': { $exists: false } };
+  }
+  return {};
+};
+
+const isPublishedFilter = (
+  isPublished: Condition<string>,
+): FilterQuery<PitchSchema> => {
+  if (!isPublished) {
+    return {};
+  }
+
+  isPublished = isPublished.toString().toUpperCase();
+
+  if (isPublished === 'TRUE') {
+    return {
+      'issueStatuses.issueStatus': issueStatusEnum.READY_TO_PUBLISH,
+      'issues.releaseDate': { $lte: new Date() },
+    };
+  } else if (isPublished === 'FALSE') {
+    return {
+      $or: [
+        {
+          'issuesStatuses.issueStatus': {
+            $ne: issueStatusEnum.READY_TO_PUBLISH,
+          },
+        },
+        { 'issues.releaseDate': { $gte: new Date() } },
+      ],
+    };
   }
   return {};
 };
@@ -155,13 +184,10 @@ const paginate = async (
     mongooseFilters(filters),
     definedFilters,
     hasPublishDateFilter(filters['hasPublishDate']),
+    isPublishedFilter(filters['isPublished']),
     claimStatusFilter(filters['claimStatus']),
     searchFilter(search),
   );
-
-  console.log('Pitch doc filters: ');
-  console.log(mergedFilters);
-  console.log(mergedFilters.$or);
 
   const pitches = await Pitch.find(mergedFilters)
     .skip(offset * limit)
