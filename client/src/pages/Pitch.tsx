@@ -78,7 +78,7 @@ const Pitch = (): ReactElement => {
       if (result.primaryEditor) {
         editors[result.primaryEditor._id] = {
           ...result.primaryEditor,
-          editorType: 'First',
+          editorType: 'Primary',
         };
       }
       result.secondEditors.map(

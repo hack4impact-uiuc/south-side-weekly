@@ -1,13 +1,13 @@
-import { omit } from 'lodash';
+import { groupBy, omit } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
-import { Button, Divider, Icon, Input, Label } from 'semantic-ui-react';
+import { Button, Divider, Icon, Label } from 'semantic-ui-react';
 import { Team, User } from 'ssw-common';
 import Swal from 'sweetalert2';
 
 import { FieldTag } from '..';
 import { apiCall, isError } from '../../api';
 import { EditorRecord } from '../../pages/Pitch';
-import { getUserFullName, pluralize } from '../../utils/helpers';
+import { getUserFullName } from '../../utils/helpers';
 import ContributorFeedback from '../modal/ContributorFeedback';
 import { SingleSelect } from '../select/SingleSelect';
 import UserChip from '../tag/UserChip';
@@ -30,8 +30,8 @@ interface SelectOption {
 
 const editorTypeDropDownOptions: SelectOption[] = [
   {
-    value: 'First',
-    label: 'First',
+    value: 'Primary',
+    label: 'Primary',
   },
   {
     value: 'Seconds',
@@ -54,12 +54,9 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
   const [selectContributorMode, setSelectContributorMode] = useState(false);
   const [filteredContributors, setFilteredContributors] = useState<User[]>([]);
   const [selectedContributor, setSelectedContributor] = useState('');
-  const [editTargetMode, setEditTargetMode] = useState(false);
   const [allEditors, setAllEditors] = useState<User[]>([]);
   const [temporaryContributors, setTemporaryContributors] =
     useState<EditorRecord>({});
-
-  const [totalPositions, setTotalPositions] = useState(0);
 
   const getContributorFromId = (userId: string): User | undefined =>
     allEditors.find(({ _id }) => userId === _id);
@@ -153,30 +150,6 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
     await callback();
   };
 
-  const changeTarget = async (): Promise<void> => {
-    //if (totalPositions - assignmentContributors.length < 0) {
-    Swal.fire({
-      title:
-        'The number of positions cannot be less than the current number of contributors',
-      icon: 'error',
-    });
-    //return;
-    // }
-
-    setEditTargetMode(false);
-
-    await apiCall({
-      method: 'PUT',
-      url: `/pitches/${pitchId}/teamTarget`,
-      body: {
-        teamId: team._id,
-        target: totalPositions - 1,
-      },
-    });
-
-    callback();
-  };
-
   const renderAddContributor = (): JSX.Element => {
     if (selectContributorMode) {
       return (
@@ -256,57 +229,55 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
     pendingEditors,
   ]);
 
-  const renderCardHeader = (): JSX.Element => {
-    void 0;
-    if (editTargetMode) {
-      return (
-        <div className="target-row">
-          <div className="target-text">
-            <div style={{ display: 'flex' }}>
-              {Object.keys(editors).length} out of{' '}
-            </div>
-            <Input
-              className="target-input"
-              value={isNaN(totalPositions) ? '' : totalPositions}
-              onChange={(_, { value }) => setTotalPositions(parseInt(value))}
-            />
-            <div style={{ display: 'block', position: 'relative' }}>
-              {pluralize('position', team.target + Object.keys(editors).length)}{' '}
-              filled
-            </div>
-          </div>
+  const numEditors = (): number =>
+    Object.values(
+      groupBy(Object.values(editors).map(({ editorType }) => editorType)),
+    ).length;
 
-          <Button content="Save" color="black" onClick={changeTarget} />
-        </div>
-      );
-    }
-    return (
-      <>
-        <p>
-          {Object.keys(editors).length} out of{' '}
-          {team.target + Object.keys(editors).length}{' '}
-          {pluralize('position', team.target + Object.keys(editors).length)}{' '}
-          filled
-        </p>
-        <AuthView view="isAdmin">
-          <Icon
-            name="pencil"
-            link
-            onClick={() => {
-              setEditTargetMode(true);
-              setTotalPositions(team.target + 1);
-            }}
-          />
-        </AuthView>
-      </>
-    );
-  };
+  const renderCardHeader = (): JSX.Element => (
+    <p>{numEditors()} out of 3 positions filled</p>
+  );
 
   const changeEditor = async (
     userId: string,
     from: string,
     to: string,
   ): Promise<void> => {
+    if (from === to) {
+      return;
+    }
+
+    if (from === 'Primary') {
+      Swal.fire({
+        title: 'Cannot remove only Primary Editor.',
+        text: 'If you want to remove a Primary Editor, add a new Contributor with editing-level Primary.',
+        icon: 'error',
+      });
+      return;
+    }
+    const primaryEditor = Object.values(editors).find(
+      ({ editorType }) => editorType === 'Primary',
+    );
+
+    let shouldCancelChange = false;
+    if (primaryEditor && to === 'Primary') {
+      await Swal.fire({
+        title: 'Primary Editor already exists.',
+        text: `This action will remove the current Primary Editor, ${primaryEditor.fullname}. Contributors on this pitch will not be alerted of this.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Assign New Primary Editor',
+      }).then((result) => {
+        if (!result.isConfirmed) {
+          shouldCancelChange = true;
+        }
+      });
+    }
+
+    if (shouldCancelChange) {
+      return;
+    }
+
     await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/changeEditor`,
@@ -350,11 +321,17 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
                   }
                   placeholder="Editor Type"
                   className="select-editor-type"
+                  isClearable={false}
                 />
+
                 <Icon
                   name="trash"
-                  link
+                  link={editor.editorType !== 'Primary'}
                   onClick={() => removeContributor(editorId, editor.editorType)}
+                  disabled={editor.editorType === 'Primary'}
+                  className={
+                    editor.editorType === 'Primary' ? 'disabled-trash' : ''
+                  }
                 />
               </div>
             )}
@@ -364,13 +341,16 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
         {Object.entries(pendingEditors).map(([editorId, editor], idx) => (
           <div className="claim-row" key={idx}>
             <UserChip user={omit(editor, 'editorType')} />
+
             <div className="dropdown-trash">
+              <FieldTag content="pending" />
               <SingleSelect
                 value={editor.editorType}
                 options={editorTypeDropDownOptions}
                 onChange={(e) => approveClaim(editorId, e ? e.value : '')}
                 placeholder="Editor Type"
                 className="select-editor-type"
+                isClearable={false}
               />
               <Icon name="trash" link onClick={() => declineClaim(editorId)} />
             </div>
@@ -388,6 +368,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
                   onChange={(e) => addEditor(editorId, e ? e.value : '')}
                   placeholder="Editor Type"
                   className="select-editor-type"
+                  isClearable={false}
                 />
                 <Icon
                   name="trash"

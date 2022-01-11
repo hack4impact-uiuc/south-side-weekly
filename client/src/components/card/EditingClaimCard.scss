@@ -148,6 +148,11 @@
           //background-color: blue !important;
           width: 150px !important;
         }
+
+        .disabled-trash &:hover {
+          cursor: not-allowed !important;
+          border: solid blue 10px !important;
+        }
       }
     }
   }

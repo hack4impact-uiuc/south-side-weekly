@@ -97,6 +97,12 @@ export const assignmentStatusEnum = {
   NONE: 'NONE',
 };
 
+export const claimStatusEnum = {
+  APPROVED: 'APPROVED',
+  PENDING: 'PENDING',
+  DECLINED: 'DECLINED',
+};
+
 export const editStatusEnum = {
   WRITER_NEEDED: 'Writer Needed',
   FIRST_NEEDED: '1st Needed',

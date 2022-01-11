@@ -164,7 +164,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
       );
     }
     return (
-      <AuthView view="isAdmin">
+      <AuthView view="minStaff">
         <Label
           className="add-contributor"
           as="a"
@@ -241,6 +241,8 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
           <Button content="Save" color="black" onClick={changeTarget} />
         </div>
       );
+    } else if (team.name === 'Writing') {
+      return <p>{assignmentContributors.length} out of 1 position filled</p>;
     }
     return (
       <>
@@ -250,7 +252,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
           {pluralize('position', team.target + assignmentContributors.length)}{' '}
           filled
         </p>
-        <AuthView view="isAdmin">
+        <AuthView view="minStaff">
           <Icon
             name="pencil"
             link
@@ -279,20 +281,25 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
             <div key={idx} className="claim-row">
               <UserChip user={contributor} />
 
-              <div className="button-group">
-                <Button
-                  content="Approve"
-                  positive
-                  size="small"
-                  onClick={() => approveClaim(contributor._id)}
-                />
-                <Button
-                  content="Decline"
-                  negative
-                  size="small"
-                  onClick={() => declineClaim(contributor._id)}
-                />
-              </div>
+              <AuthView view="minStaff">
+                <div className="button-group">
+                  <Button
+                    content="Approve"
+                    positive
+                    size="small"
+                    onClick={() => approveClaim(contributor._id)}
+                  />
+                  <Button
+                    content="Decline"
+                    negative
+                    size="small"
+                    onClick={() => declineClaim(contributor._id)}
+                  />
+                </div>
+              </AuthView>
+              <AuthView view="isContributor">
+                <FieldTag content="pending" />
+              </AuthView>
             </div>
           );
         })}
@@ -307,11 +314,13 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
                 pitchId={pitchId}
               />
             ) : (
-              <Icon
-                name="trash"
-                link
-                onClick={() => removeContributor(contributor._id)}
-              />
+              <AuthView view="minStaff">
+                <Icon
+                  name="trash"
+                  link
+                  onClick={() => removeContributor(contributor._id)}
+                />
+              </AuthView>
             )}
           </div>
         ))}
