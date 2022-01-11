@@ -1,11 +1,8 @@
 import React, { ReactElement, FC, useState, useEffect } from 'react';
 import { Modal, ModalProps, Icon, Menu } from 'semantic-ui-react';
-import { IPitchFeedback } from 'ssw-common';
+import { PitchFeedback } from 'ssw-common';
 
-import { isError, getPitchFeedback } from '../../../api';
-
-import IndividualTab from './individualTab';
-import QuestionsTab from './questionsTab';
+import { apiCall, isError } from '../../../api';
 
 import './styles.scss';
 
@@ -23,7 +20,7 @@ const PitchFeedbackModal: FC<PitchFeedbackModal> = ({
   } as const;
   type Tab = typeof TABS[keyof typeof TABS];
   const [isOpen, setIsOpen] = useState(false);
-  const [feedbacks, setFeedbacks] = useState<IPitchFeedback[]>([]);
+  const [, setFeedbacks] = useState<PitchFeedback[]>([]);
   const [currentTab, setCurrentTab] = useState<Tab>(TABS.QUESTIONS);
 
   useEffect(() => {
@@ -32,7 +29,10 @@ const PitchFeedbackModal: FC<PitchFeedbackModal> = ({
     }
 
     const getFeedback = async (): Promise<void> => {
-      const res = await getPitchFeedback(pitchId);
+      const res = await apiCall<PitchFeedback[]>({
+        url: `/pitchFeedback/${pitchId}`,
+        method: 'GET',
+      });
 
       if (!isError(res)) {
         setFeedbacks(res.data.result);
@@ -68,9 +68,11 @@ const PitchFeedbackModal: FC<PitchFeedbackModal> = ({
       </Menu>
       <Modal.Content>
         {currentTab === TABS.QUESTIONS ? (
-          <QuestionsTab feedbacks={feedbacks} />
+          // <QuestionsTab feedbacks={feedbacks} />
+          <></>
         ) : (
-          <IndividualTab feedbacks={feedbacks} />
+          // <IndividualTab feedbacks={feedbacks} />
+          <></>
         )}
       </Modal.Content>
     </Modal>

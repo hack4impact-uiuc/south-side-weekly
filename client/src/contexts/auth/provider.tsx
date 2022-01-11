@@ -5,8 +5,9 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
+import { BasePopulatedUser } from 'ssw-common';
 
-import { getCurrentUser, isError, logout as clearSession } from '../../api';
+import { isError, apiCall } from '../../api';
 import { onboardingStatusEnum, rolesEnum } from '../../utils/enums';
 
 import { AuthContext, initialValues, useAuth } from './context';
@@ -15,14 +16,21 @@ import { IAuthContext } from './types';
 const AuthProvider: FC = ({ children }): ReactElement => {
   const [auth, setAuth] = useState<IAuthContext>(initialValues);
 
-  const logout = useCallback((): void => {
-    clearSession();
+  const logout = useCallback(async (): Promise<void> => {
+    await apiCall({
+      url: 'auth/logout',
+      method: 'GET',
+    });
     setAuth({ ...initialValues, isLoading: false });
   }, []);
 
   useEffect(() => {
     const loadCurrentUser = async (): Promise<void> => {
-      const res = await getCurrentUser();
+      const res = await apiCall<BasePopulatedUser>({
+        url: '/users/me',
+        method: 'GET',
+        populate: 'default',
+      });
 
       if (!isError(res)) {
         const user = res.data.result;

@@ -1,0 +1,27 @@
+@import '../../../styles/colors.scss';
+
+.onboard4-wrapper {
+  .prompt {
+    margin: 50px;
+    text-align: center;
+    font-size: large;
+    margin-bottom: 5vh;
+    line-height: 30px;
+  }
+
+  .form {
+    justify-content: center;
+    width: 70%;
+    margin: auto;
+    padding-bottom: 100px;
+
+    .field {
+      width: 100% !important;
+
+      textarea {
+        min-height: 200px;
+        max-height: 200px;
+      }
+    }
+  }
+}

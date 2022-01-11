@@ -1,0 +1,26 @@
+#submit-pitch-form {
+  .form-wrapper {
+    .row {
+      display: flex;
+      margin-bottom: 10px;
+
+      .select-group {
+        display: flex;
+        margin-top: 10px;
+
+        .form-field {
+          width: fit-content;
+          margin-right: 10px;
+        }
+      }
+
+      .description > * textarea {
+        min-width: 100%;
+        margin-top: 10px;
+        min-height: 100px;
+        height: 100px;
+        max-height: 150px;
+      }
+    }
+  }
+}

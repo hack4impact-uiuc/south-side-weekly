@@ -1,0 +1,16 @@
+@import '../../styles/colors.scss';
+
+.loading-modal {
+  background: none !important;
+  box-shadow: none !important;
+
+  .content {
+    background: none !important;
+
+    .spinner {
+      display: flex;
+      justify-content: center;
+      color: black !important;
+    }
+  }
+}

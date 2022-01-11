@@ -1,7 +1,14 @@
 import { AsYouType } from 'libphonenumber-js';
 import { camelCase, isUndefined, reject, startCase } from 'lodash';
 import { DropdownItemProps } from 'semantic-ui-react';
-import { IUser, IPitch } from 'ssw-common';
+import {
+  BasePopulatedUser,
+  BasePopulatedPitch,
+  TeamFields,
+  FullPopulatedPitch,
+  Pitch,
+  User,
+} from 'ssw-common';
 
 import { pitchStatusEnum } from './enums';
 
@@ -13,7 +20,7 @@ import { pitchStatusEnum } from './enums';
  * @param pitch the pitch to pull the teams from
  * @returns an array of all of team IDs belonging to the pitch
  */
-const getPitchTeams = (pitch: IPitch): string[] => {
+const getPitchTeams = (pitch: Pitch): string[] => {
   const teams = pitch.teams
     .filter((team) => team.target > 0)
     .map((team) => team.teamId);
@@ -21,10 +28,7 @@ const getPitchTeams = (pitch: IPitch): string[] => {
   return teams;
 };
 
-const getUserTeamsForPitch = (
-  pitch: Partial<IPitch>,
-  user: IUser,
-): string[] => {
+const getUserTeamsForPitch = (pitch: Partial<Pitch>, user: User): string[] => {
   const contributor = pitch.assignmentContributors?.find(
     (contributor) => contributor.userId === user._id,
   );
@@ -35,24 +39,22 @@ const getUserTeamsForPitch = (
  *
  * @param pitch the pitch to check
  * @param user the user to look at teams for
- * @returns an array of all the team IDs belonging to the user or undefined if the user isn't on the pitch
+ * @returns an array of all the teams belonging to the user
  */
 const getPitchTeamsForContributor = (
-  pitch: IPitch,
-  user: IUser,
-): string[] | undefined => {
-  type Contributor = IPitch['assignmentContributors'][0];
+  pitch: BasePopulatedPitch | FullPopulatedPitch,
+  user: BasePopulatedUser,
+): TeamFields[] | undefined => {
+  type Contributor = BasePopulatedPitch['assignmentContributors'][0];
   const isUser = (contributor: Contributor): boolean =>
-    contributor.userId === user._id;
+    contributor.userId._id === user._id;
 
-  const contributor =
-    pitch.assignmentContributors.find(isUser) ||
-    pitch.pendingContributors.find(isUser);
+  const contributor = pitch.assignmentContributors.find(isUser);
 
-  return contributor?.teams;
+  return contributor?.teams ?? [];
 };
 
-type PendingContributor = IPitch['pendingContributors'][0];
+type PendingContributor = Pitch['pendingContributors'][0];
 /**
  * Find a pending contributor on a pitch that matches a given user
  *
@@ -61,14 +63,34 @@ type PendingContributor = IPitch['pendingContributors'][0];
  * @returns the pending contributor object
  */
 const findPendingContributor = (
-  pitch: IPitch,
-  user: IUser,
-): PendingContributor | undefined =>
-  pitch.pendingContributors.find(
+  pitch: Pitch | BasePopulatedPitch,
+  user: User | BasePopulatedUser,
+): PendingContributor | undefined => {
+  if (pitch.pendingContributors.length === 0) {
+    return undefined;
+  }
+
+  return (pitch as BasePopulatedPitch).pendingContributors.find(
     (contributor) => contributor.userId === user._id,
   );
+};
 
-type AssignmentContributor = IPitch['assignmentContributors'][0];
+type FullPendingContributor = FullPopulatedPitch['pendingContributors'][0];
+/**
+ * Find a pending contributor on a pitch that matches a given user
+ *
+ * @param pitch the pitch to check
+ * @param user the user to patch
+ * @returns the fully populated pending contributor object
+ */
+const findFullPendingContributor = (
+  pitch: FullPopulatedPitch,
+  user: BasePopulatedUser | User,
+): FullPendingContributor | undefined =>
+  pitch.pendingContributors.find(
+    (contributor) => contributor.userId._id === user._id,
+  );
+
 /**
  * Find an assignment contributor on a pitch that matches a given user
  *
@@ -77,12 +99,37 @@ type AssignmentContributor = IPitch['assignmentContributors'][0];
  * @returns the assignment contributor object
  */
 const findAssignmentContributor = (
-  pitch: IPitch,
-  user: IUser,
-): AssignmentContributor | undefined =>
+  pitch: BasePopulatedPitch,
+  user: BasePopulatedUser,
+): BasePopulatedPitch['assignmentContributors'][0] | undefined =>
   pitch.assignmentContributors.find(
-    (contributor) => contributor.userId === user._id,
+    (contributor) => contributor.userId._id === user._id,
   );
+
+/**
+ * Check if an assignment contributor is found on a pitch
+ *
+ * @param pitch the pitch to check
+ * @param user the user to match
+ * @returns whether or not the assignment contributor is found on the pitch
+ */
+const hasAssignmentContributor = (
+  pitch: Pitch | BasePopulatedPitch | FullPopulatedPitch,
+  user: User | BasePopulatedUser,
+): boolean => {
+  if (typeof pitch.author === 'string') {
+    return (
+      (pitch as Pitch).assignmentContributors.find(
+        (contributor) => contributor.userId === user._id,
+      ) !== undefined
+    );
+  }
+  return (
+    (pitch as BasePopulatedPitch).assignmentContributors.find(
+      (contributor) => contributor.userId._id === user._id,
+    ) !== undefined
+  );
+};
 
 type PitchClaimStatus = typeof pitchStatusEnum[keyof typeof pitchStatusEnum];
 /**
@@ -93,16 +140,21 @@ type PitchClaimStatus = typeof pitchStatusEnum[keyof typeof pitchStatusEnum];
  * @returns the user's pitch claim status
  */
 const getUserClaimStatusForPitch = (
-  pitch: IPitch,
-  user: IUser,
+  pitch: Pitch | BasePopulatedPitch | FullPopulatedPitch,
+  user: User | BasePopulatedUser,
 ): PitchClaimStatus => {
-  if (findAssignmentContributor(pitch, user)) {
+  if (hasAssignmentContributor(pitch, user)) {
     return pitchStatusEnum.APPROVED;
   }
 
-  const pendingContributor = findPendingContributor(pitch, user);
+  const base =
+    pitch.pendingContributors.length === 0 ||
+    typeof pitch.pendingContributors[0].userId === 'string';
+  const pendingContributor = base
+    ? findPendingContributor(pitch as BasePopulatedPitch, user)
+    : findFullPendingContributor(pitch as FullPopulatedPitch, user);
   if (pendingContributor) {
-    return pendingContributor.status;
+    return pitchStatusEnum.PENDING;
   }
 
   return pitchStatusEnum.DECLINED;
@@ -117,9 +169,9 @@ const getUserClaimStatusForPitch = (
  * @returns all the pitches which contain all the interests
  */
 const filterPitchesByInterests = (
-  pitches: IPitch[],
+  pitches: Pitch[],
   interests: string[],
-): IPitch[] => {
+): Pitch[] => {
   if (interests.length === 0) {
     return pitches;
   }
@@ -137,9 +189,9 @@ const filterPitchesByInterests = (
  * @returns the sorted list of pitches
  */
 const sortPitches = (
-  pitches: IPitch[],
+  pitches: Pitch[],
   sort: 'none' | 'increase' | 'decrease',
-): IPitch[] => {
+): Pitch[] => {
   if (sort === 'none') {
     return pitches;
   }
@@ -165,11 +217,11 @@ const sortPitches = (
  * @param value the corresponding to value to set the user's key to
  * @returns the updated user object
  */
-const updateUserField = <T extends keyof IUser>(
-  user: IUser,
+const updateUserField = <T extends keyof User>(
+  user: User,
   key: T,
-  value: IUser[T],
-): IUser => {
+  value: User[T],
+): User => {
   const userCopy = { ...user };
   userCopy[key] = value;
   return userCopy;
@@ -181,7 +233,7 @@ const updateUserField = <T extends keyof IUser>(
  * @param user the user to get the fullname of
  * @returns the fullname of the user
  */
-const getUserFullName = (user?: Partial<IUser>): string => {
+const getUserFullName = (user?: Partial<User>): string => {
   if (user === null || user === undefined) {
     return '';
   }
@@ -198,7 +250,7 @@ const getUserFullName = (user?: Partial<IUser>): string => {
  * @param user the user to get the short name of
  * @returns the shortname of the user
  */
-const getUserShortName = (user: Partial<IUser>): string =>
+const getUserShortName = (user: Partial<User>): string =>
   `${user.preferredName || user.firstName} ${user.lastName?.slice(0, 1)}.`;
 
 /**
@@ -208,7 +260,7 @@ const getUserShortName = (user: Partial<IUser>): string =>
  * @param user the user to check the teams for
  * @returns the teams that the user can claim
  */
-const getClaimableTeams = (pitch: IPitch, user: IUser): string[] =>
+const getClaimableTeams = (pitch: Pitch, user: User): string[] =>
   pitch.writer
     ? pitch.teams
         .filter((team) => team.target > 0 && user.teams.includes(team.teamId))
@@ -234,7 +286,7 @@ const parseOptions = (options: string[]): DropdownItemProps[] =>
  * @param pitch the pitch check the claims status
  * @returns true if pitch is claimed, else false
  */
-const isPitchClaimed = (pitch: IPitch): boolean =>
+const isPitchClaimed = (pitch: Pitch): boolean =>
   pitch.teams.every((team) => team.target <= 0);
 
 interface MapConversion<T, K> {
@@ -265,6 +317,11 @@ const titleCase = (str: string): string => startCase(camelCase(str));
  * A default void function to use as an initial function for contexts
  */
 const defaultFunc = (): void => void 0;
+
+/**
+ * A default async void function to use as an initial function for contexts
+ */
+const defaultAsyncFunc = (): Promise<void> => Promise.resolve();
 
 /**
  * Formats a number using libphonenumber-js into a US phone number
@@ -310,7 +367,7 @@ const classNames = (...classNames: (string | undefined)[]): string => {
  *
  * @param user the user whose profile should be opened
  */
-const openProfile = (user: IUser): void =>
+const openProfile = (user: BasePopulatedUser): void =>
   window.open(`/profile/${user._id}`)!.focus();
 
 interface SelectOption {
@@ -351,6 +408,7 @@ export {
   getPitchTeamsForContributor,
   getUserTeamsForPitch,
   findPendingContributor,
+  findFullPendingContributor,
   findAssignmentContributor,
   getUserClaimStatusForPitch,
   filterPitchesByInterests,
@@ -371,4 +429,5 @@ export {
   pluralize,
   formatDate,
   isPast,
+  defaultAsyncFunc,
 };

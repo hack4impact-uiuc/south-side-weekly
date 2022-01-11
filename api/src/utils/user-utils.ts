@@ -2,7 +2,7 @@ import { IUser } from 'ssw-common';
 import { difference } from 'lodash';
 import { Request } from 'express';
 import { isAdmin } from './auth-utils';
-import User, { UserSchema } from '../models/user';
+import User, { UserSchema } from '../models/user.model';
 import { Query } from 'mongoose';
 
 type UserKeys = (keyof IUser)[];

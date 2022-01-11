@@ -1,4 +1,4 @@
-import { IUser } from 'ssw-common';
+import { User } from 'ssw-common';
 
 // https://stackoverflow.com/questions/37377731/extend-express-request-object-using-typescript
 /**
@@ -6,7 +6,7 @@ import { IUser } from 'ssw-common';
  */
 declare module 'express-serve-static-core' {
   interface Request {
-    user?: IUser;
+    user?: User;
     _parsedUrl: {
       query: any;
     };

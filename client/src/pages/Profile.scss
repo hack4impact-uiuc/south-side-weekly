@@ -1,0 +1,91 @@
+.profile-page {
+  .profile-header {
+    padding-left: 5% !important;
+  }
+
+  .tag-spacing {
+    margin-top: 2% !important;
+  }
+
+  .user-role {
+    margin-top: 3%;
+  }
+
+  .field-label {
+    margin: auto;
+    margin-top: 5% !important;
+    width: 65%;
+  }
+
+  .rating {
+    display: flex;
+    margin-top: 3%;
+
+    .number-ratings {
+      margin-top: 2%;
+      margin-left: 2%;
+      font-size: 12px;
+    }
+  }
+
+  .no-ratings {
+    color: #a3a3a3;
+    margin-top: 4%;
+  }
+
+  .profile-pic-col {
+    display: flex !important;
+    text-align: left;
+  }
+
+  .user-pic {
+    margin-right: 3%;
+  }
+
+  .name-pronouns {
+    .name {
+      font-weight: 700;
+    }
+    .pronouns {
+      font-weight: 400;
+      text-align: left;
+    }
+  }
+
+  .registration {
+    margin-top: 10% !important;
+    color: #575757;
+  }
+
+  .experience {
+    padding: 5% !important;
+  }
+
+  .social-inputs {
+    display: flex;
+    flex-direction: column;
+  }
+  .feedback {
+    padding-bottom: 2% !important;
+    align-items: center !important;
+    justify-items: center !important;
+
+    .user-feedback {
+      margin-top: 2%;
+      margin-left: 0 !important;
+    }
+
+    .feedback-cards {
+      padding-bottom: 2%;
+    }
+  }
+  &.segment {
+    background-color: white;
+  }
+
+  .tag-col {
+    display: flex;
+    flex-flow: column;
+    align-items: flex-start;
+  }
+}

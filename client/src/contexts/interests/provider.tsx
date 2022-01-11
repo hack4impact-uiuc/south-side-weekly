@@ -5,23 +5,26 @@ import React, {
   useEffect,
   useCallback,
 } from 'react';
-import { IInterest } from 'ssw-common';
+import { Interest } from 'ssw-common';
 
-import { getInterests, isError } from '../../api';
+import { apiCall, isError } from '../../api';
 
 import { InterestsContext, initialValues, useInterests } from './context';
 
 // Interest provider
 const InterestsProvider: FC = ({ children }): ReactElement => {
-  const [interests, setInterests] = useState<IInterest[]>(
+  const [interests, setInterests] = useState<Interest[]>(
     initialValues.interests,
   );
 
-  const getInterestById = (id: string): IInterest | undefined =>
+  const getInterestById = (id: string): Interest | undefined =>
     interests.find(({ _id }) => _id === id);
 
   const fetchInterests = useCallback(async () => {
-    const res = await getInterests();
+    const res = await apiCall<Interest[]>({
+      url: '/interests',
+      method: 'GET',
+    });
 
     if (!isError(res)) {
       setInterests(res.data.result);

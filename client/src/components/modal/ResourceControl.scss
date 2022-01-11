@@ -1,0 +1,12 @@
+@import '../../styles/colors.scss';
+
+.resource-modal {
+  .delete-btn {
+    float: left;
+
+    &:hover {
+      background-color: transparent !important;
+      opacity: 0.7 !important;
+    }
+  }
+}

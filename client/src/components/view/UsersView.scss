@@ -1,0 +1,28 @@
+@import '../../styles/colors.scss';
+
+.users-view {
+  .filters {
+    width: 100%;
+
+    .filter {
+      width: 30%;
+      margin-right: 2%;
+    }
+
+    .top-filters {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+
+      #search {
+        width: 45% !important;
+        margin-right: 2%;
+      }
+
+      .publish-date-checkbox {
+        margin: 0 5px 0px 5px;
+      }
+    }
+  }
+}

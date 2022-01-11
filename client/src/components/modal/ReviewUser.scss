@@ -1,0 +1,23 @@
+@import '../../styles/colors.scss';
+
+.review-user-modal {
+  .column {
+    line-height: 2;
+  }
+  .user-info {
+    display: flex;
+    align-items: center;
+    line-height: 1;
+    .user-info-text {
+      display: flex;
+      flex-direction: column;
+    }
+  }
+  .icon {
+    margin-right: 10px;
+  }
+  .review-user-picture {
+    width: 12% !important;
+    margin-right: 15px;
+  }
+}

@@ -1,0 +1,55 @@
+@import '../styles/colors.scss';
+
+.homepage-wrapper {
+  .homepage-header {
+    padding: 0px 2% 0px 2%;
+  }
+
+  .filters-wrapper {
+    display: flex;
+    flex-flow: row wrap;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 20px;
+
+    .filter-dropdown {
+      min-width: 14em;
+    }
+  }
+
+  .ui {
+    &.menu {
+      margin-bottom: 2px;
+      padding-inline: 0px;
+    }
+
+    &.secondary.pointing.menu {
+      border-bottom: 0px;
+
+      .active.item {
+        border-bottom: 4px solid;
+        border-color: $secondaryColor;
+      }
+      .item {
+        border-bottom-width: auto;
+        padding-inline: 3em;
+
+        &.right {
+          padding-inline: 0px;
+        }
+      }
+    }
+    &.segment {
+      padding: 1.5em 4em;
+      // margin: 0px -6%;
+    }
+  }
+
+  .pitch-table {
+    .flex-cell {
+      display: flex;
+      flex-flow: row wrap;
+      gap: 5px;
+    }
+  }
+}

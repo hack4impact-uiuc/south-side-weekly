@@ -25,6 +25,7 @@ const onboardingStatusEnum = {
 };
 
 const pagesEnum = {
+  HOMEPAGE: 'HOMEPAGE',
   PITCHDOC: 'PITCHDOC',
   DIRECTORY: 'DIRECTORY',
   RESOURCES: 'RESOURCES',
@@ -62,6 +63,12 @@ const issueStatusEnum = {
   PUSH: 'PUSH',
 };
 
+const claimStatusEnum = {
+  APPROVED: 'APPROVED',
+  PENDING: 'PENDING',
+  DECLINED: 'DECLINED',
+};
+
 const editStatusEnum = {
   WRITER_NEEDED: 'Writer Needed',
   FIRST_NEEDED: '1st Needed',
@@ -87,4 +94,5 @@ export {
   visibilityEnum,
   issueStatusEnum,
   editStatusEnum,
+  claimStatusEnum,
 };

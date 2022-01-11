@@ -1,0 +1,33 @@
+@import '../../styles/colors.scss';
+
+.ui.modal {
+  > .header {
+    background-color: $primary !important;
+    color: white !important;
+    display: flex !important;
+    align-items: center;
+
+    i {
+      cursor: pointer;
+      float: right !important;
+    }
+  }
+
+  .content {
+    background-color: $mainBackground !important;
+    mark.optional {
+      color: #9b9b9b;
+      background-color: transparent !important;
+      font-weight: lighter !important;
+    }
+
+    .section {
+      margin-bottom: 20px;
+      width: 100%;
+    }
+  }
+
+  .actions {
+    background-color: $mainBackground !important;
+  }
+}

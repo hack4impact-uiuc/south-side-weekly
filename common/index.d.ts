@@ -1,4 +1,4 @@
-import internal from "node:stream";
+export * from './interfaces';
 
 /**
  * Interface for a User Schema.
@@ -14,7 +14,6 @@ export interface IUser {
   genders: string[];
   pronouns: string[];
   dateJoined: Date;
-  masthead: boolean;
   onboardingStatus: string;
   visitedPages: string[];
   profilePic: string;
@@ -34,7 +33,22 @@ export interface IUser {
   onboardReasoning: string;
   feedback: string[];
   lastActive: Date;
+  fullname: string;
+  activityStatus: string;
+  joinedNames: string;
 }
+
+export type PitchFields = Pick<
+  IPitch,
+  | 'title'
+  | 'description'
+  | 'createdAt'
+  | 'topics'
+  | 'status'
+  | 'editStatus'
+  | 'deadline'
+  | 'issueStatuses'
+>;
 
 export interface IUserAggregate extends IUser {
   aggregated: {
@@ -152,6 +166,12 @@ export interface IIssue {
   pitches: string[];
   type: string;
 }
+
+type BaseIssueOmitFields = 'pitches';
+
+export type PopulatedIssue = Omit<IIssue, BaseIssueOmitFields> & {
+  pitches: PitchFields[];
+};
 
 /**
  * Interface for UserFeedback Schedma.

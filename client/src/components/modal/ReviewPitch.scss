@@ -1,0 +1,70 @@
+@import '../../styles/colors.scss';
+
+.review-pitch-modal {
+  .content {
+    #target-selectors {
+      display: flex;
+      flex-wrap: wrap;
+      overflow: auto;
+    }
+
+    #add-issue-btn {
+      background-color: transparent !important;
+      padding-top: 0px !important;
+      padding-right: 0px !important;
+      color: $secondaryColor !important;
+    }
+
+    #date-issue-selector {
+      display: flex;
+      margin-top: 20px;
+
+      #deadline-title {
+        margin-right: 20px;
+      }
+
+      #issue-title {
+        margin-right: 80px;
+      }
+    }
+
+    .flex-wrapper {
+      display: flex;
+      align-items: center;
+
+      #title {
+        margin-right: 15px;
+      }
+
+      #pitch-creator {
+        margin-right: 30px;
+      }
+    }
+
+    #description {
+      line-height: 3rem;
+    }
+
+    #writer-editor-select {
+      display: flex;
+      position: relative;
+      width: 100%;
+
+      #writer-select {
+        float: left;
+        width: 50%;
+        padding-right: 20px;
+      }
+
+      #editor-select {
+        float: right;
+        width: 50%;
+        padding-left: 20px;
+      }
+    }
+
+    .selector {
+      margin-bottom: 8px;
+    }
+  }
+}

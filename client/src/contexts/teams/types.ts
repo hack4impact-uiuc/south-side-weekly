@@ -1,7 +1,7 @@
-import { ITeam } from 'ssw-common';
+import { Team } from 'ssw-common';
 
 export interface ITeamsContext {
-  teams: ITeam[];
-  getTeamFromId: (id: string) => ITeam | undefined;
+  teams: Team[];
+  getTeamFromId: (id: string) => Team;
   fetchTeams: () => void;
 }

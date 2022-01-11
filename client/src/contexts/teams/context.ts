@@ -1,4 +1,5 @@
 import { createContext, useContext } from 'react';
+import { Team } from 'ssw-common';
 
 import { defaultFunc } from '../../utils/helpers';
 
@@ -6,7 +7,7 @@ import { ITeamsContext } from './types';
 
 const initialValues = {
   teams: [],
-  getTeamFromId: (): undefined => undefined,
+  getTeamFromId: (): Team => ({ name: '', active: false, _id: '', color: '' }),
   fetchTeams: defaultFunc,
 };
 
