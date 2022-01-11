@@ -56,12 +56,15 @@ const Issues = (): ReactElement => {
     );
   }
 
-  if (
-    issues.length === 0 ||
-    viewIssueIndex < 0 ||
-    viewIssueIndex > issues.length
-  ) {
+  if (viewIssueIndex < 0 || viewIssueIndex > issues.length) {
     return <>Loading...</>;
+  } else if (issues.length === 0) {
+    return (
+      <div style={{ textAlign: 'center', paddingTop: '15vh' }}>
+        <h3>{`No issues found. Create an issue to get started!`}</h3>
+        <AddIssueModal />
+      </div>
+    );
   }
 
   return (

@@ -3,6 +3,7 @@ import { BasePopulatedUser } from 'ssw-common';
 
 import { ReviewUser } from '..';
 import { approveUser, rejectUser } from '../../api';
+import { useAuth } from '../../contexts';
 import { ViewUserModal } from '../modal/ViewUser';
 import { PrimaryButton } from '../ui/PrimaryButton';
 import { SecondaryButton } from '../ui/SecondaryButton';
@@ -17,6 +18,8 @@ import {
   ratingColumn,
   joinedColumn,
   rejectionColumn,
+  teamsModalColumn,
+  interestsModalColumn,
 } from './columns';
 import { configureColumn } from './dynamic/DynamicTable2.0';
 import { PaginatedTable } from './dynamic/PaginatedTable';
@@ -32,12 +35,32 @@ const approvedColumns = [
   joinedColumn,
 ];
 
+const approvedAdminColumns = [
+  profilePic,
+  nameColumn,
+  roleColumn,
+  teamsModalColumn,
+  interestsModalColumn,
+  statusColumn,
+  ratingColumn,
+  joinedColumn,
+];
+
 const pendingColumns = [
   profilePic,
   nameColumn,
   roleColumn,
   teamsColumn,
   interestsColumn,
+  joinedColumn,
+];
+
+const pendingAdminColumns = [
+  profilePic,
+  nameColumn,
+  roleColumn,
+  teamsModalColumn,
+  interestsModalColumn,
   joinedColumn,
 ];
 
@@ -63,6 +86,8 @@ export const UsersRecords: FC<TableProps> = ({
   type,
   onModalClose,
 }) => {
+  const { isAdmin } = useAuth();
+
   const actionColumn = configureColumn<BasePopulatedUser>({
     title: '',
     width: 2,
@@ -100,15 +125,17 @@ export const UsersRecords: FC<TableProps> = ({
   const cols = useMemo(() => {
     switch (type) {
       case 'approved':
-        return approvedColumns;
+        return isAdmin ? approvedAdminColumns : approvedColumns;
       case 'pending':
-        return [...pendingColumns, actionColumn];
+        return isAdmin
+          ? [...pendingAdminColumns, actionColumn]
+          : [...pendingColumns, actionColumn];
       case 'denied':
         return deniedColumns;
       default:
         return [];
     }
-  }, [type, actionColumn]);
+  }, [type, actionColumn, isAdmin]);
 
   return (
     <PaginatedTable<BasePopulatedUser>

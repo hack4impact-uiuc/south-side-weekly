@@ -30,7 +30,7 @@ router.get('/denied', requireAdmin, errorWrap(UserController.getDeniedUsers));
 // GET /api/users/me
 router.get('/me', requireRegistered, errorWrap(UserController.getMe));
 
-router.get(
+router.post(
   '/stallUsers',
   requireRequestSecret,
   errorWrap(UserController.stallOldScheduledOnboarding),

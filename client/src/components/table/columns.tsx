@@ -9,7 +9,7 @@ import {
   Team,
 } from 'ssw-common';
 
-import { FieldTag, UserPicture } from '..';
+import { EditInterests, EditTeams, FieldTag, UserPicture } from '..';
 import { approveUser, rejectUser } from '../../api/apiWrapper';
 import { useAuth, useTeams } from '../../contexts';
 import {
@@ -79,15 +79,31 @@ export const interestsColumn = configureColumn<BasePopulatedUser>({
   title: 'Interests',
   extractor: function getInterests(user: BasePopulatedUser) {
     return (
-      <>
-        <TagList
-          size="tiny"
-          tags={user.interests.sort((a, b) => a.name.localeCompare(b.name))}
-          limit={3}
-        />
-      </>
+      <TagList
+        size="tiny"
+        tags={user.interests.sort((a, b) => a.name.localeCompare(b.name))}
+        limit={3}
+      />
     );
   },
+});
+
+export const teamsModalColumn = configureColumn<BasePopulatedUser>({
+  ...teamsColumn,
+  title: (
+    <span>
+      Teams <EditTeams />
+    </span>
+  ),
+});
+
+export const interestsModalColumn = configureColumn<BasePopulatedUser>({
+  ...interestsColumn,
+  title: (
+    <span>
+      Interests <EditInterests />
+    </span>
+  ),
 });
 
 export const statusColumn = configureColumn<BasePopulatedUser>({
