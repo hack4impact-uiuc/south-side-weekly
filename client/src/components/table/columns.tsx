@@ -53,7 +53,7 @@ export const nameColumn = configureColumn<BasePopulatedUser>({
 export const roleColumn = configureColumn<BasePopulatedUser>({
   id: 'role',
   title: 'Role',
-  width: 2,
+  width: 1,
   extractor: function getRoles(user: BasePopulatedUser) {
     return <FieldTag size="tiny" content={user.role} />;
   },
@@ -77,6 +77,7 @@ export const teamsColumn = configureColumn<BasePopulatedUser>({
 export const interestsColumn = configureColumn<BasePopulatedUser>({
   id: 'interests',
   title: 'Interests',
+  width: 2,
   extractor: function getInterests(user: BasePopulatedUser) {
     return (
       <TagList
@@ -159,8 +160,18 @@ export const actionColumn = configureColumn<BasePopulatedUser>({
 
 export const rejectionColumn = configureColumn<BasePopulatedUser>({
   id: 'onboardReasoning',
+  width: 4,
   title: 'Rejection Reasoning',
   extractor: 'onboardReasoning',
+});
+
+export const onboardStatusColumn = configureColumn<BasePopulatedUser>({
+  id: 'onboardingStatus',
+  title: 'Onboarding Status',
+  width: 2,
+  extractor: function getOnboardStatus(user: BasePopulatedUser) {
+    return <FieldTag size="tiny" content={user.onboardingStatus} />;
+  },
 });
 
 export const titleColumn = configureColumn({
@@ -330,12 +341,13 @@ export const teamsRequireApprovalColumn = configureColumn<BasePopulatedPitch>({
 });
 
 export const pitchStatusCol = configureColumn<
-  Pick<BasePopulatedPitch, 'status'>
+  Pick<BasePopulatedPitch, 'title' | 'status'>
 >({
   id: 'status',
   title: 'Status',
   width: 1,
-  extractor: function StatusCell({ status }) {
+  extractor: function StatusCell({ title, status }) {
+    console.log(title, status);
     return <FieldTag content={status} size={'small'} />;
   },
 });
@@ -355,14 +367,22 @@ export const associatedTeamsColumn = configureColumn<
   BasePopulatedPitch | FullPopulatedPitch
 >({
   title: "Teams You're On",
-  width: 1,
-  extractor: function TeamsCell(pitch) {
+  width: 4,
+  extractor: function TeamsCell({ ...pitch }) {
     const { user } = useAuth();
+    const { teams } = useTeams();
+
+    if (pitch.title.includes('National')) {
+      console.log(getPitchTeamsForContributor(pitch, user!, teams));
+      console.log(pitch);
+    }
+
     return (
       <div>
         <TagList
           size="tiny"
-          tags={getPitchTeamsForContributor(pitch, user!)!}
+          tags={getPitchTeamsForContributor(pitch, user!, teams)!}
+          limit={8}
         />
       </div>
     );

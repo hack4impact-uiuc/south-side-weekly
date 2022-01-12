@@ -20,6 +20,7 @@ import {
   rejectionColumn,
   teamsModalColumn,
   interestsModalColumn,
+  onboardStatusColumn,
 } from './columns';
 import { configureColumn } from './dynamic/DynamicTable2.0';
 import { PaginatedTable } from './dynamic/PaginatedTable';
@@ -59,6 +60,7 @@ const pendingAdminColumns = [
   profilePic,
   nameColumn,
   roleColumn,
+  onboardStatusColumn,
   teamsModalColumn,
   interestsModalColumn,
   joinedColumn,

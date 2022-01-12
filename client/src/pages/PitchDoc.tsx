@@ -29,7 +29,7 @@ export const PitchDocPage = (): ReactElement => {
 
     if (isAdmin) {
       panes.unshift({
-        title: 'Review Unclaimed Pitches',
+        title: 'Review Assignments',
         content: <PitchesView type="review-unclaimed" />,
       });
       panes.unshift({

@@ -135,6 +135,23 @@ export const getClaimablePitches = async (
   });
 };
 
+export const getClaimRequests = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  const userId = req.params.userId;
+
+  const populateType = extractPopulateQuery(req.query);
+  const options = extractOptions(req.query);
+
+  const pitches = await PitchService.getClaimRequests(userId, options);
+
+  sendSuccess(res, 'Pitches retrieved successfully', {
+    data: await populatePitch(pitches.data, populateType),
+    count: pitches.count,
+  });
+};
+
 // UPDATE controls
 
 type UpdateReqBody = Partial<Pitch>;

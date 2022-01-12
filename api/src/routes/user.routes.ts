@@ -81,6 +81,12 @@ router.get(
   errorWrap(UserController.pitches),
 );
 
+router.get(
+  '/:id/currentPitches',
+  requireContributor,
+  errorWrap(UserController.getCurrentPitches),
+);
+
 // DELETE /api/users/:id
 router.delete('/:id', requireAdmin, errorWrap(UserController.deleteUser));
 

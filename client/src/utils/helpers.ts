@@ -8,6 +8,7 @@ import {
   FullPopulatedPitch,
   Pitch,
   User,
+  Team,
 } from 'ssw-common';
 
 import { pitchStatusEnum } from './enums';
@@ -44,14 +45,30 @@ const getUserTeamsForPitch = (pitch: Partial<Pitch>, user: User): string[] => {
 const getPitchTeamsForContributor = (
   pitch: BasePopulatedPitch | FullPopulatedPitch,
   user: BasePopulatedUser,
+  allTeams: Team[],
 ): TeamFields[] | undefined => {
   type Contributor = BasePopulatedPitch['assignmentContributors'][0];
   const isUser = (contributor: Contributor): boolean =>
     contributor.userId._id === user._id;
 
-  const contributor = pitch.assignmentContributors.find(isUser);
+  const WRITING_TEAM = allTeams.find((team) => team.name === 'Writing')!;
+  const EDITING_TEAM = allTeams.find((team) => team.name === 'Editing')!;
 
-  return contributor?.teams ?? [];
+  const contributor = pitch.assignmentContributors.find(isUser)?.teams || [];
+
+  if (user._id === pitch.author._id) {
+    contributor.push(WRITING_TEAM);
+  }
+
+  if (
+    pitch.primaryEditor?._id === user._id ||
+    pitch.secondEditors.some((editor) => editor._id === user._id) ||
+    pitch.thirdEditors.some((editor) => editor._id === user._id)
+  ) {
+    contributor.push(EDITING_TEAM);
+  }
+
+  return [...new Set(contributor)].sort((a, b) => a.name.localeCompare(b.name));
 };
 
 type PendingContributor = Pitch['pendingContributors'][0];

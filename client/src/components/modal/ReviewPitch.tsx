@@ -176,7 +176,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
           <Message
             warning
             header="Wait!"
-            content="You have already claimed this pitch"
+            content="You cannot approve your own pitch!"
           />
         )}
         <div className="flex-wrapper">
