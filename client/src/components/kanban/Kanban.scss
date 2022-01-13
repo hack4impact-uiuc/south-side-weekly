@@ -1,0 +1,40 @@
+@import '../../styles/colors.scss';
+
+.kanban-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: space-between;
+  height: 100%;
+  font-family: Lato;
+  font-style: normal;
+  line-height: 25px;
+  z-index: 0;
+
+  .kanban-header {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+    justify-content: left !important;
+    width: 100%;
+    position: relative;
+    left: 12px;
+
+    .num-pitches {
+      margin-left: 10px;
+      font-weight: normal;
+      font-size: 14px;
+    }
+  }
+
+  .kanban-column {
+    padding: 4px;
+    width: 225px;
+    height: 500px;
+    overflow-y: auto;
+
+    &.dragging {
+      background-color: lightgray !important;
+    }
+  }
+}

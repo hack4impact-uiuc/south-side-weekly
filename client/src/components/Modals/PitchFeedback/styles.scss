@@ -1,0 +1,60 @@
+@import '../../../styles/colors.scss';
+
+.feedback-modal {
+  .menu {
+    margin: 0px;
+    padding-inline: 0px;
+    border-bottom: 1px #a3a3a3 solid !important;
+  }
+
+  .secondary.pointing.menu {
+    border-bottom: 0px;
+
+    .active.item {
+      border-bottom: 4px solid;
+      border-color: $secondaryColor !important;
+    }
+    .item {
+      border-bottom-width: auto;
+      padding-inline: 3em;
+
+      &.right {
+        padding-inline: 0px;
+      }
+    }
+  }
+  .segment {
+    padding: 1.5em 4em;
+    margin: 0px -6%;
+  }
+  .header {
+    background-color: $primary !important;
+    color: white !important;
+    .icon {
+      float: right;
+    }
+  }
+  .content {
+    .questions-select {
+      width: 100%;
+    }
+    .individual-select {
+      min-width: 20px !important;
+      width: 50px !important;
+      margin-right: 8px;
+    }
+  }
+}
+
+.block {
+  background-color: #f4f4f4;
+  margin-bottom: 10px;
+  border-radius: 5px;
+  padding: 3px 8px;
+  margin: 20px 0px;
+  line-height: 2;
+}
+
+.left-right-control {
+  margin-bottom: 20px;
+}

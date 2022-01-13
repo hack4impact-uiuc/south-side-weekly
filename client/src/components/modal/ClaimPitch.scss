@@ -1,0 +1,54 @@
+@import '../../styles/colors.scss';
+
+.claim-pitch-modal {
+  .flex-wrapper {
+    display: flex;
+    align-items: center;
+
+    #title {
+      margin-right: 2%;
+    }
+  }
+  #contributors-summary {
+    cursor: pointer;
+    margin-top: 20px;
+    > h4 {
+      display: inline-flex;
+    }
+  }
+  #main-contributors {
+    display: flex;
+    margin-left: 2%;
+
+    .row {
+      display: flex;
+      align-items: flex-start;
+      margin: 20px 0px 10px 0px;
+
+      .chip-label {
+        width: 10%;
+        min-width: fit-content;
+        width: 20%;
+      }
+      .chips {
+        overflow: auto;
+        white-space: pre-wrap;
+        margin-left: 2%;
+
+        .chip {
+          margin: 0px 5px 0px 5px !important;
+        }
+      }
+    }
+
+    .left-col {
+      float: left;
+      width: 40%;
+    }
+
+    .right-col {
+      float: right;
+      width: 60%;
+    }
+  }
+}

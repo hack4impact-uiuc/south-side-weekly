@@ -1,0 +1,13 @@
+.contributors-group-list {
+  display: flex;
+  margin: 2% 0px 2% 0px;
+
+  .chip-label {
+    min-width: fit-content;
+    width: 10%;
+  }
+
+  .chips {
+    margin-left: 5%;
+  }
+}

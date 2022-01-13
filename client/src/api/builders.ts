@@ -1,13 +1,19 @@
 import axios, { AxiosResponse } from 'axios';
 
 import { API_URI } from './urls';
-import { ErrorWrapper, ApiResponse } from './types';
 
 // Generalized axios configuration
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 axios.defaults.withCredentials = true;
 
 console.log('Running API URI: ', API_URI);
+
+interface ErrorWrapper {
+  type: string;
+  error: any;
+}
+
+type ApiResponse<T> = AxiosResponse<T> | ErrorWrapper;
 
 const instance = axios.create({
   baseURL: API_URI,
@@ -110,4 +116,30 @@ const buildLoginEndpoint = (endpoint: string): string =>
  */
 const buildEndpoint = (...paths: string[]): string => paths.join('/');
 
-export { buildLoginEndpoint, get, post, put, del, isError, buildEndpoint };
+/**
+ * Builds the URI with complete params that are parsed correctly
+ * @param url the url with the endpoints built
+ * @param params the query params
+ * @returns the uri string with params appended correctly
+ */
+
+const buildURI = (url: string, params: Record<string, string[]>): string => {
+  const query = new URLSearchParams();
+  Object.entries(params).map(([param, values]) => {
+    values.forEach((value) => {
+      query.append(param, value);
+    });
+  });
+  return `${url}?${query.toString()}`;
+};
+
+export {
+  buildLoginEndpoint,
+  get,
+  post,
+  put,
+  del,
+  isError,
+  buildEndpoint,
+  buildURI,
+};

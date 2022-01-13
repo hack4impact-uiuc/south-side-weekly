@@ -1,0 +1,54 @@
+@import '../styles/colors.scss';
+
+.directory-page {
+  .directory-page-header {
+    padding: 0px 2% 0px 2%;
+    margin-bottom: 10px;
+  }
+
+  .directory {
+    margin-top: 20px;
+    .content {
+      display: flex;
+      align-items: center;
+      border-bottom: solid $primary 7px;
+      color: black !important;
+
+      .name {
+        flex-grow: 1;
+        margin-left: 15px;
+      }
+
+      h2 {
+        font-weight: normal;
+        font-size: large;
+      }
+    }
+  }
+
+  #directory-tabs {
+    .ui {
+      &.menu {
+        margin-bottom: 2px;
+        padding-inline-start: 4em;
+        padding-inline-end: 4em;
+      }
+      &.secondary.pointing.menu {
+        border-bottom: 0px;
+
+        .active.item {
+          border-bottom: 4px solid;
+          border-color: $secondaryColor;
+        }
+        .item {
+          border-bottom-width: auto;
+          padding-left: 3em;
+          padding-right: 3em;
+        }
+      }
+      &.segment {
+        padding: 1.5em 4em;
+      }
+    }
+  }
+}

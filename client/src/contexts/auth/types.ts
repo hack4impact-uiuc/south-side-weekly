@@ -1,7 +1,7 @@
-import { IUser } from 'ssw-common';
+import { BasePopulatedUser } from 'ssw-common';
 
 export interface IAuthContext {
-  user: IUser;
+  user?: BasePopulatedUser;
   isAuthenticated: boolean;
   isContributor: boolean;
   isStaff: boolean;

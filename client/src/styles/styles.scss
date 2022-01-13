@@ -3,11 +3,15 @@
 body {
   margin: 0 !important;
   padding: 0 !important;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: $mainBackground;
+  font-family: 'Lato', Tahoma, Geneva, Verdana, sans-serif !important;
+  background-color: $mainBackground !important;
 
   // Forces the sroll bar at ALL times to prevent div jumping
   overflow-y: scroll;
+
+  .error {
+    color: red;
+  }
 }
 
 /* SSW Header Logo Styling */
@@ -27,74 +31,57 @@ body {
   padding: 5vh 0 5vh 0;
 }
 
-.admin-tag-color {
-  background-color: $admin !important;
-}
-
-.staff-tag-color {
-  background-color: $staff !important;
-}
-
-.contributor-tag-color {
-  background-color: $contributor !important;
-}
-
-.onboarded-tag-color {
-  background-color: $onboarded !important;
-}
-
-.onboarding-scheduled-tag-color {
-  background-color: $onboardingScheduled !important;
-}
-
-.no-show-tag-color {
-  background-color: $noShow !important;
-}
-
-.denied-tag-color {
-  background-color: $denied !important;
-}
-
-.recently-active-tag-color {
-  background-color: $recentlyActive !important;
-}
-
-.active-tag-color {
-  background-color: $active !important;
-}
-
-.inactive-tag-color,
-.stalled-tag-color {
-  background-color: $inactive !important;
-}
-
-.default-btn {
-  background-color: $secondaryColor !important;
-  color: white !important;
-
-  &:hover,
-  :focus {
-    background-color: $secondaryColor !important;
-    color: white !important;
-    opacity: 0.9;
+.scrollable {
+  ::-webkit-scrollbar {
+    width: 8px;
+    overflow: visible;
+    margin: 0px 4px;
   }
-}
 
-.ui {
-  &.button {
-    font-weight: normal;
+  ::-webkit-scrollbar-corner {
+    display: none;
+    background: #f5f5f5;
+  }
 
-    &.secondary {
-      background-color: $secondaryColor;
+  ::-webkit-scrollbar-button {
+    display: none;
+    height: 0;
+    width: 0;
+  }
 
-      &:hover,
-      &:focus {
-        background-color: darken($secondaryColor, 2.5%);
-      }
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
 
-      &:active {
-        background-color: darken($secondaryColor, 5%);
-      }
-    }
+  ::-webkit-scrollbar-button:start:decrement,
+  ::-webkit-scrollbar-button:end:increment {
+    display: block;
+  }
+
+  ::-webkit-scrollbar-button:vertical:start:increment,
+  ::-webkit-scrollbar-button:vertical:end:decrement {
+    display: none;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    background-color: rgba(0, 0, 0, 0.125);
+    min-height: 28px;
+    padding-top: 100px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+
+  ::-webkit-scrollbar-thumb:vertical,
+  ::-webkit-scrollbar-thumb:horizontal {
+    border-width: 0;
+    border-left-width: 0;
+    border-right-width: 0;
   }
 }

@@ -1,11 +1,10 @@
-import { IPitch, IPitchAggregate, IUser } from 'ssw-common';
-
 import { wizardPages } from './enums';
 import neighborhoods from './neighborhoods';
 
 const allGenders = ['Man', 'Woman', 'Nonbinary', 'Other'];
 const allPronouns = ['He/his', 'She/her', 'They/them', 'Ze/hir', 'Other'];
 const allRoles = ['ADMIN', 'STAFF', 'CONTRIBUTOR'];
+const allActivities = ['Active', 'Recently Active', 'Inactive'];
 const allRaces = [
   'AMERICAN INDIAN OR ALASKAN NATIVE',
   'BLACK OR AFRICAN AMERICAN',
@@ -37,84 +36,31 @@ const pitchDocTabs = {
   CLAIM_APPROVAL: 'Assign Pitch Contributors',
 };
 
-const emptyUser: IUser = {
-  _id: '',
-  firstName: '',
-  lastName: '',
-  preferredName: '',
-  email: '',
-  phone: '',
-  oauthID: '',
-  genders: [],
-  pronouns: [],
-  dateJoined: new Date(Date.now()),
-  masthead: false,
-  onboardingStatus: '',
-  visitedPages: [],
-  profilePic: '',
-  portfolio: '',
-  linkedIn: '',
-  twitter: '',
-  involvementResponse: '',
-  claimedPitches: [],
-  submittedPitches: [],
-  teams: [],
-  role: '',
-  races: [],
-  interests: [],
-  onboardReasoning: '',
-};
-
-const emptyPitch: IPitch = {
-  _id: '',
-  title: '',
-  author: '',
-  writer: '',
-  primaryEditor: '',
-  secondEditors: [],
-  thirdEditors: [],
-  issues: [],
-  conflictOfInterest: false,
-  status: '',
-  description: '',
-  assignmentStatus: '',
-  assignmentGoogleDocLink: '',
-  assignmentContributors: [],
-  pendingContributors: [],
-  topics: [],
-  teams: [],
-  reviewedBy: '',
-  similarStories: [],
-  deadline: new Date(),
-  neighborhoods: [],
-};
-
-const emptyAggregatePitch: IPitchAggregate = {
-  aggregated: {
-    author: emptyUser,
-    writer: emptyUser,
-    primaryEditor: emptyUser,
-    secondaryEditors: [emptyUser],
-    thirdEditors: [emptyUser],
-    assignmentContributors: [],
-    pendingContributors: [],
-    reviewedBy: emptyUser,
-    teams: [],
-    interests: [],
+const pitchQuestionOptions = [
+  {
+    value: 'firstQuestion',
+    text: 'Is there any way that the Weekly staff could have supported you better during the Weekly’s writing/editing process of the story?',
   },
-  ...emptyPitch,
-};
+  {
+    value: 'secondQuestion',
+    text: 'Can you share anything about your reporting/writing process that would be useful for other writers to know, or any lessons you learned from the process?',
+  },
+  {
+    value: 'thirdQuestion',
+    text: 'List any new contacts you made that could be useful for future Weekly writers to have (include name, organizational affiliation, contact info):',
+  },
+  { value: 'fourthQuestion', text: 'Any additional feedback? Thank you!' },
+];
 
 export {
   allGenders,
   allPronouns,
   allRoles,
+  allActivities,
   allRaces,
-  emptyUser,
-  emptyPitch,
-  emptyAggregatePitch,
   staffPages,
   contributorPages,
   pitchDocTabs,
   neighborhoods,
+  pitchQuestionOptions,
 };

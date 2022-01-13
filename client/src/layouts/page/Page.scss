@@ -1,0 +1,27 @@
+@import '../../styles/colors.scss';
+@import '../../styles/variables.scss';
+
+$innerWidth: 3vw;
+
+.page-wrapper {
+  min-height: 100vh;
+  height: fit-content;
+
+  .page-content {
+    .page-header-content {
+      width: 100%;
+    }
+
+    .page-inner-content {
+      padding-top: 20px;
+      padding-left: $innerWidth;
+      padding-right: $innerWidth;
+      padding-bottom: 2%;
+      background-color: white !important;
+    }
+
+    &.space {
+      margin-top: 15px;
+    }
+  }
+}

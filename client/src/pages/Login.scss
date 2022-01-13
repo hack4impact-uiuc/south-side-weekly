@@ -1,0 +1,42 @@
+@import '../styles/colors.scss';
+
+.login-wrapper {
+  position: relative;
+  height: 100vh;
+
+  .card-wrapper {
+    position: relative;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    .card {
+      text-align: center;
+      display: flex;
+      align-items: center;
+      width: 500px;
+      height: 200px;
+
+      .header {
+        width: 100%;
+        padding: 15px;
+      }
+
+      .content {
+        background-color: white !important;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .btn {
+          background-color: $primary;
+          color: white;
+          width: 400px;
+          padding: 5px;
+        }
+      }
+    }
+  }
+}

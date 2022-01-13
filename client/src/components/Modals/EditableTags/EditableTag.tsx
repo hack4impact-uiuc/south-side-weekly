@@ -8,7 +8,10 @@ import {
   Modal,
   ModalProps,
 } from 'semantic-ui-react';
+import { Interest, Team } from 'ssw-common';
 import Swal from 'sweetalert2';
+
+import { PrimaryButton } from '../../ui/PrimaryButton';
 
 import './styles.scss';
 
@@ -18,13 +21,7 @@ const ModalTrigger: FC<ButtonProps> = ({ ...rest }): ReactElement => (
   </Button>
 );
 
-// A tag will have the same interface as IInterest and ITema
-interface Tag {
-  _id: string;
-  name: string;
-  color: string;
-  active: boolean;
-}
+type Tag = Interest | Team;
 
 interface EditableTagModalProps extends ModalProps {
   title: string;
@@ -42,7 +39,6 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
   onFetch,
   ...rest
 }): ReactElement => {
-  const [isOpen, setIsOpen] = useState(false);
   const [formValues, setFormValues] = useState<Tag[]>([]);
 
   const [clonedTags, setClonedTags] = useState<Partial<Tag>[]>([]);
@@ -60,7 +56,7 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
     setClonedTags([...clone]);
     onFetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen]);
+  }, []);
 
   // Add a new field in form
   const addInputLine = (): void => {
@@ -139,7 +135,6 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
         onCreate(parsedNewTags);
         onUpdate(changedTags);
 
-        setIsOpen(false);
         onFetch();
         setFormValues([]);
 
@@ -155,10 +150,13 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
   return (
     <Modal
       size="tiny"
-      open={isOpen}
-      onOpen={() => setIsOpen(true)}
-      onClose={() => setIsOpen(false)}
-      trigger={<ModalTrigger />}
+      trigger={
+        <ModalTrigger
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        />
+      }
       className="tags-modal"
       {...rest}
     >
@@ -199,13 +197,7 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
         </Form>
       </Modal.Content>
       <Modal.Actions>
-        <Button
-          type="submit"
-          content="Save"
-          form="submit-tags"
-          className="save-button"
-          style={{ backgroundColor: 'black' }}
-        />
+        <PrimaryButton type="submit" content="Save" form="submit-tags" />
       </Modal.Actions>
     </Modal>
   );

@@ -1,0 +1,10 @@
+@import '../../styles/colors.scss';
+
+.secondary-btn {
+  background-color: transparent !important;
+  color: $secondaryColor !important;
+
+  &.bordered {
+    border: 1px solid $secondaryColor !important;
+  }
+}

@@ -7,22 +7,30 @@ import {
   Switch,
 } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
+import { QueryParamProvider } from 'use-query-params';
 
 import {
   Directory,
   Profile,
-  NotFound,
+  UnknownRoute,
   Login,
-  PitchDoc,
   Resources,
+  Issues,
+  Homepage,
 } from './pages';
 import Wizard from './wizard';
-import { PrivateRoute, ProviderWrapper } from './components';
-
+import { PrivateRoute } from './components';
 import 'semantic-ui-css/semantic.min.css';
 import './styles/styles.scss';
+import { Providers } from './components/wrapper/Providers';
+import { PitchDocPage } from './pages/PitchDoc';
+import Pitch from './pages/Pitch';
 
 const routes = [
+  {
+    path: '/home',
+    component: Homepage,
+  },
   {
     path: '/users',
     component: Directory,
@@ -37,7 +45,15 @@ const routes = [
   },
   {
     path: '/pitches',
-    component: PitchDoc,
+    component: PitchDocPage,
+  },
+  {
+    path: '/pitch/:pitchId',
+    component: Pitch,
+  },
+  {
+    path: '/issues',
+    component: Issues,
   },
   {
     path: '/resources',
@@ -49,25 +65,32 @@ const routes = [
   },
   {
     path: '*',
-    component: NotFound,
+    component: UnknownRoute,
   },
 ];
 
 ReactDOM.render(
   <React.StrictMode>
-    <ProviderWrapper>
-      <Toaster />
+    <Providers>
+      <Toaster position="bottom-right" />
       <Router>
-        <Switch>
-          <Route exact path="/">
-            <Redirect to="/login" />
-          </Route>
-          {routes.map(({ path, component }) => (
-            <PrivateRoute key={path} exact path={path} component={component} />
-          ))}
-        </Switch>
+        <QueryParamProvider ReactRouterRoute={Route}>
+          <Switch>
+            <Route exact path="/">
+              <Redirect to="/login" />
+            </Route>
+            {routes.map(({ path, component }) => (
+              <PrivateRoute
+                key={path}
+                exact
+                path={path}
+                component={component}
+              />
+            ))}
+          </Switch>
+        </QueryParamProvider>
       </Router>
-    </ProviderWrapper>
+    </Providers>
   </React.StrictMode>,
   document.getElementById('root'),
 );

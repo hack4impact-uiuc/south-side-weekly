@@ -1,0 +1,63 @@
+@import '../../styles/colors.scss';
+
+.user-modal {
+  .header {
+    background-color: $primary !important;
+    color: white !important;
+  }
+
+  .grid {
+    width: 100%;
+
+    .interest-tag,
+    .team-tag {
+      margin-top: 10px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .user-information {
+      margin: 10px 0px 10px 0px !important;
+      text-transform: capitalize !important;
+      font-weight: normal;
+
+      &.email {
+        text-transform: lowercase !important;
+        word-wrap: break-word;
+        font-size: 1.1em;
+      }
+    }
+
+    .profile-button {
+      margin-top: 20px !important;
+      background-color: #3b3f4c !important;
+      color: white !important;
+    }
+
+    .list-header {
+      font-weight: normal !important;
+      text-align: center;
+    }
+
+    .modal-label {
+      border-radius: 1rem;
+      color: black;
+      padding: 0px 2px 0px 2px;
+      text-align: center;
+      margin: 10px 0px 10px 0px;
+      font-size: large;
+      text-transform: capitalize;
+    }
+
+    .tag-col {
+      display: flex;
+      flex-flow: column;
+      align-items: center;
+
+      .field-tag-label {
+        margin-top: 2% !important;
+        margin-bottom: 2% !important;
+      }
+    }
+  }
+}

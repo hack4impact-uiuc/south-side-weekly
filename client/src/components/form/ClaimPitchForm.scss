@@ -1,0 +1,36 @@
+@import '../../styles/colors.scss';
+
+#claim-pitch-form {
+  .teams {
+    width: 30%;
+    border: solid $secondaryColor !important;
+    padding: 20px;
+    margin-top: 20px;
+
+    h4 {
+      color: $secondaryColor !important;
+    }
+  }
+
+  #good-fit-input {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .message-field {
+    width: 100%;
+
+    textarea {
+      min-width: 100%;
+      max-width: 100%;
+      width: 100%;
+
+      min-height: 75px;
+      max-height: 100px;
+    }
+  }
+
+  #word-limit {
+    float: right;
+  }
+}

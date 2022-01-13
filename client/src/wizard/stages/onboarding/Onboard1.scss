@@ -1,0 +1,39 @@
+@import '../../../styles/colors.scss';
+
+.onboard1-wrapper {
+  padding-top: 20vh !important;
+
+  img {
+    width: 70%;
+  }
+
+  .form {
+    width: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    .form-group {
+      display: flex;
+
+      .input-group {
+        width: 100%;
+        margin-right: 30px;
+      }
+
+      .submit-group {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    input {
+      border-radius: 1rem !important;
+    }
+
+    .error-message {
+      color: red;
+    }
+  }
+}

@@ -9,5 +9,6 @@ jobs:
       - name: Call the update-stalled users API endpoint
         run: |
           curl --request POST \
-          --url 'https://south-side-weekly.vercel.app/api/users/update-stalled' \
+          --url 'https://south-side-weekly.vercel.app/api/users/stallUsers' \
           --header 'X-REQUEST-SECRET: ${{ secrets.REQUEST_SECRET }}'
+# TODO: update the endpoint and method to GET
