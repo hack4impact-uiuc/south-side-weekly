@@ -313,7 +313,7 @@ export const approvePitch = async (
   reviewedBy: string,
   payload: Partial<PitchSchema>,
 ): Pitch => {
-  await IssueService.addPitch(
+  await IssueService.addPitchToIssues(
     payload.issueStatuses.map((issue) => issue.issueId),
     _id,
   );

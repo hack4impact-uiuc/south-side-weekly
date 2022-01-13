@@ -153,10 +153,7 @@ const Pitch = (): ReactElement => {
   return (
     <div className="review-claim-page">
       <div className="content">
-        <ReviewClaimForm
-          pitch={pitch}
-          isReadyForFeedback={isReadyForFeedback}
-        />
+        <ReviewClaimForm pitch={pitch} callback={fetchAggregatedPitch} />
 
         <div className="card-content">
           {Object.entries(allContributors).map(

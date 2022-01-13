@@ -25,9 +25,7 @@ import './ReviewClaimForm.scss';
 
 interface FormProps {
   pitch: FullPopulatedPitch | null;
-  isReadyForFeedback: (
-    issueStatuses: FullPopulatedPitch['issueStatuses'],
-  ) => void;
+  callback: () => Promise<void>;
 }
 
 interface FormData
@@ -55,10 +53,10 @@ const fields: (keyof FormData)[] = [
 
 export const ReviewClaimForm: FC<FormProps> = ({
   pitch,
-  isReadyForFeedback,
+  callback,
 }): ReactElement => {
   const [editMode, setEditMode] = useState<boolean>(false);
-  console.log(fields);
+
   const { getInterestById, interests } = useInterests();
   const { getIssueFromId, issues, fetchIssues } = useIssues();
 
@@ -78,15 +76,28 @@ export const ReviewClaimForm: FC<FormProps> = ({
       ),
     };
 
-    const res = await apiCall<BasePopulatedPitch>({
-      method: 'PUT',
-      url: `/pitches/${pitch?._id}`,
-      body: newPitch,
-    });
+    const pitchIds = pitch!.issueStatuses.map(({ issueId: { _id } }) => _id);
+    const newIds = data.issueStatuses.map(({ issueId: { _id } }) => _id);
 
-    if (!isError(res)) {
+    const res = await Promise.all([
+      apiCall<BasePopulatedPitch>({
+        method: 'PUT',
+        url: `/pitches/${pitch?._id}`,
+        body: newPitch,
+      }),
+      apiCall({
+        method: 'PUT',
+        url: `/issues/updatePitchIssues/${pitch!._id}`,
+        body: {
+          addToIssues: difference(newIds, pitchIds),
+          removeFromIssues: difference(pitchIds, newIds),
+        },
+      }),
+    ]);
+
+    if (!isError(res[0]) && !isError(res[1])) {
       resetForm({ values: data, isSubmitting: true });
-      isReadyForFeedback(data.issueStatuses);
+      await callback();
     }
 
     setEditMode(false);

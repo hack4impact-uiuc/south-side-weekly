@@ -139,3 +139,41 @@ export const updateIssueStatus = async (
     await populatePitch(pitch, populateType),
   );
 };
+
+type UpdatePitchIssuesReqBody = {
+  addToIssues: string[];
+  removeFromIssues: string[];
+};
+type UpdatePitchIssuesReq = Request<
+  { pitchId: string },
+  never,
+  UpdatePitchIssuesReqBody,
+  never
+>;
+
+export const updatePitchIssues = async (
+  req: UpdatePitchIssuesReq,
+  res: Response,
+): Promise<void> => {
+  const { addToIssues, removeFromIssues } = req.body;
+
+  let issue = await IssueService.addPitchToIssues(
+    addToIssues,
+    req.params.pitchId,
+  );
+
+  if (!issue) {
+    sendNotFound(res, 'Issue(s) not found');
+  }
+
+  issue = await IssueService.removePitchFromIssues(
+    removeFromIssues,
+    req.params.pitchId,
+  );
+
+  if (!issue) {
+    sendNotFound(res, 'Issue(s) not found');
+  }
+
+  sendSuccess(res, 'Pitch Issues updated');
+};
