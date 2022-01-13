@@ -26,15 +26,20 @@ interface ParamTypes {
 }
 
 type AllContributorsForTeam = {
-  pending: UserFields[];
+  pending: { user: UserFields; message: string }[];
   assignment: UserFields[];
 };
 
 type TeamContributorRecord = Record<string, AllContributorsForTeam>;
 
-export type EditorRecord = Record<string, UserWithEditorType>;
-
-type UserWithEditorType = UserFields & { editorType: string };
+export type EditorRecord = Record<
+  string,
+  { user: UserFields; editorType: string }
+>;
+export type PendingEditorRecord = Record<
+  string,
+  { user: UserFields; editorType: string; message: string }
+>;
 
 const Pitch = (): ReactElement => {
   const { pitchId } = useParams<ParamTypes>();
@@ -49,7 +54,7 @@ const Pitch = (): ReactElement => {
   const [editorContributors, setEditorContributors] = useState<EditorRecord>(
     {},
   );
-  const [pendingEditors, setPendingEditors] = useState<EditorRecord>({});
+  const [pendingEditors, setPendingEditors] = useState<PendingEditorRecord>({});
   const [writer, setWriter] = useState<UserFields[]>([]);
 
   const { teams, getTeamFromId } = useTeams();
@@ -77,15 +82,15 @@ const Pitch = (): ReactElement => {
 
       if (result.primaryEditor) {
         editors[result.primaryEditor._id] = {
-          ...result.primaryEditor,
+          user: result.primaryEditor,
           editorType: 'Primary',
         };
       }
       result.secondEditors.map(
-        (user) => (editors[user?._id] = { ...user, editorType: 'Seconds' }),
+        (user) => (editors[user?._id] = { user, editorType: 'Seconds' }),
       );
       result.thirdEditors.map(
-        (user) => (editors[user?._id] = { ...user, editorType: 'Thirds' }),
+        (user) => (editors[user?._id] = { user, editorType: 'Thirds' }),
       );
 
       setEditorContributors(editors);
@@ -113,17 +118,22 @@ const Pitch = (): ReactElement => {
       allContributorsRecord[team._id] = { pending: [], assignment: [] };
     });
 
-    const pendingEditorContributors: EditorRecord = {};
+    const pendingEditorContributors: PendingEditorRecord = {};
 
     pendingContributors.map((pendingContributor) => {
       pendingContributor.teams.map((team) => {
         if (team.name === 'Editing') {
           pendingEditorContributors[pendingContributor.userId._id] = {
-            ...pendingContributor.userId,
+            user: pendingContributor.userId,
             editorType: 'None',
+            message: pendingContributor.message,
           };
+          return;
         }
-        allContributorsRecord[team._id].pending.push(pendingContributor.userId);
+        allContributorsRecord[team._id].pending.push({
+          user: pendingContributor.userId,
+          message: pendingContributor.message,
+        });
       });
     });
 

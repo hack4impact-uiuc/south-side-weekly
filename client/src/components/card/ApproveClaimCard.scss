@@ -112,6 +112,13 @@
       justify-content: space-between;
       align-items: center !important;
 
+      .field-tag-popup {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        column-gap: 5px;
+      }
+
       .feedback-button {
         background-color: transparent !important;
         font-weight: 600 !important;

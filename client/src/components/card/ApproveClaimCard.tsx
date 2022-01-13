@@ -5,7 +5,8 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { Button, Divider, Icon, Input, Label } from 'semantic-ui-react';
+import { useReducer } from 'react';
+import { Button, Divider, Icon, Input, Label, Popup } from 'semantic-ui-react';
 import { Team, User, UserFields } from 'ssw-common';
 import Swal from 'sweetalert2';
 
@@ -19,7 +20,7 @@ import { AuthView } from '../wrapper/AuthView';
 import './ApproveClaimCard.scss';
 
 interface ApproveClaimCardProps {
-  pendingContributors: UserFields[];
+  pendingContributors: { user: UserFields; message: string }[];
   assignmentContributors: UserFields[];
   team: Team & { target: number };
   pitchId: string;
@@ -182,7 +183,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
       contributors.filter(
         ({ _id }) =>
           !assignmentContributors.map((user) => user._id).includes(_id) &&
-          !pendingContributors.map((user) => user._id).includes(_id),
+          !pendingContributors.map(({ user }) => user._id).includes(_id),
       ),
     [assignmentContributors, pendingContributors],
   );
@@ -275,11 +276,20 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
       <Divider />
       {!completed && renderAddContributor()}
       <div className="claim-section">
-        {pendingContributors.map((contributor, idx) => {
+        {pendingContributors.map(({ user, message }, idx) => {
           void 0;
           return (
             <div key={idx} className="claim-row">
-              <UserChip user={contributor} />
+              <div className="field-tag-popup">
+                <UserChip user={user} />
+                <Popup
+                  content={message}
+                  trigger={<Icon size="small" name="question circle" />}
+                  wide="very"
+                  position="top center"
+                  hoverable
+                />
+              </div>
 
               <AuthView view="minStaff">
                 <div className="button-group">
@@ -287,13 +297,13 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
                     content="Approve"
                     positive
                     size="small"
-                    onClick={() => approveClaim(contributor._id)}
+                    onClick={() => approveClaim(user._id)}
                   />
                   <Button
                     content="Decline"
                     negative
                     size="small"
-                    onClick={() => declineClaim(contributor._id)}
+                    onClick={() => declineClaim(user._id)}
                   />
                 </div>
               </AuthView>
