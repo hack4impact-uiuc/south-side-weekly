@@ -200,12 +200,12 @@ const DynamicTable = <T,>({
    *
    * @param column the column being clicked.
    */
-  const handleColumnClick = (column: Column<T>): void => {
+  const handleColumnClick = (column: Column<T>, event: React.MouseEvent): void => {
     const { onClick, sorter } = column;
 
     if (!rest.sortable && sorter) {
       log('sorting is disabled');
-    } else if (rest.sortable) {
+    } else if (event.target === event.currentTarget && rest.sortable) {
       handleSort(column);
     }
 
@@ -244,7 +244,7 @@ const DynamicTable = <T,>({
             {columns.map((column) => (
               <Table.HeaderCell
                 width={column.width}
-                onClick={() => handleColumnClick(column)}
+                onClick={(e: React.MouseEvent) => handleColumnClick(column, e)}
                 key={v4()}
                 sorted={
                   sort?.column.id === column.id && sort?.column.sortable

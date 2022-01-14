@@ -12,14 +12,9 @@ import { Interest, Team } from 'ssw-common';
 import Swal from 'sweetalert2';
 
 import { PrimaryButton } from '../../ui/PrimaryButton';
+import { Pusher } from '../../ui/Pusher';
 
 import './styles.scss';
-
-const ModalTrigger: FC<ButtonProps> = ({ ...rest }): ReactElement => (
-  <Button {...rest} size="tiny" circular icon style={{ background: 'none' }}>
-    <Icon name="pencil" />
-  </Button>
-);
 
 type Tag = Interest | Team;
 
@@ -40,7 +35,7 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
   ...rest
 }): ReactElement => {
   const [formValues, setFormValues] = useState<Tag[]>([]);
-
+  const [isOpen, setIsOpen] = useState(false);
   const [clonedTags, setClonedTags] = useState<Partial<Tag>[]>([]);
 
   useEffect(() => {
@@ -65,6 +60,12 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
       { _id: 'NEW', name: '', color: '#3d4f91', active: true },
     ]);
   };
+
+  const ModalTrigger: FC<ButtonProps> = ({ ...rest }): ReactElement => (
+    <Button {...rest} size="tiny" circular icon style={{ background: 'none' }}>
+      <Icon name="pencil" />
+    </Button>
+  );
 
   // Remove a field in form
   const removeField = (i: number): void => {
@@ -151,16 +152,19 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
     <Modal
       size="tiny"
       trigger={
-        <ModalTrigger
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-        />
+        <ModalTrigger/>
       }
+      open={isOpen}
+      onOpen={() => setIsOpen(true)}
+      onClose={() => setIsOpen(false)}
       className="tags-modal"
       {...rest}
     >
-      <Modal.Header>Edit {title}</Modal.Header>
+      <Modal.Header>
+        <span>Edit {title}</span>
+        <Pusher />
+        <Icon id="close-icon" name="times" onClick={() => setIsOpen(false)} />
+      </Modal.Header>
       <Modal.Content scrolling>
         <Form id="submit-tags" onSubmit={saveForm}>
           {formValues.map((value, index) => (
