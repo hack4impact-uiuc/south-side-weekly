@@ -200,7 +200,10 @@ const DynamicTable = <T,>({
    *
    * @param column the column being clicked.
    */
-  const handleColumnClick = (column: Column<T>, event: React.MouseEvent): void => {
+  const handleColumnClick = (
+    column: Column<T>,
+    event: React.MouseEvent,
+  ): void => {
     const { onClick, sorter } = column;
 
     if (!rest.sortable && sorter) {

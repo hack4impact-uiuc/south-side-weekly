@@ -151,9 +151,7 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
   return (
     <Modal
       size="tiny"
-      trigger={
-        <ModalTrigger/>
-      }
+      trigger={<ModalTrigger />}
       open={isOpen}
       onOpen={() => setIsOpen(true)}
       onClose={() => setIsOpen(false)}
