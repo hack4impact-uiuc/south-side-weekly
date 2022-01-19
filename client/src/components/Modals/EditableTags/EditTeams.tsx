@@ -16,15 +16,15 @@ const EditTeams = (): ReactElement => {
     action: 'POST' | 'PUT',
   ): Promise<void> => {
     const res = await apiCall({
-      url: `./${tagType}/many`,
+      url: `/${tagType}/many`,
       method: action,
-      body: { ...tags },
+      body: { teams: tags },
     });
 
     if (!isError(res)) {
-      toast.success('Interests created');
+      toast.success('Teams created');
     } else {
-      toast.error('Failed to create interests');
+      toast.error('Failed to create teams');
     }
   };
 

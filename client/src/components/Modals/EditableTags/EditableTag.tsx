@@ -49,9 +49,8 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
     }));
 
     setClonedTags([...clone]);
-    onFetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [onFetch]);
 
   // Add a new field in form
   const addInputLine = (): void => {
@@ -133,11 +132,13 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
       confirmButtonText: 'Confirm',
     }).then((result) => {
       if (result.isConfirmed) {
-        onCreate(parsedNewTags);
-        onUpdate(changedTags);
-
+        if (parsedNewTags.length) {
+          onCreate(parsedNewTags);
+        }
+        if (changedTags.length) {
+          onUpdate(changedTags);
+        }
         onFetch();
-        setFormValues([]);
 
         Swal.fire(
           `${title} updated!`,

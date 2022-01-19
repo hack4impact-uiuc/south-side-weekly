@@ -16,9 +16,9 @@ const EditInterests = (): ReactElement => {
     action: 'POST' | 'PUT',
   ): Promise<void> => {
     const res = await apiCall({
-      url: `./${tagType}/many`,
+      url: `/${tagType}/many`,
       method: action,
-      body: { ...tags },
+      body: { interests: tags },
     });
 
     if (!isError(res)) {
