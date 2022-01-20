@@ -304,7 +304,9 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
         {Object.entries(editors).map(([editorId, editor], idx) => (
           <div className="claim-row" key={idx}>
             <UserChip user={omit(editor, 'editorType')} />
-            <FieldTag content={editor.editorType} />
+            <AuthView view="isContributor">
+              <FieldTag content={editor.editorType} />
+            </AuthView>
             <AuthView view="minStaff">
               {completed ? (
                 <ContributorFeedback

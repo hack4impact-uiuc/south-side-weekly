@@ -11,10 +11,10 @@ import {
 import { Interest, Team } from 'ssw-common';
 import Swal from 'sweetalert2';
 
-import { PrimaryButton } from '../../ui/PrimaryButton';
-import { Pusher } from '../../ui/Pusher';
+import { PrimaryButton } from '../ui/PrimaryButton';
+import { Pusher } from '../ui/Pusher';
 
-import './styles.scss';
+import './EditableTag.scss';
 
 type Tag = Interest | Team;
 

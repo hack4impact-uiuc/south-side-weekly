@@ -2,8 +2,8 @@ import React, { ReactElement } from 'react';
 import toast from 'react-hot-toast';
 import { Team, Interest } from 'ssw-common';
 
-import { apiCall, isError } from '../../../api';
-import { useInterests } from '../../../contexts';
+import { apiCall, isError } from '../../api';
+import { useInterests } from '../../contexts';
 
 import EditableTagModal from './EditableTag';
 
