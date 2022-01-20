@@ -16,15 +16,15 @@ const EditInterests = (): ReactElement => {
     action: 'POST' | 'PUT',
   ): Promise<void> => {
     const res = await apiCall({
-      url: `./${tagType}/many`,
+      url: `/${tagType}/many`,
       method: action,
-      body: { ...tags },
+      body: { interests: tags },
     });
-
+    const actionVerb = action === 'POST' ? 'create' : 'update';
     if (!isError(res)) {
-      toast.success('Interests created');
+      toast.success(`Interests ${actionVerb}d`);
     } else {
-      toast.error('Failed to create interests');
+      toast.error(`Failed to ${actionVerb} interests`);
     }
   };
 
