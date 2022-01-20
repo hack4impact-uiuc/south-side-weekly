@@ -20,11 +20,11 @@ const EditInterests = (): ReactElement => {
       method: action,
       body: { interests: tags },
     });
-
+    const actionVerb = action === 'POST' ? 'create' : 'update';
     if (!isError(res)) {
-      toast.success('Interests created');
+      toast.success(`Interests ${actionVerb}d`);
     } else {
-      toast.error('Failed to create interests');
+      toast.error(`Failed to ${actionVerb} interests`);
     }
   };
 

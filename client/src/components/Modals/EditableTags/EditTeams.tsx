@@ -20,11 +20,11 @@ const EditTeams = (): ReactElement => {
       method: action,
       body: { teams: tags },
     });
-
+    const actionVerb = action === 'POST' ? 'create' : 'update';
     if (!isError(res)) {
-      toast.success('Teams created');
+      toast.success(`Teams ${actionVerb}d`);
     } else {
-      toast.error('Failed to create teams');
+      toast.error(`Failed to ${actionVerb} teams`);
     }
   };
 

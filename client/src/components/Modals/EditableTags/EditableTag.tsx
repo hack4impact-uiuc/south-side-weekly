@@ -145,6 +145,7 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
           `${title} tags has been updated`,
           'success',
         );
+        setIsOpen(false);
       }
     });
   };
