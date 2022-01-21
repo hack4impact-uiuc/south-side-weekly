@@ -13,7 +13,9 @@ import { IIssue } from 'ssw-common';
 import { apiCall, isError } from '../../api';
 import { issueTypeEnum } from '../../utils/enums';
 import { PrimaryButton } from '../ui/PrimaryButton';
+import { Pusher } from '../ui/Pusher';
 import './AddIssue.scss';
+import './modals.scss';
 
 type FormData = Pick<IIssue, 'releaseDate' | 'type'>;
 
@@ -74,10 +76,9 @@ const AddIssueModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
       {...rest}
     >
       <Modal.Header>
-        <div className="modal-header">
-          Add Issue
-          <Icon name="close" onClick={() => setIsOpen(false)} />
-        </div>
+        Add Issue
+        <Pusher />
+        <Icon name="close" onClick={() => setIsOpen(false)} />
       </Modal.Header>
       <Modal.Content scrolling>
         <div className="modal-content">

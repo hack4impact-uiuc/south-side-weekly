@@ -6,6 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { useParams } from 'react-router';
+import { Button } from 'semantic-ui-react';
 import {
   FullPopulatedPitch,
   PendingContributor,
@@ -17,6 +18,7 @@ import { apiCall, isError } from '../api';
 import ApproveClaimCard from '../components/card/ApproveClaimCard';
 import EditingClaimCard from '../components/card/EditingClaimCard';
 import { ReviewClaimForm } from '../components/form/ReviewClaimForm';
+import PitchFeedbackModal from '../components/modal/PitchFeedback';
 import { useTeams } from '../contexts';
 import { issueStatusEnum } from '../utils/enums';
 import './Pitch.scss';
@@ -163,7 +165,10 @@ const Pitch = (): ReactElement => {
   return (
     <div className="review-claim-page">
       <div className="content">
-        <ReviewClaimForm pitch={pitch} callback={fetchAggregatedPitch} />
+        <div className="form-content">
+          <ReviewClaimForm pitch={pitch} callback={fetchAggregatedPitch} />
+          <PitchFeedbackModal pitchId={pitchId} />
+        </div>
 
         <div className="card-content">
           {Object.entries(allContributors).map(

@@ -17,7 +17,7 @@ export const createPitchFeedback = async (
   req: CreateReq,
   res: Response,
 ): Promise<void> => {
-  const feedback = await PitchFeedbackService.add(req.body);
+  const feedback = await PitchFeedbackService.add(req.body, req.user._id);
 
   const populateType = extractPopulateQuery(req.query);
 
@@ -84,6 +84,32 @@ export const getFeedbackForPitch = async (
     data: await populatePitchFeedback(feedback.data, populateType),
     count: feedback.count,
   });
+};
+
+type GetPitchFeedbackFromUserReq = Request<{ pitchId: string; userId: string }>;
+
+export const getPitchFeedbackFromUser = async (
+  req: GetPitchFeedbackFromUserReq,
+  res: Response,
+): Promise<void> => {
+  const { pitchId, userId } = req.params;
+
+  const pitchFeedback = await PitchFeedbackService.getPitchFeedbackFromUser(
+    pitchId,
+    userId,
+  );
+
+  if (!pitchFeedback) {
+    sendNotFound(res, 'Pitch Feedback not found for user');
+  }
+
+  const populateType = extractPopulateQuery(req.query);
+
+  sendSuccess(
+    res,
+    'Successfully retrieved pitch feedback for user',
+    await populatePitchFeedback(pitchFeedback, populateType),
+  );
 };
 
 // UPDATE controls
