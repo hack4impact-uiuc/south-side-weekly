@@ -76,6 +76,8 @@ export const ReviewClaimForm: FC<FormProps> = ({
       ),
     };
 
+    console.log('NEW PITCH', newPitch);
+
     const pitchIds = pitch!.issueStatuses.map(({ issueId: { _id } }) => _id);
     const newIds = data.issueStatuses.map(({ issueId: { _id } }) => _id);
 

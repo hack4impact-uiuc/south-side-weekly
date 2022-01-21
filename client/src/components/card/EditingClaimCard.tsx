@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { FieldTag } from '..';
 import { apiCall, isError } from '../../api';
 import { EditorRecord, PendingEditorRecord } from '../../pages/Pitch';
+import { editorTypeEnum } from '../../utils/enums';
 import { getUserFullName } from '../../utils/helpers';
 import ContributorFeedback from '../modal/ContributorFeedback';
 import { SingleSelect } from '../select/SingleSelect';
@@ -28,20 +29,9 @@ interface SelectOption {
   label: string;
 }
 
-const editorTypeDropDownOptions: SelectOption[] = [
-  {
-    value: 'Primary',
-    label: 'Primary',
-  },
-  {
-    value: 'Seconds',
-    label: 'Seconds',
-  },
-  {
-    value: 'Thirds',
-    label: 'Thirds',
-  },
-];
+const editorTypeDropDownOptions: SelectOption[] = Object.values(
+  editorTypeEnum,
+).map((type) => ({ value: type, label: type }));
 
 const EditingClaimCard: FC<EditingClaimCardProps> = ({
   pitchId,
@@ -247,7 +237,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       return;
     }
 
-    if (from === 'Primary') {
+    if (from === editorTypeEnum.PRIMARY) {
       Swal.fire({
         title: 'Cannot remove only Primary Editor.',
         text: 'If you want to remove a Primary Editor, add a new Contributor with editing-level Primary.',
@@ -256,11 +246,11 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       return;
     }
     const primaryEditor = Object.values(editors).find(
-      ({ editorType }) => editorType === 'Primary',
+      ({ editorType }) => editorType === editorTypeEnum.PRIMARY,
     );
 
     let shouldCancelChange = false;
-    if (primaryEditor && to === 'Primary') {
+    if (primaryEditor && to === editorTypeEnum.PRIMARY) {
       await Swal.fire({
         title: 'Primary Editor already exists.',
         text: `This action will remove the current Primary Editor, ${primaryEditor.user.fullname}. Contributors on this pitch will not be alerted of this.`,
@@ -328,11 +318,13 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
 
                     <Icon
                       name="trash"
-                      link={editorType !== 'Primary'}
+                      link={editorType !== editorTypeEnum.PRIMARY}
                       onClick={() => removeContributor(editorId, editorType)}
-                      disabled={editorType === 'Primary'}
+                      disabled={editorType === editorTypeEnum.PRIMARY}
                       className={
-                        editorType === 'Primary' ? 'disabled-trash' : ''
+                        editorType === editorTypeEnum.PRIMARY
+                          ? 'disabled-trash'
+                          : ''
                       }
                     />
                   </div>

@@ -103,6 +103,12 @@ export const claimStatusEnum = {
   DECLINED: 'DECLINED',
 };
 
+export const editorTypeEnum = {
+  PRIMARY: 'Primary',
+  SECONDS: 'Seconds',
+  THIRDS: 'Thirds',
+};
+
 export const editStatusEnum = {
   WRITER_NEEDED: 'Writer Needed',
   FIRST_NEEDED: '1st Needed',
