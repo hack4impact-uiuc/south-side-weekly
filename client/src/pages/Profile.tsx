@@ -5,7 +5,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { useParams, useLocation } from 'react-router-dom';
+import { useParams, useLocation, useHistory } from 'react-router-dom';
 import {
   BasePopulatedPitch,
   BasePopulatedUser,
@@ -13,7 +13,7 @@ import {
   Team,
   User,
 } from 'ssw-common';
-import { Grid, Pagination, Rating } from 'semantic-ui-react';
+import { Grid, Pagination, Rating, SemanticWIDTHS } from 'semantic-ui-react';
 import _ from 'lodash';
 import { StringParam, useQueryParams } from 'use-query-params';
 
@@ -30,6 +30,9 @@ import { apiCall, isError } from '../api';
 import { SingleSelect } from '../components/select/SingleSelect';
 import { parseOptionsSelect } from '../utils/helpers';
 import Loading from '../components/ui/Loading';
+import { AuthView } from '../components/wrapper/AuthView';
+import { pitchStatusEnum } from '../utils/enums';
+import { pitchStatusCol } from '../components/table/columns';
 
 import './Profile.scss';
 
@@ -57,6 +60,7 @@ const Profile = (): ReactElement => {
   const [feedbackData, setFeedbackData] = useState<FeedbackRes>();
 
   const location = useLocation();
+  const history = useHistory();
   const [permissions, setPermissions] = useState<{
     view: (keyof User)[];
     edit: (keyof User)[];
@@ -97,11 +101,11 @@ const Profile = (): ReactElement => {
     }
 
     const params = new URLSearchParams(location.search);
-    const ids = [...user.claimedPitches, ...user.submittedPitches];
     const q = {
       limit: params.get('limit') || '10',
       offset: params.get('offset') || '0',
-      _id__in: ids.length > 0 ? ids.join(',') : ',',
+      sortBy: params.get('sortBy'),
+      orderBy: params.get('orderBy'),
     };
 
     return _.omitBy(q, _.isNil);
@@ -115,7 +119,6 @@ const Profile = (): ReactElement => {
     const q = {
       limit: params.get('f_limit') || '10',
       offset: params.get('f_offset') || '0',
-      _id__in: user.feedback.length > 0 ? user.feedback.join(',') : ',',
     };
 
     return _.omitBy(q, _.isNil);
@@ -141,7 +144,7 @@ const Profile = (): ReactElement => {
   useEffect(() => {
     const loadPitches = async (): Promise<void> => {
       const res = await apiCall<PitchesRes>({
-        url: `/pitches`,
+        url: `/users/${user?._id}/pitches`,
         method: 'GET',
         populate: 'default',
         query: queryParams,
@@ -165,7 +168,7 @@ const Profile = (): ReactElement => {
         data: PopulatedUserFeedback[];
         count: number;
       }>({
-        url: `/userFeedback`,
+        url: `/userFeedback/user/${user?._id}`,
         method: 'GET',
         query: feedbackQueryParams,
         populate: 'default',
@@ -194,6 +197,7 @@ const Profile = (): ReactElement => {
   }
 
   const titleColumn = configureColumn<BasePopulatedPitch>({
+    id: 'title',
     title: 'Title',
     width: 5,
     extractor: (pitch) => pitch.title,
@@ -238,22 +242,16 @@ const Profile = (): ReactElement => {
           ).toLocaleDateString()
         : 'Not Published',
     sortable: true,
-    sorter: (a, b) => {
-      if (a.issueStatuses.length === 0) {
-        return 1;
-      }
-
-      if (b.issueStatuses.length === 0) {
-        return 0 - 1;
-      }
-
-      return a.issueStatuses[0].issueId.releaseDate.localeCompare(
-        b.issueStatuses[0].issueId.releaseDate,
-      );
-    },
   });
 
-  const cols = [titleColumn, topicsColumn, teamsColumn, publishDateColumn];
+  const pitchStatusColWidth = 2 as SemanticWIDTHS;
+  const cols = [
+    titleColumn,
+    { ...pitchStatusCol, width: pitchStatusColWidth },
+    topicsColumn,
+    teamsColumn,
+    publishDateColumn,
+  ];
 
   return (
     <div className="profile-page">
@@ -375,6 +373,15 @@ const Profile = (): ReactElement => {
           records={pitchesData.data}
           count={pitchesData.count}
           pageOptions={['1', '10', '25', '50']}
+          onRecordClick={(pitch) => {
+            if (pitch.status !== pitchStatusEnum.APPROVED) {
+              return;
+            }
+
+            history.push(`/pitch/${pitch._id}`);
+          }}
+          sortable
+          sortType="query"
         />
 
         <Grid columns={2} className="experience">
@@ -388,53 +395,60 @@ const Profile = (): ReactElement => {
             <p>{user.journalismResponse}</p>
           </Grid.Column>
         </Grid>
-        <Grid centered className="feedback">
-          <Grid.Column width={10}>
-            <h2 className="title">{`${user.firstName}'s`} Feedback</h2>
-            {feedbackData.count > 0 ? (
-              <div
-                style={{
-                  display: 'flex',
-                  marginTop: '20px',
-                  alignItems: 'center',
-                }}
-              >
-                <div>
-                  <span>Records per page: </span>
-                  <SingleSelect
-                    value={queries.f_limit || '10'}
-                    options={parseOptionsSelect(['1', '10', '25', '50'])}
-                    onChange={(v) =>
-                      updateQuery('f_limit', v ? v?.value : '10')
-                    }
-                    placeholder="Limit"
-                  />
-                  <br />
+        <AuthView view="minStaff">
+          <Grid centered className="feedback">
+            <Grid.Column width={10}>
+              <h2 className="title">{`${user.firstName}'s`} Feedback</h2>
+
+              {feedbackData.count > 0 ? (
+                <div
+                  style={{
+                    // display: 'flex',
+                    marginTop: '20px',
+                    alignItems: 'center',
+                  }}
+                >
                   <div>
-                    <p>Total count: {feedbackData.count}</p>
-                  </div>
-                </div>
-                <div className="feedback-cards">
-                  {feedbackData.data.map((feedback, index) => (
-                    <div key={index} className="user-feedback">
-                      <UserFeedback feedback={feedback} />
+                    <span>Records per page: </span>
+                    <SingleSelect
+                      value={queries.f_limit || '10'}
+                      options={parseOptionsSelect(['1', '10', '25', '50'])}
+                      onChange={(v) =>
+                        updateQuery('f_limit', v ? v?.value : '10')
+                      }
+                      placeholder="Limit"
+                    />
+                    <br />
+                    <div>
+                      <p>Total count: {feedbackData.count}</p>
                     </div>
-                  ))}
+                  </div>
+                  <div className="feedback-cards">
+                    {feedbackData.data.map((feedback, index) => (
+                      <div key={index} className="user-feedback">
+                        <UserFeedback feedback={feedback} />
+                      </div>
+                    ))}
+                  </div>
+                  <Pagination
+                    totalPages={Math.ceil(
+                      feedbackData.count /
+                        parseInt(queries.f_limit || '10', 10),
+                    )}
+                    onPageChange={(e, { activePage }) =>
+                      updateQuery(
+                        'f_offset',
+                        String(parseActivePage(activePage)),
+                      )
+                    }
+                  />
                 </div>
-                <Pagination
-                  totalPages={Math.ceil(
-                    feedbackData.count / parseInt(queries.f_limit || '10', 10),
-                  )}
-                  onPageChange={(e, { activePage }) =>
-                    updateQuery('f_offset', String(parseActivePage(activePage)))
-                  }
-                />
-              </div>
-            ) : (
-              <div>No feedback</div>
-            )}
-          </Grid.Column>
-        </Grid>
+              ) : (
+                <div>No feedback</div>
+              )}
+            </Grid.Column>
+          </Grid>
+        </AuthView>
       </div>
     </div>
   );

@@ -11,15 +11,10 @@ import {
 import { Interest, Team } from 'ssw-common';
 import Swal from 'sweetalert2';
 
-import { PrimaryButton } from '../../ui/PrimaryButton';
+import { PrimaryButton } from '../ui/PrimaryButton';
+import { Pusher } from '../ui/Pusher';
 
-import './styles.scss';
-
-const ModalTrigger: FC<ButtonProps> = ({ ...rest }): ReactElement => (
-  <Button {...rest} size="tiny" circular icon style={{ background: 'none' }}>
-    <Icon name="pencil" />
-  </Button>
-);
+import './EditableTag.scss';
 
 type Tag = Interest | Team;
 
@@ -40,7 +35,7 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
   ...rest
 }): ReactElement => {
   const [formValues, setFormValues] = useState<Tag[]>([]);
-
+  const [isOpen, setIsOpen] = useState(false);
   const [clonedTags, setClonedTags] = useState<Partial<Tag>[]>([]);
 
   useEffect(() => {
@@ -54,9 +49,8 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
     }));
 
     setClonedTags([...clone]);
-    onFetch();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [onFetch]);
 
   // Add a new field in form
   const addInputLine = (): void => {
@@ -65,6 +59,12 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
       { _id: 'NEW', name: '', color: '#3d4f91', active: true },
     ]);
   };
+
+  const ModalTrigger: FC<ButtonProps> = ({ ...rest }): ReactElement => (
+    <Button {...rest} size="tiny" circular icon style={{ background: 'none' }}>
+      <Icon name="pencil" />
+    </Button>
+  );
 
   // Remove a field in form
   const removeField = (i: number): void => {
@@ -132,17 +132,20 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
       confirmButtonText: 'Confirm',
     }).then((result) => {
       if (result.isConfirmed) {
-        onCreate(parsedNewTags);
-        onUpdate(changedTags);
-
+        if (parsedNewTags.length) {
+          onCreate(parsedNewTags);
+        }
+        if (changedTags.length) {
+          onUpdate(changedTags);
+        }
         onFetch();
-        setFormValues([]);
 
         Swal.fire(
           `${title} updated!`,
           `${title} tags has been updated`,
           'success',
         );
+        setIsOpen(false);
       }
     });
   };
@@ -150,17 +153,18 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
   return (
     <Modal
       size="tiny"
-      trigger={
-        <ModalTrigger
-          onClick={(e) => {
-            e.stopPropagation();
-          }}
-        />
-      }
+      trigger={<ModalTrigger />}
+      open={isOpen}
+      onOpen={() => setIsOpen(true)}
+      onClose={() => setIsOpen(false)}
       className="tags-modal"
       {...rest}
     >
-      <Modal.Header>Edit {title}</Modal.Header>
+      <Modal.Header>
+        <span>Edit {title}</span>
+        <Pusher />
+        <Icon id="close-icon" name="times" onClick={() => setIsOpen(false)} />
+      </Modal.Header>
       <Modal.Content scrolling>
         <Form id="submit-tags" onSubmit={saveForm}>
           {formValues.map((value, index) => (

@@ -45,8 +45,6 @@ export const HomepageView: FC<HomepageViewProps> = ({ type }): ReactElement => {
       topics__all: params.get('interests__all'),
       isPublished: type === 'published' || undefined,
       author: type === 'submitted' ? user?._id : undefined,
-      'pendingContributors.userId':
-        type === 'claim-submitted' ? user?._id : undefined,
       sortBy: params.get('sortBy'),
       orderBy: params.get('orderBy'),
     };
@@ -57,11 +55,11 @@ export const HomepageView: FC<HomepageViewProps> = ({ type }): ReactElement => {
   const apiUrl = useMemo(() => {
     switch (type) {
       case 'member':
-        return `/users/${user?._id}/pitches`;
+        return `/users/${user?._id}/currentPitches`;
       case 'submitted':
         return '/pitches';
       case 'claim-submitted':
-        return `/pitches/approved`;
+        return `/pitches/user/${user?._id}/claimRequests`;
       case 'published':
         return `/users/${user?._id}/pitches`;
       default:

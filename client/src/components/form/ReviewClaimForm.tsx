@@ -58,7 +58,6 @@ export const ReviewClaimForm: FC<FormProps> = ({
   callback,
 }): ReactElement => {
   const [editMode, setEditMode] = useState<boolean>(false);
-
   const { getInterestById, interests } = useInterests();
   const { getIssueFromId, issues, fetchIssues } = useIssues();
 

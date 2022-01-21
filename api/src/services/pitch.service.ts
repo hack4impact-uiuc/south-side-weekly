@@ -79,28 +79,28 @@ const isPublishedFilter = (
 
   isPublished = isPublished.toString().toUpperCase();
 
+  const publishedCondition = {
+    $elemMatch: {
+      issueStatus: issueStatusEnum.READY_TO_PUBLISH,
+      releaseDate: { $lt: new Date() },
+    },
+  };
+
   if (isPublished === 'TRUE') {
     return {
       issueStatuses: {
-        $elemMatch: {
-          issueStatus: issueStatusEnum.READY_TO_PUBLISH,
-          releaseDate: { $lt: new Date() },
+        ...publishedCondition,
+      },
+    };
+  } else if (isPublished === 'FALSE') {
+    return {
+      issueStatuses: {
+        $not: {
+          ...publishedCondition,
         },
       },
     };
   }
-  // else if (isPublished === 'FALSE') {
-  //   return {
-  //     $or: [
-  //       {
-  //         'issuesStatuses.issueStatus': {
-  //           $ne: issueStatusEnum.READY_TO_PUBLISH,
-  //         },
-  //       },
-  //       { 'issues.releaseDate': { $gte: new Date() } },
-  //     ],
-  //   };
-  // }
   return {};
 };
 
@@ -123,7 +123,6 @@ const claimablePitchesFilter = (
 
   if (!isWriter) {
     return {
-      author: { $ne: user._id },
       status: { $eq: pitchStatusEnum.APPROVED },
       writer: { $ne: null },
       $or: [
@@ -141,7 +140,6 @@ const claimablePitchesFilter = (
   }
 
   return {
-    author: { $ne: user._id },
     status: { $eq: pitchStatusEnum.APPROVED },
     $or: [
       { writer: { $eq: null } },
@@ -272,6 +270,21 @@ export const getClaimablePitches = async (
 
   return await paginate(claimablePitchesFilter(pUser), options);
 };
+
+export const getClaimRequests = async (
+  userId: string,
+  options?: PaginateOptions<PitchSchema>,
+): Promise<PitchesResponse> =>
+  await paginate(
+    {
+      pendingContributors: {
+        $elemMatch: {
+          userId,
+        },
+      },
+    },
+    options,
+  );
 
 export const getFeedbackForPitch = async (
   pitchId: string,
@@ -637,7 +650,20 @@ export const removeContributor = async (
   return pitch;
 };
 
-export const getMemberPitches = async (
+const userOnPitchFilters = (userId: string): FilterQuery<PitchSchema> => ({
+  $or: [
+    {
+      author: userId,
+    },
+    { writer: userId },
+    { assignmentContributors: { $elemMatch: { userId: userId } } },
+    { primaryEditor: userId },
+    { secondEditors: userId },
+    { thirdEditors: userId },
+  ],
+});
+
+export const getCurrentPitches = async (
   _id: string,
   options?: PaginateOptions<PitchSchema>,
 ): Promise<{
@@ -647,19 +673,21 @@ export const getMemberPitches = async (
   const filteredPitches = await paginate(
     {
       status: pitchStatusEnum.APPROVED,
-      $or: [
-        {
-          author: _id,
-        },
-        { writer: _id },
-        { assignmentContributors: { $elemMatch: { userId: _id } } },
-        { primaryEditor: _id },
-        { secondEditors: _id },
-        { thirdEditors: _id },
-      ],
+      issueStatuses: {
+        $not: { $elemMatch: { releaseDate: { $lt: new Date().getUTCDate() } } },
+      },
+      ...userOnPitchFilters(_id),
     },
     options,
   );
 
   return filteredPitches;
 };
+
+export const getAllUserPitches = async (
+  userId: string,
+  options?: PaginateOptions<PitchSchema>,
+): Promise<{
+  data: LeanDocument<PitchSchema>[];
+  count: number;
+}> => await paginate({ ...userOnPitchFilters(userId) }, options);

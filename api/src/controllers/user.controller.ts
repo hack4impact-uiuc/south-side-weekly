@@ -129,6 +129,22 @@ export const getDeniedUsers = async (
   });
 };
 
+// Gets all of the uers's current pitches
+export const getCurrentPitches = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  const populateType = extractPopulateQuery(req.query);
+  const options = extractOptions(req.query);
+
+  const pitches = await PitchService.getCurrentPitches(req.params.id, options);
+
+  sendSuccess(res, 'Pitches retrieved successfully', {
+    data: await populatePitches(pitches.data, populateType),
+    count: pitches.count,
+  });
+};
+
 // Gets a user by id
 export const getMe = async (req: Request, res: Response): Promise<void> => {
   if (req.isUnauthenticated()) {
@@ -326,7 +342,7 @@ export const pitches = async (req: Request, res: Response): Promise<void> => {
   const populateType = extractPopulateQuery(req.query);
   const options = extractOptions(req.query);
 
-  const pitches = await PitchService.getMemberPitches(req.params.id, options);
+  const pitches = await PitchService.getAllUserPitches(req.params.id, options);
 
   if (pitches === undefined) {
     sendNotFound(res, `User not found with id ${req.params.id}`);

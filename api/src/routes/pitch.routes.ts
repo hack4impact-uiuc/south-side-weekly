@@ -40,6 +40,12 @@ router.get(
   errorWrap(PitchController.getClaimablePitches),
 );
 
+router.get(
+  '/user/:userId/claimRequests',
+  requireRegistered,
+  errorWrap(PitchController.getClaimRequests),
+);
+
 // GET /api/pitches/:id
 router.get('/:id', requireRegistered, errorWrap(PitchController.getPitch));
 

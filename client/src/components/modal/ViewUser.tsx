@@ -46,27 +46,27 @@ export const ViewUserModal: FC<ViewUserProps> = ({
         </Grid.Column>
         <Grid.Column verticalAlign="middle" width={5}>
           <Grid.Row>
-            <h1 className="user-information name">
+            <h2 className="user-information name">
               <b>{user.fullname}</b>
-            </h1>
+            </h2>
           </Grid.Row>
           <Grid.Row>
             <h3 className="user-information role">{toLower(user.role)}</h3>
           </Grid.Row>
           <Grid.Row>
-            <h3 className="user-information email">{user.email}</h3>
+            <p className="user-information email">{user.email}</p>
           </Grid.Row>
         </Grid.Column>
         <Grid.Column>
           <h1 className="list-header">Topics</h1>
           <div className="tag-col">
-            <TagList tags={user.interests} />
+            <TagList size="large" tags={user.interests} />
           </div>
         </Grid.Column>
         <Grid.Column>
           <h1 className="list-header">Teams</h1>
           <div className="tag-col">
-            <TagList tags={user.teams} />
+            <TagList size="large" tags={user.teams} />
           </div>
         </Grid.Column>
       </Grid>

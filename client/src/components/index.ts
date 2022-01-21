@@ -8,11 +8,9 @@ import UserPicture from './ui/UserPicture';
 import SubmitButton from './Wizard/SubmitButton';
 import PrevButton from './Wizard/PrevButton';
 import Walkthrough from './ui/Walkthrough';
-import {
-  EditableTagModal,
-  EditInterests,
-  EditTeams,
-} from './Modals/EditableTags';
+import EditableTagModal from './modal/EditableTag';
+import EditTeams from './modal/EditTeams';
+import EditInterests from './modal/EditInterests';
 import { ReviewUser } from './modal/ReviewUser';
 import Kanban from './kanban/Kanban';
 

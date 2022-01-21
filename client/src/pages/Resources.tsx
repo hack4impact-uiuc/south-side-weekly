@@ -4,6 +4,7 @@ import { ResourceModal, Walkthrough } from '../components';
 import { PrimaryButton } from '../components/ui/PrimaryButton';
 import { Pusher } from '../components/ui/Pusher';
 import { ResourcesView } from '../components/view/ResourcesView';
+import { AuthView } from '../components/wrapper/AuthView';
 import { useAuth, useTeams } from '../contexts';
 import { Tabs } from '../layouts/tabs/Tabs';
 import { pagesEnum } from '../utils/enums';
@@ -35,13 +36,16 @@ const Resources = (): ReactElement => {
     <div className="directory-page">
       <div className="page-header-content directory-page-header">
         <Walkthrough page={pagesEnum.RESOURCES} content={walkthroughContent} />
-        <div style={{ display: 'flex' }}>
-          <Pusher />
-          <ResourceModal
-            action="create"
-            trigger={<PrimaryButton content="Add Resource" icon="add" />}
-          />
-        </div>
+        <AuthView view="isAdmin">
+          <div style={{ display: 'flex' }}>
+            <Pusher />
+
+            <ResourceModal
+              action="create"
+              trigger={<PrimaryButton content="Add Resource" icon="add" />}
+            />
+          </div>
+        </AuthView>
       </div>
       <div style={{ display: 'flex' }}></div>
       <Tabs views={views} />
