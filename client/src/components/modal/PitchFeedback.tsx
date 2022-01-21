@@ -1,5 +1,5 @@
-import React, { ReactElement, FC, useState, useEffect } from 'react';
-import { Modal, ModalProps, Icon, Menu, Label } from 'semantic-ui-react';
+import React, { FC, ReactElement, useEffect, useState } from 'react';
+import { Icon, Label, Modal, ModalProps } from 'semantic-ui-react';
 import { PitchFeedback } from 'ssw-common';
 
 import { apiCall, isError } from '../../api';
@@ -7,7 +7,6 @@ import { useAuth } from '../../contexts';
 import { PitchFeedbackForm } from '../form/PitchFeedbackForm';
 import { PrimaryButton } from '../ui/PrimaryButton';
 import { Pusher } from '../ui/Pusher';
-
 import './modals.scss';
 
 interface PitchFeedbackModal extends ModalProps {

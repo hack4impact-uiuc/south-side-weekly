@@ -6,7 +6,6 @@ import React, {
   useState,
 } from 'react';
 import { useParams } from 'react-router';
-import { Button } from 'semantic-ui-react';
 import {
   FullPopulatedPitch,
   PendingContributor,
@@ -19,7 +18,7 @@ import ApproveClaimCard from '../components/card/ApproveClaimCard';
 import EditingClaimCard from '../components/card/EditingClaimCard';
 import { ReviewClaimForm } from '../components/form/ReviewClaimForm';
 import PitchFeedbackModal from '../components/modal/PitchFeedback';
-import { useTeams } from '../contexts';
+import { useAuth, useTeams } from '../contexts';
 import { issueStatusEnum } from '../utils/enums';
 import './Pitch.scss';
 
@@ -44,6 +43,7 @@ export type PendingEditorRecord = Record<
 >;
 
 const Pitch = (): ReactElement => {
+  const { user } = useAuth();
   const { pitchId } = useParams<ParamTypes>();
   const [pendingContributors, setPendingContributors] = useState<
     PendingContributor[]
@@ -58,12 +58,35 @@ const Pitch = (): ReactElement => {
   );
   const [pendingEditors, setPendingEditors] = useState<PendingEditorRecord>({});
   const [writer, setWriter] = useState<UserFields[]>([]);
+  const [workedOnPitch, setWorkedOnPitch] = useState(false);
 
   const { teams, getTeamFromId } = useTeams();
 
   const [pitch, setPitch] = useState<FullPopulatedPitch | null>(null);
 
   const fetchAggregatedPitch = useCallback(async (): Promise<void> => {
+    const didWorkOnPitch = (pitch: FullPopulatedPitch): void => {
+      if (!user?._id) {
+        return;
+      }
+      const userId = user._id;
+      if (pitch.writer._id === userId || pitch.primaryEditor._id === userId) {
+        setWorkedOnPitch(true);
+        return;
+      }
+      if (
+        pitch.secondEditors.find(({ _id }) => _id === userId) ||
+        pitch.thirdEditors.find(({ _id }) => _id === userId)
+      ) {
+        setWorkedOnPitch(true);
+        return;
+      }
+      setWorkedOnPitch(
+        !!pitch.assignmentContributors.find(
+          ({ userId: { _id } }) => _id === userId,
+        ),
+      );
+    };
     const res = await apiCall<FullPopulatedPitch>({
       method: 'GET',
       url: `/pitches/${pitchId}`,
@@ -79,6 +102,7 @@ const Pitch = (): ReactElement => {
       setWriter(result.writer ? [result.writer] : []);
       setPitchTeams(result.teams);
       isReadyForFeedback(result.issueStatuses);
+      didWorkOnPitch(result);
 
       const editors: EditorRecord = {};
 
@@ -97,7 +121,7 @@ const Pitch = (): ReactElement => {
 
       setEditorContributors(editors);
     }
-  }, [pitchId]);
+  }, [pitchId, user?._id]);
 
   useEffect(() => {
     fetchAggregatedPitch();
@@ -167,7 +191,9 @@ const Pitch = (): ReactElement => {
       <div className="content">
         <div className="form-content">
           <ReviewClaimForm pitch={pitch} callback={fetchAggregatedPitch} />
-          <PitchFeedbackModal pitchId={pitchId} />
+          {readyForFeedback && workedOnPitch && (
+            <PitchFeedbackModal pitchId={pitchId} />
+          )}
         </div>
 
         <div className="card-content">
@@ -204,7 +230,6 @@ const Pitch = (): ReactElement => {
           )}
         </div>
       </div>
-      <pre>{JSON.stringify(pitch, null, 2)}</pre>
     </div>
   );
 };

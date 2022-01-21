@@ -3,18 +3,9 @@ import React, { FC, ReactElement } from 'react';
 import { Form } from 'semantic-ui-react';
 import { PitchFeedback } from 'ssw-common';
 
-import { useTeams } from '../../contexts';
 import { pitchQuestionOptions } from '../../utils/constants';
 import { FormTextArea } from '../ui/FormTextArea';
 import './PitchFeedbackForm.scss';
-
-/* const schema = yup.object({
-  name: yup.string().required(),
-  link: yup.string().required(),
-  teams: yup.array().of(yup.string()).min(1),
-  isGeneral: yup.boolean().required(),
-  visibility: yup.string().required(),
-}); */
 
 interface FormProps extends FormikConfig<Partial<PitchFeedback>> {
   id?: string;
