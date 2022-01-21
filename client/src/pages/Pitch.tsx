@@ -15,7 +15,6 @@ import {
 } from 'ssw-common';
 
 import { apiCall, isError } from '../api';
-import { Walkthrough } from '../components';
 import ApproveClaimCard from '../components/card/ApproveClaimCard';
 import EditingClaimCard from '../components/card/EditingClaimCard';
 import { ReviewClaimForm } from '../components/form/ReviewClaimForm';
