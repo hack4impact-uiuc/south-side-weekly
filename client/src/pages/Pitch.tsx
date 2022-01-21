@@ -196,18 +196,13 @@ const Pitch = (): ReactElement => {
 
   return (
     <div className="review-claim-page">
-      <div>
-        <Message
-          content={
-            pitch.status !== pitchStatusEnum.PENDING
-              ? 'This pitch is currently under review.'
-              : ''
-          }
-          color="blue"
-          visible
-          className="pitch-status-message"
-        />
-      </div>
+      {notApproved && (
+        <Message visible className="pitch-status-message" warning>
+          {pitch.status === pitchStatusEnum.PENDING
+            ? 'This pitch is currently under review.'
+            : 'This pitch has been declined.'}
+        </Message>
+      )}
       <div className="content">
         <div className="form-content">
           <ReviewClaimForm

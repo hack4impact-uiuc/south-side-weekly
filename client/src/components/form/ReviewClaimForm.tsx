@@ -165,7 +165,7 @@ export const ReviewClaimForm: FC<FormProps> = ({
     >
       {({ values, handleReset, setFieldValue, setSubmitting }) => (
         <FormikForm id={'review-claim-form'}>
-          {!editMode && (
+          {!editMode && !notApproved && (
             <AuthView view="isAdmin">
               <Label
                 className="edit-button"
