@@ -24,6 +24,7 @@ interface ApproveClaimCardProps {
   team: Team & { target: number };
   pitchId: string;
   completed: boolean;
+  notApproved: boolean;
   callback: () => Promise<void>;
 }
 
@@ -33,6 +34,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
   assignmentContributors,
   pitchId,
   completed,
+  notApproved,
   callback,
 }): ReactElement => {
   const [selectContributorMode, setSelectContributorMode] = useState(false);
@@ -162,19 +164,21 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
           </div>
         </div>
       );
+    } else if (!notApproved) {
+      return (
+        <AuthView view="minStaff">
+          <Label
+            className="add-contributor"
+            as="a"
+            onClick={() => setSelectContributorMode(true)}
+          >
+            <Icon name="plus" />
+            Add contributor
+          </Label>
+        </AuthView>
+      );
     }
-    return (
-      <AuthView view="minStaff">
-        <Label
-          className="add-contributor"
-          as="a"
-          onClick={() => setSelectContributorMode(true)}
-        >
-          <Icon name="plus" />
-          Add contributor
-        </Label>
-      </AuthView>
-    );
+    return <></>;
   };
 
   const filterContributors = useCallback(
@@ -252,16 +256,18 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
           {pluralize('position', team.target + assignmentContributors.length)}{' '}
           filled
         </p>
-        <AuthView view="minStaff">
-          <Icon
-            name="pencil"
-            link
-            onClick={() => {
-              setEditTargetMode(true);
-              setTotalPositions(team.target + assignmentContributors.length);
-            }}
-          />
-        </AuthView>
+        {!notApproved && (
+          <AuthView view="minStaff">
+            <Icon
+              name="pencil"
+              link
+              onClick={() => {
+                setEditTargetMode(true);
+                setTotalPositions(team.target + assignmentContributors.length);
+              }}
+            />
+          </AuthView>
+        )}
       </>
     );
   };
@@ -281,31 +287,34 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
             <div key={idx} className="claim-row">
               <div className="field-tag-popup">
                 <UserChip user={user} />
-                <Popup
-                  content={message}
-                  trigger={<Icon size="small" name="question circle" />}
-                  wide="very"
-                  position="top center"
-                  hoverable
-                />
+                <AuthView view="minStaff">
+                  <Popup
+                    content={message}
+                    trigger={<Icon size="small" name="question circle" />}
+                    wide="very"
+                    position="top center"
+                    hoverable
+                  />
+                </AuthView>
               </div>
-
-              <AuthView view="minStaff">
-                <div className="button-group">
-                  <Button
-                    content="Approve"
-                    positive
-                    size="small"
-                    onClick={() => approveClaim(user._id)}
-                  />
-                  <Button
-                    content="Decline"
-                    negative
-                    size="small"
-                    onClick={() => declineClaim(user._id)}
-                  />
-                </div>
-              </AuthView>
+              {!notApproved && (
+                <AuthView view="minStaff">
+                  <div className="button-group">
+                    <Button
+                      content="Approve"
+                      positive
+                      size="small"
+                      onClick={() => approveClaim(user._id)}
+                    />
+                    <Button
+                      content="Decline"
+                      negative
+                      size="small"
+                      onClick={() => declineClaim(user._id)}
+                    />
+                  </div>
+                </AuthView>
+              )}
               <AuthView view="isContributor">
                 <FieldTag content="pending" />
               </AuthView>

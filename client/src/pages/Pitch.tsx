@@ -6,6 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { useParams } from 'react-router';
+import { Message } from 'semantic-ui-react';
 import {
   FullPopulatedPitch,
   PendingContributor,
@@ -14,12 +15,13 @@ import {
 } from 'ssw-common';
 
 import { apiCall, isError } from '../api';
+import { Walkthrough } from '../components';
 import ApproveClaimCard from '../components/card/ApproveClaimCard';
 import EditingClaimCard from '../components/card/EditingClaimCard';
 import { ReviewClaimForm } from '../components/form/ReviewClaimForm';
 import PitchFeedbackModal from '../components/modal/PitchFeedback';
 import { useAuth, useTeams } from '../contexts';
-import { issueStatusEnum } from '../utils/enums';
+import { issueStatusEnum, pitchStatusEnum } from '../utils/enums';
 import './Pitch.scss';
 
 interface ParamTypes {
@@ -59,6 +61,7 @@ const Pitch = (): ReactElement => {
   const [pendingEditors, setPendingEditors] = useState<PendingEditorRecord>({});
   const [writer, setWriter] = useState<UserFields[]>([]);
   const [workedOnPitch, setWorkedOnPitch] = useState(false);
+  const [notApproved, setNotApproved] = useState(false);
 
   const { teams, getTeamFromId } = useTeams();
 
@@ -70,7 +73,7 @@ const Pitch = (): ReactElement => {
         return;
       }
       const userId = user._id;
-      if (pitch.writer._id === userId || pitch.primaryEditor._id === userId) {
+      if (pitch.writer?._id === userId || pitch.primaryEditor?._id === userId) {
         setWorkedOnPitch(true);
         return;
       }
@@ -103,6 +106,7 @@ const Pitch = (): ReactElement => {
       setPitchTeams(result.teams);
       isReadyForFeedback(result.issueStatuses);
       didWorkOnPitch(result);
+      setNotApproved(result.status !== pitchStatusEnum.APPROVED);
 
       const editors: EditorRecord = {};
 
@@ -186,11 +190,31 @@ const Pitch = (): ReactElement => {
     return { ...team.teamId, target: team.target };
   };
 
+  if (!pitch) {
+    return <></>;
+  }
+
   return (
     <div className="review-claim-page">
+      <div>
+        <Message
+          content={
+            pitch.status !== pitchStatusEnum.PENDING
+              ? 'This pitch is currently under review.'
+              : ''
+          }
+          color="blue"
+          visible
+          className="pitch-status-message"
+        />
+      </div>
       <div className="content">
         <div className="form-content">
-          <ReviewClaimForm pitch={pitch} callback={fetchAggregatedPitch} />
+          <ReviewClaimForm
+            pitch={pitch}
+            callback={fetchAggregatedPitch}
+            notApproved={notApproved}
+          />
           {readyForFeedback && workedOnPitch && (
             <PitchFeedbackModal pitchId={pitchId} />
           )}
@@ -208,6 +232,7 @@ const Pitch = (): ReactElement => {
                     callback={fetchAggregatedPitch}
                     team={getTeamWithTargetFromId(teamId)}
                     pendingEditors={pendingEditors}
+                    notApproved={notApproved}
                   />
                 );
               }
@@ -224,6 +249,7 @@ const Pitch = (): ReactElement => {
                   pitchId={pitchId}
                   callback={fetchAggregatedPitch}
                   completed={readyForFeedback}
+                  notApproved={notApproved}
                 />
               );
             },

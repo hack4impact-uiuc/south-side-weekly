@@ -25,6 +25,7 @@ import './ReviewClaimForm.scss';
 
 interface FormProps {
   pitch: FullPopulatedPitch | null;
+  notApproved: boolean;
   callback: () => Promise<void>;
 }
 
@@ -53,6 +54,7 @@ const fields: (keyof FormData)[] = [
 
 export const ReviewClaimForm: FC<FormProps> = ({
   pitch,
+  notApproved,
   callback,
 }): ReactElement => {
   const [editMode, setEditMode] = useState<boolean>(false);

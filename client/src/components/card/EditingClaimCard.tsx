@@ -22,6 +22,7 @@ interface EditingClaimCardProps {
   pendingEditors: PendingEditorRecord;
   team: Team & { target: number };
   callback: () => Promise<void>;
+  notApproved: boolean;
 }
 
 interface SelectOption {
@@ -39,6 +40,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
   editors,
   team,
   pendingEditors,
+  notApproved,
   callback,
 }): ReactElement => {
   const [selectContributorMode, setSelectContributorMode] = useState(false);
@@ -170,19 +172,21 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
           </div>
         </div>
       );
+    } else if (!notApproved) {
+      return (
+        <AuthView view="isAdmin">
+          <Label
+            className="add-contributor"
+            as="a"
+            onClick={() => setSelectContributorMode(true)}
+          >
+            <Icon name="plus" />
+            Add contributor
+          </Label>
+        </AuthView>
+      );
     }
-    return (
-      <AuthView view="isAdmin">
-        <Label
-          className="add-contributor"
-          as="a"
-          onClick={() => setSelectContributorMode(true)}
-        >
-          <Icon name="plus" />
-          Add contributor
-        </Label>
-      </AuthView>
-    );
+    return <></>;
   };
 
   useEffect(() => {
@@ -295,41 +299,45 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
           ([editorId, { user, editorType }], idx) => (
             <div className="claim-row" key={idx}>
               <UserChip user={omit(user, 'editorType')} />
-              <FieldTag content={editorType} />
-              <AuthView view="minStaff">
-                {completed ? (
-                  <ContributorFeedback
-                    user={omit(user, 'editorType')}
-                    team={team}
-                    pitchId={pitchId}
-                  />
-                ) : (
-                  <div className="dropdown-trash">
-                    <SingleSelect
-                      value={editorType}
-                      options={editorTypeDropDownOptions}
-                      onChange={(e) =>
-                        changeEditor(editorId, editorType, e ? e.value : '')
-                      }
-                      placeholder="Editor Type"
-                      className="select-editor-type"
-                      isClearable={false}
-                    />
-
-                    <Icon
-                      name="trash"
-                      link={editorType !== editorTypeEnum.PRIMARY}
-                      onClick={() => removeContributor(editorId, editorType)}
-                      disabled={editorType === editorTypeEnum.PRIMARY}
-                      className={
-                        editorType === editorTypeEnum.PRIMARY
-                          ? 'disabled-trash'
-                          : ''
-                      }
-                    />
-                  </div>
-                )}
+              <AuthView view="isContributor">
+                <FieldTag content={editorType} />
               </AuthView>
+              {!notApproved && (
+                <AuthView view="minStaff">
+                  {completed ? (
+                    <ContributorFeedback
+                      user={omit(user, 'editorType')}
+                      team={team}
+                      pitchId={pitchId}
+                    />
+                  ) : (
+                    <div className="dropdown-trash">
+                      <SingleSelect
+                        value={editorType}
+                        options={editorTypeDropDownOptions}
+                        onChange={(e) =>
+                          changeEditor(editorId, editorType, e ? e.value : '')
+                        }
+                        placeholder="Editor Type"
+                        className="select-editor-type"
+                        isClearable={false}
+                      />
+
+                      <Icon
+                        name="trash"
+                        link={editorType !== editorTypeEnum.PRIMARY}
+                        onClick={() => removeContributor(editorId, editorType)}
+                        disabled={editorType === editorTypeEnum.PRIMARY}
+                        className={
+                          editorType === editorTypeEnum.PRIMARY
+                            ? 'disabled-trash'
+                            : ''
+                        }
+                      />
+                    </div>
+                  )}
+                </AuthView>
+              )}
             </div>
           ),
         )}
@@ -350,21 +358,23 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
 
               <div className="dropdown-trash">
                 <FieldTag content="pending" />
-                <AuthView view="minStaff">
-                  <SingleSelect
-                    value={editorType}
-                    options={editorTypeDropDownOptions}
-                    onChange={(e) => approveClaim(editorId, e ? e.value : '')}
-                    placeholder="Editor Type"
-                    className="select-editor-type"
-                    isClearable={false}
-                  />
-                  <Icon
-                    name="trash"
-                    link
-                    onClick={() => declineClaim(editorId)}
-                  />
-                </AuthView>
+                {!notApproved && (
+                  <AuthView view="minStaff">
+                    <SingleSelect
+                      value={editorType}
+                      options={editorTypeDropDownOptions}
+                      onChange={(e) => approveClaim(editorId, e ? e.value : '')}
+                      placeholder="Editor Type"
+                      className="select-editor-type"
+                      isClearable={false}
+                    />
+                    <Icon
+                      name="trash"
+                      link
+                      onClick={() => declineClaim(editorId)}
+                    />
+                  </AuthView>
+                )}
               </div>
             </div>
           ),
