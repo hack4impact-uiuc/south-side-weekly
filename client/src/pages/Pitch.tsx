@@ -143,7 +143,16 @@ const Pitch = (): ReactElement => {
 
   const allContributors = useMemo(() => {
     const allContributorsRecord: TeamContributorRecord = {};
-    teams.map((team) => {
+    const orderedTeams = [
+      ...teams.filter(
+        (team) => team.name === 'Writing' || team.name === 'Editing',
+      ),
+      ...teams.filter(
+        (team) => team.name !== 'Writing' && team.name !== 'Editing',
+      ),
+    ];
+
+    orderedTeams.map((team) => {
       allContributorsRecord[team._id] = { pending: [], assignment: [] };
     });
 
