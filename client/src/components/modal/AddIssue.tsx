@@ -42,7 +42,10 @@ const AddIssueModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
     if (!isError(res)) {
       toast.success('Successfully added a new issue!');
       setIsOpen(false);
+    } else if (res.error.response.status === 409) {
+      toast.error('Issue with this date and type already exists');
     } else {
+      console.log(res);
       toast.error('Unable to add a new issue');
     }
   };
@@ -63,8 +66,10 @@ const AddIssueModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
     changeField('type', value ? (value as string) : '');
   };
 
-  const formatDate = (date: Date | undefined): string =>
-    new Date(date || new Date()).toISOString().split('T')[0];
+  const formatDate = (date: Date | undefined): string => {
+    console.log(date);
+    return new Date(date || new Date()).toISOString().split('T')[0];
+  };
 
   useEffect(() => {
     setFormData(defaultData);
@@ -91,9 +96,11 @@ const AddIssueModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
               type="date"
               className="date-input"
               label="Publication Date"
-              onChange={(_, { value }) =>
-                changeField('releaseDate', formatDate(new Date(value)))
-              }
+              onChange={(_, { value }) => {
+                if (value) {
+                  changeField('releaseDate', formatDate(new Date(value)));
+                }
+              }}
               value={formData.releaseDate}
             />
             <Form.Group className="issue-type">

@@ -18,6 +18,19 @@ export const createIssue = async (
   req: CreateReq,
   res: Response,
 ): Promise<void> => {
+  const isIssueTaken = await IssueService.isIssueTaken(
+    req.body.releaseDate,
+    req.body.type,
+  );
+
+  if (isIssueTaken) {
+    res.status(409).json({
+      message: 'Issue with this date and type already exists',
+      success: false,
+    });
+    return;
+  }
+
   const newIssue = await IssueService.add(req.body);
   const populateType = extractPopulateQuery(req.query);
 

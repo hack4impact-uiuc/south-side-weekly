@@ -128,3 +128,9 @@ export const removePitchFromIssues = async (
       $pull: { pitches: pitchId },
     },
   );
+
+export const isIssueTaken = async (
+  releaseDate: string,
+  type: string,
+): Promise<boolean> =>
+  await Issue.exists({ releaseDate: releaseDate, type: type });
