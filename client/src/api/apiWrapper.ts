@@ -12,6 +12,7 @@ import { isError } from './builders';
 
 import { apiCall } from '.';
 
+// API call to load a user's permissions
 export const loadUserPermissions = async (
   userId: string,
 ): Promise<{ view: (keyof User)[]; edit: (keyof User)[] }> => {
