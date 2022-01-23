@@ -20,6 +20,7 @@ import { FormSingleSelect } from '../ui/FormSingleSelect';
 import { FormTextArea } from '../ui/FormTextArea';
 import { LinkDisplay } from '../ui/LinkDisplayButton';
 import { PrimaryButton } from '../ui/PrimaryButton';
+import { SecondaryButton } from '../ui/SecondaryButton';
 import { AuthView } from '../wrapper/AuthView';
 import './ReviewClaimForm.scss';
 
@@ -247,7 +248,19 @@ export const ReviewClaimForm: FC<FormProps> = ({
 
             <div className={editMode ? 'column' : 'row'}>
               <div className={editMode ? 'issue-column' : 'left-col'}>
-                {editMode && <AddIssue callback={fetchIssues} />}
+                {editMode && (
+                  <AddIssue
+                    onUnmount={fetchIssues}
+                    trigger={
+                      <SecondaryButton
+                        id="add-issue"
+                        icon="add"
+                        content="Add Issue"
+                        type="button"
+                      />
+                    }
+                  />
+                )}
 
                 {editMode ? (
                   <>

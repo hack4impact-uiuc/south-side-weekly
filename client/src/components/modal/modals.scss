@@ -31,3 +31,8 @@
     background-color: $mainBackground !important;
   }
 }
+
+.ui.modals {
+  flex-direction: column !important;
+  justify-content: center !important;
+}

@@ -12,6 +12,7 @@ import { IIssue } from 'ssw-common';
 
 import { apiCall, isError } from '../../api';
 import { issueTypeEnum } from '../../utils/enums';
+import { addTime } from '../../utils/helpers';
 import { PrimaryButton } from '../ui/PrimaryButton';
 import { Pusher } from '../ui/Pusher';
 import './AddIssue.scss';
@@ -32,7 +33,10 @@ const AddIssueModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
     const res = await apiCall({
       method: 'POST',
       url: '/issues/',
-      body: formData,
+      body: {
+        ...formData,
+        releaseDate: new Date(addTime(formData.releaseDate)),
+      },
     });
 
     if (!isError(res)) {

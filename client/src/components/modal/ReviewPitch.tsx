@@ -27,6 +27,7 @@ import { Pusher } from '../ui/Pusher';
 
 import './modals.scss';
 import './ReviewPitch.scss';
+import AddIssueModal from './AddIssue';
 
 interface ReviewPitchProps extends ModalProps {
   id: string;
@@ -40,7 +41,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
   ...rest
 }): ReactElement => {
   const { user } = useAuth();
-  const { issues } = useIssues();
+  const { issues, fetchIssues } = useIssues();
   const { teams } = useTeams();
 
   const [pitch, setPitch] = useState<BasePopulatedPitch | null>(null);
@@ -335,10 +336,16 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
                   <mark className="optional"> - Optional</mark>
                 </b>
               </p>
-              <SecondaryButton
-                id="add-issue-btn"
-                icon="add"
-                content="Add Issue"
+              <AddIssueModal
+                onUnmount={fetchIssues}
+                trigger={
+                  <SecondaryButton
+                    id="add-issue-btn"
+                    icon="add"
+                    content="Add Issue"
+                    type="button"
+                  />
+                }
               />
             </div>
             <MultiSelect
