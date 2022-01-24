@@ -52,7 +52,7 @@ export const EditUserForm: FC<FormProps> = ({
   permissions = defPermissions,
 }): ReactElement => {
   const { interests } = useInterests();
-  const { teams } = useTeams();
+  const { teams, getTeamFromId } = useTeams();
 
   return (
     <Formik<User>
@@ -178,6 +178,7 @@ export const EditUserForm: FC<FormProps> = ({
                   options={teams.map((t) => ({ value: t._id, label: t.name }))}
                   viewable={permissions.view.includes('teams')}
                   editable={permissions.edit.includes('teams')}
+                  getTagData={getTeamFromId}
                 />
               </div>
             </div>
