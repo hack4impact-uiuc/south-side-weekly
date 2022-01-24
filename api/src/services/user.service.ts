@@ -107,12 +107,21 @@ const paginate = async (
   options?: PaginateOptions<UserSchema>,
 ): Promise<UsersResponse> => {
   const { offset, limit, sort, filters, search } = options || {};
+  const mongoFilters = mongooseFilters(filters);
+
+  if (!mongoFilters.role) {
+    console.log('here');
+    mongoFilters.role = { $ne: rolesEnum.TBD };
+  }
+
   const mergedFilters = _.merge(
-    mongooseFilters(filters),
     definedFilters,
+    mongoFilters,
     activityFilter(filters['activityStatus']),
     searchFilter(search),
   );
+
+  console.log(mergedFilters);
 
   const users = await User.find(mergedFilters)
     .skip(offset * limit)
@@ -169,10 +178,7 @@ export const getWithOnboardStatus = async (
   status: string[],
   options?: PaginateOptions<UserSchema>,
 ): Promise<UsersResponse> =>
-  paginate(
-    { onboardingStatus: { $in: status }, role: { $ne: rolesEnum.TBD } },
-    options,
-  );
+  paginate({ onboardingStatus: { $in: status } }, options);
 
 export const update = async (
   _id: string,

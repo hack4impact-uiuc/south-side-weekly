@@ -22,12 +22,22 @@ interface ResourcesRes {
   count: number;
 }
 
+type RequireOnlyOne<T, Keys extends keyof T = keyof T> = Pick<
+  T,
+  Exclude<keyof T, Keys>
+> &
+  {
+    [K in Keys]-?: Required<Pick<T, K>> &
+      Partial<Record<Exclude<Keys, K>, undefined>>;
+  }[Keys];
 interface ResourcesViewProps {
   team: { teamId: string; teamName: string };
+  isGeneral: boolean;
 }
 
-export const ResourcesView: FC<ResourcesViewProps> = ({
+export const ResourcesView: FC<RequireOnlyOne<ResourcesViewProps>> = ({
   team,
+  isGeneral,
 }): ReactElement => {
   const [data, setData] = useState<ResourcesRes>({ data: [], count: 0 });
   const location = useLocation();
@@ -41,14 +51,15 @@ export const ResourcesView: FC<ResourcesViewProps> = ({
       offset: params.get('offset') || '0',
       sortBy: params.get('sortBy'),
       orderBy: params.get('orderBy'),
+      isGeneral: isGeneral || undefined,
     };
 
     return _.omitBy(q, _.isNil);
-  }, [location.search]);
+  }, [location.search, isGeneral]);
 
   const queryResources = useCallback(async (): Promise<void> => {
     const res = await apiCall<ResourcesRes>({
-      url: `/resources/teamName/${team.teamId}`,
+      url: team ? `/resources/teamName/${team.teamId}` : '/resources',
       method: 'GET',
       query: queryParams,
     });
@@ -69,7 +80,9 @@ export const ResourcesView: FC<ResourcesViewProps> = ({
   useEffect(() => {
     setQuery({ limit: 10, offset: 0 }, 'push');
     setData({ data: [], count: 0 });
-    toast.loading(`Loading ${team.teamName} resources...`);
+    toast.loading(
+      `Loading ${team ? team.teamName : 'Is General'} resources...`,
+    );
   }, [team, setQuery]);
 
   return (

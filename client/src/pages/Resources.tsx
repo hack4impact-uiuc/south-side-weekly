@@ -15,16 +15,22 @@ const Resources = (): ReactElement => {
   const { isOnboarded } = useAuth();
   const { teams } = useTeams();
 
-  const views = useMemo(
-    () =>
-      teams.map((team) => ({
+  const views = useMemo(() => {
+    const views = [
+      {
+        title: 'General',
+        content: <ResourcesView isGeneral />,
+      },
+      ...teams.map((team) => ({
         title: team.name,
         content: (
           <ResourcesView team={{ teamId: team._id, teamName: team.name }} />
         ),
       })),
-    [teams],
-  );
+    ];
+
+    return views;
+  }, [teams]);
 
   const walkthroughContent = useMemo(() => {
     if (!isOnboarded) {
