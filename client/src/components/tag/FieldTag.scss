@@ -9,7 +9,7 @@
 }
 
 .admin-tag-color {
-  background-color: $admin !important;
+  background-color: $tagRed !important;
 }
 
 .pronouns-tag-color {
@@ -17,19 +17,19 @@
 }
 
 .staff-tag-color {
-  background-color: $staff !important;
+  background-color: $tagOrange !important;
 }
 
 .contributor-tag-color {
-  background-color: $contributor !important;
+  background-color: $tagGreen !important;
 }
 
 .onboarded-tag-color {
-  background-color: $onboarded !important;
+  background-color: $tagGreen !important;
 }
 
 .onboarding-scheduled-tag-color {
-  background-color: $onboardingScheduled !important;
+  background-color: $tagPurple !important;
 }
 
 .no-show-tag-color {
@@ -37,11 +37,11 @@
 }
 
 .denied-tag-color {
-  background-color: $denied !important;
+  background-color: $tagRed !important;
 }
 
 .recently-active-tag-color {
-  background-color: $recentlyActive !important;
+  background-color: $tagGreen !important;
 }
 
 .published-tag-color {
@@ -53,25 +53,25 @@
 }
 
 .active-tag-color {
-  background-color: $active !important;
+  background-color: $tagBlue !important;
 }
 
 .inactive-tag-color,
 .stalled-tag-color {
-  background-color: $inactive !important;
+  background-color: $tagYellow !important;
 }
 
 .public-tag-color {
-  background-color: $public !important;
+  background-color: $tagGreen !important;
 }
 
 .private-tag-color {
-  background-color: $private !important;
+  background-color: $tagRed !important;
 }
 
 .pending-tag-color,
 .pending-review-tag-color {
-  background-color: $pending !important;
+  background-color: $tagYellow !important;
 }
 
 .approved-tag-color,
@@ -101,10 +101,13 @@
   background-color: $readyToPublish !important;
 }
 
-.push-tag-color,
 .writer-needed-tag-color,
 .primary-editor-needed-tag-color {
   background-color: $push !important;
+}
+
+.push-tag-color {
+  background-color: $tagPurple !important;
 }
 
 //TODO: Determine colors for type of status tags
@@ -170,4 +173,8 @@
 
 .translation-in-progress-tag-color {
   background-color: $tagYellow !important;
+}
+
+.coming-late-tag-color {
+  background-color: $tagOrange !important;
 }

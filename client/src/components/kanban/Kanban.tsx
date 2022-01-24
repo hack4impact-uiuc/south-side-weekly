@@ -37,9 +37,9 @@ const getStatusValue = (index: number): string => {
     case 1:
       return issueStatusEnum.DEFINITELY_IN;
     case 2:
-      return issueStatusEnum.IN_EDITS;
-    case 3:
       return issueStatusEnum.READY_TO_PUBLISH;
+    case 3:
+      return issueStatusEnum.COMING_LATE;
     case 4:
       return issueStatusEnum.PUSH;
     default:

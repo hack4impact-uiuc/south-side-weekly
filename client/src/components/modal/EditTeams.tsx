@@ -15,6 +15,18 @@ const EditTeams = (): ReactElement => {
     tagType: 'interests' | 'teams',
     action: 'POST' | 'PUT',
   ): Promise<void> => {
+    if (
+      tagType === 'teams' &&
+      tags.find(
+        (tag) =>
+          tag.name?.toLowerCase() === 'writing' ||
+          tag.name?.toLowerCase() === 'editing',
+      )
+    ) {
+      toast.error('Writing and Editing are reserved team names');
+      return;
+    }
+
     const res = await apiCall({
       url: `/${tagType}/many`,
       method: action,

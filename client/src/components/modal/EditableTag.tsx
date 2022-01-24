@@ -150,6 +150,8 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
     });
   };
 
+  const NUM_RESTRICTED_TAGS = 2;
+
   return (
     <Modal
       size="tiny"
@@ -182,7 +184,10 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
                 type="text"
                 onChange={(e, { value }) => updateInputText(index, value)}
                 value={value.name}
-                disabled={value.name === 'Editing' || value.name === 'Writing'}
+                disabled={
+                  (value.name === 'Editing' || value.name === 'Writing') &&
+                  index < NUM_RESTRICTED_TAGS
+                }
               />
               {value._id === 'NEW' && (
                 <Icon
