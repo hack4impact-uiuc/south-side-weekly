@@ -58,7 +58,7 @@ const Issues = (): ReactElement => {
   }
 
   if (!issues) {
-    return <Loading />;
+    return <Loading open />;
   }
 
   if (issues.length === 0) {
