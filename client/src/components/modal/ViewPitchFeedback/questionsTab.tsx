@@ -5,7 +5,7 @@ import { toString } from 'lodash';
 
 import { pitchQuestionOptions } from '../../../utils/constants';
 
-import './styles.scss';
+import './ViewPitchFeedback';
 
 interface QuestionsTabProps extends ModalProps {
   feedbacks: IPitchFeedback[];

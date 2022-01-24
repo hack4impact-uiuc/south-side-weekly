@@ -1,0 +1,26 @@
+.view-pitch-feedback-modal {
+  width: 75% !important;
+
+  .content {
+    .questions-select {
+      width: 100%;
+    }
+    .individual-select {
+      margin-right: 8px;
+      min-width: fit-content;
+    }
+  }
+
+  .block {
+    background-color: #f4f4f4;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    padding: 3px 8px;
+    margin: 20px 0px;
+    line-height: 2;
+  }
+
+  .left-right-control {
+    margin-bottom: 20px;
+  }
+}

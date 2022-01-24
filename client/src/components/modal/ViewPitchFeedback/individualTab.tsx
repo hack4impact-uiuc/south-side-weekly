@@ -1,46 +1,55 @@
 import React, { ReactElement, FC, useState, useEffect } from 'react';
 import { ModalProps, Icon, Select } from 'semantic-ui-react';
-import { IPitchFeedback } from 'ssw-common';
+import { PitchFeedback } from 'ssw-common';
 import { toNumber } from 'lodash';
 
-import './styles.scss';
+import './ViewPitchFeedback';
 
 interface QuestionsTabProps extends ModalProps {
-  feedbacks: IPitchFeedback[];
+  feedbacks: PitchFeedback[];
+  count: number;
 }
 
-const IndividualTab: FC<QuestionsTabProps> = ({ feedbacks }): ReactElement => {
-  const [feedback, setFeedback] = useState<IPitchFeedback>(feedbacks[0]);
+const IndividualTab: FC<QuestionsTabProps> = ({
+  feedbacks,
+  count,
+}): ReactElement => {
+  const [feedback, setFeedback] = useState<PitchFeedback | undefined>(
+    feedbacks[0],
+  );
   const [index, setIndex] = useState(0);
-  const totalNumFeedback = feedbacks.length;
 
   useEffect(() => {
     setFeedback(feedbacks[index]);
   }, [feedbacks, index]);
 
   const handleRightClick = (): void => {
-    index !== totalNumFeedback - 1 && setIndex(index + 1);
+    index !== count - 1 && setIndex(index + 1);
   };
 
   const handlLeftClick = (): void => {
     index !== 0 && setIndex(index - 1);
   };
+
+  if (!feedback) {
+    return <>No feedbacks</>;
+  }
   return (
     <div>
       <div className="left-right-control">
         <Icon name="angle left" size="large" onClick={handlLeftClick} />
         <Select
           className="individual-select"
-          options={feedbacks.map((item, idx) => ({
+          options={feedbacks.map((_, idx) => ({
             text: idx + 1,
             value: idx,
           }))}
           value={index}
-          onChange={(e, data) => {
+          onChange={(_, data) => {
             setIndex(toNumber(data.value));
           }}
         />
-        of {totalNumFeedback}
+        of {count}
         <Icon name="angle right" size="large" onClick={handleRightClick} />
       </div>
       <dt>
