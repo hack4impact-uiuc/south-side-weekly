@@ -68,18 +68,23 @@ const Onboard5 = (): ReactElement => {
     onboardUser();
   };
 
+  const getCalendlyUrl = (): string => {
+    if (window.location.hostname === 'localhost') {
+      return 'https://calendly.com/sawhney4/60min';
+    }
+
+    return 'TODO';
+  };
+
   return (
     <div className="onboard5-wrapper">
       <div className="prompt">
         Please schedule an Onboarding Session with a Staff Member. If no times
-        work for you, please contact a Staff Member at amitplaystrumpet@ssw.com
-        after submitting.
+        work for you, please contact a Staff Member at
+        editor@southsideweekly.com after submitting.
       </div>
       <Form id="onboard-5" onSubmit={onSubmit}>
-        <InlineWidget
-          styles={{ height: '77vh' }}
-          url="https://calendly.com/sawhney4/60min"
-        />
+        <InlineWidget styles={{ height: '77vh' }} url={getCalendlyUrl()} />
         <CalendlyEventListener onEventScheduled={onEventScheduled} />
       </Form>
     </div>
