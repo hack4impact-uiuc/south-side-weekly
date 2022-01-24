@@ -1,8 +1,10 @@
 import React, { ReactElement, useMemo } from 'react';
+import { openPopupWidget } from 'react-calendly';
 
 import { ResourceModal, Walkthrough } from '../components';
 import { PrimaryButton } from '../components/ui/PrimaryButton';
 import { Pusher } from '../components/ui/Pusher';
+import { SecondaryButton } from '../components/ui/SecondaryButton';
 import { ResourcesView } from '../components/view/ResourcesView';
 import { AuthView } from '../components/wrapper/AuthView';
 import { useAuth, useTeams } from '../contexts';
@@ -32,6 +34,15 @@ const Resources = (): ReactElement => {
     return 'Check out the members on the SSW team and click their profiles to view more details!';
   }, [isOnboarded]);
 
+  const getCalendlyUrl = (): string => {
+    console.log(window.location.hostname);
+    if (window.location.hostname === 'localhost') {
+      return 'https://calendly.com/sawhney4/60min';
+    }
+
+    return 'TODO';
+  };
+
   return (
     <div className="directory-page">
       <div className="page-header-content directory-page-header">
@@ -43,6 +54,22 @@ const Resources = (): ReactElement => {
             <ResourceModal
               action="create"
               trigger={<PrimaryButton content="Add Resource" icon="add" />}
+            />
+          </div>
+        </AuthView>
+        <AuthView view="nonAdmin">
+          <div style={{ display: 'flex' }}>
+            <Pusher />
+
+            <SecondaryButton
+              border
+              onClick={() =>
+                openPopupWidget({
+                  url: getCalendlyUrl(),
+                })
+              }
+              content="Schedule Office Hour"
+              className="calendly-button"
             />
           </div>
         </AuthView>
