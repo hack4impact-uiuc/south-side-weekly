@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import { Button, Divider, Icon, Input, Label } from 'semantic-ui-react';
+import { Button, Divider, Icon, Input, Label, Popup } from 'semantic-ui-react';
 import { Team, User, UserFields } from 'ssw-common';
 import Swal from 'sweetalert2';
 
@@ -19,11 +19,12 @@ import { AuthView } from '../wrapper/AuthView';
 import './ApproveClaimCard.scss';
 
 interface ApproveClaimCardProps {
-  pendingContributors: UserFields[];
+  pendingContributors: { user: UserFields; message: string }[];
   assignmentContributors: UserFields[];
   team: Team & { target: number };
   pitchId: string;
   completed: boolean;
+  notApproved: boolean;
   callback: () => Promise<void>;
 }
 
@@ -33,6 +34,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
   assignmentContributors,
   pitchId,
   completed,
+  notApproved,
   callback,
 }): ReactElement => {
   const [selectContributorMode, setSelectContributorMode] = useState(false);
@@ -162,19 +164,21 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
           </div>
         </div>
       );
+    } else if (!notApproved) {
+      return (
+        <AuthView view="minStaff">
+          <Label
+            className="add-contributor"
+            as="a"
+            onClick={() => setSelectContributorMode(true)}
+          >
+            <Icon name="plus" />
+            Add contributor
+          </Label>
+        </AuthView>
+      );
     }
-    return (
-      <AuthView view="minStaff">
-        <Label
-          className="add-contributor"
-          as="a"
-          onClick={() => setSelectContributorMode(true)}
-        >
-          <Icon name="plus" />
-          Add contributor
-        </Label>
-      </AuthView>
-    );
+    return <></>;
   };
 
   const filterContributors = useCallback(
@@ -182,7 +186,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
       contributors.filter(
         ({ _id }) =>
           !assignmentContributors.map((user) => user._id).includes(_id) &&
-          !pendingContributors.map((user) => user._id).includes(_id),
+          !pendingContributors.map(({ user }) => user._id).includes(_id),
       ),
     [assignmentContributors, pendingContributors],
   );
@@ -252,16 +256,18 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
           {pluralize('position', team.target + assignmentContributors.length)}{' '}
           filled
         </p>
-        <AuthView view="minStaff">
-          <Icon
-            name="pencil"
-            link
-            onClick={() => {
-              setEditTargetMode(true);
-              setTotalPositions(team.target + assignmentContributors.length);
-            }}
-          />
-        </AuthView>
+        {!notApproved && (
+          <AuthView view="minStaff">
+            <Icon
+              name="pencil"
+              link
+              onClick={() => {
+                setEditTargetMode(true);
+                setTotalPositions(team.target + assignmentContributors.length);
+              }}
+            />
+          </AuthView>
+        )}
       </>
     );
   };
@@ -275,28 +281,40 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
       <Divider />
       {!completed && renderAddContributor()}
       <div className="claim-section">
-        {pendingContributors.map((contributor, idx) => {
+        {pendingContributors.map(({ user, message }, idx) => {
           void 0;
           return (
             <div key={idx} className="claim-row">
-              <UserChip user={contributor} />
-
-              <AuthView view="minStaff">
-                <div className="button-group">
-                  <Button
-                    content="Approve"
-                    positive
-                    size="small"
-                    onClick={() => approveClaim(contributor._id)}
+              <div className="field-tag-popup">
+                <UserChip user={user} />
+                <AuthView view="minStaff">
+                  <Popup
+                    content={message}
+                    trigger={<Icon size="small" name="question circle" />}
+                    wide="very"
+                    position="top center"
+                    hoverable
                   />
-                  <Button
-                    content="Decline"
-                    negative
-                    size="small"
-                    onClick={() => declineClaim(contributor._id)}
-                  />
-                </div>
-              </AuthView>
+                </AuthView>
+              </div>
+              {!notApproved && (
+                <AuthView view="minStaff">
+                  <div className="button-group">
+                    <Button
+                      content="Approve"
+                      positive
+                      size="small"
+                      onClick={() => approveClaim(user._id)}
+                    />
+                    <Button
+                      content="Decline"
+                      negative
+                      size="small"
+                      onClick={() => declineClaim(user._id)}
+                    />
+                  </div>
+                </AuthView>
+              )}
               <AuthView view="isContributor">
                 <FieldTag content="pending" />
               </AuthView>

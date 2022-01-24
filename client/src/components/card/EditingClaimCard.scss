@@ -1,6 +1,6 @@
 @import '../../styles/colors.scss';
 
-.approve-claim-card {
+.editing-claim-card {
   background-color: white;
   border-radius: 5px;
   padding: 10px 12px;
@@ -116,6 +116,13 @@
         background-color: transparent !important;
         font-weight: 600 !important;
         color: $secondaryColor !important;
+      }
+
+      .field-tag-popup {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        column-gap: 5px;
       }
 
       .button-group {

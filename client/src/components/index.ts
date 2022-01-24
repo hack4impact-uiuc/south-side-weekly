@@ -13,7 +13,6 @@ import EditTeams from './modal/EditTeams';
 import EditInterests from './modal/EditInterests';
 import { ReviewUser } from './modal/ReviewUser';
 import Kanban from './kanban/Kanban';
-import PitchFeedbackModal from './Modals/PitchFeedback';
 
 export { PrivateRoute } from './wrapper/PrivateRoute';
 
@@ -32,6 +31,5 @@ export {
   EditTeams,
   EditableTagModal,
   ReviewUser,
-  PitchFeedbackModal,
   Kanban,
 };

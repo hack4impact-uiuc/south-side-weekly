@@ -29,6 +29,13 @@ router.put(
   errorWrap(IssueController.updateIssueStatus),
 );
 
+// PUT /api/issues/updatePitchIssues/:pitchId
+router.put(
+  '/updatePitchIssues/:pitchId',
+  requireAdmin,
+  errorWrap(IssueController.updatePitchIssues),
+);
+
 // PUT /api/issues/:id
 router.put('/:id', requireAdmin, errorWrap(IssueController.updateIssue));
 

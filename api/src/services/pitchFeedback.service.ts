@@ -44,8 +44,11 @@ const updateModel = async <T>(
     runValidators: true,
   }).lean();
 
-export const add = async (payload: Partial<IPitchFeedback>): PitchFeedback => {
-  const feedback = await PitchFeedback.create(payload);
+export const add = async (
+  payload: Partial<IPitchFeedback>,
+  userId: string,
+): PitchFeedback => {
+  const feedback = await PitchFeedback.create({ ...payload, userId: userId });
   return await getOne(feedback._id);
 };
 
@@ -60,6 +63,15 @@ export const getFeedbackForPitch = async (
   pitchId: string,
   options?: PaginateOptions<PitchFeedbackSchema>,
 ): Promise<PitchFeedbacksResponse> => await paginate({ pitchId }, options);
+
+export const getPitchFeedbackFromUser = async (
+  pitchId: string,
+  userId: string,
+): PitchFeedback =>
+  await PitchFeedback.findOne({
+    userId: userId,
+    pitchId: pitchId,
+  });
 
 export const update = async (
   _id: string,

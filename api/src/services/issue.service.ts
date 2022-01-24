@@ -63,15 +63,6 @@ export const getAll = async (
   options?: PaginateOptions<IssueSchema>,
 ): Promise<IssuesResponse> => await paginate({}, options);
 
-export const addPitch = async (
-  issueIds: string[],
-  pichId: string,
-): Promise<UpdateWriteOpResult> =>
-  await Issue.updateMany(
-    { _id: { $in: issueIds } },
-    { $push: { pitches: pichId } },
-  );
-
 export const update = async (_id: string, payload: Partial<IIssue>): Issue =>
   await updateModel({ _id }, payload);
 
@@ -111,3 +102,35 @@ export const getPitchBuckets = async (
 
   return buckets;
 };
+
+export const addPitchToIssues = async (
+  issues: string[],
+  pitchId: string,
+): Promise<UpdateWriteOpResult> =>
+  await Issue.updateMany(
+    {
+      _id: { $in: issues },
+    },
+    {
+      $addToSet: { pitches: pitchId },
+    },
+  );
+
+export const removePitchFromIssues = async (
+  issues: string[],
+  pitchId: string,
+): Promise<UpdateWriteOpResult> =>
+  await Issue.updateMany(
+    {
+      _id: { $in: issues },
+    },
+    {
+      $pull: { pitches: pitchId },
+    },
+  );
+
+export const isIssueTaken = async (
+  releaseDate: string,
+  type: string,
+): Promise<boolean> =>
+  await Issue.exists({ releaseDate: releaseDate, type: type });

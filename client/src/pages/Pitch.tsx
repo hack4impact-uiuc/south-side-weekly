@@ -6,6 +6,7 @@ import React, {
   useState,
 } from 'react';
 import { useParams } from 'react-router';
+import { Message } from 'semantic-ui-react';
 import {
   FullPopulatedPitch,
   PendingContributor,
@@ -17,8 +18,9 @@ import { apiCall, isError } from '../api';
 import ApproveClaimCard from '../components/card/ApproveClaimCard';
 import EditingClaimCard from '../components/card/EditingClaimCard';
 import { ReviewClaimForm } from '../components/form/ReviewClaimForm';
-import { useTeams } from '../contexts';
-import { issueStatusEnum } from '../utils/enums';
+import PitchFeedbackModal from '../components/modal/PitchFeedback';
+import { useAuth, useTeams } from '../contexts';
+import { issueStatusEnum, pitchStatusEnum } from '../utils/enums';
 import './Pitch.scss';
 
 interface ParamTypes {
@@ -26,17 +28,23 @@ interface ParamTypes {
 }
 
 type AllContributorsForTeam = {
-  pending: UserFields[];
+  pending: { user: UserFields; message: string }[];
   assignment: UserFields[];
 };
 
 type TeamContributorRecord = Record<string, AllContributorsForTeam>;
 
-export type EditorRecord = Record<string, UserWithEditorType>;
-
-type UserWithEditorType = UserFields & { editorType: string };
+export type EditorRecord = Record<
+  string,
+  { user: UserFields; editorType: string }
+>;
+export type PendingEditorRecord = Record<
+  string,
+  { user: UserFields; editorType: string; message: string }
+>;
 
 const Pitch = (): ReactElement => {
+  const { user } = useAuth();
   const { pitchId } = useParams<ParamTypes>();
   const [pendingContributors, setPendingContributors] = useState<
     PendingContributor[]
@@ -49,14 +57,38 @@ const Pitch = (): ReactElement => {
   const [editorContributors, setEditorContributors] = useState<EditorRecord>(
     {},
   );
-  const [pendingEditors, setPendingEditors] = useState<EditorRecord>({});
+  const [pendingEditors, setPendingEditors] = useState<PendingEditorRecord>({});
   const [writer, setWriter] = useState<UserFields[]>([]);
+  const [workedOnPitch, setWorkedOnPitch] = useState(false);
+  const [notApproved, setNotApproved] = useState(false);
 
   const { teams, getTeamFromId } = useTeams();
 
   const [pitch, setPitch] = useState<FullPopulatedPitch | null>(null);
 
   const fetchAggregatedPitch = useCallback(async (): Promise<void> => {
+    const didWorkOnPitch = (pitch: FullPopulatedPitch): void => {
+      if (!user?._id) {
+        return;
+      }
+      const userId = user._id;
+      if (pitch.writer?._id === userId || pitch.primaryEditor?._id === userId) {
+        setWorkedOnPitch(true);
+        return;
+      }
+      if (
+        pitch.secondEditors.find(({ _id }) => _id === userId) ||
+        pitch.thirdEditors.find(({ _id }) => _id === userId)
+      ) {
+        setWorkedOnPitch(true);
+        return;
+      }
+      setWorkedOnPitch(
+        !!pitch.assignmentContributors.find(
+          ({ userId: { _id } }) => _id === userId,
+        ),
+      );
+    };
     const res = await apiCall<FullPopulatedPitch>({
       method: 'GET',
       url: `/pitches/${pitchId}`,
@@ -72,25 +104,27 @@ const Pitch = (): ReactElement => {
       setWriter(result.writer ? [result.writer] : []);
       setPitchTeams(result.teams);
       isReadyForFeedback(result.issueStatuses);
+      didWorkOnPitch(result);
+      setNotApproved(result.status !== pitchStatusEnum.APPROVED);
 
       const editors: EditorRecord = {};
 
       if (result.primaryEditor) {
         editors[result.primaryEditor._id] = {
-          ...result.primaryEditor,
+          user: result.primaryEditor,
           editorType: 'Primary',
         };
       }
       result.secondEditors.map(
-        (user) => (editors[user?._id] = { ...user, editorType: 'Seconds' }),
+        (user) => (editors[user?._id] = { user, editorType: 'Seconds' }),
       );
       result.thirdEditors.map(
-        (user) => (editors[user?._id] = { ...user, editorType: 'Thirds' }),
+        (user) => (editors[user?._id] = { user, editorType: 'Thirds' }),
       );
 
       setEditorContributors(editors);
     }
-  }, [pitchId]);
+  }, [pitchId, user?._id]);
 
   useEffect(() => {
     fetchAggregatedPitch();
@@ -109,21 +143,35 @@ const Pitch = (): ReactElement => {
 
   const allContributors = useMemo(() => {
     const allContributorsRecord: TeamContributorRecord = {};
-    teams.map((team) => {
+    const orderedTeams = [
+      ...teams.filter(
+        (team) => team.name === 'Writing' || team.name === 'Editing',
+      ),
+      ...teams.filter(
+        (team) => team.name !== 'Writing' && team.name !== 'Editing',
+      ),
+    ];
+
+    orderedTeams.map((team) => {
       allContributorsRecord[team._id] = { pending: [], assignment: [] };
     });
 
-    const pendingEditorContributors: EditorRecord = {};
+    const pendingEditorContributors: PendingEditorRecord = {};
 
     pendingContributors.map((pendingContributor) => {
       pendingContributor.teams.map((team) => {
         if (team.name === 'Editing') {
           pendingEditorContributors[pendingContributor.userId._id] = {
-            ...pendingContributor.userId,
+            user: pendingContributor.userId,
             editorType: 'None',
+            message: pendingContributor.message,
           };
+          return;
         }
-        allContributorsRecord[team._id].pending.push(pendingContributor.userId);
+        allContributorsRecord[team._id].pending.push({
+          user: pendingContributor.userId,
+          message: pendingContributor.message,
+        });
       });
     });
 
@@ -150,13 +198,30 @@ const Pitch = (): ReactElement => {
     return { ...team.teamId, target: team.target };
   };
 
+  if (!pitch) {
+    return <></>;
+  }
+
   return (
     <div className="review-claim-page">
+      {notApproved && (
+        <Message visible className="pitch-status-message" warning>
+          {pitch.status === pitchStatusEnum.PENDING
+            ? 'This pitch is currently under review.'
+            : 'This pitch has been declined.'}
+        </Message>
+      )}
       <div className="content">
-        <ReviewClaimForm
-          pitch={pitch}
-          isReadyForFeedback={isReadyForFeedback}
-        />
+        <div className="form-content">
+          <ReviewClaimForm
+            pitch={pitch}
+            callback={fetchAggregatedPitch}
+            notApproved={notApproved}
+          />
+          {readyForFeedback && workedOnPitch && (
+            <PitchFeedbackModal pitchId={pitchId} />
+          )}
+        </div>
 
         <div className="card-content">
           {Object.entries(allContributors).map(
@@ -170,6 +235,7 @@ const Pitch = (): ReactElement => {
                     callback={fetchAggregatedPitch}
                     team={getTeamWithTargetFromId(teamId)}
                     pendingEditors={pendingEditors}
+                    notApproved={notApproved}
                   />
                 );
               }
@@ -186,6 +252,7 @@ const Pitch = (): ReactElement => {
                   pitchId={pitchId}
                   callback={fetchAggregatedPitch}
                   completed={readyForFeedback}
+                  notApproved={notApproved}
                 />
               );
             },

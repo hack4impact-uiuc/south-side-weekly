@@ -69,6 +69,12 @@ const claimStatusEnum = {
   DECLINED: 'DECLINED',
 };
 
+const editorTypeEnum = {
+  PRIMARY: 'Primary',
+  SECONDS: 'Seconds',
+  THIRDS: 'Thirds',
+};
+
 const editStatusEnum = {
   WRITER_NEEDED: 'Writer Needed',
   FIRST_NEEDED: '1st Needed',
@@ -95,4 +101,5 @@ export {
   issueStatusEnum,
   editStatusEnum,
   claimStatusEnum,
+  editorTypeEnum,
 };

@@ -27,6 +27,13 @@ router.get(
   errorWrap(PitchFeedbackController.getFeedbackForPitch),
 );
 
+// GET /api/pitchFeedback/:pitchId/:userId
+router.get(
+  '/:pitchId/:userId',
+  requireAdmin,
+  errorWrap(PitchFeedbackController.getPitchFeedbackFromUser),
+);
+
 // POST /api/pitchFeedback
 router.post(
   '/',

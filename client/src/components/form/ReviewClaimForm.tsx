@@ -20,14 +20,14 @@ import { FormSingleSelect } from '../ui/FormSingleSelect';
 import { FormTextArea } from '../ui/FormTextArea';
 import { LinkDisplay } from '../ui/LinkDisplayButton';
 import { PrimaryButton } from '../ui/PrimaryButton';
+import { SecondaryButton } from '../ui/SecondaryButton';
 import { AuthView } from '../wrapper/AuthView';
 import './ReviewClaimForm.scss';
 
 interface FormProps {
   pitch: FullPopulatedPitch | null;
-  isReadyForFeedback: (
-    issueStatuses: FullPopulatedPitch['issueStatuses'],
-  ) => void;
+  notApproved: boolean;
+  callback: () => Promise<void>;
 }
 
 interface FormData
@@ -55,7 +55,8 @@ const fields: (keyof FormData)[] = [
 
 export const ReviewClaimForm: FC<FormProps> = ({
   pitch,
-  isReadyForFeedback,
+  notApproved,
+  callback,
 }): ReactElement => {
   const [editMode, setEditMode] = useState<boolean>(false);
   const { getInterestById, interests } = useInterests();
@@ -77,15 +78,30 @@ export const ReviewClaimForm: FC<FormProps> = ({
       ),
     };
 
-    const res = await apiCall<BasePopulatedPitch>({
-      method: 'PUT',
-      url: `/pitches/${pitch?._id}`,
-      body: newPitch,
-    });
+    console.log('NEW PITCH', newPitch);
 
-    if (!isError(res)) {
+    const pitchIds = pitch!.issueStatuses.map(({ issueId: { _id } }) => _id);
+    const newIds = data.issueStatuses.map(({ issueId: { _id } }) => _id);
+
+    const res = await Promise.all([
+      apiCall<BasePopulatedPitch>({
+        method: 'PUT',
+        url: `/pitches/${pitch?._id}`,
+        body: newPitch,
+      }),
+      apiCall({
+        method: 'PUT',
+        url: `/issues/updatePitchIssues/${pitch!._id}`,
+        body: {
+          addToIssues: difference(newIds, pitchIds),
+          removeFromIssues: difference(pitchIds, newIds),
+        },
+      }),
+    ]);
+
+    if (!isError(res[0]) && !isError(res[1])) {
       resetForm({ values: data, isSubmitting: true });
-      isReadyForFeedback(data.issueStatuses);
+      await callback();
     }
 
     setEditMode(false);
@@ -149,7 +165,7 @@ export const ReviewClaimForm: FC<FormProps> = ({
     >
       {({ values, handleReset, setFieldValue, setSubmitting }) => (
         <FormikForm id={'review-claim-form'}>
-          {!editMode && (
+          {!editMode && !notApproved && (
             <AuthView view="isAdmin">
               <Label
                 className="edit-button"
@@ -232,7 +248,19 @@ export const ReviewClaimForm: FC<FormProps> = ({
 
             <div className={editMode ? 'column' : 'row'}>
               <div className={editMode ? 'issue-column' : 'left-col'}>
-                {editMode && <AddIssue callback={fetchIssues} />}
+                {editMode && (
+                  <AddIssue
+                    onUnmount={fetchIssues}
+                    trigger={
+                      <SecondaryButton
+                        id="add-issue"
+                        icon="add"
+                        content="Add Issue"
+                        type="button"
+                      />
+                    }
+                  />
+                )}
 
                 {editMode ? (
                   <>

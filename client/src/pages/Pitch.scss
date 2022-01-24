@@ -1,4 +1,9 @@
 .review-claim-page {
+  .pitch-status-message {
+    width: 95%;
+    margin: auto;
+  }
+
   .content {
     width: 95%;
     margin: auto;
@@ -6,6 +11,18 @@
     flex-direction: row;
     justify-content: space-between;
     padding-top: 2rem;
+
+    .form-content {
+      display: flex;
+      flex-direction: column;
+      width: 57%;
+      row-gap: 10px;
+
+      .feedback-label {
+        background-color: transparent !important;
+        color: black !important;
+      }
+    }
 
     .card-content {
       width: 40%;

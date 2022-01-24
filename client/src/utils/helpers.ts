@@ -367,6 +367,13 @@ const formatDate = (date: Date | string): string => {
 };
 
 /**
+ * Adds 12:00 PM CST to date in ISO format
+ * @param date date in format yyyy-mm-dd
+ * @returns ISO formatted date with 12:00 PM CST
+ */
+const addTime = (date: string): string => `${date}T18:00:00.0Z`;
+
+/**
  * Converts an array of arguments into a single className
  *
  * ("first", "second", undefined, "third") -> "first second third"
@@ -447,4 +454,5 @@ export {
   formatDate,
   isPast,
   defaultAsyncFunc,
+  addTime,
 };
