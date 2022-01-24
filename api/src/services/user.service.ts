@@ -5,7 +5,7 @@ import { IUser } from 'ssw-common';
 
 import User, { UserSchema } from '../models/user.model';
 import { UserFeedbackSchema } from '../models/userFeedback.model';
-import { onboardingStatusEnum } from '../utils/enums';
+import { onboardingStatusEnum, rolesEnum } from '../utils/enums';
 import { PaginateOptions } from './types';
 
 type User = LeanDocument<UserSchema>;
@@ -169,7 +169,10 @@ export const getWithOnboardStatus = async (
   status: string[],
   options?: PaginateOptions<UserSchema>,
 ): Promise<UsersResponse> =>
-  paginate({ onboardingStatus: { $in: status } }, options);
+  paginate(
+    { onboardingStatus: { $in: status }, role: { $ne: rolesEnum.TBD } },
+    options,
+  );
 
 export const update = async (
   _id: string,
