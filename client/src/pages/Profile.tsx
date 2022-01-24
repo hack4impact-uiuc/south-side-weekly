@@ -92,7 +92,7 @@ const Profile = (): ReactElement => {
     }
 
     const sum = feedbackData.data.reduce((acc, curr) => acc + curr.stars, 0);
-    return sum / feedbackData.data.length;
+    return Math.round(sum / feedbackData.data.length);
   }, [feedbackData]);
 
   const queryParams = useMemo(() => {

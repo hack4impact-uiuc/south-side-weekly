@@ -15,23 +15,29 @@ const Resources = (): ReactElement => {
   const { isOnboarded } = useAuth();
   const { teams } = useTeams();
 
-  const views = useMemo(
-    () =>
-      teams.map((team) => ({
+  const views = useMemo(() => {
+    const views = [
+      {
+        title: 'General',
+        content: <ResourcesView isGeneral />,
+      },
+      ...teams.map((team) => ({
         title: team.name,
         content: (
           <ResourcesView team={{ teamId: team._id, teamName: team.name }} />
         ),
       })),
-    [teams],
-  );
+    ];
+
+    return views;
+  }, [teams]);
 
   const walkthroughContent = useMemo(() => {
     if (!isOnboarded) {
       return 'After you are onboarded, you will be able to submit and claim pitches and begin your South Side Weekly journey!';
     }
 
-    return 'Check out the members on the SSW team and click their profiles to view more details!';
+    return 'This is the resources page. Here you can find resources to help you get started with your South Side Weekly journey regarding your specific team.';
   }, [isOnboarded]);
 
   const getCalendlyUrl = (): string => {

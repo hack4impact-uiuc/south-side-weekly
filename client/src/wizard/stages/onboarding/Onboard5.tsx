@@ -73,7 +73,8 @@ const Onboard5 = (): ReactElement => {
       return 'https://calendly.com/sawhney4/60min';
     }
 
-    return 'TODO';
+    // TODO: fix this to SSW
+    return 'https://calendly.com/sawhney4/60min';
   };
 
   return (

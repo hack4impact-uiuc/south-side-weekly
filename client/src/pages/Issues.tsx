@@ -6,12 +6,13 @@ import { isError, apiCall } from '../api';
 import { Kanban } from '../components';
 import AddIssueModal from '../components/modal/AddIssue';
 import { SingleSelect } from '../components/select/SingleSelect';
+import Loading from '../components/ui/Loading';
 import { useAuth } from '../contexts';
 
 import './Issues.scss';
 
 const Issues = (): ReactElement => {
-  const [issues, setIssues] = useState<PopulatedIssue[]>([]);
+  const [issues, setIssues] = useState<PopulatedIssue[] | null>(null);
   const [viewIssueIndex, setViewIssueIndex] = useState<number>(0);
   const { isAdmin } = useAuth();
 
@@ -55,6 +56,11 @@ const Issues = (): ReactElement => {
       </div>
     );
   }
+
+  if (!issues) {
+    return <Loading />;
+  }
+
   if (issues.length === 0) {
     return (
       <div style={{ textAlign: 'center', paddingTop: '15vh' }}>
@@ -62,8 +68,6 @@ const Issues = (): ReactElement => {
         <AddIssueModal />
       </div>
     );
-  } else if (viewIssueIndex < 0 || viewIssueIndex > issues.length) {
-    return <>Loading...</>;
   }
 
   return (

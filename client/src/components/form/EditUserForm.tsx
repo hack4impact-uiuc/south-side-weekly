@@ -64,12 +64,12 @@ export const EditUserForm: FC<FormProps> = ({
       onSubmit={customOnSubmit}
       validationSchema={schema}
     >
-      {({ errors }) => (
+      {({ touched, errors }) => (
         <FormikForm id={id}>
           <div className="form-wrapper">
             <div className="row">
               <div className="left-col">
-                {errors['firstName'] && (
+                {touched['firstName'] && errors['firstName'] && (
                   <div className="error">{errors['firstName']}</div>
                 )}
                 <Field
@@ -81,7 +81,7 @@ export const EditUserForm: FC<FormProps> = ({
                 />
               </div>
               <div className="right-col">
-                {errors['lastName'] && (
+                {touched['lastName'] && errors['lastName'] && (
                   <div className="error">{errors['lastName']}</div>
                 )}
                 <Field
@@ -95,7 +95,7 @@ export const EditUserForm: FC<FormProps> = ({
             </div>
             <div className="row">
               <div className="left-col">
-                {errors['preferredName'] && (
+                {touched['preferredName'] && errors['preferredName'] && (
                   <div className="error">{errors['preferredName']}</div>
                 )}
                 <Field
@@ -109,7 +109,7 @@ export const EditUserForm: FC<FormProps> = ({
             </div>
             <div className="row">
               <div className="left-col">
-                {errors['genders'] && (
+                {touched['genders'] && errors['genders'] && (
                   <div className="error">{errors['genders']}</div>
                 )}
                 <Field
@@ -122,7 +122,7 @@ export const EditUserForm: FC<FormProps> = ({
                 />
               </div>
               <div className="right-col">
-                {errors['pronouns'] && (
+                {touched['pronouns'] && errors['pronouns'] && (
                   <div className="error">{errors['pronouns']}</div>
                 )}
                 <Field
@@ -137,7 +137,7 @@ export const EditUserForm: FC<FormProps> = ({
             </div>
             <div className="row">
               <div className="left-col">
-                {errors['role'] && (
+                {touched['role'] && errors['role'] && (
                   <div className="error">{errors['role']}</div>
                 )}
                 <Field
@@ -152,7 +152,7 @@ export const EditUserForm: FC<FormProps> = ({
             </div>
             <div className="row">
               <div className="left-col">
-                {errors['interests'] && (
+                {touched['interests'] && errors['interests'] && (
                   <div className="error">{errors['interests']}</div>
                 )}
                 <Field
@@ -168,7 +168,7 @@ export const EditUserForm: FC<FormProps> = ({
                 />
               </div>
               <div className="right-col">
-                {errors['teams'] && (
+                {touched['teams'] && errors['teams'] && (
                   <div className="error">{errors['teams']}</div>
                 )}
                 <Field
@@ -184,7 +184,7 @@ export const EditUserForm: FC<FormProps> = ({
             </div>
             <div className="row">
               <div className="left-col">
-                {errors['email'] && (
+                {touched['email'] && errors['email'] && (
                   <div className="error">{errors['email']}</div>
                 )}
                 <Field
@@ -198,7 +198,7 @@ export const EditUserForm: FC<FormProps> = ({
             </div>
             <div className="row">
               <div className="left-col">
-                {errors['phone'] && (
+                {touched['phone'] && errors['phone'] && (
                   <div className="error">{errors['phone']}</div>
                 )}
                 <Field
@@ -212,7 +212,7 @@ export const EditUserForm: FC<FormProps> = ({
             </div>
             <div className="row">
               <div className="left-col">
-                {errors['twitter'] && (
+                {touched['twitter'] && errors['twitter'] && (
                   <div className="error">{errors['twitter']}</div>
                 )}
                 <Field
@@ -226,7 +226,7 @@ export const EditUserForm: FC<FormProps> = ({
             </div>
             <div className="row">
               <div className="left-col">
-                {errors['linkedIn'] && (
+                {touched['linkedIn'] && errors['linkedIn'] && (
                   <div className="error">{errors['linkedIn']}</div>
                 )}
                 <Field
@@ -240,7 +240,7 @@ export const EditUserForm: FC<FormProps> = ({
             </div>
             <div className="row">
               <div className="left-col">
-                {errors['portfolio'] && (
+                {touched['portfolio'] && errors['portfolio'] && (
                   <div className="error">{errors['portfolio']}</div>
                 )}
                 <Field

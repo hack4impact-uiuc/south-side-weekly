@@ -56,29 +56,30 @@ export const SubmitPitchForm: FC<FormProps> = ({
       onSubmit={rest.onSubmit}
       validationSchema={schema}
     >
-      {({ errors }) => (
+      {({ touched, errors }) => (
         <FormikForm id={id}>
           <div className="form-wrapper">
+            {touched['title'] && errors['title'] && (
+              <div className="error">{errors['title']}</div>
+            )}
             <div className="row">
-              {errors['title'] && (
-                <div className="error">{errors['title']}</div>
-              )}
               <Field component={FormInput} name="title" label="Title" />
             </div>
-            <div className="row">
-              {errors['assignmentGoogleDocLink'] && (
+            {touched['assignmentGoogleDocLink'] &&
+              errors['assignmentGoogleDocLink'] && (
                 <div className="error">{errors['assignmentGoogleDocLink']}</div>
               )}
+            <div className="row">
               <Field
                 component={FormInput}
                 name="assignmentGoogleDocLink"
                 label="Google Doc Link"
               />
             </div>
+            {touched['description'] && errors['description'] && (
+              <div className="error">{errors['description']}</div>
+            )}
             <div className="row">
-              {errors['description'] && (
-                <div className="error">{errors['description']}</div>
-              )}
               <Field
                 component={FormTextArea}
                 name="description"
@@ -86,10 +87,10 @@ export const SubmitPitchForm: FC<FormProps> = ({
                 className="description"
               />
             </div>
+            {touched['topics'] && errors['topics'] && (
+              <div className="error">{errors['topics']}</div>
+            )}
             <div className="row">
-              {errors['topics'] && (
-                <div className="error">{errors['topics']}</div>
-              )}
               <Field
                 component={FormMultiSelect}
                 name="topics"
@@ -101,34 +102,39 @@ export const SubmitPitchForm: FC<FormProps> = ({
               />
             </div>
             {isWriter && (
-              <div className="row">
-                <div>
-                  {errors['writerIntent'] && (
-                    <div className="error">{errors['writerIntent']}</div>
-                  )}
-                  <p>
-                    <b>Do you want to be the writer of the story?</b>
-                  </p>
-                  <div className="select-group">
-                    <Field
-                      type="radio"
-                      component={FormRadio}
-                      name="writerIntent"
-                      label="Yes"
-                      value="true"
-                    />
-                    <Field
-                      type="radio"
-                      component={FormRadio}
-                      name="writerIntent"
-                      label="No, I want someone else to write this story."
-                      value="false"
-                    />
+              <>
+                {touched['writerIntent'] && errors['writerIntent'] && (
+                  <div className="error">{errors['writerIntent']}</div>
+                )}
+                <div className="row">
+                  <div>
+                    <p>
+                      <b>Do you want to be the writer of the story?</b>
+                    </p>
+                    <div className="select-group">
+                      <Field
+                        type="radio"
+                        component={FormRadio}
+                        name="writerIntent"
+                        label="Yes"
+                        value="true"
+                      />
+                      <Field
+                        type="radio"
+                        component={FormRadio}
+                        name="writerIntent"
+                        label="No, I want someone else to write this story."
+                        value="false"
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
+              </>
             )}
 
+            {touched['conflictOfInterest'] && errors['conflictOfInterest'] && (
+              <div className="error">{errors['conflictOfInterest']}</div>
+            )}
             <div className="row">
               <div>
                 <p>
@@ -138,9 +144,6 @@ export const SubmitPitchForm: FC<FormProps> = ({
                   pitch? i.e. do you have a relationship with them as an
                   employee, family member, friend, or donor?
                 </p>
-                {errors['conflictOfInterest'] && (
-                  <div className="error">{errors['conflictOfInterest']}</div>
-                )}
                 <div className="select-group">
                   <Field
                     type="radio"
