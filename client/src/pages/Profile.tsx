@@ -48,7 +48,7 @@ interface FeedbackRes {
 
 const Profile = (): ReactElement => {
   const { userId } = useParams<{ userId: string }>();
-  const { user: currentUser, isAdmin } = useAuth();
+  const { user: currentUser, isAdmin, isStaff } = useAuth();
   const [queries, setQueries] = useQueryParams({
     limit: StringParam,
     offset: StringParam,
@@ -395,7 +395,7 @@ const Profile = (): ReactElement => {
             <p>{user.journalismResponse}</p>
           </Grid.Column>
         </Grid>
-        <AuthView view="minStaff">
+        {(userId === currentUser?._id || isStaff || isAdmin) && (
           <Grid centered className="feedback">
             <Grid.Column width={10}>
               <h2 className="title">{`${user.firstName}'s`} Feedback</h2>
@@ -448,7 +448,7 @@ const Profile = (): ReactElement => {
               )}
             </Grid.Column>
           </Grid>
-        </AuthView>
+        )}
       </div>
     </div>
   );
