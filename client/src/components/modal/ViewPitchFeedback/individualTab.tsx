@@ -65,7 +65,7 @@ const IndividualTab: FC<QuestionsTabProps> = ({
       <dt className="block">{feedback.secondQuestion}</dt>
       <dt>
         List any new contacts you made that could be useful for future Weekly
-        writers to have (include ƒname, organizational affiliation, contact
+        writers to have (include name, organizational affiliation, contact
         info):
       </dt>
       <dt className="block">{feedback.thirdQuestion}</dt>

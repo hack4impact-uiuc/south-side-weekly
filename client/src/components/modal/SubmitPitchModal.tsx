@@ -70,8 +70,6 @@ export const SubmitPitchModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
       author: user!._id,
     };
 
-    console.log(data.writerIntent);
-
     if (data.writerIntent === undefined || data.writerIntent === 'false') {
       body.writer = undefined;
     }

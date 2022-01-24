@@ -194,9 +194,6 @@ const paginate = async (
     searchFilter(search),
   );
 
-  console.log('Mereged filters: ');
-  console.log(mergedFilters);
-
   const pitches = await Pitch.find(mergedFilters)
     .skip(offset * limit)
     .limit(limit)
@@ -459,7 +456,6 @@ export const decrementTeamTarget = async (
   let pitch;
 
   if (pitchWithTeam) {
-    //console.log('WITH TEAM');
     pitch = await updateModel(
       {
         _id: _id,
@@ -473,7 +469,6 @@ export const decrementTeamTarget = async (
       },
     );
   } else {
-    //console.log('NO TEAM');
     pitch = await updateModel(
       { _id },
       {

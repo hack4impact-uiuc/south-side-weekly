@@ -35,7 +35,6 @@ const Resources = (): ReactElement => {
   }, [isOnboarded]);
 
   const getCalendlyUrl = (): string => {
-    console.log(window.location.hostname);
     if (window.location.hostname === 'localhost') {
       return 'https://calendly.com/sawhney4/60min';
     }

@@ -96,7 +96,6 @@ export const getResourceByName = async (
 ): Promise<void> => {
   const options = extractOptions(req.query);
 
-  console.log(req.params.name);
   const resource = await ResourceService.getByName(req.params.name, options);
 
   if (!resource) {

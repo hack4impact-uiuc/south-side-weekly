@@ -78,8 +78,6 @@ export const ReviewClaimForm: FC<FormProps> = ({
       ),
     };
 
-    console.log('NEW PITCH', newPitch);
-
     const pitchIds = pitch!.issueStatuses.map(({ issueId: { _id } }) => _id);
     const newIds = data.issueStatuses.map(({ issueId: { _id } }) => _id);
 
@@ -265,7 +263,6 @@ export const ReviewClaimForm: FC<FormProps> = ({
                 {editMode ? (
                   <>
                     <div>
-                      {console.log('hey')}
                       <b>Add Pitch to Issue(s)</b>
                       <MultiSelect
                         options={issues.map((issue) => ({

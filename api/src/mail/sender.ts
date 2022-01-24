@@ -17,9 +17,6 @@ export const sendMail = async (mailOptions: SendMailOptions): Promise<void> => {
 };
 
 export const sendRejectUserMail = (contributor: User, reviewer: User): void => {
-  console.log(contributor);
-  console.log(reviewer);
-
   const templateValues = {
     contributor: contributor.fullname,
     role: contributor.role,

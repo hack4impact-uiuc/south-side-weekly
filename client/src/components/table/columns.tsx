@@ -346,8 +346,7 @@ export const pitchStatusCol = configureColumn<
   id: 'status',
   title: 'Status',
   width: 1,
-  extractor: function StatusCell({ title, status }) {
-    console.log(title, status);
+  extractor: function StatusCell({ status }) {
     return <FieldTag content={status} size={'small'} />;
   },
 });
@@ -371,11 +370,6 @@ export const associatedTeamsColumn = configureColumn<
   extractor: function TeamsCell({ ...pitch }) {
     const { user } = useAuth();
     const { teams } = useTeams();
-
-    if (pitch.title.includes('National')) {
-      console.log(getPitchTeamsForContributor(pitch, user!, teams));
-      console.log(pitch);
-    }
 
     return (
       <div>
