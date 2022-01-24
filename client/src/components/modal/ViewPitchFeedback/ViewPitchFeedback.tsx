@@ -25,10 +25,6 @@ export const ViewPitchFeedback: FC<PitchFeedbackProps> = ({
   pitchId,
   ...rest
 }): ReactElement => {
-  const TABS = {
-    QUESTIONS: 'Questions',
-    INDIVIDUAL: 'Individual',
-  } as const;
   const [isOpen, setIsOpen] = useState(false);
   const [feedbacks, setFeedbacks] = useState<PitchFeedbacksResponse>({
     data: [],

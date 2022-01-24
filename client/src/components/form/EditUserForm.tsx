@@ -64,155 +64,196 @@ export const EditUserForm: FC<FormProps> = ({
       onSubmit={customOnSubmit}
       validationSchema={schema}
     >
-      <FormikForm id={id}>
-        <div className="form-wrapper">
-          <div className="row">
-            <div className="left-col">
-              <Field
-                component={FormInput}
-                name="firstName"
-                label="First Name"
-                viewable={permissions.view.includes('firstName')}
-                editable={permissions.edit.includes('firstName')}
-              />
+      {({ errors }) => (
+        <FormikForm id={id}>
+          <div className="form-wrapper">
+            <div className="row">
+              <div className="left-col">
+                {errors['firstName'] && (
+                  <div className="error">{errors['firstName']}</div>
+                )}
+                <Field
+                  component={FormInput}
+                  name="firstName"
+                  label="First Name"
+                  viewable={permissions.view.includes('firstName')}
+                  editable={permissions.edit.includes('firstName')}
+                />
+              </div>
+              <div className="right-col">
+                {errors['lastName'] && (
+                  <div className="error">{errors['lastName']}</div>
+                )}
+                <Field
+                  component={FormInput}
+                  name="lastName"
+                  label="Last Name"
+                  viewable={permissions.view.includes('lastName')}
+                  editable={permissions.edit.includes('lastName')}
+                />
+              </div>
             </div>
-            <div className="right-col">
-              <Field
-                component={FormInput}
-                name="lastName"
-                label="Last Name"
-                viewable={permissions.view.includes('lastName')}
-                editable={permissions.edit.includes('lastName')}
-              />
+            <div className="row">
+              <div className="left-col">
+                {errors['preferredName'] && (
+                  <div className="error">{errors['preferredName']}</div>
+                )}
+                <Field
+                  component={FormInput}
+                  name="preferredName"
+                  label="Preferred Name"
+                  viewable={permissions.view.includes('preferredName')}
+                  editable={permissions.edit.includes('preferredName')}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="left-col">
+                {errors['genders'] && (
+                  <div className="error">{errors['genders']}</div>
+                )}
+                <Field
+                  component={FormMultiSelect}
+                  name="genders"
+                  label="Genders"
+                  options={allGenders.map((g) => ({ value: g, label: g }))}
+                  viewable={permissions.view.includes('genders')}
+                  editable={permissions.edit.includes('genders')}
+                />
+              </div>
+              <div className="right-col">
+                {errors['pronouns'] && (
+                  <div className="error">{errors['pronouns']}</div>
+                )}
+                <Field
+                  component={FormMultiSelect}
+                  name="pronouns"
+                  label="Pronouns"
+                  options={allPronouns.map((p) => ({ value: p, label: p }))}
+                  viewable={permissions.view.includes('pronouns')}
+                  editable={permissions.edit.includes('pronouns')}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="left-col">
+                {errors['role'] && (
+                  <div className="error">{errors['role']}</div>
+                )}
+                <Field
+                  component={FormSingleSelect}
+                  options={allRoles.map((r) => ({ value: r, label: r }))}
+                  name="role"
+                  label="Role"
+                  viewable={permissions.view.includes('role')}
+                  editable={permissions.edit.includes('role')}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="left-col">
+                {errors['interests'] && (
+                  <div className="error">{errors['interests']}</div>
+                )}
+                <Field
+                  component={FormMultiSelect}
+                  name="interests"
+                  label="Interests"
+                  options={interests.map((i) => ({
+                    value: i._id,
+                    label: i.name,
+                  }))}
+                  viewable={permissions.view.includes('interests')}
+                  editable={permissions.edit.includes('interests')}
+                />
+              </div>
+              <div className="right-col">
+                {errors['teams'] && (
+                  <div className="error">{errors['teams']}</div>
+                )}
+                <Field
+                  component={FormMultiSelect}
+                  name="teams"
+                  label="Teams"
+                  options={teams.map((t) => ({ value: t._id, label: t.name }))}
+                  viewable={permissions.view.includes('teams')}
+                  editable={permissions.edit.includes('teams')}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="left-col">
+                {errors['email'] && (
+                  <div className="error">{errors['email']}</div>
+                )}
+                <Field
+                  component={FormInput}
+                  name="email"
+                  label="Email"
+                  viewable={permissions.view.includes('email')}
+                  editable={permissions.edit.includes('email')}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="left-col">
+                {errors['phone'] && (
+                  <div className="error">{errors['phone']}</div>
+                )}
+                <Field
+                  component={FormInput}
+                  name="phone"
+                  label="Phone Number"
+                  viewable={permissions.view.includes('phone')}
+                  editable={permissions.edit.includes('phone')}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="left-col">
+                {errors['twitter'] && (
+                  <div className="error">{errors['twitter']}</div>
+                )}
+                <Field
+                  component={FormInput}
+                  name="twitter"
+                  label="Twitter"
+                  viewable={permissions.view.includes('twitter')}
+                  editable={permissions.edit.includes('twitter')}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="left-col">
+                {errors['linkedIn'] && (
+                  <div className="error">{errors['linkedIn']}</div>
+                )}
+                <Field
+                  component={FormInput}
+                  name="linkedIn"
+                  label="LinkedIn"
+                  viewable={permissions.view.includes('linkedIn')}
+                  editable={permissions.edit.includes('linkedIn')}
+                />
+              </div>
+            </div>
+            <div className="row">
+              <div className="left-col">
+                {errors['portfolio'] && (
+                  <div className="error">{errors['portfolio']}</div>
+                )}
+                <Field
+                  component={FormInput}
+                  name="portfolio"
+                  label="Website"
+                  viewable={permissions.view.includes('portfolio')}
+                  editable={permissions.edit.includes('portfolio')}
+                />
+              </div>
             </div>
           </div>
-          <div className="row">
-            <div className="left-col">
-              <Field
-                component={FormInput}
-                name="preferredName"
-                label="Preferred Name"
-                viewable={permissions.view.includes('preferredName')}
-                editable={permissions.edit.includes('preferredName')}
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="left-col">
-              <Field
-                component={FormMultiSelect}
-                name="genders"
-                label="Genders"
-                options={allGenders.map((g) => ({ value: g, label: g }))}
-                viewable={permissions.view.includes('genders')}
-                editable={permissions.edit.includes('genders')}
-              />
-            </div>
-            <div className="right-col">
-              <Field
-                component={FormMultiSelect}
-                name="pronouns"
-                label="Pronouns"
-                options={allPronouns.map((p) => ({ value: p, label: p }))}
-                viewable={permissions.view.includes('pronouns')}
-                editable={permissions.edit.includes('pronouns')}
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="left-col">
-              <Field
-                component={FormSingleSelect}
-                options={allRoles.map((r) => ({ value: r, label: r }))}
-                name="role"
-                label="Role"
-                viewable={permissions.view.includes('role')}
-                editable={permissions.edit.includes('role')}
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="left-col">
-              <Field
-                component={FormMultiSelect}
-                name="interests"
-                label="Interests"
-                options={interests.map((i) => ({
-                  value: i._id,
-                  label: i.name,
-                }))}
-                viewable={permissions.view.includes('interests')}
-                editable={permissions.edit.includes('interests')}
-              />
-            </div>
-            <div className="right-col">
-              <Field
-                component={FormMultiSelect}
-                name="teams"
-                label="Teams"
-                options={teams.map((t) => ({ value: t._id, label: t.name }))}
-                viewable={permissions.view.includes('teams')}
-                editable={permissions.edit.includes('teams')}
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="left-col">
-              <Field
-                component={FormInput}
-                name="email"
-                label="Email"
-                viewable={permissions.view.includes('email')}
-                editable={permissions.edit.includes('email')}
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="left-col">
-              <Field
-                component={FormInput}
-                name="phone"
-                label="Phone Number"
-                viewable={permissions.view.includes('phone')}
-                editable={permissions.edit.includes('phone')}
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="left-col">
-              <Field
-                component={FormInput}
-                name="twitter"
-                label="Twitter"
-                viewable={permissions.view.includes('twitter')}
-                editable={permissions.edit.includes('twitter')}
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="left-col">
-              <Field
-                component={FormInput}
-                name="linkedIn"
-                label="LinkedIn"
-                viewable={permissions.view.includes('linkedIn')}
-                editable={permissions.edit.includes('linkedIn')}
-              />
-            </div>
-          </div>
-          <div className="row">
-            <div className="left-col">
-              <Field
-                component={FormInput}
-                name="portfolio"
-                label="Website"
-                viewable={permissions.view.includes('portfolio')}
-                editable={permissions.edit.includes('portfolio')}
-              />
-            </div>
-          </div>
-        </div>
-      </FormikForm>
+        </FormikForm>
+      )}
     </Formik>
   );
 };

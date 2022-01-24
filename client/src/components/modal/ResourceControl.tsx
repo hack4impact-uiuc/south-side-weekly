@@ -101,7 +101,9 @@ const ResourceModal: FC<ResourceProps> = ({
       <Modal.Header>
         <span>Resource Control</span>
         <Pusher />
-        <Icon id="close-icon" name="close" onClick={() => setOpen?.(false)} />
+        {action === 'edit' && (
+          <Icon id="close-icon" name="close" onClick={() => setOpen?.(false)} />
+        )}
       </Modal.Header>
       <Modal.Content scrolling>
         <Modal.Description>

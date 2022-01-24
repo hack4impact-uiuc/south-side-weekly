@@ -60,6 +60,11 @@ export const ClaimPitch: FC<ClaimPitchProps> = ({
   };
 
   const submitClaim = async (data: ClaimPitchFields): Promise<void> => {
+    if (data.teams.length === 0) {
+      toast.error('You must select at least one team!');
+      return;
+    }
+
     const res = await apiCall({
       url: `/pitches/${pitch?._id}/submitClaim`,
       method: 'PUT',

@@ -101,6 +101,14 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       return;
     }
 
+    if (!primaryEditor) {
+      toast.error('Please select a primary editor');
+    } else if (deadline.length === 0) {
+      toast.error('Please select a deadline');
+    } else if (parsedTeams.length === 0) {
+      toast.error('Please assign at least one team');
+    }
+
     const pitchData = {
       writer: writer || undefined,
       primaryEditor: primaryEditor,
@@ -159,6 +167,10 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
 
     return opts;
   }, [writers, pitch]);
+
+  if (!pitch) {
+    return <div>Loading pitch information...</div>;
+  }
 
   return (
     <Modal
@@ -223,7 +235,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
           </div>
           <div id="editor-select">
             <p>
-              <b>Editors</b> <mark className="optional">- Optional</mark>
+              <b>Editors</b>
             </p>
             <SingleSelect
               value={primaryEditor}
@@ -232,7 +244,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
                 label: editor.fullname,
               }))}
               onChange={(val) => setPrimaryEditor(val?.value || '')}
-              placeholder="Primary Editor"
+              placeholder="Primary Editor - Required"
               className="selector"
             />
             <MultiSelect
@@ -244,7 +256,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
               onChange={(values) =>
                 setSecondEditors(values.map((v) => v.value))
               }
-              placeholder="Secondary Editors"
+              placeholder="Secondary Editors - Optional"
               className="selector"
             />
             <MultiSelect
@@ -256,7 +268,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
               onChange={(values) =>
                 setTertiaryEditors(values.map((v) => v.value))
               }
-              placeholder="Tertiary Editors"
+              placeholder="Tertiary Editors - Optional"
               className="selector"
             />
           </div>
@@ -373,12 +385,12 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       </Modal.Content>
       <Modal.Actions>
         <PrimaryButton
-          disabled={user!._id === pitch?.author._id}
+          disabled={user!._id === pitch?.author._id || !pitch}
           onClick={approvePitch}
           content="Approve"
         />
         <SecondaryButton
-          disabled={user!._id === pitch?.author._id}
+          disabled={user!._id === pitch?.author._id || !pitch}
           onClick={declinePitch}
           content="Decline"
           border
