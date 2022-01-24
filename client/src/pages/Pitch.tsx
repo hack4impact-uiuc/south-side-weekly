@@ -19,6 +19,8 @@ import ApproveClaimCard from '../components/card/ApproveClaimCard';
 import EditingClaimCard from '../components/card/EditingClaimCard';
 import { ReviewClaimForm } from '../components/form/ReviewClaimForm';
 import PitchFeedbackModal from '../components/modal/PitchFeedback';
+import { ViewPitchFeedback } from '../components/modal/ViewPitchFeedback/ViewPitchFeedback';
+import { AuthView } from '../components/wrapper/AuthView';
 import { useAuth, useTeams } from '../contexts';
 import { issueStatusEnum, pitchStatusEnum } from '../utils/enums';
 import './Pitch.scss';
@@ -218,9 +220,16 @@ const Pitch = (): ReactElement => {
             callback={fetchAggregatedPitch}
             notApproved={notApproved}
           />
-          {readyForFeedback && workedOnPitch && (
-            <PitchFeedbackModal pitchId={pitchId} />
-          )}
+          <div style={{ display: 'flex', flexDirection: 'row' }}>
+            {readyForFeedback && (
+              <AuthView view="minStaff">
+                <ViewPitchFeedback pitchId={pitchId} />{' '}
+              </AuthView>
+            )}
+            {readyForFeedback && workedOnPitch && (
+              <PitchFeedbackModal pitchId={pitchId} />
+            )}
+          </div>
         </div>
 
         <div className="card-content">
