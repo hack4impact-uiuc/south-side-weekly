@@ -273,7 +273,7 @@ export const approveUser = async (
     return;
   }
 
-  sendApproveUserMail(user, user);
+  sendApproveUserMail(user, req.user);
 
   sendSuccess(
     res,
