@@ -472,8 +472,6 @@ export const addContributor = async (
     return;
   }
 
-  //TODO: Add mail for adding contributor
-
   const populateType = extractPopulateQuery(req.query);
 
   sendSuccess(
@@ -515,8 +513,6 @@ export const removeContributor = async (
     sendNotFound(res, `Pitch with id ${req.params.id} not found`);
     return;
   }
-
-  //TODO: Add mail for removing contributor
 
   const populateType = extractPopulateQuery(req.query);
 

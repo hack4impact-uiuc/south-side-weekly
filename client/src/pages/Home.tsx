@@ -45,7 +45,7 @@ const Homepage = (): ReactElement => {
       <div className="page-header-content page-wrapper-header">
         <Walkthrough
           page={pagesEnum.PITCHDOC}
-          content="The Pitch Doc is where you can claim, submit, and view pitches! Use the filters to find pitches you are interested in."
+          content="The Home Page is where you can view your current pitches, the pitches you have submitted, claim requests, and publications. Use the filters to see all of your pitches!"
         />
         <div className="header">
           <Pusher />
