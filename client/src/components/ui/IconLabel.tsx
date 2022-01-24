@@ -22,7 +22,11 @@ export const IconLabel: FC<SocialsInputProps> = ({
     if (icon.includes('mail')) {
       return <a href={`mailto:${link}`}>{link}</a>;
     } else if (icon === 'linkedin' || icon === 'globe' || icon === 'twitter') {
-      return <a href={link}>{link}</a>;
+      return (
+        <a href={link} rel="noreferrer" target="_blank">
+          {link}
+        </a>
+      );
     } else if (icon.includes('phone')) {
       return <a href={`tel:${link}`}>{link}</a>;
     }
