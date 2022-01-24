@@ -6,7 +6,11 @@ import { IssueService, UserService } from '.';
 
 import Pitch, { PitchSchema } from '../models/pitch.model';
 import { populateUser } from '../populators';
-import { issueStatusEnum, pitchStatusEnum } from '../utils/enums';
+import {
+  issueStatusEnum,
+  pitchStatusEnum,
+  editorTypeEnum,
+} from '../utils/enums';
 import { PaginateOptions } from './types';
 
 interface PitchesResponse {
@@ -326,7 +330,7 @@ export const approvePitch = async (
   reviewedBy: string,
   payload: Partial<PitchSchema>,
 ): Pitch => {
-  await IssueService.addPitch(
+  await IssueService.addPitchToIssues(
     payload.issueStatuses.map((issue) => issue.issueId),
     _id,
   );
@@ -504,41 +508,44 @@ export const changeEditor = async (
 ): Pitch => {
   let pitch;
 
-  if (from === 'First') {
+  if (from === editorTypeEnum.PRIMARY) {
     pitch = await updateModel(
       { _id },
       {
         primaryEditor: null,
         $addToSet: {
-          ...(to === 'Seconds'
+          ...(to === editorTypeEnum.SECONDS
             ? { secondEditors: userId }
             : { thirdEditors: userId }),
         },
       },
     );
-  } else if (to === 'First') {
+  } else if (to === editorTypeEnum.PRIMARY) {
     pitch = await updateModel(
       { _id },
       {
         primaryEditor: userId,
         $pull: {
-          ...(from === 'Seconds'
+          ...(from === editorTypeEnum.SECONDS
             ? { secondEditors: userId }
             : { thirdEditors: userId }),
         },
       },
     );
-  } else if (from === 'Seconds' || from === 'Thirds') {
+  } else if (
+    from === editorTypeEnum.SECONDS ||
+    from === editorTypeEnum.THIRDS
+  ) {
     pitch = updateModel(
       { _id },
       {
         $pull: {
-          ...(from === 'Seconds'
+          ...(from === editorTypeEnum.SECONDS
             ? { secondEditors: userId }
             : { thirdEditors: userId }),
         },
         $addToSet: {
-          ...(to === 'Seconds'
+          ...(to === editorTypeEnum.SECONDS
             ? { secondEditors: userId }
             : { thirdEditors: userId }),
         },
@@ -553,23 +560,26 @@ export const addContributor = async (
   _id: string,
   userId: string,
   teamId: string,
-  editor: 'First' | 'Seconds' | 'Thirds' | undefined,
+  editor: string | undefined,
   writer: string,
 ): Pitch => {
   let pitch;
-  if (editor === 'First') {
+  if (editor === editorTypeEnum.PRIMARY) {
     pitch = await updateModel(
       { _id },
       {
         primaryEditor: userId,
       },
     );
-  } else if (editor === 'Seconds' || editor === 'Thirds') {
+  } else if (
+    editor === editorTypeEnum.SECONDS ||
+    editor === editorTypeEnum.THIRDS
+  ) {
     pitch = updateModel(
       { _id },
       {
         $addToSet: {
-          ...(editor === 'Seconds'
+          ...(editor === editorTypeEnum.SECONDS
             ? { secondEditors: userId }
             : { thirdEditors: userId }),
         },
@@ -593,24 +603,27 @@ export const removeContributor = async (
   _id: string,
   userId: string,
   teamId: string,
-  editor: 'First' | 'Seconds' | 'Thirds' | undefined,
+  editor: string | undefined,
   writer: string,
 ): Pitch => {
   let pitch;
 
-  if (editor === 'First') {
+  if (editor === editorTypeEnum.PRIMARY) {
     pitch = await updateModel(
       { _id },
       {
         primaryEditor: null,
       },
     );
-  } else if (editor === 'Seconds' || editor === 'Thirds') {
+  } else if (
+    editor === editorTypeEnum.SECONDS ||
+    editor === editorTypeEnum.THIRDS
+  ) {
     pitch = await updateModel(
       { _id },
       {
         $pull: {
-          ...(editor === 'Seconds'
+          ...(editor === editorTypeEnum.SECONDS
             ? { secondEditors: userId }
             : { thirdEditors: userId }),
         },

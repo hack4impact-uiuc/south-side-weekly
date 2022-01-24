@@ -12,8 +12,11 @@ import { IIssue } from 'ssw-common';
 
 import { apiCall, isError } from '../../api';
 import { issueTypeEnum } from '../../utils/enums';
+import { addTime } from '../../utils/helpers';
 import { PrimaryButton } from '../ui/PrimaryButton';
+import { Pusher } from '../ui/Pusher';
 import './AddIssue.scss';
+import './modals.scss';
 
 type FormData = Pick<IIssue, 'releaseDate' | 'type'>;
 
@@ -30,13 +33,19 @@ const AddIssueModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
     const res = await apiCall({
       method: 'POST',
       url: '/issues/',
-      body: formData,
+      body: {
+        ...formData,
+        releaseDate: new Date(addTime(formData.releaseDate)),
+      },
     });
 
     if (!isError(res)) {
       toast.success('Successfully added a new issue!');
       setIsOpen(false);
+    } else if (res.error.response.status === 409) {
+      toast.error('Issue with this date and type already exists');
     } else {
+      console.log(res);
       toast.error('Unable to add a new issue');
     }
   };
@@ -57,8 +66,10 @@ const AddIssueModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
     changeField('type', value ? (value as string) : '');
   };
 
-  const formatDate = (date: Date | undefined): string =>
-    new Date(date || new Date()).toISOString().split('T')[0];
+  const formatDate = (date: Date | undefined): string => {
+    console.log(date);
+    return new Date(date || new Date()).toISOString().split('T')[0];
+  };
 
   useEffect(() => {
     setFormData(defaultData);
@@ -74,10 +85,9 @@ const AddIssueModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
       {...rest}
     >
       <Modal.Header>
-        <div className="modal-header">
-          Add Issue
-          <Icon name="close" onClick={() => setIsOpen(false)} />
-        </div>
+        Add Issue
+        <Pusher />
+        <Icon name="close" onClick={() => setIsOpen(false)} />
       </Modal.Header>
       <Modal.Content scrolling>
         <div className="modal-content">
@@ -86,9 +96,11 @@ const AddIssueModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
               type="date"
               className="date-input"
               label="Publication Date"
-              onChange={(_, { value }) =>
-                changeField('releaseDate', formatDate(new Date(value)))
-              }
+              onChange={(_, { value }) => {
+                if (value) {
+                  changeField('releaseDate', formatDate(new Date(value)));
+                }
+              }}
               value={formData.releaseDate}
             />
             <Form.Group className="issue-type">

@@ -18,6 +18,19 @@ export const createIssue = async (
   req: CreateReq,
   res: Response,
 ): Promise<void> => {
+  const isIssueTaken = await IssueService.isIssueTaken(
+    req.body.releaseDate,
+    req.body.type,
+  );
+
+  if (isIssueTaken) {
+    res.status(409).json({
+      message: 'Issue with this date and type already exists',
+      success: false,
+    });
+    return;
+  }
+
   const newIssue = await IssueService.add(req.body);
   const populateType = extractPopulateQuery(req.query);
 
@@ -138,4 +151,42 @@ export const updateIssueStatus = async (
     'Issue status updated',
     await populatePitch(pitch, populateType),
   );
+};
+
+type UpdatePitchIssuesReqBody = {
+  addToIssues: string[];
+  removeFromIssues: string[];
+};
+type UpdatePitchIssuesReq = Request<
+  { pitchId: string },
+  never,
+  UpdatePitchIssuesReqBody,
+  never
+>;
+
+export const updatePitchIssues = async (
+  req: UpdatePitchIssuesReq,
+  res: Response,
+): Promise<void> => {
+  const { addToIssues, removeFromIssues } = req.body;
+
+  let issue = await IssueService.addPitchToIssues(
+    addToIssues,
+    req.params.pitchId,
+  );
+
+  if (!issue) {
+    sendNotFound(res, 'Issue(s) not found');
+  }
+
+  issue = await IssueService.removePitchFromIssues(
+    removeFromIssues,
+    req.params.pitchId,
+  );
+
+  if (!issue) {
+    sendNotFound(res, 'Issue(s) not found');
+  }
+
+  sendSuccess(res, 'Pitch Issues updated');
 };
