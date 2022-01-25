@@ -9,13 +9,17 @@ interface FormInputProps extends FieldProps<string> {
   className?: string;
   editable?: boolean;
   label?: string;
+  type?: string;
 }
+
+const SECS = 50000000;
 
 export const FormInput: FC<FormInputProps> = ({
   className,
   editable = true,
   field,
   label,
+  type,
   ...props
 }): ReactElement => {
   const memoizedJSX = useMemo(
@@ -32,7 +36,15 @@ export const FormInput: FC<FormInputProps> = ({
     return (
       <div className={cn('form-field', className)}>
         <label>{label}</label>
-        <p>{field.value}</p>
+        {type === 'date' ? (
+          <p>
+            {new Date(
+              new Date(field.value).getTime() + SECS,
+            ).toLocaleDateString()}
+          </p>
+        ) : (
+          <p>{field.value}</p>
+        )}
       </div>
     );
   }
