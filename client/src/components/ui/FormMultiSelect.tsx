@@ -18,6 +18,7 @@ interface FormMultiSelectProps extends FieldProps<string[]> {
   viewable?: boolean;
   editable?: boolean;
   getTagData?: (id: string) => any;
+  maxMenuHeight?: number;
 }
 
 export const FormMultiSelect: FC<FormMultiSelectProps> = ({
@@ -29,6 +30,7 @@ export const FormMultiSelect: FC<FormMultiSelectProps> = ({
   field,
   getTagData = undefined,
   form: { setFieldValue },
+  maxMenuHeight,
 }): ReactElement => {
   const memoizedJSX = useMemo(
     () => (
@@ -44,10 +46,11 @@ export const FormMultiSelect: FC<FormMultiSelectProps> = ({
               values.map((v) => v.value),
             )
           }
+          maxMenuHeight={maxMenuHeight}
         />
       </div>
     ),
-    [field, setFieldValue, label, className, options, editable],
+    [field, setFieldValue, label, className, options, editable, maxMenuHeight],
   );
 
   if (!viewable) {
