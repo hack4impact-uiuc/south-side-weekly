@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useMemo } from 'react';
+import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Form, Icon, Modal, ModalProps } from 'semantic-ui-react';
 import { Resource } from 'ssw-common';
@@ -36,6 +36,7 @@ const ResourceModal: FC<ResourceProps> = ({
   setOpen,
   ...rest
 }): ReactElement => {
+  const [isOpen, setIsOpen] = useState(open);
   const formValues = useMemo(
     () => (action === 'create' || !resource ? defaultData : resource),
     [resource, action],
@@ -56,6 +57,10 @@ const ResourceModal: FC<ResourceProps> = ({
       toast.error('Error deleting resource');
     }
   };
+
+  useEffect(() => {
+    console.log(isOpen);
+  }, [isOpen]);
 
   const submitResourceForm = (resource: Resource): void => {
     const body = {
@@ -88,13 +93,20 @@ const ResourceModal: FC<ResourceProps> = ({
     };
 
     manageResource();
+    setIsOpen(false);
   };
 
   return (
     <Modal
-      open={open}
-      onOpen={() => setOpen?.(true)}
-      onClose={() => setOpen?.(false)}
+      open={isOpen}
+      onOpen={() => {
+        setOpen?.(true);
+        setIsOpen(true);
+      }}
+      onClose={() => {
+        setOpen?.(false);
+        setIsOpen(false);
+      }}
       className="resource-modal"
       {...rest}
     >

@@ -8,7 +8,8 @@ import Loading from '../ui/Loading';
 export const PrivateRoute: FC<RouteProps> = ({
   ...routeProps
 }): ReactElement => {
-  const { isAuthenticated, isLoading, isRegistered, isOnboarded } = useAuth();
+  const { user, isAuthenticated, isLoading, isRegistered, isOnboarded } =
+    useAuth();
   const location = useLocation();
 
   const canShowPage = useMemo(
@@ -20,7 +21,7 @@ export const PrivateRoute: FC<RouteProps> = ({
     return <Loading open={isLoading} />;
   }
 
-  if (!isAuthenticated && location.pathname !== '/login') {
+  if ((!isAuthenticated && location.pathname !== '/login') || !user) {
     return <Redirect to="/login" />;
   } else if (!isRegistered) {
     <Redirect to="/join" from={location.pathname} />;
