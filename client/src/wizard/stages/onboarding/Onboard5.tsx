@@ -41,10 +41,10 @@ const Onboard5 = (): ReactElement => {
       involvementResponse: data!.involvementResponse,
       journalismResponse: data!.journalismResponse,
       neighborhood: data!.neighborhood,
-      teams: data!.teams,
+      teams: [...new Set(data!.teams)],
       role: data!.role,
       races: reject(data!.races, isEmpty),
-      interests: reject(data!.interests, isEmpty),
+      interests: [...new Set(reject(data!.interests, isEmpty))],
     };
 
     const onboardUser = async (): Promise<void> => {
