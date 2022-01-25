@@ -17,11 +17,22 @@ export const PrivateRoute: FC<RouteProps> = ({
     [isLoading, isAuthenticated, location],
   );
 
+  console.log(
+    isLoading,
+    isAuthenticated,
+    isRegistered,
+    isOnboarded,
+    user,
+    canShowPage,
+  );
+
   if (isLoading) {
     return <Loading open={isLoading} />;
   }
 
-  if ((!isAuthenticated && location.pathname !== '/login') || !user) {
+  if (!isOnboarded && location.pathname !== '/join') {
+    return <Redirect to="/join" />;
+  } else if (!isAuthenticated && location.pathname !== '/login') {
     return <Redirect to="/login" />;
   } else if (!isRegistered) {
     <Redirect to="/join" from={location.pathname} />;
