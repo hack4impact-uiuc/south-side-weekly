@@ -26,10 +26,10 @@ export const FormInput: FC<FormInputProps> = ({
     () => (
       <div className={cn('form-field', className)}>
         {label && <label>{label}</label>}
-        <Form.Input fluid {...field} {...props} />
+        <Form.Input fluid {...field} {...props} type={type} />
       </div>
     ),
-    [field, label, className, props],
+    [field, label, className, props, type],
   );
 
   if (!editable) {
