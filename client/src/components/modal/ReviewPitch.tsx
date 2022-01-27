@@ -155,18 +155,14 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
     }
   };
 
-  const writerOptions = useMemo(() => {
-    const opts = writers.map((writer) => ({
-      label: writer.fullname,
-      value: writer._id,
-    }));
-
-    if (pitch?.writer) {
-      opts.unshift({ label: pitch.writer.fullname, value: pitch.writer._id });
-    }
-
-    return opts;
-  }, [writers, pitch]);
+  const writerOptions = useMemo(
+    () =>
+      writers.map((writer) => ({
+        label: writer.fullname,
+        value: writer._id,
+      })),
+    [writers],
+  );
 
   if (!pitch) {
     return (
