@@ -167,7 +167,7 @@ export const sendClaimRequestDeclinedMail = (
   const templateValues = {
     staff: getUserFulName(staff),
     contributor: getUserFulName(contributor),
-    pitch: pitch.title,
+    title: pitch.title,
     contact: staff.email,
   };
 
