@@ -8,7 +8,7 @@ import * as htmlTemplates from './templates';
 export const getHtmlString = (templateName: Template): string => {
   switch (templateName) {
     case 'claimRequestApproved.html':
-      return htmlTemplates.claimReqDeniedHtml;
+      return htmlTemplates.claimReqApprovedHtml;
     case 'claimRequestDeclined.html':
       return htmlTemplates.claimReqDeniedHtml;
     case 'contributorAddedToPitch.html':
