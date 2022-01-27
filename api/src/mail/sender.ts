@@ -93,7 +93,7 @@ export const sendApprovedPitchMail = (
     contributor: contributor.fullname,
     pitch: pitch.title,
     pitchDocLink: `https://ssw.h4i.app/pitches`,
-    reviewer: reviewer.fullname,
+    staff: reviewer.fullname,
     primaryEditor: pitch.primaryEditor.fullname,
     description: pitch.description,
   };

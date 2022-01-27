@@ -26,7 +26,6 @@ export const PitchDocPage = (): ReactElement => {
         content: <PitchesView type="all" />,
       },
     ];
-    console.log('STATUS', isAdmin, isStaff);
 
     if (isAdmin || isStaff) {
       panes.unshift({

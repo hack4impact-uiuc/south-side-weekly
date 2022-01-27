@@ -485,8 +485,6 @@ export const addContributor = async (
     return;
   }
 
-  /* const approvedByUser = await UserService.getOne(req.user) */
-
   const populatedPitch = (await populatePitch(
     pitch,
     'default',
