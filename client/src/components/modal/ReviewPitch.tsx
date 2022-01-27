@@ -169,7 +169,16 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
   }, [writers, pitch]);
 
   if (!pitch) {
-    return <div>Loading pitch information...</div>;
+    return (
+      <Modal open>
+        <Modal.Header>
+          <span>Review Pitch</span>
+        </Modal.Header>
+        <Modal.Content>
+          <p>Loading...</p>
+        </Modal.Content>
+      </Modal>
+    );
   }
 
   return (
