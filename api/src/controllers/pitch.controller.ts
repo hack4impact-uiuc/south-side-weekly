@@ -485,13 +485,16 @@ export const addContributor = async (
     return;
   }
 
-  const populateType = extractPopulateQuery(req.query);
+  /* const approvedByUser = await UserService.getOne(req.user) */
 
-  sendSuccess(
-    res,
-    'Successfully added contributor',
-    await populatePitch(pitch, populateType),
-  );
+  const populatedPitch = (await populatePitch(
+    pitch,
+    'default',
+  )) as BasePopulatedPitch;
+
+  sendContributorAddedToPitchMail(user, req.user, populatedPitch);
+
+  sendSuccess(res, 'Successfully added contributor', pitch);
 };
 
 /* type RemoveContributorQuery = {
