@@ -362,20 +362,6 @@ export const submitClaim = async (
     },
   );
 
-export const approveClaimRequest = async (
-  _id: string,
-  userId: string,
-  teamId: string,
-): Pitch =>
-  await updateModel(
-    { _id: _id, 'pendingContributors.userId': userId },
-    {
-      $pull: {
-        'pendingContributors.$.teams': teamId,
-      },
-    },
-  );
-
 export const addContributorToAssignmentContributors = async (
   _id: string,
   userId: string,
@@ -411,19 +397,35 @@ export const addContributorToAssignmentContributors = async (
   return pitch;
 };
 
-export const declineClaimRequest = async (
-  _id: string,
+export const removeTeamFromPendingContributors = async (
+  id: string,
   userId: string,
   teamId: string,
-): Pitch =>
-  await updateModel(
-    { _id: _id, 'pendingContributors.userId': userId },
+): Pitch => {
+  const pitch = await updateModel(
+    { _id: id, 'pendingContributors.userId': userId },
     {
       $pull: {
         'pendingContributors.$.teams': teamId,
       },
     },
   );
+  await removeEmptyPendingContributors(id);
+  return pitch;
+};
+
+export const removeEmptyPendingContributors = async (
+  id: string,
+): Promise<void> => {
+  await updateModel(
+    { _id: id },
+    {
+      $pull: {
+        pendingContributors: { teams: [] },
+      },
+    },
+  );
+};
 
 export const updateTeamTarget = async (
   _id: string,
@@ -686,3 +688,9 @@ export const getAllUserPitches = async (
   data: LeanDocument<PitchSchema>[];
   count: number;
 }> => await paginate({ ...userOnPitchFilters(userId) }, options);
+
+export const isWriterOrEditor = (writer: string, editor: string): boolean =>
+  editor === editorTypeEnum.PRIMARY ||
+  editor === editorTypeEnum.SECONDS ||
+  editor === editorTypeEnum.THIRDS ||
+  writer === 'true';

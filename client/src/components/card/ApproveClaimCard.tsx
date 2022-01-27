@@ -48,8 +48,25 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
   const [totalPositions, setTotalPositions] = useState(0);
 
   const addContributor = async (): Promise<void> => {
-    setSelectContributorMode(false);
     if (selectedContributor) {
+      let shouldCancelChange = false;
+      if (team.name === 'Writing' && assignmentContributors[0]) {
+        await Swal.fire({
+          title: 'Writer already exists.',
+          text: `This action will remove the current Writer, ${assignmentContributors[0].fullname}. Contributors on this pitch will not be alerted of this.`,
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Assign New Writer',
+        }).then((result) => {
+          if (!result.isConfirmed) {
+            shouldCancelChange = true;
+          }
+        });
+      }
+      if (shouldCancelChange) {
+        return;
+      }
+
       await apiCall({
         method: 'PUT',
         url: `/pitches/${pitchId}/addContributor`,
@@ -62,6 +79,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
         },
       });
     }
+    setSelectContributorMode(false);
     await callback();
   };
 

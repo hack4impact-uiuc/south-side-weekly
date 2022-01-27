@@ -1,5 +1,5 @@
 import { SendMailOptions } from 'nodemailer';
-import { BasePopulatedPitch, Pitch, User } from 'ssw-common';
+import { BasePopulatedPitch, Pitch, Team, User } from 'ssw-common';
 import { UserFields } from 'ssw-common/interfaces/_types';
 import { getUserFulName } from '../utils/helpers';
 
@@ -59,6 +59,7 @@ export const sendClaimRequestApprovedMail = (
   contributor: User,
   pitch: BasePopulatedPitch,
   staff: User,
+  team: Team,
 ): void => {
   const templateValues = {
     contributor: contributor.fullname,
@@ -66,6 +67,7 @@ export const sendClaimRequestApprovedMail = (
     primaryEditor: pitch.primaryEditor.fullname,
     staff: staff.fullname,
     contributorsList: buildContributorHtml(pitch),
+    teamName: team.name,
   };
 
   const mailOptions = buildSendMailOptions(
@@ -167,7 +169,7 @@ export const sendClaimRequestDeclinedMail = (
   const templateValues = {
     staff: getUserFulName(staff),
     contributor: getUserFulName(contributor),
-    pitch: pitch.title,
+    title: pitch.title,
     contact: staff.email,
   };
 
