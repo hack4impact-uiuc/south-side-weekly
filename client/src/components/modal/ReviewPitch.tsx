@@ -217,7 +217,9 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
         />
 
         <p id="description">{pitch?.description}</p>
-        <p><b>Conflict of interest: {pitch.conflictOfInterest ? 'Yes' : 'No'}</b></p>
+        <p>
+          <b>Conflict of interest</b>: {pitch.conflictOfInterest ? 'Yes' : 'No'}
+        </p>
 
         <div className="flex-wrapper section">
           <div>
