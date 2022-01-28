@@ -212,15 +212,33 @@ const Profile = (): ReactElement => {
   });
 
   const getTeamsForPitch = (pitch: BasePopulatedPitch): Team[] => {
-    const contributor = pitch.assignmentContributors.find(
-      (contributor) => contributor.userId._id === userId,
-    );
-
-    if (!contributor) {
-      return [];
+    const teams: Team[] = [];
+    pitch.assignmentContributors.map((contributor) => {
+      if (contributor.userId._id === userId) {
+        contributor.teams.map((t) => teams.push(t));
+      }
+    });
+    if (pitch.writer._id === userId) {
+      const writingTeam = currentUser?.teams.find(
+        ({ name }) => name === 'Writing',
+      );
+      if (writingTeam) {
+        teams.push(writingTeam);
+      }
     }
-
-    return contributor.teams;
+    if (
+      pitch.secondEditors.find(({ _id }) => _id === userId) ||
+      pitch.thirdEditors.find(({ _id }) => _id === userId) ||
+      pitch.primaryEditor._id === userId
+    ) {
+      const editingTeam = currentUser?.teams.find(
+        ({ name }) => name === 'Editing',
+      );
+      if (editingTeam) {
+        teams.push(editingTeam);
+      }
+    }
+    return teams;
   };
 
   const teamsColumn = configureColumn<BasePopulatedPitch>({
