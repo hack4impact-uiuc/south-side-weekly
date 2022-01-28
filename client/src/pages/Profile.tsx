@@ -229,7 +229,7 @@ const Profile = (): ReactElement => {
     if (
       pitch.secondEditors.find(({ _id }) => _id === userId) ||
       pitch.thirdEditors.find(({ _id }) => _id === userId) ||
-      pitch.primaryEditor._id === userId
+      pitch.primaryEditor?._id === userId
     ) {
       const editingTeam = currentUser?.teams.find(
         ({ name }) => name === 'Editing',
@@ -390,13 +390,7 @@ const Profile = (): ReactElement => {
           records={pitchesData.data}
           count={pitchesData.count}
           pageOptions={['1', '10', '25', '50']}
-          onRecordClick={(pitch) => {
-            if (pitch.status !== pitchStatusEnum.APPROVED) {
-              return;
-            }
-
-            history.push(`/pitch/${pitch._id}`);
-          }}
+          onRecordClick={(pitch) => history.push(`/pitch/${pitch._id}`)}
           sortable
           sortType="query"
         />
