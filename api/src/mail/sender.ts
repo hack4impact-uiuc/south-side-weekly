@@ -41,7 +41,7 @@ export const sendApproveUserMail = (
   const templateValues = {
     contributor: getUserFulName(contributor),
     role: contributor.role,
-    loginUrl: 'https://ssw.h4i.app/login',
+    loginUrl: 'https://hub.southsideweekly.com/login',
     reviewer: getUserFulName(reviewer),
   };
 
@@ -92,7 +92,7 @@ export const sendApprovedPitchMail = (
   const templateValues = {
     contributor: contributor.fullname,
     pitch: pitch.title,
-    pitchDocLink: `https://ssw.h4i.app/pitches`,
+    pitchDocLink: `https://hub.southsideweekly.com/pitches`,
     staff: reviewer.fullname,
     primaryEditor: pitch.primaryEditor.fullname,
     description: pitch.description,
@@ -120,7 +120,7 @@ export const sendDeclinedPitchMail = (
   const templateValues = {
     contributor: contributor.fullname,
     title: pitch.title,
-    pitchDocLink: `https://ssw.h4i.app/pitches`,
+    pitchDocLink: `https://hub.southsideweekly.com/pitches`,
     staff: staff.fullname,
     reasoning: reasoning ? reasoning : '',
   };

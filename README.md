@@ -31,7 +31,7 @@ The majority of The Weekly's staff are volunteers, with their main contributor b
 
 ## Usage
 
-The latest version of this application can be found at [ssw.h4i.app](https://ssw.h4i.app/).
+The latest version of this application can be found at [hub.southsideweekly.com](https://hub.southsideweekly.com/).
 
 To install and set up locally, follow the instructions in the [`/client`](https://github.com/hack4impact-uiuc/mern_template/tree/main/client) and [`/api`](https://github.com/hack4impact-uiuc/mern_template/tree/main/api) directories.
 

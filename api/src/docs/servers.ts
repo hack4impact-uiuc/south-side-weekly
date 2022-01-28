@@ -5,7 +5,7 @@ export const servers = {
       description: 'Local development server',
     },
     {
-      url: 'https://ssw.h4i.app/api',
+      url: 'https://hub.southsideweekly.com/api',
       description: 'Production server',
     },
   ],
