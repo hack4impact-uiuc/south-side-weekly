@@ -22,7 +22,11 @@ const KanbanCard: FC<PitchProps> = ({ pitch, ...rest }): ReactElement => {
     >
       <p className="pitch-title">{pitch.title}</p>
       <div className="pitch-info">
-        <FieldTag size="small" content={pitch.editStatus} />
+        <FieldTag
+          size="small"
+          name={pitch.editStatus}
+          content={pitch.editStatus}
+        />
         <p className="pitch-text">
           Due{' '}
           {pitch.deadline

@@ -18,6 +18,7 @@ const TeamsProvider: FC = ({ children }): ReactElement => {
     teams.find(({ _id }) => _id === teamId) || initialValues.getTeamFromId();
 
   const fetchTeams = useCallback(async () => {
+    console.log('fetching teams');
     const res = await apiCall<Team[]>({
       url: '/teams',
       method: 'GET',

@@ -15,7 +15,11 @@ const UserChip: FC<UserChipProps> = ({ user, className }) => {
   }
 
   return (
-    <a className={className} href={`/profile/${user._id}`}>
+    <a
+      onClick={(e) => e.stopPropagation()}
+      className={className}
+      href={`/profile/${user._id}`}
+    >
       <span className={cn('user-chip-wrapper')}>
         <img src={user.profilePic} alt={user.fullname} />
         {user.shortName}

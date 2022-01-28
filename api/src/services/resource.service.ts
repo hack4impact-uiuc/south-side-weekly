@@ -56,9 +56,19 @@ export const getOne = async (_id: string): Resource =>
   await Resource.findById({ _id }).lean();
 
 export const getByName = async (
+  isApproved: boolean,
   name: string,
   options?: PaginateOptions<ResourceSchema>,
-): Promise<ResourcesResponse> => await paginate({ teams: name }, options);
+): Promise<ResourcesResponse> => {
+  if (!isApproved) {
+    return await paginate(
+      { teams: name, visibility: visibilityEnum.PUBLIC },
+      options,
+    );
+  }
+
+  return await paginate({ teams: name }, options);
+};
 
 export const getAll = async (
   isApproved: boolean,

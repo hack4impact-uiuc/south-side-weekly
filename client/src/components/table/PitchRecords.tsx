@@ -121,7 +121,6 @@ export const PitchRecords: FC<TableProps> = ({
       columns={cols}
       records={data}
       count={count}
-      pageOptions={['1', '10', '25', '50']}
       getModal={getModal}
       onRecordClick={onRecordClick}
       sortType="query"

@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useEffect, useMemo, useState } from 'react';
+import React, { FC, ReactElement, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Form, Icon, Modal, ModalProps } from 'semantic-ui-react';
 import { Resource } from 'ssw-common';
@@ -58,10 +58,6 @@ const ResourceModal: FC<ResourceProps> = ({
     }
   };
 
-  useEffect(() => {
-    console.log(isOpen);
-  }, [isOpen]);
-
   const submitResourceForm = (resource: Resource): void => {
     const body = {
       name: resource.name,
@@ -80,6 +76,7 @@ const ResourceModal: FC<ResourceProps> = ({
 
       if (!isError(res)) {
         setOpen?.(false);
+        setIsOpen(false);
         toast.success(
           `Successfully ${
             action === 'create' ? 'created' : 'updated'
@@ -93,7 +90,6 @@ const ResourceModal: FC<ResourceProps> = ({
     };
 
     manageResource();
-    setIsOpen(false);
   };
 
   return (

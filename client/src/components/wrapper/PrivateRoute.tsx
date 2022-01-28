@@ -22,13 +22,16 @@ export const PrivateRoute: FC<RouteProps> = ({
   }
 
   if (user && user.role === 'TBD' && location.pathname !== '/join') {
-    console.log('HERERERERE');
     return <Redirect to="/join" />;
   } else if (!isAuthenticated && location.pathname !== '/login') {
     return <Redirect to="/login" />;
   } else if (!isRegistered) {
     <Redirect to="/join" from={location.pathname} />;
-  } else if (!isOnboarded && location.pathname !== '/resources') {
+  } else if (
+    !isOnboarded &&
+    location.pathname !== '/resources' &&
+    location.pathname !== '/join'
+  ) {
     return <Redirect to="/resources" from={location.pathname} />;
   }
 

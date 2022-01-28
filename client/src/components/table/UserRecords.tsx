@@ -142,7 +142,6 @@ export const UsersRecords: FC<TableProps> = ({
   return (
     <PaginatedTable<BasePopulatedUser>
       count={count}
-      pageOptions={['1', '10', '25', '50']}
       sortType="query"
       sortable
       records={users}

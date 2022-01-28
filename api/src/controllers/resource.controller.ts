@@ -96,7 +96,11 @@ export const getResourceByName = async (
 ): Promise<void> => {
   const options = extractOptions(req.query);
 
-  const resource = await ResourceService.getByName(req.params.name, options);
+  const resource = await ResourceService.getByName(
+    req.user.onboardingStatus === onboardingStatusEnum.ONBOARDED,
+    req.params.name,
+    options,
+  );
 
   if (!resource) {
     sendNotFound(res, 'Resource not found');

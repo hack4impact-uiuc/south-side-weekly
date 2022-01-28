@@ -50,7 +50,7 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
 
     setClonedTags([...clone]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [onFetch]);
+  }, [onFetch, isOpen]);
 
   // Add a new field in form
   const addInputLine = (): void => {
@@ -126,7 +126,7 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
 
     Swal.fire({
       icon: 'question',
-      text: `Are you sure you want to save your ${title} changes?`,
+      text: `Are you sure you want to save your ${title} changes? If you are adding new tags, you will not be able to delete them.`,
       showCancelButton: true,
       cancelButtonText: 'Cancel',
       confirmButtonText: 'Confirm',
@@ -139,13 +139,7 @@ const EditableTagModal: FC<EditableTagModalProps> = ({
           onUpdate(changedTags);
         }
         onFetch();
-
-        Swal.fire(
-          `${title} updated!`,
-          `${title} tags has been updated`,
-          'success',
-        );
-        setIsOpen(false);
+        location.reload();
       }
     });
   };

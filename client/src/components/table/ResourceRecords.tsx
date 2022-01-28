@@ -35,7 +35,6 @@ export const ResourceRecords: FC<TableProps> = ({
   return (
     <PaginatedTable<Resource>
       count={count}
-      pageOptions={['1', '10', '25', '50']}
       sortType="query"
       sortable
       records={resources}

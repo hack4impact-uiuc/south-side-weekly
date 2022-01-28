@@ -1,4 +1,4 @@
-import React, { FC, ReactElement, useState } from 'react';
+import React, { FC, ReactElement, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
 import { Icon, Modal, ModalProps, Popup, Header } from 'semantic-ui-react';
 import { Pitch } from 'ssw-common';
@@ -46,21 +46,34 @@ const HelperMessage = (): ReactElement => (
   </>
 );
 
-export const SubmitPitchModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
-  const [isOpen, setIsOpen] = useState(false);
+interface SubmitPitchModalProps extends ModalProps {
+  pitch?: Pick<
+    Pitch,
+    | 'title'
+    | 'description'
+    | 'assignmentGoogleDocLink'
+    | 'conflictOfInterest'
+    | 'topics'
+    | 'writer'
+    | '_id'
+  >;
+  hasTrigger?: boolean;
+  open?: boolean;
+  setOpen?: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
+  pitch,
+  hasTrigger = true,
+  open,
+  setOpen,
+  ...rest
+}): ReactElement => {
+  const [isOpen, setIsOpen] = useState(open);
   const { user } = useAuth();
 
   const submitPitch = async (data: SubmitPitchFields): Promise<void> => {
-    const body: Pick<
-      Partial<Pitch>,
-      | 'title'
-      | 'assignmentGoogleDocLink'
-      | 'description'
-      | 'topics'
-      | 'conflictOfInterest'
-      | 'writer'
-      | 'author'
-    > = {
+    const body: Record<string, unknown> = {
       title: data.title,
       assignmentGoogleDocLink: data.assignmentGoogleDocLink,
       description: data.description,
@@ -71,28 +84,60 @@ export const SubmitPitchModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
     };
 
     if (data.writerIntent === undefined || data.writerIntent === 'false') {
-      body.writer = undefined;
+      body.writer = null;
     }
 
-    const res = await apiCall({
-      url: '/pitches',
-      method: 'POST',
+    const res = await apiCall<Pitch>({
+      url: pitch ? `/pitches/${pitch._id}` : `/pitches`,
+      method: pitch ? 'PUT' : 'POST',
       body,
     });
 
     if (!isError(res)) {
-      toast.success('Pitch successfully submitted!');
+      const message = pitch
+        ? 'Pitch updated successfully'
+        : 'Pitch submitted successfully';
+      toast.success(message);
       setIsOpen(false);
+      setOpen?.(false);
     }
   };
 
+  const initVals = useMemo(() => {
+    if (pitch) {
+      return {
+        title: pitch.title,
+        assignmentGoogleDocLink: pitch.assignmentGoogleDocLink,
+        description: pitch.description,
+        topics: pitch.topics,
+        conflictOfInterest: pitch.conflictOfInterest ? 'true' : 'false',
+        writerIntent: pitch.writer === user?._id ? 'true' : 'false',
+      };
+    }
+
+    return {
+      title: '',
+      description: '',
+      assignmentGoogleDocLink: '',
+      topics: [],
+      conflictOfInterest: 'false',
+      writerIntent: undefined,
+    };
+  }, [pitch, user]);
+
   return (
     <Modal
-      trigger={<PrimaryButton content="Submit Pitch" />}
-      open={isOpen}
+      trigger={hasTrigger && <PrimaryButton content="Submit Pitch" />}
+      open={open || isOpen}
       className="submit-pitch-modal"
-      onOpen={() => setIsOpen(true)}
-      onClose={() => setIsOpen(false)}
+      onOpen={() => {
+        setIsOpen(true);
+        setOpen?.(true);
+      }}
+      onClose={() => {
+        setIsOpen(false);
+        setOpen?.(false);
+      }}
       {...rest}
     >
       <Modal.Header>
@@ -107,26 +152,26 @@ export const SubmitPitchModal: FC<ModalProps> = ({ ...rest }): ReactElement => {
           />
         </div>
         <Pusher />
-        <Icon id="close-icon" name="times" onClick={() => setIsOpen(false)} />
+        <Icon
+          id="close-icon"
+          name="times"
+          onClick={() => {
+            setIsOpen(false);
+            setOpen?.(false);
+          }}
+        />
       </Modal.Header>
       <Modal.Content>
         <SubmitPitchForm
           id="submit-pitch-form"
-          initialValues={{
-            title: '',
-            description: '',
-            assignmentGoogleDocLink: '',
-            topics: [],
-            conflictOfInterest: 'false',
-            writerIntent: undefined,
-          }}
+          initialValues={initVals}
           onSubmit={submitPitch}
         />
       </Modal.Content>
       <Modal.Actions>
         <PrimaryButton
           type="submit"
-          content="Submit"
+          content={pitch ? 'Update Pitch' : 'Submit Pitch'}
           form="submit-pitch-form"
         />
       </Modal.Actions>

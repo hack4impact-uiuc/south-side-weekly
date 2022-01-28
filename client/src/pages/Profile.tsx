@@ -218,7 +218,7 @@ const Profile = (): ReactElement => {
         contributor.teams.map((t) => teams.push(t));
       }
     });
-    if (pitch.writer._id === userId) {
+    if (pitch.writer?._id === userId) {
       const writingTeam = currentUser?.teams.find(
         ({ name }) => name === 'Writing',
       );
