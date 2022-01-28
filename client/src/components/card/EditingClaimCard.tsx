@@ -241,6 +241,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       return;
     }
 
+    //some random change
     if (from === editorTypeEnum.PRIMARY) {
       Swal.fire({
         title: 'Cannot remove only Primary Editor.',
