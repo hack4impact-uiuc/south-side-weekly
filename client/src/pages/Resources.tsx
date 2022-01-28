@@ -55,7 +55,6 @@ const Resources = (): ReactElement => {
         <AuthView view="isAdmin">
           <div style={{ display: 'flex' }}>
             <Pusher />
-
             <ResourceModal
               action="create"
               trigger={<PrimaryButton content="Add Resource" icon="add" />}

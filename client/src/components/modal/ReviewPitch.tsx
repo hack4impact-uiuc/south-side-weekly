@@ -155,21 +155,26 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
     }
   };
 
-  const writerOptions = useMemo(() => {
-    const opts = writers.map((writer) => ({
-      label: writer.fullname,
-      value: writer._id,
-    }));
-
-    if (pitch?.writer) {
-      opts.unshift({ label: pitch.writer.fullname, value: pitch.writer._id });
-    }
-
-    return opts;
-  }, [writers, pitch]);
+  const writerOptions = useMemo(
+    () =>
+      writers.map((writer) => ({
+        label: writer.fullname,
+        value: writer._id,
+      })),
+    [writers],
+  );
 
   if (!pitch) {
-    return <div>Loading pitch information...</div>;
+    return (
+      <Modal open>
+        <Modal.Header>
+          <span>Review Pitch</span>
+        </Modal.Header>
+        <Modal.Content>
+          <p>Loading...</p>
+        </Modal.Content>
+      </Modal>
+    );
   }
 
   return (
@@ -208,6 +213,9 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
         />
 
         <p id="description">{pitch?.description}</p>
+        <p>
+          <b>Conflict of interest</b>: {pitch.conflictOfInterest ? 'Yes' : 'No'}
+        </p>
 
         <div className="flex-wrapper section">
           <div>

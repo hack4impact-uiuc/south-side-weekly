@@ -45,11 +45,11 @@ const Onboard3 = (): ReactElement => {
       genders: reject(data!.genders, isEmpty),
       pronouns: reject(data!.pronouns, isEmpty),
       dateJoined: new Date(Date.now()),
-      teams: Array.from(selectedTeams),
+      teams: [...new Set(selectedTeams)],
       role: data!.role,
       races: reject(data!.races, isEmpty),
       neighborhood: data!.neighborhood,
-      interests: Array.from(selectedInterests),
+      interests: [...new Set(selectedInterests)],
     };
 
     const onboardUser = async (): Promise<void> => {

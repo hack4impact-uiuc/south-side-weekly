@@ -8,6 +8,7 @@ import AddIssueModal from '../components/modal/AddIssue';
 import { SingleSelect } from '../components/select/SingleSelect';
 import Loading from '../components/ui/Loading';
 import { useAuth } from '../contexts';
+import { titleCase } from '../utils/helpers';
 
 import './Issues.scss';
 
@@ -85,7 +86,9 @@ const Issues = (): ReactElement => {
           <SingleSelect
             className="issue-select"
             options={issues.map((issue) => ({
-              label: new Date(issue.releaseDate).toLocaleDateString(),
+              label: `${new Date(
+                issue.releaseDate,
+              ).toLocaleDateString()} - ${titleCase(issue.type)}`,
               value: issue._id,
             }))}
             value={issues[viewIssueIndex] ? issues[viewIssueIndex]._id : ''}

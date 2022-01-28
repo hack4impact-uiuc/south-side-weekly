@@ -63,6 +63,7 @@ export const ResourceForm: FC<FormProps> = ({ id, ...rest }): ReactElement => {
                   label: t.name,
                   value: t._id,
                 }))}
+                maxMenuHeight={200}
               />
             </div>
             <div className="row">

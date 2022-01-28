@@ -13,7 +13,7 @@ import './pages.scss';
 import './PitchDoc.scss';
 
 export const PitchDocPage = (): ReactElement => {
-  const { isAdmin } = useAuth();
+  const { isAdmin, isStaff } = useAuth();
 
   const views = useMemo(() => {
     const panes = [
@@ -27,19 +27,21 @@ export const PitchDocPage = (): ReactElement => {
       },
     ];
 
-    if (isAdmin) {
+    if (isAdmin || isStaff) {
       panes.unshift({
         title: 'Review Assignments',
         content: <PitchesView type="review-unclaimed" />,
       });
-      panes.unshift({
-        title: 'Review New Pitches',
-        content: <PitchesView type="review-new" />,
-      });
+      if (isAdmin) {
+        panes.unshift({
+          title: 'Review New Pitches',
+          content: <PitchesView type="review-new" />,
+        });
+      }
     }
 
     return panes;
-  }, [isAdmin]);
+  }, [isAdmin, isStaff]);
 
   useEffect(() => {
     toast.loading('Loading Pitch Doc...');

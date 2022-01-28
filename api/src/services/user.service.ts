@@ -48,7 +48,7 @@ const activityFilter = (status: Condition<string>): FilterQuery<UserSchema> => {
     now.getDate(),
   );
   const lastInactive = new Date(
-    now.getFullYear(),
+    now.getFullYear() - 1,
     now.getMonth(),
     now.getDate(),
   );
