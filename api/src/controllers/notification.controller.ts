@@ -105,16 +105,6 @@ export const sendPitchApprovedNotification = async (
 
   const reviewer = await UserService.getOne(reviewerId);
 
-  console.log(
-    'Writer id: ',
-    populatedPitch.writer && populatedPitch.writer._id,
-  );
-  console.log('Contributor id: ', contributorId);
-  console.log(
-    populatedPitch.writer &&
-      populatedPitch.writer._id.toString() === contributorId,
-  );
-
   await sendApprovedPitchMail(
     contributor,
     reviewer,
