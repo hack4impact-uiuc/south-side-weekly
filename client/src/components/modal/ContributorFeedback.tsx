@@ -15,6 +15,7 @@ import { Team, UserFeedback, UserFields } from 'ssw-common';
 import { FieldTag } from '..';
 import { apiCall, isError } from '../../api';
 import UserChip from '../tag/UserChip';
+import { Pusher } from '../ui/Pusher';
 
 import './ContributorFeedback.scss';
 
@@ -129,10 +130,9 @@ const ContributorFeedback: FC<ClaimPitchProps> = ({
       {...rest}
     >
       <Modal.Header>
-        <div className="modal-header">
-          Leave Feedback
-          <Icon name="close" onClick={() => setIsOpen(false)} />
-        </div>
+        Leave Feedback
+        <Pusher />
+        <Icon name="close" onClick={() => setIsOpen(false)} />
       </Modal.Header>
       <Modal.Content scrolling>
         <div className="modal-content">
