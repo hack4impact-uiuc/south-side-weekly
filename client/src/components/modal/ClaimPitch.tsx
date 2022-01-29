@@ -87,7 +87,7 @@ export const ClaimPitch: FC<ClaimPitchProps> = ({
       return false;
     }
 
-    const isWriter = pitch.writer._id === user?._id;
+    const isWriter = pitch.writer?._id === user?._id;
     const isEditor =
       pitch.primaryEditor._id === user?._id ||
       pitch.secondEditors.some((editor) => editor._id === user?._id) ||
