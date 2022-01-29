@@ -1,13 +1,6 @@
 import { Request, Response } from 'express';
 import { BasePopulatedPitch, Pitch } from 'ssw-common';
 
-import {
-  sendApprovedPitchMail,
-  sendClaimRequestApprovedMail,
-  sendClaimRequestDeclinedMail,
-  sendContributorAddedToPitchMail,
-  sendDeclinedPitchMail,
-} from '../mail/sender';
 import { populatePitch } from '../populators';
 import { PitchService, TeamService, UserService } from '../services';
 import { isWriterOrEditor } from '../services/pitch.service';
@@ -192,26 +185,6 @@ export const approvePitch = async (
     return;
   }
 
-  const populatedPitch = (await populatePitch(
-    pitch,
-    'default',
-  )) as BasePopulatedPitch;
-
-  sendApprovedPitchMail(
-    populatedPitch.author,
-    populatedPitch.reviewedBy,
-    populatedPitch,
-    req.body.writer === populatedPitch.author._id,
-  );
-
-  if (req.body.writer && req.body.writer !== populatedPitch.author._id) {
-    sendContributorAddedToPitchMail(
-      populatedPitch.writer,
-      populatedPitch.reviewedBy,
-      populatedPitch,
-    );
-  }
-
   sendSuccess(res, 'Pitch approved successfully', pitch);
 };
 
@@ -235,13 +208,6 @@ export const declinePitch = async (
     pitch,
     'default',
   )) as BasePopulatedPitch;
-
-  sendDeclinedPitchMail(
-    populatedPitch.author,
-    req.user,
-    populatedPitch,
-    req.body.reasoning,
-  );
 
   sendSuccess(res, 'Pitch declined successfully', populatedPitch);
 };
@@ -333,8 +299,6 @@ export const approveClaimRequest = async (
     'default',
   )) as BasePopulatedPitch;
 
-  sendClaimRequestApprovedMail(user, defaultPopulatedPitch, req.user, team);
-
   sendSuccess(res, 'Claim approved successfully', defaultPopulatedPitch);
 };
 
@@ -369,8 +333,6 @@ export const declineClaimRequest = async (
     sendNotFound(res, `User with id ${userId} not found`);
     return;
   }
-
-  sendClaimRequestDeclinedMail(user, req.user, pitch);
 
   const populateType = extractPopulateQuery(req.query);
 
@@ -484,13 +446,6 @@ export const addContributor = async (
     sendNotFound(res, `Pitch with id ${req.params.id} not found`);
     return;
   }
-
-  const populatedPitch = (await populatePitch(
-    pitch,
-    'default',
-  )) as BasePopulatedPitch;
-
-  sendContributorAddedToPitchMail(user, req.user, populatedPitch);
 
   sendSuccess(res, 'Successfully added contributor', pitch);
 };

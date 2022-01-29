@@ -18,7 +18,10 @@ export const sendMail = async (mailOptions: SendMailOptions): Promise<void> => {
   console.log('RESOLVED');
 };
 
-export const sendRejectUserMail = (contributor: User, reviewer: User): void => {
+export const sendRejectUserMail = async (
+  contributor: User,
+  reviewer: User,
+): Promise<void> => {
   const templateValues = {
     contributor: contributor.fullname,
     role: contributor.role,
@@ -33,7 +36,7 @@ export const sendRejectUserMail = (contributor: User, reviewer: User): void => {
     templateValues,
   );
 
-  sendMail(mailOptions);
+  await sendMail(mailOptions);
 };
 
 export const sendApproveUserMail = async (
@@ -58,12 +61,12 @@ export const sendApproveUserMail = async (
   await sendMail(mailOptions);
 };
 
-export const sendClaimRequestApprovedMail = (
+export const sendClaimRequestApprovedMail = async (
   contributor: User,
   pitch: BasePopulatedPitch,
   staff: User,
   team: Team,
-): void => {
+): Promise<void> => {
   const templateValues = {
     contributor: contributor.fullname,
     title: pitch.title,
@@ -83,15 +86,15 @@ export const sendClaimRequestApprovedMail = (
     },
   );
 
-  sendMail(mailOptions);
+  await sendMail(mailOptions);
 };
 
-export const sendApprovedPitchMail = (
+export const sendApprovedPitchMail = async (
   contributor: UserFields,
   reviewer: UserFields,
   pitch: BasePopulatedPitch,
   hasWriter: boolean,
-): void => {
+): Promise<void> => {
   const templateValues = {
     contributor: contributor.fullname,
     pitch: pitch.title,
@@ -111,15 +114,15 @@ export const sendApprovedPitchMail = (
     },
   );
 
-  sendMail(mailOptions);
+  await sendMail(mailOptions);
 };
 
-export const sendDeclinedPitchMail = (
+export const sendDeclinedPitchMail = async (
   contributor: UserFields,
   staff: User,
   pitch: BasePopulatedPitch,
   reasoning?: string,
-): void => {
+): Promise<void> => {
   const templateValues = {
     contributor: contributor.fullname,
     title: pitch.title,
@@ -135,14 +138,14 @@ export const sendDeclinedPitchMail = (
     templateValues,
   );
 
-  sendMail(mailOptions);
+  await sendMail(mailOptions);
 };
 
-export const sendContributorAddedToPitchMail = (
+export const sendContributorAddedToPitchMail = async (
   contributor: UserFields,
   staff: UserFields,
   pitch: BasePopulatedPitch,
-): void => {
+): Promise<void> => {
   const templateValues = {
     contributor: contributor.fullname,
     primaryEditor: pitch.primaryEditor.fullname,
@@ -161,14 +164,14 @@ export const sendContributorAddedToPitchMail = (
     },
   );
 
-  sendMail(mailOptions);
+  await sendMail(mailOptions);
 };
 
-export const sendClaimRequestDeclinedMail = (
+export const sendClaimRequestDeclinedMail = async (
   contributor: User,
   staff: User,
   pitch: Pitch,
-): void => {
+): Promise<void> => {
   const templateValues = {
     staff: getUserFulName(staff),
     contributor: getUserFulName(contributor),
@@ -183,5 +186,5 @@ export const sendClaimRequestDeclinedMail = (
     templateValues,
   );
 
-  sendMail(mailOptions);
+  await sendMail(mailOptions);
 };
