@@ -22,7 +22,7 @@ import { FieldTag, UserPicture } from '../components';
 import { configureColumn } from '../components/table/dynamic/DynamicTable2.0';
 import UserFeedback from '../components/card/UserFeedback';
 import { EditUserModal } from '../components/modal/EditUser';
-import { useAuth } from '../contexts';
+import { useAuth, useTeams } from '../contexts';
 import { TagList } from '../components/list/TagList';
 import { IconLabel } from '../components/ui/IconLabel';
 import { PaginatedTable } from '../components/table/dynamic/PaginatedTable';
@@ -45,6 +45,7 @@ interface FeedbackRes {
 }
 
 const Profile = (): ReactElement => {
+  const { teams: allTeams } = useTeams();
   const { userId } = useParams<{ userId: string }>();
   const { user: currentUser, isAdmin, isStaff } = useAuth();
   const [queries, setQueries] = useQueryParams({
@@ -218,9 +219,7 @@ const Profile = (): ReactElement => {
       }
     });
     if (pitch.writer?._id === userId) {
-      const writingTeam = currentUser?.teams.find(
-        ({ name }) => name === 'Writing',
-      );
+      const writingTeam = allTeams.find(({ name }) => name === 'Writing');
       if (writingTeam) {
         teams.push(writingTeam);
       }
@@ -230,9 +229,7 @@ const Profile = (): ReactElement => {
       pitch.thirdEditors.find(({ _id }) => _id === userId) ||
       pitch.primaryEditor?._id === userId
     ) {
-      const editingTeam = currentUser?.teams.find(
-        ({ name }) => name === 'Editing',
-      );
+      const editingTeam = allTeams.find(({ name }) => name === 'Editing');
       if (editingTeam) {
         teams.push(editingTeam);
       }

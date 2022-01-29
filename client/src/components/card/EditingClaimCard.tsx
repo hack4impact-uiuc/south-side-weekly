@@ -80,7 +80,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
 
     apiCall({
       method: 'POST',
-      url: '/notifications/sendClaimRequestDenied',
+      url: '/notifications/sendClaimRequestDeclined',
       body: {
         contributorId: userId,
         pitchId: pitchId,
@@ -397,7 +397,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
                 <UserChip user={omit(user, 'editorType')} />
                 <Popup
                   content={message}
-                  trigger={<Icon size="small" name="question circle" />}
+                  trigger={<Icon size="massive" name="question circle" />}
                   wide="very"
                   position="top center"
                   hoverable

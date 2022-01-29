@@ -150,7 +150,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
 
     apiCall({
       method: 'POST',
-      url: '/notifications/sendClaimRequestDenied',
+      url: '/notifications/sendClaimRequestDeclined',
       body: {
         contributorId: userId,
         pitchId: pitchId,
@@ -340,7 +340,12 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
                 <AuthView view="minStaff">
                   <Popup
                     content={message}
-                    trigger={<Icon size="small" name="question circle" />}
+                    trigger={
+                      <Icon
+                        style={{ fontSize: '16px' }}
+                        name="question circle"
+                      />
+                    }
                     wide="very"
                     position="top center"
                     hoverable

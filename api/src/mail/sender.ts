@@ -110,7 +110,7 @@ export const sendApprovedPitchMail = async (
     hasWriter ? 'pitchApprovedWriter.html' : 'pitchApprovedNoWriter.html',
     templateValues,
     {
-      cc: pitch.primaryEditor.email,
+      cc: hasWriter && pitch.primaryEditor.email,
     },
   );
 

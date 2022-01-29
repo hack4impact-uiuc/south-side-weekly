@@ -140,12 +140,14 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       },
     });
 
-    if (pitchData.writer !== user?._id) {
+    console.log(pitchData.writer, pitch?.author._id);
+
+    if (pitchData.writer && pitchData.writer !== pitch?.author._id) {
       apiCall({
         method: 'POST',
         url: '/notifications/sendContributorAdded',
         body: {
-          contributorId: pitch?.author._id,
+          contributorId: pitchData.writer,
           staffId: user?._id,
           pitchId: pitch?._id,
         },

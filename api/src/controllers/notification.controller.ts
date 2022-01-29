@@ -109,7 +109,7 @@ export const sendPitchApprovedNotification = async (
     contributor,
     reviewer,
     populatedPitch,
-    pitch.writer.toString() === contributorId,
+    populatedPitch.writer?._id.toString() === contributorId,
   );
   sendSuccess(res, 'Pitch approved successfully');
 };
