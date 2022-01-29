@@ -130,6 +130,28 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       body: pitchData,
     });
 
+    apiCall({
+      method: 'POST',
+      url: '/notifications/sendPitchApproved',
+      body: {
+        contributorId: pitch?.author._id,
+        pitchId: pitch?._id,
+        reviewerId: user?._id,
+      },
+    });
+
+    if (pitchData.writer !== user?._id) {
+      apiCall({
+        method: 'POST',
+        url: '/notifications/sendContributorAdded',
+        body: {
+          contributorId: pitch?.author._id,
+          staffId: user?._id,
+          pitchId: pitch?._id,
+        },
+      });
+    }
+
     if (!isError(res)) {
       toast.success('Pitch approved');
       setOpen(false);
@@ -144,6 +166,17 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       method: 'PUT',
       body: {
         reasoning,
+      },
+    });
+
+    apiCall({
+      method: 'POST',
+      url: '/notifications/sendPitchDeclined',
+      body: {
+        contributorId: pitch?.author._id,
+        staffId: user?._id,
+        pitchId: pitch?._id,
+        reasoning: reasoning,
       },
     });
 

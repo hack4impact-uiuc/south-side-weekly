@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 
 import { FieldTag } from '..';
 import { apiCall, isError } from '../../api';
+import { useAuth } from '../../contexts';
 import { EditorRecord, PendingEditorRecord } from '../../pages/Pitch';
 import { editorTypeEnum } from '../../utils/enums';
 import { getUserFullName } from '../../utils/helpers';
@@ -43,6 +44,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
   notApproved,
   callback,
 }): ReactElement => {
+  const { user } = useAuth();
   const [selectContributorMode, setSelectContributorMode] = useState(false);
   const [filteredContributors, setFilteredContributors] = useState<User[]>([]);
   const [selectedContributor, setSelectedContributor] = useState('');
@@ -73,6 +75,16 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       body: {
         userId: userId,
         teamId: team._id,
+      },
+    });
+
+    apiCall({
+      method: 'POST',
+      url: '/notifications/sendClaimRequestDenied',
+      body: {
+        contributorId: userId,
+        pitchId: pitchId,
+        staffId: user?._id,
       },
     });
     await callback();
@@ -117,10 +129,20 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       body: {
         userId: editorId,
         teamId: team._id,
-        teams: [team.name],
       },
       query: {
         editor: editorType,
+      },
+    });
+
+    apiCall({
+      method: 'POST',
+      url: '/notifications/sendClaimRequestApproved',
+      body: {
+        contributorId: editorId,
+        pitchId: pitchId,
+        staffId: user?._id,
+        teamId: team._id,
       },
     });
 
@@ -149,6 +171,16 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       },
       query: {
         editor: editorType,
+      },
+    });
+
+    apiCall({
+      method: 'POST',
+      url: '/notifications/sendContributorAdded',
+      body: {
+        contributorId: editorId,
+        staffId: user?._id,
+        pitchId: pitchId,
       },
     });
 

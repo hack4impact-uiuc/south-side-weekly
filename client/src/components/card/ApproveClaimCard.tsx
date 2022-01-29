@@ -11,6 +11,7 @@ import Swal from 'sweetalert2';
 
 import { FieldTag } from '..';
 import { apiCall, isError } from '../../api';
+import { useAuth } from '../../contexts';
 import { getUserFullName, pluralize } from '../../utils/helpers';
 import ContributorFeedback from '../modal/ContributorFeedback';
 import { SingleSelect } from '../select/SingleSelect';
@@ -37,6 +38,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
   notApproved,
   callback,
 }): ReactElement => {
+  const { user } = useAuth();
   const [selectContributorMode, setSelectContributorMode] = useState(false);
   const [filteredContribtors, setFilteredContributors] = useState<User[]>([]);
   const [allTeamContributors, setAllTeamContributors] = useState<User[] | null>(
@@ -78,6 +80,16 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
           writer: team.name === 'Writing',
         },
       });
+
+      apiCall({
+        method: 'POST',
+        url: '/notifications/sendContributorAdded',
+        body: {
+          contributorId: selectedContributor,
+          staffId: user?._id,
+          pitchId: pitchId,
+        },
+      });
     }
     setSelectContributorMode(false);
     await callback();
@@ -106,10 +118,20 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
       body: {
         userId: userId,
         teamId: team._id,
-        teams: [team.name],
       },
       query: {
         writer: team.name === 'Writing',
+      },
+    });
+
+    apiCall({
+      method: 'POST',
+      url: '/notifications/sendClaimRequestApproved',
+      body: {
+        contributorId: userId,
+        pitchId: pitchId,
+        staffId: user?._id,
+        teamId: team._id,
       },
     });
 
@@ -123,6 +145,16 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
       body: {
         userId: userId,
         teamId: team._id,
+      },
+    });
+
+    apiCall({
+      method: 'POST',
+      url: '/notifications/sendClaimRequestDenied',
+      body: {
+        contributorId: userId,
+        pitchId: pitchId,
+        staffId: user?._id,
       },
     });
     await callback();
