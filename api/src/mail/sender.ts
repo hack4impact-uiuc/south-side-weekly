@@ -36,10 +36,10 @@ export const sendRejectUserMail = (contributor: User, reviewer: User): void => {
   sendMail(mailOptions);
 };
 
-export const sendApproveUserMail = (
+export const sendApproveUserMail = async (
   contributor: User,
   reviewer: User,
-): void => {
+): Promise<void> => {
   console.log('REACHED SENDER FUNCTION');
   const templateValues = {
     contributor: getUserFulName(contributor),
@@ -55,7 +55,7 @@ export const sendApproveUserMail = (
     templateValues,
   );
 
-  sendMail(mailOptions);
+  await sendMail(mailOptions);
 };
 
 export const sendClaimRequestApprovedMail = (

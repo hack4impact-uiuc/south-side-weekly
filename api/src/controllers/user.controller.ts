@@ -274,7 +274,7 @@ export const approveUser = async (
   }
   console.log('REACHED APPROVE USER ENDPOINT');
 
-  sendApproveUserMail(user, req.user);
+  await sendApproveUserMail(user, req.user);
 
   sendSuccess(
     res,
