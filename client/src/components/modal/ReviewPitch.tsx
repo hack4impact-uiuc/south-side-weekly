@@ -83,7 +83,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       const pitch = await loadBasePitch(id);
 
       setPitch(pitch);
-      setWriter(pitch && pitch.writer && pitch.writer._id);
+      setWriter(pitch && pitch.writer && pitch.writer?._id);
     };
 
     if (open) {
