@@ -9,7 +9,7 @@ export const pitchApprovedWriterHtml = `
     <p>Congratulations, your pitch {{ title }} has been approved! Here are the details you provided regarding the pitch:
     </p>
     <p><b>{{ description }}</b></p>
-    <p>Your pitch has been added to the <a href="{{ pitchDocLink }}">{{ pitchDocLink }}</a>. Your primary editor, {{
+    <p>Your pitch has been added to the pitch doc (<a href="{{ pitchDocLink }}">{{ pitchDocLink }}</a>). Your primary editor, {{
         primaryEditor }}, is cc’ed on this email
         and will be following up to begin discussing your story.</p>
 
