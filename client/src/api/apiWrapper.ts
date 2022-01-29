@@ -167,7 +167,7 @@ export const approveUser = async (
     url: `/users/${user._id}/approve`,
   });
 
-  apiCall({
+  await apiCall({
     method: 'POST',
     url: `/notifications/sendUserApproved`,
     body: {
