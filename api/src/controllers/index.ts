@@ -8,3 +8,4 @@ export * as ResourceController from './resource.controller';
 export * as TeamController from './team.controller';
 export * as UserFeedbackController from './userFeedback.controller';
 export * as ConstantsController from './constants.controller';
+export * as NotificationController from './notification.controller';
