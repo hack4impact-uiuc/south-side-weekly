@@ -69,6 +69,8 @@ const Issues = (): ReactElement => {
         <AddIssueModal />
       </div>
     );
+  } else if (viewIssueIndex < 0 || viewIssueIndex >= issues.length) {
+    return <></>;
   }
 
   return (

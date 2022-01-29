@@ -25,11 +25,13 @@ export interface ClaimPitchFields {
 interface FormProps extends FormikConfig<ClaimPitchFields> {
   id?: string;
   pitch: FullPopulatedPitch | null;
+  disabled?: boolean;
 }
 
 export const ClaimPitchForm: FC<FormProps> = ({
   id = '',
   pitch,
+  disabled = false,
   ...rest
 }): ReactElement => {
   const { user } = useAuth();
@@ -91,6 +93,7 @@ export const ClaimPitchForm: FC<FormProps> = ({
                           )
                         }
                         label={getTargetLabel(team.teamId.name, team.target)}
+                        disabled={disabled}
                       />
                     )}
                   </Field>
@@ -107,6 +110,7 @@ export const ClaimPitchForm: FC<FormProps> = ({
             component={FormTextArea}
             name="message"
             maxLength={MAX_MESSAGE_LENGTH}
+            disabled={disabled}
           />
           <p id="word-limit">{values.message.length} / 250</p>
           {errors['message'] && touched['message'] && (

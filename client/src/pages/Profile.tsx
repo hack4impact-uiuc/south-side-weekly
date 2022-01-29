@@ -30,7 +30,6 @@ import { apiCall, isError } from '../api';
 import { SingleSelect } from '../components/select/SingleSelect';
 import { parseOptionsSelect } from '../utils/helpers';
 import Loading from '../components/ui/Loading';
-import { pitchStatusEnum } from '../utils/enums';
 import { pitchStatusCol } from '../components/table/columns';
 
 import './Profile.scss';

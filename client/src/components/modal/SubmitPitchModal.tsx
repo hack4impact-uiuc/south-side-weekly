@@ -120,7 +120,7 @@ export const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
       description: '',
       assignmentGoogleDocLink: '',
       topics: [],
-      conflictOfInterest: 'false',
+      conflictOfInterest: null,
       writerIntent: undefined,
     };
   }, [pitch, user]);

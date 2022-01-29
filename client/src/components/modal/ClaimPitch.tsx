@@ -87,11 +87,16 @@ export const ClaimPitch: FC<ClaimPitchProps> = ({
       return false;
     }
 
-    return (
-      pitch.assignmentContributors.findIndex(
-        (c) => c.userId._id === user!._id,
-      ) >= 0
+    const isWriter = pitch.writer._id === user?._id;
+    const isEditor =
+      pitch.primaryEditor._id === user?._id ||
+      pitch.secondEditors.some((editor) => editor._id === user?._id) ||
+      pitch.thirdEditors.some((editor) => editor._id === user?._id);
+    const isContributor = pitch.assignmentContributors.some(
+      (contributor) => contributor.userId._id === user?._id,
     );
+
+    return isWriter || isEditor || isContributor;
   }, [pitch, user]);
 
   const hasSubmittedClaim = useMemo(() => {
@@ -128,7 +133,7 @@ export const ClaimPitch: FC<ClaimPitchProps> = ({
         {hasClaimedPitch && (
           <Message
             header="Wait!"
-            content="You have already claimed this pitch"
+            content="You have already claimed this pitch. Please contact an Staff or Admin to claim this pitch."
             warning
           />
         )}
@@ -211,6 +216,7 @@ export const ClaimPitch: FC<ClaimPitchProps> = ({
           pitch={pitch}
           onSubmit={submitClaim}
           initialValues={{ message: '', teams: [] }}
+          disabled={hasClaimedPitch || hasSubmittedClaim}
         />
       </Modal.Content>
       <Modal.Actions>

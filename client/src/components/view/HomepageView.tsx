@@ -37,13 +37,21 @@ export const HomepageView: FC<HomepageViewProps> = ({ type }): ReactElement => {
   const queryParams = useMemo(() => {
     const params = new URLSearchParams(location.search);
 
+    let isPublished = undefined;
+
+    if (type === 'published') {
+      isPublished = true;
+    } else if (type === 'member') {
+      isPublished = false;
+    }
+
     const q = {
       limit: params.get('limit') || '10',
       offset: params.get('offset') || '0',
       search: params.get('search'),
       'teams.teamId__all': params.get('teams__all'),
       topics__all: params.get('interests__all'),
-      isPublished: type === 'published' || undefined,
+      isPublished: isPublished,
       author: type === 'submitted' ? user?._id : undefined,
       sortBy: params.get('sortBy'),
       orderBy: params.get('orderBy'),
