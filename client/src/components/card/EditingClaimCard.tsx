@@ -134,8 +134,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
     if (!(await shouldContinueEditorAPI(editorType))) {
       const temp = cloneDeep(temporaryContributors);
       temp[editorId].editorType = 'SECONDS';
-      console.log(temp);
-      setTemporaryContributors((t) => temp);
+      setTemporaryContributors(temp);
       return;
     }
 

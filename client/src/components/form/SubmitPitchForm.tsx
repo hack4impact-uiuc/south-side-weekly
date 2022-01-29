@@ -26,7 +26,7 @@ export interface SubmitPitchFields
     'title' | 'assignmentGoogleDocLink' | 'description' | 'topics'
   > {
   writerIntent?: string;
-  conflictOfInterest: string;
+  conflictOfInterest: string | null;
 }
 
 interface FormProps extends FormikConfig<SubmitPitchFields> {
@@ -59,16 +59,12 @@ export const SubmitPitchForm: FC<FormProps> = ({
       {({ touched, errors }) => (
         <FormikForm id={id}>
           <div className="form-wrapper">
-            {touched['title'] && errors['title'] && (
-              <div className="error">{errors['title']}</div>
-            )}
             <div className="row">
               <Field component={FormInput} name="title" label="Title" />
             </div>
-            {touched['assignmentGoogleDocLink'] &&
-              errors['assignmentGoogleDocLink'] && (
-                <div className="error">{errors['assignmentGoogleDocLink']}</div>
-              )}
+            {touched['title'] && errors['title'] && (
+              <div className="error">{errors['title']}</div>
+            )}
             <div className="row">
               <Field
                 component={FormInput}
@@ -76,9 +72,10 @@ export const SubmitPitchForm: FC<FormProps> = ({
                 label="Google Doc Link"
               />
             </div>
-            {touched['description'] && errors['description'] && (
-              <div className="error">{errors['description']}</div>
-            )}
+            {touched['assignmentGoogleDocLink'] &&
+              errors['assignmentGoogleDocLink'] && (
+                <div className="error">{errors['assignmentGoogleDocLink']}</div>
+              )}
             <div className="row">
               <Field
                 component={FormTextArea}
@@ -87,8 +84,8 @@ export const SubmitPitchForm: FC<FormProps> = ({
                 className="description"
               />
             </div>
-            {touched['topics'] && errors['topics'] && (
-              <div className="error">{errors['topics']}</div>
+            {touched['description'] && errors['description'] && (
+              <div className="error">{errors['description']}</div>
             )}
             <div className="row">
               <Field
@@ -101,11 +98,11 @@ export const SubmitPitchForm: FC<FormProps> = ({
                 }))}
               />
             </div>
+            {touched['topics'] && errors['topics'] && (
+              <div className="error">{errors['topics']}</div>
+            )}
             {isWriter && (
               <>
-                {touched['writerIntent'] && errors['writerIntent'] && (
-                  <div className="error">{errors['writerIntent']}</div>
-                )}
                 <div className="row">
                   <div>
                     <p>
@@ -129,12 +126,12 @@ export const SubmitPitchForm: FC<FormProps> = ({
                     </div>
                   </div>
                 </div>
+                {touched['writerIntent'] && errors['writerIntent'] && (
+                  <div className="error">{errors['writerIntent']}</div>
+                )}
               </>
             )}
 
-            {touched['conflictOfInterest'] && errors['conflictOfInterest'] && (
-              <div className="error">{errors['conflictOfInterest']}</div>
-            )}
             <div className="row">
               <div>
                 <p>
@@ -162,6 +159,9 @@ export const SubmitPitchForm: FC<FormProps> = ({
                 </div>
               </div>
             </div>
+            {touched['conflictOfInterest'] && errors['conflictOfInterest'] && (
+              <div className="error">{errors['conflictOfInterest']}</div>
+            )}
           </div>
         </FormikForm>
       )}
