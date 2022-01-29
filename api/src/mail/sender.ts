@@ -15,6 +15,7 @@ export const sendMail = async (mailOptions: SendMailOptions): Promise<void> => {
   });
 
   await mailDelivered;
+  console.log('RESOLVED');
 };
 
 export const sendRejectUserMail = (contributor: User, reviewer: User): void => {
