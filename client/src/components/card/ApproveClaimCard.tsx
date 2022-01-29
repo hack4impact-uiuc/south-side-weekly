@@ -342,22 +342,23 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
         {assignmentContributors.map((contributor, idx) => (
           <div key={idx} className="claim-row">
             <UserChip user={contributor} />
-
-            <AuthView view="minStaff">
-              {completed ? (
-                <ContributorFeedback
-                  user={contributor}
-                  team={team}
-                  pitchId={pitchId}
-                />
-              ) : (
-                <Icon
-                  name="trash"
-                  link
-                  onClick={() => removeContributor(contributor._id)}
-                />
-              )}
-            </AuthView>
+            {!notApproved && (
+              <AuthView view="minStaff">
+                {completed ? (
+                  <ContributorFeedback
+                    user={contributor}
+                    team={team}
+                    pitchId={pitchId}
+                  />
+                ) : (
+                  <Icon
+                    name="trash"
+                    link
+                    onClick={() => removeContributor(contributor._id)}
+                  />
+                )}
+              </AuthView>
+            )}
           </div>
         ))}
       </div>
