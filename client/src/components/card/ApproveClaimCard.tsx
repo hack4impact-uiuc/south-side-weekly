@@ -13,7 +13,11 @@ import Swal from 'sweetalert2';
 import { FieldTag } from '..';
 import { apiCall, isError } from '../../api';
 import { useAuth } from '../../contexts';
-import { getUserFullName, pluralize } from '../../utils/helpers';
+import {
+  extractErrorMessage,
+  getUserFullName,
+  pluralize,
+} from '../../utils/helpers';
 import ContributorFeedback from '../modal/ContributorFeedback';
 import { SingleSelect } from '../select/SingleSelect';
 import UserChip from '../tag/UserChip';
@@ -80,6 +84,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
         query: {
           writer: team.name === 'Writing',
         },
+        failureMessage: 'Failed to add contributor',
       });
 
       if (!isError(res)) {
@@ -95,7 +100,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
         toast.success('Added contributor');
         setSelectContributorMode(false);
       } else {
-        toast.error('Error adding contributor');
+        toast.error(extractErrorMessage(res));
       }
     }
 
@@ -113,12 +118,13 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
       query: {
         writer: team.name === 'Writing',
       },
+      failureMessage: 'Failed to remove contributor',
     });
 
     if (!isError(res)) {
       toast.success('Removed contributor');
     } else {
-      toast.error('Error removing contributor');
+      toast.error(extractErrorMessage(res));
     }
 
     await callback();
@@ -135,6 +141,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
       query: {
         writer: team.name === 'Writing',
       },
+      failureMessage: 'Failed to approve contributor claim',
     });
 
     if (!isError(res)) {
@@ -150,7 +157,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
       });
       toast.success('Approved contributor claim');
     } else {
-      toast.error('Error approving contributor claim');
+      toast.error(extractErrorMessage(res));
     }
 
     await callback();
@@ -164,6 +171,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
         userId: userId,
         teamId: team._id,
       },
+      failureMessage: 'Failed to decline contributor claim',
     });
 
     if (!isError(res)) {
@@ -178,7 +186,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
       });
       toast.success('Declined contributor claim');
     } else {
-      toast.error('Error declining contributor claim');
+      toast.error(extractErrorMessage(res));
     }
 
     await callback();

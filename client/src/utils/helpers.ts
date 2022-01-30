@@ -10,6 +10,7 @@ import {
   User,
   Team,
 } from 'ssw-common';
+import { ErrorWrapper } from '../api/types';
 
 import { pitchStatusEnum } from './enums';
 
@@ -427,6 +428,20 @@ const pluralize = (word: string, numberOf: number): string =>
  */
 const isPast = (date: Date): boolean => Date.now() - date.getTime() > 0;
 
+/**
+ * Extracts error message from API response
+ *
+ * @param res the API Response
+ * @returns the error message
+ */
+const extractErrorMessage = (res: ErrorWrapper): string => {
+  if (res.error.response.status === 400) {
+    return res.error.response.data.message;
+  }
+
+  return res.type;
+};
+
 export {
   getPitchTeams,
   getPitchTeamsForContributor,
@@ -455,4 +470,5 @@ export {
   isPast,
   defaultAsyncFunc,
   addTime,
+  extractErrorMessage,
 };

@@ -11,6 +11,7 @@ import { rolesEnum } from '../utils/enums';
 import { isError } from './builders';
 
 import { apiCall } from '.';
+import { extractErrorMessage } from '../utils/helpers';
 
 // API call to load a user's permissions
 export const loadUserPermissions = async (
@@ -183,7 +184,7 @@ export const approveUser = async (
       },
     });
   } else {
-    toast.error(res.type, {
+    toast.error(extractErrorMessage(res), {
       id: toastId,
     });
   }
@@ -202,6 +203,7 @@ export const rejectUser = async (
   const res = await apiCall({
     method: 'PUT',
     url: `/users/${user._id}/deny`,
+    failureMessage: 'Failed to reject user.',
   });
 
   if (!isError(res)) {
@@ -212,13 +214,13 @@ export const rejectUser = async (
       method: 'POST',
       url: `/notifications/sendUserRejected`,
       body: {
-        contributorId: user._id,
+        contributorId: /* user._id */ '71f45a007b377e3ee97bbf3c',
         reviewerId: currentUser._id,
       },
     });
     toast.success('User rejected');
   } else {
-    toast.error(res.type, {
+    toast.error(extractErrorMessage(res), {
       id: toastId,
     });
   }
