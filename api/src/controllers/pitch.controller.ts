@@ -462,15 +462,7 @@ export const addContributor = async (
 
   const currentPitch = await PitchService.getOne(req.params.id);
 
-  console.log('User id: ', userId);
-  console.log('Team id: ', teamId);
-  console.log('Editor: ', editor);
-  console.log('Writer: ', writer);
-
-  console.log('Current Pitch writer: ', currentPitch.writer);
-  console.log('Current Pitch primary editor', currentPitch.primaryEditor);
-
-  const canAddContributor = (): [boolean, string] => {
+  const canAddContributor = async (): Promise<[boolean, string]> => {
     if (writer === 'true') {
       if (currentPitch.writer && currentPitch.writer.toString() === userId) {
         return [false, 'User is already a writer'];
@@ -501,14 +493,16 @@ export const addContributor = async (
       }
 
       return [true, ''];
-    } else if (PitchService.isContributor(req.params.id, userId, teamId)) {
+    } else if (
+      await PitchService.isContributor(req.params.id, userId, teamId)
+    ) {
       return [false, 'User is already a contributor'];
     }
 
     return [true, ''];
   };
 
-  const [canAdd, error] = canAddContributor();
+  const [canAdd, error] = await canAddContributor();
 
   if (!canAdd) {
     sendFail(res, error);
@@ -559,7 +553,7 @@ export const removeContributor = async (
 
   const currentPitch = await PitchService.getOne(req.params.id);
 
-  const canRemoveContributor = (): [boolean, string] => {
+  const canRemoveContributor = async (): Promise<[boolean, string]> => {
     if (writer === 'true') {
       if (currentPitch.writer && currentPitch.writer.toString() !== userId) {
         return [false, 'User is not the writer'];
@@ -592,14 +586,16 @@ export const removeContributor = async (
       }
 
       return [true, ''];
-    } else if (!PitchService.isContributor(req.params.id, userId, teamId)) {
+    } else if (
+      !(await PitchService.isContributor(req.params.id, userId, teamId))
+    ) {
       return [false, 'User is not a contributor'];
     }
 
     return [true, ''];
   };
 
-  const [canRemove, error] = canRemoveContributor();
+  const [canRemove, error] = await canRemoveContributor();
 
   if (!canRemove) {
     sendFail(res, error);
