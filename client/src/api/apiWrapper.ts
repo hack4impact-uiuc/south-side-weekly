@@ -214,7 +214,7 @@ export const rejectUser = async (
       method: 'POST',
       url: `/notifications/sendUserRejected`,
       body: {
-        contributorId: /* user._id */ '71f45a007b377e3ee97bbf3c',
+        contributorId: user._id,
         reviewerId: currentUser._id,
       },
     });
