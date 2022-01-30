@@ -709,3 +709,33 @@ export const isWriterOrEditor = (writer: string, editor: string): boolean =>
   editor === editorTypeEnum.SECONDS ||
   editor === editorTypeEnum.THIRDS ||
   writer === 'true';
+
+export const isPendingContributor = (
+  pitchId: string,
+  userId: string,
+  teamId: string,
+): Promise<boolean> =>
+  Pitch.exists({
+    _id: pitchId,
+    pendingContributors: {
+      $elemMatch: {
+        userId,
+        teamId,
+      },
+    },
+  });
+
+export const isContributor = (
+  pitchId: string,
+  userId: string,
+  teamId: string,
+): Promise<boolean> =>
+  Pitch.exists({
+    _id: pitchId,
+    assignmentContributors: {
+      $elemMatch: {
+        userId,
+        teamId,
+      },
+    },
+  });
