@@ -260,7 +260,7 @@ export const approveUser = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const currentUser = await UserService.getOne(req.user._id);
+  const currentUser = await UserService.getOne(req.params.id);
 
   if (!currentUser) {
     sendNotFound(res, `User not found with id ${req.params.id}`);
@@ -299,7 +299,7 @@ export const rejectUser = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
-  const currentUser = await UserService.getOne(req.user._id);
+  const currentUser = await UserService.getOne(req.params.id);
 
   if (!currentUser) {
     sendNotFound(res, `User not found with id ${req.params.id}`);
