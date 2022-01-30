@@ -31,6 +31,7 @@ import { SingleSelect } from '../components/select/SingleSelect';
 import { parseOptionsSelect } from '../utils/helpers';
 import Loading from '../components/ui/Loading';
 import { pitchStatusCol } from '../components/table/columns';
+import { pitchStatusEnum } from '../utils/enums';
 
 import './Profile.scss';
 
@@ -212,6 +213,10 @@ const Profile = (): ReactElement => {
   });
 
   const getTeamsForPitch = (pitch: BasePopulatedPitch): Team[] => {
+    if (pitch.status !== pitchStatusEnum.APPROVED) {
+      return [];
+    }
+
     const teams: Team[] = [];
     pitch.assignmentContributors.map((contributor) => {
       if (contributor.userId._id === userId) {
@@ -238,7 +243,10 @@ const Profile = (): ReactElement => {
   };
 
   const teamsColumn = configureColumn<BasePopulatedPitch>({
-    title: "Team(s) You're On",
+    title:
+      currentUser?._id === user._id
+        ? "Team(s) You're On"
+        : "Team(s) They're On",
     width: 3,
     extractor: function getTeams(pitch) {
       return <TagList tags={getTeamsForPitch(pitch)} />;
