@@ -208,7 +208,6 @@ export const declinePitch = async (
   req: DeclineReq,
   res: Response,
 ): Promise<void> => {
-
   const currentPitch = await PitchService.getOne(req.params.id);
 
   if (!currentPitch) {
