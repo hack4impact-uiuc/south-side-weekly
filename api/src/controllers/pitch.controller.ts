@@ -4,6 +4,7 @@ import { BasePopulatedPitch, Pitch } from 'ssw-common';
 import { populatePitch } from '../populators';
 import { PitchService, TeamService, UserService } from '../services';
 import { isWriterOrEditor } from '../services/pitch.service';
+import { pitchStatusEnum } from '../utils/enums';
 import { sendFail, sendNotFound, sendSuccess } from '../utils/helpers';
 import { extractOptions, extractPopulateQuery } from './utils';
 
@@ -175,6 +176,16 @@ export const approvePitch = async (
   req: UpdateReq,
   res: Response,
 ): Promise<void> => {
+  const currentPitch = await PitchService.getOne(req.params.id);
+
+  if (!currentPitch) {
+    sendNotFound(res, `Pitch with id ${req.params.id} not found`);
+    return;
+  } else if (currentPitch.status !== pitchStatusEnum.PENDING) {
+    sendFail(res, 'Pitch is not pending approval');
+    return;
+  }
+
   const pitch = await PitchService.approvePitch(
     req.params.id,
     req.user._id,
@@ -197,12 +208,18 @@ export const declinePitch = async (
   req: DeclineReq,
   res: Response,
 ): Promise<void> => {
-  const pitch = await PitchService.declinePitch(req.params.id, req.user._id);
 
-  if (!pitch) {
+  const currentPitch = await PitchService.getOne(req.params.id);
+
+  if (!currentPitch) {
     sendNotFound(res, `Pitch with id ${req.params.id} not found`);
     return;
+  } else if (currentPitch.status !== pitchStatusEnum.PENDING) {
+    sendFail(res, 'Pitch is not pending approval');
+    return;
   }
+
+  const pitch = await PitchService.declinePitch(req.params.id, req.user._id);
 
   const populatedPitch = (await populatePitch(
     pitch,
