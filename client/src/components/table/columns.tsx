@@ -141,6 +141,7 @@ export const actionColumn = configureColumn<BasePopulatedUser>({
   width: 2,
   extractor: function GetAction(user: BasePopulatedUser) {
     const { user: currentUser } = useAuth();
+
     return (
       <div style={{ display: 'flex' }}>
         <PrimaryButton

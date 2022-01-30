@@ -162,12 +162,18 @@ export const approveUser = async (
     return;
   }
 
+  const toastId = toast.loading('Approving user...');
+
   const res = await apiCall({
     method: 'PUT',
     url: `/users/${user._id}/approve`,
+    failureMessage: 'Failed to approve user.',
   });
 
   if (!isError(res)) {
+    toast.success('User approved!', {
+      id: toastId,
+    });
     await apiCall({
       method: 'POST',
       url: `/notifications/sendUserApproved`,
@@ -176,9 +182,10 @@ export const approveUser = async (
         reviewerId: currentUser._id,
       },
     });
-    toast.success('User approved');
   } else {
-    toast.error('Error approving user');
+    toast.error(res.type, {
+      id: toastId,
+    });
   }
 };
 
@@ -190,12 +197,17 @@ export const rejectUser = async (
     return;
   }
 
+  const toastId = toast.loading('Approving user...');
+
   const res = await apiCall({
     method: 'PUT',
     url: `/users/${user._id}/deny`,
   });
 
   if (!isError(res)) {
+    toast.success('User approved!', {
+      id: toastId,
+    });
     apiCall({
       method: 'POST',
       url: `/notifications/sendUserRejected`,
@@ -206,6 +218,8 @@ export const rejectUser = async (
     });
     toast.success('User rejected');
   } else {
-    toast.error('Error rejecting user');
+    toast.error(res.type, {
+      id: toastId,
+    });
   }
 };

@@ -462,29 +462,56 @@ export const addContributor = async (
 
   const currentPitch = await PitchService.getOne(req.params.id);
 
-  if (writer === 'true' && currentPitch.writer.toString() === userId) {
-    sendFail(res, 'User is already a writer');
-    return;
-  } else if (
-    editor === editorTypeEnum.PRIMARY &&
-    currentPitch.primaryEditor.toString() === userId
-  ) {
-    sendFail(res, 'User is already Primary Editor editor');
-    return;
-  } else if (
-    editor === editorTypeEnum.SECONDS &&
-    currentPitch.secondEditors.some((editor) => editor.toString() === userId)
-  ) {
-    sendFail(res, 'User is already Secondary Editor editor');
-    return;
-  } else if (
-    editor === editorTypeEnum.THIRDS &&
-    currentPitch.thirdEditors.some((editor) => editor.toString() === userId)
-  ) {
-    sendFail(res, 'User is already Third Editor editor');
-    return;
-  } else if (PitchService.isContributor(req.params.id, userId, teamId)) {
-    sendFail(res, 'User is already a contributor');
+  console.log('User id: ', userId);
+  console.log('Team id: ', teamId);
+  console.log('Editor: ', editor);
+  console.log('Writer: ', writer);
+
+  console.log('Current Pitch writer: ', currentPitch.writer);
+  console.log('Current Pitch primary editor', currentPitch.primaryEditor);
+
+  const canAddContributor = (): [boolean, string] => {
+    if (writer === 'true') {
+      if (currentPitch.writer && currentPitch.writer.toString() === userId) {
+        return [false, 'User is already a writer'];
+      }
+
+      return [true, ''];
+    } else if (editor === editorTypeEnum.PRIMARY) {
+      if (currentPitch.primaryEditor.toString() === userId) {
+        return [false, 'User is already a primary editor'];
+      }
+
+      return [true, ''];
+    } else if (editor === editorTypeEnum.SECONDS) {
+      if (
+        currentPitch.secondEditors.some(
+          (editor) => editor.toString() === userId,
+        )
+      ) {
+        return [false, 'User is already a secondary editor'];
+      }
+
+      return [true, ''];
+    } else if (editor === editorTypeEnum.THIRDS) {
+      if (
+        currentPitch.thirdEditors.some((editor) => editor.toString() === userId)
+      ) {
+        return [false, 'User is already a third editor'];
+      }
+
+      return [true, ''];
+    } else if (PitchService.isContributor(req.params.id, userId, teamId)) {
+      return [false, 'User is already a contributor'];
+    }
+
+    return [true, ''];
+  };
+
+  const [canAdd, error] = canAddContributor();
+
+  if (!canAdd) {
+    sendFail(res, error);
     return;
   }
 
@@ -532,29 +559,50 @@ export const removeContributor = async (
 
   const currentPitch = await PitchService.getOne(req.params.id);
 
-  if (writer === 'true' && currentPitch.writer.toString() !== userId) {
-    sendFail(res, 'User is already a writer');
-    return;
-  } else if (
-    editor === editorTypeEnum.PRIMARY &&
-    currentPitch.primaryEditor.toString() !== userId
-  ) {
-    sendFail(res, 'User is already Primary Editor editor');
-    return;
-  } else if (
-    editor === editorTypeEnum.SECONDS &&
-    currentPitch.secondEditors.every((editor) => editor.toString() !== userId)
-  ) {
-    sendFail(res, 'User is already Secondary Editor editor');
-    return;
-  } else if (
-    editor === editorTypeEnum.THIRDS &&
-    currentPitch.thirdEditors.every((editor) => editor.toString() !== userId)
-  ) {
-    sendFail(res, 'User is already Third Editor editor');
-    return;
-  } else if (!PitchService.isContributor(req.params.id, userId, teamId)) {
-    sendFail(res, 'User is already a contributor');
+  const canRemoveContributor = (): [boolean, string] => {
+    if (writer === 'true') {
+      if (currentPitch.writer && currentPitch.writer.toString() !== userId) {
+        return [false, 'User is not the writer'];
+      }
+
+      return [true, ''];
+    } else if (editor === editorTypeEnum.PRIMARY) {
+      if (currentPitch.primaryEditor.toString() !== userId) {
+        return [false, 'User is not the primary editor'];
+      }
+
+      return [true, ''];
+    } else if (editor === editorTypeEnum.SECONDS) {
+      if (
+        currentPitch.secondEditors.every(
+          (editor) => editor.toString() !== userId,
+        )
+      ) {
+        return [false, 'User is not a secondary editor'];
+      }
+
+      return [true, ''];
+    } else if (editor === editorTypeEnum.THIRDS) {
+      if (
+        currentPitch.thirdEditors.every(
+          (editor) => editor.toString() !== userId,
+        )
+      ) {
+        return [false, 'User is not a third editor'];
+      }
+
+      return [true, ''];
+    } else if (!PitchService.isContributor(req.params.id, userId, teamId)) {
+      return [false, 'User is not a contributor'];
+    }
+
+    return [true, ''];
+  };
+
+  const [canRemove, error] = canRemoveContributor();
+
+  if (!canRemove) {
+    sendFail(res, error);
     return;
   }
 

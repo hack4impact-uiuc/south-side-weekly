@@ -366,12 +366,12 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
                     content={message}
                     trigger={
                       <Icon
-                        style={{ fontSize: '16px' }}
+                        style={{ fontSize: '16px', cursor: 'pointer' }}
                         name="question circle"
                       />
                     }
                     wide="very"
-                    position="top center"
+                    position="right center"
                     hoverable
                   />
                 </AuthView>

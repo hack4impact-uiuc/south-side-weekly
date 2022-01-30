@@ -78,29 +78,33 @@ export const PitchesView: FC<PitchesViewProps> = ({ type }): ReactElement => {
 
     if (!isError(res)) {
       setData(res.data.result);
-      toast.dismiss();
-      toast.success('Successfully loaded pitches!');
     }
   }, [queryParams, apiUrl]);
 
   useEffect(() => {
-    queryPitches();
+    let message = '';
+
+    if (type === 'all') {
+      message = 'Loading all approved pitches...';
+    } else if (type === 'claim') {
+      message = 'Loading your claimable pitches...';
+    } else if (type === 'review-unclaimed') {
+      message = 'Loading unclaimed pitches...';
+    } else if (type === 'review-new') {
+      message = 'Loading new pitches...';
+    }
+
+    toast.promise(queryPitches(), {
+      loading: message,
+      success: () => `Successfully loaded pitches...`,
+      error: () => `Failed to load ${type} pitches...`,
+    });
   }, [type, queryPitches]);
 
   useEffect(() => {
     setData({ data: [], count: 0 });
     setQuery({ limit: 10, offset: 0 }, 'push');
-
-    if (type === 'all') {
-      toast.loading('Loading all approved pitches...');
-    } else if (type === 'claim') {
-      toast.loading('Loading your claimable pitches...');
-    } else if (type === 'review-unclaimed') {
-      toast.loading('Loading unclaimed pitches...');
-    } else if (type === 'review-new') {
-      toast.loading('Loading new pitches...');
-    }
-  }, [setQuery, type]);
+  }, [setQuery]);
 
   return (
     <div className="users-view">

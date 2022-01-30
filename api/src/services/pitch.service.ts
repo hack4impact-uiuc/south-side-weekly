@@ -720,7 +720,7 @@ export const isPendingContributor = (
     pendingContributors: {
       $elemMatch: {
         userId,
-        teamId,
+        teams: teamId,
       },
     },
   });
@@ -735,7 +735,7 @@ export const isContributor = (
     assignmentContributors: {
       $elemMatch: {
         userId,
-        teamId,
+        teams: teamId,
       },
     },
   });

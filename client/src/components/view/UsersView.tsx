@@ -64,18 +64,20 @@ export const UsersView: FC<UsersViewProps> = ({ type }): ReactElement => {
 
     if (!isError(res)) {
       setData(res.data.result);
-      toast.dismiss();
     }
   }, [queryParams, type]);
 
   useEffect(() => {
-    queryUsers();
-  }, [queryUsers]);
+    toast.promise(queryUsers(), {
+      loading: 'Loading',
+      success: () => `Successfully loaded ${type} users...`,
+      error: () => `Failed to load ${type} users...`,
+    });
+  }, [queryUsers, type]);
 
   useEffect(() => {
     setData({ users: [], count: 0 });
     setQuery({ limit: 10, offset: 0 }, 'push');
-    toast.loading(`Loading ${type} users...`);
   }, [type, setQuery]);
 
   return (

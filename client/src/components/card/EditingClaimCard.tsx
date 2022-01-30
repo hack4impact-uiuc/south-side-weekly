@@ -420,9 +420,14 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
                 <UserChip user={omit(user, 'editorType')} />
                 <Popup
                   content={message}
-                  trigger={<Icon size="massive" name="question circle" />}
+                  trigger={
+                    <Icon
+                      style={{ fontSize: '16px', cursor: 'pointer' }}
+                      name="question circle"
+                    />
+                  }
                   wide="very"
-                  position="top center"
+                  position="right center"
                   hoverable
                 />
               </div>
