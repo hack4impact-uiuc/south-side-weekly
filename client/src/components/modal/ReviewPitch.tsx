@@ -130,31 +130,27 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       body: pitchData,
     });
 
-    apiCall({
-      method: 'POST',
-      url: '/notifications/sendPitchApproved',
-      body: {
-        contributorId: pitch?.author._id,
-        pitchId: pitch?._id,
-        reviewerId: user?._id,
-      },
-    });
-
-    console.log(pitchData.writer, pitch?.author._id);
-
-    if (pitchData.writer && pitchData.writer !== pitch?.author._id) {
+    if (!isError(res)) {
       apiCall({
         method: 'POST',
-        url: '/notifications/sendContributorAdded',
+        url: '/notifications/sendPitchApproved',
         body: {
-          contributorId: pitchData.writer,
-          staffId: user?._id,
+          contributorId: pitch?.author._id,
           pitchId: pitch?._id,
+          reviewerId: user?._id,
         },
       });
-    }
-
-    if (!isError(res)) {
+      if (pitchData.writer && pitchData.writer !== pitch?.author._id) {
+        apiCall({
+          method: 'POST',
+          url: '/notifications/sendContributorAdded',
+          body: {
+            contributorId: pitchData.writer,
+            staffId: user?._id,
+            pitchId: pitch?._id,
+          },
+        });
+      }
       toast.success('Pitch approved');
       setOpen(false);
     } else {
@@ -171,18 +167,18 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       },
     });
 
-    apiCall({
-      method: 'POST',
-      url: '/notifications/sendPitchDeclined',
-      body: {
-        contributorId: pitch?.author._id,
-        staffId: user?._id,
-        pitchId: pitch?._id,
-        reasoning: reasoning,
-      },
-    });
-
     if (!isError(res)) {
+      apiCall({
+        method: 'POST',
+        url: '/notifications/sendPitchDeclined',
+        body: {
+          contributorId: pitch?.author._id,
+          staffId: user?._id,
+          pitchId: pitch?._id,
+          reasoning: reasoning,
+        },
+      });
+
       toast.success('Pitch declined');
       setOpen(false);
     } else {

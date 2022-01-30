@@ -167,16 +167,15 @@ export const approveUser = async (
     url: `/users/${user._id}/approve`,
   });
 
-  await apiCall({
-    method: 'POST',
-    url: `/notifications/sendUserApproved`,
-    body: {
-      contributorId: user._id,
-      reviewerId: currentUser._id,
-    },
-  });
-
   if (!isError(res)) {
+    await apiCall({
+      method: 'POST',
+      url: `/notifications/sendUserApproved`,
+      body: {
+        contributorId: user._id,
+        reviewerId: currentUser._id,
+      },
+    });
     toast.success('User approved');
   } else {
     toast.error('Error approving user');
@@ -195,16 +194,16 @@ export const rejectUser = async (
     method: 'PUT',
     url: `/users/${user._id}/deny`,
   });
-  apiCall({
-    method: 'POST',
-    url: `/notifications/sendUserRejected`,
-    body: {
-      contributorId: user._id,
-      reviewerId: currentUser._id,
-    },
-  });
 
   if (!isError(res)) {
+    apiCall({
+      method: 'POST',
+      url: `/notifications/sendUserRejected`,
+      body: {
+        contributorId: user._id,
+        reviewerId: currentUser._id,
+      },
+    });
     toast.success('User rejected');
   } else {
     toast.error('Error rejecting user');

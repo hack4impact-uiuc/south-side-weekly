@@ -5,6 +5,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
+import toast from 'react-hot-toast';
 import { Button, Divider, Icon, Input, Label, Popup } from 'semantic-ui-react';
 import { Team, User, UserFields } from 'ssw-common';
 import Swal from 'sweetalert2';
@@ -69,7 +70,7 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
         return;
       }
 
-      await apiCall({
+      const res = await apiCall({
         method: 'PUT',
         url: `/pitches/${pitchId}/addContributor`,
         body: {
@@ -81,22 +82,28 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
         },
       });
 
-      apiCall({
-        method: 'POST',
-        url: '/notifications/sendContributorAdded',
-        body: {
-          contributorId: selectedContributor,
-          staffId: user?._id,
-          pitchId: pitchId,
-        },
-      });
+      if (!isError(res)) {
+        apiCall({
+          method: 'POST',
+          url: '/notifications/sendContributorAdded',
+          body: {
+            contributorId: selectedContributor,
+            staffId: user?._id,
+            pitchId: pitchId,
+          },
+        });
+        toast.success('Added contributor');
+        setSelectContributorMode(false);
+      } else {
+        toast.error('Error adding contributor');
+      }
     }
-    setSelectContributorMode(false);
+
     await callback();
   };
 
   const removeContributor = async (userId: string): Promise<void> => {
-    await apiCall({
+    const res = await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/removeContributor`,
       body: {
@@ -108,11 +115,17 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
       },
     });
 
+    if (!isError(res)) {
+      toast.success('Removed contributor');
+    } else {
+      toast.error('Error removing contributor');
+    }
+
     await callback();
   };
 
   const approveClaim = async (userId: string): Promise<void> => {
-    await apiCall({
+    const res = await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/approveClaim`,
       body: {
@@ -124,22 +137,27 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
       },
     });
 
-    apiCall({
-      method: 'POST',
-      url: '/notifications/sendClaimRequestApproved',
-      body: {
-        contributorId: userId,
-        pitchId: pitchId,
-        staffId: user?._id,
-        teamId: team._id,
-      },
-    });
+    if (!isError(res)) {
+      apiCall({
+        method: 'POST',
+        url: '/notifications/sendClaimRequestApproved',
+        body: {
+          contributorId: userId,
+          pitchId: pitchId,
+          staffId: user?._id,
+          teamId: team._id,
+        },
+      });
+      toast.success('Approved contributor claim');
+    } else {
+      toast.error('Error approving contributor claim');
+    }
 
     await callback();
   };
 
   const declineClaim = async (userId: string): Promise<void> => {
-    await apiCall({
+    const res = await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/declineClaim`,
       body: {
@@ -148,15 +166,21 @@ const ApproveClaimCard: FC<ApproveClaimCardProps> = ({
       },
     });
 
-    apiCall({
-      method: 'POST',
-      url: '/notifications/sendClaimRequestDeclined',
-      body: {
-        contributorId: userId,
-        pitchId: pitchId,
-        staffId: user?._id,
-      },
-    });
+    if (!isError(res)) {
+      apiCall({
+        method: 'POST',
+        url: '/notifications/sendClaimRequestDeclined',
+        body: {
+          contributorId: userId,
+          pitchId: pitchId,
+          staffId: user?._id,
+        },
+      });
+      toast.success('Declined contributor claim');
+    } else {
+      toast.error('Error declining contributor claim');
+    }
+
     await callback();
   };
 
