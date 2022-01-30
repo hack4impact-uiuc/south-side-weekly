@@ -139,17 +139,18 @@ export const joinedColumn = configureColumn<BasePopulatedUser>({
 export const actionColumn = configureColumn<BasePopulatedUser>({
   title: '',
   width: 2,
-  extractor: function getAction(user: BasePopulatedUser) {
+  extractor: function GetAction(user: BasePopulatedUser) {
+    const { user: currentUser } = useAuth();
     return (
       <div style={{ display: 'flex' }}>
         <PrimaryButton
           size="mini"
-          onClick={() => approveUser(user)}
+          onClick={() => approveUser(user, currentUser)}
           content="Approve"
         />
         <SecondaryButton
           size="mini"
-          onClick={() => rejectUser(user)}
+          onClick={() => rejectUser(user, currentUser)}
           content="Decline"
           border
         />

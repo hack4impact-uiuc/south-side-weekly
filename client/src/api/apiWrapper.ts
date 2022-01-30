@@ -154,10 +154,26 @@ export const loadEditors = async (): Promise<BasePopulatedUser[]> => {
   return [];
 };
 
-export const approveUser = async (user: BasePopulatedUser): Promise<void> => {
+export const approveUser = async (
+  user: BasePopulatedUser,
+  currentUser: BasePopulatedUser | undefined,
+): Promise<void> => {
+  if (!currentUser) {
+    return;
+  }
+
   const res = await apiCall({
     method: 'PUT',
     url: `/users/${user._id}/approve`,
+  });
+
+  await apiCall({
+    method: 'POST',
+    url: `/notifications/sendUserApproved`,
+    body: {
+      contributorId: user._id,
+      reviewerId: currentUser._id,
+    },
   });
 
   if (!isError(res)) {
@@ -167,10 +183,25 @@ export const approveUser = async (user: BasePopulatedUser): Promise<void> => {
   }
 };
 
-export const rejectUser = async (user: BasePopulatedUser): Promise<void> => {
+export const rejectUser = async (
+  user: BasePopulatedUser,
+  currentUser: BasePopulatedUser | undefined,
+): Promise<void> => {
+  if (!currentUser) {
+    return;
+  }
+
   const res = await apiCall({
     method: 'PUT',
     url: `/users/${user._id}/deny`,
+  });
+  apiCall({
+    method: 'POST',
+    url: `/notifications/sendUserRejected`,
+    body: {
+      contributorId: user._id,
+      reviewerId: currentUser._id,
+    },
   });
 
   if (!isError(res)) {

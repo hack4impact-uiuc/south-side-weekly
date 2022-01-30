@@ -1,21 +1,16 @@
 import React, { ReactElement, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import { Button, Segment } from 'semantic-ui-react';
-import Swal from 'sweetalert2';
 
 import { useAuth } from '../../contexts';
-import { openProfile } from '../../utils/helpers';
 
 import './Completion.scss';
 
 const Completion = (): ReactElement => {
-  const { register, user } = useAuth();
+  const { register } = useAuth();
+  const history = useHistory();
 
   useEffect(() => {
-    Swal.fire({
-      title: 'Account created!',
-      icon: 'success',
-    });
-
     register();
   }, [register]);
 
@@ -33,7 +28,7 @@ const Completion = (): ReactElement => {
         className="default-btn"
         fluid
         content="Go to Dashboard"
-        onClick={() => openProfile(user!)}
+        onClick={() => history.push('/resources')}
       />
     </div>
   );

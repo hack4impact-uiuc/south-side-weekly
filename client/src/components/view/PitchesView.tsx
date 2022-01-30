@@ -15,9 +15,9 @@ import toast from 'react-hot-toast';
 import { isError, apiCall } from '../../api';
 import { MultiSelectFilter } from '../filter/MultiSelectFilter';
 import { DelayedSearch } from '../search/DelayedSearch';
-import { CheckboxFilter } from '../filter/CheckboxFilter';
 import { PitchRecords } from '../table/PitchRecords';
 import { useAuth } from '../../contexts';
+import { RadioFilter } from '../filter/RadioFilter';
 
 interface PitchesRes {
   data: BasePopulatedPitch[];
@@ -109,12 +109,12 @@ export const PitchesView: FC<PitchesViewProps> = ({ type }): ReactElement => {
           <div id="search">
             <DelayedSearch id="search" />
           </div>
-          <CheckboxFilter
+          <RadioFilter
             className="publish-date-checkbox"
             label="Has Publish Date"
             filterKey="hasPublishDate"
           />
-          <CheckboxFilter
+          <RadioFilter
             label="Has No Publish Date"
             value="false"
             filterKey="hasPublishDate"

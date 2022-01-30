@@ -74,6 +74,7 @@ export interface DynamicTableProps<T> extends Omit<TableProps, 'columns'> {
   footer?: ReactNode;
   sortType?: 'internal' | 'query';
   noHeader?: boolean;
+  priority?: 'modal' | 'record-action';
 }
 
 /**
@@ -103,6 +104,7 @@ const DynamicTable = <T,>({
   emptyMessage = 'No records found',
   sortType = 'internal',
   noHeader = false,
+  priority,
   ...rest
 }: DynamicTableProps<T>): ReactElement => {
   const [sortedRecords, setSortedRecords] = useState(records);
@@ -221,6 +223,18 @@ const DynamicTable = <T,>({
    * @param record the record being clicked
    */
   const handleRecordClick = (record: T): void => {
+    console.log(priority);
+
+    if (priority && priority === 'record-action') {
+      onRecordClick?.(record);
+      return;
+    } else if (priority && priority === 'modal' && getModal) {
+      console.log('here');
+      setClickedRecord(record);
+      setIsModalOpen(true);
+      return;
+    }
+
     if (onRecordClick) {
       onRecordClick(record);
     }

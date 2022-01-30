@@ -76,7 +76,7 @@ export const ViewPitchFeedback: FC<PitchFeedbackProps> = ({
       {...rest}
     >
       <Modal.Header>
-        View Contributor Feedback
+        View Pitch Feedback
         <Pusher />
         <Icon name="close" onClick={() => setIsOpen(false)} />
       </Modal.Header>

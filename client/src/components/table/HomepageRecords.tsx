@@ -1,8 +1,11 @@
 import React, { FC, useEffect, useMemo } from 'react';
 import { BasePopulatedPitch, FullPopulatedPitch, Pitch } from 'ssw-common';
+import { useHistory } from 'react-router-dom';
 
 import { useAuth } from '../../contexts';
 import { findPendingContributor } from '../../utils/helpers';
+import { pitchStatusEnum } from '../../utils/enums';
+import { SubmitPitchModal } from '../modal/SubmitPitchModal';
 
 import { configureColumn } from './dynamic/DynamicTable2.0';
 import {
@@ -74,8 +77,16 @@ interface TableProps {
   onModalClose?: () => void;
 }
 
-export const HomepageRecords: FC<TableProps> = ({ data, count, type }) => {
+export const HomepageRecords: FC<TableProps> = ({
+  data,
+  count,
+  type,
+  onModalClose,
+}) => {
   const { user } = useAuth();
+
+  const history = useHistory();
+
   useEffect(() => {
     const col = configureColumn<BasePopulatedPitch>({
       title: 'Date Submitted',
@@ -118,14 +129,38 @@ export const HomepageRecords: FC<TableProps> = ({ data, count, type }) => {
 
   return (
     <PaginatedTable<FullPopulatedPitch | BasePopulatedPitch>
+      getModal={(pitch, open, setOpen) => {
+        if (pitch.status === pitchStatusEnum.PENDING) {
+          return (
+            <SubmitPitchModal
+              onUnmount={onModalClose}
+              hasTrigger={false}
+              pitch={{
+                title: pitch.title,
+                description: pitch.description,
+                topics: pitch.topics.map((topic) => topic._id),
+                assignmentGoogleDocLink: pitch.assignmentGoogleDocLink,
+                conflictOfInterest: pitch.conflictOfInterest,
+                writer: pitch.writer?._id,
+                _id: pitch._id,
+              }}
+              open={open}
+              setOpen={setOpen}
+            />
+          );
+        }
+
+        history.push(`/pitch/${pitch._id}`);
+        return <></>;
+      }}
       columns={cols as any}
       records={data}
       count={count}
-      pageOptions={['1', '10', '25', '50']}
       onRecordClick={viewPitch}
       emptyMessage="There are no pitches in this category."
       sortType="query"
       sortable
+      priority="modal"
     />
   );
 };

@@ -83,7 +83,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       const pitch = await loadBasePitch(id);
 
       setPitch(pitch);
-      setWriter(pitch && pitch.writer && pitch.writer._id);
+      setWriter(pitch && pitch.writer && pitch.writer?._id);
     };
 
     if (open) {
@@ -130,6 +130,30 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       body: pitchData,
     });
 
+    apiCall({
+      method: 'POST',
+      url: '/notifications/sendPitchApproved',
+      body: {
+        contributorId: pitch?.author._id,
+        pitchId: pitch?._id,
+        reviewerId: user?._id,
+      },
+    });
+
+    console.log(pitchData.writer, pitch?.author._id);
+
+    if (pitchData.writer && pitchData.writer !== pitch?.author._id) {
+      apiCall({
+        method: 'POST',
+        url: '/notifications/sendContributorAdded',
+        body: {
+          contributorId: pitchData.writer,
+          staffId: user?._id,
+          pitchId: pitch?._id,
+        },
+      });
+    }
+
     if (!isError(res)) {
       toast.success('Pitch approved');
       setOpen(false);
@@ -144,6 +168,17 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       method: 'PUT',
       body: {
         reasoning,
+      },
+    });
+
+    apiCall({
+      method: 'POST',
+      url: '/notifications/sendPitchDeclined',
+      body: {
+        contributorId: pitch?.author._id,
+        staffId: user?._id,
+        pitchId: pitch?._id,
+        reasoning: reasoning,
       },
     });
 

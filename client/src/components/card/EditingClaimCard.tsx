@@ -1,4 +1,4 @@
-import { groupBy, omit } from 'lodash';
+import { cloneDeep, groupBy, omit } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
 import { Button, Divider, Icon, Label, Popup } from 'semantic-ui-react';
 import { Team, User } from 'ssw-common';
@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 
 import { FieldTag } from '..';
 import { apiCall, isError } from '../../api';
+import { useAuth } from '../../contexts';
 import { EditorRecord, PendingEditorRecord } from '../../pages/Pitch';
 import { editorTypeEnum } from '../../utils/enums';
 import { getUserFullName } from '../../utils/helpers';
@@ -43,6 +44,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
   notApproved,
   callback,
 }): ReactElement => {
+  const { user } = useAuth();
   const [selectContributorMode, setSelectContributorMode] = useState(false);
   const [filteredContributors, setFilteredContributors] = useState<User[]>([]);
   const [selectedContributor, setSelectedContributor] = useState('');
@@ -75,23 +77,72 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
         teamId: team._id,
       },
     });
+
+    apiCall({
+      method: 'POST',
+      url: '/notifications/sendClaimRequestDeclined',
+      body: {
+        contributorId: userId,
+        pitchId: pitchId,
+        staffId: user?._id,
+      },
+    });
     await callback();
+  };
+
+  const shouldContinueEditorAPI = async (
+    editorType: string,
+  ): Promise<boolean> => {
+    const primaryEditor = Object.values(editors).find(
+      ({ editorType }) => editorType === editorTypeEnum.PRIMARY,
+    );
+    let shouldCancelChange = false;
+    if (editorType === editorTypeEnum.PRIMARY && primaryEditor) {
+      await Swal.fire({
+        title: 'Primary Editor already exists.',
+        text: `This action will remove the current Primary Editor, ${primaryEditor.user.fullname}. Contributors on this pitch will not be alerted of this.`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Assign New Primary Editor',
+      }).then((result) => {
+        if (!result.isConfirmed) {
+          shouldCancelChange = true;
+        }
+      });
+      if (shouldCancelChange) {
+        return false;
+      }
+    }
+    return true;
   };
 
   const approveClaim = async (
     editorId: string,
     editorType: string,
   ): Promise<void> => {
+    if (!(await shouldContinueEditorAPI(editorType))) {
+      return;
+    }
     await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/approveClaim`,
       body: {
         userId: editorId,
         teamId: team._id,
-        teams: [team.name],
       },
       query: {
         editor: editorType,
+      },
+    });
+
+    apiCall({
+      method: 'POST',
+      url: '/notifications/sendClaimRequestApproved',
+      body: {
+        contributorId: editorId,
+        pitchId: pitchId,
+        staffId: user?._id,
+        teamId: team._id,
       },
     });
 
@@ -102,6 +153,13 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
     editorId: string,
     editorType: string,
   ): Promise<void> => {
+    if (!(await shouldContinueEditorAPI(editorType))) {
+      const temp = cloneDeep(temporaryContributors);
+      temp[editorId].editorType = 'SECONDS';
+      setTemporaryContributors(temp);
+      return;
+    }
+
     removeTemporaryContributor(editorId);
 
     await apiCall({
@@ -113,6 +171,16 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       },
       query: {
         editor: editorType,
+      },
+    });
+
+    apiCall({
+      method: 'POST',
+      url: '/notifications/sendContributorAdded',
+      body: {
+        contributorId: editorId,
+        staffId: user?._id,
+        pitchId: pitchId,
       },
     });
 
@@ -249,29 +317,9 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       });
       return;
     }
-    const primaryEditor = Object.values(editors).find(
-      ({ editorType }) => editorType === editorTypeEnum.PRIMARY,
-    );
-
-    let shouldCancelChange = false;
-    if (primaryEditor && to === editorTypeEnum.PRIMARY) {
-      await Swal.fire({
-        title: 'Primary Editor already exists.',
-        text: `This action will remove the current Primary Editor, ${primaryEditor.user.fullname}. Contributors on this pitch will not be alerted of this.`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Assign New Primary Editor',
-      }).then((result) => {
-        if (!result.isConfirmed) {
-          shouldCancelChange = true;
-        }
-      });
-    }
-
-    if (shouldCancelChange) {
+    if (!(await shouldContinueEditorAPI(to))) {
       return;
     }
-
     await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/changeEditor`,
@@ -349,7 +397,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
                 <UserChip user={omit(user, 'editorType')} />
                 <Popup
                   content={message}
-                  trigger={<Icon size="small" name="question circle" />}
+                  trigger={<Icon size="massive" name="question circle" />}
                   wide="very"
                   position="top center"
                   hoverable

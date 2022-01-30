@@ -22,7 +22,7 @@ import { FieldTag, UserPicture } from '../components';
 import { configureColumn } from '../components/table/dynamic/DynamicTable2.0';
 import UserFeedback from '../components/card/UserFeedback';
 import { EditUserModal } from '../components/modal/EditUser';
-import { useAuth } from '../contexts';
+import { useAuth, useTeams } from '../contexts';
 import { TagList } from '../components/list/TagList';
 import { IconLabel } from '../components/ui/IconLabel';
 import { PaginatedTable } from '../components/table/dynamic/PaginatedTable';
@@ -30,7 +30,6 @@ import { apiCall, isError } from '../api';
 import { SingleSelect } from '../components/select/SingleSelect';
 import { parseOptionsSelect } from '../utils/helpers';
 import Loading from '../components/ui/Loading';
-import { pitchStatusEnum } from '../utils/enums';
 import { pitchStatusCol } from '../components/table/columns';
 
 import './Profile.scss';
@@ -46,6 +45,7 @@ interface FeedbackRes {
 }
 
 const Profile = (): ReactElement => {
+  const { teams: allTeams } = useTeams();
   const { userId } = useParams<{ userId: string }>();
   const { user: currentUser, isAdmin, isStaff } = useAuth();
   const [queries, setQueries] = useQueryParams({
@@ -212,15 +212,29 @@ const Profile = (): ReactElement => {
   });
 
   const getTeamsForPitch = (pitch: BasePopulatedPitch): Team[] => {
-    const contributor = pitch.assignmentContributors.find(
-      (contributor) => contributor.userId._id === userId,
-    );
-
-    if (!contributor) {
-      return [];
+    const teams: Team[] = [];
+    pitch.assignmentContributors.map((contributor) => {
+      if (contributor.userId._id === userId) {
+        contributor.teams.map((t) => teams.push(t));
+      }
+    });
+    if (pitch.writer?._id === userId) {
+      const writingTeam = allTeams.find(({ name }) => name === 'Writing');
+      if (writingTeam) {
+        teams.push(writingTeam);
+      }
     }
-
-    return contributor.teams;
+    if (
+      pitch.secondEditors.find(({ _id }) => _id === userId) ||
+      pitch.thirdEditors.find(({ _id }) => _id === userId) ||
+      pitch.primaryEditor?._id === userId
+    ) {
+      const editingTeam = allTeams.find(({ name }) => name === 'Editing');
+      if (editingTeam) {
+        teams.push(editingTeam);
+      }
+    }
+    return teams;
   };
 
   const teamsColumn = configureColumn<BasePopulatedPitch>({
@@ -372,13 +386,7 @@ const Profile = (): ReactElement => {
           records={pitchesData.data}
           count={pitchesData.count}
           pageOptions={['1', '10', '25', '50']}
-          onRecordClick={(pitch) => {
-            if (pitch.status !== pitchStatusEnum.APPROVED) {
-              return;
-            }
-
-            history.push(`/pitch/${pitch._id}`);
-          }}
+          onRecordClick={(pitch) => history.push(`/pitch/${pitch._id}`)}
           sortable
           sortType="query"
         />

@@ -9,7 +9,6 @@ import {
   sendUnauthorized,
 } from '../utils/helpers';
 import { getEditableFields, getViewableFields } from '../utils/user-utils';
-import { sendApproveUserMail, sendRejectUserMail } from '../mail/sender';
 import { TeamService, UserService, PitchService } from '../services';
 
 import { populateUser } from '../populators/user.populate';
@@ -272,8 +271,7 @@ export const approveUser = async (
     sendNotFound(res, `User not found with id ${req.params.id}`);
     return;
   }
-
-  sendApproveUserMail(user, req.user);
+  console.log('REACHED APPROVE USER ENDPOINT');
 
   sendSuccess(
     res,
@@ -293,8 +291,6 @@ export const rejectUser = async (
     req.params.id,
     onboardingStatusEnum.DENIED,
   );
-
-  sendRejectUserMail(user, req.user);
 
   if (!user) {
     sendNotFound(res, `User not found with id ${req.params.id}`);

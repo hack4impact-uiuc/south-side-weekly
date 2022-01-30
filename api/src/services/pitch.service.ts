@@ -427,6 +427,19 @@ export const removeEmptyPendingContributors = async (
   );
 };
 
+export const removeEmptyAssignmentContributors = async (
+  id: string,
+): Promise<void> => {
+  await updateModel(
+    { _id: id },
+    {
+      $pull: {
+        assignmentContributors: { teams: [] },
+      },
+    },
+  );
+};
+
 export const updateTeamTarget = async (
   _id: string,
   teamId: string,
@@ -643,6 +656,8 @@ export const removeContributor = async (
       },
     );
   }
+
+  await removeEmptyAssignmentContributors(_id);
 
   return pitch;
 };

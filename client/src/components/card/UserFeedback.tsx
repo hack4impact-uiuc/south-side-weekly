@@ -22,7 +22,7 @@ const UserFeedback: FC<UserFeedbackProps> = ({ feedback }) => (
         </p>
       </Grid.Column>
       <Grid.Column width={10}>
-        <div>
+        <div className="stars">
           <Rating
             className="rating"
             size="large"

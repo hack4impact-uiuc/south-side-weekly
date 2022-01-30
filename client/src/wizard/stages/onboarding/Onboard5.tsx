@@ -40,7 +40,7 @@ const Onboard5 = (): ReactElement => {
       onboardingStatus: 'ONBOARDING_SCHEDULED',
       involvementResponse: data!.involvementResponse,
       journalismResponse: data!.journalismResponse,
-      neighborhood: data!.neighborhood,
+      neighborhood: data!.neighborhood || 'NA',
       teams: [...new Set(data!.teams)],
       role: data!.role,
       races: reject(data!.races, isEmpty),

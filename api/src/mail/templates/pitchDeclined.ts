@@ -5,7 +5,7 @@ export const pitchDeclinedHtml = `
 
 <body>
     <p>Hi {{ contributor }}</p>
-    <br />
+ 
     <p>Thank you for submitting your pitch "{{ title }}". Unfortunately, your pitch was declined for the following
         reason:
     </p>
@@ -17,8 +17,6 @@ export const pitchDeclinedHtml = `
         pitch-writing {{ resourcesLink }} under the “Writing” tab. In the meantime, feel free to check the {{ pitchDocLink }} for potential
         new stories to claim!
     </p>
-    <br />
-
 
     <p>Thank you,</p>
     <p>{{ staff }} </p>

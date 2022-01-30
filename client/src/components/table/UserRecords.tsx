@@ -88,7 +88,7 @@ export const UsersRecords: FC<TableProps> = ({
   type,
   onModalClose,
 }) => {
-  const { isAdmin } = useAuth();
+  const { isAdmin, user: currentUser } = useAuth();
 
   const actionColumn = configureColumn<BasePopulatedUser>({
     title: '',
@@ -100,7 +100,7 @@ export const UsersRecords: FC<TableProps> = ({
             size="mini"
             onClick={async (e) => {
               e.stopPropagation();
-              await approveUser(user);
+              await approveUser(user, currentUser);
               if (onModalClose) {
                 onModalClose();
               }
@@ -111,7 +111,7 @@ export const UsersRecords: FC<TableProps> = ({
             size="mini"
             onClick={async (e) => {
               e.stopPropagation();
-              await rejectUser(user);
+              await rejectUser(user, currentUser);
               if (onModalClose) {
                 onModalClose();
               }
@@ -142,7 +142,6 @@ export const UsersRecords: FC<TableProps> = ({
   return (
     <PaginatedTable<BasePopulatedUser>
       count={count}
-      pageOptions={['1', '10', '25', '50']}
       sortType="query"
       sortable
       records={users}

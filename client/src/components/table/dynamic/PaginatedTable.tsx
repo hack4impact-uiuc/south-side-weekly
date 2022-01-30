@@ -8,13 +8,13 @@ import { SingleSelect } from '../../select/SingleSelect';
 import DynamicTable, { DynamicTableProps } from './DynamicTable2.0';
 
 interface PaginateOptions<T> extends DynamicTableProps<T> {
-  pageOptions: string[];
+  pageOptions?: string[];
   count: number;
 }
 
 export const PaginatedTable = <T,>({
   count,
-  pageOptions,
+  pageOptions = ['10', '25', '50'],
   ...rest
 }: PaginateOptions<T>): ReactElement => {
   const [query, setQuery] = useQueryParams({

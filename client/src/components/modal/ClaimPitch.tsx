@@ -1,19 +1,19 @@
-import React, { FC, useEffect, useMemo, useState } from 'react';
-import { Divider, Icon, Modal, ModalProps, Message } from 'semantic-ui-react';
 import cn from 'classnames';
-import { FullPopulatedPitch } from 'ssw-common';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import toast from 'react-hot-toast';
+import { Divider, Icon, Message, Modal, ModalProps } from 'semantic-ui-react';
+import { FullPopulatedPitch } from 'ssw-common';
 
-import { PrimaryButton } from '../ui/PrimaryButton';
-import { Pusher } from '../ui/Pusher';
-import { LinkDisplay } from '../ui/LinkDisplayButton';
 import { apiCall, isError } from '../../api';
+import { useAuth } from '../../contexts';
+import { ClaimPitchFields, ClaimPitchForm } from '../form/ClaimPitchForm';
+import { PitchContributors } from '../list/PitchContributors';
 import { TagList } from '../list/TagList';
 import UserChip from '../tag/UserChip';
-import { useAuth } from '../../contexts';
-import { PitchContributors } from '../list/PitchContributors';
-import { ClaimPitchFields, ClaimPitchForm } from '../form/ClaimPitchForm';
-
+import { LinkDisplay } from '../ui/LinkDisplayButton';
+import { PrimaryButton } from '../ui/PrimaryButton';
+import { Pusher } from '../ui/Pusher';
+import { SecondaryButton } from '../ui/SecondaryButton';
 import './ClaimPitch.scss';
 
 interface ClaimPitchProps extends ModalProps {
@@ -87,11 +87,16 @@ export const ClaimPitch: FC<ClaimPitchProps> = ({
       return false;
     }
 
-    return (
-      pitch.assignmentContributors.findIndex(
-        (c) => c.userId._id === user!._id,
-      ) >= 0
+    const isWriter = pitch.writer?._id === user?._id;
+    const isEditor =
+      pitch.primaryEditor._id === user?._id ||
+      pitch.secondEditors.some((editor) => editor._id === user?._id) ||
+      pitch.thirdEditors.some((editor) => editor._id === user?._id);
+    const isContributor = pitch.assignmentContributors.some(
+      (contributor) => contributor.userId._id === user?._id,
     );
+
+    return isWriter || isEditor || isContributor;
   }, [pitch, user]);
 
   const hasSubmittedClaim = useMemo(() => {
@@ -128,7 +133,7 @@ export const ClaimPitch: FC<ClaimPitchProps> = ({
         {hasClaimedPitch && (
           <Message
             header="Wait!"
-            content="You have already claimed this pitch"
+            content="You have already claimed this pitch. Please contact an Staff or Admin to claim this pitch."
             warning
           />
         )}
@@ -139,6 +144,14 @@ export const ClaimPitch: FC<ClaimPitchProps> = ({
           <div>
             <LinkDisplay href={pitch?.assignmentGoogleDocLink || ''} />
           </div>
+          <Pusher />
+
+          <SecondaryButton
+            content="View Pitch"
+            color="grey"
+            border
+            onClick={() => window.open(`/pitch/${id}`)!.focus()}
+          />
         </div>
         <TagList tags={pitch?.topics || []} />
         <div className="description">{pitch?.description}</div>
@@ -211,6 +224,7 @@ export const ClaimPitch: FC<ClaimPitchProps> = ({
           pitch={pitch}
           onSubmit={submitClaim}
           initialValues={{ message: '', teams: [] }}
+          disabled={hasClaimedPitch || hasSubmittedClaim}
         />
       </Modal.Content>
       <Modal.Actions>
