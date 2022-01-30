@@ -267,7 +267,7 @@ export const approveUser = async (
     return;
   } else if (
     currentUser.onboardingStatus !==
-      onboardingStatusEnum.ONBOARDING_SCHEDULED ||
+      onboardingStatusEnum.ONBOARDING_SCHEDULED &&
     currentUser.onboardingStatus !== onboardingStatusEnum.STALLED
   ) {
     sendFail(res, 'User is not pending approval');
@@ -306,7 +306,7 @@ export const rejectUser = async (
     return;
   } else if (
     currentUser.onboardingStatus !==
-      onboardingStatusEnum.ONBOARDING_SCHEDULED ||
+      onboardingStatusEnum.ONBOARDING_SCHEDULED &&
     currentUser.onboardingStatus !== onboardingStatusEnum.STALLED
   ) {
     sendFail(res, 'User is not pending approval');
