@@ -4,7 +4,7 @@ import { BasePopulatedPitch, Pitch } from 'ssw-common';
 import { populatePitch } from '../populators';
 import { PitchService, TeamService, UserService } from '../services';
 import { isWriterOrEditor } from '../services/pitch.service';
-import { pitchStatusEnum } from '../utils/enums';
+import { editorTypeEnum, pitchStatusEnum } from '../utils/enums';
 import { sendFail, sendNotFound, sendSuccess } from '../utils/helpers';
 import { extractOptions, extractPopulateQuery } from './utils';
 
@@ -273,6 +273,17 @@ export const approveClaimRequest = async (
   const { userId, teamId } = req.body;
   const { writer, editor } = req.query;
 
+  const isPendingContributor = await PitchService.isPendingContributor(
+    req.params.id,
+    userId,
+    teamId,
+  );
+
+  if (!isPendingContributor) {
+    sendFail(res, 'User is not pending contributor');
+    return;
+  }
+
   const team = await TeamService.getOne(teamId);
   if (!team) {
     sendNotFound(res, `Team with id ${teamId} not found`);
@@ -326,6 +337,17 @@ export const declineClaimRequest = async (
   res: Response,
 ): Promise<void> => {
   const { userId, teamId } = req.body;
+
+  const isPendingContributor = await PitchService.isPendingContributor(
+    req.params.id,
+    userId,
+    teamId,
+  );
+
+  if (!isPendingContributor) {
+    sendFail(res, 'User is not pending contributor');
+    return;
+  }
 
   if (!userId) {
     sendFail(res, 'User id is required');
@@ -438,6 +460,34 @@ export const addContributor = async (
   const { userId, teamId } = req.body;
   const { editor, writer } = req.query;
 
+  const currentPitch = await PitchService.getOne(req.params.id);
+
+  if (writer === 'true' && currentPitch.writer.toString() === userId) {
+    sendFail(res, 'User is already a writer');
+    return;
+  } else if (
+    editor === editorTypeEnum.PRIMARY &&
+    currentPitch.primaryEditor.toString() === userId
+  ) {
+    sendFail(res, 'User is already Primary Editor editor');
+    return;
+  } else if (
+    editor === editorTypeEnum.SECONDS &&
+    currentPitch.secondEditors.some((editor) => editor.toString() === userId)
+  ) {
+    sendFail(res, 'User is already Secondary Editor editor');
+    return;
+  } else if (
+    editor === editorTypeEnum.THIRDS &&
+    currentPitch.thirdEditors.some((editor) => editor.toString() === userId)
+  ) {
+    sendFail(res, 'User is already Third Editor editor');
+    return;
+  } else if (PitchService.isContributor(req.params.id, userId, teamId)) {
+    sendFail(res, 'User is already a contributor');
+    return;
+  }
+
   let pitch = await PitchService.addContributor(
     req.params.id,
     userId,
@@ -479,6 +529,34 @@ export const removeContributor = async (
 ): Promise<void> => {
   const { userId, teamId } = req.body;
   const { editor, writer } = req.query;
+
+  const currentPitch = await PitchService.getOne(req.params.id);
+
+  if (writer === 'true' && currentPitch.writer.toString() !== userId) {
+    sendFail(res, 'User is already a writer');
+    return;
+  } else if (
+    editor === editorTypeEnum.PRIMARY &&
+    currentPitch.primaryEditor.toString() !== userId
+  ) {
+    sendFail(res, 'User is already Primary Editor editor');
+    return;
+  } else if (
+    editor === editorTypeEnum.SECONDS &&
+    currentPitch.secondEditors.every((editor) => editor.toString() !== userId)
+  ) {
+    sendFail(res, 'User is already Secondary Editor editor');
+    return;
+  } else if (
+    editor === editorTypeEnum.THIRDS &&
+    currentPitch.thirdEditors.every((editor) => editor.toString() !== userId)
+  ) {
+    sendFail(res, 'User is already Third Editor editor');
+    return;
+  } else if (!PitchService.isContributor(req.params.id, userId, teamId)) {
+    sendFail(res, 'User is already a contributor');
+    return;
+  }
 
   let pitch = await PitchService.removeContributor(
     req.params.id,
