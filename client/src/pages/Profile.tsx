@@ -393,7 +393,6 @@ const Profile = (): ReactElement => {
           columns={cols}
           records={pitchesData.data}
           count={pitchesData.count}
-          pageOptions={['1', '10', '25', '50']}
           onRecordClick={(pitch) => history.push(`/pitch/${pitch._id}`)}
           sortable
           sortType="query"
@@ -427,7 +426,7 @@ const Profile = (): ReactElement => {
                     <span>Records per page: </span>
                     <SingleSelect
                       value={queries.f_limit || '10'}
-                      options={parseOptionsSelect(['1', '10', '25', '50'])}
+                      options={parseOptionsSelect(['5', '10', '25', '50'])}
                       onChange={(v) =>
                         updateQuery('f_limit', v ? v?.value : '10')
                       }
