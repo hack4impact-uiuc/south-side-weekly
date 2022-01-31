@@ -28,6 +28,7 @@ import { Pusher } from '../ui/Pusher';
 import './modals.scss';
 import './ReviewPitch.scss';
 import AddIssueModal from './AddIssue';
+import { extractErrorMessage } from '../../utils/helpers';
 
 interface ReviewPitchProps extends ModalProps {
   id: string;
@@ -128,6 +129,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       url: `/pitches/${pitch?._id}/approve`,
       method: 'PUT',
       body: pitchData,
+      failureMessage: 'Failed to approve pitch',
     });
 
     if (!isError(res)) {
@@ -154,7 +156,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       toast.success('Pitch approved');
       setOpen(false);
     } else {
-      toast.error('Error approving pitch');
+      toast.error(extractErrorMessage(res));
     }
   };
 
@@ -165,6 +167,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       body: {
         reasoning,
       },
+      failureMessage: 'Failed to decline pitch',
     });
 
     if (!isError(res)) {
@@ -182,7 +185,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       toast.success('Pitch declined');
       setOpen(false);
     } else {
-      toast.error('Failed to decline pitch');
+      toast.error(extractErrorMessage(res));
     }
   };
 

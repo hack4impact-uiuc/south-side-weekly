@@ -10,7 +10,7 @@ import { apiCall, isError } from '../../api';
 import { useAuth } from '../../contexts';
 import { EditorRecord, PendingEditorRecord } from '../../pages/Pitch';
 import { editorTypeEnum } from '../../utils/enums';
-import { getUserFullName } from '../../utils/helpers';
+import { extractErrorMessage, getUserFullName } from '../../utils/helpers';
 import ContributorFeedback from '../modal/ContributorFeedback';
 import { SingleSelect } from '../select/SingleSelect';
 import UserChip from '../tag/UserChip';
@@ -77,6 +77,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
         userId: userId,
         teamId: team._id,
       },
+      failureMessage: 'Failed to decline editor claim',
     });
 
     if (!isError(res)) {
@@ -91,7 +92,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       });
       toast.success('Declined editor claim');
     } else {
-      toast.error('Error declining editor claim');
+      toast.error(extractErrorMessage(res));
     }
 
     await callback();
@@ -140,6 +141,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       query: {
         editor: editorType,
       },
+      failureMessage: 'Failed to approve editor claim',
     });
 
     if (!isError(res)) {
@@ -155,7 +157,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       });
       toast.success('Approved editor claim');
     } else {
-      toast.error('Error approving editor claim');
+      toast.error(extractErrorMessage(res));
     }
 
     await callback();
@@ -184,6 +186,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       query: {
         editor: editorType,
       },
+      failureMessage: 'Failed to add editor',
     });
 
     if (!isError(res)) {
@@ -198,7 +201,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       });
       toast.success('Added editor');
     } else {
-      toast.error('Error adding editor');
+      toast.error(extractErrorMessage(res));
     }
 
     await callback();
@@ -222,12 +225,13 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       query: {
         editor: editorType,
       },
+      failureMessage: 'Failed to remove editor',
     });
 
     if (!isError(res)) {
       toast.success('Removed editor');
     } else {
-      toast.error('Error removing editor');
+      toast.error(extractErrorMessage(res));
     }
 
     await callback();
