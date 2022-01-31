@@ -46,7 +46,7 @@ export const PitchesView: FC<PitchesViewProps> = ({ type }): ReactElement => {
       topics__all: params.get('interests__all'),
       hasPublishDate: params.get('hasPublishDate'),
       claimStatus: type === 'review-unclaimed' ? 'unclaimed' : undefined,
-      sortBy: params.get('sortBy') || '-updatedAt',
+      sortBy: params.get('sortBy') || 'updatedAt',
       orderBy: params.get('orderBy') || 'desc',
     };
 

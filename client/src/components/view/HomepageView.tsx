@@ -42,7 +42,7 @@ export const HomepageView: FC<HomepageViewProps> = ({ type }): ReactElement => {
     if (type === 'published') {
       isPublished = true;
     } else if (type === 'member') {
-      isPublished = false;
+      isPublished = undefined;
     }
 
     const q = {
@@ -53,9 +53,12 @@ export const HomepageView: FC<HomepageViewProps> = ({ type }): ReactElement => {
       topics__all: params.get('interests__all'),
       isPublished: isPublished,
       author: type === 'submitted' ? user?._id : undefined,
-      sortBy: params.get('sortBy'),
-      orderBy: params.get('orderBy'),
+      sortBy: params.get('sortBy') || 'updatedAt',
+      orderBy: params.get('orderBy') || 'desc',
+      // isFullyPublished: type === 'member' ? true : undefined,
     };
+
+    console.log(q);
 
     return _.omitBy(q, _.isNil);
   }, [location.search, type, user]);

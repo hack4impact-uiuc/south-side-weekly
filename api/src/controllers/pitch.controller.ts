@@ -19,6 +19,11 @@ export const createPitch = async (
   req: CreateReq,
   res: Response,
 ): Promise<void> => {
+  if (await PitchService.duplicatePitch(req.body.author, req.body.title)) {
+    sendFail(res, 'You have already created this pitch.');
+    return;
+  }
+
   const newPitch = await PitchService.add(req.body);
 
   if (newPitch) {

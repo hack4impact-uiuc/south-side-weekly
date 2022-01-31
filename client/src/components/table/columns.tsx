@@ -120,7 +120,13 @@ export const ratingColumn = configureColumn<BasePopulatedUser>({
   id: 'rating',
   title: 'Rating',
   width: 2,
-  extractor: function getRating(user: BasePopulatedUser) {
+  extractor: function GetRating(user: BasePopulatedUser) {
+    const { user: currentUser } = useAuth();
+
+    if (currentUser?._id === user._id) {
+      return <Icon name="x" color="red" />;
+    }
+
     return `${user.rating ? user.rating.toFixed(2) : '-'} / 5`;
   },
   sortable: true,

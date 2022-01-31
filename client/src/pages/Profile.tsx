@@ -302,18 +302,22 @@ const Profile = (): ReactElement => {
                 <div className="user-role">
                   <FieldTag size="small" content={user.role} />
                 </div>
-                {feedbackData.count > 0 ? (
-                  <div className="rating">
-                    <Rating
-                      defaultRating={rating}
-                      maxRating={5}
-                      disabled
-                      className="rating-icon"
-                    />
-                    <p className="number-ratings">({feedbackData.count})</p>
-                  </div>
-                ) : (
-                  <p className="no-ratings"> No ratings </p>
+                {(isAdmin || isStaff) && userId !== currentUser?._id && (
+                  <>
+                    {feedbackData.count > 0 ? (
+                      <div className="rating">
+                        <Rating
+                          defaultRating={rating}
+                          maxRating={5}
+                          disabled
+                          className="rating-icon"
+                        />
+                        <p className="number-ratings">({feedbackData.count})</p>
+                      </div>
+                    ) : (
+                      <p className="no-ratings"> No ratings </p>
+                    )}
+                  </>
                 )}
 
                 <div>
@@ -409,7 +413,7 @@ const Profile = (): ReactElement => {
             <p>{user.journalismResponse}</p>
           </Grid.Column>
         </Grid>
-        {(userId === currentUser?._id || isStaff || isAdmin) && (
+        {userId !== currentUser?._id && (isStaff || isAdmin) && (
           <Grid centered className="feedback">
             <Grid.Column width={10}>
               <h2 className="title">{`${user.firstName}'s`} Feedback</h2>

@@ -19,6 +19,7 @@ import { isError, apiCall } from '../../api';
 import { issueStatusEnum } from '../../utils/enums';
 import { titleCase } from '../../utils/helpers';
 import { FieldTag } from '../tag/FieldTag';
+import { useAuth } from '../../contexts';
 
 import KanbanCard from './KanbanCard';
 
@@ -90,6 +91,7 @@ interface KanbanProps {
 
 const Kanban: FC<KanbanProps> = ({ issueId }): ReactElement => {
   const [columns, setColumns] = useState<ColumnProps[]>([]);
+  const { isAdmin } = useAuth();
 
   useEffect(() => {
     const fetchData = async (): Promise<void> => {
@@ -140,7 +142,11 @@ const Kanban: FC<KanbanProps> = ({ issueId }): ReactElement => {
               </p>
             </div>
             <div style={{ margin: 8 }}>
-              <Droppable droppableId={`${index}`} key={index}>
+              <Droppable
+                isDropDisabled={!isAdmin}
+                droppableId={`${index}`}
+                key={index}
+              >
                 {(provided, snapshot) => (
                   <div
                     {...provided.droppableProps}
@@ -151,6 +157,7 @@ const Kanban: FC<KanbanProps> = ({ issueId }): ReactElement => {
                   >
                     {column.items.map((item: Pitch, index: number) => (
                       <Draggable
+                        isDragDisabled={!isAdmin}
                         key={item._id}
                         draggableId={item._id}
                         index={index}

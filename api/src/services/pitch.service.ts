@@ -18,7 +18,12 @@ interface PitchesResponse {
   count: number;
 }
 
-const ignoreKeys = ['hasPublishDate', 'claimStatus', 'isPublished'];
+const ignoreKeys = [
+  'hasPublishDate',
+  'claimStatus',
+  'isPublished',
+  'isFullyPublished',
+];
 
 const mongooseFilters = (
   filters: FilterQuery<PitchSchema>,
@@ -193,6 +198,9 @@ const paginate = async (
     claimStatusFilter(filters['claimStatus']),
     searchFilter(search),
   );
+
+  console.log(mongooseFilters(filters));
+  console.log(mergedFilters);
 
   const pitches = await Pitch.find(mergedFilters)
     .skip(offset * limit)
@@ -686,7 +694,19 @@ export const getCurrentPitches = async (
     {
       status: pitchStatusEnum.APPROVED,
       issueStatuses: {
-        $not: { $elemMatch: { releaseDate: { $lt: new Date().getUTCDate() } } },
+        $all: [
+          {
+            $elemMatch: {
+              issueStatus: {
+                $in: [issueStatusEnum.READY_TO_PUBLISH, issueStatusEnum.PUSH],
+              },
+              releaseDate: { $lt: new Date() },
+            },
+          },
+        ],
+
+        // }
+        // $not: { $elemMatch: { releaseDate: { $lt: new Date().getUTCDate() } } },
       },
       ...userOnPitchFilters(_id),
     },
@@ -739,3 +759,8 @@ export const isContributor = (
       },
     },
   });
+
+export const duplicatePitch = async (
+  authorId: string,
+  title: string,
+): Promise<boolean> => Pitch.exists({ author: authorId, title });
