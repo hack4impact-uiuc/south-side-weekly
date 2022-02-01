@@ -193,6 +193,7 @@ export const approveUser = async (
 export const rejectUser = async (
   user: BasePopulatedUser,
   currentUser: BasePopulatedUser | undefined,
+  reasoning = '',
 ): Promise<void> => {
   if (!currentUser) {
     return;
@@ -216,6 +217,7 @@ export const rejectUser = async (
       body: {
         contributorId: user._id,
         reviewerId: currentUser._id,
+        onboardReasoning: reasoning,
       },
     });
     toast.success('User rejected');

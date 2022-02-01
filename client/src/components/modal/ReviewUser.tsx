@@ -8,14 +8,14 @@ import {
   Message,
 } from 'semantic-ui-react';
 import { BasePopulatedUser } from 'ssw-common';
-import toast from 'react-hot-toast';
 
 import { UserPicture, FieldTag } from '..';
 import { titleCase } from '../../utils/helpers';
 import { SecondaryButton } from '../ui/SecondaryButton';
 import { PrimaryButton } from '../ui/PrimaryButton';
-import { isError, apiCall } from '../../api';
+import { approveUser, rejectUser } from '../../api';
 import { TagList } from '../list/TagList';
+import { useAuth } from '../../contexts';
 
 import './modals.scss';
 import './ReviewUser.scss';
@@ -34,36 +34,7 @@ export const ReviewUser: FC<ReviewUserProps> = ({
   ...rest
 }): ReactElement => {
   const [onboardReasoning, setOnboardReasoning] = useState('');
-
-  const denyUser = async (): Promise<void> => {
-    const res = await apiCall({
-      method: 'PUT',
-      url: `/users/${user._id}/deny`,
-      body: { onboardReasoning },
-    });
-
-    if (!isError(res)) {
-      toast.success('User denied');
-      setOpen(false);
-    } else {
-      toast.error('Fail to deny user!');
-    }
-  };
-
-  const approveUser = async (): Promise<void> => {
-    const res = await apiCall({
-      method: 'PUT',
-      url: `/users/${user._id}/approve`,
-      body: { onboardReasoning },
-    });
-
-    if (!isError(res)) {
-      toast.success('User approved');
-      setOpen(false);
-    } else {
-      toast.error('Fail to approve user!');
-    }
-  };
+  const { user: currentUser } = useAuth();
 
   return (
     <Modal
@@ -178,12 +149,12 @@ export const ReviewUser: FC<ReviewUserProps> = ({
         <Modal.Actions className="review-user-actions">
           <PrimaryButton
             className="approve-button"
-            onClick={approveUser}
+            onClick={() => approveUser(user, currentUser)}
             content="Approve"
           />
           <SecondaryButton
             className="decline-button"
-            onClick={denyUser}
+            onClick={() => rejectUser(user, currentUser, onboardReasoning)}
             content="Decline"
             border
           />

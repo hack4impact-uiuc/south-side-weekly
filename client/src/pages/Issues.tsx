@@ -43,20 +43,14 @@ const Issues = (): ReactElement => {
       }
 
       setIssues(allIssues);
+    } else {
+      setIssues([]);
     }
   }, []);
 
   useEffect(() => {
     fetchIssues();
   }, [fetchIssues]);
-
-  if (!isAdmin) {
-    return (
-      <div style={{ textAlign: 'center', paddingTop: '15vh' }}>
-        <h2>{`You are not authorized to view this page >:(`}</h2>
-      </div>
-    );
-  }
 
   if (!issues) {
     return <Loading open />;
@@ -112,7 +106,7 @@ const Issues = (): ReactElement => {
             onClick={() => setViewIssueIndex(viewIssueIndex + 1)}
           />
         </div>
-        <AddIssueModal callback={void 0} onUnmount={fetchIssues} />
+        {isAdmin && <AddIssueModal callback={void 0} onUnmount={fetchIssues} />}
       </div>
 
       <Kanban issueId={issues.length > 0 ? issues[viewIssueIndex]._id : ''} />

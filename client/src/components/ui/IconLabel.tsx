@@ -18,10 +18,16 @@ export const IconLabel: FC<SocialsInputProps> = ({
     return <></>;
   }
 
-  const linkify = (icon: SemanticICONS, link: string): ReactElement => {
+  const linkify = (icon: SemanticICONS, link: string | null): ReactElement => {
     if (icon.includes('mail')) {
       return <a href={`mailto:${link}`}>{link}</a>;
     } else if (icon === 'linkedin' || icon === 'globe' || icon === 'twitter') {
+      if (link !== null && link !== '' && !link.match(/^[a-zA-Z]+:\/\//)) {
+        link = `http://${link}`;
+      } else if (link === null) {
+        link = '';
+      }
+
       return (
         <a href={link} rel="noreferrer" target="_blank">
           {link}
