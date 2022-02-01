@@ -31,6 +31,7 @@ import { SingleSelect } from '../components/select/SingleSelect';
 import { parseOptionsSelect } from '../utils/helpers';
 import Loading from '../components/ui/Loading';
 import { pitchStatusCol } from '../components/table/columns';
+import { pitchStatusEnum } from '../utils/enums';
 
 import './Profile.scss';
 
@@ -212,6 +213,10 @@ const Profile = (): ReactElement => {
   });
 
   const getTeamsForPitch = (pitch: BasePopulatedPitch): Team[] => {
+    if (pitch.status !== pitchStatusEnum.APPROVED) {
+      return [];
+    }
+
     const teams: Team[] = [];
     pitch.assignmentContributors.map((contributor) => {
       if (contributor.userId._id === userId) {
@@ -238,7 +243,10 @@ const Profile = (): ReactElement => {
   };
 
   const teamsColumn = configureColumn<BasePopulatedPitch>({
-    title: "Team(s) You're On",
+    title:
+      currentUser?._id === user._id
+        ? "Team(s) You're On"
+        : "Team(s) They're On",
     width: 3,
     extractor: function getTeams(pitch) {
       return <TagList tags={getTeamsForPitch(pitch)} />;
@@ -294,18 +302,22 @@ const Profile = (): ReactElement => {
                 <div className="user-role">
                   <FieldTag size="small" content={user.role} />
                 </div>
-                {feedbackData.count > 0 ? (
-                  <div className="rating">
-                    <Rating
-                      defaultRating={rating}
-                      maxRating={5}
-                      disabled
-                      className="rating-icon"
-                    />
-                    <p className="number-ratings">({feedbackData.count})</p>
-                  </div>
-                ) : (
-                  <p className="no-ratings"> No ratings </p>
+                {(isAdmin || isStaff) && userId !== currentUser?._id && (
+                  <>
+                    {feedbackData.count > 0 ? (
+                      <div className="rating">
+                        <Rating
+                          defaultRating={rating}
+                          maxRating={5}
+                          disabled
+                          className="rating-icon"
+                        />
+                        <p className="number-ratings">({feedbackData.count})</p>
+                      </div>
+                    ) : (
+                      <p className="no-ratings"> No ratings </p>
+                    )}
+                  </>
                 )}
 
                 <div>
@@ -385,7 +397,6 @@ const Profile = (): ReactElement => {
           columns={cols}
           records={pitchesData.data}
           count={pitchesData.count}
-          pageOptions={['1', '10', '25', '50']}
           onRecordClick={(pitch) => history.push(`/pitch/${pitch._id}`)}
           sortable
           sortType="query"
@@ -402,7 +413,7 @@ const Profile = (): ReactElement => {
             <p>{user.journalismResponse}</p>
           </Grid.Column>
         </Grid>
-        {(userId === currentUser?._id || isStaff || isAdmin) && (
+        {userId !== currentUser?._id && (isStaff || isAdmin) && (
           <Grid centered className="feedback">
             <Grid.Column width={10}>
               <h2 className="title">{`${user.firstName}'s`} Feedback</h2>
@@ -419,7 +430,7 @@ const Profile = (): ReactElement => {
                     <span>Records per page: </span>
                     <SingleSelect
                       value={queries.f_limit || '10'}
-                      options={parseOptionsSelect(['1', '10', '25', '50'])}
+                      options={parseOptionsSelect(['5', '10', '25', '50'])}
                       onChange={(v) =>
                         updateQuery('f_limit', v ? v?.value : '10')
                       }

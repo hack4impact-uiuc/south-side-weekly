@@ -19,7 +19,6 @@ export const RadioFilter: FC<RadioFilterProps> = ({
   });
 
   const updateQuery = (): void => {
-    console.log(query[filterKey], value);
     setQuery({
       [filterKey]: query[filterKey] === `${value}` ? undefined : `${value}`,
     });

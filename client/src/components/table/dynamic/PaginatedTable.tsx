@@ -14,7 +14,7 @@ interface PaginateOptions<T> extends DynamicTableProps<T> {
 
 export const PaginatedTable = <T,>({
   count,
-  pageOptions = ['10', '25', '50'],
+  pageOptions = ['5', '10', '25', '50'],
   ...rest
 }: PaginateOptions<T>): ReactElement => {
   const [query, setQuery] = useQueryParams({

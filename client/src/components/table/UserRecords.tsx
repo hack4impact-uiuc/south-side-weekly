@@ -32,7 +32,6 @@ const approvedColumns = [
   teamsColumn,
   interestsColumn,
   statusColumn,
-  ratingColumn,
   joinedColumn,
 ];
 
@@ -88,7 +87,7 @@ export const UsersRecords: FC<TableProps> = ({
   type,
   onModalClose,
 }) => {
-  const { isAdmin, user: currentUser } = useAuth();
+  const { isAdmin, isStaff, user: currentUser } = useAuth();
 
   const actionColumn = configureColumn<BasePopulatedUser>({
     title: '',
@@ -127,7 +126,7 @@ export const UsersRecords: FC<TableProps> = ({
   const cols = useMemo(() => {
     switch (type) {
       case 'approved':
-        return isAdmin ? approvedAdminColumns : approvedColumns;
+        return isAdmin || isStaff ? approvedAdminColumns : approvedColumns;
       case 'pending':
         return isAdmin
           ? [...pendingAdminColumns, actionColumn]
@@ -137,7 +136,7 @@ export const UsersRecords: FC<TableProps> = ({
       default:
         return [];
     }
-  }, [type, actionColumn, isAdmin]);
+  }, [type, actionColumn, isAdmin, isStaff]);
 
   return (
     <PaginatedTable<BasePopulatedUser>

@@ -4,6 +4,7 @@ import { BasePopulatedPitch, Pitch } from 'ssw-common';
 import { populatePitch } from '../populators';
 import { PitchService, TeamService, UserService } from '../services';
 import { isWriterOrEditor } from '../services/pitch.service';
+import { editorTypeEnum, pitchStatusEnum } from '../utils/enums';
 import { sendFail, sendNotFound, sendSuccess } from '../utils/helpers';
 import { extractOptions, extractPopulateQuery } from './utils';
 
@@ -18,6 +19,11 @@ export const createPitch = async (
   req: CreateReq,
   res: Response,
 ): Promise<void> => {
+  if (await PitchService.duplicatePitch(req.body.author, req.body.title)) {
+    sendFail(res, 'You have already created this pitch.');
+    return;
+  }
+
   const newPitch = await PitchService.add(req.body);
 
   if (newPitch) {
@@ -162,6 +168,7 @@ export const updatePitch = async (
     return;
   }
 
+  await UserService.updateActivity(updatedPitch.author);
   const populateType = extractPopulateQuery(req.query);
 
   sendSuccess(
@@ -175,6 +182,16 @@ export const approvePitch = async (
   req: UpdateReq,
   res: Response,
 ): Promise<void> => {
+  const currentPitch = await PitchService.getOne(req.params.id);
+
+  if (!currentPitch) {
+    sendNotFound(res, `Pitch with id ${req.params.id} not found`);
+    return;
+  } else if (currentPitch.status !== pitchStatusEnum.PENDING) {
+    sendFail(res, 'Pitch is not pending approval');
+    return;
+  }
+
   const pitch = await PitchService.approvePitch(
     req.params.id,
     req.user._id,
@@ -197,12 +214,17 @@ export const declinePitch = async (
   req: DeclineReq,
   res: Response,
 ): Promise<void> => {
-  const pitch = await PitchService.declinePitch(req.params.id, req.user._id);
+  const currentPitch = await PitchService.getOne(req.params.id);
 
-  if (!pitch) {
+  if (!currentPitch) {
     sendNotFound(res, `Pitch with id ${req.params.id} not found`);
     return;
+  } else if (currentPitch.status !== pitchStatusEnum.PENDING) {
+    sendFail(res, 'Pitch is not pending approval');
+    return;
   }
+
+  const pitch = await PitchService.declinePitch(req.params.id, req.user._id);
 
   const populatedPitch = (await populatePitch(
     pitch,
@@ -257,6 +279,17 @@ export const approveClaimRequest = async (
   const { userId, teamId } = req.body;
   const { writer, editor } = req.query;
 
+  const isPendingContributor = await PitchService.isPendingContributor(
+    req.params.id,
+    userId,
+    teamId,
+  );
+
+  if (!isPendingContributor) {
+    sendFail(res, 'User is not pending contributor');
+    return;
+  }
+
   const team = await TeamService.getOne(teamId);
   if (!team) {
     sendNotFound(res, `Team with id ${teamId} not found`);
@@ -310,6 +343,17 @@ export const declineClaimRequest = async (
   res: Response,
 ): Promise<void> => {
   const { userId, teamId } = req.body;
+
+  const isPendingContributor = await PitchService.isPendingContributor(
+    req.params.id,
+    userId,
+    teamId,
+  );
+
+  if (!isPendingContributor) {
+    sendFail(res, 'User is not pending contributor');
+    return;
+  }
 
   if (!userId) {
     sendFail(res, 'User id is required');
@@ -422,6 +466,55 @@ export const addContributor = async (
   const { userId, teamId } = req.body;
   const { editor, writer } = req.query;
 
+  const currentPitch = await PitchService.getOne(req.params.id);
+
+  const canAddContributor = async (): Promise<[boolean, string]> => {
+    if (writer === 'true') {
+      if (currentPitch.writer && currentPitch.writer.toString() === userId) {
+        return [false, 'User is already a writer'];
+      }
+
+      return [true, ''];
+    } else if (editor === editorTypeEnum.PRIMARY) {
+      if (currentPitch.primaryEditor.toString() === userId) {
+        return [false, 'User is already a primary editor'];
+      }
+
+      return [true, ''];
+    } else if (editor === editorTypeEnum.SECONDS) {
+      if (
+        currentPitch.secondEditors.some(
+          (editor) => editor.toString() === userId,
+        )
+      ) {
+        return [false, 'User is already a secondary editor'];
+      }
+
+      return [true, ''];
+    } else if (editor === editorTypeEnum.THIRDS) {
+      if (
+        currentPitch.thirdEditors.some((editor) => editor.toString() === userId)
+      ) {
+        return [false, 'User is already a third editor'];
+      }
+
+      return [true, ''];
+    } else if (
+      await PitchService.isContributor(req.params.id, userId, teamId)
+    ) {
+      return [false, 'User is already a contributor'];
+    }
+
+    return [true, ''];
+  };
+
+  const [canAdd, error] = await canAddContributor();
+
+  if (!canAdd) {
+    sendFail(res, error);
+    return;
+  }
+
   let pitch = await PitchService.addContributor(
     req.params.id,
     userId,
@@ -463,6 +556,57 @@ export const removeContributor = async (
 ): Promise<void> => {
   const { userId, teamId } = req.body;
   const { editor, writer } = req.query;
+
+  const currentPitch = await PitchService.getOne(req.params.id);
+
+  const canRemoveContributor = async (): Promise<[boolean, string]> => {
+    if (writer === 'true') {
+      if (currentPitch.writer && currentPitch.writer.toString() !== userId) {
+        return [false, 'User is not the writer'];
+      }
+
+      return [true, ''];
+    } else if (editor === editorTypeEnum.PRIMARY) {
+      if (currentPitch.primaryEditor.toString() !== userId) {
+        return [false, 'User is not the primary editor'];
+      }
+
+      return [true, ''];
+    } else if (editor === editorTypeEnum.SECONDS) {
+      if (
+        currentPitch.secondEditors.every(
+          (editor) => editor.toString() !== userId,
+        )
+      ) {
+        return [false, 'User is not a secondary editor'];
+      }
+
+      return [true, ''];
+    } else if (editor === editorTypeEnum.THIRDS) {
+      if (
+        currentPitch.thirdEditors.every(
+          (editor) => editor.toString() !== userId,
+        )
+      ) {
+        return [false, 'User is not a third editor'];
+      }
+
+      return [true, ''];
+    } else if (
+      !(await PitchService.isContributor(req.params.id, userId, teamId))
+    ) {
+      return [false, 'User is not a contributor'];
+    }
+
+    return [true, ''];
+  };
+
+  const [canRemove, error] = await canRemoveContributor();
+
+  if (!canRemove) {
+    sendFail(res, error);
+    return;
+  }
 
   let pitch = await PitchService.removeContributor(
     req.params.id,

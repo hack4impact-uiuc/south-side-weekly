@@ -15,6 +15,7 @@ import {
 import { useAuth, useTeams } from '../../contexts';
 import UserChip from '../tag/UserChip';
 import neighborhoods from '../../utils/neighborhoods';
+import { extractErrorMessage } from '../../utils/helpers';
 import { useIssues } from '../../contexts/issues/context';
 import { issueStatusEnum } from '../../utils/enums';
 import { PrimaryButton } from '../ui/PrimaryButton';
@@ -117,48 +118,52 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       neighborhoods: pitchNeighborhoods,
       teams: parsedTeams,
       deadline: new Date(deadline),
-      issueStatuses: pitchIssues.map((issueId) => ({
-        issueId,
-        issueStatus: issueStatusEnum.MAYBE_IN,
-        releaseDate: issues.find((issue) => issue._id === issueId)!.releaseDate,
-      })),
+      issueStatuses: pitchIssues
+        .map((issueId) => ({
+          issueId,
+          issueStatus: issueStatusEnum.MAYBE_IN,
+          releaseDate: issues.find((issue) => issue._id === issueId)!
+            .releaseDate,
+        }))
+        .sort(
+          (a, b) =>
+            new Date(a.releaseDate).getTime() -
+            new Date(b.releaseDate).getTime(),
+        ),
     };
 
     const res = await apiCall({
       url: `/pitches/${pitch?._id}/approve`,
       method: 'PUT',
       body: pitchData,
+      failureMessage: 'Failed to approve pitch',
     });
-
-    apiCall({
-      method: 'POST',
-      url: '/notifications/sendPitchApproved',
-      body: {
-        contributorId: pitch?.author._id,
-        pitchId: pitch?._id,
-        reviewerId: user?._id,
-      },
-    });
-
-    console.log(pitchData.writer, pitch?.author._id);
-
-    if (pitchData.writer && pitchData.writer !== pitch?.author._id) {
-      apiCall({
-        method: 'POST',
-        url: '/notifications/sendContributorAdded',
-        body: {
-          contributorId: pitchData.writer,
-          staffId: user?._id,
-          pitchId: pitch?._id,
-        },
-      });
-    }
 
     if (!isError(res)) {
+      apiCall({
+        method: 'POST',
+        url: '/notifications/sendPitchApproved',
+        body: {
+          contributorId: pitch?.author._id,
+          pitchId: pitch?._id,
+          reviewerId: user?._id,
+        },
+      });
+      if (pitchData.writer && pitchData.writer !== pitch?.author._id) {
+        apiCall({
+          method: 'POST',
+          url: '/notifications/sendContributorAdded',
+          body: {
+            contributorId: pitchData.writer,
+            staffId: user?._id,
+            pitchId: pitch?._id,
+          },
+        });
+      }
       toast.success('Pitch approved');
       setOpen(false);
     } else {
-      toast.error('Error approving pitch');
+      toast.error(extractErrorMessage(res));
     }
   };
 
@@ -169,24 +174,25 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       body: {
         reasoning,
       },
-    });
-
-    apiCall({
-      method: 'POST',
-      url: '/notifications/sendPitchDeclined',
-      body: {
-        contributorId: pitch?.author._id,
-        staffId: user?._id,
-        pitchId: pitch?._id,
-        reasoning: reasoning,
-      },
+      failureMessage: 'Failed to decline pitch',
     });
 
     if (!isError(res)) {
+      apiCall({
+        method: 'POST',
+        url: '/notifications/sendPitchDeclined',
+        body: {
+          contributorId: pitch?.author._id,
+          staffId: user?._id,
+          pitchId: pitch?._id,
+          reasoning: reasoning,
+        },
+      });
+
       toast.success('Pitch declined');
       setOpen(false);
     } else {
-      toast.error('Failed to decline pitch');
+      toast.error(extractErrorMessage(res));
     }
   };
 

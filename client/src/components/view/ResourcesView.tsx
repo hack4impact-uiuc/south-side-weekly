@@ -58,6 +58,10 @@ export const ResourcesView: FC<RequireOnlyOne<ResourcesViewProps>> = ({
   }, [location.search, isGeneral]);
 
   const queryResources = useCallback(async (): Promise<void> => {
+    const toastId = toast.loading(
+      `Loading ${isGeneral ? 'General' : 'Team'} Resources...`,
+    );
+
     const res = await apiCall<ResourcesRes>({
       url: team ? `/resources/teamName/${team.teamId}` : '/resources',
       method: 'GET',
@@ -65,13 +69,17 @@ export const ResourcesView: FC<RequireOnlyOne<ResourcesViewProps>> = ({
     });
 
     if (!isError(res)) {
+      toast.success(`Loaded ${isGeneral ? 'General' : 'Team'} Resources`, {
+        id: toastId,
+      });
       setData(res.data.result);
-      toast.dismiss();
-    } else {
-      toast.error('Failed to load resources');
-      toast.dismiss();
+      return;
     }
-  }, [team, queryParams]);
+
+    toast.error(`Failed to load ${isGeneral ? 'General' : 'Team'} Resources`, {
+      id: toastId,
+    });
+  }, [team, queryParams, isGeneral]);
 
   useEffect(() => {
     queryResources();
@@ -80,9 +88,6 @@ export const ResourcesView: FC<RequireOnlyOne<ResourcesViewProps>> = ({
   useEffect(() => {
     setQuery({ limit: 10, offset: 0 }, 'push');
     setData({ data: [], count: 0 });
-    toast.loading(
-      `Loading ${team ? team.teamName : 'Is General'} resources...`,
-    );
   }, [team, setQuery]);
 
   return (

@@ -110,7 +110,6 @@ const paginate = async (
   const mongoFilters = mongooseFilters(filters);
 
   if (!mongoFilters.role) {
-    console.log('here');
     mongoFilters.role = { $ne: rolesEnum.TBD };
   }
 
@@ -120,8 +119,6 @@ const paginate = async (
     activityFilter(filters['activityStatus']),
     searchFilter(search),
   );
-
-  console.log(mergedFilters);
 
   const users = await User.find(mergedFilters)
     .skip(offset * limit)
@@ -295,3 +292,6 @@ export const removeFeedback = async (
   feedbackId: string,
 ): Promise<User> =>
   await updateModel({ _id }, { $pull: { feedback: feedbackId } });
+
+export const updateActivity = async (_id: string): Promise<User> =>
+  await updateModel({ _id }, { lastActive: new Date() });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Icon } from 'semantic-ui-react';
+import { Icon, Popup } from 'semantic-ui-react';
 import {
   BasePopulatedPitch,
   BasePopulatedUser,
@@ -120,7 +120,13 @@ export const ratingColumn = configureColumn<BasePopulatedUser>({
   id: 'rating',
   title: 'Rating',
   width: 2,
-  extractor: function getRating(user: BasePopulatedUser) {
+  extractor: function GetRating(user: BasePopulatedUser) {
+    const { user: currentUser } = useAuth();
+
+    if (currentUser?._id === user._id) {
+      return <Icon name="x" color="red" />;
+    }
+
     return `${user.rating ? user.rating.toFixed(2) : '-'} / 5`;
   },
   sortable: true,
@@ -141,6 +147,7 @@ export const actionColumn = configureColumn<BasePopulatedUser>({
   width: 2,
   extractor: function GetAction(user: BasePopulatedUser) {
     const { user: currentUser } = useAuth();
+
     return (
       <div style={{ display: 'flex' }}>
         <PrimaryButton
@@ -381,6 +388,49 @@ export const associatedTeamsColumn = configureColumn<
         />
       </div>
     );
+  },
+});
+
+export const claimedPitchStatusColumn = configureColumn<BasePopulatedPitch>({
+  title: <div style={{ textAlign: 'center' }}>Claim Request Status</div>,
+  width: 2,
+  extractor: function ClaimStatusCell({ ...pitch }) {
+    const { user } = useAuth();
+
+    if (
+      pitch.assignmentContributors?.some(
+        (contributor) => contributor.userId._id === user?._id,
+      ) ||
+      pitch.writer?._id === user?._id ||
+      pitch.primaryEditor?._id === user?._id ||
+      pitch.secondEditors.some((editor) => editor._id === user?._id) ||
+      pitch.thirdEditors.some((editor) => editor._id === user?._id)
+    ) {
+      return (
+        <div style={{ textAlign: 'center' }}>
+          <Popup
+            basic
+            trigger={<Icon color="green" name="check" />}
+            content="You have claimed this pitch."
+          />
+        </div>
+      );
+    } else if (
+      pitch.pendingContributors.some(
+        (contributor) => contributor.userId === user?._id,
+      )
+    ) {
+      return (
+        <div style={{ textAlign: 'center' }}>
+          <Popup
+            basic
+            trigger={<Icon size="small" color="yellow" name="clock" />}
+            content="You have submitted a claim request for this pitch."
+          />
+        </div>
+      );
+    }
+    return <div style={{ textAlign: 'center' }}>None</div>;
   },
 });
 

@@ -1,4 +1,5 @@
 import React, { FC, ReactElement, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { Icon, Label, Modal, ModalProps } from 'semantic-ui-react';
 import { PitchFeedback } from 'ssw-common';
 
@@ -46,6 +47,16 @@ const PitchFeedbackModal: FC<PitchFeedbackModal> = ({
     pitchFeedback: Partial<PitchFeedback>,
   ): Promise<void> => {
     if (!feedback) {
+      if (
+        pitchFeedback.firstQuestion === '' &&
+        pitchFeedback.secondQuestion === '' &&
+        pitchFeedback.thirdQuestion === '' &&
+        pitchFeedback.fourthQuestion === ''
+      ) {
+        toast.error('Please fill out one field fields.');
+        return;
+      }
+
       const res = await apiCall<PitchFeedback>({
         url: `/pitchFeedback`,
         method: 'POST',
@@ -57,6 +68,16 @@ const PitchFeedbackModal: FC<PitchFeedbackModal> = ({
         setFeedback(res.data.result);
       }
     } else {
+      if (
+        pitchFeedback.firstQuestion === '' &&
+        pitchFeedback.secondQuestion === '' &&
+        pitchFeedback.thirdQuestion === '' &&
+        pitchFeedback.fourthQuestion === ''
+      ) {
+        toast.error('Please fill out one field.');
+        return;
+      }
+
       const res = await apiCall<PitchFeedback>({
         url: `/pitchFeedback/${feedback._id}`,
         method: 'PUT',

@@ -69,13 +69,17 @@ export const ReviewClaimForm: FC<FormProps> = ({
     const newPitch: Partial<Pitch> = {
       ...data,
       deadline: new Date(data.deadline),
-      issueStatuses: data.issueStatuses.map(
-        ({ issueId: { _id }, issueStatus, releaseDate }) => ({
+      issueStatuses: data.issueStatuses
+        .map(({ issueId: { _id }, issueStatus, releaseDate }) => ({
           issueId: _id,
           issueStatus,
           releaseDate,
-        }),
-      ),
+        }))
+        .sort(
+          (a, b) =>
+            new Date(a.releaseDate).getTime() -
+            new Date(b.releaseDate).getTime(),
+        ),
     };
 
     const pitchIds = pitch!.issueStatuses.map(({ issueId: { _id } }) => _id);

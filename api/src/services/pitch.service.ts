@@ -18,7 +18,12 @@ interface PitchesResponse {
   count: number;
 }
 
-const ignoreKeys = ['hasPublishDate', 'claimStatus', 'isPublished'];
+const ignoreKeys = [
+  'hasPublishDate',
+  'claimStatus',
+  'isPublished',
+  'isFullyPublished',
+];
 
 const mongooseFilters = (
   filters: FilterQuery<PitchSchema>,
@@ -686,8 +691,17 @@ export const getCurrentPitches = async (
     {
       status: pitchStatusEnum.APPROVED,
       issueStatuses: {
-        $not: { $elemMatch: { releaseDate: { $lt: new Date().getUTCDate() } } },
+        $elemMatch: {
+          issueStatus: {
+            $ne: issueStatusEnum.READY_TO_PUBLISH,
+          },
+          releaseDate: { $gte: new Date().getTime() },
+        },
       },
+
+      // }
+      // $not: { $elemMatch: { releaseDate: { $lt: new Date().getUTCDate() } } },
+
       ...userOnPitchFilters(_id),
     },
     options,
@@ -709,3 +723,38 @@ export const isWriterOrEditor = (writer: string, editor: string): boolean =>
   editor === editorTypeEnum.SECONDS ||
   editor === editorTypeEnum.THIRDS ||
   writer === 'true';
+
+export const isPendingContributor = (
+  pitchId: string,
+  userId: string,
+  teamId: string,
+): Promise<boolean> =>
+  Pitch.exists({
+    _id: pitchId,
+    pendingContributors: {
+      $elemMatch: {
+        userId,
+        teams: teamId,
+      },
+    },
+  });
+
+export const isContributor = (
+  pitchId: string,
+  userId: string,
+  teamId: string,
+): Promise<boolean> =>
+  Pitch.exists({
+    _id: pitchId,
+    assignmentContributors: {
+      $elemMatch: {
+        userId,
+        teams: teamId,
+      },
+    },
+  });
+
+export const duplicatePitch = async (
+  authorId: string,
+  title: string,
+): Promise<boolean> => Pitch.exists({ author: authorId, title });

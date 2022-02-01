@@ -7,7 +7,6 @@ import transporter from './transporter';
 import { buildContributorHtml, buildSendMailOptions } from './utils';
 
 export const sendMail = async (mailOptions: SendMailOptions): Promise<void> => {
-  console.log('REACHED SEND MAIL');
   const mailDelivered = new Promise((resolve, reject) => {
     transporter.sendMail(mailOptions, (err, info) => {
       err ? reject(err) : resolve(info);
@@ -15,7 +14,6 @@ export const sendMail = async (mailOptions: SendMailOptions): Promise<void> => {
   });
 
   await mailDelivered;
-  console.log('RESOLVED');
 };
 
 export const sendRejectUserMail = async (
@@ -43,7 +41,6 @@ export const sendApproveUserMail = async (
   contributor: User,
   reviewer: User,
 ): Promise<void> => {
-  console.log('REACHED SENDER FUNCTION');
   const templateValues = {
     contributor: getUserFulName(contributor),
     role: contributor.role,

@@ -7,6 +7,7 @@ import {
 import toast from 'react-hot-toast';
 
 import { rolesEnum } from '../utils/enums';
+import { extractErrorMessage } from '../utils/helpers';
 
 import { isError } from './builders';
 
@@ -162,51 +163,67 @@ export const approveUser = async (
     return;
   }
 
+  const toastId = toast.loading('Approving user...');
+
   const res = await apiCall({
     method: 'PUT',
     url: `/users/${user._id}/approve`,
-  });
-
-  await apiCall({
-    method: 'POST',
-    url: `/notifications/sendUserApproved`,
-    body: {
-      contributorId: user._id,
-      reviewerId: currentUser._id,
-    },
+    failureMessage: 'Failed to approve user.',
   });
 
   if (!isError(res)) {
-    toast.success('User approved');
+    toast.success('User approved!', {
+      id: toastId,
+    });
+    await apiCall({
+      method: 'POST',
+      url: `/notifications/sendUserApproved`,
+      body: {
+        contributorId: user._id,
+        reviewerId: currentUser._id,
+      },
+    });
   } else {
-    toast.error('Error approving user');
+    toast.error(extractErrorMessage(res), {
+      id: toastId,
+    });
   }
 };
 
 export const rejectUser = async (
   user: BasePopulatedUser,
   currentUser: BasePopulatedUser | undefined,
+  reasoning = '',
 ): Promise<void> => {
   if (!currentUser) {
     return;
   }
 
+  const toastId = toast.loading('Approving user...');
+
   const res = await apiCall({
     method: 'PUT',
     url: `/users/${user._id}/deny`,
-  });
-  apiCall({
-    method: 'POST',
-    url: `/notifications/sendUserRejected`,
-    body: {
-      contributorId: user._id,
-      reviewerId: currentUser._id,
-    },
+    failureMessage: 'Failed to reject user.',
   });
 
   if (!isError(res)) {
+    toast.success('User approved!', {
+      id: toastId,
+    });
+    apiCall({
+      method: 'POST',
+      url: `/notifications/sendUserRejected`,
+      body: {
+        contributorId: user._id,
+        reviewerId: currentUser._id,
+        onboardReasoning: reasoning,
+      },
+    });
     toast.success('User rejected');
   } else {
-    toast.error('Error rejecting user');
+    toast.error(extractErrorMessage(res), {
+      id: toastId,
+    });
   }
 };

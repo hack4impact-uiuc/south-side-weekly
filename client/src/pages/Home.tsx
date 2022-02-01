@@ -4,7 +4,6 @@ import { Walkthrough } from '../components';
 import { SubmitPitchModal } from '../components/modal/SubmitPitchModal';
 import { HomepageView } from '../components/view/HomepageView';
 import { Pusher } from '../components/ui/Pusher';
-import { useAuth } from '../contexts';
 import { Tabs } from '../layouts/tabs/Tabs';
 import { pagesEnum } from '../utils/enums';
 
@@ -12,8 +11,6 @@ import './Home.scss';
 import './pages.scss';
 
 const Homepage = (): ReactElement => {
-  const { isAdmin } = useAuth();
-
   const views = useMemo(() => {
     const panes = [
       {
@@ -24,21 +21,18 @@ const Homepage = (): ReactElement => {
         title: 'Pitches You Submitted',
         content: <HomepageView type="submitted" />,
       },
-    ];
-
-    if (isAdmin) {
-      panes.push({
+      {
         title: 'Your Claim Requests',
         content: <HomepageView type="claim-submitted" />,
-      });
-      panes.push({
+      },
+      {
         title: 'Your Publications',
         content: <HomepageView type="published" />,
-      });
-    }
+      },
+    ];
 
     return panes;
-  }, [isAdmin]);
+  }, []);
 
   return (
     <div className="pitch-doc-page">

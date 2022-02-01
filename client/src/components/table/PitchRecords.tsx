@@ -16,6 +16,7 @@ import {
   teamsRequireApprovalColumn,
   unclaimedTeamsColumn,
   deadlineColumn,
+  claimedPitchStatusColumn,
 } from './columns';
 import { PaginatedTable } from './dynamic/PaginatedTable';
 
@@ -32,6 +33,14 @@ const reviewUnclaimedCols = [
   teamsRequireApprovalColumn,
   unclaimedTeamsColumn,
   deadlineColumn,
+];
+
+const claimCols = [
+  titleColumn,
+  descriptionColumn,
+  associatedInterestsColumn,
+  claimableTeamsColumn,
+  claimedPitchStatusColumn,
 ];
 
 const otherCols = [
@@ -62,6 +71,7 @@ export const PitchRecords: FC<TableProps> = ({
       case 'review-unclaimed':
         return reviewUnclaimedCols;
       case 'claim':
+        return claimCols;
       case 'all':
         return otherCols;
       default:

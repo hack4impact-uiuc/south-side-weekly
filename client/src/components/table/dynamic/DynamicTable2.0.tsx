@@ -223,13 +223,10 @@ const DynamicTable = <T,>({
    * @param record the record being clicked
    */
   const handleRecordClick = (record: T): void => {
-    console.log(priority);
-
     if (priority && priority === 'record-action') {
       onRecordClick?.(record);
       return;
     } else if (priority && priority === 'modal' && getModal) {
-      console.log('here');
       setClickedRecord(record);
       setIsModalOpen(true);
       return;

@@ -260,6 +260,20 @@ export const approveUser = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
+  const currentUser = await UserService.getOne(req.params.id);
+
+  if (!currentUser) {
+    sendNotFound(res, `User not found with id ${req.params.id}`);
+    return;
+  } else if (
+    currentUser.onboardingStatus !==
+      onboardingStatusEnum.ONBOARDING_SCHEDULED &&
+    currentUser.onboardingStatus !== onboardingStatusEnum.STALLED
+  ) {
+    sendFail(res, 'User is not pending approval');
+    return;
+  }
+
   const populateType = extractPopulateQuery(req.query);
 
   const user = await UserService.setOnboardStatus(
@@ -271,7 +285,6 @@ export const approveUser = async (
     sendNotFound(res, `User not found with id ${req.params.id}`);
     return;
   }
-  console.log('REACHED APPROVE USER ENDPOINT');
 
   sendSuccess(
     res,
@@ -285,17 +298,26 @@ export const rejectUser = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
+  const currentUser = await UserService.getOne(req.params.id);
+
+  if (!currentUser) {
+    sendNotFound(res, `User not found with id ${req.params.id}`);
+    return;
+  } else if (
+    currentUser.onboardingStatus !==
+      onboardingStatusEnum.ONBOARDING_SCHEDULED &&
+    currentUser.onboardingStatus !== onboardingStatusEnum.STALLED
+  ) {
+    sendFail(res, 'User is not pending approval');
+    return;
+  }
+
   const populateType = extractPopulateQuery(req.query);
 
   const user = await UserService.setOnboardStatus(
     req.params.id,
     onboardingStatusEnum.DENIED,
   );
-
-  if (!user) {
-    sendNotFound(res, `User not found with id ${req.params.id}`);
-    return;
-  }
 
   sendSuccess(
     res,

@@ -207,6 +207,7 @@ export const EditUserForm: FC<FormProps> = ({
                   label="Phone Number"
                   viewable={permissions.view.includes('phone')}
                   editable={permissions.edit.includes('phone')}
+                  placeholder="(555) 555-5555"
                 />
               </div>
             </div>
@@ -221,6 +222,7 @@ export const EditUserForm: FC<FormProps> = ({
                   label="Twitter"
                   viewable={permissions.view.includes('twitter')}
                   editable={permissions.edit.includes('twitter')}
+                  placeholder="https://twitter.com/username"
                 />
               </div>
             </div>
@@ -235,6 +237,7 @@ export const EditUserForm: FC<FormProps> = ({
                   label="LinkedIn"
                   viewable={permissions.view.includes('linkedIn')}
                   editable={permissions.edit.includes('linkedIn')}
+                  placeholder="https://www.linkedin.com/in/username"
                 />
               </div>
             </div>
@@ -249,6 +252,7 @@ export const EditUserForm: FC<FormProps> = ({
                   label="Website"
                   viewable={permissions.view.includes('portfolio')}
                   editable={permissions.edit.includes('portfolio')}
+                  placeholder="https://www.website.com"
                 />
               </div>
             </div>

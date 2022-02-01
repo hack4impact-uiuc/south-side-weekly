@@ -1,5 +1,6 @@
 import { cloneDeep, groupBy, omit } from 'lodash';
 import React, { FC, ReactElement, useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { Button, Divider, Icon, Label, Popup } from 'semantic-ui-react';
 import { Team, User } from 'ssw-common';
 import Swal from 'sweetalert2';
@@ -9,7 +10,7 @@ import { apiCall, isError } from '../../api';
 import { useAuth } from '../../contexts';
 import { EditorRecord, PendingEditorRecord } from '../../pages/Pitch';
 import { editorTypeEnum } from '../../utils/enums';
-import { getUserFullName } from '../../utils/helpers';
+import { extractErrorMessage, getUserFullName } from '../../utils/helpers';
 import ContributorFeedback from '../modal/ContributorFeedback';
 import { SingleSelect } from '../select/SingleSelect';
 import UserChip from '../tag/UserChip';
@@ -69,24 +70,31 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
   };
 
   const declineClaim = async (userId: string): Promise<void> => {
-    await apiCall({
+    const res = await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/declineClaim`,
       body: {
         userId: userId,
         teamId: team._id,
       },
+      failureMessage: 'Failed to decline editor claim',
     });
 
-    apiCall({
-      method: 'POST',
-      url: '/notifications/sendClaimRequestDeclined',
-      body: {
-        contributorId: userId,
-        pitchId: pitchId,
-        staffId: user?._id,
-      },
-    });
+    if (!isError(res)) {
+      apiCall({
+        method: 'POST',
+        url: '/notifications/sendClaimRequestDeclined',
+        body: {
+          contributorId: userId,
+          pitchId: pitchId,
+          staffId: user?._id,
+        },
+      });
+      toast.success('Declined editor claim');
+    } else {
+      toast.error(extractErrorMessage(res));
+    }
+
     await callback();
   };
 
@@ -123,7 +131,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
     if (!(await shouldContinueEditorAPI(editorType))) {
       return;
     }
-    await apiCall({
+    const res = await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/approveClaim`,
       body: {
@@ -133,18 +141,24 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       query: {
         editor: editorType,
       },
+      failureMessage: 'Failed to approve editor claim',
     });
 
-    apiCall({
-      method: 'POST',
-      url: '/notifications/sendClaimRequestApproved',
-      body: {
-        contributorId: editorId,
-        pitchId: pitchId,
-        staffId: user?._id,
-        teamId: team._id,
-      },
-    });
+    if (!isError(res)) {
+      apiCall({
+        method: 'POST',
+        url: '/notifications/sendClaimRequestApproved',
+        body: {
+          contributorId: editorId,
+          pitchId: pitchId,
+          staffId: user?._id,
+          teamId: team._id,
+        },
+      });
+      toast.success('Approved editor claim');
+    } else {
+      toast.error(extractErrorMessage(res));
+    }
 
     await callback();
   };
@@ -162,7 +176,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
 
     removeTemporaryContributor(editorId);
 
-    await apiCall({
+    const res = await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/addContributor/`,
       body: {
@@ -172,17 +186,23 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       query: {
         editor: editorType,
       },
+      failureMessage: 'Failed to add editor',
     });
 
-    apiCall({
-      method: 'POST',
-      url: '/notifications/sendContributorAdded',
-      body: {
-        contributorId: editorId,
-        staffId: user?._id,
-        pitchId: pitchId,
-      },
-    });
+    if (!isError(res)) {
+      apiCall({
+        method: 'POST',
+        url: '/notifications/sendContributorAdded',
+        body: {
+          contributorId: editorId,
+          staffId: user?._id,
+          pitchId: pitchId,
+        },
+      });
+      toast.success('Added editor');
+    } else {
+      toast.error(extractErrorMessage(res));
+    }
 
     await callback();
   };
@@ -195,7 +215,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
     userId: string,
     editorType: string,
   ): Promise<void> => {
-    await apiCall({
+    const res = await apiCall({
       method: 'PUT',
       url: `/pitches/${pitchId}/removeContributor`,
       body: {
@@ -205,7 +225,14 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       query: {
         editor: editorType,
       },
+      failureMessage: 'Failed to remove editor',
     });
+
+    if (!isError(res)) {
+      toast.success('Removed editor');
+    } else {
+      toast.error(extractErrorMessage(res));
+    }
 
     await callback();
   };
@@ -242,7 +269,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       );
     } else if (!notApproved) {
       return (
-        <AuthView view="isAdmin">
+        <AuthView view="minStaff">
           <Label
             className="add-contributor"
             as="a"
@@ -397,9 +424,14 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
                 <UserChip user={omit(user, 'editorType')} />
                 <Popup
                   content={message}
-                  trigger={<Icon size="massive" name="question circle" />}
+                  trigger={
+                    <Icon
+                      style={{ fontSize: '16px', cursor: 'pointer' }}
+                      name="question circle"
+                    />
+                  }
                   wide="very"
-                  position="top center"
+                  position="right center"
                   hoverable
                 />
               </div>
