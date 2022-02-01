@@ -46,7 +46,6 @@ const PitchFeedbackModal: FC<PitchFeedbackModal> = ({
   const submitFeedback = async (
     pitchFeedback: Partial<PitchFeedback>,
   ): Promise<void> => {
-    console.log(pitchFeedback);
     if (!feedback) {
       if (
         pitchFeedback.firstQuestion === '' &&
