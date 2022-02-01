@@ -269,7 +269,7 @@ const EditingClaimCard: FC<EditingClaimCardProps> = ({
       );
     } else if (!notApproved) {
       return (
-        <AuthView view="isAdmin">
+        <AuthView view="minStaff">
           <Label
             className="add-contributor"
             as="a"
