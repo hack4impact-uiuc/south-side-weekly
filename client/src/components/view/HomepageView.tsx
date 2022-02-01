@@ -55,10 +55,7 @@ export const HomepageView: FC<HomepageViewProps> = ({ type }): ReactElement => {
       author: type === 'submitted' ? user?._id : undefined,
       sortBy: params.get('sortBy') || 'updatedAt',
       orderBy: params.get('orderBy') || 'desc',
-      // isFullyPublished: type === 'member' ? true : undefined,
     };
-
-    console.log(q);
 
     return _.omitBy(q, _.isNil);
   }, [location.search, type, user]);

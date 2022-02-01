@@ -285,7 +285,6 @@ export const approveUser = async (
     sendNotFound(res, `User not found with id ${req.params.id}`);
     return;
   }
-  console.log('REACHED APPROVE USER ENDPOINT');
 
   sendSuccess(
     res,

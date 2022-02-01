@@ -110,7 +110,6 @@ const paginate = async (
   const mongoFilters = mongooseFilters(filters);
 
   if (!mongoFilters.role) {
-    console.log('here');
     mongoFilters.role = { $ne: rolesEnum.TBD };
   }
 
@@ -120,8 +119,6 @@ const paginate = async (
     activityFilter(filters['activityStatus']),
     searchFilter(search),
   );
-
-  console.log(mergedFilters);
 
   const users = await User.find(mergedFilters)
     .skip(offset * limit)

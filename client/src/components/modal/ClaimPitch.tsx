@@ -123,19 +123,20 @@ export const ClaimPitch: FC<ClaimPitchProps> = ({
         <Icon name="close" onClick={handleClose} />
       </Modal.Header>
       <Modal.Content scrolling>
-        {hasSubmittedClaim && (
-          <Message
-            header="Wait!"
-            warning
-            content="You have already submitted claim for this pitch"
-          />
-        )}
-        {hasClaimedPitch && (
+        {hasClaimedPitch ? (
           <Message
             header="Wait!"
             content="You have already claimed this pitch. Please contact an Staff or Admin to claim this pitch."
             warning
           />
+        ) : (
+          hasSubmittedClaim && (
+            <Message
+              header="Wait!"
+              warning
+              content="You have already submitted claim for this pitch"
+            />
+          )
         )}
         <div className="flex-wrapper">
           <div id="title">

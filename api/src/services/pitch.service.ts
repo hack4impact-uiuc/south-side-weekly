@@ -199,9 +199,6 @@ const paginate = async (
     searchFilter(search),
   );
 
-  console.log(mongooseFilters(filters));
-  console.log(mergedFilters);
-
   const pitches = await Pitch.find(mergedFilters)
     .skip(offset * limit)
     .limit(limit)

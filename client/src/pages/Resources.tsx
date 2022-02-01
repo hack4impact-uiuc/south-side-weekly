@@ -42,10 +42,11 @@ const Resources = (): ReactElement => {
 
   const getCalendlyUrl = (): string => {
     if (window.location.hostname === 'localhost') {
+      // TODO: if continuing development, please change this calendly
       return 'https://calendly.com/sawhney4/60min';
     }
 
-    return 'TODO';
+    return 'https://calendly.com/south-side-weekly-1';
   };
 
   return (
