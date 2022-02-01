@@ -15,6 +15,7 @@ import {
 import { useAuth, useTeams } from '../../contexts';
 import UserChip from '../tag/UserChip';
 import neighborhoods from '../../utils/neighborhoods';
+import { extractErrorMessage } from '../../utils/helpers';
 import { useIssues } from '../../contexts/issues/context';
 import { issueStatusEnum } from '../../utils/enums';
 import { PrimaryButton } from '../ui/PrimaryButton';
@@ -28,7 +29,6 @@ import { Pusher } from '../ui/Pusher';
 import './modals.scss';
 import './ReviewPitch.scss';
 import AddIssueModal from './AddIssue';
-import { extractErrorMessage } from '../../utils/helpers';
 
 interface ReviewPitchProps extends ModalProps {
   id: string;
@@ -118,11 +118,18 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       neighborhoods: pitchNeighborhoods,
       teams: parsedTeams,
       deadline: new Date(deadline),
-      issueStatuses: pitchIssues.map((issueId) => ({
-        issueId,
-        issueStatus: issueStatusEnum.MAYBE_IN,
-        releaseDate: issues.find((issue) => issue._id === issueId)!.releaseDate,
-      })),
+      issueStatuses: pitchIssues
+        .map((issueId) => ({
+          issueId,
+          issueStatus: issueStatusEnum.MAYBE_IN,
+          releaseDate: issues.find((issue) => issue._id === issueId)!
+            .releaseDate,
+        }))
+        .sort(
+          (a, b) =>
+            new Date(a.releaseDate).getTime() -
+            new Date(b.releaseDate).getTime(),
+        ),
     };
 
     const res = await apiCall({

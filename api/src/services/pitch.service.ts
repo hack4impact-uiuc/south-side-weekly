@@ -694,20 +694,17 @@ export const getCurrentPitches = async (
     {
       status: pitchStatusEnum.APPROVED,
       issueStatuses: {
-        $all: [
-          {
-            $elemMatch: {
-              issueStatus: {
-                $in: [issueStatusEnum.READY_TO_PUBLISH, issueStatusEnum.PUSH],
-              },
-              releaseDate: { $lt: new Date() },
-            },
+        $elemMatch: {
+          issueStatus: {
+            $ne: issueStatusEnum.READY_TO_PUBLISH,
           },
-        ],
-
-        // }
-        // $not: { $elemMatch: { releaseDate: { $lt: new Date().getUTCDate() } } },
+          releaseDate: { $gte: new Date().getTime() },
+        },
       },
+
+      // }
+      // $not: { $elemMatch: { releaseDate: { $lt: new Date().getUTCDate() } } },
+
       ...userOnPitchFilters(_id),
     },
     options,

@@ -168,6 +168,7 @@ export const updatePitch = async (
     return;
   }
 
+  await UserService.updateActivity(updatedPitch.author);
   const populateType = extractPopulateQuery(req.query);
 
   sendSuccess(

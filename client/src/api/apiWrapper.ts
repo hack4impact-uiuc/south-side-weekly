@@ -7,11 +7,11 @@ import {
 import toast from 'react-hot-toast';
 
 import { rolesEnum } from '../utils/enums';
+import { extractErrorMessage } from '../utils/helpers';
 
 import { isError } from './builders';
 
 import { apiCall } from '.';
-import { extractErrorMessage } from '../utils/helpers';
 
 // API call to load a user's permissions
 export const loadUserPermissions = async (

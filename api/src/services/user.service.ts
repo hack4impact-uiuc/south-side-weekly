@@ -295,3 +295,6 @@ export const removeFeedback = async (
   feedbackId: string,
 ): Promise<User> =>
   await updateModel({ _id }, { $pull: { feedback: feedbackId } });
+
+export const updateActivity = async (_id: string): Promise<User> =>
+  await updateModel({ _id }, { lastActive: new Date() });
