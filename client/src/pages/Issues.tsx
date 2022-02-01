@@ -60,7 +60,7 @@ const Issues = (): ReactElement => {
     return (
       <div style={{ textAlign: 'center', paddingTop: '15vh' }}>
         <h3>{`No issues found. Create an issue to get started!`}</h3>
-        <AddIssueModal />
+        {isAdmin && <AddIssueModal />}
       </div>
     );
   } else if (viewIssueIndex < 0 || viewIssueIndex >= issues.length) {
