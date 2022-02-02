@@ -232,11 +232,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       </Modal.Header>
       <Modal.Content scrolling>
         {user!._id === pitch?.author._id && (
-          <Message
-            warning
-            header="Wait!"
-            content="You cannot approve your own pitch!"
-          />
+          <Message info header="You are the author of this pitch" />
         )}
         <div className="flex-wrapper">
           <div id="title">
@@ -434,12 +430,12 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       </Modal.Content>
       <Modal.Actions>
         <PrimaryButton
-          disabled={user!._id === pitch?.author._id || !pitch}
+          disabled={!pitch}
           onClick={approvePitch}
           content="Approve"
         />
         <SecondaryButton
-          disabled={user!._id === pitch?.author._id || !pitch}
+          disabled={!pitch}
           onClick={declinePitch}
           content="Decline"
           border
