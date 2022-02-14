@@ -17,11 +17,11 @@ export const PitchDocPage = (): ReactElement => {
   const views = useMemo(() => {
     const panes = [
       {
-        title: 'Claim a Pitch',
+        title: 'Claim an Assignment',
         content: <PitchesView type="claim" />,
       },
       {
-        title: 'View all Pitches',
+        title: 'View all Stories',
         content: <PitchesView type="all" />,
       },
     ];

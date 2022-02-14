@@ -5,6 +5,7 @@ import { PopulatedIssue } from 'ssw-common';
 import { isError, apiCall } from '../api';
 import { Kanban } from '../components';
 import AddIssueModal from '../components/modal/AddIssue';
+import { SubmitPitchModal } from '../components/modal/SubmitPitchModal';
 import { SingleSelect } from '../components/select/SingleSelect';
 import Loading from '../components/ui/Loading';
 import { useAuth } from '../contexts';
@@ -107,6 +108,7 @@ const Issues = (): ReactElement => {
           />
         </div>
         {isAdmin && <AddIssueModal callback={void 0} onUnmount={fetchIssues} />}
+        <SubmitPitchModal />
       </div>
 
       <Kanban issueId={issues.length > 0 ? issues[viewIssueIndex]._id : ''} />

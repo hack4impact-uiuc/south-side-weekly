@@ -3,6 +3,7 @@ import { Form, Grid } from 'semantic-ui-react';
 import { isEmpty, reject } from 'lodash';
 import Swal from 'sweetalert2';
 import { IInterest, ITeam } from 'ssw-common';
+import toast from 'react-hot-toast';
 
 import { useAuth, useInterests, useTeams, useWizard } from '../../../contexts';
 import { formatNumber, titleCase } from '../../../utils/helpers';
@@ -28,6 +29,11 @@ const Onboard3 = (): ReactElement => {
   };
 
   const contributorSubmit = (): void => {
+    if (selectedInterests.size === 0 || selectedTeams.size === 0) {
+      toast.error('Please select at least one interest and one team.');
+      return;
+    }
+
     const data = {
       interests: Array.from(selectedInterests),
       teams: Array.from(selectedTeams),
@@ -37,6 +43,11 @@ const Onboard3 = (): ReactElement => {
   };
 
   const staffSubmit = (): void => {
+    if (selectedInterests.size === 0 || selectedTeams.size === 0) {
+      toast.error('Please select at least one interest and one team.');
+      return;
+    }
+
     const newUser = {
       firstName: data!.firstName,
       lastName: data!.lastName,
@@ -85,32 +96,18 @@ const Onboard3 = (): ReactElement => {
   }, [data]);
 
   const handleInterests = (interest: IInterest): void => {
-    if (!selectedInterests.has(interest) && selectedInterests.size === 5) {
-      Swal.fire({
-        title: 'Please select a maximum of 5 teams!',
-        icon: 'error',
-      });
-      return;
-    }
-
     selectedInterests.has(interest)
       ? selectedInterests.delete(interest)
       : selectedInterests.add(interest);
+
     setInterests(new Set(selectedInterests));
   };
 
   const handleTeams = (team: ITeam): void => {
-    if (!selectedTeams.has(team) && selectedTeams.size === 2) {
-      Swal.fire({
-        title: 'Please select a maximum of 2 teams!',
-        icon: 'error',
-      });
-      return;
-    }
-
     selectedTeams.has(team)
       ? selectedTeams.delete(team)
       : selectedTeams.add(team);
+
     setSelectedTeams(new Set(selectedTeams));
   };
 

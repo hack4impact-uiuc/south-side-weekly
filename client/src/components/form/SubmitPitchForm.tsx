@@ -15,7 +15,7 @@ const schema = yup.object({
   title: yup.string().required(),
   assignmentGoogleDocLink: yup.string().required(),
   description: yup.string().required(),
-  topics: yup.array().of(yup.string().required()).required().min(1),
+  topics: yup.array().of(yup.string().required()).required().min(0),
   writerIntent: yup.string().nullable(),
   conflictOfInterest: yup.string().nullable().required(),
 });
@@ -80,7 +80,17 @@ export const SubmitPitchForm: FC<FormProps> = ({
               <Field
                 component={FormTextArea}
                 name="description"
-                label="Description"
+                label={
+                  <span>
+                    Description -{' '}
+                    <span style={{ fontWeight: 'normal' }}>
+                      Please add a link to blank google doc here and change the
+                      share settings to “allow anyone with the link” to be an
+                      editor. We’ll use this document to work on your first
+                      draft together.
+                    </span>
+                  </span>
+                }
                 className="description"
               />
             </div>

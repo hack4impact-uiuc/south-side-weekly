@@ -138,7 +138,7 @@ const Kanban: FC<KanbanProps> = ({ issueId }): ReactElement => {
               <FieldTag size="small" key={index} content={column.name} />
               <p className="num-pitches">
                 {column.items.length}{' '}
-                {column.items.length === 1 ? 'pitch' : 'pitches'}
+                {column.items.length === 1 ? 'story' : 'stories'}
               </p>
             </div>
             <div style={{ margin: 8 }}>

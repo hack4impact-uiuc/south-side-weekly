@@ -14,9 +14,9 @@ const DesktopNavbarItems = (): ReactElement => (
   <div id="desktop-wrapper">
     <AuthView view="isOnboarded">
       <Menu.Item as={NavLink} to="/home" name="Home" />
-      <Menu.Item as={NavLink} to="/pitches" name="Pitch Doc" />
+      <Menu.Item as={NavLink} to="/pitches" name="Stories" />
       <Menu.Item as={NavLink} to="/issues" name="Issues" />
-      <Menu.Item as={NavLink} to="/users" name="Directory" />
+      <Menu.Item as={NavLink} to="/users" name="People" />
     </AuthView>
     <Menu.Item as={NavLink} to="/resources" name="Resources" />
     <Menu.Item className="profile">
