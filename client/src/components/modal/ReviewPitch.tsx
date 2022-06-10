@@ -89,6 +89,10 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
 
     if (open) {
       loadPitch();
+      issues.sort(
+        (a, b) =>
+          new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime(),
+      );
     }
   }, [open, id, teams]);
 

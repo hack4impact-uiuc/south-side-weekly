@@ -1,6 +1,6 @@
 import { FastField, Form as FormikForm, Formik, FormikHelpers } from 'formik';
 import { cloneDeep, difference, lowerCase, pick, startCase } from 'lodash';
-import React, { FC, ReactElement, useState } from 'react';
+import React, { FC, ReactElement, useState, useEffect } from 'react';
 import { MultiValue } from 'react-select';
 import { Button, Form, Icon, Label } from 'semantic-ui-react';
 import { BasePopulatedPitch, FullPopulatedPitch, Pitch } from 'ssw-common';
@@ -61,6 +61,13 @@ export const ReviewClaimForm: FC<FormProps> = ({
   const [editMode, setEditMode] = useState<boolean>(false);
   const { getInterestById, interests } = useInterests();
   const { getIssueFromId, issues, fetchIssues } = useIssues();
+
+  useEffect(() => {
+    issues.sort(
+      (a, b) =>
+        new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime(),
+    );
+  }, [editMode, issues]);
 
   const handleSave = async (
     data: FormData,
