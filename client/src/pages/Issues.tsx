@@ -30,11 +30,11 @@ const Issues = (): ReactElement => {
 
       allIssues.sort(
         (a, b) =>
-          new Date(a.releaseDate).getTime() - new Date(b.releaseDate).getTime(),
+          new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime(),
       );
 
       const closestIssueIndex = allIssues.findIndex(
-        (issue) => new Date() <= new Date(issue.releaseDate),
+        (issue) => new Date() >= new Date(issue.releaseDate),
       );
 
       if (closestIssueIndex < 0) {

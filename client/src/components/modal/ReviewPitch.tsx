@@ -89,8 +89,12 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
 
     if (open) {
       loadPitch();
+      issues.sort(
+        (a, b) =>
+          new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime(),
+      );
     }
-  }, [open, id, teams]);
+  }, [open, id, teams, issues]);
 
   const approvePitch = async (): Promise<void> => {
     const parsedTeams = Object.entries(teamConfig)
