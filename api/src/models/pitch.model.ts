@@ -93,6 +93,8 @@ const Pitch = new mongoose.Schema(
       enum: Object.values(editStatusEnum),
       default: editStatusEnum.WRITER_NEEDED,
     },
+    wordCount: { type: Number, default: null },
+    pageCount: { type: Number, default: null },
   },
   { timestamps: true },
 );

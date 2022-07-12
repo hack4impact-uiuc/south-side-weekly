@@ -15,6 +15,13 @@
       color: $secondaryColor !important;
     }
 
+    #page-word-count {
+      display: flex;
+      #word-count {
+        margin-right: 20px;
+      }
+    }
+
     #date-issue-selector {
       display: flex;
       margin-top: 20px;

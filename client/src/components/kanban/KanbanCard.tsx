@@ -34,6 +34,9 @@ const KanbanCard: FC<PitchProps> = ({ pitch, ...rest }): ReactElement => {
             : new Date().toLocaleDateString()}
         </p>
       </div>
+      <p className="pitch-text">
+        Page Count: {pitch.pageCount ? pitch.pageCount : 'NA'}
+      </p>
     </Card>
   );
 };
