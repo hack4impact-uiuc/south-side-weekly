@@ -13,7 +13,7 @@ import './SubmitPitchForm.scss';
 
 const schema = yup.object({
   title: yup.string().required(),
-  assignmentGoogleDocLink: yup.string().required(),
+  assignmentGoogleDocLink: yup.string().nullable(),
   description: yup.string().required(),
   topics: yup.array().of(yup.string().required()).required().min(0),
   writerIntent: yup.string().nullable(),
@@ -72,10 +72,6 @@ export const SubmitPitchForm: FC<FormProps> = ({
                 label="Google Doc Link"
               />
             </div>
-            {touched['assignmentGoogleDocLink'] &&
-              errors['assignmentGoogleDocLink'] && (
-                <div className="error">{errors['assignmentGoogleDocLink']}</div>
-              )}
             <div className="row">
               <Field
                 component={FormTextArea}

@@ -58,7 +58,7 @@ const getPitchTeamsForContributor = (
 
   const contributor = pitch.assignmentContributors.find(isUser)?.teams || [];
 
-  if (user._id === pitch.writer._id) {
+  if (pitch.writer && user._id === pitch.writer._id) {
     contributor.push(WRITING_TEAM);
   }
 

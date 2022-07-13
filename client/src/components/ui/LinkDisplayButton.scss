@@ -1,5 +1,9 @@
 @import '../../styles/colors.scss';
 
+#no-link {
+  opacity: 0.5;
+}
+
 .link-display-link {
   display: flex;
   align-items: center;

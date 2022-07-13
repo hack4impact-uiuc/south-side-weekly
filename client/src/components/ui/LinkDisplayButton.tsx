@@ -8,9 +8,17 @@ interface LinkDisplayProps {
   [key: string]: any;
 }
 
-export const LinkDisplay: FC<LinkDisplayProps> = ({ href, ...rest }) => (
-  <a {...rest} href={href} className="link-display-link">
-    <Icon name="linkify" />
-    Link
-  </a>
-);
+export const LinkDisplay: FC<LinkDisplayProps> = ({ href, ...rest }) => {
+  const hasLink = href === '';
+  return hasLink ? (
+    <p id="no-link">
+      <Icon name="linkify" />
+      Link not Provided
+    </p>
+  ) : (
+    <a {...rest} href={href} className="link-display-link">
+      <Icon name="linkify" />
+      Link
+    </a>
+  );
+};

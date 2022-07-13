@@ -103,7 +103,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       .map(([id, target]) => ({ teamId: id, target }))
       .filter(({ target }) => target > 0);
 
-    if (!primaryEditor || deadline.length === 0 || parsedTeams.length === 0) {
+    if (!primaryEditor || deadline.length === 0) {
       toast.error('Please fill out all fields');
       return;
     }
@@ -112,9 +112,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       toast.error('Please select a primary editor');
     } else if (deadline.length === 0) {
       toast.error('Please select a deadline');
-    } else if (parsedTeams.length === 0) {
-      toast.error('Please assign at least one team');
-    }
+    } 
 
     const pitchData = {
       writer: writer || undefined,
@@ -247,7 +245,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
             <h2>{pitch?.title}</h2>
           </div>
           <div>
-            <LinkDisplay href={pitch?.assignmentGoogleDocLink || ''} />
+            <LinkDisplay href={pitch.assignmentGoogleDocLink} />
           </div>
         </div>
 
