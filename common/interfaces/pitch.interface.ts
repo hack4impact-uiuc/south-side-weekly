@@ -33,6 +33,8 @@ export interface Pitch {
   updatedAt: Date;
   issueStatuses: { issueId: string; issueStatus: string, releaseDate: string }[];
   editStatus: string;
+  wordCount: number;
+  pageCount: number;
 }
 
 type BasePitchOmitFields =

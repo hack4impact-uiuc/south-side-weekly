@@ -97,6 +97,8 @@ export interface IPitch {
   updatedAt: Date;
   issueStatuses: { issueId: string; issueStatus: string }[];
   editStatus: string;
+  wordCount: number;
+  pageCount: number;
 }
 
 export interface IPitchAggregate extends IPitch {

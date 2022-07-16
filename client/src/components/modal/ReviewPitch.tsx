@@ -112,7 +112,7 @@ export const ReviewPitch: FC<ReviewPitchProps> = ({
       toast.error('Please select a primary editor');
     } else if (deadline.length === 0) {
       toast.error('Please select a deadline');
-    } 
+    }
 
     const pitchData = {
       writer: writer || undefined,
