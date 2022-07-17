@@ -1,6 +1,7 @@
 import React, { ReactElement, useCallback, useEffect, useState } from 'react';
 import { Icon } from 'semantic-ui-react';
 import { PopulatedIssue } from 'ssw-common';
+import { useQueryParams, NumberParam } from 'use-query-params';
 
 import { isError, apiCall } from '../api';
 import { Kanban } from '../components';
@@ -16,6 +17,7 @@ import './Issues.scss';
 const Issues = (): ReactElement => {
   const [issues, setIssues] = useState<PopulatedIssue[] | null>(null);
   const [viewIssueIndex, setViewIssueIndex] = useState<number>(0);
+  const [query, setQuery] = useQueryParams({ index: NumberParam });
   const { isAdmin } = useAuth();
 
   const fetchIssues = useCallback(async (): Promise<void> => {
@@ -33,21 +35,22 @@ const Issues = (): ReactElement => {
           new Date(b.releaseDate).getTime() - new Date(a.releaseDate).getTime(),
       );
 
-      const closestIssueIndex = allIssues.findIndex(
-        (issue) => new Date() >= new Date(issue.releaseDate),
-      );
-
-      if (closestIssueIndex < 0) {
-        setViewIssueIndex(allIssues.length - 1);
+      if (query.index === undefined) {
+        const closestIssueIndex = allIssues.findIndex(
+          (issue) => new Date() >= new Date(issue.releaseDate),
+        );
+        setViewIssueIndex(
+          closestIssueIndex < 0 ? allIssues.length - 1 : closestIssueIndex,
+        );
       } else {
-        setViewIssueIndex(closestIssueIndex);
+        setViewIssueIndex(query.index || 0);
       }
 
       setIssues(allIssues);
     } else {
       setIssues([]);
     }
-  }, []);
+  }, [query.index]);
 
   useEffect(() => {
     fetchIssues();
@@ -89,11 +92,13 @@ const Issues = (): ReactElement => {
               value: issue._id,
             }))}
             value={issues[viewIssueIndex] ? issues[viewIssueIndex]._id : ''}
-            onChange={(e) =>
-              setViewIssueIndex(
-                issues.findIndex((issue) => issue._id === e?.value),
-              )
-            }
+            onChange={(e) => {
+              const newIndex = issues.findIndex(
+                (issue) => issue._id === e?.value,
+              );
+              setViewIssueIndex(newIndex);
+              setQuery({ index: newIndex });
+            }}
             isClearable={false}
           />
 
