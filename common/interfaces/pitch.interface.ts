@@ -35,6 +35,7 @@ export interface Pitch {
   editStatus: string;
   wordCount: number;
   pageCount: number;
+  isInternal: boolean;
 }
 
 type BasePitchOmitFields =

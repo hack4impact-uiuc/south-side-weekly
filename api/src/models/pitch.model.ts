@@ -95,6 +95,7 @@ const Pitch = new mongoose.Schema(
     },
     wordCount: { type: Number, default: null },
     pageCount: { type: Number, default: null },
+    isInternal: { type: Boolean, default: false, required: true },
   },
   { timestamps: true },
 );

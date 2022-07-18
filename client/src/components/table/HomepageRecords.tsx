@@ -143,6 +143,7 @@ export const HomepageRecords: FC<TableProps> = ({
                 conflictOfInterest: pitch.conflictOfInterest,
                 writer: pitch.writer?._id,
                 _id: pitch._id,
+                isInternal: pitch.isInternal,
               }}
               open={open}
               setOpen={setOpen}

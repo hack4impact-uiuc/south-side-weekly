@@ -56,6 +56,7 @@ interface SubmitPitchModalProps extends ModalProps {
     | 'topics'
     | 'writer'
     | '_id'
+    | 'isInternal'
   >;
   hasTrigger?: boolean;
   open?: boolean;
@@ -81,6 +82,7 @@ export const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
       conflictOfInterest: data.conflictOfInterest === 'true',
       writer: user!._id,
       author: user!._id,
+      isInternal: data.isInternal,
     };
 
     if (data.writerIntent === undefined || data.writerIntent === 'false') {
@@ -112,6 +114,7 @@ export const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
         topics: pitch.topics,
         conflictOfInterest: pitch.conflictOfInterest ? 'true' : 'false',
         writerIntent: pitch.writer === user?._id ? 'true' : 'false',
+        isInternal: pitch.isInternal,
       };
     }
 
@@ -122,6 +125,7 @@ export const SubmitPitchModal: FC<SubmitPitchModalProps> = ({
       topics: [],
       conflictOfInterest: null,
       writerIntent: undefined,
+      isInternal: false,
     };
   }, [pitch, user]);
 
