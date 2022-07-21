@@ -33,6 +33,11 @@ export interface Pitch {
   updatedAt: Date;
   issueStatuses: { issueId: string; issueStatus: string, releaseDate: string }[];
   editStatus: string;
+  factCheckingStatus: string;
+  factCheckingLink: string;
+  visualStatus: string;
+  visualLink: string;
+  layoutStatus: string;
   wordCount: number;
   pageCount: number;
 }

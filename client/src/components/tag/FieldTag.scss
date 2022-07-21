@@ -177,3 +177,65 @@
 .coming-late-tag-color {
   background-color: $tagOrange !important;
 }
+
+// Fact Checking Status Colors
+
+.needs-fc-tag-color {
+  background-color: $tagRed !important;
+}
+
+.fc-in-progress-tag-color {
+  background-color: $tagYellow !important;
+}
+
+.fc-done-tag-color {
+  background-color: $tagGreen !important;
+}
+
+.not-integrated-tag-color {
+  background-color: $tagOrange !important;
+}
+
+.fc-integrated-tag-color {
+  background-color: $tagBlue !important;
+}
+
+// Visuals Status Colors
+
+.unassigned-tag-color {
+  background-color: $tagRed !important;
+}
+
+.re-use-illustration-tag-color {
+  background-color: $tagBlue !important;
+}
+
+.in-drive-tag-color {
+  background-color: $tagGreen !important;
+}
+
+.uncertain-tag-color {
+  background-color: $tagOrange !important;
+}
+
+// Layout Status Colors
+
+.layout-drafted-tag-color {
+  background-color: $tagYellow !important;
+}
+
+.copy-placed-tag-color {
+  background-color: $tagOrange !important;
+}
+
+.visuals-placed-tag-color {
+  background-color: $tagBlue !important;
+}
+
+.board-printed-tag-color {
+  background-color: $tagPurple !important;
+}
+
+.finalized-tag-color {
+  background-color: $tagGreen !important;
+}

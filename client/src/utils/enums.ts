@@ -122,3 +122,27 @@ export const editStatusEnum = {
   DROPPED: 'Dropped',
   TRANSLATION_IP: 'Translation In Progress',
 };
+
+export const factCheckingStatusEnum = {
+  NEEDS_FC: 'Needs FC',
+  FC_IN_PROGRESS: 'FC In Progress',
+  FC_DONE: 'FC Done',
+  NOT_INTEGRATED: 'Not Integrated',
+  FC_INTEGRATED: 'FC Integrated',
+};
+
+export const visualStatusEnum = {
+  UNASSIGNED: 'Unassigned',
+  IN_PROGRESS: 'In Progress',
+  REUSE_ILLUSTRATION: 'Re-use Illustration',
+  IN_DRIVE: 'In Drive',
+  UNCERTAIN: 'Uncertain',
+};
+
+export const layoutStatusEnum = {
+  IN_PROGRESS: 'In Progress',
+  LAYOUT_DRAFTED: 'Layout Drafted',
+  COPY_PLACED: 'Copy Placed',
+  BOARD_PRINTED: 'Board Printed',
+  FINALIZED: 'Finalized',
+};

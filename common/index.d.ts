@@ -99,6 +99,11 @@ export interface IPitch {
   editStatus: string;
   wordCount: number;
   pageCount: number;
+  factCheckingStatus: string;
+  factCheckingLink: string;
+  visualStatus: string;
+  visualLink: string;
+  layoutStatus: string;
 }
 
 export interface IPitchAggregate extends IPitch {

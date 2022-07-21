@@ -89,6 +89,30 @@ const editStatusEnum = {
   TRANSLATION_IP: 'Translation In Progress',
 };
 
+const factCheckingStatusEnum = {
+  NEEDS_FC: 'Needs FC',
+  FC_IN_PROGRESS: 'FC In Progress',
+  FC_DONE: 'FC Done',
+  NOT_INTEGRATED: 'Not Integrated',
+  FC_INTEGRATED: 'FC Integrated',
+};
+
+const visualStatusEnum = {
+  UNASSIGNED: 'Unassigned',
+  IN_PROGRESS: 'In Progress',
+  REUSE_ILLUSTRATION: 'Re-use Illustration',
+  IN_DRIVE: 'In Drive',
+  UNCERTAIN: 'Uncertain',
+};
+
+const layoutStatusEnum = {
+  IN_PROGRESS: 'In Progress',
+  LAYOUT_DRAFTED: 'Layout Drafted',
+  COPY_PLACED: 'Copy Placed',
+  BOARD_PRINTED: 'Board Printed',
+  FINALIZED: 'Finalized',
+};
+
 export {
   issueTypeEnum,
   rolesEnum,
@@ -102,4 +126,7 @@ export {
   editStatusEnum,
   claimStatusEnum,
   editorTypeEnum,
+  factCheckingStatusEnum,
+  visualStatusEnum,
+  layoutStatusEnum,
 };

@@ -9,7 +9,13 @@ import { FieldTag } from '..';
 import { apiCall, isError } from '../../api';
 import { useInterests } from '../../contexts';
 import { useIssues } from '../../contexts/issues/context';
-import { editStatusEnum, issueStatusEnum } from '../../utils/enums';
+import {
+  editStatusEnum,
+  issueStatusEnum,
+  factCheckingStatusEnum,
+  visualStatusEnum,
+  layoutStatusEnum,
+} from '../../utils/enums';
 import { formatDate } from '../../utils/helpers';
 import AddIssue from '../modal/AddIssue';
 import { MultiSelect } from '../select/MultiSelect';
@@ -35,6 +41,11 @@ interface FormData
     Pitch,
     | 'title'
     | 'editStatus'
+    | 'factCheckingStatus'
+    | 'factCheckingLink'
+    | 'visualStatus'
+    | 'visualLink'
+    | 'layoutStatus'
     | 'topics'
     | 'assignmentGoogleDocLink'
     | 'description'
@@ -48,6 +59,11 @@ interface FormData
 const fields: (keyof FormData)[] = [
   'title',
   'editStatus',
+  'factCheckingStatus',
+  'factCheckingLink',
+  'visualStatus',
+  'visualLink',
+  'layoutStatus',
   'topics',
   'assignmentGoogleDocLink',
   'description',
@@ -223,6 +239,78 @@ export const ReviewClaimForm: FC<FormProps> = ({
               </div>
             </div>
             <div className="row">
+              <div className="left-col">
+                <FastField
+                  component={FormSingleSelect}
+                  options={Object.values(factCheckingStatusEnum).map(
+                    (status) => ({
+                      value: status,
+                      label: status,
+                    }),
+                  )}
+                  name="factCheckingStatus"
+                  label="Fact Checking Status"
+                  editable={editMode}
+                />
+              </div>
+              <div className="right-col">
+                {!editMode ? (
+                  <p>
+                    <b>Fact Checking Link</b>
+                    <LinkDisplay href={values.factCheckingLink} />
+                  </p>
+                ) : (
+                  <FastField
+                    component={FormInput}
+                    name="factCheckingLink"
+                    label="Fact Checking Link"
+                  />
+                )}
+              </div>
+            </div>
+            <div className="row">
+              <div className="left-col">
+                <FastField
+                  component={FormSingleSelect}
+                  options={Object.values(visualStatusEnum).map((status) => ({
+                    value: status,
+                    label: status,
+                  }))}
+                  name="visualStatus"
+                  label="Visuals Status"
+                  editable={editMode}
+                />
+              </div>
+              <div className="right-col">
+                {!editMode ? (
+                  <p>
+                    <b>Visuals Link</b>
+                    <LinkDisplay href={values.visualLink} />
+                  </p>
+                ) : (
+                  <FastField
+                    component={FormInput}
+                    name="visualLink"
+                    label="Visuals Link"
+                  />
+                )}
+              </div>
+            </div>
+            <div className="row">
+              <div className="left-col">
+                <FastField
+                  component={FormSingleSelect}
+                  options={Object.values(layoutStatusEnum).map((status) => ({
+                    value: status,
+                    label: status,
+                  }))}
+                  name="layoutStatus"
+                  label="Layout Status"
+                  editable={editMode}
+                />
+              </div>
+            </div>
+            <div className="row">
               <FastField
                 component={FormMultiSelect}
                 name="topics"
@@ -237,7 +325,10 @@ export const ReviewClaimForm: FC<FormProps> = ({
             </div>
             <div className="row">
               {!editMode ? (
-                <LinkDisplay href={values.assignmentGoogleDocLink} />
+                <p>
+                  <b>Google Doc Link</b>
+                  <LinkDisplay href={values.assignmentGoogleDocLink} />
+                </p>
               ) : (
                 <FastField
                   component={FormInput}

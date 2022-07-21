@@ -6,6 +6,9 @@ import {
   assignmentStatusEnum,
   issueStatusEnum,
   editStatusEnum,
+  factCheckingStatusEnum,
+  visualStatusEnum,
+  layoutStatusEnum,
 } from '../utils/enums';
 
 export type PitchSchema = Pitch & Document<any>;
@@ -92,6 +95,23 @@ const Pitch = new mongoose.Schema(
       type: String,
       enum: Object.values(editStatusEnum),
       default: editStatusEnum.WRITER_NEEDED,
+    },
+    factCheckingStatus: {
+      type: String,
+      enum: Object.values(factCheckingStatusEnum),
+      default: factCheckingStatusEnum.NEEDS_FC,
+    },
+    factCheckingLink: { type: String, default: null },
+    visualStatus: {
+      type: String,
+      enum: Object.values(visualStatusEnum),
+      default: visualStatusEnum.UNASSIGNED,
+    },
+    visualLink: { type: String, default: null },
+    layoutStatus: {
+      type: String,
+      enum: Object.values(layoutStatusEnum),
+      default: layoutStatusEnum.IN_PROGRESS,
     },
     wordCount: { type: Number, default: null },
     pageCount: { type: Number, default: null },
